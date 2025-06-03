@@ -1,0 +1,30 @@
+//
+//  StartWeekOn.swift
+//  FitHub
+//
+//  Created by Anthony Cantu on 5/3/25.
+//
+
+import SwiftUI
+
+/*struct StartWeekOn: View {
+    @EnvironmentObject var userData: UserData
+
+    var body: some View {
+        Form {
+            Picker("Start Week On", selection: $userData.startWeekOn) {
+                Text("Saturday").tag(daysOfWeek.saturday)
+                Text("Sunday").tag(daysOfWeek.sunday)
+                Text("Monday").tag(daysOfWeek.monday)
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .onChange(of: userData.startWeekOn) { oldValue, newValue in
+                if oldValue != newValue {
+                    userData.saveSingleVariableToFile(\.startWeekOn, for: .startWeekOn)
+                }
+            }
+        }
+        .navigationTitle("Start Week On")
+    }
+}*/
+

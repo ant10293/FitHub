@@ -29,8 +29,9 @@ struct PersistenceController {
     }()
 
     let container: NSPersistentContainer
+    
 
-    init(inMemory: Bool = false) {
+   /* init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "FitHub")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
@@ -53,4 +54,57 @@ struct PersistenceController {
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
-}
+    
+}*/
+
+    init(inMemory: Bool = false) {
+            container = NSPersistentContainer(name: "FitHub")
+
+            // Support lightweight migrations & automatic inference
+            if let description = container.persistentStoreDescriptions.first {
+                description.shouldInferMappingModelAutomatically = true
+                description.shouldMigrateStoreAutomatically = true
+
+                if inMemory {
+                    description.url = URL(fileURLWithPath: "/dev/null")
+                } else {
+                    // Use Documents directory for persistent store
+                    let storeURL = FileManager.default
+                        .urls(for: .applicationSupportDirectory, in: .userDomainMask)
+                        .first?
+                        .appendingPathComponent("FitHub.sqlite")
+                    description.url = storeURL
+                }
+            }
+
+            container.loadPersistentStores(completionHandler: { storeDescription, error in
+                if let error = error as NSError? {
+                    // Log error and attempt recovery if possible
+                    #if DEBUG
+                    fatalError("Unresolved Core Data error: \(error), \(error.userInfo)")
+                    #else
+                    print("Core Data load error: \(error.localizedDescription)")
+                    #endif
+                }
+            })
+
+            // Merge changes from parent contexts automatically
+            container.viewContext.automaticallyMergesChangesFromParent = true
+            container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+
+            // Improve performance by turning off undo manager
+            container.viewContext.undoManager = nil
+        }
+
+        /// Helper to save the view context safely
+        func saveContext() {
+            let context = container.viewContext
+            guard context.hasChanges else { return }
+            do {
+                try context.save()
+            } catch {
+                let nsError = error as NSError
+                print("Failed to save Core Data context: \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
