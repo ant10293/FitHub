@@ -1,35 +1,39 @@
 import SwiftUI
 
 struct CalculatorView: View {
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var exerciseData: ExerciseData
-    
+    @EnvironmentObject private var ctx: AppContext
+
     var body: some View {
         NavigationStack {
             VStack {
                 List {
-                    Section(header: Text("Strength")) {
-                        NavigationLink(destination: RMCalculator(userData: userData, exerciseData: exerciseData)) {
+                    Section {
+                        NavigationLink(destination: OneRMCalculator()) {
                             CalculatorRow(title: "1 Rep Max Calculator", systemImageName: "scalemass")
                         }
                         // premium only
-                        NavigationLink(destination: TemplateSelection()) {
+                        NavigationLink(destination: TemplateSelection(userTemplates: ctx.userData.workoutPlans.userTemplates, trainerTemplates: ctx.userData.workoutPlans.trainerTemplates)) {
                             CalculatorRow(title: "Progressive Overload Calculator", systemImageName: "chart.line.uptrend.xyaxis")
                         }
+                    } header: {
+                        Text("Strength")
                     }
-                    Section(header: Text("Health")) {
-                        NavigationLink(destination: BMICalculator(userData: userData)) {
+                    
+                    Section {
+                        NavigationLink(destination: BMICalculator(userData: ctx.userData)) {
                             CalculatorRow(title: "BMI Calculator", systemImageName: "heart.text.square")
                         }
-                        NavigationLink(destination: KcalCalculator(userData: userData)) {
+                        NavigationLink(destination: KcalCalculator(userData: ctx.userData)) {
                             CalculatorRow(title: "Daily Caloric Intake Calculator", systemImageName: "flame")
                         }
-                        NavigationLink(destination: BFCalculator(userData: userData)) {
+                        NavigationLink(destination: BFCalculator(userData: ctx.userData)) {
                             CalculatorRow(title: "Body Fat Calculator", systemImageName: "percent")
                         }
-                        NavigationLink(destination: MacroCalculator(userData: userData)) {
+                        NavigationLink(destination: MacroCalculator(userData: ctx.userData)) {
                             CalculatorRow(title: "Macronutrient Calculator", systemImageName: "fork.knife.circle")
                         }
+                    } header: {
+                        Text("Health")
                     }
                     .listStyle(GroupedListStyle())
                 }

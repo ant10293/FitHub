@@ -3,23 +3,18 @@ import HealthKit
 
 
 struct HealthKitRequestView: View {
-    @ObservedObject var userData: UserData
-   // @EnvironmentObject var userData: UserData
-    @EnvironmentObject var healthKitManager: HealthKitManager
     @Environment(\.colorScheme) var colorScheme
+    @ObservedObject var userData: UserData
+    @StateObject private var healthKit = HealthKitManager()
     @State var userName: String = ""
     @State private var localUserName: String = ""
     @State private var isPrimaryColor: Bool = true
-
-
-    init(userData: UserData) {
-        self.userData = userData
-        _userName = State(initialValue: userData.userName)
-    }
+    @State private var updatedDOB: Bool = false
+    @State private var updatedWeight: Bool = false
 
     var body: some View {
         VStack {
-            if userData.allowedCredentials {
+            if userData.settings.allowedCredentials {
                 Text("Loading...")
                     .font(.headline)
                     .foregroundColor(isPrimaryColor ? primaryColor : secondaryColor)
@@ -30,17 +25,17 @@ struct HealthKitRequestView: View {
             Image("Logo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 150, height: 150, alignment: .topLeading)
-            
-            if !userData.allowedCredentials  {
+                .frame(width: UIScreen.main.bounds.width * 0.5)  // ≈ 1/2 screen
+
+            if !userData.settings.allowedCredentials  {
                 TextField("Enter your name here", text: $userName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 
                 Button("Get Started") {
-                    userData.userName = userName
-                    userData.saveSingleVariableToFile(\.userName, for: .userName)
-                    requestAuth()
+                    userData.profile.userName = userName
+                    userData.saveSingleStructToFile(\.profile, for: .profile)
+                    healthKit.requestAuthorization(userData: userData)
                 }
                 .foregroundColor(.white)
                 .padding()
@@ -51,14 +46,12 @@ struct HealthKitRequestView: View {
         }
         .navigationBarBackButtonHidden(true) // Hiding the back button
         .onAppear {
-            if userData.allowedCredentials {
-                requestAuth()
+            if userData.settings.allowedCredentials {
+                healthKit.requestAuthorization(userData: userData)
+            } else {
+                userName = userData.profile.userName
             }
         }
-    }
-    
-    func isDataAvailable() -> Bool {
-        return userData.heightFeet > 0 && userData.currentMeasurementValue(for: .weight) > 0
     }
     
     var primaryColor: Color {
@@ -67,42 +60,6 @@ struct HealthKitRequestView: View {
     
     var secondaryColor: Color {
         colorScheme == .dark ? .black : .white
-    }
-    
-    func requestAuth() {
-        healthKitManager.requestAuthorization {
-            // start polling on the main thread
-            DispatchQueue.main.async {
-                self.pollForHeight()
-            }
-        }
-    }
-
-    private func pollForHeight() {
-        let totalInches = healthKitManager.totalInches
-
-        // Make sure we have both a height & a DOB before proceeding
-        guard totalInches > 0,
-              let dob = healthKitManager.dob
-        else {
-            // Not ready yet → retry in 0.5 s
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                pollForHeight()
-            }
-            return
-        }
-
-        // ✅ We’ve got valid data—process it once and stop polling
-        let feet   = totalInches / 12
-        let inches = totalInches % 12
-        
-        userData.dob          = dob
-        userData.heightFeet   = Int(feet)
-        userData.heightInches = Int(inches)
-
-        userData.updateMeasurementValue(for: .weight, with: Double(healthKitManager.weight), shouldSave: false)
-        userData.setupState = .detailsView
-        userData.saveToFile()
     }
 
     func startBlinking() {

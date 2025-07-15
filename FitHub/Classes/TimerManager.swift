@@ -8,9 +8,9 @@
 import Foundation
 
 
-class TimerManager: ObservableObject {
+final class TimerManager: ObservableObject {
     @Published var secondsElapsed: Int = 0
-    @Published var timerIsActive: Bool = false
+    @Published var isActive: Bool = false
     private var timer: Timer?
     
     // new “rest clock”
@@ -23,7 +23,7 @@ class TimerManager: ObservableObject {
         timer?.invalidate()
 
         // 2. Flip the flag (will redraw your play/pause button)
-        timerIsActive = true
+        isActive = true
 
         // 3. Schedule a 1-s repeating timer…
         let t = Timer(timeInterval: 1.0, repeats: true) { [weak self] _ in
@@ -37,7 +37,7 @@ class TimerManager: ObservableObject {
     }
     
     func stopTimer() {
-        timerIsActive = false
+        isActive = false
         timer?.invalidate()
         timer = nil
     }

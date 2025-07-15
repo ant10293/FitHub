@@ -10,134 +10,106 @@ import SwiftUI
 struct EnterOneRepMaxes: View {
     @ObservedObject var userData: UserData
     @ObservedObject var exerciseData: ExerciseData
+    @StateObject private var kbd = KeyboardManager.shared
     @State private var benchPressMax: String = ""
     @State private var squatMax: String = ""
     @State private var deadliftMax: String = ""
-    @State private var isKeyboardVisible: Bool = false
     @State private var numberReps: Int = 1 // Defaulting to 1 to ensure the Text reflects initial selection correctly
     let repOptions: [Int] = Array(1...8).filter { $0 % 1 == 0 }
     var onFinish: () -> Void
 
     var body: some View {
-        VStack(spacing: 20) {
+        ZStack {
+            Color(UIColor.secondarySystemBackground)
+                .ignoresSafeArea(.all)
+                .zIndex(0)
+            
             VStack {
-                Text("Don't know your 1 rep max?")
-                    .font(.headline)
-                Text("Enter your 2-8 rep max for atleast one of")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                    .centerHorizontally()
-                Text("the exercises below.")
-                    .padding(.top, -5)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                    .centerHorizontally()
-            }
-            .padding(.top, 180)
-            
-            HStack(alignment: .center, spacing: 20) {
-                Text("Number Of Reps")
-                    .bold()
-                Picker(" ", selection: $numberReps) {
-                    ForEach(repOptions, id: \.self) {
-                        Text("\($0)")
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .frame(width: 200)
-            }
-            .padding(.vertical, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-            
-            
-            VStack(spacing: 15) {
-                InputField(label: "Bench Press", value: $benchPressMax)
-                InputField(label: "Squat", value: $squatMax)
-                InputField(label: "Deadlift", value: $deadliftMax)
-            }
-            
-            if !isKeyboardVisible {
-                Button(action: handleSubmit) {
-                    Text("Submit")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                    //.background(benchPressMax.isEmpty || squatMax.isEmpty || deadliftMax.isEmpty ? Color.gray : Color.green)
-                        .background(benchPressMax.isEmpty && squatMax.isEmpty && deadliftMax.isEmpty ? Color.gray : Color.green)
-                        .foregroundColor(Color.white)
-                        .cornerRadius(10)
+                VStack(spacing: 5) {
+                    Text("Don't know your 1 rep max?")
                         .font(.headline)
+                    Text("Enter your 2-8 rep max for atleast one \n of the exercises below.")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                        .centerHorizontally()
+                        .multilineTextAlignment(.center)
                 }
-                .disabled(benchPressMax.isEmpty && squatMax.isEmpty && deadliftMax.isEmpty) // only need to enter one
-                .padding(.vertical, 30)
+                .padding(.top)
+                
+                HStack(alignment: .center) {
+                    Text("Number Of Reps")
+                        .bold()
+                    Picker("", selection: $numberReps) {
+                        ForEach(repOptions, id: \.self) {
+                            Text("\($0)")
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }
                 .padding()
+                
+                VStack(spacing: 15) {
+                    InputSection(label: "Bench Press", value: $benchPressMax)
+                    InputSection(label: "Squat", value: $squatMax)
+                    InputSection(label: "Deadlift", value: $deadliftMax)
+                }
+                
+                Spacer()
+                
+                if !kbd.isVisible {
+                    ActionButton(title: "Submit", enabled: submitEnabled, color: submitEnabled ? .green : .gray, action: handleSubmit)
+                        .padding()
+                }
+                
+                Spacer()
             }
-            Spacer()
         }
-        .background(Color(UIColor.secondarySystemBackground)).ignoresSafeArea(.all)
-        .onAppear(perform: setupKeyboardObservers)
-        .onDisappear(perform: removeKeyboardObservers)
-        .overlay(isKeyboardVisible ? dismissKeyboardButton.padding(.bottom, 35) : nil, alignment: .bottomTrailing)
         .navigationBarTitle("Enter your \(numberReps) Rep Max", displayMode: .large)
-    }
-
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = true
-        }
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = false
-        }
+        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
     }
     
-    private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
+    private var submitEnabled: Bool { !benchPressMax.isEmpty && !squatMax.isEmpty && !deadliftMax.isEmpty }
     
     private func handleSubmit() {
+        let recommendedFormula = OneRMFormula.recommendedFormula(forReps: numberReps)
         var maxValuesEntered = false
         
         if let benchMax = Double(benchPressMax) {
-            let estimatedBench = calculateOneRepMax(weight: benchMax)
-            exerciseData.updateExercisePerformance(for: "Bench Press", newValue: estimatedBench, reps: numberReps, weight: benchMax, csvEstimate: false)
+            let estimatedBench = OneRMFormula.calculateOneRepMax(weight: benchMax, reps: numberReps, formula: recommendedFormula)
+            if let bench = exerciseData.exercise(named: "Bench Press") {
+                // "8DCDCCF6-F83E-4445-BF63-8EF67CA91240"
+                exerciseData.updateExercisePerformance(for: bench, newValue: estimatedBench, reps: numberReps, weight: benchMax, csvEstimate: false)
+            }
             maxValuesEntered = true
         }
         
         if let squatMax = Double(squatMax) {
-            let estimatedSquat = calculateOneRepMax(weight: squatMax)
-            exerciseData.updateExercisePerformance(for: "Back Squat", newValue: estimatedSquat, reps: numberReps, weight: squatMax, csvEstimate: false)
+            let estimatedSquat = OneRMFormula.calculateOneRepMax(weight: squatMax, reps: numberReps, formula: recommendedFormula)
+            if let squat = exerciseData.exercise(named: "Back Squat") {
+                // "F4E51C55-059D-4B60-902B-B9D31C894813"
+                exerciseData.updateExercisePerformance(for: squat, newValue: estimatedSquat, reps: numberReps, weight: squatMax, csvEstimate: false)
+            }
             maxValuesEntered = true
         }
         
         if let deadMax = Double(deadliftMax) {
-            let estimatedDeadlift = calculateOneRepMax(weight: deadMax)
-            exerciseData.updateExercisePerformance(for: "Deadlift", newValue: estimatedDeadlift, reps: numberReps, weight: deadMax, csvEstimate: false)
+            let estimatedDeadlift = OneRMFormula.calculateOneRepMax(weight: deadMax, reps: numberReps, formula: recommendedFormula)
+            if let deadlift = exerciseData.exercise(named: "Deadlift") {
+                // "B61A4A76-D761-4A08-8C66-25AB3662AC35"
+                exerciseData.updateExercisePerformance(for: deadlift, newValue: estimatedDeadlift, reps: numberReps, weight: deadMax, csvEstimate: false)
+            }
             maxValuesEntered = true
         }
         
         if maxValuesEntered {
             exerciseData.savePerformanceData()
-            userData.oneRepMaxesEntered = true
-            userData.saveSingleVariableToFile(\.oneRepMaxesEntered, for: .oneRepMaxesEntered)
+            userData.setup.oneRepMaxesEntered = true
+            userData.saveSingleStructToFile(\.setup, for: .setup)
             onFinish()
         }
     }
     
-    private func calculateOneRepMax(weight: Double) -> Double {
-        let estimatedMax = Double(weight) / (1.0278 - 0.0278 * Double(numberReps))
-        return round(estimatedMax)
-        
-    }
-    
-    @ViewBuilder
-    private func InputField(label: String, value: Binding<String>) -> some View {
-        HStack {
-            Spacer(minLength: 20)
-            Text(label)
-            TextField("Enter Weight", text: value)
-                .keyboardType(.numberPad)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.horizontal)
-            Spacer(minLength: 20)
-        }
+    private func InputSection(label: String, value: Binding<String>) -> some View {
+        InputField(text: value, label: label, placeholder: "Enter Weight (lbs)")
     }
 }

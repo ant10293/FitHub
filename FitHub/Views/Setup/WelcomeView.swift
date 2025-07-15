@@ -1,78 +1,90 @@
 import SwiftUI
 import AuthenticationServices
-import FirebaseAuth
+
+
 
 struct WelcomeView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @ObservedObject var userData: UserData
-   // @EnvironmentObject var userData: UserData
-    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
-    private let auth = AuthService()
+    @StateObject private var authService = AuthService.shared
 
     var body: some View {
-        ZStack {
-            // Background color to cover the entire screen
-            Color(UIColor.secondarySystemBackground)
-                .ignoresSafeArea()
-                
-            VStack {
-                Image("Logo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 150, height: 150, alignment: .topLeading)
-                    .padding(.vertical, 25)
-                
-                SignInWithAppleButton(.signIn) { req in
-                   req.requestedScopes = [.email, .fullName]
-                 } onCompletion: { result in
-                   auth.signIn(with: result, into: userData) { res in
-                     switch res {
-                     case .success:
-                         handleNavigation(saveSingleVar: true)
-                     case .failure(let err):
-                       print("Sign-in failed: \(err)")
-                     }
-                   }
-                 }
-                .frame(width: 280, height: 50)
-                .padding(.vertical, 5)
-                
-                HStack {
-                    Line()
-                    Text("or")
-                        .bold()
-                    Line()
+        GeometryReader { geo in
+            let maxW  = geo.size.width
+            let maxH  = geo.size.height
+            let logoW = maxW * 0.50          // 50 % of screen width
+            let btnW  = maxW * 0.75          // 75 % of screen width
+            let btnH  = maxH * 0.075         // ≈ 7.5 % of screen height
+
+            ZStack {
+                Color(UIColor.secondarySystemBackground)
+                    .ignoresSafeArea()
+
+                VStack {
+                    Spacer(minLength: 0)
+
+                    // ─────────── Logo ───────────
+                    Image("Logo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: logoW)
+                    
+                    Spacer(minLength: 30)
+
+                    // ─── Sign-in with Apple ─────
+                    SignInWithAppleButton(.signIn) { req in
+                        req.requestedScopes = [.email, .fullName]
+                    } onCompletion: { result in
+                        authService.signIn(with: result,
+                                           into: userData) { res in
+                            switch res {
+                            case .success:
+                                handleNavigation(saveSingleVar: true)
+                            case .failure(let err):
+                                print("Sign-in failed:", err)
+                            }
+                        }
+                    }
+                    .frame(width: btnW, height: btnH)
+
+                    // ───────── OR divider ───────
+                    HStack { Line(); Text("or").bold(); Line() }
+                        .frame(maxWidth: btnW)
+                        .padding(.vertical, 4)
+
+                    // ───── Guest button ─────────
+                    Button("Continue without Account") {
+                        userData.settings.allowedCredentials = false
+                        handleNavigation(saveSingleVar: false)
+                    }
+                    .bold()
+                    .frame(width: btnW, height: btnH)
+                    .foregroundColor(.white)
+                    .background(Color.black)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                    Spacer(minLength: 40)
                 }
-                .frame(width: 280, height: 1)
-                .padding(.vertical, 5)
-                
-                Button("Continue without Account") {
-                    userData.allowedCredentials = false
-                    handleNavigation(saveSingleVar: false)
-                }
-                .bold()
-                .frame(width: 280, height: 50)
-                .foregroundColor(.white)
-                .background(Color.black)
-                .cornerRadius(8)
-                .padding(.bottom, 20)
+                .padding(.horizontal)
             }
         }
         .navigationTitle("Welcome")
     }
-    
+
+    // MARK: – thin separator line
     struct Line: View {
         var body: some View {
             Rectangle()
                 .frame(height: 1)
-                .foregroundColor(.gray)
-                .padding(.horizontal, 5)
+                .foregroundColor(.secondary)
         }
     }
-    
-    func handleNavigation(saveSingleVar: Bool) {
-        userData.setupState = .healthKitView
+
+    // MARK: – Navigation / persistence
+    private func handleNavigation(saveSingleVar: Bool) {
+        userData.setup.setupState = .healthKitView
         if saveSingleVar {
-            userData.saveSingleVariableToFile(\.setupState, for: .setupState)
+            userData.saveSingleStructToFile(\.setup, for: .setup)
         } else {
             userData.saveToFile()
         }

@@ -4,41 +4,29 @@ import SwiftUI
 struct HistoryView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.calendar) var calendar
-    @EnvironmentObject var userData: UserData
+    @ObservedObject var userData: UserData
     @State private var currentMonth = Date()
     @State private var showCalendar: Bool = true
-    @State private var isNavigationActive: Bool = false
     @State private var workoutDates: [Date] = []
     @State private var plannedWorkoutDates: [Date] = []
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                HStack {
-                    Spacer()
-                    VStack(spacing: 1) {
-                        HStack {
-                            Text("Workout Streak: ").bold()
-                            + Text("\(userData.workoutStreak)")
-                            Image(systemName: "flame")
-                        }
-                        let longestStreak = userData.longestWorkoutStreak
-                        Text("Longest Streak: ").bold()
-                            .font(.subheadline)
-                        + Text("\(longestStreak) \(longestStreak != 1 ? "days" : "day")")
-                            .font(.subheadline)
-                    }
-                    
-                    ToggleButton
-                        .padding(.trailing, 35)
-                }
-                .padding(.top, 10)
+                headerSection
                 
                 if showCalendar {
-                    CalendarView(userData: userData, currentMonth: $currentMonth, workoutDates: workoutDates, plannedWorkoutDates: plannedWorkoutDates)
-                    
+                    CalendarView(
+                        currentMonth: $currentMonth,
+                        workoutDates: workoutDates,
+                        plannedWorkoutDates: plannedWorkoutDates,
+                        completedWorkouts: userData.workoutPlans.completedWorkouts
+                    )
                 } else {
-                    WorkoutConsistency(userData: userData, workoutDates: workoutDates)
+                    ConsistencyGraph(
+                        workoutDates: workoutDates,
+                        workoutDaysPerWeek: userData.workoutPrefs.workoutDaysPerWeek
+                    )
                 }
                 
                 LegendView
@@ -46,12 +34,9 @@ struct HistoryView: View {
                 
                 Spacer()
             }
-            .onAppear {
-                workoutDates = userData.getWorkoutDates()
-                plannedWorkoutDates = userData.getPlannedWorkoutDates()
-            }
             .navigationTitle("History")
             .background(Color(UIColor.systemGroupedBackground))
+            .onAppear(perform: onAppearAction)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     NavigationLink(destination: SettingsView()) {
@@ -71,21 +56,41 @@ struct HistoryView: View {
         }
     }
     
-    private var ToggleButton: some View {
-        Button(action: {
-            showCalendar.toggle()
-        }) {
-            Image(systemName: showCalendar ? "chart.bar" : "calendar")
-                .resizable()
-                .frame(width: 15, height: 15)
-                .padding()
-                .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-                .foregroundColor(.blue)
-                .clipShape(Circle())
-        }
-        .padding(.leading)
+    private func onAppearAction() {
+        workoutDates = userData.getWorkoutDates()
+        plannedWorkoutDates = userData.getPlannedWorkoutDates()
     }
     
+    // MARK: – Header
+    private var headerSection: some View {
+        HStack {
+            Spacer()
+            VStack(spacing: 1) {
+                HStack(spacing: 0) {
+                    Text("Workout Streak: ").bold()
+                    + Text("\(userData.sessionTracking.workoutStreak) ")
+                    Image(systemName: "flame")
+                }
+
+                let longest = userData.sessionTracking.longestWorkoutStreak
+                (Text("Longest Streak:").bold() +
+                 Text(" \(longest) \(longest == 1 ? "day" : "days")"))
+                    .font(.subheadline)
+            }
+            Spacer()
+        }
+        .overlay(alignment: .trailing) {
+            FloatingButton(
+                image: showCalendar ? "chart.bar" : "calendar",
+                foreground: .blue,
+                background: colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : .white,
+                size: 15,
+                action: { showCalendar.toggle() }
+            )
+            .padding(.trailing)
+        }
+    }
+
     private var LegendView: some View {
         VStack(spacing: 10) {
             if showCalendar {
@@ -139,13 +144,14 @@ struct HistoryView: View {
         }
         .padding()
         .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-        .cornerRadius(10)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
     
     private func workoutCountForLastMonth() -> Int {
         let lastMonth = calendar.date(byAdding: .month, value: -1, to: currentMonth)!
         return workoutDates.filter { calendar.isDate($0, equalTo: lastMonth, toGranularity: .month) }.count
     }
+    
     private func workoutCountForCurrentMonth() -> Int {
         return workoutDates.filter { calendar.isDate($0, equalTo: currentMonth, toGranularity: .month) }.count
     }
@@ -172,6 +178,7 @@ extension Calendar {
         
         return dates
     }
+    
     func isSameDay(_ date1: Date, _ date2: Date) -> Bool {
         return self.isDate(date1, inSameDayAs: date2)
     }

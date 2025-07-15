@@ -1,81 +1,54 @@
 import SwiftUI
 
 struct ExerciseView: View {
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var equipmentData: EquipmentData
-    @EnvironmentObject var csvLoader: CSVLoader
-    @EnvironmentObject var exerciseData: ExerciseData
-    @State private var selectedExercise: Exercise?
-    @State private var searchText = ""
-    @State private var selectedCategory: CategorySelections = .split(.all)
     @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
+    @EnvironmentObject private var ctx: AppContext
+    @StateObject private var kbd = KeyboardManager.shared
+    @State private var selectedExercise: Exercise?
+    @State private var searchText: String = ""
+    @State private var selectedCategory: CategorySelections = .split(.all)
     @State private var showingFavorites: Bool = false
-    @State private var isKeyboardVisible: Bool = false
-    @State private var showingDetailView: Bool = false
-    
-    var filteredExercises: [Exercise] {
-        exerciseData.filteredExercises(
-            searchText: searchText,
-            selectedCategory: selectedCategory,
-            favoritesOnly: showingFavorites,
-            favoriteList: userData.favoriteExercises
-        )
-    }
-    
+    @State private var showExerciseCreation: Bool = false
+
     var body: some View {
         VStack {
-            SplitCategoryPicker(sortOption: userData.exerciseSortOption, selectedCategory: $selectedCategory, onChange: { sortOption in 
-                if userData.exerciseSortOption != sortOption {
-                    userData.exerciseSortOption = sortOption
-                    userData.saveSingleVariableToFile(\.exerciseSortOption, for: .exerciseSortOption)
-                }
-            }).padding(.bottom, -5)
-            
-            HStack {
-                Image(systemName: "magnifyingglass")
-                TextField("Search Exercises", text: $searchText)
-                if !searchText.isEmpty {
-                    Button(action: {
-                        searchText = "" // Clear the search text
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .frame(alignment: .trailing)
-                            .foregroundColor(.gray)
+            SplitCategoryPicker(
+                enableSortPicker: ctx.userData.settings.enableSortPicker,
+                saveSelectedSort: ctx.userData.settings.saveSelectedSort,
+                sortOption: ctx.userData.sessionTracking.exerciseSortOption,
+                selectedCategory: $selectedCategory,
+                onChange: { sortOption in
+                    if ctx.userData.sessionTracking.exerciseSortOption != sortOption, ctx.userData.settings.saveSelectedSort {
+                        ctx.userData.sessionTracking.exerciseSortOption = sortOption
+                        ctx.userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
                     }
                 }
-            }
-            .padding(.vertical, 8)
-            .padding(.horizontal)
-            .background(Color(.systemGray6))
-            .cornerRadius(10)
-            .padding(.horizontal)
+            ).padding(.bottom, -5)
+            
+            SearchBar(text: $searchText, placeholder: "Search Exercises")
+                .padding(.horizontal)
             
             exerciseListView
         }
-        .navigationTitle("Exercises")
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(isPresented: $showingDetailView) {
-            if let selectedExercise = selectedExercise {
-                // ExerciseDetailView displayed as an overlay
-                ExerciseDetailView(
-                    exerciseData: exerciseData,
-                    viewingDuringWorkout: false,
-                    exercise: selectedExercise,
-                    onClose: {
-                        self.selectedExercise = nil
-                        showingDetailView = false
-                    }
-                )
+        .navigationBarTitle("Exercises", displayMode: .inline)
+        .navigationDestination(item: $selectedExercise) { exercise in
+            if ctx.exercises.allExercises.contains(where: { $0.id == exercise.id }) {
+                ExerciseDetailView(viewingDuringWorkout: false, exercise: exercise, onClose: { selectedExercise = nil })
+            } else {
+                // exercise got deleted while we were on the detail screen → pop
+                Color.clear.onAppear { selectedExercise = nil }
             }
         }
-        .overlay(isKeyboardVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-        .onAppear(perform: setupKeyboardObservers)
-        .onDisappear(perform: removeKeyboardObservers)
+        .overlay(!kbd.isVisible ?
+            FloatingButton(
+                image: "plus", action: { showExerciseCreation = true }
+            ) : nil, alignment: .bottomTrailing
+        )
+        .sheet(isPresented: $showExerciseCreation) { NewExercise() }
+        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    showingFavorites.toggle()
-                }) {
+                Button(action: { showingFavorites.toggle() }) {
                     Image(systemName: "heart.fill")
                         .foregroundColor(showingFavorites ? .red : .gray)
                 }
@@ -83,102 +56,79 @@ struct ExerciseView: View {
         }
     }
     
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = true
-        }
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = false
-        }
-    }
-    private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    private var exerciseListView: some View {
-        VStack {
-            if filteredExercises.isEmpty {
-                List {
-                    Text("No exercises available in this category.")
-                        .foregroundColor(.gray)
-                        .padding()
-                }
-            } else {
-                List(filteredExercises, id: \.self) { exercise in
-                    ExerciseRow(exercise: exercise, onSelect: { exercise in
-                        selectedExercise = exercise
-                        self.showingDetailView = true
-                    })
-                }
-            }
-        }
+    private var filteredExercises: [Exercise] {
+        ctx.exercises.filteredExercises(
+            searchText: searchText,
+            selectedCategory: selectedCategory,
+            favoritesOnly: showingFavorites,
+            userData: ctx.userData,
+            equipmentData: ctx.equipment
+        )
     }
     
-    struct ExerciseRow: View {
-        @EnvironmentObject var userData: UserData
-        @EnvironmentObject var exerciseData: ExerciseData
-        var exercise: Exercise
-        var onSelect: (Exercise) -> Void
-        
-        var body: some View {
-            HStack {
-                ZStack(alignment: .bottomTrailing) {
-                    Image(exercise.fullImagePath)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 80, height: 80)
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                    
-                    // Overlay heart icon if exercise is in favorite exercises
-                    if userData.favoriteExercises.contains(exercise.name) {
-                        Image(systemName: "heart.fill")
-                            .resizable()
-                            .frame(width: 15, height: 15)
-                            .foregroundColor(.red)
-                            .padding(-15)
-                            .padding(.bottom, -22)
-                    } else if userData.dislikedExercises.contains(exercise.name) {
-                        Image(systemName: "hand.thumbsdown.fill")
-                            .resizable()
-                            .frame(width: 15, height: 15)
-                            .foregroundColor(.blue)
-                            .padding(-15)
-                            .padding(.bottom, -22)
+    private var exerciseListView: some View {
+        List {
+            if filteredExercises.isEmpty {
+                Text("No exercises available in this category.")
+                    .foregroundColor(.gray)
+                    .padding()
+            } else {
+                Section {
+                    ForEach(filteredExercises, id: \.self) { exercise in
+                        let favState: FavoriteState = ctx.userData.evaluation.favoriteExercises.contains(exercise.id)
+                        ? .favorite
+                        : (ctx.userData.evaluation.dislikedExercises.contains(exercise.id) ? .disliked : .unmarked)
+                        
+                        ExerciseRow(
+                            exercise,
+                            heartOverlay: favState != .unmarked,
+                            favState: favState,
+                            imageSize: 0.2,
+                            accessory: { EmptyView() },
+                            detail: {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    // 🔄 Aliases
+                                    if let aliases = exercise.aliases, !aliases.isEmpty {
+                                        (
+                                            Text(aliases.count == 1 ? "Alias: " : "Aliases: ")
+                                                .font(.caption)
+                                                .fontWeight(.semibold)
+                                            +
+                                            Text(aliases.joined(separator: ", "))
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        )
+                                    }
+                                    
+                                    // 🏆 1RM
+                                    if let max = ctx.exercises.getMax(for: exercise.id) {
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "trophy.fill")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 8.5, height: 8.5)
+                                            
+                                            Text(exercise.type.usesWeight ? "1rm: " : "Max Reps: ")
+                                                .bold()
+                                                .font(.caption2)
+                                            +
+                                            Text(Format.smartFormat(max))
+                                                .font(.caption2)
+                                        }
+                                        .padding(.top, -4)
+                                    }
+                                }
+                            },
+                            onTap: {
+                                selectedExercise = exercise
+                            }
+                        )
                     }
+                } footer: {
+                    Text("\(filteredExercises.count) exercise\(filteredExercises.count == 1 ? "" : "s")")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.vertical, 8)
                 }
-                VStack(alignment: .leading) {
-                    Text(exercise.name)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
-                    if let aliases = exercise.aliases, !aliases.isEmpty {
-                        Text(aliases.count == 1 ? "Alias: " : "Aliases: ")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                        +
-                        Text(aliases.joined(separator: ", "))
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                    }
-                    if let maxValue = exerciseData.getMax(for: exercise.name) {
-                        HStack {
-                            Image(systemName: "trophy.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 8.5, height: 8.5)
-                                .padding(.trailing, -5)
-                            Text(exercise.usesWeight ? "1rm: " : "Max Reps: ").bold()
-                                .font(.caption2)
-                            + Text("\(smartFormat(maxValue))")
-                                .font(.caption2)
-                        }
-                        .padding(.top, -5)
-                    }
-                }
-                Spacer()
-            }
-            .contentShape(Rectangle())
-            .onTapGesture {
-                onSelect(exercise)
             }
         }
     }

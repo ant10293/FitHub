@@ -2,19 +2,12 @@ import SwiftUI
 
 
 struct ExercisePerformanceView: View {
-    var exercise: Exercise
-    var maxValue: Double?
-    var repsXweight: RepsXWeight?
-    var currentMaxDate: Date?
-    var pastMaxes: [MaxRecord]
     @State private var selectedTimeRange: TimeRange = .allTime
-    
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .none
-        return formatter
-    }()
+    let exercise: Exercise
+    let maxValue: Double?
+    let repsXweight: RepsXWeight?
+    let currentMaxDate: Date?
+    let pastMaxes: [MaxRecord]
     
     var body: some View {
         VStack {
@@ -30,38 +23,40 @@ struct ExercisePerformanceView: View {
                 .padding(.trailing)
             }
             .padding(.bottom, -10)
-            .padding(.top)
             .zIndex(0)
             
             List {
-                ForEach(sortedMaxRecords(), id: \.id) { record in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text("Date: \(dateFormatter.string(from: record.date))")
-                            Text(exercise.usesWeight ? "One Rep Max: \(smartFormat(record.value)) lbs" : "Max Reps: \(smartFormat(record.value)) reps")
-                            //Text("Max Value: \(smartFormat(record.value)) \(exercise.usesWeight ? "lbs" : "reps")")
-                            if exercise.usesWeight {
-                                if let repsWeight = record.repsXweight {
-                                    Text("\(smartFormat(repsWeight.weight)) lbs x \(repsWeight.reps) reps")
-                                    //.font(.caption)
+                if sortedMaxRecords.isEmpty {
+                    Text("No data available for this exercise.")
+                        .foregroundColor(.gray)
+                        .padding()
+                } else {
+                    ForEach(sortedMaxRecords, id: \.id) { record in
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text("Date: \(Format.formatDate(record.date, dateStyle: .short, timeStyle: .none))")
+                                Text(exercise.type.usesWeight ? "One Rep Max: \(Format.smartFormat(record.value)) lbs" : "Max Reps: \(Format.smartFormat(record.value)) reps")
+                                if exercise.type.usesWeight {
+                                    if let repsWeight = record.repsXweight {
+                                        Text("\(Format.smartFormat(repsWeight.weight)) lbs x \(repsWeight.reps) reps")
+                                    }
                                 }
                             }
+                            Spacer()
+                            if record.date == currentMaxDate {
+                                Image(systemName: "star.fill")
+                                    .foregroundColor(.yellow)
+                            }
                         }
-                        Spacer()
-                        if record.date == currentMaxDate {
-                            Image(systemName: "star.fill")
-                                .foregroundColor(.yellow)
-                        }
+                        .padding()
                     }
-                    .padding()
                 }
             }
         }
     }
     
-    private func sortedMaxRecords() -> [MaxRecord] {
-        let calendar = Calendar.current
-        let startDate = calendar.date(byAdding: timeInterval(for: selectedTimeRange), to: Date())!
+    private var sortedMaxRecords: [MaxRecord] {
+        let startDate = Calendar.current.date(byAdding: timeInterval(for: selectedTimeRange), to: Date())!
         var records = pastMaxes.filter { $0.date >= startDate }
         if let currentMaxDate = currentMaxDate, let maxValue = maxValue {
             let currentRecord = MaxRecord(id: UUID(), value: maxValue, repsXweight: repsXweight, date: currentMaxDate)

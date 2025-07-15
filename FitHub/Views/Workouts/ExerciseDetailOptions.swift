@@ -16,15 +16,17 @@ struct ExerciseDetailOptions: View {
     @State private var replacedExercises: [String] = []
     @State private var showRestTimerEditor: Bool = false
     @State private var showWarmupSets: Bool = false
-    var roundingPreference: [EquipmentCategory: Double]
+    //var roundingPreference: [EquipmentCategory: Double]
+    let roundingPreference: RoundingPreference
     var setStructure: SetStructures = .pyramid
     var onReplaceExercise: () -> Void
     var onRemoveExercise: () -> Void
     var onClose: () -> Void
+    var onSave: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            if exercise.usesWeight {
+            if exercise.type.usesWeight {
                 Button(action: {
                     withAnimation {
                         showWarmupSets.toggle()
@@ -33,7 +35,6 @@ struct ExerciseDetailOptions: View {
                     HStack {
                         Text("Warm-up Sets")
                         Image(systemName: "flame.fill")
-                        //Text("+")
                     }
                     .foregroundColor(.blue)
                 }
@@ -80,14 +81,18 @@ struct ExerciseDetailOptions: View {
             .buttonStyle(PlainButtonStyle())
         }
         .sheet(isPresented: $showRestTimerEditor) {
-            RestTimerEditor(exercise: $exercise)
+            RestTimerEditor(exercise: $exercise, onSave: {
+                onSave()
+            })
         }
         .sheet(isPresented: $showWarmupSets) {
-            WarmUpSetsEditorView(exercise: $exercise, setStructure: setStructure, roundingPreference: roundingPreference)
+            WarmUpSetsEditorView(exercise: $exercise, setStructure: setStructure, roundingPreference: roundingPreference, onSave: {
+                onSave()
+            })
         }
         .padding()
         .background(Color(UIColor.secondarySystemBackground))
-        .cornerRadius(8)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(radius: 5)
     }
 }

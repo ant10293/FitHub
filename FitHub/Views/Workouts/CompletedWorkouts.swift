@@ -17,61 +17,37 @@ struct CompletedWorkouts: View {
     @State private var workoutToDelete: CompletedWorkout?
     
     var body: some View {
-        Group {
-            if userData.completedWorkouts.isEmpty {
-                VStack {
-                    Image(systemName: "figure.walk")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 100, height: 100)
-                        .foregroundColor(.gray)
-                        .padding(.bottom, 20)
-                    
-                    Text("No completed workouts yet...")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(.gray)
-                        .padding(.bottom, 10)
-                    
-                    Text("Start your fitness journey today!")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(UIColor.systemGroupedBackground))
-            } else {
-                VStack {
-                    HStack {
-                        Text("Sort by").bold()
-                            .padding(.trailing)
-                        Picker("", selection: $selectedSortOption) {
-                            ForEach(CompletedWorkoutSortOption.allCases) { option in
-                                Text(option.rawValue).tag(option)
-                            }
-                        }
-                        .pickerStyle(MenuPickerStyle())
-                        .padding(.trailing)
+        VStack(spacing: 0) {
+            HStack {
+                Text("Sort by").bold()
+                    .padding(.trailing)
+                Picker("", selection: $selectedSortOption) {
+                    ForEach(CompletedWorkoutSortOption.allCases) { option in
+                        Text(option.rawValue).tag(option)
                     }
-                    .padding(.bottom, -10)
-                    .padding(.top)
-                    .zIndex(0)
+                }
+                .pickerStyle(MenuPickerStyle())
+                .padding(.trailing)
+                .disabled(sortedWorkouts.isEmpty)
+            }
+            .padding(.top)
+            .zIndex(0)
                     
-                    List {
-                        ForEach(sortedWorkouts) { workout in
+            List {
+                if sortedWorkouts.isEmpty {
+                    emptyWorkoutsView
+                } else {
+                    ForEach(sortedWorkouts) { workout in
+                        if !workout.template.exercises.isEmpty {
                             let categories = SplitCategory.concatenateCategories(for: workout.template.categories)
                             HStack {
-                                NavigationLink(
-                                    destination: CompletedDetails(workout: workout, categories: categories)
-                                ) {
+                                NavigationLink(destination: CompletedDetails(workout: workout, categories: categories)) {
                                     if isEditing {
                                         Button(action: {
-                                            // deleteWorkout(workout)
                                             workoutToDelete = workout
                                             showingDeleteConfirmation = true
                                         }) {
-                                            Image(
-                                                systemName: "minus.circle.fill"
-                                            )
+                                            Image(systemName: "minus.circle.fill")
                                             .foregroundColor(.red)
                                         }
                                         .buttonStyle(BorderlessButtonStyle())
@@ -82,14 +58,12 @@ struct CompletedWorkouts: View {
                                         if !categories.isEmpty {
                                             Text(categories)
                                         }
-                                        Text("Date: \(workout.date, formatter: dateFormatter)")
+                                        Text("Date: \(Format.formatDate(workout.date, dateStyle: .medium, timeStyle: .none))")
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
-                                        Text(
-                                            "Duration: \(workout.duration / 60) minutes"
-                                        )
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
+                                        Text("Duration: \(Format.formatDuration(workout.duration, roundSeconds: true))")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
                                     }
                                     .padding(.vertical, 5)
                                 }
@@ -97,31 +71,28 @@ struct CompletedWorkouts: View {
                         }
                     }
                 }
-                .background(Color(UIColor.systemGroupedBackground))
-                .confirmationDialog(
-                    "Are you sure you want to delete this workout?",
-                    isPresented: $showingDeleteConfirmation,
-                    titleVisibility: .visible
-                ) {
-                    Button("Delete", role: .destructive) {
-                        if let workout = workoutToDelete {
-                            deleteWorkout(workout)
-                        }
-                        //isEditing = false
+            }
+            .confirmationDialog(
+                "Are you sure you want to delete this workout?",
+                isPresented: $showingDeleteConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button("Delete", role: .destructive) {
+                    if let workout = workoutToDelete {
+                        deleteWorkout(workout)
                     }
-                    Button("Cancel", role: .cancel) {
-                        workoutToDelete = nil
-                    }
+                }
+                Button("Cancel", role: .cancel) {
+                    workoutToDelete = nil
                 }
             }
         }
-        .navigationTitle("Completed Workouts")
-        .navigationBarTitleDisplayMode(.inline)
+        .background(Color(UIColor.systemGroupedBackground))
+        .navigationBarTitle("Completed Workouts", displayMode: .inline)
+        
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    isEditing.toggle()
-                }) {
+                Button(action: { isEditing.toggle() }) {
                     Text(isEditing ? "Done" : "Edit")
                 }
                 .disabled(sortedWorkouts.isEmpty)
@@ -129,42 +100,62 @@ struct CompletedWorkouts: View {
         }
     }
     
-    private var sortedWorkouts: [CompletedWorkout] {
-        switch selectedSortOption {
-        case .mostRecent:
-            return userData.completedWorkouts.sorted { $0.date > $1.date }
-        case .leastRecent:
-            return userData.completedWorkouts.sorted { $0.date < $1.date }
-        case .thisMonth:
-            let currentMonth = Calendar.current.component(.month, from: Date())
-            return userData.completedWorkouts.filter {
-                Calendar.current
-                    .component(.month, from: $0.date) == currentMonth
-            }
-        case .longestDuration:
-            return userData.completedWorkouts
-                .sorted { $0.duration > $1.duration }
-        case .shortestDuration:
-            return userData.completedWorkouts
-                .sorted { $0.duration < $1.duration }
+    private var emptyWorkoutsView: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "figure.walk")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxHeight: UIScreen.main.bounds.width * 0.33)  // ≈ 1/3 screen
+                .foregroundColor(.gray)
+                .padding(.bottom)
+            
+            Text("No completed workouts yet...")
+                .font(.title)
+                .fontWeight(.bold)
+                .foregroundColor(.gray)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            
+            Text("Start your FitHub journey today!")
+                .font(.subheadline)
+                .foregroundColor(.gray)
         }
+        .padding()
     }
     
-    private var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        //  formatter.dateStyle = .full
-        return formatter
+    private var sortedWorkouts: [CompletedWorkout] {
+        let workouts: [CompletedWorkout]
+        
+        switch selectedSortOption {
+        case .mostRecent:
+            workouts = userData.workoutPlans.completedWorkouts.sorted { $0.date > $1.date }
+            
+        case .leastRecent:
+            workouts = userData.workoutPlans.completedWorkouts.sorted { $0.date < $1.date }
+            
+        case .thisMonth:
+            let currentMonth = Calendar.current.component(.month, from: Date())
+            workouts = userData.workoutPlans.completedWorkouts.filter {
+                Calendar.current.component(.month, from: $0.date) == currentMonth
+            }
+            
+        case .longestDuration:
+            workouts = userData.workoutPlans.completedWorkouts.sorted { $0.duration > $1.duration }
+            
+        case .shortestDuration:
+            workouts = userData.workoutPlans.completedWorkouts.sorted { $0.duration < $1.duration }
+        }
+        
+        return workouts.filter { !$0.template.exercises.isEmpty }
     }
     
     private func deleteWorkout(_ workout: CompletedWorkout) {
-        if let index = userData.completedWorkouts.firstIndex(
-            where: { $0.id == workout.id
-            }) {
+        if let index = userData.workoutPlans.completedWorkouts.firstIndex(where: { $0.id == workout.id}) {
             print("Removing workout: \(workout.name)")
-            userData.completedWorkouts.remove(at: index)
+            // remove the exercises instead of the entire completed workout, since we need the data in CompletedWorkouts for reference
+            userData.workoutPlans.completedWorkouts[index].template.exercises = []
+            print("Workout Deleted!")
+            userData.saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
         }
-        print("Workout Deleted!")
-        userData.saveSingleVariableToFile(\.completedWorkouts, for: .completedWorkouts)
     }
 }

@@ -1,28 +1,37 @@
 import SwiftUI
 
 struct MenuView: View {
-    @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var equipmentData: EquipmentData
+    @EnvironmentObject private var ctx: AppContext
     
     var body: some View {
         List {
-            NavigationLink(destination: ExerciseView()) {
-                Label("Exercise Database", systemImage: "list.bullet.rectangle")
-            }
-            NavigationLink(destination: EquipmentSelection(userData: userData, equipmentData: equipmentData)) {
-                Label("Your Equipment", systemImage: "dumbbell")
-            }
-            NavigationLink(destination: GoalSelectionView(userData: userData)) {
-                Label("Modify Goal", systemImage: "target")
-            }
-            NavigationLink(destination: MeasurementsView()) {
-                Label("Measurements", systemImage: "ruler")
-            }
-            NavigationLink(destination: StatsView()) {
-                Label("Statistics", systemImage: "chart.bar")
+            Section {
+                NavigationLink(destination: ExerciseView()) {
+                    Label("Exercise Database", systemImage: "list.bullet.rectangle")
+                }
+                NavigationLink(destination: MeasurementsView(userData: ctx.userData)) {
+                    Label("Measurements", systemImage: "ruler")
+                }
+                NavigationLink(destination: TemplateArchives(userData: ctx.userData)) {
+                    Label("Archived Templates", systemImage: "archivebox")
+                }
+            } header: {
+                Text("Logging")
             }
             
+            Section {
+                NavigationLink(destination: EquipmentSelection(selection: ctx.userData.evaluation.equipmentSelected)) {
+                    Label("Your Equipment", systemImage: "dumbbell")
+                }
+                NavigationLink(destination: StatsView(userData: ctx.userData)) {
+                    Label("Statistics", systemImage: "chart.bar")
+                }
+                NavigationLink(destination: GoalSelectionView(userData: ctx.userData)) {
+                    Label("Modify Goal", systemImage: "target")
+                }
+            } header: {
+                Text("Setup")
+            }
         }
         .listStyle(InsetGroupedListStyle()) // Gives a card-like appearance
         .navigationTitle("Menu")

@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct AddCategoryPicker: View {
-    var exercise: Exercise
-    var existingCategories: Set<AdjustmentCategories>
-    var onAddCategory: (AdjustmentCategories) -> Void
-    var availableCategories: [AdjustmentCategories] {
-        AdjustmentCategories.allCases.filter { !existingCategories.contains($0) }
-    }
-    
     @Environment(\.presentationMode) var presentationMode
+    var exercise: Exercise
+    var existingCategories: Set<AdjustmentCategory>
+    var onAddCategory: (AdjustmentCategory) -> Void
+    var availableCategories: [AdjustmentCategory] {
+        AdjustmentCategory.allCases.filter { !existingCategories.contains($0) }
+    }
     
     var body: some View {
         NavigationStack {
@@ -30,24 +29,23 @@ struct AddCategoryPicker: View {
                                 Text(category.rawValue)
                                     .foregroundColor(.primary)
                                 
-                                
                                 // Adjustment image
                                 Image(category.image)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 50, height: 50)
+                                    .frame(height: UIScreen.main.bounds.height * 0.1)
                                     .clipShape(RoundedRectangle(cornerRadius: 6))
-                                
                             }
+                            
                             Spacer()
+                            
                             Image(systemName: "plus.circle")
-                            // .foregroundColor(.blue)
                                 .foregroundColor(.secondary)
                         }
                     }
                 }
             }
-            .navigationTitle("Add Adjustment Category").navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitle("Add Adjustment Category", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {

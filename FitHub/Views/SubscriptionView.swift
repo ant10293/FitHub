@@ -36,7 +36,7 @@ struct SubscriptionView: View {
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(isSubscribed ? Color.green : Color.blue)
-                    .cornerRadius(10)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             .padding()
             
@@ -46,6 +46,7 @@ struct SubscriptionView: View {
         .navigationBarTitle("FitHub Pro", displayMode: .inline)
         .background(Color(.systemGray6))
     }
+    
     struct FeatureView: View {
         var icon: String
         var title: String
@@ -55,7 +56,7 @@ struct SubscriptionView: View {
             HStack(alignment: .top) {
                 Image(systemName: icon)
                     .foregroundColor(.blue)
-                    .frame(width: 20, height: 20)
+                    .imageScale(.medium)
                     .padding(.top, 5)
                 
                 VStack(alignment: .leading, spacing: 2) {

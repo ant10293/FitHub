@@ -2,65 +2,45 @@ import SwiftUI
 import UserNotifications
 
 struct SettingsView: View {
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var exerciseData: ExerciseData
-    @EnvironmentObject var equipment: EquipmentData
-    @EnvironmentObject var healthKitManager: HealthKitManager
+    @EnvironmentObject private var ctx: AppContext
+    @ObservedObject var notifications = NotificationManager.shared
     @State private var isNotificationsExpanded = false
     
     var body: some View {
         List {
             generalSettingsSection()
             advancedWorkoutSection()
-            healthSection()
+            //healthSection()
             legalSection()
         }
         .navigationTitle("Settings")
-        .listStyle(InsetGroupedListStyle())
     }
     
     private func generalSettingsSection() -> some View {
-        Section(header: Text("General Settings")) {
-            navigationLink("timer", "Rest Timer", RestTimerSettings(userData: userData))
+        Section {
+            navigationLink("timer", "Rest Timer", RestTimerSettings(userData: ctx.userData))
+            navigationLink("arrow.up.arrow.down", "Exercise Sorting", SortSettings(userData: ctx.userData))
            // navigationLink("calendar", "Start Week On", StartWeekOn())
-            navigationLink("globe", "Change Language", ChangeLanguage())
-            navigationLink("ruler", "US/Metric Selection", UnitSelection())
-            navigationLink("paintbrush", "Change Theme", ChangeTheme())
+            navigationLink("globe", "Change Language", ChangeLanguage(userData: ctx.userData))
+            navigationLink("ruler", "US/Metric Selection", UnitSelection(userData: ctx.userData))
+            navigationLink("paintbrush", "Change Theme", ChangeTheme(userData: ctx.userData))
             
             DisclosureGroup(isExpanded: $isNotificationsExpanded) {
-                Toggle(isOn: $userData.allowedNotifications) {
-                    Text("Enable Notifications")
+                Toggle("Enable Notifications", isOn: notifications.toggleBinding)
+                .onChange(of: notifications.isAuthorized) { oldValue, newValue in
+                    ctx.userData.settings.allowedNotifications = newValue
+                    ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
                 }
-                .onChange(of: userData.allowedNotifications) { oldValue, newValue in
-                    if newValue {
-                        requestNotificationPermissionIfNeeded()
-                    } else {
-                        // Handle the case when notifications are turned off.
-                        print("User turned off notifications")
-                        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-                    }
-                }
-                /*.onChange(of: userData.allowedNotifications) { _, newValue in
-                        Task { @MainActor in
-                            if newValue {
-                                await notifier.requestAuthorization()
-                                if !notifier.isAuthorized {          // user hit “Don’t Allow”
-                                    userData.allowedNotifications = false   // snap toggle back
-                                }
-                            } else {
-                                await notifier.cancelAll()
-                            }
-                            userData.saveSingleVariableToFile(\.allowedNotifications, for: .allowedNotifications)
-                        }
-                    }*/
             }
             label: {
                 HStack {
                     Image(systemName: "bell")
-                    Text("Notifications")
+                    Text("Push Notifications")
                 }
             }
-            .accentColor(Color(UIColor.darkGray)) // This ensures the chevron arrow is gray
+            .accentColor(Color(UIColor.secondaryLabel)) // This ensures the chevron arrow is gray
+        } header: {
+            Text("General")
         }
     }
     
@@ -70,8 +50,8 @@ struct SettingsView: View {
                 requestNotificationPermission()
             } else {
                 DispatchQueue.main.async {
-                    userData.allowedNotifications = settings.authorizationStatus == .authorized
-                    userData.saveSingleVariableToFile(\.allowedNotifications, for: .allowedNotifications)
+                    ctx.userData.settings.allowedNotifications = settings.authorizationStatus == .authorized
+                    ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
                 }
             }
         }
@@ -80,8 +60,8 @@ struct SettingsView: View {
     private func requestNotificationPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             DispatchQueue.main.async {
-                userData.allowedNotifications = granted
-                userData.saveSingleVariableToFile(\.allowedNotifications, for: .allowedNotifications)
+                ctx.userData.settings.allowedNotifications = granted
+                ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
             }
             if let error = error {
                 print("Error requesting notifications permission: \(error.localizedDescription)")
@@ -92,30 +72,42 @@ struct SettingsView: View {
     }
     
     private func advancedWorkoutSection() -> some View {
-        Section(header: Text("Advanced Workout Generation")) {
-            navigationLink("scalemass", "Adjust Weight Incrementation", WeightIncrementation(userData: userData))
-            navigationLink("chart.bar", "Progressive Overload", OverloadStyle())
-            navigationLink("figure.walk", "Muscle Rest Duration", MuscleRest())
-            navigationLink("clock", "Planned Workout Time", PlannedWorkoutTime(userData: userData))
+        Section {
+            navigationLink("gearshape.2", "Workout Generation", WorkoutCustomization())
+            navigationLink("scalemass", "Weight Rounding", WeightIncrementation())
+            navigationLink("chart.bar", "Progressive Overload", OverloadSettings(userData: ctx.userData))
+            navigationLink("slider.horizontal.3", "Volume Deloading", DeloadSettings(userData: ctx.userData))
+            navigationLink("figure.walk", "Muscle Rest Duration", MuscleRest(userData: ctx.userData))
+            navigationLink("clock", "Planned Workout Time", PlannedWorkoutTime(userData: ctx.userData))
+        } header: {
+            Text("Workout")
         }
     }
     
+    /*
     private func healthSection() -> some View {
-        Section(header: Text("Health")) {
-            navigationLink("heart", "HealthKit", HealthKitSettings(healthKitManager: healthKitManager))
+        Section {
+            navigationLink("heart", "HealthKit", HealthKitSettings())
+        } header: {
+            Text("Health")
         }
     }
+    */
     
     private func legalSection() -> some View {
-        Section(header: Text("Legal")) {
+        Section {
             navigationLink("shield", "Privacy Policy", PrivacyPolicy())
             navigationLink("doc.text", "Terms of Service", TermsOfService())
+        } header: {
+            Text("Legal")
         }
     }
     
-    
     private func navigationLink<Destination: View>(_ imageName: String, _ label: String, _ destination: Destination) -> some View {
-        NavigationLink(destination: destination) {
+        NavigationLink {
+            destination
+                .navigationBarTitleDisplayMode(.inline)   // ← here
+        } label: {
             HStack {
                 Image(systemName: imageName)
                 Text(label)

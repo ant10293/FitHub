@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct AdjustmentsView: View {
-    @EnvironmentObject var adjustmentsViewModel: AdjustmentsViewModel
-    @ObservedObject var exerciseData: ExerciseData
-    @EnvironmentObject var equipmentData: EquipmentData
-    @State private var isKeyboardVisible = false
     @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var AdjustmentsData: AdjustmentsData
+    @StateObject private var kbd = KeyboardManager.shared
     @State private var showAddCategoryPicker = false
     var exercise: Exercise
     
@@ -23,26 +21,22 @@ struct AdjustmentsView: View {
                 headerSection
                 
                 // Adjustments List
-                if let exerciseAdjustment = adjustmentsViewModel.adjustments[exercise.name] {
-                    adjustmentList(for: exerciseAdjustment)
-                } else {
-                    noAdjustmentsText
-                }
+                adjustmentList(
+                    for: AdjustmentsData.adjustments[exercise.id]
+                    ?? ExerciseEquipmentAdjustments(id: exercise.id, equipmentAdjustments: [:], adjustmentImage: "")
+                )
                 
                 Spacer()
             }
             .padding()
-            .navigationTitle("Equipment Adjustments")
-            .navigationBarTitleDisplayMode(.inline)
-            .overlay(isKeyboardVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-            .onAppear(perform: setupKeyboardObservers)
-            .onDisappear(perform: removeKeyboardObservers)
+            .navigationBarTitle("Equipment Adjustments", displayMode: .inline)
+            .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
             .sheet(isPresented: $showAddCategoryPicker) {
                 AddCategoryPicker(
                     exercise: exercise,
-                    existingCategories: Set(adjustmentsViewModel.getEquipmentAdjustments(for: exercise)?.keys.map { $0 } ?? []),
+                    existingCategories: Set(AdjustmentsData.getEquipmentAdjustments(for: exercise)?.keys.map { $0 } ?? []),
                     onAddCategory: { category in
-                        adjustmentsViewModel.addAdjustmentCategory(exercise, category: category)
+                        AdjustmentsData.addAdjustmentCategory(exercise, category: category)
                     }
                 )
             }
@@ -52,58 +46,69 @@ struct AdjustmentsView: View {
         }
     }
     
-    // MARK: - Subviews
+    // MARK: – Header
     private var headerSection: some View {
-        HStack {
-            Text(exercise.name)
+        let imageSize = UIScreen.main.bounds.height * 0.14    // square side
+
+        return HStack {
+            Text(exercise.name.isEmpty ? "Unnamed\nExercise" : exercise.name)
                 .font(.title2)
-                .padding()
-            Image(exercise.fullImagePath)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 70, height: 70)
-                .clipShape(RoundedRectangle(cornerRadius: 6))
+                .padding(.trailing, 8)
+                .multilineTextAlignment(.center)
+
+            // Try to load the exercise image; fall back to a placeholder
+            exercise.fullImage
+            .resizable()
+            .scaledToFit()
+            .frame(width: imageSize, height: imageSize)       // ← always square
+            .clipShape(RoundedRectangle(cornerRadius: 6))
         }
     }
     
     private var noAdjustmentsText: some View {
-        Text("No adjustments required for this exercise.")
-            .font(.subheadline)
-            .foregroundColor(.gray)
+        Text("No adjustments found for this exercise.")
+            .foregroundStyle(.red)
     }
     
+    // MARK: - Adjustment list with “Add” button as a section footer
     private func adjustmentList(for exerciseAdjustment: ExerciseEquipmentAdjustments) -> some View {
         List {
-            ForEach(exerciseAdjustment.equipmentAdjustments.keys.sorted(), id: \.self) { category in
-                adjustmentRow(for: category, in: exerciseAdjustment)
-            }
-            .onDelete { indexSet in
-                handleDelete(indexSet, in: exerciseAdjustment)
-            }
-            // Row for adding a new category
-            Button(action: {
-                showAddCategoryPicker = true
-            }) {
-                HStack {
-                    Image(systemName: "plus.circle.fill")
-                        .foregroundColor(.blue)
-                    Text("Add Adjustment")
-                        .foregroundColor(.blue)
+            Section {
+                if exerciseAdjustment.equipmentAdjustments.isEmpty {
+                    noAdjustmentsText
+                } else {
+                    ForEach(exerciseAdjustment.equipmentAdjustments.keys.sorted(), id: \.self) { category in
+                        adjustmentRow(for: category, in: exerciseAdjustment)
+                    }
+                    .onDelete { indexSet in
+                        handleDelete(indexSet, in: exerciseAdjustment)
+                    }
                 }
+                
+            } footer: {
+                Button {
+                    showAddCategoryPicker = true
+                } label: {
+                    Label("Add Adjustment", systemImage: "plus.circle.fill")
+                        .font(.headline)
+                        .foregroundColor(.blue)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.plain)
+                .padding(.vertical, 4)
             }
-            .buttonStyle(PlainButtonStyle())
         }
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .listStyle(.insetGrouped)   // optional, looks good with a footer CTA
     }
     
     private func handleDelete(_ indexSet: IndexSet, in adjustment: ExerciseEquipmentAdjustments) {
         for index in indexSet {
             let categoryToDelete = adjustment.equipmentAdjustments.keys.sorted()[index]
-            adjustmentsViewModel.deleteAdjustment(exercise: exercise, category: categoryToDelete)
+            AdjustmentsData.deleteAdjustment(exercise: exercise, category: categoryToDelete)
         }
     }
     
-    private func adjustmentRow(for category: AdjustmentCategories, in adjustment: ExerciseEquipmentAdjustments) -> some View {
+    private func adjustmentRow(for category: AdjustmentCategory, in adjustment: ExerciseEquipmentAdjustments) -> some View {
         VStack {
             HStack {
                 Text(category.rawValue)
@@ -111,17 +116,14 @@ struct AdjustmentsView: View {
                 Spacer()
                 
                 // TextField for adjustment value
-                TextField(
-                    "Value",
-                    text: bindingForCategory(category, in: adjustment)
-                )
-                .keyboardType(determineKeyboardType(for: adjustment.equipmentAdjustments[category]))
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .frame(width: 80)
+                TextField("Value", text: bindingForCategory(category, in: adjustment))
+                    .keyboardType(determineKeyboardType(for: adjustment.equipmentAdjustments[category]))
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .frame(width: 80)
                 
                 // Clear button
                 Button(action: {
-                    adjustmentsViewModel.clearAdjustmentValue(exercise: exercise, for: category, in: adjustment)
+                    AdjustmentsData.clearAdjustmentValue(exercise: exercise, for: category, in: adjustment)
                 }) {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.gray)
@@ -133,60 +135,38 @@ struct AdjustmentsView: View {
             Image(category.image)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 50, height: 50)
+                .frame(height: UIScreen.main.bounds.height * 0.1)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
         }
     }
     
     private var toolbarContent: some ToolbarContent {
-        ToolbarItem {
-            Button(action: dismiss) {
-                Text("Save").bold()
-                    .frame(alignment: .trailing)
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                Text("Done").bold()
+                    .padding(.trailing)
             }
         }
     }
     
     // MARK: - Helper Methods
-    
-    private func bindingForCategory(_ category: AdjustmentCategories, in adjustment: ExerciseEquipmentAdjustments) -> Binding<String> {
+    private func bindingForCategory(_ category: AdjustmentCategory, in adjustment: ExerciseEquipmentAdjustments) -> Binding<String> {
         Binding(
             get: {
-                adjustmentsViewModel.adjustmentInputs["\(adjustment.id)-\(category.rawValue)", default: ""]
+                AdjustmentsData.adjustmentInputs["\(adjustment.id)-\(category.rawValue)", default: ""]
             },
             set: { newValue in
                 let adjustmentValue = AdjustmentValue.from(newValue)
-                adjustmentsViewModel.updateAdjustmentValue(for: exercise.name, category: category, newValue: adjustmentValue)
+                AdjustmentsData.updateAdjustmentValue(for: exercise, category: category, newValue: adjustmentValue)
             }
         )
     }
     
     private func determineKeyboardType(for adjustmentValue: AdjustmentValue?) -> UIKeyboardType {
         switch adjustmentValue {
-        case .integer:
-            return .numbersAndPunctuation
-        case .string, .none:
-            return .default
+        case .integer: return .numbersAndPunctuation
+        case .string, .none: return .default
         }
-    }
-    
-    private func dismiss() {
-        adjustmentsViewModel.saveAdjustmentsToFile()
-        presentationMode.wrappedValue.dismiss()
-    }
-    
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = true
-        }
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = false
-        }
-    }
-    
-    private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 }
 

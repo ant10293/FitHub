@@ -12,14 +12,15 @@ struct NextButton: View {
     @Binding var exercise: Exercise
     @Binding var isPressed: Bool
     @State private var skipPressed: Bool = false
-    let getPriorMax: (String) -> Double
-    let index: Int
     let isLastExercise: Bool
-    let goToNextSetOrExercise: () -> Void
     var restTimerEnabled: Bool
     var restPeriod: Int
-    var onPerformanceUpdate: (String, Double, RepsXWeight, Int) -> Void
+    let goToNextSetOrExercise: () -> Void
+    //let getPriorMax: (String) -> Double
+    let getPriorMax: (UUID) -> Double
+    var onPerformanceUpdate: (PerformanceUpdate) -> Void
     
+    var index: Int { exercise.currentSet - 1 }
     
     var body: some View {
         VStack {
@@ -27,31 +28,35 @@ struct NextButton: View {
                 Text("Rest for \(formattedTime(time: timerManager.restTimeRemaining))")
                     .font(.headline)
                     .padding()
-                Button("Skip Rest") { skipRest() }
+                Button(action: skipRest) {
+                    HStack {
+                        Text("Skip Rest")
+                        Image(systemName: "forward.circle.fill")
+                    }
                     .padding()
                     .background(RoundedRectangle(cornerRadius: 10).fill(Color.red))
                     .foregroundColor(.white)
+                }
             } else {
                 Button(action: handleButtonPress) {
                     HStack {
                         if index < exercise.allSetDetails.count - 1 {
                             Text("Next Set")
-                            Image(systemName: "forward.circle.fill")
+                            //Image(systemName: "forward.circle.fill")
+                            Image(systemName: "arrow.right.circle.fill")
                         } else if isLastExercise {
                             Text("Finish Workout")
                             Image(systemName: "flag.checkered.circle.fill")
                         } else {
                             Text("Next Exercise")
-                            Image(systemName: "forward.end.circle.fill")
+                            //Image(systemName: "forward.end.circle.fill")
+                            Image(systemName: "arrowshape.forward.circle.fill")
                         }
                     }
                     .padding()
                     .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue))
                     .foregroundColor(.white)
                 }
-                .scaleEffect(isPressed ? 0.96 : 1.0)
-                .opacity(isPressed ? 0.7 : 1.0)
-                .animation(.spring(), value: isPressed)
             }
         }
     }
@@ -63,10 +68,11 @@ struct NextButton: View {
 
         // Get and update SetDetail
         var detail = isWarm ? exercise.warmUpDetails[detailIdx] : exercise.setDetails[detailIdx]
+
         if detail.repsCompleted == nil {
             detail.repsCompleted = detail.reps
         }
-        let repsComp = detail.repsCompleted!
+        let repsComp = detail.repsCompleted ?? 0
 
         // Write back to correct array
         if isWarm {
@@ -78,17 +84,17 @@ struct NextButton: View {
         let weightUsed = detail.weight
         let rxw = RepsXWeight(reps: repsComp, weight: weightUsed)
         let setNum = exercise.currentSet - warmCount
-        let priorMax = getPriorMax(exercise.name)
+        let priorMax = getPriorMax(exercise.id)
 
-        if !exercise.usesWeight {
+        if !exercise.type.usesWeight {
             let result = detail.updateCompletedReps(repsCompleted: repsComp, maxReps: Int(priorMax))
             if let newMax = result.newMaxReps {
-                onPerformanceUpdate(exercise.name, Double(newMax), rxw, setNum)
+                onPerformanceUpdate(PerformanceUpdate(exerciseId: exercise.id, exerciseName: exercise.name, value: Double(newMax), repsXweight: rxw, setNumber: setNum))
             }
         } else {
             let result = detail.updateCompletedRepsAndRecalculate(repsCompleted: repsComp, oneRepMax: priorMax)
             if let new1RM = result.new1RM {
-                onPerformanceUpdate(exercise.name, new1RM, rxw, setNum)
+                onPerformanceUpdate(PerformanceUpdate(exerciseId: exercise.id, exerciseName: exercise.name, value: new1RM, repsXweight: rxw, setNumber: setNum))
             }
         }
 

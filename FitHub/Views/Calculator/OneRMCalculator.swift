@@ -1,5 +1,5 @@
 //
-//  1RMCalculator.swift
+//  OneRMCalculator.swift
 //  FitHub
 //
 //  Created by Anthony Cantu on 5/3/25.
@@ -7,152 +7,113 @@
 
 import SwiftUI
 
+
+
 struct OneRMCalculator: View {
+    @EnvironmentObject private var ctx: AppContext
+    @StateObject private var kbd = KeyboardManager.shared
+    @State private var selectedFormula: OneRMFormula = .epleys
     @State private var weightLifted: String = ""
     @State private var reps: String = ""
-    @State private var selectedFormula: OneRepMaxFormula = .landers
-    @State private var calculatedOneRepMax: Double?
-    @ObservedObject var userData: UserData
-    @ObservedObject var exerciseData: ExerciseData
-    @State private var isKeyboardVisible = false
-    @State private var searchText = ""
-    @State private var showingSaveConfirmation = false
-    @State private var isCalculated: Bool = false
+    @State private var searchText: String = ""
     @State private var exerciseToSave: Exercise?
-    @State private var showingConfirmationPopup = false
     @State private var tappedExercise: Exercise?
-    @State private var weightErrorMessage: String?
-    @State private var repsErrorMessage: String?
-    
-    var filteredExercises: [Exercise] {
-        exerciseData.allExercises.filter { exercise in
-            (searchText.isEmpty || exercise.name.localizedCaseInsensitiveContains(searchText)) && exercise.usesWeight
-        }
-    }
+    @State private var calculatedOneRepMax: Double?
+    @State private var isCalculated: Bool = false
+    @State private var showingConfirmationPopup: Bool = false
     
     var body: some View {
         ZStack {
+            if ctx.toast.showingSaveConfirmation { InfoBanner(text: "1RM Saved Successfully!").zIndex(1) }
+            
             Form {
-                if showingSaveConfirmation {
-                    Section {
-                        saveConfirmationView
-                            .zIndex(1)  // Ensures the overlay is above all other content
-                    }
-                }
-                
                 if !isCalculated {
-                    Section(header: Text("Enter Weight and Reps")) {
+                    Section(
+                        header: Text("Enter Weight and Reps"),
+                        footer: Text(repsErrorMessage ?? "")
+                            .foregroundColor(.red) // or any custom color
+                    ) {
+                    
                         TextField("Weight lifted (lbs)", text: $weightLifted)
                             .keyboardType(.decimalPad)
-                            .onChange(of: weightLifted) {
-                                validateInputs()
+                            .onChange(of: weightLifted) { oldValue, newValue in
+                                weightLifted = InputLimiter.filteredWeight(old: oldValue, new: newValue)
                             }
-                        
-                        if let errorMessage = weightErrorMessage {
-                            Text(errorMessage)
-                                .foregroundColor(.red)
-                                .font(.caption)
-                        }
-                        
+
                         TextField("Number of reps", text: $reps)
                             .keyboardType(.numberPad)
-                            .onChange(of: reps) {
-                                validateInputs()
+                            .onChange(of: reps) { oldValue, newValue in
+                                reps = InputLimiter.filteredReps(newValue)
                             }
-                        if let errorMessage = repsErrorMessage {
-                            Text(errorMessage)
-                                .foregroundColor(.red)
-                                .font(.caption)
-                        }
                     }
-                    Section(header: Text("Select Formula")) {
+                    
+                    Section {
                         Picker("Formula", selection: $selectedFormula) {
-                            Text("Lander's").tag(OneRepMaxFormula.landers)
-                            Text("Epley's").tag(OneRepMaxFormula.epleys)
+                            Text("Epley's").tag(OneRMFormula.epleys)
+                            Text("Brzycki's").tag(OneRMFormula.brzycki)
                         }
                         .pickerStyle(SegmentedPickerStyle())
+                        Text(selectedFormula.description)
+                            .font(.caption)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                    } header: {
+                        Text("Select Formula")
                     }
                     
-                }
-                
-                if let oneRepMax = calculatedOneRepMax {
-                    HStack {
-                        Text("Calculated 1RM:").bold()
-                        Text("\(oneRepMax, specifier: "%.2f") lbs")
+                    Section {
+                        // No rows in this section—just a footer
+                        EmptyView()
+                    } footer: {
+                        if !isCalculated && !kbd.isVisible {
+                            ActionButton(
+                                title: "Calculate One Rep Max",
+                                enabled: isCalculateEnabled,
+                                action: {
+                                    calculatedOneRepMax = OneRMFormula.calculateOneRepMax(weight: Double(weightLifted) ?? 0, reps: Int(reps) ?? 0, formula: selectedFormula)
+                                    isCalculated = true
+                                }
+                            )
+                            .padding(.top, 6)
+                            .padding(.bottom, 16)
+                        }
                     }
                     
-                    Section(header: Text("1RM Percentages")) {
-                        MaxRecordTable(oneRepMax: oneRepMax)
-                    }
-                    
-                    Section(header: Text("Save 1RM to Exercise")) {
+                } else {
+                    if let oneRepMax = calculatedOneRepMax {
                         HStack {
-                            Image(systemName: "magnifyingglass")
-                            TextField("Search Exercises", text: $searchText)
-                            if !searchText.isEmpty {
-                                Button(action: {
-                                    searchText = "" // Clear the search text
-                                }) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .frame(alignment: .trailing)
-                                        .foregroundColor(.gray)
-                                }
-                            }
+                            Text("Calculated 1RM:").bold()
+                            Text("\(oneRepMax, specifier: "%.2f") lbs")
                         }
-                        .padding(.horizontal)
                         
-                        ForEach(filteredExercises) { exercise in
-                            VStack(alignment: .leading) {
-                                Text(exercise.name)
-                                    .bold()
-                                HStack {
-                                    Image(exercise.fullImagePath)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 50)
-                                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                                    
-                                    // let oneRepMax = exerciseData.getOneRepMax(for: exercise.name) ?? 0.0
-                                    let oneRepMax = exerciseData.getMax(for: exercise.name) ?? 0.0
-                                    if oneRepMax == 0 {
-                                        Text("Current 1RM: - lbs")
-                                    } else {
-                                        Text("Current 1RM: \(oneRepMax, specifier: "%.2f") lbs")
-                                    }
-                                }
+                        Section {
+                            OneRMTable(oneRepMax: oneRepMax)
+                        } header: {
+                            Text("1RM Percentages")
+                        }
+                        
+                        Section {
+                            SearchBar(text: $searchText, placeholder: "Search Exercises")
+                                .padding(.horizontal)
+                            
+                            ForEach(filteredExercises) { exercise in
+                                // Tappable row
+                                ExerciseRow(exercise, heartOverlay: false, accessory: { EmptyView() }, detail: {
+                                    let oneRepMax = ctx.exercises.getMax(for: exercise.id) ?? 0.0
+                                        Text("Current 1RM:").foregroundStyle(.gray) +
+                                        Text(" \(oneRepMax != 0 ? String(format: "%.2f", oneRepMax) : "") ") +
+                                        Text("\(oneRepMax == 0 ? "— " : "")lbs").fontWeight(.light)
+                                    },
+                                    onTap: { exerciseTap(exercise) }
+                                )
                             }
-                            .padding()
-                            .background(tappedExercise == exercise ? Color.gray.opacity(0.2) : Color.clear)
-                            .cornerRadius(8)
-                            .onTapGesture {
-                                tappedExercise = exercise
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                    tappedExercise = nil
-                                }
-                                exerciseToSave = exercise
-                                showingConfirmationPopup = true
-                            }
+                        } header: {
+                            Text("Save 1RM to Exercise")
                         }
                     }
                 }
             }
-            if !isCalculated && !isKeyboardVisible {
-                Button(action: {
-                    calculatedOneRepMax = calculateOneRepMax(weight: weightLifted, reps: reps, formula: selectedFormula)
-                    isCalculated = true
-                }) {
-                    Text("Calculate One Rep Max")
-                        .font(.headline) // Prominent and readable text
-                        .foregroundColor(.white) // Ensure text contrasts with the background
-                        .frame(maxWidth: .infinity) // Stretch button to fit container width
-                        .padding() // Add padding for larger tappable area
-                        .background(isCalculateEnabled ? Color.blue : Color.gray) // Conditional background color
-                        .cornerRadius(10) // Rounded corners for a modern look
-                }
-                .disabled(!isCalculateEnabled) // Disable button if conditions are not met
-                .padding(.horizontal) // Horizontal alignment
-                .padding(.bottom, 50) // Space below the button
-            }
+            .blur(radius: ctx.toast.showingSaveConfirmation ? 10 : 0)
         }
         .navigationBarTitle("1 Rep Max Calculator", displayMode: .inline)
         .toolbar {
@@ -165,20 +126,16 @@ struct OneRMCalculator: View {
                 }
             }
         }
-        .overlay(isKeyboardVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-        .onAppear(perform: setupKeyboardObservers)
-        .onDisappear(perform: removeKeyboardObservers)
+        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .alert(isPresented: $showingConfirmationPopup) {
             Alert(
                 title: Text("Update 1RM"),
                 message: Text("Are you sure you want to save this 1RM for \(exerciseToSave?.name ?? "")?"),
                 primaryButton: .default(Text("Save")) {
                     if let exercise = exerciseToSave, let oneRepMax = calculatedOneRepMax {
-                        exerciseData.updateExercisePerformance(for: exercise.name, newValue: oneRepMax, reps: Int(reps), weight: Double(weightLifted), csvEstimate: false)
-                        exerciseData.savePerformanceData()
-                        showingSaveConfirmation = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            showingSaveConfirmation = false
+                        ctx.exercises.updateExercisePerformance(for: exercise, newValue: oneRepMax, reps: Int(reps), weight: Double(weightLifted), csvEstimate: false)
+                        ctx.exercises.savePerformanceData()
+                        ctx.toast.showSaveConfirmation(duration: 2) {
                             resetView()
                         }
                     }
@@ -188,26 +145,18 @@ struct OneRMCalculator: View {
         }
     }
     
-    private var saveConfirmationView: some View {
-        VStack {
-            Text("1RM Saved Successfully!")
-                .foregroundColor(.white)
-                .padding()
-                .background(Color.blue)
-                .cornerRadius(10)
-        }
-        .frame(width: 300, height: 100)
-        .background(Color.clear)
-        .cornerRadius(20)
-        .shadow(radius: 10)
-        .transition(.scale) // Smooth transition for showing/hiding
-        .centerHorizontally()  // Extension method to center the view
+    private var filteredExercises: [Exercise] {
+        ctx.exercises.filteredExercises(
+            searchText: searchText,
+            selectedCategory: .resistanceType(.weighted),
+            userData: ctx.userData,
+            equipmentData: ctx.equipment
+        )
     }
-    
+
     private var isCalculateEnabled: Bool {
         // Ensure weightLifted is a valid number and not empty
         guard !weightLifted.trimmingCharacters(in: .whitespaces).isEmpty, let weight = Double(weightLifted), weight > 0 else {
-            
             return false
         }
         
@@ -219,57 +168,46 @@ struct OneRMCalculator: View {
         return true
     }
     
-    private func validateInputs() {
-        // Validate weightLifted
+    private var weightErrorMessage: String? {
         if !weightLifted.isEmpty && (Double(weightLifted) == nil || Double(weightLifted) == 0) {
-            weightErrorMessage = "Please enter a valid weight."
+            return "Please enter a valid weight."
         } else {
-            weightErrorMessage = nil
+            return nil
         }
-        
-        // Validate reps
+    }
+    
+    private var repsErrorMessage: String? {
         if !reps.isEmpty && (Int(reps) == nil || Int(reps) == 0 || Int(reps) == 1 || reps.contains(".")) {
-            repsErrorMessage = "Reps must be an integer greater than 1."
+            return "Reps must be an integer greater than 1."
         } else {
-            repsErrorMessage = nil
+            return nil
         }
+    }
+    
+    private func exerciseTap(_ exercise: Exercise) {
+        tappedExercise = exercise
+        ctx.toast.manageTap(completion: { tappedExercise = nil })
+        exerciseToSave = exercise
+        showingConfirmationPopup = true
+    }
+
+    @ViewBuilder
+    private func errorRow(_ message: String) -> some View {
+        Group {
+            Text("ERROR: ").bold() +
+            Text(message)
+        }
+        .foregroundColor(.red)
+        .font(.caption)
     }
     
     private func resetView() {
         weightLifted = ""
         reps = ""
-        selectedFormula = .landers
+        selectedFormula = .epleys
         calculatedOneRepMax = nil
         isCalculated = false
         searchText = ""
         exerciseToSave = nil
-        weightErrorMessage = nil
-        repsErrorMessage = nil
-    }
-    
-    private func calculateOneRepMax(weight: String, reps: String, formula: OneRepMaxFormula) -> Double {
-        let weightInKg = (Double(weight) ?? 0) * 0.453592
-        let repsCount = Double(reps) ?? 0
-        
-        switch formula {
-        case .epleys:
-            return (weightInKg * (1 + 0.0333 * repsCount)) * 2.2
-        case .landers:
-            return ((100 * weightInKg) / (101.3 - 2.67123 * repsCount)) * 2.2
-        }
-    }
-    
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = true
-        }
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = false
-        }
-    }
-    
-    private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 }

@@ -9,12 +9,13 @@ import SwiftUI
 
 
 struct ChangeTheme: View {
-    @EnvironmentObject var userData: UserData
+    @ObservedObject var userData: UserData
+    
     
     var body: some View {
         VStack {
             
-            Picker("Theme", selection: $userData.selectedTheme) {
+            Picker("Theme", selection: $userData.settings.selectedTheme) {
                 ForEach(Themes.allCases, id: \.self) { theme in
                     Text(theme.rawValue).tag(theme)
                 }
@@ -28,6 +29,6 @@ struct ChangeTheme: View {
                 .padding(.top)
         }
         .padding()
-        .navigationTitle("Change Theme").navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle("Change Theme", displayMode: .inline)
     }
 }

@@ -9,27 +9,30 @@ import SwiftUI
 
 
 struct WarmUpSetsEditorView: View {
-    @EnvironmentObject var equipmentData: EquipmentData
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var ctx: AppContext
     @Binding var exercise: Exercise
+    @StateObject private var kbd = KeyboardManager.shared
     @State private var weightInputs: [String] = []
     @State private var repInputs: [String] = []
-    @State private var isKeyboardVisible: Bool = false
     @State private var changeMade: Bool = false
-    var roundingPreference: [EquipmentCategory: Double]
     var setStructure: SetStructures = .pyramid
+    let roundingPreference: RoundingPreference
+    var onSave: () -> Void
+    private let generator = WorkoutGenerator()
 
-    init(exercise: Binding<Exercise>, weightInputs: [String] = [], repInputs: [String] = [], setStructure: SetStructures, roundingPreference: [EquipmentCategory: Double]) {
+    init(exercise: Binding<Exercise>, setStructure: SetStructures, roundingPreference: RoundingPreference, onSave: @escaping () -> Void) {
         _exercise = exercise
-        _weightInputs = State(initialValue: exercise.wrappedValue.warmUpDetails.map { $0.weight > 0 ? ($0.weight.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", $0.weight) : String($0.weight)) : "" })
+        _weightInputs = State(initialValue: exercise.wrappedValue.warmUpDetails.map { $0.weight > 0 ? Format.smartFormat($0.weight) : "" })
         _repInputs = State(initialValue: exercise.wrappedValue.warmUpDetails.map { $0.reps > 0 ? String($0.reps) : "" })
         
         self.setStructure = setStructure
         self.roundingPreference = roundingPreference
+        self.onSave = onSave
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 // List for warm-up sets (editable)
                 List {
@@ -42,30 +45,17 @@ struct WarmUpSetsEditorView: View {
                                 HStack {
                                     Text("Set \(index + 1)")
                                     Spacer()
-                                    if exercise.usesWeight {
+                                    if exercise.type.usesWeight {
                                         Text("lbs")
                                             .bold()
                                         TextField("Weight", text: Binding(
-                                            get: {
-                                                weightInputs.indices.contains(index) ? weightInputs[index] : ""
-                                            },
+                                            get: { weightInputs.indices.contains(index) ? weightInputs[index] : "" },
                                             set: { newValue in
                                                 if weightInputs.indices.contains(index) {
-                                                    // keep only digits + dot
-                                                    let filtered = newValue.filter { "0123456789.".contains($0) }
-                                                    // allow up to 4 integer digits and up to 2 fractional digits
-                                                    let pattern = #"^(\d{0,4})(\.\d{0,2})?$"#
-                                                    guard filtered.range(of: pattern, options: .regularExpression) != nil else {
-                                                        return    // reject this keystroke
-                                                    }
-                                                    // apply it
+                                                    guard weightInputs.indices.contains(index) else { return }
+                                                    let filtered = InputLimiter.filteredWeight(old:  weightInputs[index], new: newValue)
                                                     weightInputs[index] = filtered
-                                                    // update model
-                                                    if let w = Double(filtered) {
-                                                        exercise.warmUpDetails[index].weight = w
-                                                    } else if filtered.isEmpty {
-                                                        exercise.warmUpDetails[index].weight = 0
-                                                    }
+                                                    exercise.warmUpDetails[index].weight = Double(filtered) ?? 0
                                                 }
                                             }
                                         ))
@@ -77,19 +67,13 @@ struct WarmUpSetsEditorView: View {
                                     Text("Reps")
                                         .bold()
                                     TextField("Reps", text: Binding(
-                                        get: {
-                                            repInputs.indices.contains(index) ? repInputs[index] : ""
-                                        },
+                                        get: { repInputs.indices.contains(index) ? repInputs[index] : "" },
                                         set: { newValue in
                                             if repInputs.indices.contains(index) {
-                                                let filtered = newValue.filter { "0123456789".contains($0) }
-                                                let capped = String(filtered.prefix(3))
-                                                repInputs[index] = capped              // UI text
-                                                if let r = Int(filtered) {
-                                                    exercise.warmUpDetails[index].reps = r
-                                                } else if filtered.isEmpty {
-                                                    exercise.warmUpDetails[index].reps = 0
-                                                }
+                                                guard repInputs.indices.contains(index) else { return }
+                                                let filtered = InputLimiter.filteredReps(newValue)
+                                                repInputs[index] = filtered
+                                                exercise.warmUpDetails[index].reps = Int(filtered) ?? 0
                                             }
                                         }
                                     ))
@@ -133,7 +117,11 @@ struct WarmUpSetsEditorView: View {
                     
                     HStack {
                         Spacer()
-                        Button(action: autofillWarmUpSets) {
+                        Button(action: {
+                            generator.autofillWarmUpSets(equipmentData: ctx.equipment, for: &exercise, setStructure: setStructure, roundingPref: roundingPreference)
+                            onSave()
+                        }
+                        ) {
                             Label("Autofill", systemImage: "wand.and.stars")
                                 .foregroundColor(.green)
                         }
@@ -153,7 +141,7 @@ struct WarmUpSetsEditorView: View {
                                 HStack {
                                     Text("Set \(index + 1)")
                                     Spacer()
-                                    if exercise.usesWeight {
+                                    if exercise.type.usesWeight {
                                         Text("lbs")
                                             .bold()
                                         // Display the working set weight using a rounded rectangle background similar to textfields.
@@ -183,34 +171,15 @@ struct WarmUpSetsEditorView: View {
                 }
                 .listStyle(PlainListStyle())
             }
-            .onChange(of: exercise.warmUpDetails) {
-                print("change")
-                resetInputs()
-            }
-            .onAppear(perform: setupKeyboardObservers)
-            .onDisappear(perform: removeKeyboardObservers)
-            .overlay(isKeyboardVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-            .navigationTitle(exercise.name).navigationBarTitleDisplayMode(.inline)
+            .onChange(of: exercise.warmUpDetails) { resetInputs() }
+            .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+            .navigationBarTitle(exercise.name, displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") { dismiss() }
                 }
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
-    }
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = true
-        }
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = false
-        }
-    }
-    
-    private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - Warm-Up Set Functions
@@ -219,6 +188,7 @@ struct WarmUpSetsEditorView: View {
         repInputs.append("")
         let newSetNumber = exercise.warmUpSets + 1
         exercise.warmUpDetails.append(SetDetail(setNumber: newSetNumber, weight: 0, reps: 0))
+        onSave()
     }
     
     private func deleteLastWarmUpSet() {
@@ -227,60 +197,20 @@ struct WarmUpSetsEditorView: View {
         guard !weightInputs.isEmpty, !repInputs.isEmpty else { return }
         weightInputs.removeLast()
         repInputs.removeLast()
+        onSave()
     }
     
     /// Uses the first regular set as a baseline to generate auto-filled warm-up sets.
     private func addWarmUpSets() {
         guard let baselineSet = exercise.setDetails.first else { return }
-        let warmUpSets = createWarmUpDetails(baselineSet: baselineSet)
+        let warmUpSets = generator.createWarmUpDetails(equipmentData: ctx.equipment, for: exercise, baselineSet: baselineSet, setStructure: setStructure, roundingPref: roundingPreference)
         exercise.warmUpDetails = warmUpSets
-    }
-    
-    /// Generates warm-up sets based on the chosen set structure.
-    private func createWarmUpDetails(baselineSet: SetDetail) -> [SetDetail] {
-        var warmUpDetails: [SetDetail] = []
-        var totalWarmUpSets: Int = 0
-        var weightReductionSteps: [Double] = []
-        var repsIncreaseSteps: [Int] = []
-        
-        switch setStructure {
-        case .pyramid:
-            totalWarmUpSets = 2
-            weightReductionSteps = [0.5, 0.65]
-            repsIncreaseSteps = [12, 10]
-        case .reversePyramid:
-            totalWarmUpSets = 3
-            weightReductionSteps = [0.5, 0.65, 0.8]
-            repsIncreaseSteps = [10, 8, 6]
-        default:
-            totalWarmUpSets = 0
-            weightReductionSteps = []
-            repsIncreaseSteps = []
-        }
-        
-        for i in 0..<totalWarmUpSets {
-            let weight = baselineSet.weight * weightReductionSteps[i]
-            let roundedWeight = equipmentData.roundWeight(weight, for: exercise.equipmentRequired, roundingPreference: roundingPreference)
-            let reps = repsIncreaseSteps[i]
-            warmUpDetails.append(SetDetail(setNumber: i + 1, weight: roundedWeight, reps: reps))
-        }
-        
-        return warmUpDetails
+        onSave()
     }
     
     private func resetInputs() {
-        weightInputs = exercise.warmUpDetails.map { $0.weight > 0 ? ($0.weight.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", $0.weight) : String($0.weight)) : "" }
+        weightInputs = exercise.warmUpDetails.map { $0.weight > 0 ? Format.smartFormat($0.weight) : "" }
         repInputs = exercise.warmUpDetails.map { $0.reps > 0 ? String($0.reps) : "" }
     }
-    
-    /// Auto-fills warm-up sets and updates the input arrays.
-    private func autofillWarmUpSets() {
-        guard let baseline = exercise.setDetails.first else { return }
-
-        let details = createWarmUpDetails(baselineSet: baseline)       // uses roundWeight ✅
-
-        exercise.warmUpDetails = details                               // commit last
-
-       // exercise = exercise
-    }
 }
+

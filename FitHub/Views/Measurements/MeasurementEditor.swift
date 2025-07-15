@@ -9,12 +9,12 @@ import SwiftUI
 
 
 struct MeasurementEditor: View {
+    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
     var measurementType: MeasurementType
     @Binding var value: Double
     @Binding var isPresented: Bool
     @State private var inputValue: String = ""
     @FocusState private var isFocused: Bool
-    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
     var onSave: ((Double) -> Void)?
     
     var body: some View {
@@ -24,13 +24,18 @@ struct MeasurementEditor: View {
                 .padding()
             
             TextField(getString(), text: $inputValue)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
                 .keyboardType(.decimalPad)
                 .focused($isFocused)
+                .padding(8)
+                .background(
+                    RoundedRectangle(cornerRadius: 4) // Background shape
+                    .fill(colorScheme == .dark ? Color(UIColor.systemBackground) : Color(UIColor.secondarySystemBackground))
+                )
+                .padding(.horizontal)
                 .onChange(of: inputValue) { oldValue, newValue in
-                    inputValue = formatInput(newValue)
+                    inputValue = InputLimiter.filteredWeight(old: oldValue, new: newValue)
                 }
+            
             HStack(spacing: 20) {
                 Spacer()
                 
@@ -55,19 +60,18 @@ struct MeasurementEditor: View {
                 }
                 .buttonStyle(.bordered)
                 .tint(.green)
-                .disabled(!isInputValid())
                 
                 Spacer()
             }
             .padding()
         }
         .frame(width: 300, height: 200)
-        .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-        .cornerRadius(12)
+        .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color(UIColor.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
         .shadow(radius: 10)
         .padding()
         .onAppear {
-            inputValue = formatValue(value)
+            inputValue = Format.smartFormat(value)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 isFocused = true
             }
@@ -84,6 +88,7 @@ struct MeasurementEditor: View {
             }
         }
     }
+    
     private func getString() -> String {
         var stringValue: String = ""
         
@@ -93,29 +98,6 @@ struct MeasurementEditor: View {
             stringValue = "Enter Value"
         }
         return stringValue
-    }
-    
-    private func formatValue(_ value: Double) -> String {
-        // Format the value to a string with a maximum of two decimal places
-        return String(format: "%.2f", value).trimmingCharacters(in: CharacterSet(charactersIn: "0").union(.punctuationCharacters))
-    }
-    
-    private func formatInput(_ input: String) -> String {
-        // Allow only numbers and one decimal point, and limit to two decimal places
-        var filtered = input.filter { "0123456789.".contains($0) }
-        
-        let components = filtered.split(separator: ".")
-        if components.count > 1, let decimalPart = components.last {
-            filtered = components.first! + "." + String(decimalPart.prefix(2))
-        }
-        
-        return filtered
-    }
-    
-    private func isInputValid() -> Bool {
-        let trimmedInput = inputValue.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedInput.isEmpty else { return false }
-        return Double(trimmedInput) != nil
     }
 }
 

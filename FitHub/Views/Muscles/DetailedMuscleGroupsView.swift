@@ -6,120 +6,162 @@
 //
 
 import SwiftUI
+import Foundation
 
 
 struct DetailedMuscleGroupsView: View {
-    @EnvironmentObject var userData: UserData
-    var muscle: Muscle
+    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
+    @ObservedObject var userData: UserData
     @State var showFront: Bool
     @State private var hasFront: Bool = false
     @State private var hasRear: Bool = false
     @State private var selectedSubMuscle: SubMuscles? = nil
-    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
+    @State private var selectedView: ViewOptions = .recovery
+    @State private var restPercentages: [SubMuscles: Int] = [:]  // State to hold the rest percentages
+    var muscle: Muscle
     var onClose: () -> Void
     
     var body: some View {
         VStack {
-            Text(muscle.simpleName)
-                .font(.headline)
-            + Text(muscle.rawValue != muscle.simpleName ? " (\(muscle.rawValue))" : "")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            
+           // nameHeader()
             
             ZStack {
-                // Determine whether to show front or rear view
-                if showFront {
-                    if Muscle.hasFrontImages.contains(muscle) {
-                        DirectImageView(imageName: "(M)Front_Detailed_Blank-\(muscle.rawValue.replacingOccurrences(of: " ", with: "-").lowercased())")
-                            .opacity(1.0)
+                muscleView()
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        flipButton()
                     }
-                    
-                    ForEach(Muscle.getSubMuscles(for: muscle), id: \.self) { subMuscle in
-                        ForEach(subMuscle.detailedMuscleGroupImages.filter { $0.contains("Front") }, id: \.self) { imagePath in
-                            DirectImageView(imageName: imagePath)
-                                .opacity(calculateOpacity(for: subMuscle))
-                                .onTapGesture {
-                                    selectedSubMuscle = subMuscle
-                                }
-                        }
-                    }
-                } else {
-                    if Muscle.hasRearImages.contains(muscle) {
-                        DirectImageView(imageName: "(M)Rear_Detailed_Blank-\(muscle.rawValue.replacingOccurrences(of: " ", with: "-").lowercased())")
-                            .opacity(1.0)
-                    }
-                    
-                    ForEach(Muscle.getSubMuscles(for: muscle), id: \.self) { subMuscle in
-                        ForEach(subMuscle.detailedMuscleGroupImages.filter { $0.contains("Rear") }, id: \.self) { imagePath in
-                            DirectImageView(imageName: imagePath)
-                                .opacity(calculateOpacity(for: subMuscle))
-                                .onTapGesture {
-                                    selectedSubMuscle = subMuscle
-                                }
-                        }
-                    }
-                }
-                if hasFront && hasRear {
-                    Button(action: { withAnimation { showFront.toggle() } }) {
-                        Image(systemName: "arrow.2.circlepath")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .clipShape(Circle())
-                    }
-                    .padding(.leading, 300)
-                    .padding(.top, 220)
                 }
             }
             
-            List {
-                Section(header: Text("Select submuscle to view recent sets")) {
-                    ForEach(Muscle.getSubMuscles(for: muscle), id: \.self) { subMuscle in
+            viewPicker
+            subMuscleList
+        }
+        .padding()
+        .navigationBarTitle(nameHeader, displayMode: .inline)
+        .onAppear(perform: determineDefaultViewSide)
+        .sheet(item: $selectedSubMuscle) { subMuscle in
+            RecentlyCompletedSetsView(userData: userData, muscle: subMuscle) { selectedSubMuscle = nil }
+        }
+    }
+    
+    private var nameHeader: Text {
+        return (
+        Text(muscle.simpleName)
+        + Text(muscle.rawValue != muscle.simpleName ? " (\(muscle.rawValue))" : "")
+        )
+    }
+
+    @ViewBuilder private func muscleView() -> some View {
+        if showFront {
+            if Muscle.hasFrontImages.contains(muscle) {
+                ImageStack(front: true)
+            }
+        } else {
+            if Muscle.hasRearImages.contains(muscle) {
+                ImageStack(front: false)
+            }
+        }
+    }
+    
+    @ViewBuilder private func ImageStack(front: Bool) -> some View {
+        if selectedView == .recovery {
+            DirectImageView(imageName: muscle.blankImage(front: front, gender: userData.physical.gender))
+                .opacity(1.0)
+            ForEach(Muscle.getSubMuscles(for: muscle), id: \.self) { subMuscle in
+                ForEach(AssetPath.getDetailedMuscleImages(category: subMuscle, gender: userData.physical.gender).filter { $0.contains(front ? "Front" : "Rear") }, id: \.self) { imagePath in
+                    DirectImageView(imageName: imagePath)
+                    .opacity(calculateOpacity(for: subMuscle))
+                    .onTapGesture {
+                        selectedSubMuscle = subMuscle
+                    }
+                }
+            }
+        } else {
+            DirectImageView(imageName: muscle.coloredImage(front: front, gender: userData.physical.gender))
+                .opacity(1.0)
+        }
+    }
+    
+    @ViewBuilder private func flipButton() -> some View {
+        if hasFront && hasRear { FloatingButton(image: "arrow.2.circlepath", action: { showFront.toggle() }) }
+    }
+    
+    private var viewPicker: some View {
+        Picker("Select View", selection: $selectedView) {
+            ForEach(ViewOptions.allCases, id: \.self) { view in
+                Text(view.rawValue).tag(view)
+            }
+        }
+        .pickerStyle(SegmentedPickerStyle())
+        .padding(.horizontal)
+        .padding(.top)
+    }
+    
+    private var subMuscleList: some View {
+        List {
+            Section {
+                ForEach(Muscle.getSubMuscles(for: muscle), id: \.self) { subMuscle in
+                    HStack {
+                        let hasImage = !SubMuscles.hasNoImages.contains(subMuscle)
                         VStack(alignment: .leading) {
                             HStack {
-                                if SubMuscles.hasNoImages.contains(subMuscle) {
+                                if !hasImage {
                                     Text(subMuscle.simpleName)
                                         .foregroundColor(.gray)
-                                    +
-                                    // we will remove this upon color coding the visible muscles
-                                    Text(" (Deep)")
-                                        .fontWeight(.semibold)
-                                    
+                                    + Text(" (Deep)") // we will remove this upon color coding the visible muscles
+                                        .fontWeight(.light)
                                 } else {
                                     Text(subMuscle.simpleName)
                                         .foregroundColor(determineTextColor(for: subMuscle))
                                 }
+                                
                                 Spacer()
-                                Text("\(calculateRestPercentage(for: subMuscle))%")
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.gray)
+
+                                if selectedView == .recovery {
+                                    Text("\(restPercentages[subMuscle] ?? 100)%")
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(.gray)
+                                } else {
+                                    if hasImage {
+                                        RoundedRectangle(cornerRadius: 2)
+                                         .fill(subMuscle.fillColor)
+                                         .frame(width: 30, height: 12)
+                                    }
+                                }
                             }
-                            if subMuscle.simpleName != subMuscle.rawValue {
+                            
+                            if !subMuscle.rawValue.contains(subMuscle.simpleName) {
                                 Text(subMuscle.rawValue)
                                     .font(.caption)
                                     .foregroundColor(.secondary)
+                                    .italic(true)
+                            }
+                            if let note = subMuscle.note {
+                                Text(note)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .lineLimit(2)
+                                    .minimumScaleFactor(0.5)
                             }
                         }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            selectedSubMuscle = subMuscle
-                        }
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        selectedSubMuscle = subMuscle
                     }
                 }
+            } header: {
+                Text(selectedView == .recovery ? "Select submuscle to view recent sets" : "")
             }
         }
-        .onAppear {
-            determineDefaultViewSide()
-        }
-        .sheet(item: $selectedSubMuscle) { subMuscle in
-            RecentlyCompletedSetsView(muscle: subMuscle, userData: userData) {
-                selectedSubMuscle = nil
-            }
-        }
-        .padding()
+    }
+    
+    private enum ViewOptions: String, CaseIterable {
+        case recovery = "Recovery"
+        case identification = "Identification"
     }
     
     private func determineTextColor(for subMuscle: SubMuscles) -> Color {
@@ -141,164 +183,117 @@ struct DetailedMuscleGroupsView: View {
         let subMuscles = Muscle.getSubMuscles(for: muscle)
         hasFront = subMuscles.contains { SubMuscles.hasFrontImages.contains($0) }
         hasRear = subMuscles.contains { SubMuscles.hasRearImages.contains($0) }
-        if !hasFront && showFront {
-            showFront = false
-        } else if !hasRear && !showFront {
-            showFront = true
-        }
+        if !hasFront && showFront { showFront = false }
+        else if !hasRear && !showFront { showFront = true }
     }
     
     // Calculate opacity for a sub-muscle based on rest percentage
     private func calculateOpacity(for subMuscle: SubMuscles) -> Double {
-        let restPercentage = calculateRestPercentage(for: subMuscle)
-        return 1.0 - Double(restPercentage) / 100.0
+        return 1.0 - Double(restPercentages[subMuscle] ?? 100) / 100.0
     }
     
-    private func calculateRestPercentage(for subMuscle: SubMuscles) -> Int {
-        let now = Date()
-        let muscleRestDuration = Double(userData.muscleRestDuration) // in hours
-        
-        // 1) Gather all (Exercise, Date) pairs from completed workouts,
-        //    but only if the exercise has at least one completed set.
-        let recentlyWorkedExercises: [(Exercise, Date)] = userData.completedWorkouts.flatMap { workout in
-            workout.template.exercises.compactMap { exercise in
-                let hasCompletedSets = exercise.setDetails.contains { $0.repsCompleted != nil }
-                return hasCompletedSets ? (exercise, workout.date) : nil
+    // MARK: - Sub-muscle rest % (single pass) -------------------------------
+    private func calculateRestPercentages() {
+        let now         = Date()
+        let windowHours = Double(userData.settings.muscleRestDuration)
+
+        // temp buckets keyed by sub-muscle
+        var buckets: [SubMuscles:(rest: Double, weight: Double)] = [:]
+
+        // 1️⃣ recent workouts once
+        let recent = userData.workoutPlans.completedWorkouts
+            .filter { now.timeIntervalSince($0.date) / 3600 <= windowHours }
+
+        for workout in recent {
+            let hoursSince = now.timeIntervalSince(workout.date) / 3600
+            let pctRest    = min(1, hoursSince / windowHours) * 100
+
+            for exercise in workout.template.exercises {
+                let sets = exercise.setDetails.filter { $0.repsCompleted != nil }.count
+                guard sets > 0 else { continue }
+
+                // cache primary/secondary lists once per exercise
+                let primarySubs   = Set(exercise.primarySubMuscles ?? [])
+                let secondarySubs = Set(exercise.secondarySubMuscles ?? [])
+
+                // walk every sub-muscle engagement in this exercise
+                for engage in exercise.muscles {
+                    guard let subs = engage.submusclesWorked else { continue }
+
+                    for subEng in subs {
+                        let sub       = subEng.submuscleWorked
+                        // pick 1.0 | 0.5 | skip
+                        let psFactor: Double
+                        if  primarySubs.contains(sub) { psFactor = 1.0 }
+                        else if secondarySubs.contains(sub) { psFactor = 0.5 }
+                        else { continue }
+
+                        // engagement % × primary/secondary × set count
+                        let weight = (subEng.engagementPercentage / 100) * psFactor * Double(sets)
+
+                        var bucket = buckets[sub] ?? (0,0)
+                        bucket.rest   += weight * pctRest
+                        bucket.weight += weight
+                        buckets[sub]   = bucket
+                    }
+                }
             }
         }
-        
-        // Weighted average accumulators
-        var totalWeight = 0.0
-        var totalRest   = 0.0
-        
-        for (exercise, workoutDate) in recentlyWorkedExercises {
-            // 2) Calculate hours since this workout
-            let hoursSinceWorkout = now.timeIntervalSince(workoutDate) / 3600
-            // Skip if beyond your rest window
-            guard hoursSinceWorkout <= muscleRestDuration else { continue }
-            
-            // 3) Check if this subMuscle appears in primary or secondary submuscles
-            //    We'll use weight = 1.0 if subMuscle is found in primary,
-            //                   = 0.5 if subMuscle only in secondary,
-            //                   = 0.0 if not found at all.
-            let primarySubs = exercise.primarySubMuscles ?? []
-            let secondarySubs = exercise.secondarySubMuscles ?? []
-            
-            let muscleWeight: Double
-            if primarySubs.contains(subMuscle) {
-                muscleWeight = 1.0
-            } else if secondarySubs.contains(subMuscle) {
-                muscleWeight = 0.5
-            } else {
-                continue // this exercise doesn't target our subMuscle
-            }
-            
-            // 4) For each completed set in this exercise, update rest stats
-            let validSets = exercise.setDetails.filter { $0.repsCompleted != nil }
-            for _ in validSets {
-                // e.g. linear scale from 0–100% rest within muscleRestDuration
-                let rawPercent = (hoursSinceWorkout / muscleRestDuration) * 100
-                let restPercent = max(0, min(100, Int(rawPercent)))
-                
-                totalWeight += muscleWeight
-                totalRest   += muscleWeight * Double(restPercent)
-            }
-        }
-        
-        // 5) If no sets found for this subMuscle, it's fully rested at 100%
-        guard totalWeight > 0 else {
-            return 100
-        }
-        
-        // 6) Weighted average of rest percentages across all completed sets
-        let finalRest = totalRest / totalWeight
-        return Int(finalRest)
+
+        // 2️⃣ convert buckets → 0–100 ints; default 100
+        restPercentages = Dictionary(
+            uniqueKeysWithValues:
+                Muscle.getSubMuscles(for: muscle).map { sub in
+                    let bucket = buckets[sub] ?? (0,0)
+                    let pct = bucket.weight > 0
+                            ? Int((bucket.rest / bucket.weight).rounded())
+                            : 100
+                    return (sub, pct)
+                }
+        )
     }
 }
 
-struct RecentlyCompletedSetsView: View {
-    var muscle: SubMuscles
-    @ObservedObject var userData: UserData
-    var onClose: () -> Void
-    @Environment(\.presentationMode) var presentationMode
-    
-    var recentlyWorkedSets: [ExerciseWithSetDetails] {
-        userData.completedWorkouts.flatMap { workout in
-            workout.template.exercises.compactMap { exercise in
-                let sets = exercise.setDetails.filter { set in
-                    (set.repsCompleted ?? 0) > 0
-                    && exercise.allSubMuscles?.contains(muscle) == true
-                }
-                return sets.isEmpty ? nil : ExerciseWithSetDetails(exerciseName: exercise.name, sets: sets, usesWeight: exercise.usesWeight, completionDate: workout.date)
-            }
-        }.filter { $0.completionDate > Date().addingTimeInterval(-Double(userData.muscleRestDuration) * 60 * 60) }
+
+extension SubMuscles {
+    /// Returns the fill color for this submuscle
+    var fillColor: Color {
+        if SubMuscles.colorRed.contains(self)    { return .red }
+        if SubMuscles.colorGreen.contains(self)  { return .green }
+        if SubMuscles.colorBlue.contains(self)   { return .blue }
+        if SubMuscles.colorYellow.contains(self) { return .yellow }
+        return .gray  // fallback, if you need one
     }
-    
-    var body: some View {
-        NavigationView {
-            VStack {
-                List {
-                    if !recentlyWorkedSets.isEmpty {
-                        ForEach(recentlyWorkedSets, id: \.self) { exerciseWithSetDetails in
-                            Section(header: VStack(alignment: .leading) {
-                                Text(exerciseWithSetDetails.exerciseName)
-                                    .font(.headline)
-                                    .padding(.vertical, 5)
-                                Text("Completed on: \(exerciseWithSetDetails.completionDate, formatter: dateFormatter)")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                            }) {
-                                ForEach(exerciseWithSetDetails.sets) { setDetail in
-                                    VStack(alignment: .leading) {
-                                        Text("Set \(setDetail.setNumber)")
-                                            .font(.subheadline)
-                                        HStack {
-                                            Text("Reps: \(setDetail.repsCompleted ?? 0)")
-                                            if exerciseWithSetDetails.usesWeight {
-                                                Text("Weight: \(setDetail.weight, specifier: "%.2f") lbs")
-                                            }
-                                        }
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                    }
-                                    .padding(.vertical, 5)
-                                }
-                            }
-                        }
-                    } else {
-                        Text("No recently worked sets for this submuscle.")
-                            .foregroundColor(.gray)
-                            .padding()
-                    }
-                }
-                .listStyle(InsetGroupedListStyle())
-            }
-            .navigationBarTitle("\(muscle.rawValue)", displayMode: .inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: onClose) {
-                        Image(systemName: "xmark.circle.fill")
-                            .imageScale(.large)
-                            .foregroundColor(.gray)
-                            .contentShape(Rectangle())
-                    }
-                }
-            }
-        }
+}
+
+//  Muscle+Images.swift
+//  FitHub
+extension Muscle {
+    /// kebab-cased file name fragment (“latissimus-dorsi”)
+    private var slug: String {
+        rawValue.replacingOccurrences(of: " ", with: "-").lowercased()
     }
-    // for filtering rest calculation
-    struct ExerciseWithSetDetails: Identifiable, Hashable {
-        var id = UUID()
-        var exerciseName: String
-        var sets: [SetDetail]
-        var usesWeight: Bool
-        var completionDate: Date
+
+    /// `…/Blank/Front/<slug>`
+    func blankImage(front: Bool, gender: Gender) -> String {
+        AssetPath.getImagePath(
+            for: .detailedMuscle,
+            isfront: front,
+            // the API has mutually-exclusive flags
+            isBlank: true,
+            isColored: false,
+            gender: gender
+        ) + slug
     }
-    
-    private var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        return formatter
+
+    /// `…/Color/Front/<slug>`
+    func coloredImage(front: Bool, gender: Gender) -> String {
+        AssetPath.getImagePath(
+            for: .detailedMuscle,
+            isfront: front,
+            isBlank: false,
+            isColored: true,
+            gender: gender
+        ) + slug
     }
 }

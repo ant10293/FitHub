@@ -8,21 +8,13 @@
 import SwiftUI
 
 struct WorkoutPlan: View {
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var equipment: EquipmentData
-    @EnvironmentObject var csvLoader: CSVLoader
-    @EnvironmentObject var exerciseData: ExerciseData
-    @EnvironmentObject var equipmentData: EquipmentData
-    @EnvironmentObject var healthKitManager: HealthKitManager
-    @EnvironmentObject var timerManager: TimerManager
+    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
+    @EnvironmentObject private var ctx: AppContext
     @State private var selectedWorkoutTemplate: WorkoutTemplate?
     @State private var isNavigationActive: Bool = false
     @State private var showingAlert: Bool = false
     @State private var showingSaveConfirmation: Bool = false
-    @State private var progressiveOverload: Bool = false
-    @State private var showingProgressiveOverloadInfo: Bool = false // State for showing the info view
     @State private var showingTemplateChoice: Bool = false
-    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
     
     var body: some View {
         NavigationStack {
@@ -40,8 +32,8 @@ struct WorkoutPlan: View {
                     Rectangle()
                         .fill(Color.gray.opacity(0.3))
                         .frame(height: 200)
-                        .cornerRadius(8)
-                        .overlay(WeekWorkoutView(userData: userData))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .overlay(WeekWorkoutView(userData: ctx.userData))
                         .padding(.horizontal)
                         .overlay(
                             WeekLegendView()
@@ -49,7 +41,7 @@ struct WorkoutPlan: View {
                         ).frame(alignment: .center)
                 }
                 
-                NavigationLink(destination: ViewMusclesView(userData: userData)) {
+                NavigationLink(destination: ViewMusclesView(userData: ctx.userData)) {
                     HStack {
                         Text("View Muscle Groups")
                             .foregroundColor(colorScheme == .dark ? .white : .black)
@@ -64,16 +56,15 @@ struct WorkoutPlan: View {
                     }
                     .padding()
                     .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-                    .cornerRadius(8)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                     .shadow(radius: 5)
                 }
                 .padding(.horizontal)
                 
-                if !userData.trainerTemplates.isEmpty {
-                    NavigationLink(destination: WorkoutGeneration(userData: userData, exerciseData: exerciseData, equipmentData: equipmentData, csvLoader: csvLoader)) {
+                if !ctx.userData.workoutPlans.trainerTemplates.isEmpty {
+                    NavigationLink(destination: WorkoutGeneration()) {
                         HStack {
                             Text("Workout Generation")
-                            // .foregroundColor(.black)
                                 .foregroundColor(colorScheme == .dark ? .white : .black)
                                 .font(.headline)
                                 .fontWeight(.medium)
@@ -85,7 +76,7 @@ struct WorkoutPlan: View {
                         }
                         .padding()
                         .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-                        .cornerRadius(8)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         .shadow(radius: 5)
                     }
                     .padding(.horizontal)
@@ -93,12 +84,10 @@ struct WorkoutPlan: View {
                 
                 Spacer()
                 
-                if userData.trainerTemplates.isEmpty {
-                    // Button to generate workout plan
+                if ctx.userData.workoutPlans.trainerTemplates.isEmpty {
                     Button(action: {
-                        userData.generateWorkoutPlan(exerciseData: exerciseData, equipmentData: equipmentData, csvLoader: csvLoader, keepCurrentExercises: false, selectedExerciseType: userData.exerciseType, nextWeek: false)
+                        ctx.userData.generateWorkoutPlan(exerciseData: ctx.exercises, equipmentData: ctx.equipment, keepCurrentExercises: false, nextWeek: false)
                         showingSaveConfirmation = true
-                        
                     }) {
                         HStack {
                             Text("Generate Workout Plan")
@@ -113,9 +102,7 @@ struct WorkoutPlan: View {
                     }
                 } else {
                     // Button to start today's workout
-                    Button(action: {
-                        startWorkoutForDay()
-                    }) {
+                    Button(action: startWorkoutForDay) {
                         HStack {
                             Text("Start Today's Workout")
                                 .foregroundColor(.white)
@@ -130,19 +117,14 @@ struct WorkoutPlan: View {
                     .disabled(shouldDisableWorkoutButton())
                     .navigationDestination(isPresented: $isNavigationActive) {
                         if let selectedTemplate = selectedWorkoutTemplate {
-                            StartedWorkoutView(viewModel: WorkoutViewModel(template: selectedTemplate))
+                            StartedWorkoutView(viewModel: WorkoutVM(template: selectedTemplate))
                         }
                     }
                 }
                 Spacer()
             }
-            .blur(radius: showingProgressiveOverloadInfo ? 5 : 0)
-            .disabled(showingProgressiveOverloadInfo)
             .background(Color(UIColor.systemGroupedBackground))
             .navigationBarTitle("Trainer")
-            .onAppear {
-                progressiveOverload = userData.progressiveOverload
-            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     NavigationLink(destination: SettingsView()) {
@@ -159,9 +141,6 @@ struct WorkoutPlan: View {
                     }
                 }
             }
-            .sheet(isPresented: $showingProgressiveOverloadInfo, content: {
-                infoView
-            })
             .alert(isPresented: $showingSaveConfirmation) {
                 Alert(
                     title: Text("Workout Plan Generated!"),
@@ -178,7 +157,7 @@ struct WorkoutPlan: View {
             }
             .alert("Multiple Workouts Found for Today", isPresented: $showingTemplateChoice) {
                 Button("User Template", action: {
-                    selectedWorkoutTemplate = userData.userTemplates.first { template in
+                    selectedWorkoutTemplate = ctx.userData.workoutPlans.userTemplates.first { template in
                         if let date = template.date {
                             return Calendar.current.isDate(date, inSameDayAs: Date())
                         }
@@ -187,7 +166,7 @@ struct WorkoutPlan: View {
                     proceedToWorkout()
                 })
                 Button("Trainer Template", action: {
-                    selectedWorkoutTemplate = userData.trainerTemplates.first { template in
+                    selectedWorkoutTemplate = ctx.userData.workoutPlans.trainerTemplates.first { template in
                         if let date = template.date {
                             return Calendar.current.isDate(date, inSameDayAs: Date())
                         }
@@ -201,7 +180,7 @@ struct WorkoutPlan: View {
     }
     
     private func shouldDisableWorkoutButton() -> Bool {
-        return timerManager.timerIsActive || userData.activeWorkout != nil
+        return ctx.userData.isWorkingOut || ctx.userData.sessionTracking.activeWorkout != nil
     }
     
     private func startWorkoutForDay() {
@@ -209,7 +188,7 @@ struct WorkoutPlan: View {
         let calendar = Calendar.current
                 
         // Find templates where `date` is not nil and matches today
-        let userTemplate = userData.userTemplates.first { template in
+        let userTemplate = ctx.userData.workoutPlans.userTemplates.first { template in
             if let date = template.date {
                 if WorkoutTemplate.shouldDisableTemplate(template: template) {
                     return false
@@ -220,7 +199,7 @@ struct WorkoutPlan: View {
             return false
         }
         
-        let trainerTemplate = userData.trainerTemplates.first { template in
+        let trainerTemplate = ctx.userData.workoutPlans.trainerTemplates.first { template in
             if let date = template.date {
                 if WorkoutTemplate.shouldDisableTemplate(template: template) {
                     return false
@@ -251,45 +230,5 @@ struct WorkoutPlan: View {
     private func proceedToWorkout() {
         isNavigationActive = true
         print("Starting workout for template: \(selectedWorkoutTemplate?.name ?? "Unknown")")
-    }
-    
-    private var infoView: some View {
-        VStack {
-            Text("Progressive Overload")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding(.horizontal)
-                .padding(.top)
-                .padding(.bottom, 10)
-            
-            Text("Progressive overload is the gradual increase of stress placed upon the body during exercise training. This principle is essential for improving physical fitness, strength, and muscle mass.")
-            //.font(.body)
-                .font(.subheadline)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-                .padding(.bottom, 20)
-            
-            
-            Text("Enabling this feature allows your workout templates to be adjusted weekly in order to accommodate your changing strength levels.")
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-                .padding(.bottom, 20)
-            
-            
-            Button(action: {
-                showingProgressiveOverloadInfo = false
-            }) {
-                Text("Got it")
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(10)
-                    .padding(.horizontal)
-            }
-            .padding(.bottom)
-        }
-        .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .frame(width: 375)
     }
 }

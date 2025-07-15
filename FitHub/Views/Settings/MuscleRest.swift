@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct MuscleRest: View {
-    @EnvironmentObject var userData: UserData
-    
+    @ObservedObject var userData: UserData
+        
     var body: some View {
         VStack {
-            Stepper("Rest Duration: \(userData.muscleRestDuration) hours", value: $userData.muscleRestDuration, in: 24...168)
-                .onChange(of: userData.muscleRestDuration) {
-                    userData.saveSingleVariableToFile(\.muscleRestDuration, for: .muscleRestDuration)
+            Stepper("Rest Duration: \(userData.settings.muscleRestDuration) hours", value: $userData.settings.muscleRestDuration, in: 24...168)
+                .onChange(of: userData.settings.muscleRestDuration) {
+                    userData.saveSingleStructToFile(\.settings, for: .settings)
                 }
                 .padding()
             
@@ -24,16 +24,19 @@ struct MuscleRest: View {
                 .padding(.top)
         }
         .padding()
-        .navigationTitle("Muscle Rest Duration").navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle("Muscle Rest Duration", displayMode: .inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    userData.muscleRestDuration = 48
+                    userData.settings.muscleRestDuration = 48
                 }) {
                     Text("Reset")
-                        .foregroundColor(.red)
+                        .foregroundColor(isDefault ? Color.gray : Color.red)        // make the label red
+                        .disabled(isDefault)
                 }
             }
         }
     }
+    
+    private var isDefault: Bool { userData.settings.muscleRestDuration == 48 }
 }

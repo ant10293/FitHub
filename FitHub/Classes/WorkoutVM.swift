@@ -1,5 +1,5 @@
 //
-//  WorkoutViewModel.swift
+//  WorkoutVM.swift
 //  FitHub
 //
 //  Created by Anthony Cantu on 5/1/25.
@@ -8,22 +8,41 @@
 import Foundation
 import SwiftUI
 
-class WorkoutViewModel: ObservableObject {
-     var template: WorkoutTemplate
-     var currentSet: Int = 1
-     var currentExerciseState: CurrentExerciseState?
-     var updatedMax: [PerformanceUpdate]
-     var isWorkoutingOut: Bool = false
-     var workoutCompleted: Bool = false
-     var isOverlayVisible: Bool = true
-     var showWorkoutSummary: Bool = false
 
-    init(template: WorkoutTemplate, currentExerciseState: CurrentExerciseState? = nil, updatedMax: [PerformanceUpdate]? = nil) {
-        self.template = template
-        self.currentExerciseState = currentExerciseState
-        self.updatedMax = updatedMax ?? []
-    }
-    
+final class WorkoutVM: ObservableObject {
+    var template: WorkoutTemplate
+    let activeWorkout: WorkoutInProgress?
+    let initialElapsedTime: Int?
+    var currentExerciseState: CurrentExerciseState?
+    var updatedMax: [PerformanceUpdate]
+    var workoutCompleted: Bool = false
+    var isOverlayVisible: Bool = true
+    var showWorkoutSummary: Bool = false
+    var templateCompletedBefore: Bool = false
+
+    init(
+        template: WorkoutTemplate,
+        activeWorkout: WorkoutInProgress? = nil,
+        initialElapsedTime: Int? = nil,
+        currentExerciseState: CurrentExerciseState? = nil,
+        updatedMax: [PerformanceUpdate]? = nil
+    ) {
+       self.template        = template
+       self.activeWorkout   = activeWorkout
+
+       if let aw = activeWorkout {
+           // ---- resume a paused session ----
+           self.initialElapsedTime   = aw.elapsedTime
+           self.currentExerciseState = aw.currentExerciseState
+           self.updatedMax           = aw.updatedMax
+       } else {
+           // ---- brand-new session ----
+           self.initialElapsedTime   = initialElapsedTime
+           self.currentExerciseState = currentExerciseState
+           self.updatedMax           = updatedMax ?? []
+       }
+   }
+
     func saveTemplate(userData: UserData, detailBinding: Binding<SetDetail>, exerciseBinding: Binding<Exercise>) {
         // 1) update the SetDetail binding directly
         detailBinding.wrappedValue = detailBinding.wrappedValue
@@ -34,55 +53,53 @@ class WorkoutViewModel: ObservableObject {
         }
 
         // 3) persist in UserData
-        userData.saveTemplate(template: template)
+        _ = userData.updateTemplate(template: template)
     }
     
-    func goToNextSetOrExercise(for exerciseIndex: Int, selectedExerciseIndex: inout Int?, timerManager: TimerManager) {
+    func setTemplateCompletionStatus(completedWorkouts: [CompletedWorkout]) {
+        templateCompletedBefore = completedWorkouts.contains(where: { $0.template.id == template.id })
+        print("Template Completed Before: \(templateCompletedBefore)")
+    }
+
+    func goToNextSetOrExercise(for exerciseIndex: Int, selectedExerciseIndex: inout Int?, timer: TimerManager) {
         let currentExercise = template.exercises[exerciseIndex]
-        let warmCount = currentExercise.warmUpSets
-        //print("🔄 goToNextSetOrExercise for index \(exerciseIndex) (“\(currentExercise.name)”), currentSet=\(currentExercise.currentSet), warmUpSets=\(warmCount)")
 
         // resume timer if inactive
-        if !timerManager.timerIsActive { timerManager.startTimer() }
+        if !timer.isActive { timer.startTimer() }
         
         // Helper to allocate time when truly leaving an exercise
         func allocateTimeToCurrentExercise(index: Int, exercise: Exercise) {
-            let timeSpent = timerManager.secondsElapsed - (currentExerciseState?.startTime ?? 0)
+            let timeSpent = timer.secondsElapsed - (currentExerciseState?.startTime ?? 0)
             template.exercises[index].timeSpent += timeSpent
-            currentExerciseState = CurrentExerciseState(id: exercise.id, name: exercise.name, index: index, startTime: timerManager.secondsElapsed)
+            currentExerciseState = CurrentExerciseState(id: exercise.id, name: exercise.name, index: index, startTime: timer.secondsElapsed)
             //print("⏱  Allocated \(timeSpent)s to “\(exercise.name)”, new exerciseState=\(currentExerciseState!)")
         }
 
         // 1) If we're still in warm‑up sets, just advance the set number here
-        if currentExercise.currentSet <= warmCount {
+        if currentExercise.currentSet <= currentExercise.warmUpSets {
             //print("➡️ Still in warm‑ups (set \(currentExercise.currentSet)), just incrementing")
             template.exercises[exerciseIndex].currentSet += 1
             return
         }
 
         // 2) Now all warm‑ups are done—we can consider supersets
-        if let supersetName = currentExercise.isSupersettedWith,
-           let supersetIdx = template.exercises.firstIndex(where: { $0.name == supersetName }) {
-            let supersetExercise = template.exercises[supersetIdx]
+        if let supersetName = currentExercise.isSupersettedWith, let supersetIdx = template.exercises.firstIndex(where: { $0.name == supersetName }) {
             //print("🤝 Superset partner found: “\(supersetExercise.name)” at index \(supersetIdx), its currentSet=\(supersetExercise.currentSet)")
 
             // If main sets remain on this exercise
             if currentExercise.currentSet < currentExercise.totalSets {
                 //print("➡️ Main sets remain (\(currentExercise.currentSet)/\(currentExercise.totalSets)), advancing current exercise")
-                template.exercises[exerciseIndex].currentSet += 1
                 allocateTimeToCurrentExercise(index: exerciseIndex, exercise: currentExercise)
-                selectedExerciseIndex = supersetIdx // the exercise switches after this line
+                template.exercises[exerciseIndex].currentSet += 1
+                moveToNextIncompleteExercise(after: supersetIdx-1, selectedExerciseIndex: &selectedExerciseIndex, timer: timer)
                 //print("🔄 switched to superset exercise \(supersetExercise.name)")
-                
-                allocateTimeToCurrentExercise(index: supersetIdx, exercise: supersetExercise)
-
             // Otherwise both done, mark complete and move on
             } else {
-                /*print("Set: \(currentExercise.currentSet)/\(currentExercise.totalSets)")
-                print("✅ Superset done, marking “\(currentExercise.name)” complete")*/
+                //print("\(currentExercise.name) Set: \(currentExercise.currentSet)/\(currentExercise.totalSets)")
+                //print("✅ Superset exercise “\(currentExercise.name)” complete")
                 allocateTimeToCurrentExercise(index: exerciseIndex, exercise: currentExercise)
                 template.exercises[exerciseIndex].isCompleted = true
-                moveToNextIncompleteExercise(after: exerciseIndex, selectedExerciseIndex: &selectedExerciseIndex, timerManager: timerManager)
+                moveToNextIncompleteExercise(after: supersetIdx-1, selectedExerciseIndex: &selectedExerciseIndex, timer: timer)
             }
         } else {
             // 3) No superset configured—just finish this exercise
@@ -90,40 +107,69 @@ class WorkoutViewModel: ObservableObject {
                 //print("➡️ Finishing remaining sets on “\(currentExercise.name)” (\(currentExercise.currentSet)/\(currentExercise.totalSets))")
                 template.exercises[exerciseIndex].currentSet += 1
             } else {
-                /*print("Set: \(currentExercise.currentSet)/\(currentExercise.totalSets)")
-                print("✅ “\(currentExercise.name)” fully completed, moving to next incomplete")*/
+                //print("\(currentExercise.name) Set: \(currentExercise.currentSet)/\(currentExercise.totalSets)")
+                //print("✅ “\(currentExercise.name)” fully completed, moving to next incomplete")
                 allocateTimeToCurrentExercise(index: exerciseIndex, exercise: currentExercise)
                 template.exercises[exerciseIndex].isCompleted = true
-                moveToNextIncompleteExercise(after: exerciseIndex, selectedExerciseIndex: &selectedExerciseIndex, timerManager: timerManager)
+                moveToNextIncompleteExercise(after: exerciseIndex, selectedExerciseIndex: &selectedExerciseIndex, timer: timer)
             }
         }
     }
-    
-    private func moveToNextIncompleteExercise(after index: Int, selectedExerciseIndex: inout Int?, timerManager: TimerManager) {
+
+    private func moveToNextIncompleteExercise(after index: Int, selectedExerciseIndex: inout Int?, timer: TimerManager) {
         // Find the next incomplete exercise starting after the given index
         if let nextExerciseIndex = template.exercises.indices.first(where: { $0 > index && !template.exercises[$0].isCompleted }) {
+            setAvgRPE(selectedIndex: selectedExerciseIndex)
             selectedExerciseIndex = nextExerciseIndex
+        } else if let anyExerciseIndex = template.exercises.firstIndex(where: { !$0.isCompleted } ) {
+            setAvgRPE(selectedIndex: selectedExerciseIndex)
+            selectedExerciseIndex = anyExerciseIndex
         } else {
             // No more incomplete exercises, finish the workout
-            timerManager.stopTimer()
+            timer.stopTimer()
             showCompletionAlert()
         }
     }
-    
+
+    private func setAvgRPE(selectedIndex: Int?) {
+        guard let selectedIndex = selectedIndex, !templateCompletedBefore else { return }
+        
+        let exercise = template.exercises[selectedIndex]
+       // if exercise.currentSet >= exercise.sets {
+        if exercise.isCompleted {
+            print("Last set completed of \(exercise.name)")
+            
+            if let avgRPE = exercise.currentWeekAvgRPE {
+                print("existing rpe found. Setting \(avgRPE) as last week rpe")
+                if template.exercises[selectedIndex].previousWeeksAvgRPE == nil {
+                    template.exercises[selectedIndex].previousWeeksAvgRPE = [avgRPE]
+                } else {
+                    template.exercises[selectedIndex].previousWeeksAvgRPE?.append(avgRPE)
+                }
+                if let prevList = template.exercises[selectedIndex].previousWeeksAvgRPE {
+                    print("previous weeks rpes: \(prevList)")
+                }
+            }
+            
+            let RPEs = exercise.setDetails.compactMap(\.rpe)
+            if !RPEs.isEmpty {
+                let averageRPE: Double = {
+                    let sum = RPEs.reduce(0, +)
+                    return Double(sum) / Double(RPEs.count)
+                }()
+                
+                template.exercises[selectedIndex].currentWeekAvgRPE = averageRPE
+                print("\(exercise.name), avg rpe: \(averageRPE)")
+            }
+        }
+    }
+
     private func showCompletionAlert() {
         isOverlayVisible = false
         showWorkoutSummary = true
         workoutCompleted = true
     }
-    
-    func canCompleteSet() -> Bool {
-        template.exercises.allSatisfy { $0.sets >= currentSet }
-    }
-    
-    func maximumSets() -> Int {
-        template.exercises.map { $0.sets }.max() ?? 1
-    }
-    
+
     func isLastExerciseForIndex(_ exerciseIndex: Int) -> Bool {
         // Check if all other exercises except the current one are completed
         let allOtherExercisesCompleted = template.exercises.indices
@@ -132,7 +178,7 @@ class WorkoutViewModel: ObservableObject {
         
         return allOtherExercisesCompleted
     }
-    
+
     func getPRExercises() -> [String] {
         var exercisePRs: [String] = []
         
@@ -142,33 +188,37 @@ class WorkoutViewModel: ObservableObject {
         
         return exercisePRs
     }
-    
-    func calculateWorkoutSummary(timerManager: TimerManager) -> (totalVolume: Double, totalWeight: Double, totalReps: Int, totalTime: String, exercisePRs: [String]) {
-        let totalVolume = template.exercises.reduce(0) { total, exercise in
+
+    func calculateWorkoutSummary(secondsElapsed: Int) -> (WorkoutSummaryData) {
+        let volume = template.exercises.reduce(0) { total, exercise in
             total + exercise.setDetails.reduce(0) { $0 + $1.weight * Double($1.reps) }
         }
         
-        let totalWeight = template.exercises.reduce(0) { total, exercise in
+        let weight = template.exercises.reduce(0) { total, exercise in
             total + exercise.setDetails.reduce(0) { $0 + $1.weight }
         }
         
-        let totalReps = template.exercises.reduce(0) { total, exercise in
+        let reps = template.exercises.reduce(0) { total, exercise in
             total + exercise.setDetails.reduce(0) { $0 + $1.reps }
         }
         
-        let totalTime = timeString(from: timerManager.secondsElapsed)
+        let time = Format.timeString(from: secondsElapsed)
         
         let exercisePRs = getPRExercises()
         
-        return (totalVolume, totalWeight, totalReps, totalTime, exercisePRs)
+        return WorkoutSummaryData(totalVolume: volume, totalWeight: weight, totalReps: reps, totalTime: time, exercisePRs: exercisePRs)
     }
-    
-    func getExerciseIndex(timerManager: TimerManager) -> Int {
-        //print("Timer Active: \(timerManager.timerIsActive)")
+
+    func getExerciseIndex(timer: TimerManager) -> Int {
+        //print("Timer Active: \(timer.isActive)")
 
         // 1) If we’re just starting (timer not running), attempt to resume
-        if !timerManager.timerIsActive {
-            timerManager.startTimer()
+        if !timer.isActive {
+            // resume from saved time if present
+            if let elapsedTime = initialElapsedTime {
+                timer.secondsElapsed = elapsedTime
+            } 
+            timer.startTimer()
             // unwrap the saved state
             if let state = currentExerciseState {
                 let resumeIdx = state.index
@@ -178,105 +228,104 @@ class WorkoutViewModel: ObservableObject {
                     return resumeIdx
                 }
             }
-            // otherwise fall through to pick first unfinished
         }
-        // 2) Find the first unfinished exercise (or 0 if none)
+        // 2) Otherwise Find the first unfinished exercise (or 0 if none)
         return template.exercises.firstIndex(where: { !$0.isCompleted }) ?? 0
     }
-    
+
     func getIndex(exercise: Exercise) -> Int {
-        return template.exercises.firstIndex(where: { $0.name == exercise.name }) ?? 0
+        return template.exercises.firstIndex(where: { $0.id == exercise.id }) ?? 0
     }
-    
-    func getExerciseCount() -> Int {
-        return template.exercises.count
-    }
-    
-    func updatePerformance(_ exerciseName: String, _ newValue: Double, _ repsXWeight: RepsXWeight, _ setNumber: Int) {
-        if let index = updatedMax.firstIndex(where: { $0.exerciseName == exerciseName }) {
+
+    func updatePerformance(_ update: PerformanceUpdate) {
+        if let index = updatedMax.firstIndex(where: { $0.exerciseId == update.exerciseId }) {
             // Overwrite existing record if necessary
-            if updatedMax[index].value < newValue {
-                updatedMax[index].value = newValue
-                updatedMax[index].repsXweight = repsXWeight
-                updatedMax[index].setNumber = setNumber
+            if updatedMax[index].value < update.value {
+                updatedMax[index].value = update.value
+                updatedMax[index].repsXweight = update.repsXweight
+                updatedMax[index].setNumber = update.setNumber
             }
         } else {
             // Add new record
-            let newUpdate = PerformanceUpdate(exerciseName: exerciseName, value: newValue, repsXweight: repsXWeight, setNumber: setNumber)
-            updatedMax.append(newUpdate)
+            updatedMax.append(update)
         }
     }
-    
-    func saveWorkoutInProgress(userData: UserData, timerManager: TimerManager) {
+
+    @MainActor
+    func saveWorkoutInProgress(userData: UserData, timer: TimerManager) {
         let now = Date()
         
         // Create a WorkoutInProgress object to store the current state
         let workoutInProgress = WorkoutInProgress(
             template: template,
-            elapsedTime: timerManager.secondsElapsed,
+            elapsedTime: timer.secondsElapsed,
             currentExerciseState: currentExerciseState,
             dateStarted: now,
-            exercises: template.exercises,
             updatedMax: updatedMax
         )
         
         // Save this to userData
-        userData.activeWorkout = workoutInProgress
-        //userData.saveSingleVariableToFile(\.activeWorkout, for: .activeWorkout)
+        userData.sessionTracking.activeWorkout = workoutInProgress
         userData.saveToFileImmediate()
     }
-    
-    func finishWorkoutAndDismiss(userData: UserData, exerciseData: ExerciseData, timerManager: TimerManager) -> Bool {
+
+    @MainActor
+    func finishWorkoutAndDismiss(ctx: AppContext, timer: TimerManager) -> Bool {
         var isDone: Bool = false
-        var shouldRemoveNotifications = false
+        var shouldRemoveDate: Bool = false
         let now = Date()
         let calendar = Calendar.current
         let roundedDate = calendar.startOfDay(for: now)
                 
-        let shouldIncrement = userData.removePlannedWorkoutDate(template: template, date: roundedDate)
-        let completedToday = userData.completedWorkouts.contains { workout in         // Check if there's a workout completed today
+        let (shouldIncrement, updatedTemplate) = ctx.userData.removePlannedWorkoutDate(template: template, removeNotifications: true, removeDate: false, date: roundedDate)
+        if let updatedTemplate { template = updatedTemplate }
+        let completedToday = ctx.userData.workoutPlans.completedWorkouts.contains { workout in         // Check if there's a workout completed today
             calendar.isDate(workout.date, inSameDayAs: roundedDate)
         }
         
         if !completedToday {
             if shouldIncrement {
                 print("Date Found. Incrementing Workout Streak...")
-                shouldRemoveNotifications = true
+                shouldRemoveDate = true
             } else {
                 print("Date not found...")
                 print("No workouts completed yet today. Incrementing Workout Streak...")
             }
-            userData.incrementWorkoutStreak(shouldSave: false)
+            ctx.userData.incrementWorkoutStreak(shouldSave: false)
         }
         // save precise date for determing freshness of muscle groups
-        let completedWorkout = CompletedWorkout(name: template.name, template: template, updatedMax: updatedMax, duration: timerManager.secondsElapsed, date: Date())
-        userData.completedWorkouts.append(completedWorkout)         // Append to completedWorkouts and save
-        userData.saveToFile()
+        let completedWorkout = CompletedWorkout(name: template.name, template: template, updatedMax: updatedMax, duration: timer.secondsElapsed, date: now)
+        ctx.userData.workoutPlans.completedWorkouts.append(completedWorkout)         // Append to completedWorkouts and save
+        //ctx.userData.saveToFile()
         
-        if endWorkoutAndDismiss(userData: userData, exerciseData: exerciseData, shouldRemoveNotifications: shouldRemoveNotifications, timerManager: timerManager) {
+        if endWorkoutAndDismiss(ctx: ctx, timer: timer, shouldRemoveDate: shouldRemoveDate) {
             isDone = true
         }
         return isDone
     }
-    
-    func endWorkoutAndDismiss(userData: UserData, exerciseData: ExerciseData, shouldRemoveNotifications: Bool, timerManager: TimerManager) -> Bool {
+        
+    @MainActor
+    func endWorkoutAndDismiss(ctx: AppContext, timer: TimerManager, shouldRemoveDate: Bool) -> Bool {
         // update exercise performance
         if !updatedMax.isEmpty {
             for performanceUpdate in updatedMax {
                 if let repsWeight = performanceUpdate.repsXweight {
                     let reps = repsWeight.reps
                     let weight = repsWeight.weight
-                    exerciseData.updateExercisePerformance(for: performanceUpdate.exerciseName, newValue: performanceUpdate.value, reps: reps, weight: weight, csvEstimate: false)
+                    ctx.exercises.updateExercisePerformance(for: performanceUpdate.exerciseId, exerciseName: performanceUpdate.exerciseName, newValue: performanceUpdate.value, reps: reps, weight: weight, csvEstimate: false)
                 } else {
-                    exerciseData.updateExercisePerformance(for: performanceUpdate.exerciseName, newValue: performanceUpdate.value, reps: nil, weight: nil, csvEstimate: false)
+                    ctx.exercises.updateExercisePerformance(for: performanceUpdate.exerciseId, exerciseName: performanceUpdate.exerciseName, newValue: performanceUpdate.value, reps: nil, weight: nil, csvEstimate: false)
                 }
             }
-            exerciseData.savePerformanceData()
+            ctx.exercises.savePerformanceData()
         }
         
-        timerManager.resetTimer()
-        timerManager.stopRest()
-        userData.resetExercisesInTemplate(for: template, shouldRemoveNotifications: shouldRemoveNotifications)
+        timer.resetTimer()
+        timer.stopRest()
+        ctx.userData.resetExercisesInTemplate(for: template, shouldRemoveDate: shouldRemoveDate)
+        ctx.userData.sessionTracking.activeWorkout = nil
+        ctx.userData.isWorkingOut = false
+        ctx.userData.saveToFile()
         
         return true
     }

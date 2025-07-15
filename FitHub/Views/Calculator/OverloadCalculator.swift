@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct TemplateSelection: View {
-    @EnvironmentObject var userData: UserData
     @State private var selectedTemplate: SelectedTemplate?
     @State private var navigateToOverload: Bool = false
-
+    let userTemplates: [WorkoutTemplate]
+    let trainerTemplates: [WorkoutTemplate]
+    
     var body: some View {
         workoutList()
         .navigationDestination(isPresented: $navigateToOverload) {
@@ -19,31 +20,33 @@ struct TemplateSelection: View {
                 OverloadCalculator(selectedTemplate: selectedTemplate)
             }
         }
-        .navigationTitle("Select Template").navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle("Select Template", displayMode: .inline)
     }
     
     private func workoutList() -> some View {
         List {
-            if userData.userTemplates.isEmpty && userData.trainerTemplates.isEmpty {
-                Text("No templates found.")
+            if userTemplates.isEmpty && trainerTemplates.isEmpty {
+                Text("No templates found. Create your own or generate them in the trainer tab.")
                     .foregroundColor(.gray)
                     .padding(.horizontal)
             } else {
-                if !userData.userTemplates.isEmpty {
-                    templatesSection(templates: userData.userTemplates, userTemplates: true)
+                if !userTemplates.isEmpty {
+                    templatesSection(templates: userTemplates, userTemplates: true)
                 }
-                if !userData.trainerTemplates.isEmpty {
-                    templatesSection(templates: userData.trainerTemplates, userTemplates: false)
+                if !trainerTemplates.isEmpty {
+                    templatesSection(templates: trainerTemplates, userTemplates: false)
                 }
             }
         }
     }
     
     private func templatesSection(templates: [WorkoutTemplate], userTemplates: Bool) -> some View {
-        Section(header: Text(userTemplates ? "Your Templates" : "Trainer Templates")) {
+        Section {
             ForEach(templates.indices, id: \.self) { index in
                 templateButton(for: index, userTemplate: userTemplates)
             }
+        } header: {
+            Text(userTemplates ? "Your Templates" : "Trainer Templates")
         }
     }
     
@@ -51,15 +54,15 @@ struct TemplateSelection: View {
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
             // Main button action area
             Button(action: {
-                let template = userTemplate ? userData.userTemplates[index] : userData.trainerTemplates[index]
+                let template = userTemplate ? userTemplates[index] : trainerTemplates[index]
                 selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: userTemplate)
                 navigateToOverload = true
             }) {
                 HStack {
                     VStack(alignment: .leading) {
-                        Text(userTemplate ? userData.userTemplates[index].name : userData.trainerTemplates[index].name)
+                        Text(userTemplate ? userTemplates[index].name : trainerTemplates[index].name)
                             .foregroundColor(.primary) // Ensure the text color remains unchanged
-                        Text(SplitCategory.concatenateCategories(for: userTemplate ? userData.userTemplates[index].categories : userData.trainerTemplates[index].categories))
+                        Text(SplitCategory.concatenateCategories(for: userTemplate ? userTemplates[index].categories : trainerTemplates[index].categories))
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }
@@ -75,10 +78,7 @@ struct TemplateSelection: View {
 }
 
 struct OverloadCalculator: View {
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var exerciseData: ExerciseData
-    @EnvironmentObject var csvLoader: CSVLoader
-    @EnvironmentObject var equipmentData: EquipmentData
+    @EnvironmentObject private var ctx: AppContext
     @State private var selectedWeek: Int = 1
     @State private var weekExerciseMap: [Int: [Exercise]] = [:] // Map weeks to processed exercises
     var selectedTemplate: SelectedTemplate
@@ -97,7 +97,7 @@ struct OverloadCalculator: View {
                         .padding(.leading)
                     
                     Picker("Select Week", selection: $selectedWeek) {
-                        ForEach(1...userData.progressiveOverloadPeriod, id: \.self) { week in
+                        ForEach(1...ctx.userData.settings.progressiveOverloadPeriod, id: \.self) { week in
                             Text("\(week)")
                         }
                     }
@@ -110,14 +110,12 @@ struct OverloadCalculator: View {
                 
                 if let processedExercises = weekExerciseMap[selectedWeek] {
                     let previousWeekExercises = weekExerciseMap[selectedWeek - 1] // Safely fetch previous week
-                    let template = selectedTemplate.isUserTemplate ? userData.userTemplates[selectedTemplate.index] : userData.trainerTemplates[selectedTemplate.index]
+                    let template = selectedTemplate.isUserTemplate ? ctx.userData.workoutPlans.userTemplates[selectedTemplate.index] : ctx.userData.workoutPlans.trainerTemplates[selectedTemplate.index]
                     WorkoutTemplateView(processedExercises: processedExercises, previousWeekExercises: previousWeekExercises ?? [], templateName: template.name)
                 }
             }
-            .onAppear {
-                updateProcessedExercises()
-            }
-            .navigationTitle("Progressive Overload").navigationBarTitleDisplayMode(.inline)
+            .onAppear(perform: updateProcessedExercises)
+            .navigationBarTitle("Progressive Overload", displayMode: .inline)
         }
     }
     
@@ -126,18 +124,18 @@ struct OverloadCalculator: View {
         let selectedTemplateIndex = selectedTemplate.index
         
         if selectedTemplate.isUserTemplate {
-            guard userData.userTemplates.indices.contains(selectedTemplateIndex) else {
+            guard ctx.userData.workoutPlans.userTemplates.indices.contains(selectedTemplateIndex) else {
                 //print("Debug: selectedTemplateIndex out of range - \(selectedTemplateIndex)")
                 return
             }
-            template = userData.userTemplates[selectedTemplateIndex]
+            template = ctx.userData.workoutPlans.userTemplates[selectedTemplateIndex]
         } else {
             // Debug: check if the selectedTemplateIndex is within the range
-            guard userData.trainerTemplates.indices.contains(selectedTemplateIndex) else {
+            guard ctx.userData.workoutPlans.trainerTemplates.indices.contains(selectedTemplateIndex) else {
                 //print("Debug: selectedTemplateIndex out of range - \(selectedTemplateIndex)")
                 return
             }
-            template = userData.trainerTemplates[selectedTemplateIndex]
+            template = ctx.userData.workoutPlans.trainerTemplates[selectedTemplateIndex]
         }
         //print("Debug: Using template - \(template.name)")
         
@@ -145,7 +143,7 @@ struct OverloadCalculator: View {
         if weekExerciseMap[0] == nil {
             weekExerciseMap[0] = template.exercises.map { exercise in
                 var baseExercise = exercise
-                baseExercise.weeksStagnated = userData.stagnationPeriod
+                baseExercise.weeksStagnated = ctx.userData.settings.stagnationPeriod
                 baseExercise.overloadProgress = 0
                 baseExercise.setDetails = exercise.setDetails // Original details are preserved here
                 return baseExercise
@@ -165,7 +163,7 @@ struct OverloadCalculator: View {
                     var newExercise = exercise
                     
                     // Set weeks stagnated to the user's stagnation period
-                    newExercise.weeksStagnated = userData.stagnationPeriod
+                    newExercise.weeksStagnated = ctx.userData.settings.stagnationPeriod
                     //print("Debug: Updated weeksStagnated for exercise \(exercise.name) to \(newExercise.weeksStagnated)")
                     
                     // Update overload progress based on the week
@@ -173,13 +171,7 @@ struct OverloadCalculator: View {
                     //print("Debug: Updated overloadProgress for exercise \(exercise.name) to \(week)")
                     
                     // Apply progressive overload to set details
-                    newExercise.setDetails = ProgressiveOverloadStyle.applyProgressiveOverload(
-                        exercise: newExercise,
-                        period: userData.progressiveOverloadPeriod,
-                        style: userData.progressiveOverloadStyle,
-                        roundingPreference: userData.roundingPreference,
-                        equipmentData: equipmentData)
-                    
+                    newExercise.setDetails = ctx.userData.applyProgressiveOverload(exercise: newExercise, equipmentData: ctx.equipment)
                     //print("Debug: Applied progressive overload to \(exercise.name), new set details: \(newExercise.setDetails)")
                     
                     return newExercise
@@ -189,136 +181,137 @@ struct OverloadCalculator: View {
             }
         }
     }
-}
-
-
-struct WorkoutTemplateView: View {
-    var processedExercises: [Exercise]
-    var previousWeekExercises: [Exercise]?
-    var templateName: String
     
-    var body: some View {
-        ZStack {
-            // 1) the full-screen background
-            Color(UIColor.systemBackground)
-                .ignoresSafeArea()
-            
-            ScrollView {
-                VStack(alignment: .leading, spacing: 15) {
-                    Text(templateName)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .padding(.bottom, 10)
-                    
-                    if processedExercises.isEmpty {
-                        HStack {
-                            Spacer()
-                            Text("No Exercises Available for this Template.")
-                                .foregroundColor(.gray)
-                            Spacer()
-                        }
-                        .padding()
-                        .background(Color(UIColor.secondarySystemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .padding(.horizontal)
-                    } else {
-                        ForEach(processedExercises) { exercise in
-                            VStack(alignment: .leading, spacing: 10) {
-                                
-                                Text(exercise.name)
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
-                                    //.padding(.bottom, 5)
-                                
-                                // Labels Row
-                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 10)], spacing: 5) {
-                                    // Headers
-                                    Text("Set")
-                                        .font(.caption)
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(.gray)
-                                    Text("Weight")
-                                        .font(.caption)
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(.gray)
-                                    Text("Reps")
-                                        .font(.caption)
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(.gray)
-                                }
-                                
-                                LazyVGrid(
-                                    columns: [
-                                        GridItem(.adaptive(minimum: 80), spacing: 10),
-                                        GridItem(.adaptive(minimum: 80), spacing: 10),
-                                        GridItem(.adaptive(minimum: 80), spacing: 10)
-                                    ],
-                                    spacing: 5
-                                ) {
-                                    // Rows for each set
-                                    ForEach(exercise.setDetails) { set in
-                                        let previousSet = previousWeekExercises?
-                                            .first(where: { $0.id == exercise.id })?
-                                            .setDetails
-                                            .first(where: { $0.setNumber == set.setNumber })
-                                        
-                                        // Set number
-                                        Text("\(set.setNumber)")
+    struct WorkoutTemplateView: View {
+        let processedExercises: [Exercise]
+        let previousWeekExercises: [Exercise]?
+        let templateName: String
+        
+        var body: some View {
+            ZStack {
+                // 1) the full-screen background
+                Color(UIColor.systemBackground)
+                    .ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 15) {
+                        Text(templateName)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .padding(.bottom, 10)
+                        
+                        if processedExercises.isEmpty {
+                            HStack {
+                                Spacer()
+                                Text("No Exercises Available for this Template.")
+                                    .foregroundColor(.gray)
+                                Spacer()
+                            }
+                            .padding()
+                            .background(Color(UIColor.secondarySystemBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .padding(.horizontal)
+                        } else {
+                            ForEach(processedExercises) { exercise in
+                                VStack(alignment: .leading, spacing: 10) {
+                                    
+                                    Text(exercise.name)
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+                                        //.padding(.bottom, 5)
+                                    
+                                    // Labels Row
+                                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 10)], spacing: 5) {
+                                        // Headers
+                                        Text("Set")
                                             .font(.caption)
-                                        
-                                        // Weight comparison
-                                        if let previousWeight = previousSet?.weight, previousWeight != set.weight {
-                                            HStack(spacing: 2) {
-                                                // Display previous weight
-                                                Text(previousWeight.truncatingRemainder(dividingBy: 1) == 0 ? "\(Int(previousWeight))" : "\(previousWeight, specifier: "%.1f")")
-                                                    .font(.caption)
-                                                    .foregroundColor(.gray)
-                                                
-                                                Text(" → ")
-                                                    .font(.caption)
-                                                
-                                                // Display current weight with appropriate color
-                                                Text(set.weight.truncatingRemainder(dividingBy: 1) == 0 ? "\(Int(set.weight)) lbs" : "\(set.weight, specifier: "%.1f") lbs")
-                                                    .font(.caption)
-                                                    .foregroundColor(set.weight > previousWeight ? .green : .red)
-                                            }
-                                        } else {
-                                            Text(exercise.usesWeight ? (set.weight.truncatingRemainder(dividingBy: 1) == 0 ? "\(Int(set.weight)) lbs" : "\(set.weight, specifier: "%.1f") lbs") : "Bodyweight")
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(.gray)
+                                        Text("Weight")
+                                            .font(.caption)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(.gray)
+                                        Text("Reps")
+                                            .font(.caption)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(.gray)
+                                    }
+                                    
+                                    LazyVGrid(
+                                        columns: [
+                                            GridItem(.adaptive(minimum: 80), spacing: 10),
+                                            GridItem(.adaptive(minimum: 80), spacing: 10),
+                                            GridItem(.adaptive(minimum: 80), spacing: 10)
+                                        ],
+                                        spacing: 5
+                                    ) {
+                                        // Rows for each set
+                                        ForEach(exercise.setDetails) { set in
+                                            let previousSet = previousWeekExercises?
+                                                .first(where: { $0.id == exercise.id })?
+                                                .setDetails
+                                                .first(where: { $0.setNumber == set.setNumber })
+                                            
+                                            // Set number
+                                            Text("\(set.setNumber)")
                                                 .font(.caption)
-                                        }
-                                        
-                                        // Reps comparison
-                                        if let previousReps = previousSet?.reps, previousReps != set.reps {
-                                            HStack(spacing: 2) {
-                                                // Display previous reps
-                                                Text("\(previousReps)")
+                                            
+                                            // Weight comparison
+                                            if let previousWeight = previousSet?.weight, previousWeight != set.weight {
+                                                HStack(spacing: 2) {
+                                                    // Display previous weight
+                                                    Text(previousWeight.truncatingRemainder(dividingBy: 1) == 0 ? "\(Int(previousWeight))" : "\(previousWeight, specifier: "%.1f")")
+                                                        .font(.caption)
+                                                        .foregroundColor(.gray)
+                                                    
+                                                    Text(" → ")
+                                                        .font(.caption)
+                                                    
+                                                    // Display current weight with appropriate color
+                                                    Text(set.weight.truncatingRemainder(dividingBy: 1) == 0 ? "\(Int(set.weight)) lbs" : "\(set.weight, specifier: "%.1f") lbs")
+                                                        .font(.caption)
+                                                        .foregroundColor(set.weight > previousWeight ? .green : .red)
+                                                }
+                                            } else {
+                                                Text(exercise.type.usesWeight ? (set.weight.truncatingRemainder(dividingBy: 1) == 0 ? "\(Int(set.weight)) lbs" : "\(set.weight, specifier: "%.1f") lbs") : "Bodyweight")
                                                     .font(.caption)
-                                                    .foregroundColor(.gray)
-                                                
-                                                Text(" → ")
-                                                    .font(.caption)
-                                                
-                                                // Display current reps with appropriate color
+                                            }
+                                            
+                                            // Reps comparison
+                                            if let previousReps = previousSet?.reps, previousReps != set.reps {
+                                                HStack(spacing: 2) {
+                                                    // Display previous reps
+                                                    Text("\(previousReps)")
+                                                        .font(.caption)
+                                                        .foregroundColor(.gray)
+                                                    
+                                                    Text(" → ")
+                                                        .font(.caption)
+                                                    
+                                                    // Display current reps with appropriate color
+                                                    Text("\(set.reps)")
+                                                        .font(.caption)
+                                                        .foregroundColor(set.reps > previousReps ? .green : .red)
+                                                }
+                                            } else {
                                                 Text("\(set.reps)")
                                                     .font(.caption)
-                                                    .foregroundColor(set.reps > previousReps ? .green : .red)
                                             }
-                                        } else {
-                                            Text("\(set.reps)")
-                                                .font(.caption)
                                         }
                                     }
+                                    .padding(.vertical, 5)
+                                    .background(Color(UIColor.secondarySystemBackground))
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
                                 }
-                                .padding(.vertical, 5)
-                                .background(Color(UIColor.secondarySystemBackground))
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .padding(.horizontal)
                             }
-                            .padding(.horizontal)
                         }
                     }
+                    .padding()
                 }
-                .padding()
             }
         }
     }
 }
+
+

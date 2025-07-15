@@ -2,22 +2,20 @@ import SwiftUI
 
 
 struct TrainerView: View {
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var equipmentData: EquipmentData
-    
+    @EnvironmentObject private var ctx: AppContext
+
     var body: some View {
         VStack {
-            if !userData.questionsAnswered {
-                Questionnaire(userData: userData)
-            } else if !userData.isEquipmentSelected {
-                EquipmentSelection(userData: userData, equipmentData: equipmentData)
-            } else if !userData.infoCollected {
+            if !ctx.userData.setup.questionsAnswered {
+                Questionnaire()
+            } else if !ctx.userData.setup.isEquipmentSelected {
+                EquipmentSelection(selection: ctx.userData.evaluation.equipmentSelected)
+            } else if !ctx.userData.setup.infoCollected {
                 AssessmentView()
             } else {
                 WorkoutPlan()
             }
         }
-        .navigationBarTitle("Trainer")
     }
 }
 

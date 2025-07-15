@@ -8,47 +8,72 @@
 import SwiftUI
 
 struct EquipmentPopupView: View {
-    @EnvironmentObject var equipmentData: EquipmentData
+    let selectedEquipment: [GymEquipment]
+    var showingCategories: Bool = false
+    var title: String = "Your Equipment"
     var onClose: () -> Void
-    var onContinue: () -> Void
-    var onEdit: () -> Void
+    var onContinue: () -> Void = {}
+    var onEdit: () -> Void = {}
     
     var body: some View {
         VStack {
             HStack {
+                // ───── leading  ─────
                 Button(action: onClose) {
                     Image(systemName: "xmark")
+                        .padding()
                 }
-                .padding()
+
                 Spacer()
-                Text("Your Equipment")
-                    .bold()
-                Spacer()
-                Button("Edit") {
-                    onEdit()
+
+                // ───── trailing ─────
+                if !showingCategories {
+                    Button("Edit", action: onEdit)
+                        .padding()
                 }
-                .padding()
             }
+            .overlay(                                       // centered *over* the HStack
+                Text(title)
+                    .bold()
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity)             // keep it truly centred
+            )
+            .padding()
+
             
             // Filter and list only selected equipment
             VStack(spacing: 0) {
-                EquipmentList(equipment: equipmentData.allEquipment.filter { $0.isSelected }, title: "")
-                Divider()
+                EquipmentList
+                if !showingCategories {
+                    Divider()
+                }
             }
-            Button("Save and Continue") {
-                onContinue()
+            if !showingCategories {
+                Button("Save and Continue") {
+                    onContinue()
+                }
+                .foregroundColor(.white)
+                .padding()
+                .background(Color.blue)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             }
-            .foregroundColor(.white)
-            .padding()
-            .background(Color.blue)
-            .cornerRadius(8)
         }
     }
-    struct Line: View {
-        var body: some View {
-            Rectangle()
-                .frame(width: .infinity, height: 1)
-                .foregroundColor(.gray)
+    
+    private var EquipmentList: some View {
+        List(selectedEquipment, id: \.id) { gymEquip in
+            HStack {
+                gymEquip.fullImage
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: UIScreen.main.bounds.width * 0.15)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                
+                Text(gymEquip.name)
+
+                Spacer()
+            }
+            .padding(.vertical, 4)
         }
     }
 }

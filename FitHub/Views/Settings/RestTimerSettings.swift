@@ -13,29 +13,31 @@ struct RestTimerSettings: View {
     @State private var hours: Int
     @State private var minutes: Int
     @State private var seconds: Int
+    let initialRestPeriod: Int
     
     init(userData: UserData) {
         _userData = ObservedObject(wrappedValue: userData)
         
-        let totalSeconds = userData.customRestPeriod ?? FitnessGoal.determineRestPeriod(for: userData.goal) //userData.determineRestPeriod()
+        let totalSeconds = userData.workoutPrefs.customRestPeriod ?? FitnessGoal.determineRestPeriod(for: userData.physical.goal)
         _hours = State(initialValue: totalSeconds / 3600)
         _minutes = State(initialValue: (totalSeconds % 3600) / 60)
         _seconds = State(initialValue: totalSeconds % 60)
+        initialRestPeriod = totalSeconds
     }
     
     var body: some View {
         Form {
             Section {
-                Toggle(isOn: $userData.restTimerEnabled) {
+                Toggle(isOn: $userData.settings.restTimerEnabled) {
                     Text("Rest Timer")
                 }
                 .padding(.horizontal)
-                .onChange(of: userData.restTimerEnabled) { 
-                    userData.saveSingleVariableToFile(\.restTimerEnabled, for: .restTimerEnabled)
+                .onChange(of: userData.settings.restTimerEnabled) { 
+                    userData.saveSingleStructToFile(\.settings, for: .settings)
                 }
             }
             
-            if userData.restTimerEnabled {
+            if userData.settings.restTimerEnabled {
                 VStack {
                     Text("Rest Period")
                         .font(.headline)
@@ -50,14 +52,17 @@ struct RestTimerSettings: View {
                 .centerHorizontally()
             }
         }
-        .navigationTitle("Rest Timer Settings").navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle("Rest Timer Settings", displayMode: .inline)
         .onDisappear {
-            userData.saveSingleVariableToFile(\.customRestPeriod, for: .customRestPeriod)
+            // save if needed
+            if initialRestPeriod != userData.workoutPrefs.customRestPeriod {
+                userData.saveSingleStructToFile(\.settings, for: .settings)
+            }
         }
     }
     
     private func updateRestPeriod() {
         let totalSeconds = (hours * 3600) + (minutes * 60) + seconds
-        userData.customRestPeriod = totalSeconds
+        userData.workoutPrefs.customRestPeriod = totalSeconds
     }
 }

@@ -9,395 +9,297 @@ import SwiftUI
 
 // this view is an abomination and must be fixed
 struct ExerciseDetailView: View {
-    @ObservedObject var exerciseData: ExerciseData
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var equipmentData: EquipmentData
-    @EnvironmentObject var csvLoader: CSVLoader
+    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
+    @EnvironmentObject private var ctx: AppContext
+    @StateObject private var kbd = KeyboardManager.shared
     @State private var showingAdjustmentsView: Bool = false
     @State private var showingUpdate1RMView: Bool = false
-    @State private var isKeyboardVisible: Bool = false
-    @State private var selectedOption: String = "Standards"
-    @State private var selectedSortOption: CompletedExerciseSortOption = .mostRecent
     @State private var showingSortPicker = false
     @State private var showingList: Bool = false
+    @State private var editingExercise: Bool = false
+    @State private var selectedOption: String = "Standards"
+    @State private var selectedView: String = "About"
     var viewingDuringWorkout: Bool
     var exercise: Exercise
-    var onClose: () -> Void
-    @State private var selectedView: String = "About"
+    var onClose: () -> Void = {}
     
     var body: some View {
-        ZStack {
-            VStack {
-                if viewingDuringWorkout {
-                    HStack {
-                        Text("\(exercise.name)").bold()
-                            .frame(maxWidth: 250)
-                            .multilineTextAlignment(.center)
-                            .padding(.bottom, 30)
-                            .centerHorizontally()
-                            .overlay(
-                                Button(action: onClose) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .imageScale(.large)
-                                        .foregroundColor(.gray)
-                                }
-                                    .padding(.bottom, 30)
-                                    .padding(.trailing),
-                                alignment: .trailing
-                            )
-                    }
-                }
-                
-                Picker("View", selection: $selectedView) {
-                    Text("About").tag("About")
-                    Text("History").tag("History")
-                    Text("PRs").tag("PRs")
-                    Text("Percentile").tag("Percentile")
-                }
-                .padding(.top, -30)
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
-                
+        VStack {
+            if viewingDuringWorkout {
+                workoutToolbar
+            }
+            
+            Picker("View", selection: $selectedView) {
+                Text("About").tag("About")
+                Text("History").tag("History")
+                Text("PRs").tag("PRs")
+                Text("Percentile").tag("Percentile")
+            }
+            .padding(.horizontal)
+            .pickerStyle(SegmentedPickerStyle())
+            
+            Group {
                 switch selectedView {
                 case "About":
                     aboutView
                 case "History":
-                    historyView
+                    historyView(completedWorkouts: ctx.userData.workoutPlans.completedWorkouts, exerciseName: exercise.name)
                 case "Percentile":
                     percentileView
                 case "PRs":
-                    VStack {
-                        if showingUpdate1RMView {
-                            UpdateMaxView(
-                                usesWeight: exercise.usesWeight,
-                                onSave: { newOneRepMax in
-                                    exerciseData.updateExercisePerformance(for: exercise.name, newValue: newOneRepMax, reps: nil, weight: nil, csvEstimate: false)
-                                    exerciseData.savePerformanceData()
-                                    showingUpdate1RMView = false
-                                    isKeyboardVisible = false
-                                },
-                                onCancel: {
-                                    showingUpdate1RMView = false
-                                    isKeyboardVisible = false
-                                }
-                            )
-                        }
-                        
-                        else if let exercisePerformance = exerciseData.allExercisePerformance[exercise.name],
-                                let max = exercisePerformance.maxValue,
-                                let date = exercisePerformance.currentMaxDate {
-                            
-                            if !showingList {
-                                ExercisePerformanceGraph(
-                                    exercise: exercise,
-                                    value: max,
-                                    currentMaxDate: date,
-                                    pastMaxes: exercisePerformance.pastMaxes ?? []
-                                )
-                            } else {
-                                ExercisePerformanceView(
-                                    exercise: exercise,
-                                    maxValue: max,
-                                    repsXweight: exercisePerformance.repsXweight,
-                                    currentMaxDate: date,
-                                    pastMaxes: exercisePerformance.pastMaxes ?? []
-                                )
-                            }
-                        }
-                        else {
-                            // add ability to add one rep maxes
-                            List {
-                                Text("No data available for this exercise.")
-                                    .foregroundColor(.gray)
-                            }
-                            .padding(.bottom, 15)
-                            .frame(height: 300)
-                        }
-                        if !showingList {
-                            if !showingUpdate1RMView {
-                                Button(action: {
-                                    showingUpdate1RMView = true
-                                }) {
-                                    HStack {
-                                        Text(exercise.usesWeight ? "Update 1 Rep Max" : "Update Max Reps")
-                                            .foregroundColor(.white)
-                                        Image(systemName: "square.and.pencil")
-                                            .foregroundColor(.white)
-                                    }
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .background(Color.blue)
-                                    .clipShape(Capsule())
-                                }
-                            }
-                            Spacer()
-                        }
-                    }
+                    PRsView
                 default:
                     aboutView
                 }
-                Spacer()
             }
             .padding()
+            
+            Spacer()
         }
-        .overlay(!isKeyboardVisible && selectedView == "PRs" && !showingUpdate1RMView ? ListToggleButton(showingList: $showingList) : nil, alignment: .bottomTrailing)
-        .onAppear(perform: setupKeyboardObservers)
-        .onDisappear(perform: removeKeyboardObservers)
-        .overlay(isKeyboardVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .navigationTitle(exercise.name).multilineTextAlignment(.center)
+        .sheet(isPresented: $showingAdjustmentsView, onDismiss: { showingAdjustmentsView = false }) {
+            AdjustmentsView(AdjustmentsData: ctx.adjustments, exercise: exercise)
+        }
+        .sheet(isPresented: $editingExercise) { NewExercise(original: exercise) }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    editingExercise = true
+                } label: {
+                    Image(systemName: "square.and.pencil")   // notepad-with-pencil icon
+                }
+            }
+        }
     }
     
-    struct ListToggleButton: View {
-        @Binding var showingList: Bool
-        @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
-        
-        var body: some View {
-            Button(action: {
-                showingList.toggle()
-            }) {
-                Image(systemName: showingList ? "list.bullet.rectangle" : "chart.bar")
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .padding()
-                    .foregroundColor(.blue)
-                    .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-                    .clipShape(Circle())
-                    .shadow(radius: 10)
-                    .padding()
-            }
-            .padding(.leading)
+    private var workoutToolbar: some View {
+        HStack {
+            Text("\(exercise.name)").bold()
+                .frame(maxWidth: UIScreen.main.bounds.width * 0.66)  // ≈ 2/3 screen
+                .multilineTextAlignment(.center)
+                .centerHorizontally()
+                .overlay(
+                    Button(action: onClose) {
+                        Image(systemName: "xmark.circle.fill")
+                            .imageScale(.large)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.trailing),
+                    alignment: .trailing
+                )
         }
+        .padding(.vertical)
     }
     
     private var aboutView: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Image(exercise.fullImagePath)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 200, height: 200)
-                .clipShape(RoundedRectangle(cornerRadius: 6)) // Apply rounded rectangle shape
-                .centerHorizontally()
-            //Text("Description: ").bold() + Text(exercise.exDesc)
-            Text("How to perform: ").bold() // Placeholder text
-            
-            Text("Primary Muscles: ").bold()
-            primaryMusclesFormatted
-                .multilineTextAlignment(.leading)
-                .font(.caption)
-                .foregroundColor(.secondary)
-            // Join all secondary muscles into a single comma-separated string
-            Text("Secondary Muscles: ").bold()
-            secondaryMusclesFormatted
-                .multilineTextAlignment(.leading)
-                .font(.caption)
-                .foregroundColor(.secondary)
-            
-            if !exercise.equipmentRequired.isEmpty {
-                Text("Equipment Required: ").bold()
-                HStack {
-                    ForEach(exercise.equipmentRequired, id: \.self) { equipmentName in
-                        if let equipment = equipmentData.allEquipment.first(where: { $0.name == equipmentName }) {
-                            VStack {
-                                Image(equipment.fullImagePath)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 100, height: 100)
-                                    .clipShape(RoundedRectangle(cornerRadius: 6)) // Apply rounded rectangle shape
-                                
-                                Text(equipment.name.rawValue)
-                                    .font(.caption)
-                                //  .font(.body)
-                                //.padding(.top, -10)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 10) {
+                ExEquipImage(exercise.fullImage, infoCircle: false)
+                    .centerHorizontally()
+                
+                //Text(exercise.description)
+                 //   .multilineTextAlignment(.leading)
+
+                //Text("Description: ").bold() + Text(exercise.description)
+                Text("How to perform: ").bold() // Placeholder text
+                
+                Text("Primary Muscles: ").bold()
+                exercise.primaryMusclesFormatted
+                    .multilineTextAlignment(.leading)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                // Join all secondary muscles into a single comma-separated string
+                Text("Secondary Muscles: ").bold()
+                exercise.secondaryMusclesFormatted
+                    .multilineTextAlignment(.leading)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                if !exercise.equipmentRequired.isEmpty {
+                    Text("Equipment Required: ").bold()
+                    ScrollView(.horizontal) {
+                        LazyHStack {
+                            let size: CGFloat = UIScreen.main.bounds.height * 0.1
+                            
+                            ForEach(exercise.equipmentRequired, id: \.self) { equipmentName in
+                                if let equipment = ctx.equipment.allEquipment.first(where: {
+                                    normalize($0.name) == normalize(equipmentName)
+                                }) {
+                                    VStack {
+                                        equipment.fullImage
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: size, height: size)
+                                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                                        
+                                        Text(equipment.name)          // ← no .rawValue anymore
+                                            .font(.caption)
+                                    }
+                                }
                             }
                         }
+                        .padding(.bottom)
                     }
                 }
-                //.padding(.top, -20)
-            }
-            
-            if equipmentData.hasEquipmentAdjustments(for: exercise) {
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        showingAdjustmentsView.toggle()
-                    }) {
+                
+                if ctx.equipment.hasEquipmentAdjustments(for: exercise) {
+                    Button(action: { showingAdjustmentsView.toggle() }) {
                         Label("Equipment Adjustments", systemImage: "slider.horizontal.3")
-                            .foregroundColor(.darkGreen)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical)
+                            .foregroundColor(.green)
+                            .padding()
                     }
-                    .centerHorizontally()
                     .buttonStyle(.bordered)
                     .tint(.green)
-                    .sheet(isPresented: $showingAdjustmentsView) {
-                        AdjustmentsView(exerciseData: exerciseData, exercise: exercise)
-                    }
-                    
-                    Spacer()
+                    .centerHorizontally()
                 }
+                
+                Spacer()
+
             }
         }
     }
     
-    private var historyView: some View {
-        VStack {
-            HStack {
-                Text("Sort by").bold()
-                    .padding(.trailing)
-                Picker("", selection: $selectedSortOption) {
-                    ForEach(CompletedExerciseSortOption.allCases, id: \.self) { option in
-                        Text(option.rawValue).tag(option)
+    struct historyView: View {
+        @State private var selectedSortOption: CompletedExerciseSortOption = .mostRecent
+        let completedWorkouts: [CompletedWorkout]
+        let exerciseName: String
+
+        var body: some View {
+            VStack {
+                HStack {
+                    Text("Sort by").bold()
+                        .padding(.trailing)
+                    Picker("", selection: $selectedSortOption) {
+                        ForEach(CompletedExerciseSortOption.allCases, id: \.self) { option in
+                            Text(option.rawValue).tag(option)
+                        }
                     }
+                    .pickerStyle(MenuPickerStyle())
+                    .padding(.trailing)
                 }
-                .pickerStyle(MenuPickerStyle())
-                .padding(.trailing)
-            }
-            .padding(.bottom, -10)
-            .zIndex(0)
-            
-            List {
-                if sortedExercise.isEmpty {
-                    Text("No recent sets available for this exercise.")
-                        .foregroundColor(.gray)
-                } else {
-                    ForEach(sortedExercise, id: \.self) { workout in
-                        VStack(alignment: .leading) {
-                            Text("\(workout.date.formatted(date: .abbreviated, time: .shortened))")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                            Text("\(workout.template.name)")
-                            ForEach(workout.template.exercises.filter { $0.name == exercise.name }) { ex in
-                                ForEach(ex.setDetails, id: \.self) { set in
-                                    let repsCompleted = set.repsCompleted ?? 0
-                                    
-                                    HStack {
-                                        Text("Set \(set.setNumber):").bold()
-                                            .font(.caption)
-                                        // this implementation sucks but it works
-                                        if !ex.usesWeight {
-                                            Text("\(repsCompleted) reps completed")
+                .padding(.bottom, -10)
+                .zIndex(0)
+                
+                List {
+                    if sortedExercise.isEmpty {
+                        Text("No recent sets available for this exercise.")
+                            .foregroundColor(.gray)
+                            .padding()
+                    } else {
+                        ForEach(sortedExercise, id: \.self) { workout in
+                            VStack(alignment: .leading) {
+                                Text("\(workout.date.formatted(date: .abbreviated, time: .shortened))")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                Text("\(workout.template.name)")
+                                ForEach(workout.template.exercises.filter { $0.name == exerciseName }) { ex in
+                                    ForEach(ex.setDetails, id: \.self) { set in
+                                        let repsCompleted = set.repsCompleted ?? 0
+                                        
+                                        HStack {
+                                            Text("Set \(set.setNumber):").bold()
                                                 .font(.caption)
-                                        } else {
-                                            Text("\(smartFormat(set.weight)) lb x \(repsCompleted) reps")
-                                                .font(.caption)
+                                            // this implementation sucks but it works
+                                            if !ex.type.usesWeight {
+                                                Text("\(repsCompleted) reps completed")
+                                                    .font(.caption)
+                                            } else {
+                                                Text("\(Format.smartFormat(set.weight)) lb x \(repsCompleted) reps")
+                                                    .font(.caption)
+                                            }
                                         }
                                     }
                                 }
                             }
+                            .padding(.vertical, 5)
                         }
-                        .padding(.vertical, 5)
                     }
                 }
             }
         }
-    }
-    
-    private var primaryMusclesFormatted: Text {
-        let primaryEngagements = exercise.primaryMuscleEngagements
         
-        let muscleTexts = primaryEngagements.map { engagement -> Text in
-            let muscleName = Text("• \(engagement.muscleWorked.rawValue): ").bold() // Bold muscle name with bullet
+        private var sortedExercise: [CompletedWorkout] {
+            let filteredWorkouts = completedWorkouts.filter { workout in
+                workout.template.exercises.contains(where: { $0.name == exerciseName })
+            }
             
-            // Process submuscles using their `simpleName`
-            let subMusclesText = engagement.allSubMuscles
-                .map { $0.simpleName } // Use simpleName instead of rawValue
-                .joined(separator: ", ")
-            
-            if subMusclesText.isEmpty {
-                return muscleName // Only the muscle name if no submuscles exist
-            } else {
-                return muscleName + Text(subMusclesText) // Append submuscles
-            }
-        }
-        
-        guard let firstText = muscleTexts.first else { return Text("None") }
-        return muscleTexts.dropFirst().reduce(firstText) { $0 + Text("\n") + $1 }
-    }
-    
-    private var secondaryMusclesFormatted: Text {
-        let secondaryEngagements = exercise.secondaryMuscleEngagements
-        
-        let muscleTexts = secondaryEngagements.map { engagement -> Text in
-            let muscleName = Text("• \(engagement.muscleWorked.rawValue): ").bold() // Bold muscle name with bullet
-            
-            // Process submuscles using their `simpleName`
-            let subMusclesText = engagement.allSubMuscles
-                .map { $0.simpleName } // Use simpleName instead of rawValue
-                .joined(separator: ", ")
-            
-            if subMusclesText.isEmpty {
-                return muscleName // Only the muscle name if no submuscles exist
-            } else {
-                return muscleName + Text(subMusclesText) // Append submuscles
-            }
-        }
-        
-        guard let firstText = muscleTexts.first else { return Text("• None") }
-        return muscleTexts.dropFirst().reduce(firstText) { $0 + Text("\n") + $1 }
-    }
-    
-    private var sortedExercise: [CompletedWorkout] {
-        let filteredWorkouts = userData.completedWorkouts.filter { workout in
-            workout.template.exercises.contains(where: { $0.name == exercise.name })
-        }
-        
-        switch selectedSortOption {
-        case .mostRecent:
-            return filteredWorkouts.sorted { $0.date > $1.date }
-        case .leastRecent:
-            return filteredWorkouts.sorted { $0.date < $1.date }
-        case .thisWeek:
-            let calendar = Calendar.current
-            let weekOfYear = calendar.component(.weekOfYear, from: Date())
-            return filteredWorkouts.filter {
-                calendar.component(.weekOfYear, from: $0.date) == weekOfYear
-            }
-        case .thisMonth:
-            let currentMonth = Calendar.current.component(.month, from: Date())
-            return filteredWorkouts.filter {
-                Calendar.current.component(.month, from: $0.date) == currentMonth
-            }
-        case .mostSets:
-            return filteredWorkouts.sorted {
-                let setsInFirst = $0.template.exercises.reduce(0) { $0 + $1.setDetails.count }
-                let setsInSecond = $1.template.exercises.reduce(0) { $0 + $1.setDetails.count }
-                return setsInFirst > setsInSecond
-            }
-        case .leastSets:
-            return filteredWorkouts.sorted {
-                let setsInFirst = $0.template.exercises.reduce(0) { $0 + $1.setDetails.count }
-                let setsInSecond = $1.template.exercises.reduce(0) { $0 + $1.setDetails.count }
-                return setsInFirst < setsInSecond
+            switch selectedSortOption {
+            case .mostRecent:
+                return filteredWorkouts.sorted { $0.date > $1.date }
+            case .leastRecent:
+                return filteredWorkouts.sorted { $0.date < $1.date }
+            case .thisWeek:
+                let calendar = Calendar.current
+                let weekOfYear = calendar.component(.weekOfYear, from: Date())
+                return filteredWorkouts.filter {
+                    calendar.component(.weekOfYear, from: $0.date) == weekOfYear
+                }
+            case .thisMonth:
+                let currentMonth = Calendar.current.component(.month, from: Date())
+                return filteredWorkouts.filter {
+                    Calendar.current.component(.month, from: $0.date) == currentMonth
+                }
+            case .mostSets:
+                return filteredWorkouts.sorted {
+                    let setsInFirst = $0.template.exercises.reduce(0) { $0 + $1.setDetails.count }
+                    let setsInSecond = $1.template.exercises.reduce(0) { $0 + $1.setDetails.count }
+                    return setsInFirst > setsInSecond
+                }
+            case .leastSets:
+                return filteredWorkouts.sorted {
+                    let setsInFirst = $0.template.exercises.reduce(0) { $0 + $1.setDetails.count }
+                    let setsInSecond = $1.template.exercises.reduce(0) { $0 + $1.setDetails.count }
+                    return setsInFirst < setsInSecond
+                }
             }
         }
     }
     
     private var percentileView: some View {
         VStack {
+            let maxValue = ctx.exercises.getMax(for: exercise.id) ?? 0.0
+
             if selectedOption == "Standards" {
                 VStack {
-                    StrengthPercentileView(csvLoader: csvLoader, userData: userData, exerciseData: exerciseData, exercise: exercise)
+                    StrengthPercentileView(
+                        maxValue: maxValue,
+                        age: ctx.userData.profile.age,
+                        weight: ctx.userData.currentMeasurementValue(for: .weight),
+                        gender: ctx.userData.physical.gender,
+                        exercise: exercise,
+                        maxValuesAge: CSVLoader.get1RMValues(for: exercise.url, key: "Age", value: Double(ctx.userData.profile.age), userData: ctx.userData),
+                        maxValuesBW: CSVLoader.get1RMValues(for: exercise.url, key: "BW", value: ctx.userData.currentMeasurementValue(for: .weight), userData: ctx.userData),
+                        percentile: CSVLoader.calculateExercisePercentile(userData: ctx.userData, exercise: exercise, maxValue: maxValue),
+                    )
                 }
             } else if selectedOption == "Percentages" {
-                let oneRepMax = exerciseData.getMax(for: exercise.name) ?? 0.0
-                
-                VStack {
-                    Text("1RM Percentages")
-                        .font(.title2)
+                let usesWeight = exercise.type.usesWeight
+                    VStack {
+                        Text(usesWeight ? "1RM Percentages" : "Max Rep Percentages")
+                            .font(.title2)
+                            .padding(.vertical)
+                        
+                        Text(usesWeight ?
+                             "Use this table to determine your working weight for each rep range."
+                             : "Use this table to determine your working reps based on exertion percentage.")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom)
+                            .padding(.horizontal, 25)
+                        
+                        Section {
+                            if usesWeight {
+                                OneRMTable(oneRepMax: maxValue)
+                            } else {
+                                MaxRepsTable(maxReps: Int(maxValue))
+                            }
+                        }
                         .padding(.vertical)
-                    
-                    Text("Use this table to determine your working weight for each rep range.")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom)
-                        .padding(.horizontal, 25)
-                    
-                    Section {
-                        MaxRecordTable(oneRepMax: oneRepMax)
                     }
-                    .padding(.vertical)
-                }
+                
             }
             Picker("Options", selection: $selectedOption) {
                 Text("Standards").tag("Standards")
@@ -408,17 +310,72 @@ struct ExerciseDetailView: View {
         }
     }
     
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = true
+    private var PRsView: some View {
+        VStack {
+            let perf = ctx.exercises.allExercisePerformance[exercise.id]
+            if !showingList {
+                ExercisePerformanceGraph(
+                    exercise: exercise,
+                    value: perf?.maxValue,
+                    currentMaxDate: perf?.currentMaxDate,
+                    pastMaxes: perf?.pastMaxes ?? []
+                )
+            } else {
+                ExercisePerformanceView(
+                    exercise: exercise,
+                    maxValue: perf?.maxValue,
+                    repsXweight: perf?.repsXweight,
+                    currentMaxDate: perf?.currentMaxDate,
+                    pastMaxes: perf?.pastMaxes ?? []
+                )
+            }
+            
+            if !showingList, !showingUpdate1RMView {
+                Button(action: { showingUpdate1RMView = true }) {
+                    HStack {
+                        Text(exercise.type.usesWeight ? "Update 1 Rep Max" : "Update Max Reps")
+                            .foregroundColor(.white)
+                        Image(systemName: "square.and.pencil")
+                            .foregroundColor(.white)
+                    }
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.blue)
+                    .clipShape(Capsule())
+                }
+                .padding(.vertical)
+                
+                Spacer()
+            }
         }
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = false
+        .overlay(alignment: .center) {
+            if showingUpdate1RMView {
+                UpdateMaxView(
+                    usesWeight: exercise.type.usesWeight,
+                    onSave: { newOneRepMax in
+                        ctx.exercises.updateExercisePerformance(for: exercise, newValue: newOneRepMax, reps: nil, weight: nil, csvEstimate: false)
+                        ctx.exercises.savePerformanceData()
+                        showingUpdate1RMView = false
+                        kbd.dismiss()
+                    },
+                    onCancel: {
+                        showingUpdate1RMView = false
+                        kbd.dismiss()
+                    }
+                )
+            }
         }
-    }
-    
-    private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        .overlay(alignment: .bottomLeading) {
+            if !kbd.isVisible && !showingUpdate1RMView {
+                FloatingButton(
+                    image: showingList ? "chart.bar" : "list.bullet.rectangle",
+                    foreground: .blue,
+                    background: colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : .white,
+                    action: {
+                        showingList.toggle()
+                    }
+                )
+            }
+        }
     }
 }

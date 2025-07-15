@@ -1,64 +1,121 @@
 import SwiftUI
 import AuthenticationServices
-import FirebaseAuth
+
 
 struct UserProfileView: View {
-    @ObservedObject var userData: UserData
-    @State private var showingAlert = false
-    @State private var alertMessage = ""
-    @State private var isUserLoggedIn = Auth.auth().currentUser != nil
-    @State private var showSignInWithApple = false
-    @State private var isKeyboardVisible: Bool = false
-    private let auth = AuthService()
+    @EnvironmentObject private var ctx: AppContext
+    @StateObject private var authService = AuthService.shared
+    @StateObject private var kbd = KeyboardManager.shared
+    @State private var alertMessage: String = ""
+
+    // MARK: – Local draft state for each editable field
+    @State private var draftUserName: String = ""
+    @State private var draftFirstName: String = ""
+    @State private var draftLastName: String = ""
+    
+    // MARK: – FocusState flags
+    @FocusState private var focusedField: Field?
     
     var body: some View {
         ZStack {
-            Color(isUserLoggedIn ? UIColor.clear : UIColor.secondarySystemBackground)
-                .ignoresSafeArea()
+            Color(authService.isAuthenticated
+                  ? UIColor.clear
+                  : UIColor.secondarySystemBackground
+            )
+            .ignoresSafeArea()
             
             VStack {
-                if isUserLoggedIn {
+                // 1) Show any banner (for username/first/last update)
+                if ctx.toast.showingSaveConfirmation {
+                    InfoBanner(
+                        text: alertMessage,
+                        bgColor: !alertMessage.contains("failed")
+                            ? Color.green
+                            : Color.red
+                    )
+                }
+                
+                if authService.isAuthenticated  {
                     Form {
-                        Section(header: Text("FitHub Username")) {
-                            TextField("Enter username", text: $userData.userName)
+                        // MARK: — Username Section
+                        Section {
+                            TextField("Enter username", text: $draftUserName)
+                                .focused($focusedField, equals: .userName)
+                                .submitLabel(.done)
+                                .onSubmit(commitUserName)
+                                .onChange(of: focusedField) { oldFocus, newFocus in
+                                    if newFocus != .userName {
+                                        commitUserName()
+                                    }
+                                }
+                        } header: {
+                            Text("FitHub Username")
                         }
                         
-                        Section(header: Text("Personal Information")) {
-                            TextField("First Name", text: $userData.firstName)
-                            TextField("Last Name", text: $userData.lastName)
+                        // MARK: — Personal Info Section
+                        Section {
+                            TextField("First Name", text: $draftFirstName)
+                                .focused($focusedField, equals: .firstName)
+                                .submitLabel(.done)
+                                .onSubmit(commitFirstName)
+                                .onChange(of: focusedField) { oldFocus, newFocus in
+                                    if newFocus != .firstName {
+                                        commitFirstName()
+                                    }
+                                }
+                            
+                            TextField("Last Name", text: $draftLastName)
+                                .focused($focusedField, equals: .lastName)
+                                .submitLabel(.done)
+                                .onSubmit(commitLastName)
+                                .onChange(of: focusedField) { oldFocus, newFocus in
+                                    if newFocus != .lastName {
+                                        commitLastName()
+                                    }
+                                }
+                        } header: {
+                            Text("Personal Information")
                         }
                         
-                        if userData.allowedCredentials {
-                            Section(header: Text("Email")) {
-                                Text(userData.email)
+                        if ctx.userData.settings.allowedCredentials {
+                            Section {
+                                HStack {
+                                    Text(ctx.userData.profile.email)
+                                    Spacer()
+                                    Image(systemName: "lock.fill")
+                                }
+                                .foregroundStyle(.secondary)
+                                .textSelection(.disabled)
+                            } header: {
+                                Text("Email")
                             }
                         }
-                    }.scrollDisabled(true)
-                    
-                    if let creationDate = userData.accountCreationDate {
-                        Text("Account Created: \(formatDate(creationDate))")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .padding(.bottom)
-                    }
-                    
-                    Button(action: { logOut() }) {
-                        if !isKeyboardVisible {
-                            Text(userData.allowedCredentials ? "Logout" : "Login")
-                                .frame(maxWidth: 300)
-                                .padding()
-                                .background(userData.allowedCredentials ? Color.red : Color.green)
-                                .foregroundColor(Color.white)
-                                .cornerRadius(10)
-                                .font(.headline)
-                                .centerHorizontally()
-                                .padding(.bottom, 100)
+                        
+                        // MARK: — Footer Section with Account Creation and Logout
+                        Section {
+                            EmptyView()
+                        } footer: {
+                            VStack(spacing: 12) {
+                                if let creationDate = ctx.userData.profile.accountCreationDate {
+                                    Text("Account Created: \(Format.formatDate(creationDate))")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Button(action: handleSignOut) {
+                                    Text("Logout")
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color.red)
+                                        .foregroundColor(.white)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                }
+                            }
+                            .padding(.top, 8)
                         }
                     }
-                    .onDisappear {
-                        updateProfile()
-                    }
+                    .onAppear(perform: populateDrafts)
                 } else {
+                    // MARK: — Not logged in
                     VStack {
                         Text("Please sign in to continue")
                             .font(.title)
@@ -66,123 +123,98 @@ struct UserProfileView: View {
                         
                         SignInWithAppleButton(.signIn) { req in
                             req.requestedScopes = [.email, .fullName]
-                          } onCompletion: { result in
-                            auth.signIn(with: result, into: userData) { res in
-                              switch res {
-                              case .success:
-                                self.isUserLoggedIn = true
-                                updateProfile()
-                                // copy any @State fields if needed
-                              case .failure(let err):
-                                print("Sign-in failed: \(err)")
-                              }
+                        } onCompletion: { result in
+                            authService.signIn(with: result, into: ctx.userData) { res in
+                                switch res {
+                                case .success:
+                                    // After successful sign-in, Auth listener will fire
+                                    alertMessage = "Sign in successful!"
+                                    ctx.toast.showSaveConfirmation(duration: 2.0)
+                                    break
+                                case .failure(let err):
+                                    alertMessage = "Sign in failed! \(err)"
+                                    ctx.toast.showSaveConfirmation(duration: 2.0)
+                                }
                             }
-                          }
-                        .frame(width: 280, height: 50)
+                        }
+                        .frame(height: UIScreen.main.bounds.height * 0.08)
                         .padding()
                     }
                 }
             }
-            // Custom Alert View
-            if showingAlert {
-                CustomAlertView(message: alertMessage, isPresented: $showingAlert)
-            }
         }
         .navigationTitle("Profile")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: updateProfile) {
-                    Text("Save")
-                }
+        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+    }
+    
+    private enum Field: Hashable { case userName, firstName, lastName }
+    
+    // MARK: – Populate drafts from userData
+    private func populateDrafts() {
+        draftUserName  = ctx.userData.profile.userName
+        draftFirstName = ctx.userData.profile.firstName
+        draftLastName  = ctx.userData.profile.lastName
+    }
+    
+    // MARK: – Commit Helpers
+    
+    /// Commit username both locally and to Firebase displayName, then show a success/failure banner.
+    private func commitUserName() {
+        let trimmed = draftUserName.trimmingTrailingSpaces()
+        guard trimmed != ctx.userData.profile.userName else { return }
+        
+        // 1) Update local userData
+        ctx.userData.profile.userName = trimmed
+        ctx.userData.saveSingleStructToFile(\.profile, for: .profile)
+        
+        // 2) Update Firebase displayName
+        authService.updateDisplayName(to: trimmed) { result in
+            switch result {
+            case .success:
+                alertMessage = "Username updated successfully."
+            case .failure(let error):
+                alertMessage = "Failed to update username: \(error.localizedDescription)"
             }
-        }
-        .overlay(isKeyboardVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-        .onAppear(perform: setupKeyboardObservers)
-        .onDisappear(perform: removeKeyboardObservers)
-    }
-    
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = true
-        }
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = false
+            ctx.toast.showSaveConfirmation(duration: 2.0)
         }
     }
     
-    private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    /// Commit firstName locally only, then show a banner.
+    private func commitFirstName() {
+        let trimmed = draftFirstName.trimmingTrailingSpaces()
+        guard trimmed != ctx.userData.profile.firstName else { return }
+        
+        ctx.userData.profile.firstName = trimmed
+        ctx.userData.saveSingleStructToFile(\.profile, for: .profile)
+        
+        alertMessage = "First name updated."
+        ctx.toast.showSaveConfirmation(duration: 2.0)
     }
     
-    private func updateProfile() {
-        UIApplication.shared.endEditing()
-        // Update the user's profile information
-        let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-        let firstName: String = userData.firstName
-        let lastName: String = userData.lastName
-
-        changeRequest?.displayName = "\(firstName) \(lastName)"
-        changeRequest?.commitChanges { error in
-            if let error = error {
-                alertMessage = "Failed to update profile: \(error.localizedDescription)"
-            } else {
-                alertMessage = "Profile updated successfully."
+    /// Commit lastName locally only, then show a banner.
+    private func commitLastName() {
+        let trimmed = draftLastName.trimmingTrailingSpaces()
+        guard trimmed != ctx.userData.profile.lastName else { return }
+        
+        ctx.userData.profile.lastName = trimmed
+        ctx.userData.saveSingleStructToFile(\.profile, for: .profile)
+        
+        alertMessage = "Last name updated."
+        ctx.toast.showSaveConfirmation(duration: 2.0)
+    }
+    
+    // MARK: — Handle Logout/Login Button
+    
+    private func handleSignOut() {
+        AuthService.shared.signOut(userData: ctx.userData) { result in
+            switch result {
+            case .success:
+                alertMessage = "Logged out successfully."
+            case .failure(let error):
+                alertMessage = "Failed to log out: \(error.localizedDescription)"
             }
-            showingAlert = true
+            ctx.toast.showSaveConfirmation(duration: 2.0)
         }
-    }
-    
-    private func logOut() {
-        do {
-            try Auth.auth().signOut()
-            //userData.allowedCredentials = false
-            userData.accountCreationDate = nil
-            userData.firstName = ""
-            userData.lastName = ""
-            userData.email = ""
-            userData.saveToFile()
-            self.isUserLoggedIn = false
-        } catch let signOutError as NSError {
-            print("Error signing out: %@", signOutError)
-        }
-    }
-}
-
-// Custom Alert View
-struct CustomAlertView: View {
-    var message: String
-    @Binding var isPresented: Bool
-    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
-    
-    var body: some View {
-        VStack {
-            Text("Profile Update")
-                .font(.headline)
-                .padding()
-            Text(message)
-                .padding()
-            
-            Button(action: {
-                isPresented = false
-                
-            }) {
-                Text("OK")
-                    .bold()
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal)
-            .padding(.bottom)
-        }
-        .frame(width: 250)
-        .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-        .cornerRadius(20)
-        .shadow(radius: 10)
-        .padding()
     }
 }
 

@@ -8,7 +8,7 @@
 import SwiftUI
 
 /*struct StartWeekOn: View {
-    @EnvironmentObject var userData: UserData
+    @ObservedObject var userData: UserData
 
     var body: some View {
         Form {
@@ -20,7 +20,7 @@ import SwiftUI
             .pickerStyle(SegmentedPickerStyle())
             .onChange(of: userData.startWeekOn) { oldValue, newValue in
                 if oldValue != newValue {
-                    userData.saveSingleVariableToFile(\.startWeekOn, for: .startWeekOn)
+                    //userData.saveSingleVariableToFile(\.startWeekOn, for: .startWeekOn)
                 }
             }
         }

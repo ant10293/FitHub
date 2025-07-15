@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct MeasurementsView: View {
-    @EnvironmentObject var userData: UserData
+    @ObservedObject var userData: UserData
     @State private var showMeasurementEditor = false
     @State private var showMeasurementGraph = false
     @State private var currentMeasurementType: MeasurementType = .weight
@@ -17,51 +17,59 @@ struct MeasurementsView: View {
     var body: some View {
         ZStack {
             List {
-                Section(header: Text("CORE")) {
+                Section {
                     ForEach(MeasurementType.coreMeasurements, id: \.self) { measurement in
                         MeasurementRow(
+                            showMeasurementEditor: $showMeasurementEditor,
+                            showMeasurementGraph: $showMeasurementGraph,
+                            showGraph: $showGraph,
                             title: measurement.rawValue,
-                            value: userData.currentMeasurements[measurement]?.value ?? 0.0,
+                            value: userData.physical.currentMeasurements[measurement]?.value ?? 0.0,
                             onSelectMeasurement: { type, value in
                                 currentMeasurementType = type
                                 currentMeasurementValue = value
-                            },
-                            showMeasurementEditor: $showMeasurementEditor,
-                            showMeasurementGraph: $showMeasurementGraph,
-                            showGraph: $showGraph
+                            }
                         )
                     }
+                } header: {
+                    Text("CORE")
                 }
-                Section(header: Text("BODY PART (Circumference)")) {
+                
+                Section {
                     ForEach(MeasurementType.bodyPartMeasurements, id: \.self) { measurement in
                         MeasurementRow(
+                            showMeasurementEditor: $showMeasurementEditor,
+                            showMeasurementGraph: $showMeasurementGraph,
+                            showGraph: $showGraph,
                             title: measurement.rawValue,
-                            value: userData.currentMeasurements[measurement]?.value ?? 0.0,
+                            value: userData.physical.currentMeasurements[measurement]?.value ?? 0.0,
                             onSelectMeasurement: { type, value in
                                 currentMeasurementType = type
                                 currentMeasurementValue = value
-                            },
-                            showMeasurementEditor: $showMeasurementEditor,
-                            showMeasurementGraph: $showMeasurementGraph,
-                            showGraph: $showGraph
+                            }
                         )
                     }
+                } header: {
+                    Text("BODY PART (Circumference)")
                 }
             }
+            .disabled(showMeasurementEditor)
             .listStyle(InsetGroupedListStyle())
             .navigationTitle("Measurements")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        showGraph.toggle()
-                    }) {
+                    Button(action: { showGraph.toggle() }) {
                         Image(systemName: showGraph ? "chart.bar" : "square.and.pencil")
                     }
                 }
             }
             .sheet(isPresented: $showMeasurementGraph) {
-                NavigationView {
-                    MeasurementsGraph(userData: userData, selectedMeasurement: currentMeasurementType)
+                NavigationStack {
+                    MeasurementsGraph(
+                        selectedMeasurement: currentMeasurementType,
+                        currentMeasurement: userData.physical.currentMeasurements[currentMeasurementType],
+                        pastMeasurements: userData.physical.pastMeasurements[currentMeasurementType]
+                    )
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Button("Close") {
@@ -84,13 +92,14 @@ struct MeasurementsView: View {
             }
         }
     }
+    
     struct MeasurementRow: View {
-        var title: String
-        var value: Double
-        var onSelectMeasurement: (MeasurementType, Double) -> Void // Closure to handle selection
         @Binding var showMeasurementEditor: Bool
         @Binding var showMeasurementGraph: Bool
         @Binding var showGraph: Bool
+        var title: String
+        var value: Double
+        var onSelectMeasurement: (MeasurementType, Double) -> Void // Closure to handle selection
         
         var body: some View {
             HStack {
@@ -98,42 +107,42 @@ struct MeasurementsView: View {
                 Spacer()
                 if value > 0 {
                     HStack {
-                        Text(smartFormat(value))
+                        Text(Format.smartFormat(value))
                             .padding(.trailing, -2.5)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(Color.gray)
                         if let measurementType = MeasurementType(rawValue: title)?.unitLabel {
                             Text(measurementType)
-                                .foregroundColor(.gray)
+                                .foregroundStyle(Color.gray)
                                 .fontWeight(.light)
                         }
-                    }
-                    .onTapGesture {
-                        if let measurementType = MeasurementType(rawValue: title) {
-                            onSelectMeasurement(measurementType, value)
-                            if showGraph {
-                                showMeasurementGraph = true
-                            } else {
-                                showMeasurementEditor = true
-                            }
+                        if showGraph {
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(Color.blue)
                         }
                     }
                 } else {
-                    Button(action: {
-                        if let measurementType = MeasurementType(rawValue: title) {
-                            onSelectMeasurement(measurementType, value)
-                            if showGraph {
-                                showMeasurementGraph = true
-                            } else {
-                                showMeasurementEditor = true
-                            }
-                        }
-                    }) {
+                    if showGraph {
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(Color.blue)
+                    } else {
                         Image(systemName: "plus")
-                            .foregroundColor(.blue)
+                            .foregroundStyle(Color.blue)
                     }
                 }
             }
             .contentShape(Rectangle())
+            .onTapGesture(perform: handleTap)
+        }
+        
+        private func handleTap() {
+            if let measurementType = MeasurementType(rawValue: title) {
+                onSelectMeasurement(measurementType, value)
+                if showGraph {
+                    showMeasurementGraph = true
+                } else {
+                    showMeasurementEditor = true
+                }
+            }
         }
     }
 }

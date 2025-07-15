@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct ChangeLanguage: View {
-    @EnvironmentObject var userData: UserData
+    @ObservedObject var userData: UserData
     
     var body: some View {
         VStack {
             
-            Picker("Language", selection: $userData.userLanguage) {
+            Picker("Language", selection: $userData.settings.userLanguage) {
                 ForEach(Languages.allCases, id: \.self) { language in
                     Text(language.rawValue).tag(language)
                 }
@@ -21,6 +21,6 @@ struct ChangeLanguage: View {
             .pickerStyle(SegmentedPickerStyle())
             .padding()
         }
-        .navigationTitle("Change Language").navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle("Change Language", displayMode: .inline)
     }
 }

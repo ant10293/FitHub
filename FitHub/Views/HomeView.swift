@@ -2,36 +2,22 @@ import SwiftUI
 
 
 struct HomeView: View {
-    @ObservedObject var userData: UserData
-    @EnvironmentObject var csvLoader: CSVLoader
-    @EnvironmentObject var exerciseData: ExerciseData
-    @EnvironmentObject var equipment: EquipmentData
-    @EnvironmentObject var healthKitManager: HealthKitManager
-    @State private var showingMenuView: Bool = false
+    @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject private var ctx: AppContext
     @State private var showingFavoriteExercises: Bool = false
     @State private var showingExerciseSelection: Bool = false
-    @Environment(\.colorScheme) var colorScheme
-    
-    // Use userData values to initialize states
-    @State private var selectedExercise: String
-    @State private var selectedMeasurement: MeasurementType
-    @State private var selectedView: GraphView
-    
-    init(userData: UserData) {
-        self.userData = userData
-        
-        _selectedExercise = State(initialValue: userData.selectedExercise)
-        _selectedMeasurement = State(initialValue: userData.selectedMeasurement)
-        _selectedView = State(initialValue: userData.selectedView)
-    }
+    //@State private var selectedExercise: String = "Bench Press"
+    @State private var selectedExercise: UUID?
+    @State private var selectedMeasurement: MeasurementType = .weight
+    @State private var selectedView: GraphView = .exercisePerformance
     
     var body: some View {
         NavigationStack {
             List {
                 profileSection
-                
                 selectViewSection
             }
+            .onAppear(perform: initializeVariables)
             .listStyle(InsetGroupedListStyle())
             .navigationTitle("Home")
             .toolbar {
@@ -52,21 +38,37 @@ struct HomeView: View {
             }
         }
     }
+    
+    private func initializeVariables() {
+        selectedExercise = ctx.userData.sessionTracking.selectedExercise
+        selectedMeasurement = ctx.userData.sessionTracking.selectedMeasurement
+        selectedView = ctx.userData.sessionTracking.selectedView
+    }
+    
+    private var unwrappedExercise: Exercise? {
+        if let exerciseId = selectedExercise {
+            return ctx.exercises.exercise(for: exerciseId)
+        } else { // fallback
+            return ctx.exercises.exercise(named: "Bench Press")
+        }
+    }
+    
     private var profileSection: some View {
         Section {
             HStack {
-                NavigationLink(destination: UserProfileView(userData: userData)) {
+                NavigationLink(destination: UserProfileView()) {
                     Image(systemName: "person.crop.circle")
                         .resizable()
-                        .frame(width: 50, height: 50)
+                        .scaledToFit()
+                        .frame(width: UIScreen.main.bounds.width * 0.125) 
                         .foregroundColor(colorScheme == .dark ? .gray : .black)
                     
                     VStack(alignment: .leading) {
-                        Text(userData.userName)
+                        Text(ctx.userData.profile.userName)
                             .font(.title2)
                             .foregroundColor(colorScheme == .dark ? .white : .black)
                         
-                        Text("\(userData.totalNumWorkouts) workouts")
+                        Text("\(ctx.userData.sessionTracking.totalNumWorkouts) workouts")
                             .font(.subheadline)
                             .foregroundColor(colorScheme == .dark ? .gray : .black)
                     }
@@ -75,9 +77,7 @@ struct HomeView: View {
             }
             .padding()
             
-            Button(action: {
-                showingFavoriteExercises = true
-            }) {
+            Button(action: { showingFavoriteExercises = true }) {
                 HStack {
                     Text("Favorite Exercises")
                         .foregroundColor(colorScheme == .dark ? .white : .black)
@@ -92,9 +92,7 @@ struct HomeView: View {
                 .padding()
                 .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
             }
-            .sheet(isPresented: $showingFavoriteExercises) {
-                FavoriteExercisesView(exerciseData: exerciseData, userData: userData)
-            }
+            .sheet(isPresented: $showingFavoriteExercises) { FavoriteExercisesView() }
         }
         .background(Color.clear)
     }
@@ -110,8 +108,8 @@ struct HomeView: View {
                 .pickerStyle(SegmentedPickerStyle())
                 .padding()
                 .onChange(of: selectedView) { oldValue, newValue in
-                    userData.selectedView = newValue
-                    userData.saveSingleVariableToFile(\.selectedView, for: .selectedView)
+                    ctx.userData.sessionTracking.selectedView = newValue
+                    ctx.userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
                 }
                 if selectedView == .exercisePerformance {
                     exercisePerformanceSection
@@ -125,86 +123,47 @@ struct HomeView: View {
     
     private var exercisePerformanceSection: some View {
         VStack(alignment: .leading) {
-            if exerciseData.allExercisePerformance.isEmpty {
-                VStack(alignment: .leading) {
-                    Text("Exercise Performance")
-                        .font(.headline)
-                        .centerHorizontally()
-                    List {
-                        Text("No exercise performance data available.")
-                            .foregroundColor(.gray)
-                            .padding(.horizontal)
-                    }
-                    .frame(height: 300)
+            HStack {
+                Text("Exercise")
+                    .padding(.leading)
+                Spacer()
+                
+                Button(action: { showingExerciseSelection = true }) {
+                    pickerLabel
+                    .padding(.trailing)
+                    .contentShape(Rectangle()) // Ensure tap area is tightly bound
                 }
-            } else {
-                VStack(alignment: .leading) {
-                    HStack {
-                        /*Picker("Select Exercise", selection: $selectedExercise) {
-                            ForEach(exerciseData.allExercisePerformance.keys.sorted(), id: \.self) { exerciseName in
-                                if let performance = exerciseData.allExercisePerformance[exerciseName],
-                                    let max = performance.maxValue, max > 0 {
-                                        Text(exerciseName).tag(exerciseName as String?)
-                                }
-                            }
-                        }
-                        .pickerStyle(MenuPickerStyle())
-                        .padding(.horizontal)*/
-                        
-                        Text("Select Exercise")
-                            .padding(.leading)
-                        Spacer()
-                        // Tappable button to present ExerciseSelectionView
-                        Button(action: {
-                                self.showingExerciseSelection = true
-                        }) {
-                            pickerLabel
-                                .padding(.trailing)
-                                .contentShape(Rectangle()) // Ensure tap area is tightly bound
-                        }
-                        .buttonStyle(PlainButtonStyle()) // Prevents full-row tap behavior
-                    }
-                    .padding(.bottom)
-                    
-                    if let exercisePerformance = exerciseData.allExercisePerformance[selectedExercise] {
-                        if let ex = exerciseData.exercise(named: selectedExercise),
-                           let max = exercisePerformance.maxValue,
-                           let date = exercisePerformance.currentMaxDate {
-                            ExercisePerformanceGraph(
-                                exercise: ex,
-                                value: max,
-                                currentMaxDate: date,
-                                pastMaxes: exercisePerformance.pastMaxes ?? []
-                            )
-                        } else {
-                            List {
-                                Text("No data available for this exercise.")
-                                    .foregroundColor(.gray)
-                                    .padding(.horizontal)
-                            }
-                            .padding(.bottom, 15)
-                            .frame(height: 400)
-                        }
-                    }
+                .buttonStyle(PlainButtonStyle()) // Prevents full-row tap behavior
+            }
+            .padding(.bottom)
+            
+            if let selectedExercise = selectedExercise ?? ctx.exercises.exercise(named: "Bench Press")?.id {
+                let perf = ctx.exercises.allExercisePerformance[selectedExercise]
+                
+                if let ex = ctx.exercises.exercise(for: selectedExercise) {
+                    ExercisePerformanceGraph(
+                        exercise: ex,
+                        value: perf?.maxValue,
+                        currentMaxDate: perf?.currentMaxDate,
+                        pastMaxes: perf?.pastMaxes ?? []
+                    )
                 }
             }
+            
         }
         .onChange(of: selectedExercise) { oldValue, newValue in
-            // Only perform side effects if the value has truly changed
-            if oldValue != newValue {
-                userData.selectedExercise = newValue
-                userData.saveSingleVariableToFile(\.selectedExercise, for: .selectedExercise)
+            if oldValue != newValue { // Only perform side effects if the value has truly changed
+                ctx.userData.sessionTracking.selectedExercise = newValue
+                ctx.userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
             }
         }
         .sheet(isPresented: $showingExerciseSelection) {
-            // 3) Present your custom selection view
             ExerciseSelection(
-                // We supply an empty array because in "performance" mode we only pick one
-                selectedExercises: [],
+                selectedExercises: [], // supply an empty array because in "performance" mode we only pick one
                 onDone: { chosenExercises in
                     // Because forPerformanceView = true, we expect only one exercise
                     if let first = chosenExercises.first {
-                        self.selectedExercise = first.name
+                        self.selectedExercise = first.id
                     }
                     showingExerciseSelection = false
                 },
@@ -215,30 +174,45 @@ struct HomeView: View {
     
     private var measurementsGraphSection: some View {
         VStack(alignment: .leading) {
-            Picker("Select Measurement", selection: $selectedMeasurement) {
-                ForEach(userData.getValidMeasurements()) { measurement in
-                    Text(measurement.rawValue).tag(measurement)
+            HStack(alignment: .firstTextBaseline) {
+                Text("Measurement")
+
+                Picker("", selection: $selectedMeasurement) {
+                    ForEach(ctx.userData.getValidMeasurements()) { measurement in
+                        Text(measurement.rawValue).tag(measurement)
+                    }
                 }
+                .pickerStyle(.menu)
+                .labelsHidden()
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .pickerStyle(MenuPickerStyle())
             .padding(.horizontal)
             .padding(.top, -10)
             .padding(.bottom, 5)
-            
-            MeasurementsGraph(userData: userData, selectedMeasurement: userData.selectedMeasurement)
+
+            MeasurementsGraph(
+                selectedMeasurement: ctx.userData.sessionTracking.selectedMeasurement,
+                currentMeasurement: ctx.userData.physical.currentMeasurements[selectedMeasurement],
+                pastMeasurements: ctx.userData.physical.pastMeasurements[selectedMeasurement]
+            )
         }
         .onChange(of: selectedMeasurement) { old, new in
             if old != new {
-                userData.selectedMeasurement = new
-                userData.saveSingleVariableToFile(\.selectedMeasurement, for: .selectedMeasurement)
+                ctx.userData.sessionTracking.selectedMeasurement = new
+                ctx.userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
             }
         }
     }
     
     private var pickerLabel: some View {
         HStack(spacing: 5) {
-            Text(selectedExercise.isEmpty ? "Select Exercise" : selectedExercise)
-                .foregroundColor(.blue)
+            if let exercise = unwrappedExercise {
+                Text(exercise.name)
+                    .foregroundColor(.blue)
+            } else {
+                Text("Select Exercise")
+                    .foregroundColor(.blue)
+            }
             Image(systemName: "chevron.up.chevron.down")
                 .font(.caption)
                 .fontWeight(.semibold)

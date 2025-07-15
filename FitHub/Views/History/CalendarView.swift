@@ -8,34 +8,31 @@
 import SwiftUI
 
 struct CalendarView: View {
-    @ObservedObject var userData: UserData
-    @Binding var currentMonth: Date
-    var workoutDates: [Date]
-    var plannedWorkoutDates: [Date]
     @Environment(\.calendar) var calendar
     @Environment(\.colorScheme) var colorScheme
+    @Binding var currentMonth: Date
+    let workoutDates: [Date]
+    let plannedWorkoutDates: [Date]
+    let completedWorkouts: [CompletedWorkout]
+
     
     var body: some View {
         VStack {
             HStack {
-                Button(action: {
-                    self.moveToPreviousMonth()
-                }) {
+                Button(action: moveToPreviousMonth) {
                     Image(systemName: "arrow.left").bold()
                         .contentShape(Rectangle())
                 }
                 
                 Spacer()
                 
-                Text("\(monthName(from: currentMonth)) \(String(year(from: currentMonth)))")
+                Text("\(Format.monthName(from: currentMonth)) \(String(year(from: currentMonth)))")
                     .font(.headline)
                 
                 Spacer()
                 
                 if !isNextMonth(currentMonth) {
-                    Button(action: {
-                        self.moveToNextMonth()
-                    }) {
+                    Button(action: moveToNextMonth) {
                         Image(systemName: "arrow.right").bold()
                             .contentShape(Rectangle())
                     }
@@ -43,7 +40,7 @@ struct CalendarView: View {
             }
             .padding()
             .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-            .cornerRadius(10)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
             .padding(.horizontal)
             
             HStack {
@@ -85,12 +82,12 @@ struct CalendarView: View {
             .padding(.vertical)
         }
         .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-        .cornerRadius(10)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
         .padding(.horizontal)
     }
     
     private func workout(for date: Date) -> CompletedWorkout? {
-        return userData.completedWorkouts.first { Calendar.current.isDate($0.date, inSameDayAs: date) }
+        return completedWorkouts.first { Calendar.current.isDate($0.date, inSameDayAs: date) }
     }
     
     private func moveToPreviousMonth() {
@@ -103,12 +100,6 @@ struct CalendarView: View {
         if let newMonth = calendar.date(byAdding: .month, value: 1, to: currentMonth) {
             currentMonth = newMonth
         }
-    }
-    
-    private func monthName(from date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM"
-        return dateFormatter.string(from: date)
     }
     
     private func year(from date: Date) -> Int {
@@ -154,7 +145,7 @@ struct CalendarView: View {
                     .foregroundColor(workoutColor)
                     .frame(width: 30, height: 30)
                     .background(backgroundView)
-                    .cornerRadius(15)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
                 // Outer circle if today:
                 if calendar.isDate(day, inSameDayAs: today) {
                     Circle()

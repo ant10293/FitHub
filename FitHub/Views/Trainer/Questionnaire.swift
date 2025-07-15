@@ -9,22 +9,11 @@ import SwiftUI
 
 
 struct Questionnaire: View {
-    @ObservedObject var userData: UserData
-    @EnvironmentObject var equipmentData: EquipmentData
+    @EnvironmentObject private var ctx: AppContext
     @State private var currentQuestionIndex: Int = 0
     @State private var answers: [String] = ["", "", "", ""]
     @State private var isPresenting: Bool = false
     @State private var showingPopup: Bool = false
-    
-    init(userData: UserData) {
-        self.userData = userData
-        
-        if userData.questionAnswers.count == questions.count {
-            _currentQuestionIndex = State(initialValue: questions.count-1)
-            _answers = State(initialValue: userData.questionAnswers)
-            _showingPopup = State(initialValue: true)
-        }
-    }
     
     let questions = [
         "Are you familiar with gym equipment and exercise techniques?",
@@ -59,7 +48,7 @@ struct Questionnaire: View {
                             .frame(maxWidth: .infinity)
                             .background(Color.blue)
                             .foregroundColor(Color.white)
-                            .cornerRadius(10)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                         
                         Spacer()
                         if answers[currentQuestionIndex] == option {
@@ -71,7 +60,7 @@ struct Questionnaire: View {
                 .padding(.horizontal)
                 .padding(.vertical, 5)
                 .background(Color.blue)
-                .cornerRadius(10)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             HStack {
                 Button(action: {
@@ -92,13 +81,13 @@ struct Questionnaire: View {
                         // Before moving to the next question, save answers if needed
                         switch currentQuestionIndex {
                             case 0: // "Are you familiar with gym equipment and exercise techniques?"
-                                userData.isFamiliarWithGym = answers[0] == "Yes"
-                            userData.saveSingleVariableToFile(\.isFamiliarWithGym, for: .isFamiliarWithGym)
+                            ctx.userData.evaluation.isFamiliarWithGym = answers[0] == "Yes"
+                            ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
                             
                             case 2: // "How many days per week do you plan on exercising?"
                                 if let workoutDays = Int(answers[2]) {
-                                    userData.workoutDaysPerWeek = workoutDays
-                                    userData.saveSingleVariableToFile(\.workoutDaysPerWeek, for: .workoutDaysPerWeek)
+                                    ctx.userData.workoutPrefs.workoutDaysPerWeek = workoutDays
+                                    ctx.userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
                                 }
                             default:
                                 break
@@ -107,7 +96,7 @@ struct Questionnaire: View {
                             currentQuestionIndex += 1
                     } else {
                         // Last question answered, proceed to equipment selection or final processing
-                        equipmentData.selectEquipment(basedOn: answers[3]) // Assuming this is how you want to process the last answer
+                        ctx.userData.evaluation.equipmentSelected = ctx.equipment.selectEquipment(basedOn: answers[3]) // Assuming this is how you want to process the last answer
                         processAnswers()
                         showingPopup = true
                     }
@@ -123,32 +112,43 @@ struct Questionnaire: View {
             .padding()
         }
         .padding()
+        .onAppear(perform: initializeQuestions)
         .sheet(isPresented: $showingPopup) {
-            EquipmentPopupView(onClose: {
-                showingPopup = false
-            }, onContinue: {
-                showingPopup = false
-                handleNavigation()
-                EquipmentSelection(userData: userData, equipmentData: equipmentData).saveEquipment()
-            }, onEdit: {
-                showingPopup = false
-                handleNavigation()
-            })
-        }.onAppear {
-            if userData.questionAnswers.count == questions.count {
-                equipmentData.selectEquipment(basedOn: answers[3]) // Assuming this is how you want to process the last answer
-            }
+            let selectedEquipment = ctx.userData.evaluation.equipmentSelected
+            EquipmentPopupView(
+                selectedEquipment: selectedEquipment,
+                onClose: {
+                    showingPopup = false
+                }, onContinue: {
+                    showingPopup = false
+                    ctx.userData.setup.isEquipmentSelected = true
+                    ctx.userData.saveToFile()
+                    handleNavigation()
+                }, onEdit: {
+                    showingPopup = false
+                    handleNavigation()
+                }
+            )
         }
     }
     
-    func handleNavigation() {
-        userData.questionsAnswered = true
-        userData.saveSingleVariableToFile(\.questionsAnswered, for: .questionsAnswered)
+    private func initializeQuestions() {
+        if ctx.userData.setup.questionAnswers.count == questions.count {
+            currentQuestionIndex = questions.count - 1
+            answers = ctx.userData.setup.questionAnswers
+            ctx.userData.evaluation.equipmentSelected = ctx.equipment.selectEquipment(basedOn: answers[3]) // Assuming this is how you want to process the last answer
+            showingPopup = true
+        }
     }
     
-    func processAnswers() {
-        userData.questionAnswers = answers
-        userData.saveSingleVariableToFile(\.questionAnswers, for: .questionAnswers)
+    private func handleNavigation() {
+        ctx.userData.setup.questionsAnswered = true
+        ctx.userData.saveSingleStructToFile(\.setup, for: .setup)
+    }
+    
+    private func processAnswers() {
+        ctx.userData.setup.questionAnswers = answers
+        ctx.userData.saveSingleStructToFile(\.setup, for: .setup)
         // determine the best split for the user based on goal and workoutDaysPerWeek
     }
 }

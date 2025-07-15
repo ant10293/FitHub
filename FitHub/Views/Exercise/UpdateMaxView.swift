@@ -9,12 +9,11 @@ import SwiftUI
 
 
 struct UpdateMaxView: View {
-    @State var usesWeight: Bool
-    var onSave: (Double) -> Void
-    var onCancel: () -> Void
-    @State private var isKeyboardVisible = false
     @State private var newOneRepMax: String = ""
     @FocusState private var isTextFieldFocused: Bool
+    var usesWeight: Bool
+    var onSave: (Double) -> Void
+    var onCancel: () -> Void
     
     var body: some View {
         VStack(spacing: 20) {
@@ -25,12 +24,9 @@ struct UpdateMaxView: View {
                 .keyboardType(.decimalPad)
                 .padding()
                 .background(Color(UIColor.systemBackground))
-                .cornerRadius(8)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 .focused($isTextFieldFocused)
-                .onAppear {
-                    // Automatically focus on the text field when the view appears
-                    isTextFieldFocused = true
-                }
+                .onAppear { isTextFieldFocused = true }
             
             HStack {
                 Button(action: onCancel) {
@@ -38,25 +34,23 @@ struct UpdateMaxView: View {
                         .foregroundColor(.white)
                         .padding()
                         .background(Color.gray)
-                        .cornerRadius(8)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
                 Button(action: {
-                    if let newValue = Double(newOneRepMax) {
-                        onSave(newValue)
-                    }
+                    if let newValue = Double(newOneRepMax) { onSave(newValue) }
                 }) {
                     Text(" Save ")
                         .foregroundColor(.white)
                         .padding()
                         .background(Color.blue)
-                        .cornerRadius(8)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
                 .disabled(newOneRepMax.isEmpty)
             }
         }
         .padding()
         .background(Color(UIColor.secondarySystemBackground))
-        .cornerRadius(10)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(radius: 5)
         .padding()
     }

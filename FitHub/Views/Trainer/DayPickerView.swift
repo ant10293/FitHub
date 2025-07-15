@@ -9,20 +9,16 @@ import SwiftUI
 
 // must change to account for more day options
 struct DayPickerView: View {
+    @Environment(\.presentationMode) var presentationMode // Access to the presentation mode
+    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
     @Binding var selectedDays: [daysOfWeek]
     @Binding var numDays: Int
-   // var startDay: daysOfWeek
-    @Environment(\.presentationMode) var presentationMode // Access to the presentation mode
     @State private var showingAlert = false // State variable for showing the alert
-    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
-                Section(header: Text("Days of the Week")
-                    .font(.subheadline) // Explicitly set the font style
-                    .foregroundColor(.gray) // Ensure the color is consistent
-                ) {
+                Section {
                     ForEach(daysOfWeek.allCases, id: \.self) { day in
                         Button(action: {
                             if let index = selectedDays.firstIndex(of: day) {
@@ -30,9 +26,6 @@ struct DayPickerView: View {
                             } else if selectedDays.count < 6 {
                                 selectedDays.append(day)
                                 selectedDays.sort() // Sort after adding a new day
-                               /* selectedDays.sort(by: { lhs, rhs in
-                                    sortDays(lhs, rhs, startDay: .monday)
-                                                       })*/
                             }
                         }) {
                             HStack {
@@ -47,6 +40,9 @@ struct DayPickerView: View {
                             }
                         }
                     }
+                } header: {
+                    Text("Days of the Week")
+                        .font(.subheadline)
                 }
             }
             .navigationBarTitle("Select Days", displayMode: .inline)
@@ -69,14 +65,4 @@ struct DayPickerView: View {
             }
         }
     }
-    // Compare two days based on a user-dependent startDay
-    /*func sortDays(_ lhs: daysOfWeek, _ rhs: daysOfWeek, startDay: daysOfWeek) -> Bool {
-           // Rotate the base array so that 'startDay' is first
-           let reordered = daysOfWeek.orderedDays(startingOn: startDay)
-           guard let li = reordered.firstIndex(of: lhs),
-                 let ri = reordered.firstIndex(of: rhs) else {
-               return false
-           }
-           return li < ri
-       }*/
 }

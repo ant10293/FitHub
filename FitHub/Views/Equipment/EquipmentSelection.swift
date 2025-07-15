@@ -1,247 +1,193 @@
 import SwiftUI
 
 
+
 struct EquipmentSelection: View {
-    @ObservedObject var userData: UserData
-    @ObservedObject var equipmentData: EquipmentData
-    @EnvironmentObject var toast: ToastManager 
+    @Environment(\.presentationMode) private var presentationMode
+    @EnvironmentObject private var ctx: AppContext
+    @StateObject private var kbd = KeyboardManager.shared
     @State private var selectedCategory: EquipmentCategory = .all
-    @State private var selectedEquipment: GymEquipment? // State to manage selected exercise for detail view
+    @State private var equipToView: GymEquipment? // State to manage selected exercise for detail view
     @State private var showingSaveConfirmation: Bool = false
-    @State private var isKeyboardVisible: Bool = false
-    @State private var searchText = ""
-    
-    var filteredEquipment: [GymEquipment] {
-        equipmentData.allEquipment.filter { gymEquip in
-            (selectedCategory == .all || gymEquip.equCategory == selectedCategory) &&
-            (searchText.isEmpty || gymEquip.name.rawValue.localizedCaseInsensitiveContains(searchText))
-        }
-    }
-    
+    @State private var showEquipmentCreation: Bool = false
+    @State private var donePressed: Bool = false
+    @State private var searchText: String = ""
+    @State var selection: [GymEquipment]        // working list
+    var forNewExercise: Bool = false
+    var onDone: ([GymEquipment]) -> Void = { _ in }
+
     var body: some View {
-        VStack {
+        NavigationStack {
             VStack {
-                ScrollView(.horizontal, showsIndicators: true) {
-                    HStack(spacing: 10) {
-                        ForEach(EquipmentCategory.allCases, id: \.self) { category in
-                            Text(category.rawValue)
-                                .padding(.all, 10)
-                                .background(self.selectedCategory == category ? Color.blue : Color(UIColor.lightGray))
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                                .onTapGesture {
-                                    self.selectedCategory = category
-                                }
-                        }
-                    }
-                    .contentShape(Rectangle())
-                    .padding(.horizontal)
-                    .padding(.bottom)
-                }
-                .padding(.bottom, -5)
+                equipmentScrollView
+                    .padding(.bottom, -5)
                 
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                    TextField("Search Equipment", text: $searchText)
-                    if !searchText.isEmpty {
-                        Button(action: {
-                            searchText = "" // Clear the search text
-                        }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .frame(alignment: .trailing)
-                                .foregroundColor(.gray)
-                        }
-                    }
-                }
-                .padding(.vertical, 8)
-                .padding(.horizontal)
-                .background(Color(UIColor.secondarySystemBackground))
-                .cornerRadius(10)
-                .padding(.horizontal)
-            }
-            
-            if toast.showingSaveConfirmation {
-                saveConfirmationView
-                    .zIndex(1)
-            }
-            List(filteredEquipment, id: \.id) { gymEquip in
-                EquipmentRow(
-                    userData: userData,
-                    gymEquip: $equipmentData.allEquipment[equipmentData.allEquipment.firstIndex(where: { $0.id == gymEquip.id })!],
-                    onEquipmentSelected: { selectedEquip in
-                        self.selectedEquipment = selectedEquip // Set selectedEquipment
-                    }
-                )
-            }
-        }
-        .overlay(alignment: .bottomTrailing) {
-            Group {
-                if !userData.isEquipmentSelected {
-                    VStack {
-                        HStack {
-                            Spacer()
-                            Button(action: saveEquipment) {
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(.white)
-                                    .padding()
+                SearchBar(text: $searchText, placeholder: "Search Equipment")
+                    .padding(.horizontal)
+                
+                if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Equipment Saved Successfully!").zIndex(1) }
+                
+                List {
+                    if filteredEquipment.isEmpty {
+                        Text("No equipment found.")
+                            .foregroundColor(.gray)
+                            .padding()
+                    } else {
+                        Section {
+                            ForEach(filteredEquipment, id: \.id) { gymEquip in
+                                EquipmentRow(
+                                    gymEquip: gymEquip,
+                                    equipmentSelected: selection.contains(where: { $0.id == gymEquip.id }),
+                                    onEquipmentSelected: { selectedEquip in
+                                        self.equipToView = selectedEquip
+                                    },
+                                    toggleSelection: {
+                                        toggleSelection(gymEquip: gymEquip)
+                                    }
+                                )
                             }
-                            .background(Circle().fill(isAnyEquipmentSelected() ? Color.blue : Color.gray))
-                            .padding(.vertical)
-                            .padding(.trailing, 2.5)
-                            .shadow(radius: 10)
+                        } footer: {
+                            Text("\(filteredEquipment.count)/\(selectedInFiltered) equipment selected")
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding(.vertical, 8)
+                        }
+                    }
+                }
+            }
+            .navigationTitle(forNewExercise ? "Select Equipment" : "\(ctx.userData.profile.userName)'s Gym").navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if ctx.userData.setup.isEquipmentSelected && !forNewExercise {
+                        Button("Save") {
+                            ctx.userData.evaluation.equipmentSelected = selection
+                            ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
+                            ctx.toast.showSaveConfirmation()
+                        }
+                    } else if forNewExercise {
+                        Button("Done") {
+                            onDone(selection)
+                            donePressed = true
+                            presentationMode.wrappedValue.dismiss()
                         }
                     }
                 }
             }
         }
-        .sheet(item: $selectedEquipment) { equipment in
-            EquipmentDetail(
-                equipment: equipment,
-                onClose: {
-                    self.selectedEquipment = nil
-                }
-            )
-        }
-        .navigationTitle("\(userData.userName)'s Gym").navigationBarTitleDisplayMode(.inline)
-        .overlay(isKeyboardVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-        .onAppear(perform: setupKeyboardObservers)
-        .onDisappear(perform: removeKeyboardObservers)
-        .toolbar {
-            if userData.isEquipmentSelected {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        userData.saveSingleVariableToFile(\.equipmentSelected, for: .equipmentSelected)
-                        toast.showingSaveConfirmation = true
-                       /* showingSaveConfirmation = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            showingSaveConfirmation = false
-                        }*/
-                    }
-                }
+        .navigationDestination(item: $equipToView) { equipment in
+            if ctx.equipment.allEquipment.contains(where: { $0.id == equipment.id }) {
+                EquipmentDetail(equipment: equipment, allExercises: ctx.exercises.allExercises, allEquipment: ctx.equipment.allEquipment)
+            } else {
+                Color.clear.onAppear { equipToView = nil }
             }
         }
+        .overlay(
+            Group {               
+                if saveVisible {
+                    FloatingButton(image: "checkmark", action: {
+                        ctx.userData.evaluation.equipmentSelected = selection
+                        ctx.userData.setup.isEquipmentSelected = true
+                        ctx.userData.saveToFile()
+                    })
+                } else if actionVisible {
+                    FloatingButton(image: "plus", action: {
+                        showEquipmentCreation = true
+                    })
+                }
+            },
+            alignment: .bottomTrailing
+        )
+        .sheet(isPresented: $showEquipmentCreation) { NewEquipment() }
+        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+        .onDisappear(perform: disappearAction)
     }
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = true
-        }
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = false
+    
+    private func disappearAction() { if forNewExercise && !donePressed { onDone(selection) } }
+    
+    private var actionVisible: Bool { ctx.userData.setup.isEquipmentSelected && !forNewExercise && !kbd.isVisible }
+    
+    private var saveVisible: Bool { !ctx.userData.setup.isEquipmentSelected && !forNewExercise && !kbd.isVisible }
+    
+    private var filteredEquipment: [GymEquipment] {
+        // If “All” is selected, pass nil for the category so the helper ignores category filtering.
+        let categoryToFilter: EquipmentCategory? = (selectedCategory == .all ? nil : selectedCategory)
+        return ctx.equipment.filteredEquipment(searchText: searchText, category: categoryToFilter)
+    }
+    
+    private var selectedInFiltered: Int {
+        filteredEquipment.filter { fe in
+            selection.contains(where: { $0.id == fe.id })
+        }.count
+    }
+    
+    private func toggleSelection(gymEquip: GymEquipment) {
+        if let index = selection.firstIndex(where: { $0.id == gymEquip.id }) {
+            selection.remove(at: index)
+        } else {
+            selection.append(gymEquip)
         }
     }
     
-    private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    struct Line: View {
-        var body: some View {
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(.gray)
-        }
-    }
-    
-    private var saveConfirmationView: some View {
-        VStack {
-            Text("Equipment Saved Successfully!")
-                .foregroundColor(.white)
-                .padding()
-                .background(Color.blue)
-                .cornerRadius(10)
-        }
-        .frame(width: 300, height: 100)
-        .background(Color.clear)
-        .cornerRadius(20)
-        .shadow(radius: 10)
-        .transition(.scale)
-    }
-    
-    func saveEquipment() {
-        // Iterate over all equipment to ensure the full selection is considered
-        for gymEquip in equipmentData.allEquipment where gymEquip.isSelected {
-            if !userData.equipmentSelected.contains(where: { $0.name == gymEquip.name }) {
-                userData.equipmentSelected.append(gymEquip)
+    private var equipmentScrollView: some View {
+        ScrollView(.horizontal, showsIndicators: true) {
+            HStack(spacing: 10) {
+                ForEach(EquipmentCategory.allCases, id: \.self) { category in
+                    Text(category.rawValue)
+                        .padding(.all, 10)
+                        .background(self.selectedCategory == category ? Color.blue : Color(UIColor.lightGray))
+                        .foregroundColor(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .onTapGesture {
+                            self.selectedCategory = category
+                        }
+                }
             }
+            .contentShape(Rectangle())
+            .padding(.horizontal)
+            .padding(.bottom)
         }
-        userData.isEquipmentSelected = true
-        userData.saveToFile()
     }
-    
-    private func isAnyEquipmentSelected() -> Bool {
-        filteredEquipment.contains(where: { $0.isSelected })
-    }
-    
-    // images are rectangular but framed as square causing the corners not to be rounded properly
-    // need new images anyways
+
     struct EquipmentRow: View {
-        @ObservedObject var userData: UserData
-        @Binding var gymEquip: GymEquipment
+        let gymEquip: GymEquipment
+        let equipmentSelected: Bool
         var onEquipmentSelected: (GymEquipment) -> Void // Closure to pass selected equipment
+        var toggleSelection: () -> Void // Closure to pass selected equipment
         
         var body: some View {
             HStack {
-                HStack {
-                    Image(gymEquip.fullImagePath)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 40, height: 40)
-                        .clipShape(RoundedRectangle(cornerRadius: 6)) // Apply rounded rectangle shape
-                    
-                    VStack(alignment: .leading) {
-                        Text(gymEquip.name.rawValue)
-                            .foregroundColor(.primary)
-                            .font(.headline)
-                            .lineLimit(2)
-                            .minimumScaleFactor(0.65)
-                        Text(gymEquip.equCategory.rawValue)
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.65)
-                    }
-                }
-                .contentShape(Rectangle()) // Ensure the entire button area is tappable
+                ExEquipImage(gymEquip.fullImage, size: 0.2, imageScale: .small)
                 .onTapGesture {
                     onEquipmentSelected(gymEquip)
                 }
                 
-                Spacer()
-                
-                HStack {
-                    if userData.isEquipmentSelected {
-                        Image(systemName: userData.equipmentSelected.contains(where: { $0.name == gymEquip.name }) ? "checkmark.square.fill" : "square")
-                            .contentShape(RoundedRectangle(cornerRadius: 20))
-                            .foregroundColor(userData.equipmentSelected.contains(where: { $0.name == gymEquip.name }) ? .blue : .gray)
-                            .frame(width: 40, height: 40)
-                    } else {
-                        Image(systemName: gymEquip.isSelected ? "checkmark.square.fill" : "square")
-                            .contentShape(RoundedRectangle(cornerRadius: 20))
-                            .foregroundColor(gymEquip.isSelected ? .blue : .gray)
-                            .frame(width: 40, height: 40)
-                    }
-                }
-                .contentShape(Rectangle()) // Ensure the entire button area is tappable
-                .padding(.vertical, 4)
-                .onTapGesture(count: 1) {
+                Button {
                     toggleSelection()
+                } label: {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(gymEquip.name)
+                                .foregroundColor(.primary)
+                                .font(.headline)
+                                .lineLimit(2)
+                                .minimumScaleFactor(0.65)
+
+                            Text(gymEquip.equCategory.rawValue)
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.65)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: equipmentSelected ? "checkmark.square.fill" : "square")
+                            .foregroundColor(equipmentSelected ? .blue : .gray)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)  // stretch row to full width
+                    .contentShape(Rectangle())                        // full-row hit test
                 }
             }
-            .frame(height: 80)
-        }
-        private func toggleSelection() {
-            if userData.isEquipmentSelected {
-                if let index = userData.equipmentSelected.firstIndex(where: { $0.name == gymEquip.name }) {
-                    userData.equipmentSelected.remove(at: index)
-                    gymEquip.isSelected = false // Update isSelected to reflect changes
-                } else {
-                    userData.equipmentSelected.append(gymEquip)
-                    gymEquip.isSelected = true // Update isSelected to reflect changes
-                }
-            } else {
-                gymEquip.isSelected.toggle()
-            }
+            .padding(.vertical, 4)
         }
     }
 }

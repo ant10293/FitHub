@@ -9,24 +9,27 @@ import SwiftUI
 
 
 struct TemplateDetail: View {
-    @Binding var template: WorkoutTemplate
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var toastManager: ToastManager // Change this to EnvironmentObject
+    @EnvironmentObject private var ctx: AppContext
     @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
+    @Binding var template: WorkoutTemplate
+    @StateObject private var kbd = KeyboardManager.shared
     @State private var showingExerciseSelection: Bool = false
-    @State private var isKeyboardVisible: Bool = false // Track keyboard visibility
-    @State private var showingSaveConfirmation: Bool = false
+    @State private var showingAdjustmentsView: Bool = false
+    @State private var showingDetailView: Bool = false
     @State private var pulsate: Bool = false
-    @State private var isEditing = false // State to manage editing mode
+    @State private var isEditing: Bool = false // State to manage editing mode
+    @State var isCollapsed: Bool = false // Control collapsed state
     @State private var originalTemplate: WorkoutTemplate?
     @State private var undoStack: [WorkoutTemplate] = []
     @State private var redoStack: [WorkoutTemplate] = []
-    @State private var removedSetDetailHistory: [[UUID: [SetDetail]]] = [] // History for undo
-    @State private var restoredSetDetailHistory: [[UUID: [SetDetail]]] = [] // History for redo
-    @State var isCollapsed: Bool = false // Control collapsed state
+    @State private var replacedExercises: [UUID: [String]] = [:]
     @State private var exercisePendingDeletion: Exercise? = nil
     @State private var activeAlert: ActiveAlert? = nil
+    @State private var selectedExercise: Exercise? // State to manage selected exercise for detail view
+    @State private var activeDetailID: UUID? = nil   // nil = no menu open
     var onDone: () -> Void
+    private let modifier = ExerciseModifier()
+    
     
     var body: some View {
         ZStack {
@@ -35,106 +38,103 @@ struct TemplateDetail: View {
                 .zIndex(0)  // Ensures the overlay is below all other content
             
             VStack {
-                if isEditing {
-                    editToolBar
-                }
-                
-                if toastManager.showingSaveConfirmation {
-                    saveConfirmationView
-                        .zIndex(1)  // Ensures the overlay is above all other content
-                }
+                if isEditing { editToolBar }
+                if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Template Saved Successfully!").zIndex(1) }
                 
                 Spacer()
                 
-                if template.exercises.isEmpty {
-                    emptyView
-                } else {
-                    List {
-                        ForEach($template.exercises, id: \.id) { $exercise in
-                            ExerciseSetDetail(
-                                template: $template,
-                                exercise: $exercise,
-                                isCollapsed: $isCollapsed,
-                                addSetAction: { captureSnapshot(); addNewSetToExercise(exercise) },
-                                deleteSetAction: { captureSnapshot(); deleteSetFromExercise(exercise) },
-                                onRemoveExercise: { exercise in
-                                    confirmDeleteExercise(exercise)
-                                },
-                                captureSnap: { captureSnapshot() }
-                            )
-                            .listRowBackground(Color.clear) // Ensure list rows have a clear background
-                            .listRowSeparator(.hidden)
-                            .id(exercise.id)  // this is necessary to refresh the view smoothly when swapping exercises
-                        }
-                        .onDelete { offsets in captureSnapshot(); deleteExercise(at: offsets) }
-                        .onMove { source, destination in captureSnapshot(); moveExercise(from: source, to: destination) }
-                    }
-                    .listStyle(PlainListStyle())
-                    .scrollIndicators(.visible)
+                if !template.exercises.isEmpty {
+                    setDetailList
                 }
             }
-            .navigationBarItems(trailing: Button(isEditing ? "Close" : "Edit") {
-                isEditing.toggle()
-            })
-            .sheet(isPresented: $showingExerciseSelection) {
-                exerciseSelectionSheet
+        }
+        .overlay(alignment: .center, content: { template.exercises.isEmpty ? emptyView() : nil })
+        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+        .overlay(!kbd.isVisible ? FloatingButton(image: "plus", action: { showingExerciseSelection = true }) : nil, alignment: .bottomTrailing)
+        .navigationBarItems(trailing: Button(isEditing ? "Close" : "Edit") { isEditing.toggle() })
+        .sheet(isPresented: $showingExerciseSelection) { exerciseSelectionSheet }
+        .sheet(item: $selectedExercise, onDismiss: { handleSheetDismiss() }) { exercise in
+            if showingDetailView {
+                ExerciseDetailView(viewingDuringWorkout: true, exercise: exercise)
+                    .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
+            } else if showingAdjustmentsView {
+                AdjustmentsView(AdjustmentsData: ctx.adjustments, exercise: exercise)
             }
-            .alert(item: $activeAlert) { alertType in
-                switch alertType {
-                case .fill:
-                    return Alert(
-                        title: Text("Fill Template?"),
-                        message: Text("This will require closing and reopening this template."),
-                        primaryButton: .destructive(Text("Fill"), action: {
-                            onDone() // Perform fill action here.
-                        }),
-                        secondaryButton: .cancel()
-                    )
-                case .delete:
-                    return Alert(
-                        title: Text("Are you sure you want to remove \(exercisePendingDeletion != nil ? "'"+exercisePendingDeletion!.name+"'" : "this exercise")?"),
-                        message: Text("The exercise and its sets can be restored via: Edit → Undo"),
-                        primaryButton: .destructive(Text("Remove"), action: {
-                            if let exercise = exercisePendingDeletion {
-                                removeExercise(exercise)
-                                exercisePendingDeletion = nil
-                            }
-                        }),
-                        secondaryButton: .cancel({
+        }
+        .alert(item: $activeAlert) { alertType in
+            switch alertType {
+            case .fill:
+                return Alert(
+                    title: Text("Fill Template?"),
+                    message: Text("This will require closing and reopening this template."),
+                    primaryButton: .destructive(Text("Fill"), action: {
+                        onDone() // Perform fill action here.
+                    }),
+                    secondaryButton: .cancel()
+                )
+            case .delete:
+                return Alert(
+                    title: Text("Are you sure you want to remove \(exercisePendingDeletion != nil ? "'"+exercisePendingDeletion!.name+"'" : "this exercise")?"),
+                    message: Text("The exercise and its sets can be restored via: Edit → Undo"),
+                    primaryButton: .destructive(Text("Remove"), action: {
+                        if let exercise = exercisePendingDeletion {
+                            removeExercise(exercise)
                             exercisePendingDeletion = nil
-                        })
-                    )
-                }
-            }
-            .navigationTitle(template.name).navigationBarTitleDisplayMode(.inline)
-            .onAppear(perform: setupKeyboardObservers)
-            .onDisappear {
-                removeKeyboardObservers()
-                saveTemplate(displaySaveConfirm: false)
+                        }
+                    }),
+                    secondaryButton: .cancel({
+                        exercisePendingDeletion = nil
+                    })
+                )
             }
         }
-        .overlay(isKeyboardVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-        .overlay(!isKeyboardVisible ? floatingActionButton : nil, alignment: .bottomTrailing)
-    }
-        
-    enum ActiveAlert: Identifiable {
-        case fill, delete
-
-        var id: Int {
-            hashValue
-        }
+        .navigationBarTitle(template.name, displayMode: .inline)
+        .onDisappear { saveTemplate() }
     }
     
+    private var setDetailList: some View {
+        List {
+            ForEach($template.exercises, id: \.id) { $exercise in
+                ExerciseSetDetail(
+                    template: $template,
+                    exercise: $exercise,
+                    isCollapsed: $isCollapsed,
+                    isShowingOptions: Binding(
+                        get: { activeDetailID == exercise.id },
+                        set: { newVal in activeDetailID = newVal ? exercise.id : nil }
+                    ),
+                    replacedExercises: Binding(
+                        get: { replacedExercises[exercise.id] ?? [] },
+                        set: { replacedExercises[exercise.id] = $0 }
+                    ),
+                    roundingPref: ctx.userData.settings.roundingPreference,
+                    setStruct: ctx.userData.workoutPrefs.setStructure,
+                    hasEquipmentAdjustments: ctx.equipment.hasEquipmentAdjustments(for: exercise),
+                    perform: { action in
+                        performCallBackAction(action: action, exercise: $exercise)
+                    },
+                    onSuperSet: { ssIdString in
+                        captureSnapshot()
+                        modifier.handleSupersetSelection(for: &exercise, with: ssIdString, in: &template)
+                    },
+                )
+                .listRowBackground(Color.clear) // Ensure list rows have a clear background
+                .listRowSeparator(.hidden)
+                .id(exercise.id)  // this is necessary to refresh the view smoothly when swapping exercises
+            }
+            .onDelete { offsets in captureSnapshot(); deleteExercise(at: offsets) }
+            .onMove { source, destination in captureSnapshot(); moveExercise(from: source, to: destination) }
+        }
+        .listStyle(PlainListStyle())
+        .scrollIndicators(.visible)
+    }
+            
     private var editToolBar: some View {
         HStack {
-            Button(action: {
-                undoAction() // Handle undo action
-            }) {
+            Button(action: { undoAction() }) {
                 HStack {
-                    Text("Undo")
-                        .font(.caption)
-                    Image(systemName: "arrow.uturn.backward")
-                        .imageScale(.large)
+                    Text("Undo").font(.caption)
+                    Image(systemName: "arrow.uturn.backward").imageScale(.large)
                 }
                 .padding(.leading, 15)
                 .padding(.trailing)
@@ -142,48 +142,100 @@ struct TemplateDetail: View {
             }
             .disabled(undoStack.isEmpty)
             
-            Button(action: {
-                redoAction() // Handle redo action
-            }) {
+            Button(action: { redoAction() }) {
                 HStack {
-                    Image(systemName: "arrow.uturn.forward")
-                        .imageScale(.large)
-                    Text("Redo")
-                        .font(.caption)
-                }
-                .foregroundColor(redoStack.isEmpty ? .gray : .blue) // Gray out if disabled
+                    Image(systemName: "arrow.uturn.forward").imageScale(.large)
+                    Text("Redo").font(.caption)
+                }.foregroundColor(redoStack.isEmpty ? .gray : .blue) // Gray out if disabled
             }
             .disabled(redoStack.isEmpty)
             
             Spacer()
-            Button(action: {
-                //showFillMsg = true
-                triggerFillAlert()
-            }) {
+            Button(action: { triggerFillAlert() }) {
                 HStack {
-                    Image(systemName: "doc.fill.badge.plus")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(.blue)
-                    
-                }
-            }.disabled(template.exercises.isEmpty)
+                    Image(systemName: "doc.fill.badge.plus").imageScale(.medium)
+                }.foregroundColor(template.exercises.isEmpty ? .gray : .blue) // Gray out if disabled
+            }
+            .disabled(template.exercises.isEmpty)
             Spacer()
             
-            Button(action: {
-                saveTemplate(displaySaveConfirm: true)
-            }) {
+            Button(action: { saveTemplate(displaySaveConfirm: true) }) {
                 HStack {
                     Text("Save")
-                    Image(systemName: "tray.and.arrow.down") // Use this icon or choose another that suits your app's design
-                        .imageScale(.large)
-                }
-                .padding(.trailing, 15)
+                    Image(systemName: "tray.and.arrow.down").imageScale(.large)
+                }.padding(.trailing, 15)
             }
         }
         .padding()
         .background(Color(UIColor.secondarySystemBackground))
-        .foregroundColor(.blue)
+    }
+    
+    private var exerciseSelectionSheet: some View {
+        ExerciseSelection(
+            selectedExercises: template.exercises,
+            templateCategories: template.categories,
+            onDone: { finalSelection in
+                // Step 1: Constant-time membership tables
+                let currentIDs = Set(template.exercises.map(\.id))
+                let finalIDs = Set(finalSelection.map(\.id))
+
+                // Step 2: Remove anything that disappeared
+                template.exercises.filter { !finalIDs.contains($0.id) }.forEach(removeExercise)
+
+                // Step 3: Add the new ones
+                finalSelection.filter { !currentIDs.contains($0.id) }.forEach(addExercise)
+
+                // Step 4: Keep the caller’s order & persist once
+                template.exercises = finalSelection
+                saveTemplate()
+            }
+        )
+    }
+    
+    @ViewBuilder
+    private func emptyView() -> some View {
+        VStack {
+            HStack(spacing: 5) {
+                Text("No exercises added")
+                    .font(.headline)
+                    .foregroundColor(colorScheme == .dark ? .white : .gray)
+                Image(systemName: "exclamationmark.circle").foregroundColor(.red)
+            }
+            Text("Press + to add an exercise to the workout.").foregroundColor(.blue).padding()
+        }
+        .onAppear { self.pulsate = true }
+        .onDisappear { self.pulsate = false }
+        .padding()
+        .padding(.horizontal)
+        .background(Color(UIColor.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .shadow(radius: 10)
+        .scaleEffect(pulsate ? 1.05 : 1.0)
+        .animation(Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: pulsate)
+    }
+    
+    enum ActiveAlert: Identifiable { case fill, delete; var id: Int { hashValue } }
+    private func triggerFillAlert() { activeAlert = .fill }
+    
+    private func performCallBackAction(action: CallBackAction, exercise: Binding<Exercise>) {
+        switch action {
+        case .addSet: captureSnapshot(); modifier.addNewSet(exercise.wrappedValue, from: &template, user: ctx.userData)
+        case .deleteSet: captureSnapshot(); modifier.deleteSet(exercise.wrappedValue, from: &template, user: ctx.userData)
+        case .removeExercise: confirmDeleteExercise(exercise.wrappedValue)
+        case .replaceExercise:
+            captureSnapshot()
+            var local = replacedExercises[exercise.id] ?? []
+            _ = modifier.replace(target: exercise.wrappedValue, in: &template, ctx: ctx, replaced: &local)
+            replacedExercises[exercise.id] = local
+        case .viewAdjustments: showingAdjustmentsView = true; selectedExercise = exercise.wrappedValue
+        case .viewDetail: showingDetailView = true; selectedExercise = exercise.wrappedValue
+        case .saveTemplate: saveTemplate()
+        }
+    }
+    
+    private func handleSheetDismiss() {
+        showingDetailView ? showingDetailView = false : (showingAdjustmentsView ? showingAdjustmentsView = false : nil)
+        selectedExercise = nil
     }
     
     // When a deletion is attempted, set the pending exercise and show the confirmation alert.
@@ -191,11 +243,7 @@ struct TemplateDetail: View {
         exercisePendingDeletion = exercise
         activeAlert = .delete
     }
-    
-    private func triggerFillAlert() {
-        activeAlert = .fill
-    }
-    
+        
     private func captureSnapshot() {
         undoStack.append(template)
         redoStack.removeAll()  // Clear the redo stack whenever a new snapshot is captured
@@ -205,209 +253,41 @@ struct TemplateDetail: View {
         guard let lastUndo = undoStack.popLast() else { return }
         redoStack.append(template)  // Save the current state before applying the undo
         template = lastUndo  // Load the last template state from the undo stack
-        
-        // Restore deleted sets if applicable
-        if let lastRemovedDetail = removedSetDetailHistory.popLast() {
-            for (exerciseID, removedSets) in lastRemovedDetail {
-                guard let exerciseIndex = template.exercises.firstIndex(where: { $0.id == exerciseID }) else { continue }
-                for removedSet in removedSets {
-                    template.exercises[exerciseIndex].setDetails.append(removedSet)
-                    //template.exercises[exerciseIndex].sets += 1
-                }
-            }
-        }
-        saveTemplate(displaySaveConfirm: false)
+        saveTemplate()
     }
     
     private func redoAction() {
         guard let lastRedo = redoStack.popLast() else { return }
         undoStack.append(template)  // Save the current state before applying the redo
         template = lastRedo  // Load the template state from the redo stack
-        
-        // Reapply removed sets if applicable
-        if let lastRestoredDetail = restoredSetDetailHistory.popLast() {
-            for (exerciseID, restoredSets) in lastRestoredDetail {
-                guard let exerciseIndex = template.exercises.firstIndex(where: { $0.id == exerciseID }) else { continue }
-                for restoredSet in restoredSets {
-                    template.exercises[exerciseIndex].setDetails.removeAll(where: { $0 == restoredSet })
-                    //template.exercises[exerciseIndex].sets -= 1
-                }
-            }
-        }
-        saveTemplate(displaySaveConfirm: false)
-    }
-    
-    private func restoreLastDeletedSet(for exercise: Exercise) {
-        guard let exerciseIndex = template.exercises.firstIndex(where: { $0.id == exercise.id }),
-              let lastRemovedDetail = removedSetDetailHistory.last,
-              var removedSets = lastRemovedDetail[exercise.id],
-              let lastRemovedSet = removedSets.popLast() else {
-            return
-        }
-        // Restore the set
-        template.exercises[exerciseIndex].setDetails.append(lastRemovedSet)
-        //template.exercises[exerciseIndex].sets += 1
-        
-        // Update history
-        removedSetDetailHistory[removedSetDetailHistory.count - 1][exercise.id] = removedSets
-        if removedSets.isEmpty {
-            removedSetDetailHistory[removedSetDetailHistory.count - 1].removeValue(forKey: exercise.id)
-        }
-        saveTemplate(displaySaveConfirm: false)
-    }
-    
-    private func cleanUpResources() {
-        // Clear the Pasteboard or any other resources
-        UIPasteboard.general.items = []
-        print("Pasteboard cleared")
-        UIApplication.shared.perform(Selector(("_performMemoryWarning")))
+        saveTemplate()
     }
     
     private func moveExercise(from source: IndexSet, to destination: Int) {
         template.exercises.move(fromOffsets: source, toOffset: destination)
-        saveTemplate(displaySaveConfirm: false)
+        saveTemplate()
         isCollapsed = false
-    }
-    
-    private var saveConfirmationView: some View {
-        VStack {
-            Text("Template Saved Successfully!")
-                .foregroundColor(.white)
-                .padding()
-                .background(Color.blue)
-                .cornerRadius(10)
-        }
-        .frame(width: 300, height: 100)
-        .background(Color.clear)
-        .cornerRadius(20)
-        .shadow(radius: 10)
-        .transition(.scale) // Smooth transition for showing/hiding
-        .centerHorizontally()
-    }
-    
-    private var floatingActionButton: some View {
-        Button(action: {
-            showingExerciseSelection = true
-        }) {
-            Image(systemName: "plus")
-                .resizable()
-                .frame(width: 24, height: 24)
-                .padding()
-                .foregroundColor(.white)
-                .background(Color.blue)
-                .clipShape(Circle())
-                .shadow(radius: 10)
-                .padding()
-        }
-    }
-    
-    private var exerciseSelectionSheet: some View {
-        ExerciseSelection(
-            selectedExercises: template.exercises,
-            templateCategories: template.categories,
-            onDone: { finalSelection in
-                // Remove exercises that were deselected
-                for exercise in template.exercises {
-                    if !finalSelection.contains(where: { $0.id == exercise.id }) {
-                        removeExercise(exercise)
-                    }
-                }
-                // Add new exercises that are in the final selection but not in the current template
-                for exercise in finalSelection {
-                    if !template.exercises.contains(where: { $0.id == exercise.id }) {
-                        addExercise(exercise)
-                        self.addNewSetToExercise(exercise)
-                    }
-                }
-                // Update the template's exercises to the new ordered list
-                template.exercises = finalSelection
-                saveTemplate(displaySaveConfirm: false)
-            }
-        )
-    }
-    
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = true
-        }
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            isKeyboardVisible = false
-        }
-    }
-    
-    private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    private func addNewSetToExercise(_ exercise: Exercise) {
-        if let index = template.exercises.firstIndex(where: { $0.id == exercise.id }) {
-            let currentSets = template.exercises[index].sets
-            let newSet = SetDetail(setNumber: currentSets + 1, weight: 0, reps: 0)
-            template.exercises[index].setDetails.append(newSet)
-            saveTemplate(displaySaveConfirm: false)
-        }
-    }
-    
-    private func deleteSetFromExercise(_ exercise: Exercise) {
-        if let index = template.exercises.firstIndex(where: { $0.id == exercise.id }) {
-            guard !template.exercises[index].setDetails.isEmpty else { return }
-            template.exercises[index].setDetails.removeLast()
-            saveTemplate(displaySaveConfirm: false)
-        }
     }
     
     private func addExercise(_ exercise: Exercise) {
         captureSnapshot() // Capture the state before adding
         template.exercises.append(exercise)
-        //saveTemplate(displaySaveConfirm: false)
     }
     
     private func removeExercise(_ exercise: Exercise) {
-        captureSnapshot() // Capture the state before adding
-        if let index = template.exercises.firstIndex(where: { $0.id == exercise.id }) {
-            template.exercises.remove(at: index)
-        }
-        //saveTemplate(displaySaveConfirm: false)
+        captureSnapshot() // Capture the state before removing
+        _ = modifier.remove(exercise, from: &template, user: ctx.userData)
     }
     
     private func deleteExercise(at offsets: IndexSet) {
-        template.exercises.remove(atOffsets: offsets)
-        saveTemplate(displaySaveConfirm: false)
-    }
-    
-    private func saveTemplate(displaySaveConfirm: Bool) {
-        userData.saveTemplate(template: template)
-        if displaySaveConfirm {
-            toastManager.showSaveConfirmation()  // Trigger the notification
+        for index in offsets {
+            _ = modifier.remove(template.exercises[index], from: &template, user: ctx.userData)
         }
     }
     
-    private var emptyView: some View {
-        VStack {
-            Spacer()
-            VStack {
-                HStack(spacing: 5) {
-                    Text("No exercises added")
-                        .foregroundColor(colorScheme == .dark ? .white : .gray)
-                    Image(systemName: "exclamationmark.circle")
-                        .foregroundColor(.red)  // You can change the color to suit your design
-                }
-                Text("Press + to add an exercise to the workout.")
-                    .padding()
-                    .foregroundColor(.blue)
-            }
-            .onAppear { self.pulsate = true }
-            .onDisappear { self.pulsate = false }
-            .padding()
-            .padding(.horizontal)
-            .background(Color(UIColor.secondarySystemBackground))
-            .cornerRadius(15) // More rounded corners
-            .shadow(radius: 10)
-            .scaleEffect(pulsate ? 1.01 : 1.0)
-            .animation(Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: pulsate)
-        Spacer()
-        }
+    private func saveTemplate(displaySaveConfirm: Bool = false) {
+        _ = ctx.userData.updateTemplate(template: template)
+        if displaySaveConfirm { ctx.toast.showSaveConfirmation() }
     }
 }
 

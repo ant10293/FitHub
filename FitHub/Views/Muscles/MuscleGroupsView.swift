@@ -10,20 +10,20 @@ import UIKit
 
 
 struct MuscleGroupsView: View {
-    @ObservedObject var userData: UserData
-    var selectedMuscles: [Muscle]
     @Binding var showFront: Bool
+    var gender: Gender
+    var selectedMuscles: [Muscle]
     var restPercentages: [Muscle: Int] = [:]  // State to hold the rest percentages
     
     var body: some View {
         ZStack {
             // Display the front or rear blank image as the base
-            DirectImageView(imageName: showFront ? "(M)Front_Blank" : "(M)Rear_Blank")
+            DirectImageView(imageName: AssetPath.getImagePath(for: .muscle, isfront: showFront, isBlank: true, gender: gender))
                 .opacity(1.0)
             
             // Filter and overlay the muscle images
             ForEach(selectedMuscles, id: \.self) { muscle in
-                let paths = muscle.muscleGroupImages
+                let paths = AssetPath.getMuscleImages(category: muscle, gender: gender)
                 ForEach(paths.filter { $0.contains(showFront ? "Front" : "Rear") }, id: \.self) { path in
                     DirectImageView(imageName: path)
                         .opacity(opacity(for: muscle))

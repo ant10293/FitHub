@@ -8,20 +8,25 @@
 import SwiftUI
 
 struct SimpleMuscleGroupsView: View {
-    var selectedSplit: [SplitCategory]
     @Binding var showFront: Bool
+    var gender: Gender
+    var selectedSplit: [SplitCategory]
+    
     
     var body: some View {
         ZStack {
             // Display the front or rear blank image as the base
-            DirectImageView(imageName: showFront ? "Images/Male/Split_Images/Front_Blank/(M)Front_Simple_Blank" : "Images/Male/Split_Images/Rear_Blank/(M)Rear_Simple_Blank")
+            DirectImageView(imageName: AssetPath.getImagePath(for: .split, isfront: showFront, isBlank: true, gender: gender))
                 .opacity(1.0)
+            
+            let legTargets = SplitCategory.legFocusCategories(selectedSplit)
             
             // Overlay the muscle images
             ForEach(selectedSplit, id: \.self) { split in
-                let paths = split.splitGroupImages
+                let paths = AssetPath.getSplitImages(category: split, isTarget: legTargets.contains(split), gender: gender)
                 ForEach(paths.filter { $0.contains(showFront ? "Front" : "Rear") }, id: \.self) { path in
                     DirectImageView(imageName: path)
+                        .zIndex(split == .legs ? 0 : 1) // legs always underneath to ensure target images are properly displayed
                 }
             }
         }

@@ -19,6 +19,7 @@ struct RestTimerEditor: View {
     
     @State private var pickerMinutes: Int = 0
     @State private var pickerSeconds: Int = 0
+    var onSave: () -> Void
 
     var body: some View {
         NavigationStack {
@@ -49,16 +50,11 @@ struct RestTimerEditor: View {
                                 Text("Set \(index + 1)")
                                 Spacer()
                                 // Display the rest time in a button with a rounded rectangle border.
-                                Button(action: {
-                                    // Tapping this button opens the picker.
-                                    currentRestSetIndex = index
-                                    let rest = getSelectedSets()[index].restPeriod ?? 0
-                                    pickerMinutes = rest / 60
-                                    pickerSeconds = rest % 60
-                                    showingRestPicker = true
-                                }) {
+                                
+                                // Tapping this button opens the picker.
+                                Button(action: { initializePicker(for: index) }) {
                                     if showingRestPicker && currentRestSetIndex == index {
-                                        Text(formatTimeShort(pickerTimeSeconds()))
+                                        Text(Format.formatDuration(pickerTimeSeconds))
                                             .frame(width: 80, height: 30)
                                             .background(
                                                 RoundedRectangle(cornerRadius: 5)
@@ -69,7 +65,7 @@ struct RestTimerEditor: View {
                                                     )
                                             )
                                     } else {
-                                        Text(formatTimeShort(getSelectedSets()[index].restPeriod ?? 0))
+                                        Text(Format.formatDuration(getSelectedSets()[index].restPeriod ?? 0))
                                             .frame(width: 80, height: 30)
                                             .background(
                                                 RoundedRectangle(cornerRadius: 5)
@@ -84,6 +80,7 @@ struct RestTimerEditor: View {
                             }
                             .padding()
                             .listRowSeparator(showingRestPicker && currentRestSetIndex == index ? .hidden : .visible)
+                            
                             if showingRestPicker && currentRestSetIndex == index {
                                 VStack {
                                     Text("Adjust Rest Period for Set \(index + 1)")
@@ -97,6 +94,7 @@ struct RestTimerEditor: View {
                                             guard let idx = currentRestSetIndex else { return }
                                             updateRestPeriod(for: idx, withMinutes: pickerMinutes, seconds: pickerSeconds)
                                             resetPicker()
+                                            onSave()
                                         }) {
                                             Image(systemName: "checkmark")
                                                 .foregroundColor(.white)
@@ -113,7 +111,7 @@ struct RestTimerEditor: View {
                 .listStyle(PlainListStyle())
             }
             .padding()
-            .navigationTitle(exercise.name).navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitle(exercise.name, displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") { dismiss() }
@@ -121,13 +119,20 @@ struct RestTimerEditor: View {
             }
         }
     }
-    private func pickerTimeSeconds() -> Int {
-        return pickerMinutes * 60 + pickerSeconds
-    }
+    
+    private var pickerTimeSeconds: Int { pickerMinutes * 60 + pickerSeconds }
     
     private func resetPicker() {
         showingRestPicker = false
         currentRestSetIndex = nil
+    }
+    
+    private func initializePicker(for index: Int) {
+        currentRestSetIndex = index
+        let rest = getSelectedSets()[index].restPeriod ?? 0
+        pickerMinutes = rest / 60
+        pickerSeconds = rest % 60
+        showingRestPicker = true
     }
     
     /// Returns the currently selected array of sets.

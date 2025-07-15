@@ -8,11 +8,23 @@
 import SwiftUI
 
 struct InfoBanner: View {
+    // MARK: – Public API
+    let text: String
+    var width: CGFloat? = 300
+    var height: CGFloat? = 100
+    var bgColor: Color? = .blue
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text(text)
+                .foregroundColor(.white)
+                .padding()
+                .background(bgColor)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+        }
+        .frame(width: width, height: height)
+        .background(Color.clear)
+        .shadow(radius: 10)
+        .transition(.scale)
     }
-}
-
-#Preview {
-    InfoBanner()
 }

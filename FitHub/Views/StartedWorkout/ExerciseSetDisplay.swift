@@ -15,20 +15,22 @@ struct ExerciseSetDisplay: View {
     @State private var weightInput: String
     @State private var repsInput: String
     @State private var repsLocal: Int
+    @State private var rpeLocal: Double = 1
     var exercise: Exercise
     var saveTemplate: () -> Void
     
+    var isWarm: Bool {
+        exercise.currentSet <= exercise.warmUpSets
+    }
     
-    // Initialize the inputs similar to how it is done in `ExerciseSetDetailView`
     init(setDetail: Binding<SetDetail>, shouldDisableNext: Binding<Bool>, exercise: Exercise, saveTemplate: @escaping () -> Void) {
         _setDetail = setDetail
         _shouldDisableNext = shouldDisableNext
-        
-        // Initialize weight and reps inputs based on the set details
-        _weightInput = State(initialValue: setDetail.wrappedValue.weight > 0 ? (setDetail.wrappedValue.weight.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", setDetail.wrappedValue.weight) : String(setDetail.wrappedValue.weight)) : "")
+        _weightInput = State(initialValue: setDetail.wrappedValue.weight > 0 ? String(Format.smartFormat(setDetail.wrappedValue.weight))  : "")
         _repsInput = State(initialValue: setDetail.wrappedValue.reps > 0 ? String(setDetail.wrappedValue.reps) : "")
-        
-        _repsLocal = State(initialValue: setDetail.wrappedValue.repsCompleted ?? setDetail.wrappedValue.reps)
+        _repsLocal = State(initialValue: setDetail.wrappedValue.reps)
+        _rpeLocal = State(initialValue: 1)
+                
         self.exercise = exercise
         self.saveTemplate = saveTemplate
     }
@@ -36,9 +38,6 @@ struct ExerciseSetDisplay: View {
     var body: some View {
         VStack(alignment: .center) {
             HStack {
-                let warmCount = exercise.warmUpSets
-                let isWarm = exercise.currentSet <= warmCount
-
                 if isWarm {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("warmup")
@@ -52,7 +51,7 @@ struct ExerciseSetDisplay: View {
                         .fontWeight(.bold)
                 }
                 
-                if exercise.usesWeight {
+                if exercise.type.usesWeight {
                     ZStack {
                         RoundedRectangle(cornerRadius: 8) // Background shape
                             .fill(colorScheme == .dark ? Color(UIColor.systemGray4) : Color(UIColor.secondarySystemBackground))
@@ -61,24 +60,15 @@ struct ExerciseSetDisplay: View {
                         TextField("wt.", text: Binding<String>(
                             get: { weightInput },
                             set: { newValue in
-                                // 1️⃣ Only allow digits and “.”
-                                let filtered = newValue.filter { "0123456789.".contains($0) }
+                                let filtered = InputLimiter.filteredWeight(old: weightInput, new: newValue)
+                                weightInput = filtered
 
-                                // 2️⃣ Test the entire string against our pattern
-                                let pattern = #"^(\d{0,4})(\.\d{0,2})?$"#
-                                if filtered.range(of: pattern, options: .regularExpression) != nil {
-                                    // it matches → we accept
-                                    weightInput = filtered
-
-                                    // update your model
-                                    if let w = Double(filtered), w > 0 {
-                                        setDetail.weight = w
-                                        shouldDisableNext = false
-                                    } else {
-                                        shouldDisableNext = true
-                                    }
+                                if let w = Double(filtered), w > 0 {
+                                    setDetail.weight = w
+                                    shouldDisableNext = false
+                                } else {
+                                    shouldDisableNext = true
                                 }
-                            // else: it doesn’t match → drop that keystroke
                             }
                         ))
                         .keyboardType(.decimalPad)
@@ -90,7 +80,7 @@ struct ExerciseSetDisplay: View {
                         Text("lbs").bold()
                         
                         if let weightInstruction = exercise.weightInstruction {
-                            Text(weightInstruction)
+                            Text(weightInstruction.rawValue)
                                 .font(.caption)
                                 .foregroundColor(.gray)
                         }
@@ -107,12 +97,12 @@ struct ExerciseSetDisplay: View {
                     TextField("reps", text: Binding<String>(
                         get: { repsInput },
                         set: { newValue in
+                            let filtered = InputLimiter.filteredReps(newValue)
+                            repsInput = filtered
                             
-                            let capped = String(newValue.prefix(3))
-                            repsInput = capped
-
-                            if let r = Int(capped), r > 0 {
+                            if let r = Int(filtered), r > 0 {
                                 setDetail.reps = r
+                                repsLocal = r // new line instead of relying onChange(of: setDetail.reps)
                                 shouldDisableNext = false
                             } else {
                                 shouldDisableNext = true
@@ -129,7 +119,7 @@ struct ExerciseSetDisplay: View {
                     Text("Reps").bold()
                     
                     if let repsInstruction = exercise.repsInstruction {
-                        Text(repsInstruction)
+                        Text(repsInstruction.rawValue)
                             .font(.caption)
                             .foregroundColor(.gray)
                             .frame(alignment: .trailing)
@@ -142,32 +132,57 @@ struct ExerciseSetDisplay: View {
             HStack {
                 Text("Reps Completed:")
                     .fontWeight(.bold)
-                    .padding(.trailing, 10)
 
-                Stepper(value: $repsLocal,in: 0...(setDetail.reps * 5),step: 1) {
+                Stepper(value: $repsLocal, in: 0...(setDetail.reps * 5), step: 1) {
                     Text("\(repsLocal)")
+                        .foregroundStyle(repsLocal < setDetail.reps ? .red : (repsLocal > setDetail.reps ? .green : .primary))
                 }
+                .padding(.horizontal)
             }
             .padding(.horizontal, -15)
-            .onChange(of: repsLocal) { oldValue, newValue in
-                setDetail.repsCompleted = newValue
+            // this should only be submitted before moving the next set or exercise. but it works fine as is
+            .onChange(of: repsLocal) {
+                setDetail.repsCompleted = repsLocal
+                //print("updated repsCompleted with: \(repsLocal)")
+            }
+            
+            // RPE read-out + slider
+            if !isWarm {
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack(spacing: 0) {
+                        Text("RPE:  ").fontWeight(.bold) + Text(String(format: "%.1f", rpeLocal))
+                        
+                        Slider(
+                            value: Binding(
+                                get: { Double(rpeLocal) },
+                                set: { newValue in
+                                    rpeLocal = newValue
+                                    setDetail.rpe = newValue // new line instead of relying onChange(of: rpeLocal)
+                                }
+                            ),
+                            in: 1...10,
+                            step: 0.5
+                        )
+                        .padding(.horizontal)
+                    }
+                    .padding(.horizontal, -15)   // keeps your original edge-to-edge feel
+                    
+                    Text("(1 - 10)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.bottom, -10) // remove the space that came from adding the rpe range label
             }
         }
         .padding()
-        .onChange(of: setDetail.reps) { oldValue, newValue in
-            // if user is changing reps or new set or new exercise
-            if oldValue != newValue {
-                repsLocal = newValue
-            }
-        }
         .onChange(of: exercise) { oldValue, newValue in
-            // only if exercise or current set changes
-            if oldValue.id != newValue.id || oldValue.currentSet != newValue.currentSet {
+            if oldValue.id != newValue.id || oldValue.currentSet != newValue.currentSet { // only if exercise or current set changes
                 saveTemplate()
                 resetInputs()
             }
         }
     }
+    
     // Function to dynamically calculate text width
     private func calculateTextWidth(text: String, minWidth: CGFloat, maxWidth: CGFloat) -> CGFloat {
         let font = UIFont.systemFont(ofSize: 17)
@@ -181,6 +196,8 @@ struct ExerciseSetDisplay: View {
     private func resetInputs() {
         weightInput = setDetail.weight > 0 ? (setDetail.weight.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", setDetail.weight) : String(setDetail.weight)) : ""
         repsInput = setDetail.reps > 0 ? String(setDetail.reps) : ""
-        //repsLocal = setDetail.repsCompleted ?? setDetail.reps
+        repsLocal = setDetail.reps
+        rpeLocal = 1
     }
 }
+

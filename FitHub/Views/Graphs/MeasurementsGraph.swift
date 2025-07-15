@@ -2,77 +2,72 @@ import SwiftUI
 import Charts
 
 struct MeasurementsGraph: View {
-    @ObservedObject var userData: UserData
-    var selectedMeasurement: MeasurementType
-    @State private var selectedTimeRange: TimeRange = .allTime
     @Environment(\.colorScheme) var colorScheme
-    
-    init(userData: UserData, selectedMeasurement: MeasurementType) {
-        self.userData = userData
-        self.selectedMeasurement = selectedMeasurement  
-    }
+    @State private var selectedTimeRange: TimeRange = .allTime
+    let selectedMeasurement: MeasurementType
+    let currentMeasurement: Measurement?
+    let pastMeasurements: [Measurement]?
 
     var body: some View {
         VStack {
             Text("\(selectedMeasurement.rawValue) History")
                 .font(.headline)
                 .centerHorizontally()
-            
-            if sortedMeasurementRecords.isEmpty {
-                List {
-                    Text("No data available for the selected measurement.")
-                        .foregroundColor(.gray)
-                        .padding()
-                }
-                .frame(height: 300)
-            } else {
-                ZStack {
-                    Chart {
-                        ForEach(sortedMeasurementRecords) { record in
-                            LineMark(
-                                x: .value("Date", dateFormatter.string(from: record.date)),
-                                y: .value("Value", record.value)
-                            )
-                            .foregroundStyle(.blue)
-                            PointMark(
-                                x: .value("Date", dateFormatter.string(from: record.date)),
-                                y: .value("Value", record.value)
-                            )
-                            .foregroundStyle(record.date == currentMeasurementDate ? .green : .blue)
-                            .annotation(position: .top) {
-                                Text(smartFormat(record.value))
-                                    .font(.caption)
-                                    .foregroundColor(record.date == currentMeasurementDate ? .green : .blue)
-                                    .padding(1)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 1)
-                                            .fill(Color(colorScheme == .dark ? .secondarySystemBackground : .systemBackground).opacity(0.8))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+           
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal) {
+                    HStack(spacing: 0) {
+                        Chart {
+                            if !sortedMeasurementRecords.isEmpty {
+                                ForEach(sortedMeasurementRecords) { record in
+                                    LineMark(
+                                        x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
+                                        y: .value("Value", record.value)
                                     )
+                                    .foregroundStyle(.blue)
+                                    PointMark(
+                                        x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
+                                        y: .value("Value", record.value)
+                                    )
+                                    .foregroundStyle(record.date == currentMeasurementDate ? .green : .blue)
+                                    .annotation(position: .top) {
+                                        Text(Format.smartFormat(record.value))
+                                            .font(.caption)
+                                            .foregroundColor(record.date == currentMeasurementDate ? .green : .blue)
+                                            .padding(1)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 1)
+                                                    .fill(Color(colorScheme == .dark ? .secondarySystemBackground : .systemBackground).opacity(0.8))
+                                            )
+                                    }
+                                }
                             }
-                            /*.annotation(position: .top) {
-                                Text(smartFormat(record.value))
-                                    .font(.caption)
-                                    .foregroundColor(record.date == currentMeasurementDate ? .green: .blue)
-                            }*/
                         }
-                    }
-                    .chartYScale(domain: yAxisRange)
-                    .frame(minHeight: 250)
-                    .padding()
-                    
-                    if let unitLabel = selectedMeasurement.unitLabel {
-                        VStack {
-                            Spacer()
-                            HStack {
-                                Spacer()
+                        .chartYScale(domain: yAxisRange)
+                        .frame(width: max(CGFloat(sortedMeasurementRecords.count) * 60, UIScreen.main.bounds.width - 40), height: UIScreen.main.bounds.height * 0.33)
+                        .overlay(alignment: .center) {                    // ← ① add overlay
+                            if sortedMeasurementRecords.isEmpty {
+                                Text("No data available for \n this measurement...")
+                                    .foregroundColor(.red)
+                                    .multilineTextAlignment(.center)
+                            }
+                        }
+                        .overlay(alignment: .bottomTrailing, content: {
+                            if let unitLabel = selectedMeasurement.unitLabel {
                                 Text(unitLabel)
                                     .font(.caption)
                                     .foregroundColor(.secondary)
-                                    .padding(.bottom)
-                                    .padding(.trailing)
-                            }.zIndex(1)
-                        }
+                            }
+                        })
+                        .padding()
+                        
+                        Color.clear.frame(width: 0.1).id("END")   // sentinel at far right
                     }
+                }
+                .onAppear {
+                    proxy.scrollTo("END", anchor: .trailing)    // jump to the end
                 }
             }
             
@@ -85,22 +80,15 @@ struct MeasurementsGraph: View {
             .padding()
         }
     }
-
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .none
-        return formatter
-    }()
     
-    var sortedMeasurementRecords: [Measurement] {
+    private var sortedMeasurementRecords: [Measurement] {
         var records: [Measurement] = []
         
         // Gather past and current measurements
-        if let pastRecords = userData.pastMeasurements[selectedMeasurement] {
+        if let pastRecords = pastMeasurements {
             records = pastRecords
         }
-        if let currentRecord = userData.currentMeasurements[selectedMeasurement], currentRecord.value > 0 {
+        if let currentRecord = currentMeasurement, currentRecord.value > 0 {
             records.append(currentRecord)
         }
         
@@ -118,7 +106,7 @@ struct MeasurementsGraph: View {
         var seenDates: Set<String> = Set()
         
         for record in records.reversed() {
-            let dateString = dateFormatter.string(from: record.date)
+            let dateString = Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)
             if !seenDates.contains(dateString) {
                 uniqueRecords.append(record)
                 seenDates.insert(dateString)
@@ -149,22 +137,15 @@ struct MeasurementsGraph: View {
         return filteredRecords
     }
     
-    var currentMeasurementDate: Date? {
-        return userData.currentMeasurements[selectedMeasurement]?.date
+    private var currentMeasurementDate: Date? {
+        guard let measurement = currentMeasurement else { return nil }
+        return measurement.date
     }
     
-    var minValue: Double {
-        sortedMeasurementRecords.map { $0.value }.min() ?? 0
-    }
+    private var minValue: Double { sortedMeasurementRecords.map { $0.value }.min() ?? 0 }
     
-    var maxValue: Double {
-        sortedMeasurementRecords.map { $0.value }.max() ?? 0
-    }
+    private var maxValue: Double { sortedMeasurementRecords.map { $0.value }.max() ?? 0 }
     
-    var yAxisRange: ClosedRange<Double> {
-        let minValueAdjusted = minValue - (minValue * 0.1)
-        let maxValueAdjusted = maxValue + (maxValue * 0.1)
-        return minValueAdjusted...maxValueAdjusted
-    }
+    private var yAxisRange: ClosedRange<Double> { return minValue - (minValue * 0.1)...maxValue + (maxValue * 0.1) }
 }
 

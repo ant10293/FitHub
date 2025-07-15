@@ -8,20 +8,21 @@
 import SwiftUI
 
 struct UnitSelection: View {
-    @EnvironmentObject var userData: UserData
+    @ObservedObject var userData: UserData
+    
     
     var body: some View {
         VStack {
-            Picker("Unit of Measurement", selection: $userData.measurementUnit) {
+            Picker("Unit of Measurement", selection: $userData.settings.measurementUnit) {
                 ForEach(UnitOfMeasurement.allCases, id: \.self) { unit in
                     Text(unit.rawValue).tag(unit)
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding()
-            Text(userData.measurementUnit.desc)
+            Text(userData.settings.measurementUnit.desc)
                 .foregroundColor(.gray)
         }
-        .navigationTitle("Unit Selection").navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle("Unit Selection", displayMode: .inline)
     }
 }

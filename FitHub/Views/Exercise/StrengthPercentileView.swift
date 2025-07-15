@@ -1,31 +1,26 @@
 import SwiftUI
 
 struct StrengthPercentileView: View {
-    @ObservedObject var csvLoader: CSVLoader
-    @ObservedObject var userData: UserData
-    @ObservedObject var exerciseData: ExerciseData
-    @State private var maxValue: Double = 0.0
+    var maxValue: Double
+    var age: Int
+    var weight: Double
+    var gender: Gender
     var exercise: Exercise
+    var maxValuesAge: [String: Double]
+    var maxValuesBW: [String: Double]
+    var percentile: Int
     
-    init(csvLoader: CSVLoader, userData: UserData, exerciseData: ExerciseData, exercise: Exercise) {
-        self.csvLoader = csvLoader
-        self.userData = userData
-        self.exerciseData = exerciseData
-        self.exercise = exercise
-        
-        _maxValue = State(initialValue: exerciseData.getMax(for: exercise.name) ?? 0)
-    }
     
     var body: some View {
         VStack {
             headerView
-            if exercise.usesWeight {
-                oneRepMaxView
+            if exercise.type.usesWeight {
+                maxView(usesWeight: true)
             } else {
-                maxRepsView
+                maxView(usesWeight: false)
             }
             Text(getTitle())
-                .font(.subheadline)
+                .font(.headline)
                 .padding(.top, 15)
             
             statsViews
@@ -40,58 +35,30 @@ struct StrengthPercentileView: View {
             .padding(.bottom, 10)
     }
     
-    private var oneRepMaxView: some View {
-        //if oneRepMax == 0 {
+    private func maxView(usesWeight: Bool) -> some View {
         if maxValue == 0 {
             return AnyView(
-                Text("No one rep max available for this exercise.")
+                Text(usesWeight ? "No one rep max available for this exercise." : "No max reps available for this exercise.")
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     .padding(.bottom)
             )
         } else {
-            let percentile = calculateExercisePercentile(userData: userData, exercise: exercise)
             return AnyView(
                 VStack {
-                    Text("Your one rep max of ") +
-                    //Text("\(String(format: "%.0f", oneRepMax)) lbs").bold() +
-                    Text("\(String(format: "%.0f", maxValue)) lbs").bold() +
+                    Text(usesWeight ? "Your one rep max of " : "Your max of ") +
+                    Text("\(Format.smartFormat(maxValue)) \(usesWeight ? "lbs" : "reps")").bold() +
                     Text(" makes you stronger than ") +
                     Text("\(percentile)%").bold() +
-                    Text(" of \(userData.gender)s in your weight and age range.")
+                    Text(" of \(gender)s in your weight and age range.")
                 }
-                    .padding(.horizontal)
-            )
-        }
-    }
-    
-    private var maxRepsView: some View {
-        //if maxReps == 0 {
-        if maxValue == 0 {
-            return AnyView(
-                Text("No max reps available for this exercise.")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                    .padding(.bottom)
-            )
-        } else {
-            let percentile = calculateExercisePercentile(userData: userData, exercise: exercise)
-            return AnyView(
-                VStack {
-                    Text("Your maximum reps of ") +
-                    //  Text("\(maxReps) reps").bold() +
-                    Text("\(maxValue) reps").bold() +
-                    Text(" makes you stronger than ") +
-                    Text("\(percentile)%").bold() +
-                    Text(" of \(userData.gender)s in your weight and age range.")
-                }
-                    .padding(.horizontal)
+                .padding(.horizontal)
             )
         }
     }
     
     private var statsViews: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 24) {
             ageBasedStats
             weightBasedStats
         }
@@ -99,130 +66,126 @@ struct StrengthPercentileView: View {
     
     private var ageBasedStats: some View {
         VStack(alignment: .leading) {
-            Text("Based on Age (\(userData.age) years)")
-                .font(.headline)
+            Text("Based on Age") + Text(" (\(age) years)").foregroundColor(.gray)
             Divider()
             HorizontalTableView(values: get1RMValues(key: "Age"), oneRepMax: maxValue)
         }
+        .font(.headline)
         .padding()
+        .background(Color(UIColor.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
     
     private var weightBasedStats: some View {
         VStack(alignment: .leading) {
-            Text("Based on Body Weight (\(userData.currentMeasurementValue(for: .weight), specifier: "%.0f") lbs)")
-                .font(.headline)
+            Text("Based on Body Weight") + Text(" (\(weight, specifier: "%.0f") lbs)").foregroundColor(.gray)
             Divider()
             HorizontalTableView(values: get1RMValues(key: "BW"), oneRepMax: maxValue)
         }
+        .font(.headline)
         .padding()
+        .background(Color(UIColor.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
     
     // MARK: - Helper Methods
     
-    private func calculateExercisePercentile(userData: UserData, exercise: Exercise) -> Int {
-        let value = exerciseData.getMax(for: exercise.name) ?? 0
-        return csvLoader.calculateExercisePercentile(userData: userData, exercise: exercise, maxValue: value)
-    }
-    
     private func getTitle() -> String {
-        return exercise.usesWeight
-        ? "1RM Values for \(exercise.name):"
-        : "Max Reps for \(exercise.name):"
+        return exercise.type.usesWeight ? "1RM Values for \(exercise.name):" : "Max Reps for \(exercise.name):"
     }
     
     private func get1RMValues(key: String) -> [(key: String, value: Double)] {
-        let values = csvLoader.get1RMValues(for: exercise.url, key: key, value: key == "Age" ? Double(userData.age) : userData.currentMeasurementValue(for: .weight), userData: userData)
+        var values: [String: Double] = [:]
+        if key == "Age" {
+            values = maxValuesAge
+        } else if key == "BW" {
+            values = maxValuesBW
+        }
         return values.filter { ["BW", "Age", "Beg.", "Nov.", "Int.", "Adv.", "Elite"].contains($0.key) }
             .sorted { lhs, rhs in
                 let order = ["BW", "Age", "Beg.", "Nov.", "Int.", "Adv.", "Elite"]
                 return order.firstIndex(of: lhs.key)! < order.firstIndex(of: rhs.key)!
             }
     }
-}
-
-
-struct HorizontalTableView: View {
-    var values: [(key: String, value: Double)]
-    var oneRepMax: Double
     
-    var body: some View {
-        let userCategory = oneRepMax > 0 ? findUserCategory(oneRepMax, values: values) : nil
-        
-        HStack {
-            ForEach(values, id: \.key) { category, value in
-                VStack {
-                    let isAgeBW = isAge_BW(category: category)
-                    Text(category)
-                        .font(.subheadline)
-                        .bold(isAgeBW)
-                    Divider().bold()
-                    Text("\(Int(value))")
-                        .font(.body)
-                        .bold(isAgeBW)
-                        .padding(4)
-                        .background(category == userCategory ? Color.yellow.opacity(0.4) : Color.clear)
-                        .cornerRadius(5)
+    struct HorizontalTableView: View {
+        var values: [(key: String, value: Double)]
+        var oneRepMax: Double
+            
+        var body: some View {
+            let userCategory = oneRepMax > 0 ? findUserCategory(oneRepMax, values: values) : nil
+            
+            HStack {
+                ForEach(values, id: \.key) { category, value in
+                    VStack {
+                        let isAgeBW = isAge_BW(category: category)
+                        Text(category)
+                            .font(.subheadline)
+                            .bold(isAgeBW)
+                        Divider().bold()
+                        Text("\(Int(value))")
+                            .font(.body)
+                            .bold(isAgeBW)
+                            .padding(4)
+                            .background(category == userCategory ? Color.yellow.opacity(0.4) : Color.clear)
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                    }
                 }
             }
         }
-    }
-    private func isAge_BW(category: String) -> Bool {
-        return category == "Age" || category == "BW"
-    }
-    
-    private func findUserCategory(_ oneRepMax: Double, values: [(key: String, value: Double)]) -> String {
-        let categories = ["Beg.", "Nov.", "Int.", "Adv.", "Elite"]
-        var userCategory: String = "Beg."
         
-        let oneRepMax = round(oneRepMax)
+        private func isAge_BW(category: String) -> Bool { return category == "Age" || category == "BW" }
         
-        for cat in categories.reversed() {
-            if isUserInCategory(cat, oneRepMax: oneRepMax, values: values) {
-                userCategory = cat
-                break
+        private func findUserCategory(_ oneRepMax: Double, values: [(key: String, value: Double)]) -> String {
+            let rounded1RM     = round(oneRepMax)
+
+            // Look up the threshold numbers by enum instead of raw strings
+            let threshold: [StrengthLevel: Double] =
+                Dictionary(uniqueKeysWithValues: values.compactMap { row in
+                    guard let lvl = StrengthLevel(rawValue: row.key) else { return nil }
+                    return (lvl, row.value)
+                })
+
+            // Walk the enum from top to bottom; the first hit wins
+            for level in StrengthLevel.allCases.reversed() {
+                if isUser(in: level, oneRepMax: rounded1RM, threshold: threshold) {
+                    return level.rawValue
+                }
             }
+            return StrengthLevel.beginner.rawValue         // should never fall through
         }
-        
-        return userCategory
-    }
-    
-    private func isUserInCategory(_ category: String, oneRepMax: Double, values: [(key: String, value: Double)]) -> Bool {
-        let categories = ["Beg.", "Nov.", "Int.", "Adv.", "Elite"]
-        
-        guard let index = categories.firstIndex(of: category) else {
-            print("Error: Category \(category) not found in predefined categories.")
-            return false
+
+        /// Decide whether `oneRepMax` belongs inside the given `level`,
+        /// based on the surrounding threshold table.
+        private func isUser(in level: StrengthLevel, oneRepMax: Double, threshold: [StrengthLevel: Double]) -> Bool {
+            // Helper to grab a threshold safely
+            func t(_ lvl: StrengthLevel) -> Double { threshold[lvl] ?? 0 }
+
+            // Figure out lower / upper bounds for this level
+            let all  = StrengthLevel.allCases
+            guard let idx = all.firstIndex(of: level) else { return false }
+
+            let lower: Double
+            let upper: Double
+
+            switch level {
+
+            case .beginner:
+                lower = 0
+                upper = (idx + 1 < all.count) ? t(all[idx + 1]) - 1 : .greatestFiniteMagnitude
+
+            case .elite:
+                lower = t(.elite)
+                upper = lower * 1.25          // ← your “elite buffer”
+
+            default:
+                lower = t(level)
+                upper = (idx + 1 < all.count) ? t(all[idx + 1]) - 1 : .greatestFiniteMagnitude
+            }
+
+            return (lower ... upper).contains(oneRepMax)
         }
-        
-        var maxForCategory: Double = 0.0
-        var minForCategory: Double = 0.0
-        
-        if category == "Beg." {
-            let nextCategory = index < categories.count - 1 ? categories[index + 1] : nil
-            minForCategory = 0
-            //minForCategory = values.first { $0.key == category }?.value ?? 0.0
-            maxForCategory = nextCategory != nil ? (values.first { $0.key == nextCategory }?.value ?? Double.greatestFiniteMagnitude) - 1 : Double.greatestFiniteMagnitude
-        }
-        if category == "Elite" {
-            minForCategory = values.first { $0.key == category }?.value ?? 0.0
-            maxForCategory = (values.first { $0.key == category }?.value ?? Double.greatestFiniteMagnitude) * 1.25
-        }
-        if category != "Elite" && category != "Beg."{
-            let nextCategory = index < categories.count - 1 ? categories[index + 1] : nil
-            //let prevCategory = index > 0 ? categories[index - 1] : nil
-            // minForCategory = prevCategory != nil ? (values.first { $0.key == prevCategory }?.value ?? 0.0) + 1 : 0.0
-            minForCategory = values.first { $0.key == category }?.value ?? 0.0
-            maxForCategory = nextCategory != nil ? (values.first { $0.key == nextCategory }?.value ?? Double.greatestFiniteMagnitude) - 1 : Double.greatestFiniteMagnitude
-        }
-        
-        print("Category: \(category)")
-        print("One Rep Max: \(oneRepMax)")
-        print("Min for Category: \(minForCategory)")
-        print("Max for Category: \(maxForCategory)")
-        
-        let result = oneRepMax >= minForCategory && oneRepMax <= maxForCategory
-        print("Is User in Category: \(result)")
-        
-        return result
     }
 }
+
+
