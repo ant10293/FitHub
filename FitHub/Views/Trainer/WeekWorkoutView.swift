@@ -13,10 +13,11 @@
 import SwiftUI
 import Combine
 
+
 // MARK: - DTO used by the view -----------------------------------------
 
 struct DayInfo: Identifiable, Hashable {
-    enum Status { case pastPlanned, completed, planned }
+    enum Status { case pastPlanned, completed, planned, rest }
 
     let id: Date
     let dayName: String
@@ -57,7 +58,6 @@ struct WeekWorkoutView: View {
             }
             .onAppear {
                 proxy.scrollTo(vm.earliestFutureDate, anchor: .center)
-               // print(userData.workoutPlans.completedWorkouts.map(\.template.date))
             }
         }
     }
@@ -78,16 +78,16 @@ struct WeekWorkoutView: View {
                     Text(info.shortDate)
                         .font(.caption)
 
-                    if info.workouts.isEmpty {
+                    if info.status == .rest {
                         Text("Rest")
                             .font(.caption)
-                            .foregroundColor(colorScheme == .dark ? .white : .gray)
+                            .foregroundStyle(colorScheme == .dark ? .white : .gray)
                     } else {
                         ForEach(info.workouts) { row in
                             Text(row.categoriesText)
                                 .font(.caption)
                                 .fontWeight(.semibold)
-                                .foregroundColor(colorForStatus(info.status))
+                                .foregroundStyle(colorForStatus(info.status))
                                 .multilineTextAlignment(.center)
                                 .lineLimit(4)
                                 .minimumScaleFactor(0.7)
@@ -125,6 +125,7 @@ struct WeekWorkoutView: View {
             case .pastPlanned: return .red
             case .completed:   return .green
             case .planned:     return .blue
+            case .rest:        return .gray
             }
         }
     }
@@ -152,7 +153,7 @@ struct WeekLegendView: View {
                     .frame(width: 12, height: 12)
                 Text(label)
                     .font(.caption)
-                    .foregroundColor(.primary)
+                    .foregroundStyle(Color.primary)
             }
         }
     }
@@ -160,21 +161,18 @@ struct WeekLegendView: View {
 
 extension Date {
     func startOfWeek(using calendar: Calendar = .current) -> Date {
-        var cal = calendar
-        cal.firstWeekday = 2  // 2 = Monday in most regions
-        // Rebuild date from .yearForWeekOfYear / .weekOfYear
-        let components = cal.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self)
-        return cal.date(from: components) ?? self
+        // Use CalendarUtility for consistent behavior
+        return CalendarUtility.shared.startOfWeek(for: self) ?? self
     }
     
     // The rest stays the same
     func startOfDay(using calendar: Calendar = .current) -> Date {
-        calendar.startOfDay(for: self)
+        CalendarUtility.shared.startOfDay(for: self) 
     }
     
     func datesOfWeek(using calendar: Calendar = .current) -> [Date] {
         let start = self.startOfWeek(using: calendar)
-        return (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: start) }
+        return (0..<7).compactMap { CalendarUtility.shared.date(byAdding: .day, value: $0, to: start) }
     }
 }
 

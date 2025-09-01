@@ -8,23 +8,7 @@
 import Foundation
 
 
-enum Gender: Hashable, Codable {
-    case male, female
-}
-
-enum UnitOfMeasurement: String, Codable, CaseIterable {
-    case imperial = "Imperial"
-    case metric = "Metric"
-    
-    var desc: String {
-        switch self {
-        case .imperial:
-            return "US Customary ( lb / in )"
-        case .metric:
-            return "SI System ( kg / cm )"
-        }
-    }
-}
+enum Gender: Hashable, Codable { case male, female }
 
 enum Languages: String, Codable, CaseIterable  {
     case english = "English"

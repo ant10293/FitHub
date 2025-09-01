@@ -6,37 +6,7 @@
 //
 
 import Foundation
-
-
-struct Notification: Codable, Identifiable {
-    var id: String = UUID().uuidString
-    var title: String
-    var body: String
-    var triggerDate: Date
-    var workoutName: String
-}
-
-struct RepsXWeight: Codable, Hashable {
-    var reps: Int
-    var weight: Double
-}
-
-/*
-struct PerformanceUpdate: Codable, Hashable {
-    var exerciseName: String
-    var value: Double
-    var repsXweight: RepsXWeight?
-    var setNumber: Int?
-}
-*/
-
-struct PerformanceUpdate: Codable, Hashable {
-    var exerciseId: UUID
-    var exerciseName: String
-    var value: Double
-    var repsXweight: RepsXWeight?
-    var setNumber: Int?
-}
+import SwiftUI
 
 enum ActivityLevel: String, Codable, CaseIterable, Identifiable {
     case select = "Select"
@@ -128,108 +98,47 @@ enum StrengthLevel: String, CaseIterable, Codable {
     static let categories: [String] = StrengthLevel.allCases.map(\.rawValue)
 }
 
-enum FitnessGoal: String, Codable, CaseIterable {
-    case buildMuscle = "Build Muscle"
-    case getStronger = "Get Stronger"
-    case buildMuscleGetStronger = "Build Muscle and Get Stronger"
-    // case improveEndurance = "Improve Endurance"  // New goal
-    
-    var name: String {
-        switch self {
-        case .buildMuscle:
-            return "Build Muscle"
-        case .getStronger:
-            return "Get Stronger"
-        case .buildMuscleGetStronger:
-            return "Build Muscle & Get Stronger"
-            /* case .improveEndurance:
-             return "Improve Endurance"*/
-        }
-    }
-    
-    static func determineRestPeriod(for goal: FitnessGoal) -> Int {
-        switch goal {
-        case .buildMuscle:
-            return 60 // 60 for isolation, 90 for compound
-        case .getStronger:
-            return 120 // 180 for isolation, 240 for compound
-        case .buildMuscleGetStronger:
-            return 90 // 120 for isolation, 180 for compound
-            /* case .improveEndurance:
-             return 30*/
-        }
-    }
-    
-    static func getRepsAndSets(for goal: FitnessGoal, restPeriod: Int) -> RepsAndSets {
-        switch goal {
-        case .buildMuscle:
-            // Hypertrophy: Higher volume, moderate rest, high intensity
-            return RepsAndSets(repsRange: 8...12, sets: 5, restPeriod: restPeriod) // 4 sets for isolation, 5 for compound
-        case .getStronger:
-            // Strength: Lower reps, more sets, longer rest, very high intensity
-            return RepsAndSets(repsRange: 3...6, sets: 3, restPeriod: restPeriod) // 3 sets for isolation, 4 for compound
-        case .buildMuscleGetStronger:
-            // Hybrid: Blend of hypertrophy and strength, moderate reps, variable sets, moderate rest
-            return RepsAndSets(repsRange: 6...10, sets: 4, restPeriod: restPeriod) // 4 sets for all?
-            /* case .improveEndurance:
-             return RepsAndSets(repsRange: 12...20, sets: 3, restPeriod: restPeriod)*/
-        }
-    }
-    
-    var detailDescription: String {
-        switch self {
-        case .buildMuscle:
-            return "Reps: 8-12, Sets: 3, Rest: 60s"
-            //return "Reps: \(self.repsAndSets), Sets: 3, Rest: 60s"
-        case .getStronger:
-            return "Reps: 3-6, Sets: 5, Rest: 120s"
-        case .buildMuscleGetStronger:
-            return "Reps: 6-10, Sets: 4, Rest: 90s"
-            /*case .improveEndurance:
-             return "Reps: 12-20, Sets: 3, Rest: 30s"*/
-        }
-    }
-    
-    var shortDescription: String {
-        switch self {
-        case .buildMuscle:
-            return "Hypertrophy focused"
-        case .getStronger:
-            return "Strength focused"
-        case .buildMuscleGetStronger:
-            return "Hybrid focus"
-            /*   case .improveEndurance:
-             return "Endurance focused"*/
-        }
-    }
+enum SetupState: Codable {
+    case welcomeView, healthKitView, detailsView, goalView, finished
 }
 
-enum SetupState: Codable {
-    case welcomeView
-    case healthKitView
-    case detailsView
-    case goalView
-    case finished
-}
+enum inOut { case input, output }
 
 // landers unused
 enum OneRMFormula {
-    case epleys, landers, brzycki
+    case epleys, landers, brzycki, oconnor
     
-    static func calculateOneRepMax(weight: Double, reps: Int, formula: OneRMFormula) -> Double {
-        let weightInKg = weight * 0.453592
-        let repsCount = Double(reps)
-        
+    static func calculateOneRepMax(weight: Mass, reps: Int, formula: OneRMFormula) -> Mass {
+        guard reps > 1 else { return weight }   // 1 rep ⇒ already a 1 RM
+        let r = Double(reps), w = weight.inKg
+        guard w > 0 else { return weight }
+
+        let resultKg: Double
         switch formula {
         case .epleys:
-            return (weightInKg * (1 + 0.0333 * repsCount)) * 2.2
+            // 1RM = W * (1 + 0.0333 * r)
+            resultKg = w * (1.0 + 0.0333 * r)
+
         case .landers:
-            return ((100 * weightInKg) / (101.3 - 2.67123 * repsCount)) * 2.2
+            // 1RM = (100 * W) / (101.3 − 2.67123 * r)
+            // Denominator can approach zero at very high reps; clamp to stay safe.
+            let denom = max(101.3 - 2.67123 * r, 0.0001)
+            resultKg = (100.0 * w) / denom
+
         case .brzycki:
-            return weight / (1.0278 - 0.0278 * repsCount)
+            // 1RM = W / (1.0278 − 0.0278 * r)
+            // Clamp denominator to avoid blow-ups past ~37 reps (we clamp reps anyway).
+            let denom = max(1.0278 - 0.0278 * r, 0.0001)
+            resultKg = w / denom
+
+        case .oconnor:
+            // 1RM = W * (1 + 0.025 * r)
+            resultKg = w * (1.0 + 0.025 * r)
         }
+
+        return Mass(kg: resultKg)
     }
-    
+
     var description: String {
         switch self {
         case .epleys:
@@ -238,35 +147,80 @@ enum OneRMFormula {
             return "1RM = 100 × weight(kg) ÷ (101.3 − 2.67123 × reps)"
         case .brzycki:
             return "1RM = weight(lb) ÷ (1.0278 − 0.0278 × reps)"
+        case .oconnor:
+            return "1RM = weight(kg) × (1 + 0.025 × reps)"
         }
     }
     
     /// “Auto‐select” rule: up to 8 reps → Brzycki; beyond 8 reps → Epley.
     static func recommendedFormula(forReps reps: Int) -> OneRMFormula {
-        return reps <= 8 ? .brzycki : .epleys
+        return reps <= 10 ? .epleys : .oconnor
     }
 }
 
 enum BMI {
-    static func calculateBMI(heightInches: Int, heightFeet: Int, weight: Double) -> Double {
-        let inches = Double(heightInches)
-        let feet = Double(heightFeet)
+    static func calculateBMI(heightCm: Double, weightKg: Double) -> Double {
+        let heightM = heightCm / 100.0                     // convert to metres
+        guard heightM > 0 else { return 0 }                // avoid div‑by‑zero
         
-        let totalInches = (feet * 12) + inches
-        
-        return (weight / (totalInches * totalInches)) * 703
+        let bmi = weightKg / (heightM * heightM)
+        return (bmi * 10).rounded() / 10                   // 1 decimal place
     }
     
     static func recommendGoalBasedOnBMI(bmi: Double) -> FitnessGoal {
         switch bmi {
         case ..<18.5:
             return .buildMuscle
-        case 18.5..<25.0:
+        case 18.5..<22.0:
             return .getStronger
-        case 25.0...:
+        case 22.0..<25.0:
+            return .generalFitness
+        case 25.0..<30.0:
             return .buildMuscleGetStronger
+        case 30...:
+            return .loseWeight
         default:
             return .getStronger
         }
     }
 }
+
+enum BMR {
+    static func calculateBMR(gender: Gender, weightKg: Double, heightCm: Double, age: Double) -> Double {
+        if gender == .male {
+            return 10.0 * weightKg + 6.25 * heightCm - 5 * age + 5
+        } else {
+            return 10.0 * weightKg + 6.25 * heightCm - 5 * age - 161
+        }
+    }
+}
+
+enum RestType: String, CaseIterable, Identifiable, Hashable, Codable {
+    case warmup = "Warm-up"
+    case working = "Working"
+    case superset = "Superset"
+    
+    var id: String { rawValue }
+    
+    var note: String {
+        switch self {
+        case .warmup:   "Rest between warm-up sets"
+        case .working:  "Rest between working sets"
+        case .superset: "Rest between supersetted sets"
+        }
+    }
+}
+
+/*
+struct SupersetSettings: Codable, Hashable {
+    var enabled: Bool = false
+    var style: SupersetOption = .sameEquipment
+    var maxPairs: Int = 1         // 0–2 recommended
+    var restBetweenSupersets: Int?
+}
+
+enum SupersetOption: String, CaseIterable, Codable {
+    case sameEquipment, sameMuscle, relatedMuscle
+}
+*/
+

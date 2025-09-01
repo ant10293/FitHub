@@ -14,11 +14,9 @@ struct ExerciseDetailOptions: View {
     @Binding var template: WorkoutTemplate
     @Binding var exercise: Exercise
     @State private var replacedExercises: [String] = []
-    @State private var showRestTimerEditor: Bool = false
+    @State private var showRestTimeEditor: Bool = false
     @State private var showWarmupSets: Bool = false
-    //var roundingPreference: [EquipmentCategory: Double]
-    let roundingPreference: RoundingPreference
-    var setStructure: SetStructures = .pyramid
+    var rest: RestPeriods
     var onReplaceExercise: () -> Void
     var onRemoveExercise: () -> Void
     var onClose: () -> Void
@@ -36,21 +34,21 @@ struct ExerciseDetailOptions: View {
                         Text("Warm-up Sets")
                         Image(systemName: "flame.fill")
                     }
-                    .foregroundColor(.blue)
+                    .foregroundStyle(.blue)
                 }
                 .buttonStyle(PlainButtonStyle())
             }
             
             Button(action: {
                 withAnimation {
-                    showRestTimerEditor.toggle()
+                    showRestTimeEditor.toggle()
                 }
             }) {
                 HStack {
                     Text("Adjust Rest Timer")
                     Image(systemName: "timer")
                 }
-                .foregroundColor(.blue)
+                .foregroundStyle(.blue)
             }
             .disabled(exercise.totalSets == 0)
             .buttonStyle(PlainButtonStyle())
@@ -63,10 +61,9 @@ struct ExerciseDetailOptions: View {
                     Text("Replace Exercise")
                     Image(systemName: "arrow.triangle.2.circlepath")
                 }
-                .foregroundColor(.blue)
+                .foregroundStyle(.blue)
             }
             .buttonStyle(PlainButtonStyle())
-
             
             Button(role: .destructive, action: {
                 onRemoveExercise()
@@ -76,17 +73,17 @@ struct ExerciseDetailOptions: View {
                     Text("Remove Exercise")
                     Image(systemName: "trash")
                 }
-                .foregroundColor(.red)
+                .foregroundStyle(.red)
             }
             .buttonStyle(PlainButtonStyle())
         }
-        .sheet(isPresented: $showRestTimerEditor) {
-            RestTimerEditor(exercise: $exercise, onSave: {
+        .sheet(isPresented: $showRestTimeEditor) {
+            RestTimeEditor(exercise: $exercise, rest: rest, onSave: {
                 onSave()
             })
         }
         .sheet(isPresented: $showWarmupSets) {
-            WarmUpSetsEditorView(exercise: $exercise, setStructure: setStructure, roundingPreference: roundingPreference, onSave: {
+            WarmUpSetsEditorView(exercise: $exercise, onSave: {
                 onSave()
             })
         }

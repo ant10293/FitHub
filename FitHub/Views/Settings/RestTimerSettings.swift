@@ -7,62 +7,144 @@
 
 import SwiftUI
 
-
 struct RestTimerSettings: View {
     @ObservedObject var userData: UserData
-    @State private var hours: Int
-    @State private var minutes: Int
-    @State private var seconds: Int
-    let initialRestPeriod: Int
-    
-    init(userData: UserData) {
-        _userData = ObservedObject(wrappedValue: userData)
-        
-        let totalSeconds = userData.workoutPrefs.customRestPeriod ?? FitnessGoal.determineRestPeriod(for: userData.physical.goal)
-        _hours = State(initialValue: totalSeconds / 3600)
-        _minutes = State(initialValue: (totalSeconds % 3600) / 60)
-        _seconds = State(initialValue: totalSeconds % 60)
-        initialRestPeriod = totalSeconds
-    }
-    
+    @State private var activeEditor: RestType? = nil
+    @State private var editTime: TimeSpan = .init(seconds: 0)
+    @State private var initialCustom: RestPeriods?
+
     var body: some View {
-        Form {
-            Section {
-                Toggle(isOn: $userData.settings.restTimerEnabled) {
-                    Text("Rest Timer")
+        ScrollView {
+            VStack(spacing: 12) {
+                // Master toggle
+                card {
+                    HStack {
+                        Text("Rest Timer").font(.headline)
+                        Spacer()
+                        Toggle("", isOn: $userData.settings.restTimerEnabled)
+                            .labelsHidden()
+                            .onChange(of: userData.settings.restTimerEnabled) {
+                                userData.saveSingleStructToFile(\.settings, for: .settings)
+                            }
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
                 }
-                .padding(.horizontal)
-                .onChange(of: userData.settings.restTimerEnabled) { 
-                    userData.saveSingleStructToFile(\.settings, for: .settings)
+                .padding()
+                
+                if userData.settings.restTimerEnabled {
+                    // One collapsible row per RestType
+                    VStack(spacing: 10) {
+                        ForEach(RestType.allCases) { kind in
+                            restRow(kind: kind)
+                        }
+                    }
+                    .padding(.top, 2)
                 }
             }
-            
-            if userData.settings.restTimerEnabled {
-                VStack {
-                    Text("Rest Period")
-                        .font(.headline)
-                    RestPicker(minutes: $minutes, seconds: $seconds, frameWidth: 120)
-                    .onChange(of: minutes) {
-                        updateRestPeriod()
-                    }
-                    .onChange(of: seconds) {
-                        updateRestPeriod()
-                    }
-                }
-                .centerHorizontally()
-            }
+            .padding(.vertical, 8)
         }
         .navigationBarTitle("Rest Timer Settings", displayMode: .inline)
-        .onDisappear {
-            // save if needed
-            if initialRestPeriod != userData.workoutPrefs.customRestPeriod {
-                userData.saveSingleStructToFile(\.settings, for: .settings)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Reset") {
+                    reset()
+                }
+                .foregroundStyle(.red)
             }
+        }
+        .onAppear(perform: onAppear)
+        .onDisappear(perform: onDisappear)
+    }
+    
+    func onAppear() {
+        initialCustom = userData.workoutPrefs.customRestPeriods
+        if let open = activeEditor { loadPicker(from: open) }
+    }
+    
+    func onDisappear() {
+        if initialCustom != userData.workoutPrefs.customRestPeriods {
+            userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
         }
     }
     
-    private func updateRestPeriod() {
-        let totalSeconds = (hours * 3600) + (minutes * 60) + seconds
-        userData.workoutPrefs.customRestPeriod = totalSeconds
+    func reset() {
+        userData.settings.restTimerEnabled = true
+        userData.workoutPrefs.customRestPeriods = nil
+        if let open = activeEditor { loadPicker(from: open) }
+        userData.saveToFile()
+    }
+    
+    func restRow(kind: RestType) -> some View {
+        card {
+            VStack(spacing: 0) {
+                // Header (collapsed summary)
+                Button {
+                    toggleEditor(kind)
+                } label: {
+                    VStack {
+                        HStack {
+                            Text(kind.rawValue).font(.headline)
+                            Spacer()
+                            Text(Format.timeString(from: resolved.rest(for: kind)))
+                                .foregroundStyle(.gray)
+                                .monospacedDigit()
+                            Image(systemName: "chevron.right")
+                                .rotationEffect(.degrees(activeEditor == kind ? 90 : 0))
+                                .animation(.easeInOut(duration: 0.15), value: activeEditor == kind)
+                        }
+                        Text(kind.note)
+                            .font(.caption)
+                            .foregroundStyle(.gray)
+                            .frame(alignment: .leading)
+                    }
+                    .padding()
+                }
+                .contentShape(Rectangle())
+                
+                // Disclosure editor
+                if activeEditor == kind {
+                    VStack(spacing: 10) {
+                        RestPicker(time: $editTime)
+                            .onChange(of: editTime) { savePicker(into: kind) }
+                        
+                        HStack {
+                            Spacer()
+                            FloatingButton(
+                                image: "checkmark",
+                                action: { activeEditor = nil }
+                            )
+                            .padding(.trailing)
+                        }
+                    }
+                    .padding(.bottom, 10)
+                }
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    var resolved: RestPeriods {
+        userData.workoutPrefs.customRestPeriods ?? userData.physical.goal.defaultRest
+    }
+    
+    func toggleEditor(_ kind: RestType) {
+        if activeEditor == kind {
+            activeEditor = nil
+        } else {
+            activeEditor = kind
+            loadPicker(from: kind)
+        }
+    }
+    
+    func loadPicker(from kind: RestType) {
+        let total = max(0, resolved.rest(for: kind)) // seconds
+        editTime = TimeSpan(seconds: total)
+    }
+    
+    func savePicker(into kind: RestType) {
+        var custom = resolved
+        custom.modify(for: kind, with: editTime.inSeconds)
+        userData.workoutPrefs.customRestPeriods = custom
     }
 }

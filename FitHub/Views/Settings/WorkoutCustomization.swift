@@ -9,57 +9,60 @@ import SwiftUI
 
 
 struct WorkoutCustomization: View {
-    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject private var ctx: AppContext
     @State private var showingDayPicker: Bool = false
+    @State private var showingTimePicker: Bool = false
     @State private var showingSplitSelection: Bool = false
     @State private var showAlert: Bool = false
-    @State private var showingResetAlert: Bool = false // State variable for showing the post-reset alert
     @State private var keepCurrentExercises: Bool = false
+    @State private var isDurationExpanded = false
     @State private var daysPerWeek: Int = 3
-    @State private var numberOfSets: Int = 3
-    @State private var midpointReps: Int = 8
-    @State private var rangeWidth: Int = 4
     @State private var selectedResistanceType: ResistanceType = .any
-    @State private var selectedDays: [daysOfWeek] = []
+    @State private var selectedDays: [DaysOfWeek] = []
     @State private var selectedSetStructure: SetStructures = .pyramid
-
+    @State private var duration: TimeSpan = .hrMinToSec(hours: 1, minutes: 0)
+    
     var body: some View {
-        Form {
-            Section {
-                daysOfWeekSelector
-                setsSelector
-                repsSelector
-                repsRangeSelector
-                setStructureSelector
-                keepCurrentExercisesToggle
-                ResistanceTypeSelector
-            } header: {
-                Text("Generation Parameters")
-            }
+        VStack {
+            if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Restored Default Preferences!") }
             
-            Section {
-                splitSelector
-                workoutDaysSelector
-            } footer: {
-                ActionButton(title: "Reset to Defaults", enabled: !isDefault, color: .red, action: resetToDefaults)
-                    .clipShape(Capsule())
-                    .padding(.vertical, 30)
+            Form {
+                Section {
+                    DaysOfWeekSelector
+                    setsSelector
+                    repsSelector
+                    setStructureSelector
+                    ResistanceTypeSelector
+                    distributionSelector
+                    workoutDurationSelector
+                    keepCurrentExercisesToggle
+                }
+                
+                Section {
+                    splitSelector
+                    workoutDaysSelector
+                    if !ctx.userData.settings.useDateOnly {
+                        workoutTimesSelector
+                    }
+                }
             }
         }
+        .background(Color(UIColor.systemGroupedBackground))
+        .navigationBarTitle("Generation Parameters", displayMode: .inline)
         .onAppear(perform: initializeVariables)
         .onChange(of: ctx.userData.workoutPrefs) { ctx.userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs) }
         .sheet(isPresented: $showingSplitSelection) { SplitSelection(userData: ctx.userData) }
-        .sheet(isPresented: $showingDayPicker) { DayPickerView(selectedDays: $selectedDays, numDays: $daysPerWeek) }
-        .background(Color(UIColor.systemGroupedBackground))
-        .alert("Customization Reset", isPresented: $showingResetAlert) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("All settings have been reset to their default values.")
-        }
+        .sheet(isPresented: $showingDayPicker) { DaysEditor(selectedDays: $selectedDays, numDays: $daysPerWeek) }
+        .sheet(isPresented: $showingTimePicker) { TimesEditor(userData: ctx.userData, days: selectedDays) }
+        .toolbar { ToolbarItem(placement: .topBarTrailing) {
+            Button("Reset") { resetToDefaults() }
+                .disabled(isDefault)
+                .foregroundStyle(isDefault ? .gray : .red)
+        }}
     }
     
-    private var daysOfWeekSelector: some View {
+    private var DaysOfWeekSelector: some View {
         Picker("Workout Days per Week", selection: $daysPerWeek) {
             ForEach(2...6, id: \.self) {
                 Text("\($0) days")
@@ -69,61 +72,65 @@ struct WorkoutCustomization: View {
             if oldValue != newValue {
                 //print("workoutDaysPerWeek changed")
                 ctx.userData.workoutPrefs.workoutDaysPerWeek = newValue
-                selectedDays = daysOfWeek.resolvedWorkoutDays(customWorkoutDays: ctx.userData.workoutPrefs.customWorkoutDays, workoutDaysPerWeek: daysPerWeek)
+                selectedDays = DaysOfWeek.resolvedWorkoutDays(customWorkoutDays: ctx.userData.workoutPrefs.customWorkoutDays, workoutDaysPerWeek: daysPerWeek)
             }
         }
     }
-    
+
     private var setsSelector: some View {
-        Stepper("Number of Sets: \(numberOfSets)", value: $numberOfSets, in: 1...10)
-        .onChange(of: numberOfSets) { oldValue, newValue in
-            if oldValue != newValue {
-                //print("numberOfSets changed")
-                if newValue == defaultRepsAndSets.sets {
-                    ctx.userData.workoutPrefs.customSets = nil
-                } else {
-                    ctx.userData.workoutPrefs.customSets = newValue
-                }
+        let defaultRange = defaultRepsAndSets.sets
+        let binding = Binding(
+            get: { ctx.userData.workoutPrefs.customSets ?? defaultRange },
+            set: { newVal in
+                ctx.userData.workoutPrefs.customSets = (newVal == defaultRange) ? nil : newVal
+            }
+        )
+        
+        let summary = (ctx.userData.workoutPrefs.customSets ?? defaultRange).formattedTotalRange(filteredBy: distribution)
+
+        return DisclosureGroup {
+            SetCountEditor(sets: binding, effort: distribution)
+            .listRowSeparator(.hidden, edges: .top)
+        } label: {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Sets per Exercise")
+                Spacer()
+                Text(summary)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
             }
         }
+        .tint(.gray)
     }
     
     private var repsSelector: some View {
-        HStack {
-            Text("Rep Range: \(midpointReps)-\(midpointReps + rangeWidth)")
-            Slider(value: Binding(
-                get: { Double(midpointReps) },
-                set: { newValue in
-                    midpointReps = Int(newValue)
-                }
-            ), in: 1...20, step: 1)
-        }
-        .onChange(of: midpointReps) { oldValue, newValue in
-            if oldValue != newValue {
-                //print("midpointReps changed")
-                if newValue == defaultRepsAndSets.repsRange.lowerBound && rangeWidth == (defaultRepsAndSets.repsRange.upperBound - defaultRepsAndSets.repsRange.lowerBound) {
-                    ctx.userData.workoutPrefs.customRepsRange = nil
-                } else {
-                    ctx.userData.workoutPrefs.customRepsRange = (newValue)...(newValue+rangeWidth)
-                }
+        let defaultRange = defaultRepsAndSets.reps
+        let binding = Binding(
+            get: { ctx.userData.workoutPrefs.customRepsRange ?? defaultRange },
+            set: { newVal in
+                ctx.userData.workoutPrefs.customRepsRange = (newVal == defaultRange) ? nil : newVal
+            }
+        )
+        
+        let summary = (ctx.userData.workoutPrefs.customRepsRange ?? defaultRange).formattedTotalRange(filteredBy: distribution)
+
+        return DisclosureGroup {
+            RepRangeEditor(reps: binding, effort: distribution)
+                .listRowSeparator(.hidden, edges: .top)
+        } label: {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Rep Ranges")
+                Spacer()
+                Text(summary)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
             }
         }
+        .tint(.gray)
     }
-    
-    private var repsRangeSelector: some View {
-        Stepper("Range Width: \(rangeWidth)", value: $rangeWidth, in: 1...10)
-        .onChange(of: rangeWidth) { oldValue, newValue in
-            if oldValue != newValue  {
-                //print("rangeWidth changed")
-                if newValue == (defaultRepsAndSets.repsRange.upperBound - defaultRepsAndSets.repsRange.lowerBound) && midpointReps == defaultRepsAndSets.repsRange.lowerBound {
-                    ctx.userData.workoutPrefs.customRepsRange = nil
-                } else {
-                    ctx.userData.workoutPrefs.customRepsRange = (midpointReps)...(midpointReps+newValue)
-                }
-            }
-        }
-    }
-    
+
     private var setStructureSelector: some View {
         VStack {
             Picker("Set-weight Structure", selection: $selectedSetStructure) {
@@ -143,16 +150,6 @@ struct WorkoutCustomization: View {
         }
     }
     
-    private var keepCurrentExercisesToggle: some View {
-        Toggle("Keep current Exercises", isOn: $keepCurrentExercises) // Add this line
-        .onChange(of: keepCurrentExercises) { oldValue, newValue in
-            if oldValue != newValue {
-                //print("keepCurrentExercises changed")
-                ctx.userData.workoutPrefs.keepCurrentExercises = newValue
-            }
-        }
-    }
-    
     private var ResistanceTypeSelector: some View {
         Picker("Resistance Type", selection: $selectedResistanceType) {
             ForEach(ResistanceType.allCases) { type in
@@ -167,16 +164,68 @@ struct WorkoutCustomization: View {
         }
     }
     
+    private var distributionSelector: some View {
+        DisclosureGroup("Effort Distribution") {
+            let defaultDist = ctx.userData.physical.goal.defaultDistribution
+            DistributionEditor(
+                distribution: Binding(
+                    get: { ctx.userData.workoutPrefs.customDistribution ?? defaultDist },
+                    set: { newDist in
+                        ctx.userData.workoutPrefs.customDistribution = (newDist == defaultDist) ? nil : newDist
+                    }
+                )
+            )
+            .listRowSeparator(.hidden, edges: .top)
+        }
+        .tint(.gray)
+    }
+        
+    private var workoutDurationSelector: some View {
+        DisclosureGroup(isExpanded: $isDurationExpanded) {
+            DurationPicker(time: $duration, hourRange: 0...3)
+                .listRowSeparator(.hidden, edges: .top)
+                .padding(.trailing)
+        } label: {
+            HStack {
+                Text("Workout Duration")
+                Spacer()
+                Text(duration.displayString)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+            }
+            .contentShape(Rectangle()) // makes the whole row tappable
+        }
+        .tint(.gray) // makes the disclosure arrow gray
+        .onChange(of: duration.inMinutes) { oldValue, newValue in
+            if oldValue != newValue {
+                if newValue == defaultDuration {
+                    ctx.userData.workoutPrefs.customDuration = nil
+                } else {
+                    ctx.userData.workoutPrefs.customDuration = newValue
+                }
+            }
+        }
+    }
+    
+    private var keepCurrentExercisesToggle: some View {
+        Toggle("Keep current Exercises", isOn: $keepCurrentExercises) // Add this line
+        .onChange(of: keepCurrentExercises) { oldValue, newValue in
+            if oldValue != newValue {
+                //print("keepCurrentExercises changed")
+                ctx.userData.workoutPrefs.keepCurrentExercises = newValue
+            }
+        }
+    }
+    
     private var splitSelector: some View {
         VStack(alignment: .leading) {
             Button(action: { showingSplitSelection = true }) {
                 HStack {
                     Text("Customize Split")
-                        .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
-                    
+                        .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
                     Spacer()
                     Image(systemName: "chevron.right")
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                 }
             }
         }
@@ -187,31 +236,19 @@ struct WorkoutCustomization: View {
             Button(action: { showingDayPicker = true }) {
                 HStack {
                     Text("Select Workout Days")
-                        .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
-                    
+                        .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
                     Spacer()
                     Image(systemName: "chevron.right")
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                 }
             }
-            
-            HStack(spacing: 0) {
-                ForEach(Array(selectedDays.sorted().enumerated()), id: \.element) { index, day in
-                    Text(day.shortName)
-                        .tag(day)
-                        .bold()
-                    
-                    if index < selectedDays.count - 1 {
-                        Text(", ") // Adds a comma after each day except the last one
-                    }
-                }
-            }
-            .frame(maxWidth: .infinity)
+            DaysOfWeek.dayListText(selectedDays)
+                .frame(maxWidth: .infinity)
         }
         .onChange(of: selectedDays) { oldValue, newValue in
             if oldValue != newValue {
                 //print("selectedDays changed")
-                if !newValue.isEmpty, newValue != daysOfWeek.defaultDays(for: ctx.userData.workoutPrefs.workoutDaysPerWeek) {
+                if !newValue.isEmpty, newValue != DaysOfWeek.defaultDays(for: ctx.userData.workoutPrefs.workoutDaysPerWeek) {
                     ctx.userData.workoutPrefs.customWorkoutDays = newValue
                     if newValue.count != daysPerWeek { daysPerWeek = newValue.count }
                 } else {
@@ -221,23 +258,42 @@ struct WorkoutCustomization: View {
         }
     }
     
-    private var defaultRepsAndSets: RepsAndSets {
-        FitnessGoal.getRepsAndSets(for: ctx.userData.physical.goal, restPeriod: ctx.userData.workoutPrefs.customRestPeriod ?? FitnessGoal.determineRestPeriod(for: ctx.userData.physical.goal))
+    private var workoutTimesSelector: some View {
+        VStack(alignment: .leading) {
+            Button(action: { showingTimePicker = true }) {
+                HStack {
+                    Text("Select Workout Times")
+                        .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.gray)
+                }
+            }
+        }
     }
     
-    private var customRepsRange: ClosedRange<Int> {
-        ctx.userData.workoutPrefs.customRepsRange ?? defaultRepsAndSets.repsRange
+    private var distribution: ExerciseDistribution {
+        ctx.userData.workoutPrefs.customDistribution ?? defaultRepsAndSets.distribution
+    }
+    
+    private var defaultRepsAndSets: RepsAndSets { RepsAndSets.defaultRepsAndSets(for: ctx.userData.physical.goal) }
+    
+    private var defaultDuration: Int {
+        WorkoutParams.defaultWorkoutDuration(
+            age: ctx.userData.profile.age,
+            frequency: ctx.userData.workoutPrefs.workoutDaysPerWeek,
+            strengthLevel: ctx.userData.evaluation.strengthLevel,
+            goal: ctx.userData.physical.goal
+        )
     }
     
     private func initializeVariables() {
         daysPerWeek = ctx.userData.workoutPrefs.workoutDaysPerWeek
-        selectedDays = ctx.userData.workoutPrefs.customWorkoutDays ?? daysOfWeek.defaultDays(for: ctx.userData.workoutPrefs.workoutDaysPerWeek)
-        numberOfSets = ctx.userData.workoutPrefs.customSets ?? defaultRepsAndSets.sets
-        midpointReps = customRepsRange.lowerBound
-        rangeWidth = customRepsRange.upperBound - customRepsRange.lowerBound
+        selectedDays = ctx.userData.workoutPrefs.customWorkoutDays ?? DaysOfWeek.defaultDays(for: ctx.userData.workoutPrefs.workoutDaysPerWeek)
         keepCurrentExercises = ctx.userData.workoutPrefs.keepCurrentExercises
         selectedResistanceType = ctx.userData.workoutPrefs.ResistanceType
         selectedSetStructure = ctx.userData.workoutPrefs.setStructure
+        duration.setMin(minutes: ctx.userData.workoutPrefs.customDuration ?? defaultDuration)
     }
     
     private func resetToDefaults() {
@@ -248,12 +304,15 @@ struct WorkoutCustomization: View {
         ctx.userData.workoutPrefs.keepCurrentExercises = false
         ctx.userData.workoutPrefs.ResistanceType = .any
         ctx.userData.workoutPrefs.setStructure = .pyramid
+        ctx.userData.workoutPrefs.customDuration = nil
+        ctx.userData.workoutPrefs.customDistribution = nil
+        ctx.userData.workoutPrefs.customWorkoutTimes = nil
         
         ctx.userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
         
         initializeVariables()
 
-        showingResetAlert = true
+        ctx.toast.showSaveConfirmation()
     }
     
     private var isDefault: Bool {
@@ -266,8 +325,10 @@ struct WorkoutCustomization: View {
             && pref.keepCurrentExercises == false
             && pref.ResistanceType == .any
             && pref.setStructure == .pyramid
+            && pref.customDuration == nil
+            && pref.customDistribution == nil
+            && pref.customWorkoutTimes == nil
         )
     }
 }
-
 

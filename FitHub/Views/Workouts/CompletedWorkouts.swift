@@ -11,44 +11,44 @@ import SwiftUI
 struct CompletedWorkouts: View {
     @ObservedObject var userData: UserData
     @State private var isEditing: Bool = false
+    @State private var showingSortPicker: Bool = false
+    @State private var showingDeleteConfirmation: Bool = false
     @State private var selectedSortOption: CompletedWorkoutSortOption = .mostRecent
-    @State private var showingSortPicker = false
-    @State private var showingDeleteConfirmation = false
     @State private var workoutToDelete: CompletedWorkout?
     
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-                Text("Sort by").bold()
-                    .padding(.trailing)
-                Picker("", selection: $selectedSortOption) {
-                    ForEach(CompletedWorkoutSortOption.allCases) { option in
-                        Text(option.rawValue).tag(option)
+            if sortedWorkouts.isEmpty {
+                emptyWorkoutsView
+            } else {
+                HStack {
+                    Text("Sort by").bold()
+                        .padding(.trailing)
+                    Picker("", selection: $selectedSortOption) {
+                        ForEach(CompletedWorkoutSortOption.allCases) { option in
+                            Text(option.rawValue).tag(option)
+                        }
                     }
+                    .pickerStyle(MenuPickerStyle())
+                    .padding(.trailing)
+                    .disabled(sortedWorkouts.isEmpty)
                 }
-                .pickerStyle(MenuPickerStyle())
-                .padding(.trailing)
-                .disabled(sortedWorkouts.isEmpty)
-            }
-            .padding(.top)
-            .zIndex(0)
-                    
-            List {
-                if sortedWorkouts.isEmpty {
-                    emptyWorkoutsView
-                } else {
+                .padding(.top)
+                .zIndex(0)
+                
+                List {
                     ForEach(sortedWorkouts) { workout in
                         if !workout.template.exercises.isEmpty {
                             let categories = SplitCategory.concatenateCategories(for: workout.template.categories)
                             HStack {
-                                NavigationLink(destination: CompletedDetails(workout: workout, categories: categories)) {
+                                NavigationLink(destination: LazyDestination { CompletedDetails(workout: workout, categories: categories) }) {
                                     if isEditing {
                                         Button(action: {
                                             workoutToDelete = workout
                                             showingDeleteConfirmation = true
                                         }) {
                                             Image(systemName: "minus.circle.fill")
-                                            .foregroundColor(.red)
+                                                .foregroundStyle(.red)
                                         }
                                         .buttonStyle(BorderlessButtonStyle())
                                     }
@@ -60,38 +60,38 @@ struct CompletedWorkouts: View {
                                         }
                                         Text("Date: \(Format.formatDate(workout.date, dateStyle: .medium, timeStyle: .none))")
                                             .font(.subheadline)
-                                            .foregroundColor(.gray)
+                                            .foregroundStyle(.gray)
                                         Text("Duration: \(Format.formatDuration(workout.duration, roundSeconds: true))")
                                             .font(.subheadline)
-                                            .foregroundColor(.gray)
+                                            .foregroundStyle(.gray)
                                     }
                                     .padding(.vertical, 5)
                                 }
+                                
                             }
                         }
                     }
                 }
-            }
-            .confirmationDialog(
-                "Are you sure you want to delete this workout?",
-                isPresented: $showingDeleteConfirmation,
-                titleVisibility: .visible
-            ) {
-                Button("Delete", role: .destructive) {
-                    if let workout = workoutToDelete {
-                        deleteWorkout(workout)
+                .confirmationDialog(
+                    "Are you sure you want to delete this workout?",
+                    isPresented: $showingDeleteConfirmation,
+                    titleVisibility: .visible
+                ) {
+                    Button("Delete", role: .destructive) {
+                        if let workout = workoutToDelete {
+                            deleteWorkout(workout)
+                        }
                     }
-                }
-                Button("Cancel", role: .cancel) {
-                    workoutToDelete = nil
+                    Button("Cancel", role: .cancel) {
+                        workoutToDelete = nil
+                    }
                 }
             }
         }
         .background(Color(UIColor.systemGroupedBackground))
         .navigationBarTitle("Completed Workouts", displayMode: .inline)
-        
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 Button(action: { isEditing.toggle() }) {
                     Text(isEditing ? "Done" : "Edit")
                 }
@@ -100,26 +100,23 @@ struct CompletedWorkouts: View {
         }
     }
     
+    // MARK: – Empty state
     private var emptyWorkoutsView: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 12) {
             Image(systemName: "figure.walk")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxHeight: UIScreen.main.bounds.width * 0.33)  // ≈ 1/3 screen
-                .foregroundColor(.gray)
-                .padding(.bottom)
-            
+                .symbolRenderingMode(.hierarchical)
+                .font(.system(.largeTitle, weight: .regular))
+                .foregroundStyle(.secondary)
+
             Text("No completed workouts yet...")
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundColor(.gray)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-            
+                .font(.title3.weight(.semibold))
+
             Text("Start your FitHub journey today!")
-                .font(.subheadline)
-                .foregroundColor(.gray)
+            .font(.callout)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
         }
+        .frame(maxWidth: .infinity)
         .padding()
     }
     
@@ -134,9 +131,9 @@ struct CompletedWorkouts: View {
             workouts = userData.workoutPlans.completedWorkouts.sorted { $0.date < $1.date }
             
         case .thisMonth:
-            let currentMonth = Calendar.current.component(.month, from: Date())
+            let currentMonth = CalendarUtility.shared.month(from: Date())
             workouts = userData.workoutPlans.completedWorkouts.filter {
-                Calendar.current.component(.month, from: $0.date) == currentMonth
+                CalendarUtility.shared.month(from: $0.date) == currentMonth
             }
             
         case .longestDuration:

@@ -23,110 +23,83 @@ struct WorkoutTemplate: Identifiable, Hashable, Codable, Equatable {
     var dayIndex: Int?
     var date: Date?
     var notificationIDs: [String] = [] // Store notification identifiers for removal
-    var estimatedCompletionTime: Int?
+    var estimatedCompletionTime: TimeSpan?
 }
 
 extension WorkoutTemplate {
-    static func estimateCompletionTime(for template: WorkoutTemplate, completedWorkouts: [CompletedWorkout]) -> Int {
-        // Constants for estimating time
-        let timePerRep = 3 // Average time per rep in seconds
-        let timePerExerciseSetup = 120 // Time to set up for each exercise in seconds
-        let additionalTimePerDifficultyLevel = 10 // Additional seconds for complex exercises
-        
-        // Start with total time as 0
-        var totalTime = 0
-        
-        for exercise in template.exercises {
-            // Base time: Sets × Reps × Time Per Rep
-            let repsPerSet = exercise.setDetails.map { $0.reps }.reduce(0, +)
-            let baseTime = repsPerSet * timePerRep
-            
-            // Rest time: Rest Period × (Sets - 1) [Rest between sets only]
-            let restTime = (exercise.setDetails.first?.restPeriod ?? 0) * (exercise.setDetails.count - 1)
-            
-            // Difficulty adjustment
-            let difficultyValue = exercise.difficulty.strengthValue
-            let difficultyTime = additionalTimePerDifficultyLevel * difficultyValue
-            
-            // Setup time per exercise
-            totalTime += baseTime + restTime + difficultyTime + timePerExerciseSetup
-        }
-        // Historical adjustment: average completion time of similar past workouts
-        let pastDurations = completedWorkouts.filter {
-            $0.name == template.name && $0.template.categories == template.categories
-        }.map { $0.duration }
-        
-        if let avgPastDuration = pastDurations.average {
-            totalTime = Int(Double(totalTime) * 0.2 + Double(avgPastDuration) * 0.8) // 80% historical, 20% estimation
-        } else {
-            // If no exact matches, find workouts with similar categories
-            let templateCategories = Set(template.categories)
-            let similarWorkouts = completedWorkouts.filter {
-                let workoutCategories = Set($0.template.categories)
-                let commonCategories = templateCategories.intersection(workoutCategories)
-                return !commonCategories.isEmpty
-            }
-            let similarDurations = similarWorkouts.map { $0.duration }
-            if let avgSimilarDuration = similarDurations.average {
-                totalTime = Int(Double(totalTime) * 0.8 + Double(avgSimilarDuration) * 0.2) // 80% estimation, 20% historical
-            }
-        }
-        return totalTime
-    }
-    // Helper method to determine the number of exercises per workout
-    static func determineExercisesPerWorkout(basedOn age: Int, frequency: Int, strengthLevel: StrengthLevel) -> Int {
-        let baseCount = 5 // Base number of exercises per workout
-        var modifier = 0
-        
-        // Modifier based on age
-        if age < 30 {
-            modifier += 2 // Younger individuals might handle more exercises
-        } else if age > 50 {
-            modifier -= 1 // Older individuals might need fewer exercises
-        }
-        
-        // Modifier based on workout frequency
-        switch frequency {
-        case 3...4:
-            modifier += 1
-        case 5...6:
-            modifier += 2
-        default:
-            break
-        }
-        
-        // Modifier based on fitness score
-        switch strengthLevel {
-            case .beginner:
-                modifier -= 2 // Fewer exercises for beginners
-            case .novice:
-                modifier -= 1
-            case .intermediate:
-                // No additional modifier for intermediates
-                break
-            case .advanced:
-                modifier += 1
-            case .elite:
-                modifier += 2 // More exercises for advanced users
-        }
-        
-        return max(1, baseCount + modifier) // Ensure at least one exercise per workout
-    }
-    
-    static func shouldDisableTemplate(template: WorkoutTemplate) -> Bool {
-        var shouldDisable: Bool = false
-        
-        if template.exercises.isEmpty {
-            shouldDisable = true
-        } else {
-            for exercise in template.exercises {
-                if exercise.setDetails.isEmpty {
-                    shouldDisable = true
-                    break
+    private func estimateCompletionTime(rest: RestPeriods) -> Int {
+        let secondsPerRep = SetDetail.secPerRep
+        let avgSetup = SetDetail.secPerSetup
+        let extraPerDifficulty = SetDetail.extraSecPerDiff
+
+        var total = 0
+
+        for ex in exercises {
+            let sets = ex.setDetails
+
+            // movement time: reps → reps*sec/rep; hold → seconds directly
+            var movement = 0
+            for set in sets {
+                let metric = set.planned       // or: set.completed ?? set.planned
+                switch metric {
+                case .reps(let r): movement += max(0, r) * secondsPerRep
+                case .hold(let span): movement += max(0, span.inSeconds)
                 }
             }
+
+            // rest time: after each set except the last; use per-set rest if present
+            let workingRest = rest.rest(for: .working)
+            var rest = 0
+            if sets.count > 1 {
+                for i in 0..<(sets.count - 1) {
+                    rest += max(0, sets[i].restPeriod ?? workingRest)
+                }
+            }
+
+            let difficulty = extraPerDifficulty * ex.difficulty.strengthValue
+            total += movement + rest + difficulty + avgSetup
         }
-        return shouldDisable
+
+        print("Estimated seconds: \(total)")
+        return total
+    }
+
+    mutating func setEstimatedCompletionTime(rest: RestPeriods) {
+        estimatedCompletionTime = .init(seconds: estimateCompletionTime(rest: rest))
+    }
+    
+    mutating func resetState() {
+        for exerciseIndex in exercises.indices { exercises[exerciseIndex].resetState() }
+    }
+
+    static func uniqueTemplateName(initialName: String, from templates: [WorkoutTemplate]) -> String {
+        let existing = Set(templates.map { $0.name })
+
+        // 1️⃣  If the candidate is free, keep it
+        guard existing.contains(initialName) else { return initialName }
+
+        // 2️⃣  Split off an optional trailing integer
+        let parts = initialName.split(separator: " ")
+        var base  = initialName
+        var start = 2                                    // default suffix
+
+        if let last = parts.last, let n = Int(last) {
+            // “New Template 2”  -> base = “New Template”, start = 3
+            base  = parts.dropLast().joined(separator: " ")
+            start = n + 1
+        }
+
+        // 3️⃣  Bump until we hit a free slot
+        var i = start
+        while true {
+            let candidate = "\(base) \(i)"
+            if !existing.contains(candidate) { return candidate }
+            i += 1
+        }
+    }
+    
+    var shouldDisableTemplate: Bool {
+        exercises.isEmpty || exercises.contains { $0.setDetails.isEmpty }
     }
     
     // List of names of exercises already in the template for quick lookup
@@ -157,13 +130,13 @@ struct TemplateProgress {
     let numExercises: Int
     let isLastExercise: Bool
     let restTimerEnabled: Bool
-    let restPeriod: Int
+    let restPeriods: RestPeriods
 }
 
 struct WorkoutSummaryData {
-    let totalVolume: Double
-    let totalWeight: Double
+    let totalVolume: Mass
     let totalReps: Int
-    let totalTime: String
-    let exercisePRs: [String]
+    let totalTime: TimeSpan
+    let exercisePRs: [UUID]
+    let weightByExercise: [UUID: Double]
 }

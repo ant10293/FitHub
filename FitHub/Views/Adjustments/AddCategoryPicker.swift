@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddCategoryPicker: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     var exercise: Exercise
     var existingCategories: Set<AdjustmentCategory>
     var onAddCategory: (AdjustmentCategory) -> Void
@@ -22,12 +22,12 @@ struct AddCategoryPicker: View {
                 ForEach(availableCategories, id: \.self) { category in
                     Button(action: {
                         onAddCategory(category)
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }) {
                         HStack {
                             VStack(alignment: .leading) {
                                 Text(category.rawValue)
-                                    .foregroundColor(.primary)
+                                    .foregroundStyle(Color.primary)
                                 
                                 // Adjustment image
                                 Image(category.image)
@@ -40,16 +40,16 @@ struct AddCategoryPicker: View {
                             Spacer()
                             
                             Image(systemName: "plus.circle")
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(Color.secondary)
                         }
                     }
                 }
             }
             .navigationBarTitle("Add Adjustment Category", displayMode: .inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
             }

@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Main editor
 struct MuscleEngagementEditor: View {
-    @Environment(\.presentationMode) private var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @Binding var muscleEngagements: [MuscleEngagement]
 
     // ────────── Editor state
@@ -11,20 +11,6 @@ struct MuscleEngagementEditor: View {
     @State private var isPrimary: Bool = false
     @State private var subEng: [SubMuscleEngagement] = []
     @State private var editingIndex: Int? = nil        // nil → adding
-
-    // ────────── Helpers
-    private var totalUsed: Double {
-        muscleEngagements.reduce(0) { $0 + $1.engagementPercentage }
-    }
-    private var remainingForNew: Double {
-        max(0, 100 - totalUsed + (editingIndex.map { muscleEngagements[$0].engagementPercentage } ?? 0))
-    }
-    private var availableMuscles: [Muscle] {
-        let taken = Set(muscleEngagements.map(\.muscleWorked))
-        return Muscle.allCases.filter(\.isVisible).filter { m in
-            editingIndex.map { m == muscleEngagements[$0].muscleWorked } ?? true || !taken.contains(m)
-        }
-    }
 
     var body: some View {
         NavigationStack {
@@ -39,7 +25,7 @@ struct MuscleEngagementEditor: View {
                             Picker(
                                 selection: $selectedMuscle,
                                 label: Text(selectedMuscle?.rawValue ?? "Select")
-                                    .foregroundColor(selectedMuscle == nil ? .secondary : .primary)
+                                    .foregroundStyle(selectedMuscle == nil ? .secondary : .primary)
                             ) {
                                 Text("Select").tag(nil as Muscle?)
                                 ForEach(availableMuscles, id: \.self) { m in
@@ -75,7 +61,7 @@ struct MuscleEngagementEditor: View {
                                 // ── Overall-total warning  (only when nothing selected) ─────
                                 if !muscleEngagements.isEmpty && effectiveTotal != 100 {
                                     Text("⚠️ Overall total is \(Int(effectiveTotal)) %. Must equal 100 %.")
-                                        .foregroundColor(.red)
+                                        .foregroundStyle(.red)
                                 }
                                 
                                 Toggle("Primary Mover", isOn: $isPrimary)
@@ -92,7 +78,7 @@ struct MuscleEngagementEditor: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Added Muscles").font(.headline)
                             if muscleEngagements.isEmpty {
-                                Text("None yet").foregroundColor(.secondary)
+                                Text("None yet").foregroundStyle(Color.secondary)
                             } else {
                                 ForEach(muscleEngagements.indices, id: \.self) { idx in
                                     let me = muscleEngagements[idx]
@@ -105,7 +91,8 @@ struct MuscleEngagementEditor: View {
                                         }
                                     }
                                     .padding(8)
-                                    .background(RoundedRectangle(cornerRadius: 8).fill(Color.secondary.opacity(0.08)))
+                                    .roundedBackground(cornerRadius: 8, color: Color.secondary.opacity(0.08))
+                                    //.background(RoundedRectangle(cornerRadius: 8).fill(Color.secondary.opacity(0.08)))
                                     .contentShape(Rectangle())
                                     .onTapGesture { loadForEdit(idx) }
                                 }
@@ -122,19 +109,38 @@ struct MuscleEngagementEditor: View {
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(RoundedRectangle(cornerRadius: 12).fill(selectedMuscle == nil ? Color.gray : Color.blue))
-                        .foregroundColor(.white)
+                        .roundedBackground(cornerRadius: 12, color: selectedMuscle == nil ? Color.gray : Color.blue)
+                        .foregroundStyle(.white)
                 }
                 .disabled(selectedMuscle == nil)
                 .padding()
             }
             .navigationTitle("Muscle Engagement")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar { ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Close") { presentationMode.wrappedValue.dismiss() }
+            .toolbar { ToolbarItem(placement: .topBarTrailing) {
+                Button("Close") { dismiss() }
                     .foregroundStyle(.red)
             }}
         }
+    }
+
+    // ────────── Helpers
+    private var totalUsed: Double { muscleEngagements.reduce(0) { $0 + $1.engagementPercentage } }
+    
+    private var remainingForNew: Double {
+        max(0, 100 - totalUsed + (editingIndex.map { muscleEngagements[$0].engagementPercentage } ?? 0))
+    }
+
+    private var availableMuscles: [Muscle] {
+        // Exclude every muscle already in the list, except the one being edited.
+        let taken = Set(
+            muscleEngagements.enumerated().compactMap { i, me in
+                (i == editingIndex) ? nil : me.muscleWorked
+            }
+        )
+        return Muscle.allCases
+            .filter(\.isVisible)
+            .filter { !taken.contains($0) }
     }
 
     // ────────── CRUD helpers
@@ -206,7 +212,7 @@ private struct SubMusclePicker: View {
 
             // ── Existing rows ─────────────────────────────
             if subEng.isEmpty {
-                Text("None added").foregroundColor(.secondary)
+                Text("None added").foregroundStyle(Color.secondary)
             } else {
                 ForEach(subEng.indices, id: \.self) { idx in
                     let s = subEng[idx]
@@ -280,7 +286,7 @@ private struct SubMusclePicker: View {
             let tot = subEng.reduce(0) { $0 + $1.engagementPercentage }
             if !subEng.isEmpty && tot != 100 {
                 Text("⚠️ Sub-muscle total \(Int(tot)) % (needs 100 %).")
-                    .foregroundColor(.red)
+                    .foregroundStyle(.red)
             }
         }
     }

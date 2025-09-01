@@ -14,7 +14,7 @@ import SwiftUI
 // split category should not include those options ^
 struct NewExercise: View {
     // ────────── Environment
-    @Environment(\.presentationMode) private var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
     @EnvironmentObject var ctx: AppContext
     
@@ -93,7 +93,7 @@ struct NewExercise: View {
                                 }
                             }
                             
-                            presentationMode.wrappedValue.dismiss()
+                            dismiss()
                         }
                         .padding()
                         
@@ -108,9 +108,9 @@ struct NewExercise: View {
             }
             .navigationTitle(isEditing ? "Edit Exercise" : "New Exercise").navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel", role: .destructive) {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
             }
@@ -118,21 +118,21 @@ struct NewExercise: View {
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .onDisappear(perform: disappearAction)
         .sheet(isPresented: $selectingEquipment, onDismiss: { draft.type = determineType() }) {
-            EquipmentSelection(selection: equipmentRequired, forNewExercise: true) { selection in
+            EquipmentSelection(selection: equipmentRequired, onDone: { selection in
                 setEquipment(selection: selection)
-            }
+            })
         }
         .sheet(isPresented: $showingMuscleEditor) {
             MuscleEngagementEditor(muscleEngagements: $draft.muscles)
         }
         .sheet(isPresented: $showingAdjustmentsView) {
-            AdjustmentsView(AdjustmentsData: ctx.adjustments, exercise: exercise)
+            AdjustmentsView(exercise: exercise)
         }
         .alert("Delete this exercise?", isPresented: $showDeleteAlert) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
                 ctx.exercises.removeExercise(exercise)
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             }
         } message: {
             Text("This action can’t be undone.")
@@ -204,7 +204,7 @@ struct NewExercise: View {
                         Text("Edit Muscles")
                     }
                 }
-                .foregroundColor(.blue)
+                .foregroundStyle(.blue)
                 .buttonStyle(.plain)
             }
         }
@@ -217,7 +217,7 @@ struct NewExercise: View {
                     .font(.headline)
                 +
                 Text(draft.equipmentRequired.isEmpty ? "None" : draft.equipmentRequired.joined(separator: ", "))
-                    .foregroundColor(draft.equipmentRequired.isEmpty ? .secondary : .primary)
+                    .foregroundStyle(draft.equipmentRequired.isEmpty ? .secondary : .primary)
             )
             .multilineTextAlignment(.leading)
    
@@ -230,7 +230,7 @@ struct NewExercise: View {
                         Text("Select Equipment")
                     }
                 }
-                .foregroundColor(.blue)
+                .foregroundStyle(.blue)
                 .buttonStyle(.plain)
             }
         }
@@ -238,8 +238,6 @@ struct NewExercise: View {
     
     private var adjustmentsField: some View {
         AdjustmentsSection(
-            adjustments: ctx.adjustments,
-            equipmentData: ctx.equipment,
             showingAdjustmentsView: $showingAdjustmentsView,
             exercise: exercise,
             titleFont: .headline,
@@ -363,7 +361,7 @@ struct NewExercise: View {
                  .padding(.horizontal, 16)
                  .padding(.vertical, 6)
             }
-            .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color(UIColor.secondarySystemGroupedBackground)))
+            .roundedBackground(cornerRadius: 12, color: Color(UIColor.secondarySystemGroupedBackground), style: .continuous)
             .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(Color.secondary.opacity(0.15)))
             .padding(.top, 4)
         }

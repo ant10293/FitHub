@@ -6,23 +6,31 @@ struct StatsView: View {
     
     var body: some View {
         VStack {
+            let bmi = userData.currentMeasurementValue(for: .bmi).displayValue
+            let calories = userData.currentMeasurementValue(for: .caloricIntake).displayValue
+            let carbs = userData.physical.carbs
+            let fats = userData.physical.fats
+            let proteins = userData.physical.proteins
+        
+            Text("Strength Level: \(userData.evaluation.strengthLevel)")
+            
             metricRow(
                 label: "BMI",
-                value: userData.currentMeasurementValue(for: .bmi),
+                value: bmi,
                 linkText: "BMI Calculator",
                 destination: {
                     BMICalculator(userData: userData)
                 }
             )
             
-            if userData.currentMeasurementValue(for: .bmi) != 0 {
-                BMICategoryTable(userBMI: userData.currentMeasurementValue(for: .bmi))
+            if bmi > 0 {
+                BMICategoryTable(userBMI: bmi)
                     .frame(maxHeight: UIScreen.main.bounds.height * 0.1)  // ≈ 1/3 screen
             }
-            
+                        
             metricRow(
                 label: "Body Fat",
-                value: userData.currentMeasurementValue(for: .bodyFatPercentage),
+                value: userData.currentMeasurementValue(for: .bodyFatPercentage).displayValue,
                 unit: "%",
                 linkText: "Body Fat Calculator",
                 destination: {
@@ -32,8 +40,8 @@ struct StatsView: View {
 
             metricRow(
                 label: "Daily Caloric Intake",
-                value: userData.currentMeasurementValue(for: .caloricIntake),
-                formatted: String(format: "%.0f", userData.currentMeasurementValue(for: .caloricIntake)),
+                value: calories,
+                formatted: String(format: "%.0f", calories),
                 unit: "kcal",
                 linkText: "Calorie Calculator",
                 destination: {
@@ -43,40 +51,37 @@ struct StatsView: View {
 
             metricRow(
                 label: "Daily Macronutrients",
-                value: Double(userData.physical.carbs),
+                value: carbs == 0 ? carbs : -1,
                 linkText: "Macro Calculator",
                 destination: {
                     MacroCalculator(userData: userData)
                 }
             )
             
-            macroRow(name: "Carbs", value: userData.physical.carbs)
-            macroRow(name: "Fats", value: userData.physical.fats)
-            macroRow(name: "Proteins", value: userData.physical.proteins)
+            macroRow(name: "Carbs", value: carbs)
+            macroRow(name: "Fats", value: fats)
+            macroRow(name: "Proteins", value: proteins)
             
             RingView(
-                dailyCaloricIntake: userData.currentMeasurementValue(for: .caloricIntake),
-                carbs: userData.physical.carbs,
-                fats: userData.physical.fats,
-                proteins: userData.physical.proteins
+                dailyCaloricIntake: calories,
+                carbs: carbs,
+                fats: fats,
+                proteins: proteins
             )
             .padding()
         }
         .padding()
-        .navigationTitle("\(getTitleName())'s Stats")
+        .navigationTitle("\(getTitleName)'s Stats")
     }
     
-    private func getTitleName() -> String {
-        var name: String
-        
+    private var getTitleName: String {
         if userData.profile.firstName.isEmpty {
             // Split userName and take the first part as the first name.
             let nameComponents = userData.profile.userName.split(separator: " ")
-            name = nameComponents.first.map(String.init) ?? userData.profile.userName
+            return nameComponents.first.map(String.init) ?? userData.profile.userName
         } else {
-            name = userData.profile.firstName
+            return userData.profile.firstName
         }
-        return name
     }
     
     private func macroRow(name: String, value: Double) -> some View {
@@ -86,7 +91,7 @@ struct StatsView: View {
                 Text("\(Format.smartFormat(value))")
                 + Text(" g").fontWeight(.light)
             } else {
-                Text("N/A").foregroundColor(.secondary)
+                Text("N/A").foregroundStyle(.secondary)
             }
         }
     }
@@ -99,13 +104,17 @@ struct StatsView: View {
         linkText: String,
         destination: @escaping () -> Destination
     ) -> some View {
+        
         HStack {
             Text("\(label):").bold()
             
             if value == 0 {
-                NavigationLink(linkText, destination: destination())
-                    .foregroundColor(.blue)
-            } else {
+                NavigationLink(linkText, destination: LazyDestination { destination() })
+                    .foregroundStyle(.blue)
+            } else if value == -1 {
+                EmptyView()
+            }
+            else {
                 // number → string
                 let main = formatted ?? Format.smartFormat(value)
                 

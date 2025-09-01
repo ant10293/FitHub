@@ -70,12 +70,12 @@ struct DeloadSettings: View {
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("Progressive Overload")
+        .navigationTitle("Volume Deload")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 Button("Reset") { reset() }
-                    .foregroundColor(isDefault() ? .gray : .red)
+                    .foregroundStyle(isDefault() ? .gray : .red)
                     .disabled(isDefault())
             }
         }

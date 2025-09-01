@@ -33,14 +33,15 @@ struct TemplateArchives: View {
         .navigationBarTitle("Manage Templates", displayMode: .inline)
     }
     
+    // MARK: – List / empty‑state wrapper
     private func workoutList() -> some View {
-        List {
-            if userData.workoutPlans.archivedTemplates.isEmpty {
-                Text("No templates found.")
-                    .foregroundColor(.gray)
-                    .padding(.horizontal)
+        ZStack {
+            if !userData.workoutPlans.archivedTemplates.isEmpty {
+                List {
+                    templatesSection(templates: userData.workoutPlans.archivedTemplates)
+                }
             } else {
-                templatesSection(templates: userData.workoutPlans.archivedTemplates)
+                EmptyTemplatesState
             }
         }
     }
@@ -66,10 +67,10 @@ struct TemplateArchives: View {
                 HStack {
                     VStack(alignment: .leading) {
                         Text(userData.workoutPlans.archivedTemplates[index].name)
-                            .foregroundColor(.primary) // Ensure the text color remains unchanged
+                            .foregroundStyle(Color.primary) // Ensure the text color remains unchanged
                         Text(SplitCategory.concatenateCategories(for: userData.workoutPlans.archivedTemplates[index].categories))
                             .font(.subheadline)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                     }
                     .centerVertically()
                     Spacer()
@@ -99,14 +100,14 @@ struct TemplateArchives: View {
             
             Text("Selected: ") +
             Text("\(selected.name)")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.secondary)
                 .italic()
 
             Button("Unarchive", systemImage: "tray.full") {
                moveTemplateBack(selected: selected)
             }
             .buttonStyle(.bordered)
-            .foregroundColor(.green)
+            .foregroundStyle(.green)
             .tint(.green)
             .padding(.top)
 
@@ -115,14 +116,14 @@ struct TemplateArchives: View {
                     deleteTemplate(selected: selected)
                 }
                 .buttonStyle(.bordered)
-                .foregroundColor(.red)
+                .foregroundStyle(.red)
                 .tint(.red)
                 
                 Button("Cancel", systemImage: "xmark") {
                     showingActionOverlay = false
                 }
                 .buttonStyle(.bordered)
-                .foregroundColor(.gray)
+                .foregroundStyle(.gray)
                 .tint(.gray)
             }
             .padding()
@@ -136,7 +137,7 @@ struct TemplateArchives: View {
     
     private func moveTemplateBack(selected: SelectedTemplate) {
         var template = userData.workoutPlans.archivedTemplates.remove(at: selected.index)
-        template.name = userData.uniqueTemplateName(initialName: template.name, from: userData.workoutPlans.userTemplates)
+        template.name = WorkoutTemplate.uniqueTemplateName(initialName: template.name, from: userData.workoutPlans.userTemplates)
         userData.addUserTemplate(template: template)
         showingActionOverlay = false
     }
@@ -144,5 +145,25 @@ struct TemplateArchives: View {
     private func deleteTemplate(selected: SelectedTemplate) {
         userData.deleteUserTemplate(at: selected.index)
         showingActionOverlay = false
+    }
+    
+    // MARK: – Empty state
+    private var EmptyTemplatesState: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "tray")
+                .symbolRenderingMode(.hierarchical)
+                .font(.system(.largeTitle, weight: .regular))
+                .foregroundStyle(.secondary)
+
+            Text("Nothing Archived Yet")
+                .font(.title3.weight(.semibold))
+
+            Text("When you **archive** a workout template it will be stored here for safekeeping.")
+            .font(.callout)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
     }
 }

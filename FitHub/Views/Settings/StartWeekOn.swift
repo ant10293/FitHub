@@ -13,9 +13,9 @@ import SwiftUI
     var body: some View {
         Form {
             Picker("Start Week On", selection: $userData.startWeekOn) {
-                Text("Saturday").tag(daysOfWeek.saturday)
-                Text("Sunday").tag(daysOfWeek.sunday)
-                Text("Monday").tag(daysOfWeek.monday)
+                Text("Saturday").tag(DaysOfWeek.saturday)
+                Text("Sunday").tag(DaysOfWeek.sunday)
+                Text("Monday").tag(DaysOfWeek.monday)
             }
             .pickerStyle(SegmentedPickerStyle())
             .onChange(of: userData.startWeekOn) { oldValue, newValue in

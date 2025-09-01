@@ -1,5 +1,5 @@
 //
-//  ExercisePerformanceGraph.swift
+//  ExerciseperformanceormanceGraph.swift
 //  FitHub
 //
 //  Created by Anthony Cantu on 2/20/25.
@@ -7,18 +7,16 @@
 import SwiftUI
 import Charts
 
-
 struct ExercisePerformanceGraph: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var selectedTimeRange: TimeRange = .allTime
+    // MARK: – Inputs
     let exercise: Exercise
-    let value: Double?
-    let currentMaxDate: Date?
-    let pastMaxes: [MaxRecord]
+    let performance: ExercisePerformance?
     
     var body: some View {
         VStack {
-            Text("\(exercise.name) \(exercise.type.usesWeight ? "One Rep Max" : "Max Reps")")
+            Text("\(exercise.name) \(exercise.performanceTitle)")
                 .font(.headline)
                 .centerHorizontally()
                 .multilineTextAlignment(.center)
@@ -28,24 +26,24 @@ struct ExercisePerformanceGraph: View {
                 ScrollView(.horizontal) {
                     HStack(spacing: 0) {
                         Chart {
-                            if !sortedMaxRecords.isEmpty {
+                            if !sortedRecords.isEmpty {
                                 // One Rep Max Line and Points
-                                ForEach(sortedMaxRecords) { record in
+                                ForEach(sortedRecords) { record in
                                     LineMark(
                                         x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
-                                        y: .value(exercise.type.usesWeight ? "One Rep Max" : "Max Reps", record.value)
+                                        y: .value(exercise.performanceTitle, record.value.displayValue)
                                     )
                                     .foregroundStyle(.blue)
                                     
                                     PointMark(
                                         x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
-                                        y: .value(exercise.type.usesWeight ? "One Rep Max" : "Max Reps", record.value)
+                                        y: .value(exercise.performanceTitle, record.value.displayValue)
                                     )
-                                    .foregroundStyle(record.date == currentMaxDate ? .green : .blue)
+                                    .foregroundStyle(record.id == performance?.currentMax?.id ? .green : .blue)
                                     .annotation(position: .top) {
-                                        Text(Format.smartFormat(record.value))
+                                        Text(Format.smartFormat(record.value.displayValue))
                                             .font(.caption)
-                                            .foregroundColor(record.date == currentMaxDate ? .green : .blue)
+                                            .foregroundStyle(record.id == performance?.currentMax?.id ? .green : .blue)
                                             .padding(1)
                                             .background(
                                                 RoundedRectangle(cornerRadius: 1)
@@ -56,18 +54,18 @@ struct ExercisePerformanceGraph: View {
                             }
                         }
                         .chartYScale(domain: yAxisRange)
-                        .frame(width: max(CGFloat(sortedMaxRecords.count) * 60, UIScreen.main.bounds.width - 40), height: UIScreen.main.bounds.height * 0.33)
+                        .frame(width: max(CGFloat(sortedRecords.count) * 60, UIScreen.main.bounds.width - 40), height: UIScreen.main.bounds.height * 0.33)
                         .overlay(alignment: .center) {                    // ← ① add overlay
-                            if sortedMaxRecords.isEmpty {
-                                Text("No data for available \n for this exercise...")
-                                    .foregroundColor(.red)
+                            if sortedRecords.isEmpty {
+                                Text("No data available \n for this exercise...")
+                                    .foregroundStyle(.red)
                                     .multilineTextAlignment(.center)
                             }
                         }
                         .overlay(alignment: .bottomTrailing, content: {
-                            Text(exercise.type.usesWeight ? "lb" : "reps")
+                            Text(exercise.peformanceUnit)
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(Color.secondary)
                         })
                         .padding()
                         
@@ -89,60 +87,68 @@ struct ExercisePerformanceGraph: View {
         }
     }
     
-    private var minValue: Double {
-        if exercise.type.usesWeight {
-            return sortedMaxRecords.map { $0.value }.min() ?? 100
+    // MARK: – Derived helpers
+    private var allRecords: [MaxRecord] {
+        guard let perf = performance else { return [] }
+        var recs = perf.pastMaxes ?? []
+        if let current = perf.currentMax { recs.append(current) }
+        return recs
+    }
+    
+    /// Records after time‑range filtering and per‑day de‑duplication.
+    private var sortedRecords: [MaxRecord] {
+        guard !allRecords.isEmpty else { return [] }
+        
+        let filtered: [MaxRecord] = {
+            switch selectedTimeRange {
+            case .month:
+                if let start = CalendarUtility.shared.monthsAgo(1) {
+                return allRecords.filter { $0.date >= start }
+                }
+                return allRecords
+            case .sixMonths:
+                if let start = CalendarUtility.shared.monthsAgo(6) {
+                return allRecords.filter { $0.date >= start }
+                }
+                return allRecords
+            case .year:
+                if let start = CalendarUtility.shared.yearsAgo(1) {
+                return allRecords.filter { $0.date >= start }
+                }
+                return allRecords
+            case .allTime:
+                return allRecords
+            }
+        }()
+        
+        // keep highest per calendar day
+        var highestPerDay: [Date: MaxRecord] = [:]
+        for rec in filtered {
+            let day = CalendarUtility.shared.startOfDay(for: rec.date)
+            if let existing = highestPerDay[day] {
+                if rec.value.displayValue > existing.value.displayValue {
+                    highestPerDay[day] = rec
+                }
+            } else {
+                highestPerDay[day] = rec
+            }
         }
-        return sortedMaxRecords.map { $0.value }.min() ?? 0
+        
+        return highestPerDay.values.sorted { $0.date < $1.date }
+    }
+    
+    private var minValue: Double {
+        if exercise.type.usesWeight { return sortedRecords.map { $0.value.displayValue }.min() ?? 100 }
+        return sortedRecords.map { $0.value.displayValue }.min() ?? 0
     }
     
     private var maxValue: Double {
-        if exercise.type.usesWeight {
-            return sortedMaxRecords.map { $0.value }.max() ?? 300
-        }
-        return sortedMaxRecords.map { $0.value }.max() ?? 50
+        if exercise.type.usesWeight { return sortedRecords.map { $0.value.displayValue }.max() ?? 300 }
+        return sortedRecords.map { $0.value.displayValue }.max() ?? 50
     }
     
     private var yAxisRange: ClosedRange<Double> { return minValue - (minValue * 0.2)...maxValue + (maxValue * 0.2) }
-    
-    private var sortedMaxRecords: [MaxRecord] {
-        var records = pastMaxes
-        if let value = value, let date = currentMaxDate {
-            records.append(MaxRecord(value: value, date: date))
-        }
-        return filterRecords(records)
-    }
-    
-    private func filterRecords(_ records: [MaxRecord]) -> [MaxRecord] {
-        let calendar = Calendar.current
-        var filteredRecords: [MaxRecord]
-        
-        // Filter based on the selected time range
-        switch selectedTimeRange {
-        case .month:
-            let startDate = calendar.date(byAdding: .month, value: -1, to: Date())!
-            filteredRecords = records.filter { $0.date >= startDate }
-        case .sixMonths:
-            let startDate = calendar.date(byAdding: .month, value: -6, to: Date())!
-            filteredRecords = records.filter { $0.date >= startDate }
-        case .year:
-            let startDate = calendar.date(byAdding: .year, value: -1, to: Date())!
-            filteredRecords = records.filter { $0.date >= startDate }
-        case .allTime:
-            filteredRecords = records
-        }
-        
-        var maxRecordsByDate = [Date: MaxRecord]()
-        
-        for record in filteredRecords {
-            if let existingRecord = maxRecordsByDate[record.date] {
-                if record.value > existingRecord.value {
-                    maxRecordsByDate[record.date] = record
-                }
-            } else {
-                maxRecordsByDate[record.date] = record
-            }
-        }
-        return Array(maxRecordsByDate.values).sorted { $0.date < $1.date }
-    }
 }
+    
+
+

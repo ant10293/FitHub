@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct CompletedDetails: View {
     let workout: CompletedWorkout
     let categories: String
@@ -19,39 +18,38 @@ struct CompletedDetails: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(workout.name)
-                        .font(.headline)
-                        .padding(.bottom, 5)
-                    
                     Text(categories)
-                    
+                        .multilineTextAlignment(.leading)
+                        .padding(.top)
+
                     Text("Date: \(Format.formatDate(workout.date, dateStyle: .full, timeStyle: .short))")
                         .font(.subheadline)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
+                        .multilineTextAlignment(.leading)
                     
                     Text("Duration: \(Format.formatDuration(workout.duration, roundSeconds: true))")
                         .font(.subheadline)
                         .padding(.bottom, 5)
+                        .multilineTextAlignment(.leading)
                     
                     ForEach(workout.template.exercises) { exercise in
                         VStack(alignment: .leading, spacing: 5) {
                             Text(exercise.name)
                                 .font(.subheadline)
                                 .padding(.top, 10)
+                                .multilineTextAlignment(.leading)
                             
-                            // Display a special indicator if the exercise is supersetted
                             if let supersettedWith = exercise.isSupersettedWith {
                                 Text("(Supersetted with \(supersettedWith))")
                                     .font(.caption)
-                                    .foregroundColor(.orange)
+                                    .foregroundStyle(.orange)
+                                    .multilineTextAlignment(.leading)
                             }
                             
-                            // --- Show time spent on this exercise ---
                             Text("Time spent: \(Format.formatDuration(exercise.timeSpent))")
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(Color.secondary)
                             
-                            // ─── Warm‑up Sets ────────────────────────────────────────────────
                             if !exercise.warmUpDetails.isEmpty {
                                 warmupSets(exercise: exercise)
                                 Divider().padding(.vertical, 4)
@@ -59,122 +57,163 @@ struct CompletedDetails: View {
                             
                             mainSets(exercise: exercise)
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)   // ← row block stretches
                         .padding(.bottom, 10)
                     }
                 }
-                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)             // ← key fix
+                .padding(.horizontal)                                        // keep left/right padding
             }
         }
-        .navigationBarTitle("Workout Details", displayMode: .inline)
+        .navigationBarTitle(workout.name, displayMode: .inline)
+    }
+}
+
+// MARK: - Subviews / helpers
+private extension CompletedDetails {
+    // Warm-ups
+    func warmupSets(exercise: Exercise) -> some View {
+        ForEach(exercise.warmUpDetails) { set in
+            SetRow(set: set, exercise: exercise, warmup: true)
+                .font(.caption)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
     
-    struct RepsCompletedView: View {
-        let repsCompleted: Int?
-        let repsPlanned: Int
-        let rpe: Double?
-
-        var body: some View {
-            let done = repsCompleted ?? repsPlanned
-            let color = color(for: done, planned: repsPlanned)
-
-            HStack {
-                // Compose two Texts: arrow+number normal, label italic
-                ( Text("→ ")
-                  + Text("\(done) reps completed").italic()
-                )
-                .font(.caption)
-                .foregroundColor(color)
+    // Main sets + PR badges
+    func mainSets(exercise: Exercise) -> some View {
+        ForEach(exercise.setDetails) { set in
+            VStack(alignment: .leading, spacing: 2) {
+                // Single line: planned + completed + RPE
+                SetRow(set: set, exercise: exercise, warmup: false)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
-                if let rpe = rpe {
-                    Text("@ RPE \(String(format: "%.1f", rpe))")
-                        .font(.caption)
+                // PR line (unchanged logic)
+                if let prUpdate = workout.updatedMax.first(where: {
+                    $0.exerciseId == exercise.id && $0.setNumber == set.setNumber
+                }),
+                   let prRepsWeight = prUpdate.repsXweight {
+                    HStack {
+                        Image(systemName: "trophy.fill")
+                        if exercise.type.usesWeight {
+                            if prRepsWeight.reps > 1 {
+                                prRepsWeight.formattedText +
+                                Text(" = ") +
+                                prUpdate.value.labeledText
+                            } else {
+                                prUpdate.value.labeledText
+                            }
+                        } else {
+                            prUpdate.value.labeledText
+                        }
+                        Spacer(minLength: 0)
+                    }
+                    .font(.caption2)
+                    .foregroundStyle(Color.gold)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
         }
-
-        private func color(for done: Int, planned: Int) -> Color {
-            switch done {
-                case planned: return .blue
-                case ..<planned: return .red
-                default: return .green
-            }
-        }
     }
-    
-    private func warmupSets(exercise: Exercise) -> some View {
-        ForEach(exercise.warmUpDetails.indices, id: \.self) { idx in
-            let set = exercise.warmUpDetails[idx]
-            HStack {
-                Text("Warm‑up Set \(idx + 1):")
+}
+
+// MARK: - A single set row (planned + completed + RPE on one line)
+private extension CompletedDetails {
+    struct SetRow: View {
+        let set: SetDetail
+        let exercise: Exercise
+        let warmup: Bool
+        
+        var body: some View {
+            HStack(spacing: 6) {
+                Text("\(warmup ? "Warm-up " : "")Set \(set.setNumber):")
                     .fontWeight(.bold)
-                    .font(.caption)
                 
-                let txt: Text = {
-                    if exercise.type.usesWeight {
-                        return Text(Format.smartFormat(set.weight))
-                        + Text(" lbs").fontWeight(.light)
-                        + Text(" x ").foregroundColor(.gray)
-                        + Text("\(set.reps)")
-                        + Text(" reps").fontWeight(.light)
-                    } else {
-                        return Text("\(set.reps)")
-                        + Text(" reps planned").fontWeight(.light)
-                    }
-                }()
-                txt.font(.caption)
-                
-                RepsCompletedView(repsCompleted: set.repsCompleted, repsPlanned: set.reps, rpe: set.rpe)
+                // Planned (weight if relevant) + target (reps or time)
+                plannedText(set: set, usesWeight: exercise.type.usesWeight)
+                    .fontWeight(.regular)
+
+                // Completed + RPE inline on the same row
+                CompletedMetricView(planned: set.planned,
+                                    completed: set.completed,
+                                    rpe: set.rpe)
+
+                Spacer(minLength: 0)
             }
             .font(.caption)
+            .multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        
+        // Build planned text (weight if relevant + reps/time)
+        private func plannedText(set: SetDetail, usesWeight: Bool) -> Text {
+            let planStr = displayString(for: set.planned)
+            if usesWeight {
+                return set.weight.formattedText()
+                + Text(" × ").foregroundStyle(.gray)
+                + Text(planStr).fontWeight(.light)
+            } else {
+                return Text(planStr).fontWeight(.light)
+            }
+        }
+        
+        // Convert SetMetric → user-facing string
+        private func displayString(for metric: SetMetric) -> String {
+            switch metric {
+            case .reps(let r):
+                return "\(max(0, r)) reps"
+            case .hold(let span):
+                return span.displayStringCompact // e.g. "0:45" or "12:03"
+            }
         }
     }
-    
-    private func mainSets(exercise: Exercise) -> some View {
-        // ─── Main Sets ───────────────────────────────────────────────────
-        ForEach(exercise.setDetails) { set in
-            HStack {
-                Text("Set \(set.setNumber):")
-                    .fontWeight(.bold)
-                    .font(.caption)
+}
+
+// MARK: - Inline completed metric + tint + RPE (same name, new inline usage)
+private extension CompletedDetails {
+    struct CompletedMetricView: View {
+        let planned: SetMetric
+        let completed: SetMetric?
+        let rpe: Double?
+        
+        var body: some View {
+            HStack(spacing: 6) {
+                let (doneStr, tint) = completedDisplay()
+                ( Text("→ ") + Text(doneStr).italic() )
+                    .foregroundStyle(tint)
                 
-                let txt: Text = {
-                    if exercise.type.usesWeight {
-                        return Text(Format.smartFormat(set.weight))
-                        + Text(" lbs").fontWeight(.light)
-                        + Text(" x ").foregroundColor(.gray)
-                        + Text("\(set.reps)")
-                        + Text(" reps").fontWeight(.light)
-                    } else {
-                        return Text("\(set.reps)")
-                        + Text(" reps planned").fontWeight(.light)
-                    }
-                }()
-                txt.font(.caption)
-                
-                RepsCompletedView(repsCompleted: set.repsCompleted, repsPlanned: set.reps, rpe: set.rpe)
+                if let rpe {
+                    Text("@ RPE \(String(format: "%.1f", rpe))")
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        
+        private func completedDisplay() -> (String, Color) {
+            // If not logged, show planned as neutral
+            guard let comp = completed else {
+                return (string(from: planned) + " completed", .secondary)
             }
             
-            // Check for a PerformanceUpdate for this exercise at the specific set.
-            if let prUpdate = workout.updatedMax.first(where: {
-                $0.exerciseName == exercise.name && $0.setNumber == set.setNumber
-            }),
-               let prRepsWeight = prUpdate.repsXweight {
-                HStack {
-                    if exercise.type.usesWeight {
-                        Image(systemName: "trophy.fill")
-                        if prRepsWeight.reps == 1 {
-                            Text("\(Format.smartFormat(prUpdate.value)) lbs")
-                        } else {
-                            Text("\(Format.smartFormat(prRepsWeight.weight)) lbs x \(prRepsWeight.reps) reps") +
-                            Text(" = \(Format.smartFormat(prUpdate.value)) lbs")
-                        }
-                    } else {
-                        Image(systemName: "trophy.fill")
-                        Text("\(Format.smartFormat(prUpdate.value)) reps")
-                    }
-                }
-                .font(.caption2)
-                .foregroundColor(.yellow)
+            // Compare completed vs planned (reps as count, holds as seconds)
+            let p = normalized(planned)
+            let d = normalized(comp)
+            let color: Color = (d == p) ? .blue : (d < p ? .red : .green)
+            
+            return (string(from: comp) + " completed", color)
+        }
+        
+        private func string(from metric: SetMetric) -> String {
+            switch metric {
+            case .reps(let r): return "\(max(0, r)) reps"
+            case .hold(let span): return span.displayStringCompact
+            }
+        }
+        
+        private func normalized(_ m: SetMetric) -> Double {
+            switch m {
+            case .reps(let r): return Double(max(0, r))
+            case .hold(let span): return Double(max(0, span.inSeconds))
             }
         }
     }

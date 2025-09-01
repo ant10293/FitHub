@@ -8,53 +8,28 @@
 import SwiftUI
 
 struct EquipmentDetail: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @State private var expandList: Bool = false
     @State private var editingEquipment: Bool = false
     var equipment: GymEquipment
     let allExercises: [Exercise]
     let allEquipment: [GymEquipment]
 
-    var exercisesForEquipment: [Exercise] {
-        allExercises.filter { isExerciseCompatibleWithEquipment($0, using: equipment) }
-    }
-
     var body: some View {
         NavigationStack {
             VStack {
                 if !expandList {
-                    equipment.fullImage
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxHeight: UIScreen.main.bounds.height * 0.25)
-
-                    Text(equipment.name)
-                        .font(.headline)
-                        .bold()
-                        .padding(.top)
+                    ExEquipImage(image: equipment.fullImage, button: .expand)
+                        .centerHorizontally()
 
                     Text(equipment.description)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(Color.secondary)
                         .multilineTextAlignment(.center)
                         .lineLimit(3)
                         .minimumScaleFactor(0.7)
                 }
 
-                Button(action: {
-                    withAnimation {
-                        expandList.toggle()
-                    }
-                }) {
-                    HStack {
-                        Label(
-                            expandList ? "Collapse List" : "Expand List",
-                            systemImage: expandList ? "chevron.down" : "chevron.up"
-                        )
-                        .font(.subheadline)
-                        Spacer()
-                    }
-                    .padding(.top)
-                }
+                ExpandCollapseList(expandList: $expandList)
 
                 List {
                     Section {
@@ -62,7 +37,7 @@ struct EquipmentDetail: View {
                             ExerciseRow(exercise)
                         }
                     } header: {
-                        Text("Exercises using \(equipment.name)")
+                        Text("\(exerciseCount) Exercise\(exerciseCount == 1 ? "" : "s") using \(equipment.name)")
                             .lineLimit(1)
                             .minimumScaleFactor(0.7)
                     }
@@ -70,7 +45,7 @@ struct EquipmentDetail: View {
                 .frame(maxHeight: !expandList ? UIScreen.main.bounds.height * 0.33 : .infinity)
             }
             .padding()
-            .navigationBarTitle("Equipment Details", displayMode: .inline)
+            .navigationBarTitle(equipment.name, displayMode: .inline)
             .sheet(isPresented: $editingEquipment) { NewEquipment(original: equipment) }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -84,8 +59,14 @@ struct EquipmentDetail: View {
         }
     }
     
+    private var exercisesForEquipment: [Exercise] {
+        allExercises.filter { isExerciseCompatibleWithEquipment($0, using: equipment) }
+    }
+    
+    private var exerciseCount: Int { exercisesForEquipment.count }
+    
     /// Checks if a single piece of equipment (and its alternatives) can fulfill the exercise.
-    func isExerciseCompatibleWithEquipment(_ exercise: Exercise, using equipment: GymEquipment) -> Bool {
+    private func isExerciseCompatibleWithEquipment(_ exercise: Exercise, using equipment: GymEquipment) -> Bool {
         let name = equipment.name
 
         // Only include exercises that list the current equipment or where it's a valid alternative

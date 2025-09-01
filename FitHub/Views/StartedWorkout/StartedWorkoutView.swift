@@ -4,16 +4,15 @@ import Symbols
 
 struct StartedWorkoutView: View {
     @EnvironmentObject private var ctx: AppContext
-    @Environment(\.presentationMode) var presentationMode
-    @Environment(\.scenePhase) var scenePhase  // Observe the scenePhase here
-    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) var scenePhase
+    @Environment(\.colorScheme) var colorScheme
     @StateObject private var kbd = KeyboardManager.shared
     @StateObject var viewModel: WorkoutVM
     @StateObject private var timer = TimerManager()
     @State private var showingExitConfirmation = false
     @State private var selectedExerciseIndex: Int?
     @State private var showingDetailView: Bool = false
-    @State private var isDetailViewEnabled: Bool = false
     var onExit: () -> Void = {}
     
     var body: some View {
@@ -22,6 +21,7 @@ struct StartedWorkoutView: View {
                 Text(Format.timeString(from: timer.secondsElapsed))
                     .font(.largeTitle)
                     .padding()
+                
                 playPauseButton
             }
             
@@ -33,22 +33,10 @@ struct StartedWorkoutView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: backButton)
         .overlay(viewModel.showWorkoutSummary ? workoutSummaryOverlay : nil).zIndex(1)
-        .overlay(viewModel.isOverlayVisible ? exerciseSetOverlay() : nil)
-        .onChange(of: selectedExerciseIndex) { oldValue, newValue in
-            if oldValue != newValue {
-                isDetailViewEnabled = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    isDetailViewEnabled = true // Set to true after 1 second
-                }
-            }
-        }
+        .overlay(viewModel.isOverlayVisible ? exerciseSetOverlay : nil)
         .sheet(isPresented: $showingDetailView, onDismiss: { showingDetailView = false }) {
             if let index = selectedExerciseIndex {
-                ExerciseDetailView(
-                    viewingDuringWorkout: true,
-                    exercise: viewModel.template.exercises[index],
-                    onClose: { showingDetailView = false }
-                )
+                ExerciseDetailView(viewingDuringWorkout: true, exercise: viewModel.template.exercises[index])
             }
         }
         .onAppear(perform: performSetup)
@@ -71,17 +59,21 @@ struct StartedWorkoutView: View {
     private var exerciseList: some View {
       List {
           ForEach(viewModel.template.exercises) { exercise in
-              ExerciseRow(exercise) { }
+              ExerciseRow(
+                exercise,
+                heartOverlay: true,
+                favState: FavoriteState.getState(for: exercise, userData: ctx.userData)
+              ) { }
               detail: {
-                  Text("Sets: \(exercise.sets)")
+                  Text("Sets: \(exercise.workingSets)")
                       .font(.subheadline)
-                      .foregroundColor(.secondary)
+                      .foregroundStyle(Color.secondary)
               } onTap: {
                   // find its index at tap time
                   if let idx = viewModel.template.exercises.firstIndex(where: { $0.id == exercise.id }) {
                       selectedExerciseIndex = idx
+                      viewModel.isOverlayVisible = true
                   }
-                  viewModel.isOverlayVisible = true
               }
               .id(exercise.id)
               .disabled(exercise.isCompleted)
@@ -98,28 +90,28 @@ struct StartedWorkoutView: View {
             summary: viewModel.calculateWorkoutSummary(secondsElapsed: timer.secondsElapsed),
             exercises: viewModel.template.exercises,
             onDone: {
-                if viewModel.finishWorkoutAndDismiss(ctx: ctx, timer: timer) {
-                    presentationMode.wrappedValue.dismiss()
-                }
+                viewModel.finishWorkoutAndDismiss(ctx: ctx, timer: timer, completion: { dismiss() })
             }
         )
     }
     
     @ViewBuilder
-    private func exerciseSetOverlay() -> some View {
+    private var exerciseSetOverlay: some View {
         if let selectedExerciseIdx = selectedExerciseIndex {
             ZStack {
                 ExerciseSetOverlay(
                     timerManager: timer,
-                    adjustments: ctx.adjustments,
-                    equipmentData: ctx.equipment,
+                    equipment: ctx.equipment,
                     exercise: $viewModel.template.exercises[selectedExerciseIdx],
                     progress: TemplateProgress(
                         exerciseIdx: selectedExerciseIdx,
                         numExercises: viewModel.template.numExercises,
                         isLastExercise: viewModel.isLastExerciseForIndex(selectedExerciseIdx),
                         restTimerEnabled: ctx.userData.settings.restTimerEnabled,
-                        restPeriod: FitnessGoal.determineRestPeriod(for: ctx.userData.physical.goal)
+                        restPeriods: RestPeriods.determineRestPeriods(
+                            customRest: ctx.userData.workoutPrefs.customRestPeriods,
+                            goal: ctx.userData.physical.goal
+                        )
                     ),
                     goToNextSetOrExercise: {
                         viewModel.goToNextSetOrExercise(for: selectedExerciseIdx, selectedExerciseIndex: &selectedExerciseIndex, timer: timer)
@@ -129,12 +121,10 @@ struct StartedWorkoutView: View {
                         selectedExerciseIndex = nil
                     },
                     viewDetail: {
-                        if isDetailViewEnabled {
-                            showingDetailView = true
-                        }
+                        showingDetailView = true
                     },
                     getPriorMax: { id in
-                        ctx.exercises.getMax(for: id) ?? 0
+                        ctx.exercises.peakMetric(for: id)
                     },
                     onPerformanceUpdate: { update in
                         viewModel.updatePerformance(update)
@@ -163,10 +153,10 @@ struct StartedWorkoutView: View {
             Alert(title: Text("Are you sure you want to go back?"),
                 message: Text("Doing so will end your workout."),
                 primaryButton: .destructive(Text("End Workout")) {
-                    if viewModel.endWorkoutAndDismiss(ctx: ctx, timer: timer, shouldRemoveDate: false) {
+                    viewModel.endWorkoutAndDismiss(ctx: ctx, timer: timer, shouldRemoveDate: false, completion: {
                         onExit()
-                        presentationMode.wrappedValue.dismiss()
-                    }
+                        dismiss()
+                    })
                 },
                 secondaryButton: .cancel()
             )
@@ -181,7 +171,7 @@ struct StartedWorkoutView: View {
             Image(systemName: timer.isActive ? "pause.circle.fill" : "play.circle.fill")
                 .resizable()
                 .frame(width: 60, height: 60)
-                .foregroundColor(timer.isActive ? .yellow : .green)
+                .foregroundStyle(timer.isActive ? .yellow : .green)
                 .background(Circle().fill(Color.black))
                 .overlay(Circle().stroke(Color.white, lineWidth: 2))
         }

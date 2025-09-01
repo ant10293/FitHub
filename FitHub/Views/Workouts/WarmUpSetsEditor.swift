@@ -1,216 +1,205 @@
-//
-//  WarmUpSetsEditor.swift
-//  FitHub
-//
-//  Created by Anthony Cantu on 5/4/25.
-//
-
+//  WarmUpSetsEditorView.swift   – refactor = same visuals, safer state
 import SwiftUI
 
+//  WarmUpSetsEditorView.swift
 
+// MARK: - Row view-model (typed to SetMetric)
+private struct WarmUpRowVM: Identifiable {
+    let id = UUID()
+    var setNumber: Int
+    var weight: Mass
+    var planned: SetMetric   // <-- reps(...) or hold(...)
+
+    init(detail: SetDetail) {
+        setNumber = detail.setNumber
+        weight    = detail.weight
+        planned   = detail.planned
+    }
+    func toDetail() -> SetDetail {
+        SetDetail(setNumber: setNumber, weight: weight, planned: planned)
+    }
+}
+
+// MARK: - Main editor
 struct WarmUpSetsEditorView: View {
+    // 1) canonical model from parent
+    @Binding var exercise: Exercise
+
+    // 2) local editable buffer
+    @State private var rows: [WarmUpRowVM]
+
+    // 3) env / helpers
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var ctx: AppContext
-    @Binding var exercise: Exercise
     @StateObject private var kbd = KeyboardManager.shared
-    @State private var weightInputs: [String] = []
-    @State private var repInputs: [String] = []
-    @State private var changeMade: Bool = false
-    var setStructure: SetStructures = .pyramid
-    let roundingPreference: RoundingPreference
-    var onSave: () -> Void
     private let generator = WorkoutGenerator()
+    private let onSave: () -> Void
 
-    init(exercise: Binding<Exercise>, setStructure: SetStructures, roundingPreference: RoundingPreference, onSave: @escaping () -> Void) {
+    // 4) save-once flag
+    @State private var didSave = false
+
+    // ───────── init ─────────
+    init(exercise: Binding<Exercise>, onSave: @escaping () -> Void) {
         _exercise = exercise
-        _weightInputs = State(initialValue: exercise.wrappedValue.warmUpDetails.map { $0.weight > 0 ? Format.smartFormat($0.weight) : "" })
-        _repInputs = State(initialValue: exercise.wrappedValue.warmUpDetails.map { $0.reps > 0 ? String($0.reps) : "" })
-        
-        self.setStructure = setStructure
-        self.roundingPreference = roundingPreference
+        _rows = State(initialValue: exercise.wrappedValue.warmUpDetails.map(WarmUpRowVM.init))
         self.onSave = onSave
     }
-    
+
+    // ───────── body ─────────
     var body: some View {
         NavigationStack {
-            VStack {
-                // List for warm-up sets (editable)
-                List {
-                    VStack(alignment: .leading) {
-                        Text("Warm-Up Sets")
-                            .font(.headline)
-                        
-                        if !exercise.warmUpDetails.isEmpty {
-                            ForEach(exercise.warmUpDetails.indices, id: \.self) { index in
-                                HStack {
-                                    Text("Set \(index + 1)")
-                                    Spacer()
-                                    if exercise.type.usesWeight {
-                                        Text("lbs")
-                                            .bold()
-                                        TextField("Weight", text: Binding(
-                                            get: { weightInputs.indices.contains(index) ? weightInputs[index] : "" },
-                                            set: { newValue in
-                                                if weightInputs.indices.contains(index) {
-                                                    guard weightInputs.indices.contains(index) else { return }
-                                                    let filtered = InputLimiter.filteredWeight(old:  weightInputs[index], new: newValue)
-                                                    weightInputs[index] = filtered
-                                                    exercise.warmUpDetails[index].weight = Double(filtered) ?? 0
-                                                }
-                                            }
-                                        ))
-                                        .keyboardType(.decimalPad)
-                                        .multilineTextAlignment(.center)
-                                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                                        .frame(width: 80)
-                                    }
-                                    Text("Reps")
-                                        .bold()
-                                    TextField("Reps", text: Binding(
-                                        get: { repInputs.indices.contains(index) ? repInputs[index] : "" },
-                                        set: { newValue in
-                                            if repInputs.indices.contains(index) {
-                                                guard repInputs.indices.contains(index) else { return }
-                                                let filtered = InputLimiter.filteredReps(newValue)
-                                                repInputs[index] = filtered
-                                                exercise.warmUpDetails[index].reps = Int(filtered) ?? 0
-                                            }
-                                        }
-                                    ))
-                                    .keyboardType(.numberPad)
-                                    .multilineTextAlignment(.center)
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                    .frame(width: 80)
-                                }
-                                // In the list row
-                                .listRowSeparator(.hidden)
-                                .padding(.horizontal)
-                            }
-                        } else {
-                            Text("No warm-up sets yet.")
-                                .foregroundColor(.secondary)
-                                .padding()
-                        }
-                    }
-                    .listRowSeparator(.hidden)
-
-                    // Buttons for editing warm-up sets.
-                    HStack {
-                        Spacer()
-                        Button(action: addWarmUpSet) {
-                            Label("Add Set", systemImage: "plus")
-                                .foregroundColor(.blue)
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(.blue)
-                        
-                        Button(action: deleteLastWarmUpSet) {
-                            Label("Delete Set", systemImage: "minus")
-                                .foregroundColor(.red)
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(.red)
-                        Spacer()
-                    }
-                    .padding(.top)
-                    .listRowSeparator(.hidden)
-                    
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            generator.autofillWarmUpSets(equipmentData: ctx.equipment, for: &exercise, setStructure: setStructure, roundingPref: roundingPreference)
-                            onSave()
-                        }
-                        ) {
-                            Label("Autofill", systemImage: "wand.and.stars")
-                                .foregroundColor(.green)
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(.green)
-                        Spacer()
-                    }
-                    .listRowSeparator(.hidden)
-                    
-                    // Read-only Working Sets Section
-                    VStack(alignment: .leading) {
-                        Text("Working Sets")
-                            .font(.headline)
-                        
-                        if !exercise.setDetails.isEmpty {
-                            ForEach(exercise.setDetails.indices, id: \.self) { index in
-                                HStack {
-                                    Text("Set \(index + 1)")
-                                    Spacer()
-                                    if exercise.type.usesWeight {
-                                        Text("lbs")
-                                            .bold()
-                                        // Display the working set weight using a rounded rectangle background similar to textfields.
-                                        Text(String(format: "%.0f", exercise.setDetails[index].weight))
-                                            .frame(width: 80, height: 30)
-                                            .background(RoundedRectangle(cornerRadius: 5).stroke(Color.secondary))
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    Text("Reps")
-                                        .bold()
-                                    Text(String(exercise.setDetails[index].reps))
-                                        .frame(width: 80, height: 30)
-                                        .background(RoundedRectangle(cornerRadius: 5).stroke(Color.secondary))
-                                        .multilineTextAlignment(.center)
-                                }
-                                .padding(.horizontal)
-                                .listRowSeparator(.hidden)
-                            }
-                        } else {
-                            Text("No working sets available.")
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal)
-                        }
-                    }
-                    .padding(.top)
-                    .listRowSeparator(.hidden)
-                }
-                .listStyle(PlainListStyle())
+            List {
+                warmUpSection
+                buttonSection
+                workingSetSection
             }
-            .onChange(of: exercise.warmUpDetails) { resetInputs() }
-            .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+            .listStyle(.plain)
             .navigationBarTitle(exercise.name, displayMode: .inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") { dismiss() }
+            .toolbar { ToolbarItem(placement: .topBarTrailing) {
+                Button("Done", action: saveAndDismiss)
+            }}
+            .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+            .onDisappear(perform: saveIfNeeded)
+        }
+    }
+
+    // MARK: Warm-up rows (editable)
+    private var warmUpSection: some View {
+        VStack(alignment: .leading) {
+            Text("Warm-Up Sets")
+                .font(.headline)
+                .padding(.bottom)
+
+            if rows.isEmpty {
+                Text("No warm-up sets yet.")
+                    .foregroundStyle(.secondary)
+            } else {
+                ForEach($rows) { $row in
+                    // Weight ↔︎ String
+                    let weightText: Binding<String> = $row.weight.asText()
+
+                    // Metric ↔︎ String (reps or seconds depending on exercise)
+                    let metricText: Binding<String> = Binding<String>(
+                        get: {
+                           // ✅ use your computed property for display text
+                           SetDetail(setNumber: row.setNumber, weight: row.weight, planned: row.planned)
+                               .metricFieldString
+                        },
+                        set: { newValue in
+                            if exercise.effort.usesReps {
+                                let value = Int(newValue) ?? 0
+                                row.planned = .reps(value)
+                            } else {
+                               // keep exactly what user typed (no auto-convert to minutes)
+                                let secs = TimeSpan.seconds(from: newValue)
+                                row.planned = .hold(TimeSpan(seconds: secs))
+                            }
+                        }
+                    )
+
+                    SetInputRow(
+                        setNumber: row.setNumber,
+                        exercise : exercise,
+                        weightText: weightText,
+                        metricText: metricText
+                    )
+                    .padding(.horizontal)
+                    .listRowSeparator(.hidden)
                 }
             }
         }
+        .listRowSeparator(.hidden)
+        .padding(.top)
     }
-    
-    // MARK: - Warm-Up Set Functions
-    private func addWarmUpSet() {
-        weightInputs.append("")
-        repInputs.append("")
-        let newSetNumber = exercise.warmUpSets + 1
-        exercise.warmUpDetails.append(SetDetail(setNumber: newSetNumber, weight: 0, reps: 0))
+
+    // MARK: Buttons (add / delete / autofill)
+    private var buttonSection: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Button(action: addRow) {
+                    Label("Add Set", systemImage: "plus").foregroundStyle(.blue)
+                }
+                .buttonStyle(.bordered).tint(.blue)
+
+                Button(action: deleteRow) {
+                    Label("Delete Set", systemImage: "minus").foregroundStyle(.red)
+                }
+                .buttonStyle(.bordered).tint(.red)
+                Spacer()
+            }
+            .padding(.top)
+            .listRowSeparator(.hidden)
+
+            HStack {
+                Spacer()
+                Button(action: autofill) {
+                    Label("Autofill", systemImage: "wand.and.stars").foregroundStyle(.green)
+                }
+                .buttonStyle(.bordered).tint(.green)
+                Spacer()
+            }
+            .listRowSeparator(.hidden)
+        }
+    }
+
+    // MARK: Working sets (read-only)
+    private var workingSetSection: some View {
+        VStack(alignment: .leading) {
+            (Text("Working Sets ").font(.headline) +
+             Text("(Read Only)").foregroundStyle(.secondary))
+            .padding(.bottom)
+
+            if exercise.setDetails.isEmpty {
+                Text("No working sets available.")
+                    .foregroundStyle(.secondary)
+            } else {
+                ForEach(exercise.setDetails.indices, id: \.self) { idx in
+                    let sd = exercise.setDetails[idx]
+
+                    SetInputRow(
+                        setNumber: idx + 1,
+                        exercise : exercise,
+                        weightText: .constant(sd.weightFieldString),
+                        metricText: .constant(sd.metricFieldString)
+                    )
+                    .opacity(0.7)
+                    .padding(.horizontal)
+                    .listRowSeparator(.hidden)
+                }
+            }
+        }
+        .padding(.top)
+        .listRowSeparator(.hidden)
+    }
+
+    // MARK: Row mutators
+    private func addRow() {
+        let next = rows.count + 1
+        let defaultMetric: SetMetric = exercise.effort.usesReps ? .reps(0) : .hold(TimeSpan(seconds: 0))
+        rows.append(.init(detail: SetDetail(setNumber: next, weight: Mass(kg: 0), planned: defaultMetric)))
+    }
+
+    private func deleteRow() { if !rows.isEmpty { rows.removeLast() } }
+
+    private func autofill() {
+        exercise.createWarmupDetails(
+            equipmentData: ctx.equipment,
+            userData: ctx.userData
+        )
+        rows = exercise.warmUpDetails.map(WarmUpRowVM.init)
+    }
+
+    // MARK: Save helpers
+    private func save() {
+        guard !didSave else { return }
+        didSave = true
+        exercise.warmUpDetails = rows.map { $0.toDetail() }
         onSave()
     }
     
-    private func deleteLastWarmUpSet() {
-        guard !exercise.warmUpDetails.isEmpty else { return }
-        exercise.warmUpDetails.removeLast()
-        guard !weightInputs.isEmpty, !repInputs.isEmpty else { return }
-        weightInputs.removeLast()
-        repInputs.removeLast()
-        onSave()
-    }
+    private func saveAndDismiss() { save(); dismiss() }
     
-    /// Uses the first regular set as a baseline to generate auto-filled warm-up sets.
-    private func addWarmUpSets() {
-        guard let baselineSet = exercise.setDetails.first else { return }
-        let warmUpSets = generator.createWarmUpDetails(equipmentData: ctx.equipment, for: exercise, baselineSet: baselineSet, setStructure: setStructure, roundingPref: roundingPreference)
-        exercise.warmUpDetails = warmUpSets
-        onSave()
-    }
-    
-    private func resetInputs() {
-        weightInputs = exercise.warmUpDetails.map { $0.weight > 0 ? Format.smartFormat($0.weight) : "" }
-        repInputs = exercise.warmUpDetails.map { $0.reps > 0 ? String($0.reps) : "" }
-    }
+    private func saveIfNeeded() { save() }
 }
 

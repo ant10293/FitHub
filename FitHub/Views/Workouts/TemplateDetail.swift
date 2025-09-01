@@ -27,9 +27,8 @@ struct TemplateDetail: View {
     @State private var activeAlert: ActiveAlert? = nil
     @State private var selectedExercise: Exercise? // State to manage selected exercise for detail view
     @State private var activeDetailID: UUID? = nil   // nil = no menu open
-    var onDone: () -> Void
     private let modifier = ExerciseModifier()
-    
+    var onDone: () -> Void
     
     var body: some View {
         ZStack {
@@ -56,9 +55,8 @@ struct TemplateDetail: View {
         .sheet(item: $selectedExercise, onDismiss: { handleSheetDismiss() }) { exercise in
             if showingDetailView {
                 ExerciseDetailView(viewingDuringWorkout: true, exercise: exercise)
-                    .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
             } else if showingAdjustmentsView {
-                AdjustmentsView(AdjustmentsData: ctx.adjustments, exercise: exercise)
+                AdjustmentsView(exercise: exercise)
             }
         }
         .alert(item: $activeAlert) { alertType in
@@ -67,9 +65,7 @@ struct TemplateDetail: View {
                 return Alert(
                     title: Text("Fill Template?"),
                     message: Text("This will require closing and reopening this template."),
-                    primaryButton: .destructive(Text("Fill"), action: {
-                        onDone() // Perform fill action here.
-                    }),
+                    primaryButton: .destructive(Text("Fill"), action: { onDone() }),
                     secondaryButton: .cancel()
                 )
             case .delete:
@@ -82,9 +78,7 @@ struct TemplateDetail: View {
                             exercisePendingDeletion = nil
                         }
                     }),
-                    secondaryButton: .cancel({
-                        exercisePendingDeletion = nil
-                    })
+                    secondaryButton: .cancel({ exercisePendingDeletion = nil })
                 )
             }
         }
@@ -107,8 +101,7 @@ struct TemplateDetail: View {
                         get: { replacedExercises[exercise.id] ?? [] },
                         set: { replacedExercises[exercise.id] = $0 }
                     ),
-                    roundingPref: ctx.userData.settings.roundingPreference,
-                    setStruct: ctx.userData.workoutPrefs.setStructure,
+                    rest: ctx.userData.workoutPrefs.customRestPeriods ?? ctx.userData.physical.goal.defaultRest,
                     hasEquipmentAdjustments: ctx.equipment.hasEquipmentAdjustments(for: exercise),
                     perform: { action in
                         performCallBackAction(action: action, exercise: $exercise)
@@ -124,6 +117,12 @@ struct TemplateDetail: View {
             }
             .onDelete { offsets in captureSnapshot(); deleteExercise(at: offsets) }
             .onMove { source, destination in captureSnapshot(); moveExercise(from: source, to: destination) }
+            
+            // Spacer row at the end
+            Color.clear
+                .frame(height: 200)
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
         }
         .listStyle(PlainListStyle())
         .scrollIndicators(.visible)
@@ -138,7 +137,7 @@ struct TemplateDetail: View {
                 }
                 .padding(.leading, 15)
                 .padding(.trailing)
-                .foregroundColor(undoStack.isEmpty ? .gray : .blue) // Gray out if disabled
+                .foregroundStyle(undoStack.isEmpty ? .gray : .blue) // Gray out if disabled
             }
             .disabled(undoStack.isEmpty)
             
@@ -146,7 +145,7 @@ struct TemplateDetail: View {
                 HStack {
                     Image(systemName: "arrow.uturn.forward").imageScale(.large)
                     Text("Redo").font(.caption)
-                }.foregroundColor(redoStack.isEmpty ? .gray : .blue) // Gray out if disabled
+                }.foregroundStyle(redoStack.isEmpty ? .gray : .blue) // Gray out if disabled
             }
             .disabled(redoStack.isEmpty)
             
@@ -154,7 +153,7 @@ struct TemplateDetail: View {
             Button(action: { triggerFillAlert() }) {
                 HStack {
                     Image(systemName: "doc.fill.badge.plus").imageScale(.medium)
-                }.foregroundColor(template.exercises.isEmpty ? .gray : .blue) // Gray out if disabled
+                }.foregroundStyle(template.exercises.isEmpty ? .gray : .blue) // Gray out if disabled
             }
             .disabled(template.exercises.isEmpty)
             Spacer()
@@ -186,7 +185,12 @@ struct TemplateDetail: View {
                 finalSelection.filter { !currentIDs.contains($0.id) }.forEach(addExercise)
 
                 // Step 4: Keep the caller’s order & persist once
-                template.exercises = finalSelection
+                // Reorder exercises to match finalSelection order (but keep modified content)
+                let orderedExercises = finalSelection.compactMap { finalEx in
+                    template.exercises.first { $0.id == finalEx.id }
+                }
+                
+                template.exercises = orderedExercises
                 saveTemplate()
             }
         )
@@ -198,10 +202,10 @@ struct TemplateDetail: View {
             HStack(spacing: 5) {
                 Text("No exercises added")
                     .font(.headline)
-                    .foregroundColor(colorScheme == .dark ? .white : .gray)
-                Image(systemName: "exclamationmark.circle").foregroundColor(.red)
+                    .foregroundStyle(colorScheme == .dark ? .white : .gray)
+                Image(systemName: "exclamationmark.circle").foregroundStyle(.red)
             }
-            Text("Press + to add an exercise to the workout.").foregroundColor(.blue).padding()
+            Text("Press + to add an exercise to the workout.").foregroundStyle(.blue).padding()
         }
         .onAppear { self.pulsate = true }
         .onDisappear { self.pulsate = false }
@@ -214,7 +218,7 @@ struct TemplateDetail: View {
         .animation(Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: pulsate)
     }
     
-    enum ActiveAlert: Identifiable { case fill, delete; var id: Int { hashValue } }
+    private enum ActiveAlert: Identifiable { case fill, delete; var id: Int { hashValue } }
     private func triggerFillAlert() { activeAlert = .fill }
     
     private func performCallBackAction(action: CallBackAction, exercise: Binding<Exercise>) {
@@ -271,6 +275,8 @@ struct TemplateDetail: View {
     
     private func addExercise(_ exercise: Exercise) {
         captureSnapshot() // Capture the state before adding
+        var exercise = exercise
+        exercise.setDetails.append(SetDetail(setNumber: 1, weight: Mass(kg: 0), planned: exercise.getPlannedMetric(value: 0)))
         template.exercises.append(exercise)
     }
     

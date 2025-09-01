@@ -10,16 +10,19 @@ import SwiftUI
 
 struct OverloadSettings: View {
     @ObservedObject var userData: UserData
+    var fromCalculator: Bool = false
         
     var body: some View {
         List {
-            Section {
-                Toggle("Progressive Overload", isOn: $userData.settings.progressiveOverload)
-                .onChange(of: userData.settings.progressiveOverload) {
-                    userData.saveSingleStructToFile(\.settings, for: .settings)
+            if !fromCalculator {
+                Section {
+                    Toggle("Progressive Overload", isOn: $userData.settings.progressiveOverload)
+                        .onChange(of: userData.settings.progressiveOverload) {
+                            userData.saveSingleStructToFile(\.settings, for: .settings)
+                        }
+                } footer: {
+                    Text("When enabled, trainer templates will be automatically updated weekly based on your performance.")
                 }
-            } footer: {
-                Text("When enabled, trainer templates will be automatically updated weekly based on your performance.")
             }
             
             Section {
@@ -39,6 +42,27 @@ struct OverloadSettings: View {
             } footer: {
                 Text(userData.settings.progressiveOverloadStyle.desc)
             }
+
+            /*
+            Section {
+                let factor = Binding(
+                    get: {  userData.settings.customOverloadFactor ?? defaultFactor },
+                    set: { newFactor in
+                        userData.settings.customOverloadFactor = (newFactor == defaultFactor) ? nil : newFactor
+                    }
+                )
+                
+                HStack {
+                    Text("\(intensityPercent)")
+                    Slider(value: factor, in: 0.5...1.5, step: 0.05)
+                }
+    
+            } header: {
+                Text("Overload Intensity")
+            } footer: {
+                Text("Scales how aggressive weekly changes are. Nil or 100% is baseline.")
+            }
+            */
             
             Section {
                 Stepper("\(userData.settings.progressiveOverloadPeriod) weeks", value: $userData.settings.progressiveOverloadPeriod, in: 1...12)
@@ -51,28 +75,46 @@ struct OverloadSettings: View {
                 Text("The typical period is 6 weeks, but you can adjust it based on your preference.")
             }
             
-            Section {
-                Stepper("\(userData.settings.stagnationPeriod) weeks", value: $userData.settings.stagnationPeriod, in: 1...12)
-                .onChange(of: userData.settings.stagnationPeriod) {
-                    userData.saveSingleStructToFile(\.settings, for: .settings)
+            if !fromCalculator {
+                Section {
+                    Stepper("\(userData.settings.stagnationPeriod) weeks", value: $userData.settings.stagnationPeriod, in: 1...12)
+                        .onChange(of: userData.settings.stagnationPeriod) {
+                            userData.saveSingleStructToFile(\.settings, for: .settings)
+                        }
+                } header: {
+                    Text("Stagnation Duration")
+                } footer: {
+                    Text("Duration without improvement for an exercise until forced overloading begins.")
                 }
-            } header: {
-                Text("Stagnation Duration")
-            } footer: {
-                Text("Duration without improvement for an exercise until forced overloading begins.")
             }
         }
         .listStyle(InsetGroupedListStyle())
         .navigationBarTitle("Progressive Overload", displayMode: .inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 Button(action: { reset() }) {
                     Text("Reset")
-                        .foregroundColor(isDefault() ? Color.gray : Color.red)        // make the label red
+                        .foregroundStyle(isDefault() ? Color.gray : Color.red)        // make the label red
                         .disabled(isDefault())
                 }
             }
         }
+    }
+    
+    private var defaultFactor: Double {
+        WorkoutParams.determineOverloadFactor(
+            age: userData.profile.age,
+            frequency: userData.workoutPrefs.workoutDaysPerWeek,
+            strengthLevel: userData.evaluation.strengthLevel,
+            goal: userData.physical.goal,
+            customFactor: userData.settings.customOverloadFactor
+        )
+    }
+    
+    private var intensityPercent: String {
+        let raw = userData.settings.customOverloadFactor ?? 1.0
+        let pct = Int((raw * 100).rounded())
+        return "\(pct)%"
     }
     
     private func reset() {
@@ -80,6 +122,7 @@ struct OverloadSettings: View {
         userData.settings.progressiveOverloadStyle = .dynamic
         userData.settings.progressiveOverloadPeriod = 6
         userData.settings.stagnationPeriod = 4
+        userData.settings.customOverloadFactor = nil
     }
     
     private func isDefault() -> Bool {
@@ -87,5 +130,6 @@ struct OverloadSettings: View {
         && userData.settings.progressiveOverload
         && userData.settings.progressiveOverloadPeriod == 6
         && userData.settings.stagnationPeriod == 4
+        && userData.settings.customOverloadFactor == nil
     }
 }

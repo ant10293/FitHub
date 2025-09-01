@@ -20,10 +20,7 @@ struct WorkoutPlan: View {
         NavigationStack {
             VStack {
                 Spacer()
-                
-                // MARK: - SubscriptionView
-                //NavigationLink(destination: SubscriptionView()) {
-                
+                                
                 VStack(alignment: .leading) {
                     Text("This Week's Workouts")
                         .font(.headline)
@@ -41,18 +38,19 @@ struct WorkoutPlan: View {
                         ).frame(alignment: .center)
                 }
                 
-                NavigationLink(destination: ViewMusclesView(userData: ctx.userData)) {
+                /*
+                 NavigationLink(destination: ViewMusclesView(userData: ctx.userData)) {
                     HStack {
                         Text("View Muscle Groups")
-                            .foregroundColor(colorScheme == .dark ? .white : .black)
+                            .foregroundStyle(colorScheme == .dark ? .white : .black)
                             .font(.headline)
                             .fontWeight(.medium)
                         //Image(systemName: "figure.strengthtraining.traditional")
                         Image(systemName: "figure.wave")
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                         Spacer()
                         Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                     }
                     .padding()
                     .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
@@ -60,19 +58,20 @@ struct WorkoutPlan: View {
                     .shadow(radius: 5)
                 }
                 .padding(.horizontal)
+                */
                 
                 if !ctx.userData.workoutPlans.trainerTemplates.isEmpty {
-                    NavigationLink(destination: WorkoutGeneration()) {
+                    NavigationLink(destination: LazyDestination { WorkoutGeneration() }) {
                         HStack {
                             Text("Workout Generation")
-                                .foregroundColor(colorScheme == .dark ? .white : .black)
+                                .foregroundStyle(colorScheme == .dark ? .white : .black)
                                 .font(.headline)
                                 .fontWeight(.medium)
                             Image(systemName: "square.and.pencil")
-                                .foregroundColor(.gray)
+                                .foregroundStyle(.gray)
                             Spacer()
                             Image(systemName: "chevron.right")
-                                .foregroundColor(.gray)
+                                .foregroundStyle(.gray)
                         }
                         .padding()
                         .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
@@ -86,16 +85,23 @@ struct WorkoutPlan: View {
                 
                 if ctx.userData.workoutPlans.trainerTemplates.isEmpty {
                     Button(action: {
-                        ctx.userData.generateWorkoutPlan(exerciseData: ctx.exercises, equipmentData: ctx.equipment, keepCurrentExercises: false, nextWeek: false)
-                        showingSaveConfirmation = true
+                        ctx.userData.generateWorkoutPlan(
+                            exerciseData: ctx.exercises,
+                            equipmentData: ctx.equipment,
+                            keepCurrentExercises: false,
+                            nextWeek: false,
+                            onDone: {
+                                showingSaveConfirmation = true
+                            }
+                        )
                     }) {
                         HStack {
                             Text("Generate Workout Plan")
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                             Image(systemName: "square.and.pencil")
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                         }
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .padding()
                         .background(Color.blue)
                         .clipShape(Capsule())
@@ -105,11 +111,11 @@ struct WorkoutPlan: View {
                     Button(action: startWorkoutForDay) {
                         HStack {
                             Text("Start Today's Workout")
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                             Image(systemName: "dumbbell.fill")
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                         }
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .padding()
                         .background(shouldDisableWorkoutButton() ? Color.gray : Color.blue)
                         .clipShape(Capsule())
@@ -125,22 +131,10 @@ struct WorkoutPlan: View {
             }
             .background(Color(UIColor.systemGroupedBackground))
             .navigationBarTitle("Trainer")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    NavigationLink(destination: SettingsView()) {
-                        Image(systemName: "gear")
-                            .imageScale(.large)
-                            .padding()
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: MenuView()) {
-                        Image(systemName: "line.horizontal.3")
-                            .imageScale(.large)
-                            .padding()
-                    }
-                }
-            }
+            .customToolbar(
+                settingsDestination: { AnyView(SettingsView()) },
+                menuDestination: { AnyView(MenuView()) }
+            )
             .alert(isPresented: $showingSaveConfirmation) {
                 Alert(
                     title: Text("Workout Plan Generated!"),
@@ -159,7 +153,7 @@ struct WorkoutPlan: View {
                 Button("User Template", action: {
                     selectedWorkoutTemplate = ctx.userData.workoutPlans.userTemplates.first { template in
                         if let date = template.date {
-                            return Calendar.current.isDate(date, inSameDayAs: Date())
+                            return CalendarUtility.shared.isDate(date, inSameDayAs: Date())
                         }
                         return false
                     }
@@ -168,7 +162,7 @@ struct WorkoutPlan: View {
                 Button("Trainer Template", action: {
                     selectedWorkoutTemplate = ctx.userData.workoutPlans.trainerTemplates.first { template in
                         if let date = template.date {
-                            return Calendar.current.isDate(date, inSameDayAs: Date())
+                            return CalendarUtility.shared.isDate(date, inSameDayAs: Date())
                         }
                         return false
                     }
@@ -185,15 +179,14 @@ struct WorkoutPlan: View {
     
     private func startWorkoutForDay() {
         let today = Date()
-        let calendar = Calendar.current
                 
         // Find templates where `date` is not nil and matches today
         let userTemplate = ctx.userData.workoutPlans.userTemplates.first { template in
             if let date = template.date {
-                if WorkoutTemplate.shouldDisableTemplate(template: template) {
+                if template.shouldDisableTemplate {
                     return false
                 } else {
-                    return calendar.isDate(date, inSameDayAs: today)
+                    return CalendarUtility.shared.isDate(date, inSameDayAs: today)
                 }
             }
             return false
@@ -201,10 +194,10 @@ struct WorkoutPlan: View {
         
         let trainerTemplate = ctx.userData.workoutPlans.trainerTemplates.first { template in
             if let date = template.date {
-                if WorkoutTemplate.shouldDisableTemplate(template: template) {
+                if template.shouldDisableTemplate {
                     return false
                 } else {
-                    return calendar.isDate(date, inSameDayAs: today)
+                    return CalendarUtility.shared.isDate(date, inSameDayAs: today)
                 }
             }
             return false

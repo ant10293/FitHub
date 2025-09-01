@@ -5,13 +5,12 @@ struct ViewMusclesView: View {
     @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
     @ObservedObject var userData: UserData
     @State private var selectedOption: ViewOption = .recovery
-    @State private var selectedDay: daysOfWeek?
+    @State private var selectedDay: DaysOfWeek?
+    @State var selectedMuscle: Muscle?
     @State private var showFrontView: Bool = true
     @State private var isTapped: Bool = false
-    @State var selectedMuscle: Muscle?
-    @State private var showingDetailView = false
     @State private var tappedMuscleImage: String? = nil  // Store the tapped muscle image temporarily
-    @State private var showTappedImageOverlay = false    // Control the display of the overlay
+    @State private var showTappedImageOverlay: Bool = false    // Control the display of the overlay
     @State private var restPercentages: [Muscle: Int] = [:]  // State to hold the rest percentages
     
     var body: some View {
@@ -19,31 +18,37 @@ struct ViewMusclesView: View {
             // Picker for recovery and upcoming
             viewPicker
             
-            // Muscle groups view
-            Spacer(minLength: 90)
-            GeometryReader { geometry in
-                ZStack {
-                    muscleView(width: geometry.size.width)
-                    muscleButtons()
-                    flipButton
+            ZStack {
+                muscleView()
+                muscleButtons
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        flipButton
+                    }
                 }
-                .frame(height: 350)
             }
             
-            workoutDaysScroller()
-            muscleCategoryScroller()
-            Spacer()
+            let size: CGFloat = UIScreen.main.bounds.width * 0.15
+            if selectedOption == .upcoming {
+                workoutDaysScroller(size: size)
+            } else {
+                muscleCategoryScroller(size: size)
+            }
         }
         .padding()
         .navigationBarTitle("Your Muscles", displayMode: .inline)
         .onAppear(perform: calculateRestPercentages)
-        .navigationDestination(isPresented: $showingDetailView) {
-            if let muscle = selectedMuscle {
-                DetailedMuscleGroupsView(userData: userData, showFront: showFrontView, muscle: muscle, onClose: {
-                    selectedMuscle = nil
-                    showingDetailView = false
-                })
-            }
+        .navigationDestination(item: $selectedMuscle) { muscle in
+            DetailedMuscleGroupsView(
+                userData: userData,
+                showFront: showFrontView, // or $showFrontView if the param is a Binding<Bool>
+                muscle: muscle,
+                onClose: {
+                    selectedMuscle = nil    // popping the stack
+                }
+            )
         }
     }
     
@@ -55,32 +60,26 @@ struct ViewMusclesView: View {
         .pickerStyle(SegmentedPickerStyle())
     }
     
-    @ViewBuilder private func muscleView(width: CGFloat) -> some View {
+    @ViewBuilder private func muscleView() -> some View {
         if selectedOption == .recovery {
             MuscleGroupsView(showFront: $showFrontView, gender: userData.physical.gender, selectedMuscles: getMusclesForSelectedOption(), restPercentages: restPercentages)
-                .frame(width: width, height: 550)
-                .centerHorizontally()
             
             if showTappedImageOverlay, let imageName = tappedMuscleImage {
                 DirectImageView(imageName: imageName)
-                    .frame(width: width, height: 550)
-                    .centerHorizontally()
             }
         } else {
             SimpleMuscleGroupsView(showFront: $showFrontView, gender: userData.physical.gender, selectedSplit: getSplitCategoriesForSelectedOption())
-                .frame(width: width, height: 550)
-                .centerHorizontally()
         }
     }
     
-    @ViewBuilder private func muscleButtons() -> some View {
+    private var muscleButtons: some View {
         ForEach(musclePositions(front: showFrontView), id: \.id) { muscle in
-            muscleButton(for: muscle.category, position: muscle.position, size: muscle.size)
+            muscleButton(for: muscle.muscle, position: muscle.position, size: muscle.size)
         }
     }
     
     // Reusable button function
-    func muscleButton(for category: Muscle, position: CGPoint, size: CGSize) -> some View {
+    private func muscleButton(for category: Muscle, position: CGPoint, size: CGSize) -> some View {
         Button(action: { muscleTapped(category) }) {
             Rectangle()
                 .fill(Color.clear)
@@ -90,128 +89,124 @@ struct ViewMusclesView: View {
     }
     
     private var flipButton: some View {
-        VStack {
-            Spacer()
+        FloatingButton(image: "arrow.2.circlepath", action: { showFrontView.toggle() })
+            .padding(.trailing)
+            .padding(.bottom)
+    }
+    
+    @ViewBuilder private func workoutDaysScroller(size: CGFloat) -> some View {
+        Divider()
+        ScrollView(.horizontal, showsIndicators: true) {
             HStack {
-                Spacer()
-                Button(action: {
-                    showFrontView.toggle()
-                }) {
-                    Image(systemName: "arrow.2.circlepath")
-                        .resizable()
-                        .frame(width: 25, height: 25)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .clipShape(Circle())
-                }
-                .padding(.trailing, 20)
-            }
-            .padding(.bottom, 50)
-        }
-    }
-    
-    @ViewBuilder private func workoutDaysScroller() -> some View {
-        if selectedOption == .upcoming {
-            Divider()
-            ScrollView(.horizontal, showsIndicators: true) {
-                HStack {
-                    ForEach(upcomingWorkoutDays, id: \.self) { day in
-                        Button {
-                            withAnimation {
-                                selectedDay = day
-                                print("Selected day: \(day)")
-                            }
-                        } label: {
-                            Text(day.rawValue)
-                                .frame(minWidth: 60)              // ensure a minimum tappable width
-                                .padding()                        // give it some vertical/horizontal padding
-                                .background(day == selectedDay ? Color.blue : Color.gray)
-                                .foregroundColor(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                .contentShape(Rectangle())        // extend hit‐area to the full rectangle
+                ForEach(upcomingWorkoutDays, id: \.self) { day in
+                    Button {
+                        withAnimation {
+                            selectedDay = day
+                            print("Selected day: \(day)")
                         }
+                    } label: {
+                        Text(day.rawValue)
+                            .frame(height: size)
+                            .frame(minWidth: 60)              // ensure a minimum tappable width
+                            .padding(.horizontal)                        // give it some vertical/horizontal padding
+                            .background(day == selectedDay ? Color.blue : Color.gray)
+                            .foregroundStyle(.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .contentShape(Rectangle())        // extend hit‐area to the full rectangle
                     }
                 }
             }
         }
     }
     
-    @ViewBuilder private func muscleCategoryScroller() -> some View {
-        if selectedOption == .recovery {
-            Divider()
-            ScrollView(.horizontal, showsIndicators: true) {
-                HStack {
-                    ForEach(Muscle.allCases.filter { $0.isVisible }, id: \.self) { category in
-                        Button(action: { muscleTapped(category) }) {
-                            HStack {
-                                Muscle.getButtonForCategory(category, gender: userData.physical.gender)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 50, height: 50)
-                                VStack(alignment: .leading) {
-                                    Text(category.simpleName)
-                                        .frame(maxWidth: 75)
-                                        .foregroundColor(colorScheme == .dark ? .white : .black)
-                                        .padding(.bottom, -5)
-                                        .minimumScaleFactor(0.6)
-                                    Text("\(restPercentages[category] ?? 100)%")
-                                        .font(.subheadline)
-                                        .foregroundColor(colorScheme == .dark ? .white : .black)
-                                        .padding(5)
-                                        .background(Color.gray.opacity(0.5))
-                                        .clipShape(Capsule())
-                                }
+    @ViewBuilder private func muscleCategoryScroller(size: CGFloat) -> some View {
+        Divider()
+        ScrollView(.horizontal, showsIndicators: true) {
+            HStack {
+                ForEach(Muscle.allCases.filter { $0.isVisible }, id: \.self) { category in
+                    Button(action: { muscleTapped(category) }) {
+                        HStack {
+                            Muscle.getButtonForCategory(category, gender: userData.physical.gender)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: size, height: size)
+                            VStack(alignment: .leading) {
+                                Text(category.simpleName)
+                                    .frame(maxWidth: size * 1.5)
+                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    .padding(.bottom, -5)
+                                    .minimumScaleFactor(0.6)
+                                Text("\(restPercentages[category] ?? 100)%")
+                                    .font(.subheadline)
+                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    .padding(5)
+                                    .background(Color.gray.opacity(0.5))
+                                    .clipShape(Capsule())
                             }
-                            .contentShape(Rectangle())
                         }
+                        .contentShape(Rectangle())
                     }
                 }
-                .contentShape(Rectangle())
-                .padding(.horizontal)
             }
+            .contentShape(Rectangle())
+            .padding(.horizontal)
         }
     }
     
+    struct MuscleHitInfo: Identifiable {
+        let muscle: Muscle
+        let position: CGPoint
+        let size: CGSize
+        let side: Side?
+        
+        /// Stable ID (muscle + side) so duplicate L/R entries don’t collide in ForEach.
+        var id: String { muscle.rawValue + (side?.rawValue ?? "") }
+        
+        enum Side: String { case left = "L", right = "R", mid = "M" }
+    }
+
     // Muscle positions for front and rear views
-    func musclePositions(front: Bool) -> [(id: UUID, category: Muscle, position: CGPoint, size: CGSize)] {
-        if front {
-            return [
-                (id: UUID(), category: .trapezius, position: CGPoint(x: 178.5, y: 112), size: CGSize(width: 60, height: 20)),
-                (id: UUID(), category: .deltoids, position: CGPoint(x: 122, y: 145), size: CGSize(width: 25, height: 35)),
-                (id: UUID(), category: .deltoids, position: CGPoint(x: 236, y: 145), size: CGSize(width: 25, height: 35)),
-                (id: UUID(), category: .pectorals, position: CGPoint(x: 178.5, y: 149), size: CGSize(width: 85, height: 45)),
-                (id: UUID(), category: .abdominals, position: CGPoint(x: 178.5, y: 214), size: CGSize(width: 50, height: 85)),
-                (id: UUID(), category: .biceps, position: CGPoint(x: 127, y: 185), size: CGSize(width: 18, height: 50)),
-                (id: UUID(), category: .biceps, position: CGPoint(x: 231, y: 185), size: CGSize(width: 18, height: 50)),
-                (id: UUID(), category: .triceps, position: CGPoint(x: 110, y: 190), size: CGSize(width: 18, height: 50)),
-                (id: UUID(), category: .triceps, position: CGPoint(x: 245, y: 190), size: CGSize(width: 18, height: 50)),
-                (id: UUID(), category: .forearms, position: CGPoint(x: 120, y: 255), size: CGSize(width: 22, height: 80)),
-                (id: UUID(), category: .forearms, position: CGPoint(x: 236, y: 255), size: CGSize(width: 22, height: 80)),
-                (id: UUID(), category: .quadriceps, position: CGPoint(x: 180, y: 310), size: CGSize(width: 80, height: 100)),
-                (id: UUID(), category: .calves, position: CGPoint(x: 180, y: 430), size: CGSize(width: 70, height: 80))
-            ]
-        } else {
-            return [
-                (id: UUID(), category: .trapezius, position: CGPoint(x: 179, y: 132), size: CGSize(width: 62, height: 70)),
-                (id: UUID(), category: .deltoids, position: CGPoint(x: 122, y: 145), size: CGSize(width: 25, height: 35)),
-                (id: UUID(), category: .deltoids, position: CGPoint(x: 236, y: 145), size: CGSize(width: 25, height: 35)),
-                (id: UUID(), category: .triceps, position: CGPoint(x: 115, y: 190), size: CGSize(width: 35, height: 50)),
-                (id: UUID(), category: .triceps, position: CGPoint(x: 240, y: 190), size: CGSize(width: 35, height: 50)),
-                (id: UUID(), category: .forearms, position: CGPoint(x: 120, y: 255), size: CGSize(width: 22, height: 80)),
-                (id: UUID(), category: .forearms, position: CGPoint(x: 237, y: 255), size: CGSize(width: 22, height: 80)),
-                (id: UUID(), category: .latissimusDorsi, position: CGPoint(x: 151, y: 185), size: CGSize(width: 30, height: 50)),
-                (id: UUID(), category: .latissimusDorsi, position: CGPoint(x: 205, y: 185), size: CGSize(width: 30, height: 50)),
-                (id: UUID(), category: .erectorSpinae, position: CGPoint(x: 178.5, y: 220), size: CGSize(width: 60, height: 20)),
-                (id: UUID(), category: .gluteus, position: CGPoint(x: 180, y: 262), size: CGSize(width: 75, height: 60)),
-                (id: UUID(), category: .hamstrings, position: CGPoint(x: 180, y: 330), size: CGSize(width: 75, height: 70)),
-                (id: UUID(), category: .calves, position: CGPoint(x: 180, y: 415), size: CGSize(width: 70, height: 80))
-            ]
-        }
+    func musclePositions(front: Bool) -> [MuscleHitInfo] {
+        front ? muscleHitInfosFront : muscleHitInfosBack
     }
+
+    
+    // MARK: - FRONT hit regions
+    private let muscleHitInfosFront: [MuscleHitInfo] = [
+        .init(muscle: .trapezius,       position: .init(x: 178.5, y: 112),  size: .init(width: 60,  height: 20),  side: .mid),
+        .init(muscle: .deltoids,        position: .init(x: 122,   y: 145),  size: .init(width: 25,  height: 35),  side: .left),
+        .init(muscle: .deltoids,        position: .init(x: 236,   y: 145),  size: .init(width: 25,  height: 35),  side: .right),
+        .init(muscle: .pectorals,       position: .init(x: 178.5, y: 149),  size: .init(width: 85,  height: 45),  side: .mid),
+        .init(muscle: .abdominals,      position: .init(x: 178.5, y: 214),  size: .init(width: 50,  height: 85),  side: .mid),
+        .init(muscle: .biceps,          position: .init(x: 127,   y: 185),  size: .init(width: 18,  height: 50),  side: .left),
+        .init(muscle: .biceps,          position: .init(x: 231,   y: 185),  size: .init(width: 18,  height: 50),  side: .right),
+        .init(muscle: .triceps,         position: .init(x: 110,   y: 190),  size: .init(width: 18,  height: 50),  side: .left),
+        .init(muscle: .triceps,         position: .init(x: 245,   y: 190),  size: .init(width: 18,  height: 50),  side: .right),
+        .init(muscle: .forearms,        position: .init(x: 120,   y: 255),  size: .init(width: 22,  height: 80),  side: .left),
+        .init(muscle: .forearms,        position: .init(x: 236,   y: 255),  size: .init(width: 22,  height: 80),  side: .right),
+        .init(muscle: .quadriceps,      position: .init(x: 180,   y: 310),  size: .init(width: 80,  height: 100), side: .mid),
+        .init(muscle: .calves,          position: .init(x: 180,   y: 430),  size: .init(width: 70,  height: 80),  side: .mid)
+    ]
+
+    // MARK: - BACK hit regions
+    private let muscleHitInfosBack: [MuscleHitInfo] = [
+        .init(muscle: .trapezius,       position: .init(x: 179,   y: 132),  size: .init(width: 62,  height: 70),  side: .mid),
+        .init(muscle: .deltoids,        position: .init(x: 122,   y: 145),  size: .init(width: 25,  height: 35),  side: .left),
+        .init(muscle: .deltoids,        position: .init(x: 236,   y: 145),  size: .init(width: 25,  height: 35),  side: .right),
+        .init(muscle: .triceps,         position: .init(x: 115,   y: 190),  size: .init(width: 35,  height: 50),  side: .left),
+        .init(muscle: .triceps,         position: .init(x: 240,   y: 190),  size: .init(width: 35,  height: 50),  side: .right),
+        .init(muscle: .forearms,        position: .init(x: 120,   y: 255),  size: .init(width: 22,  height: 80),  side: .left),
+        .init(muscle: .forearms,        position: .init(x: 237,   y: 255),  size: .init(width: 22,  height: 80),  side: .right),
+        .init(muscle: .latissimusDorsi, position: .init(x: 151,   y: 185),  size: .init(width: 30,  height: 50),  side: .left),
+        .init(muscle: .latissimusDorsi, position: .init(x: 205,   y: 185),  size: .init(width: 30,  height: 50),  side: .right),
+        .init(muscle: .erectorSpinae,   position: .init(x: 178.5, y: 220),  size: .init(width: 60,  height: 20),  side: .mid),
+        .init(muscle: .gluteus,         position: .init(x: 180,   y: 262),  size: .init(width: 75,  height: 60),  side: .mid),
+        .init(muscle: .hamstrings,      position: .init(x: 180,   y: 330),  size: .init(width: 75,  height: 70),  side: .mid),
+        .init(muscle: .calves,          position: .init(x: 180,   y: 415),  size: .init(width: 70,  height: 80),  side: .mid)
+    ]
     
     // Options for the picker
-    enum ViewOption { case recovery, upcoming }
+    private enum ViewOption { case recovery, upcoming }
     
     private func getSplitCategoriesForSelectedOption() -> [SplitCategory] {
         switch selectedOption {
@@ -221,14 +216,12 @@ struct ViewMusclesView: View {
         }
     }
     
-    private func getSplitCategoriesForSelectedDay(_ selectedDay: daysOfWeek) -> [SplitCategory] {
-        let calendar = Calendar.current
-        
+    private func getSplitCategoriesForSelectedDay(_ selectedDay: DaysOfWeek) -> [SplitCategory] {
         // Filter templates by selected day
         let selectedDayTemplates = userData.workoutPlans.trainerTemplates.filter { template in
             guard let templateDate = template.date else { return false }
-            let templateDay = calendar.component(.weekday, from: templateDate)
-            return daysOfWeek(weekday: templateDay) == selectedDay
+            let templateDay = CalendarUtility.shared.weekday(from: templateDate)
+            return DaysOfWeek(weekday: templateDay) == selectedDay
         }
         
         // Collect split categories from templates
@@ -246,20 +239,22 @@ struct ViewMusclesView: View {
     }
     
     private func getRecentlyWorkedMuscles() -> [Muscle] {
-        let twoDaysAgo = Calendar.current.date(byAdding: .hour, value: -userData.settings.muscleRestDuration, to: Date())!
-        let recentlyWorkedCategories = userData.workoutPlans.completedWorkouts
-            .filter { $0.date > twoDaysAgo }
-            .flatMap { workout in
-                workout.template.exercises.flatMap { exercise -> [Muscle] in
-                    var involvedMuscles: [Muscle] = []
-                    involvedMuscles.append(contentsOf: exercise.primaryMuscles)
-                    involvedMuscles.append(contentsOf: exercise.secondaryMuscles)
-                    
-                    return involvedMuscles
+        if let twoDaysAgo = CalendarUtility.shared.hoursAgo(userData.settings.muscleRestDuration) {
+            let recentlyWorkedCategories = userData.workoutPlans.completedWorkouts
+                .filter { $0.date > twoDaysAgo }
+                .flatMap { workout in
+                    workout.template.exercises.flatMap { exercise -> [Muscle] in
+                        var involvedMuscles: [Muscle] = []
+                        involvedMuscles.append(contentsOf: exercise.primaryMuscles)
+                        involvedMuscles.append(contentsOf: exercise.secondaryMuscles)
+                        
+                        return involvedMuscles
+                    }
                 }
-            }
-        
-        return Array(Set(recentlyWorkedCategories))
+            
+            return Array(Set(recentlyWorkedCategories))
+        }
+        return []
     }
     
     // Update the muscleTapped function
@@ -274,18 +269,16 @@ struct ViewMusclesView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             tappedMuscleImage = nil
             showTappedImageOverlay = false
-            showingDetailView = true
             print("Showing detail view for: \(muscle.rawValue)")
         }
     }
     
-    private func getUpcomingMusclesForSelectedDay(_ selectedDay: daysOfWeek) -> [Muscle] {        
-        let calendar = Calendar.current
+    private func getUpcomingMusclesForSelectedDay(_ selectedDay: DaysOfWeek) -> [Muscle] {        
         // Filter trainer templates that have a valid date and match the selected day
         let selectedDayTemplates = userData.workoutPlans.trainerTemplates.filter { template in
             guard let templateDate = template.date else { return false }
-            let templateDay = calendar.component(.weekday, from: templateDate)
-            return daysOfWeek(weekday: templateDay) == selectedDay
+            let templateDay = CalendarUtility.shared.weekday(from: templateDate)
+            return DaysOfWeek(weekday: templateDay) == selectedDay
         }
                 
         let categories = selectedDayTemplates.flatMap { $0.categories } // Collect all categories from the selected templates
@@ -295,53 +288,59 @@ struct ViewMusclesView: View {
         return Array(Set(muscles))
     }
     
-    private var upcomingWorkoutDays: [daysOfWeek] {
-        let calendar = Calendar.current
-        let currentDate = Date()
-        
+    private var upcomingWorkoutDays: [DaysOfWeek] {
         // Filter planned workout dates to only include today and future dates
         let upcomingDates = userData.getPlannedWorkoutDates().filter { plannedDate in
-            if let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: plannedDate) {
-                return endOfDay >= currentDate
+            if let endOfDay = CalendarUtility.shared.date(bySettingHour: 23, minute: 59, second: 59, of: plannedDate) {
+                return endOfDay >= Date()
             }
             return false
         }
         
-        // Map the upcoming dates to daysOfWeek
+        // Map the upcoming dates to DaysOfWeek
         let upcomingDays = upcomingDates.compactMap { plannedDate in
-            calendar.dateComponents([.weekday], from: plannedDate).weekday
-        }.compactMap { weekday in daysOfWeek(weekday: weekday) }
+            CalendarUtility.shared.weekday(from: plannedDate)
+        }.compactMap { weekday in DaysOfWeek(weekday: weekday) }
         
         return upcomingDays
     }
     
     private func calculateRestPercentages() {
         let now         = Date()
-        let windowHours = Double(userData.settings.muscleRestDuration)
+        let windowHours = max(1.0, Double(userData.settings.muscleRestDuration)) // avoid /0
 
-        // temp buckets: (Σ weight × pct , Σ weight)
+        // 1) Only workouts in [0, window]
+        let recent = userData.workoutPlans.completedWorkouts.filter {
+            let h = now.timeIntervalSince($0.date) / 3600.0
+            return h >= 0 && h <= windowHours
+        }
+
+        // 2) Accumulate (Σ weight×pct, Σ weight)
         var buckets: [Muscle:(rest: Double, weight: Double)] = [:]
 
-        // ── 1. Filter recent workouts once ───────────────────────────────
-        let recent = userData.workoutPlans.completedWorkouts
-            .filter { now.timeIntervalSince($0.date) / 3600 <= windowHours }
-
-        // ── 2. Single scan over workouts / exercises / sets ──────────────
         for workout in recent {
-            let hoursSince = now.timeIntervalSince(workout.date) / 3600
-            let pctRest    = min(1, hoursSince / windowHours) * 100   // linear 0‒100
+            let hoursSince = now.timeIntervalSince(workout.date) / 3600.0
+            let ratio = hoursSince / windowHours
+            let pctRest = max(0.0, min(1.0, ratio)) * 100.0   // clamp to 0…100
 
             for exercise in workout.template.exercises {
-                let setCount = exercise.setDetails
-                                   .filter { $0.repsCompleted != nil }.count
+
+                // ✅ Count completed sets under the new SetMetric model
+                let setCount = exercise.setDetails.filter { sd in
+                    guard let c = sd.completed else { return false }
+                    switch c {
+                    case .reps(let r):     return r > 0
+                    case .hold(let span):  return span.inSeconds > 0
+                    }
+                }.count
                 guard setCount > 0 else { continue }
 
                 for engage in exercise.muscles {
-                    let base   = engage.engagementPercentage / 100       // 0‒1
+                    let base   = engage.engagementPercentage / 100.0
                     let ps     = engage.isPrimary ? 1.0 : 0.5
                     let weight = base * ps * Double(setCount)
 
-                    var bucket = buckets[engage.muscleWorked] ?? (0,0)
+                    var bucket = buckets[engage.muscleWorked] ?? (0, 0)
                     bucket.rest   += weight * pctRest
                     bucket.weight += weight
                     buckets[engage.muscleWorked] = bucket
@@ -349,41 +348,30 @@ struct ViewMusclesView: View {
             }
         }
 
-        // ── 3. Convert buckets → 0‒100 ints; default 100 if untouched ────
-        restPercentages = Dictionary(
-            uniqueKeysWithValues:
-                Muscle.allCases.map { muscle in
-                    let bucket = buckets[muscle] ?? (0,0)
-                    let pct = bucket.weight > 0
-                            ? Int((bucket.rest / bucket.weight).rounded())
-                            : 100
-                    return (muscle, pct)
-                }
+        // 3) Normalize, clamp to 0…100; 100 if untouched
+        restPercentages = Dictionary(uniqueKeysWithValues:
+            Muscle.allCases.map { m in
+                let b = buckets[m] ?? (0, 0)
+                let pct = b.weight > 0 ? (b.rest / b.weight).rounded() : 100.0
+                return (m, Int(max(0.0, min(100.0, pct))))
+            }
         )
     }
 }
 
 
 // must stay in original order for mapping to proper days in this view
-extension daysOfWeek {
+extension DaysOfWeek {
     init?(weekday: Int) {
         switch weekday {
-        case 1:
-            self = .sunday
-        case 2:
-            self = .monday
-        case 3:
-            self = .tuesday
-        case 4:
-            self = .wednesday
-        case 5:
-            self = .thursday
-        case 6:
-            self = .friday
-        case 7:
-            self = .saturday
-        default:
-            return nil
+        case 1: self = .sunday
+        case 2: self = .monday
+        case 3: self = .tuesday
+        case 4: self = .wednesday
+        case 5: self = .thursday
+        case 6: self = .friday
+        case 7: self = .saturday
+        default: return nil
         }
     }
 }

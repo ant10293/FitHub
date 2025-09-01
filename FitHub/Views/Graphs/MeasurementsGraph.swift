@@ -24,18 +24,18 @@ struct MeasurementsGraph: View {
                                 ForEach(sortedMeasurementRecords) { record in
                                     LineMark(
                                         x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
-                                        y: .value("Value", record.value)
+                                        y: .value("Value", record.entry.displayValue)
                                     )
                                     .foregroundStyle(.blue)
                                     PointMark(
                                         x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
-                                        y: .value("Value", record.value)
+                                        y: .value("Value", record.entry.displayValue)
                                     )
                                     .foregroundStyle(record.date == currentMeasurementDate ? .green : .blue)
                                     .annotation(position: .top) {
-                                        Text(Format.smartFormat(record.value))
+                                        Text(Format.smartFormat(record.entry.displayValue))
                                             .font(.caption)
-                                            .foregroundColor(record.date == currentMeasurementDate ? .green : .blue)
+                                            .foregroundStyle(record.date == currentMeasurementDate ? .green : .blue)
                                             .padding(1)
                                             .background(
                                                 RoundedRectangle(cornerRadius: 1)
@@ -50,7 +50,7 @@ struct MeasurementsGraph: View {
                         .overlay(alignment: .center) {                    // ← ① add overlay
                             if sortedMeasurementRecords.isEmpty {
                                 Text("No data available for \n this measurement...")
-                                    .foregroundColor(.red)
+                                    .foregroundStyle(.red)
                                     .multilineTextAlignment(.center)
                             }
                         }
@@ -58,7 +58,7 @@ struct MeasurementsGraph: View {
                             if let unitLabel = selectedMeasurement.unitLabel {
                                 Text(unitLabel)
                                     .font(.caption)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(Color.secondary)
                             }
                         })
                         .padding()
@@ -88,12 +88,12 @@ struct MeasurementsGraph: View {
         if let pastRecords = pastMeasurements {
             records = pastRecords
         }
-        if let currentRecord = currentMeasurement, currentRecord.value > 0 {
+        if let currentRecord = currentMeasurement, currentRecord.entry.displayValue > 0 {
             records.append(currentRecord)
         }
         
         // Filter out records with value 0
-        records = records.filter { $0.value > 0 }
+        records = records.filter { $0.entry.displayValue > 0 }
         
         // Apply time range filter
         records = filterRecords(records)
@@ -117,19 +117,27 @@ struct MeasurementsGraph: View {
     }
     
     private func filterRecords(_ records: [Measurement]) -> [Measurement] {
-        let calendar = Calendar.current
         let filteredRecords: [Measurement]
         
         switch selectedTimeRange {
         case .month:
-            let startDate = calendar.date(byAdding: .month, value: -1, to: Date())!
+            if let startDate = CalendarUtility.shared.monthsAgo(1) {
             filteredRecords = records.filter { $0.date >= startDate }
+            } else {
+                filteredRecords = records
+            }
         case .sixMonths:
-            let startDate = calendar.date(byAdding: .month, value: -6, to: Date())!
+            if let startDate = CalendarUtility.shared.monthsAgo(6) {
             filteredRecords = records.filter { $0.date >= startDate }
+            } else {
+                filteredRecords = records
+            }
         case .year:
-            let startDate = calendar.date(byAdding: .year, value: -1, to: Date())!
+            if let startDate = CalendarUtility.shared.yearsAgo(1) {
             filteredRecords = records.filter { $0.date >= startDate }
+            } else {
+                filteredRecords = records
+            }
         case .allTime:
             filteredRecords = records
         }
@@ -142,9 +150,9 @@ struct MeasurementsGraph: View {
         return measurement.date
     }
     
-    private var minValue: Double { sortedMeasurementRecords.map { $0.value }.min() ?? 0 }
+    private var minValue: Double { sortedMeasurementRecords.map { $0.entry.displayValue }.min() ?? 0 }
     
-    private var maxValue: Double { sortedMeasurementRecords.map { $0.value }.max() ?? 0 }
+    private var maxValue: Double { sortedMeasurementRecords.map { $0.entry.displayValue }.max() ?? 0 }
     
     private var yAxisRange: ClosedRange<Double> { return minValue - (minValue * 0.1)...maxValue + (maxValue * 0.1) }
 }

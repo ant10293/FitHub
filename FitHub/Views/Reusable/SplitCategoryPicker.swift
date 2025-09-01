@@ -9,41 +9,43 @@ import SwiftUI
 
 
 struct SplitCategoryPicker: View {
-    let enableSortPicker: Bool // disable ExerciseSortOptions picker
-    let saveSelectedSort: Bool // save selections as new exerciseSortOption
-    let sortByTemplateCategories: Bool // sort by template categories when editing a template with categories
-    
-    @State var sortOption: ExerciseSortOption
-    @Binding var selectedCategory: CategorySelections // One binding to cover whatever category-type is in use
- 
+    @ObservedObject var userData: UserData
+    @State private var sortOption: ExerciseSortOption          // editable
+    @Binding var selectedCategory: CategorySelections          // editable
+
+    // ── flags copied once from Settings – not edited inside this View ──
+    let enableSortPicker: Bool
+    let saveSelectedSort: Bool
+    let sortByTemplateCategories: Bool
+
+    private let templateSortingEnabled: Bool
     var templateCategories: [SplitCategory]?
     var onChange: (ExerciseSortOption) -> Void
-    
-    private let templateSortingEnabled: Bool
 
-    
     init(
-        enableSortPicker: Bool,
-        saveSelectedSort: Bool,
-        sortByTemplateCategories: Bool = false,
-        sortOption: ExerciseSortOption,
-        templateCategories: [SplitCategory]? = nil,
+        userData: UserData,
         selectedCategory: Binding<CategorySelections>,
-        onChange: @escaping (ExerciseSortOption) -> Void
+        templateCategories: [SplitCategory]? = nil,
+        onChange: @escaping (ExerciseSortOption) -> Void = { _ in }
     ) {
-        self.enableSortPicker = enableSortPicker
-        self.saveSelectedSort = saveSelectedSort
-        self.sortByTemplateCategories = sortByTemplateCategories
-        self.templateCategories = templateCategories
-        
-        let enabled = sortByTemplateCategories && !(templateCategories?.isEmpty ?? true)
-        self.templateSortingEnabled = enabled
+        self.userData                = userData
+        _selectedCategory            = selectedCategory
+        self.templateCategories      = templateCategories
 
-        if enabled { _sortOption = State(initialValue: .templateCategories) }
-        else { _sortOption = State(initialValue: sortOption) }
-        
-        _selectedCategory = selectedCategory
-        
+        // copy the three flags from Settings exactly once
+        self.enableSortPicker        = userData.settings.enableSortPicker
+        self.saveSelectedSort        = userData.settings.saveSelectedSort
+        self.sortByTemplateCategories = userData.settings.sortByTemplateCategories
+
+        // decide the initial sort-option
+        let tplSortEnabled = sortByTemplateCategories && !(templateCategories?.isEmpty ?? true)
+        self.templateSortingEnabled = tplSortEnabled
+        if tplSortEnabled {
+            _sortOption = State(initialValue: .templateCategories)
+        } else {
+            _sortOption = State(initialValue: userData.sessionTracking.exerciseSortOption)
+        }
+
         self.onChange = onChange
     }
     
@@ -63,7 +65,7 @@ struct SplitCategoryPicker: View {
         Menu {
             Text("-- Sort Category Options --")
                 .font(.subheadline.weight(.semibold))
-                .foregroundColor(.secondary)   // greyed-out look
+                .foregroundStyle(Color.secondary)   // greyed-out look
                 .disabled(true)                // makes it non-interactive
             
             // Direct list of categories, no nested Picker
@@ -71,7 +73,12 @@ struct SplitCategoryPicker: View {
                 Button(action: {
                     // update selected category to the first option
                     sortOption = category
-                    if saveSelectedSort && sortOption != .templateCategories { onChange(sortOption) }
+                    
+                    if userData.sessionTracking.exerciseSortOption != sortOption, saveSelectedSort {
+                        userData.sessionTracking.exerciseSortOption = sortOption
+                        userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
+                    }
+                    onChange(sortOption)
                 }) {
                     HStack {
                         Text(category.rawValue)
@@ -95,70 +102,77 @@ struct SplitCategoryPicker: View {
         ScrollView(.horizontal, showsIndicators: true) {
             HStack(spacing: 7.5) {
                 switch sortOption {
-                    case .simple:
-                        ForEach(SplitCategory.allCases.filter { ![.forearms, .quads, .calves, .hamstrings, .glutes].contains($0) }, id: \.self) { category in
+                case .simple:
+                    ForEach(SplitCategory.allCases.filter { ![.forearms, .quads, .calves, .hamstrings, .glutes].contains($0) }, id: \.self) { category in
+                        PillButton(text: category.rawValue, isSelected: selectedCategory == .split(category), action: {
+                            selectedCategory = .split(category)
+                        })
+                    }
+                case .moderate:
+                    ForEach(SplitCategory.allCases.filter { ![.arms, .legs].contains($0) }, id: \.self) { category in
+                        PillButton(text: category.rawValue, isSelected: selectedCategory == .split(category), action: {
+                            selectedCategory = .split(category)
+                        })
+                    }
+                case .complex:
+                    ForEach(Muscle.allCases, id: \.self) { category in
+                        PillButton(text: category.simpleName, isSelected: selectedCategory == .muscle(category), action: {
+                            selectedCategory = .muscle(category)
+                        })
+                    }
+                case .upperLower:
+                    ForEach(UpperLower.allCases, id: \.self) { category in
+                        PillButton(text: category.rawValue, isSelected: selectedCategory == .upperLower(category), action: {
+                            selectedCategory = .upperLower(category)
+                        })
+                    }
+                case .pushPull:
+                    ForEach(PushPull.allCases, id: \.self) { category in
+                        PillButton(text: category.rawValue, isSelected: selectedCategory == .pushPull(category), action: {
+                            selectedCategory = .pushPull(category)
+                        })
+                    }
+                case .templateCategories:
+                    if let categories = templateCategories {
+                        ForEach(categories, id: \.self) { category in
                             PillButton(text: category.rawValue, isSelected: selectedCategory == .split(category), action: {
                                 selectedCategory = .split(category)
                             })
-                        }.onAppear { selectedCategory = .split(.all) }
-                    case .moderate:
+                        }
+                    } else {
                         ForEach(SplitCategory.allCases.filter { ![.arms, .legs].contains($0) }, id: \.self) { category in
                             PillButton(text: category.rawValue, isSelected: selectedCategory == .split(category), action: {
                                 selectedCategory = .split(category)
                             })
-                        }.onAppear { selectedCategory = .split(.all) }
-                    case .complex:
-                        ForEach(Muscle.allCases, id: \.self) { category in
-                            PillButton(text: category.simpleName, isSelected: selectedCategory == .muscle(category), action: {
-                                selectedCategory = .muscle(category)
-                            })
-                        }.onAppear { selectedCategory = .muscle(.all) }
-                    case .upperLower:
-                        ForEach(UpperLower.allCases, id: \.self) { category in
-                            PillButton(text: category.rawValue, isSelected: selectedCategory == .upperLower(category), action: {
-                                selectedCategory = .upperLower(category)
-                            })
-                        }.onAppear { selectedCategory = .upperLower(.upperBody) }
-                    case .pushPull:
-                        ForEach(PushPull.allCases, id: \.self) { category in
-                            PillButton(text: category.rawValue, isSelected: selectedCategory == .pushPull(category), action: {
-                                selectedCategory = .pushPull(category)
-                            })
-                        }.onAppear { selectedCategory = .pushPull(.push) }
-                    case .templateCategories:
-                        if let categories = templateCategories {
-                            ForEach(categories, id: \.self) { category in
-                                PillButton(text: category.rawValue, isSelected: selectedCategory == .split(category), action: {
-                                    selectedCategory = .split(category)
-                                })
-                            }.onAppear { if let firstCat = categories.first { selectedCategory = .split(firstCat) } }
-                        } else {
-                            ForEach(SplitCategory.allCases.filter { ![.arms, .legs].contains($0) }, id: \.self) { category in
-                                PillButton(text: category.rawValue, isSelected: selectedCategory == .split(category), action: {
-                                    selectedCategory = .split(category)
-                                })
-                            }.onAppear { selectedCategory = .split(.all) }
                         }
-                    case .difficulty:
-                        ForEach(StrengthLevel.allCases, id: \.self) { lvl in
-                            PillButton(text: lvl.fullName, isSelected: selectedCategory == .difficulty(lvl), action: {
-                                selectedCategory = .difficulty(lvl)
-                            })
-                        }.onAppear { selectedCategory = .difficulty(.beginner) }
-                    case .resistanceType:
-                        ForEach(ResistanceType.allCases, id: \.self) { type in
-                            PillButton(text: type.rawValue, isSelected: selectedCategory == .resistanceType(type), action: {
-                                selectedCategory = .resistanceType(type)
-                            })
-                        }.onAppear { selectedCategory = .resistanceType(.any) }
-                    case .effortType:
-                        ForEach(EffortType.allCases, id: \.self) { type in
-                            PillButton(text: type.rawValue, isSelected: selectedCategory == .effortType(type), action: {
-                                selectedCategory = .effortType(type)
-                            })
-                        }.onAppear { selectedCategory = .effortType(.compound) }
+                    }
+                case .difficulty:
+                    ForEach(StrengthLevel.allCases, id: \.self) { lvl in
+                        PillButton(text: lvl.fullName, isSelected: selectedCategory == .difficulty(lvl), action: {
+                            selectedCategory = .difficulty(lvl)
+                        })
+                    }
+                case .resistanceType:
+                    ForEach(ResistanceType.allCases, id: \.self) { type in
+                        PillButton(text: type.rawValue, isSelected: selectedCategory == .resistanceType(type), action: {
+                            selectedCategory = .resistanceType(type)
+                        })
+                    }
+                case .effortType:
+                    ForEach(EffortType.allCases, id: \.self) { type in
+                        PillButton(text: type.rawValue, isSelected: selectedCategory == .effortType(type), action: {
+                            selectedCategory = .effortType(type)
+                        })
+                    }
+                case .limbMovement:
+                    ForEach(LimbMovementType.allCases, id: \.self) { type in
+                        PillButton(text: type.rawValue, isSelected: selectedCategory == .limbMovement(type), action: {
+                            selectedCategory = .limbMovement(type)
+                        })
+                    }
                 }
             }
+            .onChange(of: sortOption) { selectedCategory = sortOption.getDefaultSelection(templateCategories: templateCategories) }
         }
     }
     
@@ -172,7 +186,7 @@ struct SplitCategoryPicker: View {
                 .padding(10)
                 .frame(minWidth: 60)
                 .background(isSelected ? Color.blue : Color(UIColor.lightGray))
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .onTapGesture(perform: action)
         }

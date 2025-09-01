@@ -24,6 +24,9 @@ final class AppContext: ObservableObject {
     @Published var adjustments: AdjustmentsData       // Progressive‑overload prefs
     @Published var exercises = ExerciseData()      // Exercise catalogue & stats
     @Published var equipment = EquipmentData()
+    
+    @Published var store: PremiumStore
+    
 
     // MARK: –  Private
     private var sinks = Set<AnyCancellable>()
@@ -35,12 +38,18 @@ final class AppContext: ObservableObject {
         self.userData = UserData.loadFromFile() ?? .init()
         self.adjustments = AdjustmentsData.loadAdjustmentsFromFile() ?? .init()
 
+        self.store = PremiumStore(appAccountToken: nil)
+
         // Forward child updates so that *any* change triggers a view refresh
         stitch(userData)
         stitch(adjustments)
         stitch(exercises)
         stitch(equipment)
         stitch(toast)
+        stitch(store)
+        
+        // Kick StoreKit once at startup
+        Task { await store.configure() }
     }
 
     // MARK: –  Helpers

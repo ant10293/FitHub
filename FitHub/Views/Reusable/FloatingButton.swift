@@ -20,7 +20,7 @@ struct FloatingButton: View {
                 .resizable()
                 .frame(width: size, height: size)
                 .padding()
-                .foregroundColor(foreground)
+                .foregroundStyle(foreground)
                 .background(background)
                 .clipShape(Circle())
                 .shadow(radius: 10)

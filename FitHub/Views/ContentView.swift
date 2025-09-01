@@ -12,6 +12,7 @@ struct ContentView: View {
             MainAppView(userData: ctx.userData, showResumeWorkoutOverlay: $showResumeWorkoutOverlay)
                 .onReceive(notifications.$isAuthorized) { ctx.userData.settings.allowedNotifications = $0 }
                 // should also clear passed planned dates and notis
+                // need to do this on a background thread
                 .onAppear {
                     notifications.requestIfNeeded()
                     ctx.adjustments.loadAllAdjustments(for: ctx.exercises.allExercises, allEquipment: ctx.equipment.allEquipment)
@@ -40,19 +41,18 @@ struct ContentView: View {
     
     func generateTemplate() {
         let plannedWorkoutDates = ctx.userData.getAllPlannedWorkoutDates()
-        if checkAndResetWorkoutStreak(plannedWorkoutDates: plannedWorkoutDates) {
-            if ctx.userData.settings.progressiveOverload {
-                generateNewWorkoutTemplates(plannedWorkoutDates: plannedWorkoutDates)
-           }
+        if checkAndResetWorkoutStreak(plannedWorkoutDates: plannedWorkoutDates), ctx.userData.settings.progressiveOverload {
+            generateNewWorkoutTemplates(plannedWorkoutDates: plannedWorkoutDates)
        }
     }
 
     //  MARK: - Strength / Weakness Assessment
+    // add an option to disable this
     func determineUserStrengthLevel() {
         // --- Guard: run at most once every 30 days -----------------------------
         let now = Date()
         if let last = ctx.userData.evaluation.determineStrengthLevelDate,
-           Calendar.current.dateComponents([.day], from: last, to: now).day ?? 0 < 30 {
+           CalendarUtility.shared.daysBetween(last, and: now) < 30 {
             print("⏩ Skipping determination; only \(Int(now.timeIntervalSince(last)/86400)) days since last run.")
             return
         }
@@ -62,22 +62,22 @@ struct ContentView: View {
         var muscleCounts: [Muscle: [StrengthLevel: Int]] = [:]
         
      
-        let (basePathAge, basePathBW) = CSVLoader.getBasePaths(userData: ctx.userData)
-
+        let (basePathAge, basePathBW) = CSVLoader.getBasePaths(gender: ctx.userData.physical.gender)
 
         for ex in ctx.exercises.allExercises {
-            guard let maxValue = ctx.exercises.getMax(for: ex.id), maxValue > 0 else {
+            guard let maxValue = ctx.exercises.peakMetric(for: ex.id)?.actualValue, maxValue > 0,
+                    let url = ex.url
+            else {
                 print("⚠️ \(ex.name) skipped – no PR recorded"); continue
             }
-
+            
             let level = CSVLoader.calculateFitnessCategory(
                 userData: ctx.userData,
-                basePathAge: basePathAge + ex.url,
-                basePathBW: basePathBW + ex.url,
+                basePathAge: basePathAge + url,
+                basePathBW: basePathBW + url,
                 maxValue: maxValue
             )
 
-            //guard let level = StrengthLevel(rawValue: levelRaw) else { continue }
             globalCounts[level, default: 0]  += 1
 
             if let prime = ex.primaryMuscles.first {
@@ -121,12 +121,10 @@ struct ContentView: View {
     
     private func generateNewWorkoutTemplates(plannedWorkoutDates: [Date]) {
         let currentDate = Date()
-        var calendar = Calendar.current
-        calendar.firstWeekday = 2 // Set the first day of the week to Monday (1 is Sunday, 2 is Monday)
 
         // Ensure all planned workout dates are past, considering the end of the day
         let allDatesArePast = plannedWorkoutDates.allSatisfy { plannedDate in
-            if let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: plannedDate) {
+            if let endOfDay = CalendarUtility.shared.date(bySettingHour: 23, minute: 59, second: 59, of: plannedDate) {
                 return endOfDay < currentDate
             }
             return false
@@ -134,17 +132,16 @@ struct ContentView: View {
 
         if allDatesArePast {
             // Get the start of the current week
-            let currentWeekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: currentDate))!
+            guard let currentWeekStart = CalendarUtility.shared.startOfWeek(for: currentDate) else { return }
 
             // Get the start of the week for the last planned workout date
             if let lastPlannedDate = plannedWorkoutDates.last {
-                let lastWeekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: lastPlannedDate))!
+                guard let lastWeekStart = CalendarUtility.shared.startOfWeek(for: lastPlannedDate) else { return }
 
                 // Only generate a new workout plan if the current week is different from the last workout week's start date
                 if currentWeekStart > lastWeekStart {
                     // Generate new workout plan
                     ctx.userData.generateWorkoutPlan(exerciseData: ctx.exercises, equipmentData: ctx.equipment, keepCurrentExercises: true, nextWeek: true, shouldSave: false)
-
                     print("New workout plan generated.")
                 } else {
                     print("The current week is not different from the last workout week. No need to generate a new workout plan.")
@@ -169,7 +166,7 @@ struct ContentView: View {
     
         for plannedDate in filteredPlannedWorkoutDates {
             print("Checking planned date: \(plannedDate)")
-            if plannedDate < currentDate && !Calendar.current.isDateInToday(plannedDate) {
+            if plannedDate < currentDate && !CalendarUtility.shared.isDateInToday(plannedDate) {
                 print("Resetting workout streak to 0.")
                 ctx.userData.sessionTracking.workoutStreak = 0
                 return true

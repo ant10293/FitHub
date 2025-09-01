@@ -1,39 +1,60 @@
 import SwiftUI
 
+
 struct MenuView: View {
     @EnvironmentObject private var ctx: AppContext
-    
+
     var body: some View {
         List {
-            Section {
-                NavigationLink(destination: ExerciseView()) {
+            Section(header: Text("Logging")) {
+                NavigationLink(destination: LazyDestination {
+                    ExerciseView()
+                }) {
                     Label("Exercise Database", systemImage: "list.bullet.rectangle")
                 }
-                NavigationLink(destination: MeasurementsView(userData: ctx.userData)) {
+
+                NavigationLink(destination: LazyDestination {
+                    MeasurementsView(userData: ctx.userData)
+                }) {
                     Label("Measurements", systemImage: "ruler")
                 }
-                NavigationLink(destination: TemplateArchives(userData: ctx.userData)) {
+
+                NavigationLink(destination: LazyDestination {
+                    TemplateArchives(userData: ctx.userData)
+                }) {
                     Label("Archived Templates", systemImage: "archivebox")
                 }
-            } header: {
-                Text("Logging")
             }
-            
-            Section {
-                NavigationLink(destination: EquipmentSelection(selection: ctx.userData.evaluation.equipmentSelected)) {
+
+            Section(header: Text("Setup")) {
+                NavigationLink(destination: LazyDestination {
+                    EquipmentManagement()
+                }) {
                     Label("Your Equipment", systemImage: "dumbbell")
                 }
-                NavigationLink(destination: StatsView(userData: ctx.userData)) {
+
+                NavigationLink(destination: LazyDestination {
+                    StatsView(userData: ctx.userData)
+                }) {
                     Label("Statistics", systemImage: "chart.bar")
                 }
-                NavigationLink(destination: GoalSelectionView(userData: ctx.userData)) {
+
+                NavigationLink(destination: LazyDestination {
+                    GoalSelectionView(userData: ctx.userData)
+                }) {
                     Label("Modify Goal", systemImage: "target")
                 }
-            } header: {
-                Text("Setup")
+            }
+            
+            Section(header: Text("Premium")) {
+                NavigationLink(destination: LazyDestination {
+                    SubscriptionView()
+                }) {
+                    Label("FitHub Pro", systemImage: "crown")
+                }
             }
         }
-        .listStyle(InsetGroupedListStyle()) // Gives a card-like appearance
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Menu")
     }
 }

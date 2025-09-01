@@ -9,19 +9,18 @@ import SwiftUI
 
 struct ExerciseSetOverlay: View {
     let timerManager: TimerManager
-    @ObservedObject var adjustments: AdjustmentsData
-    @ObservedObject var equipmentData: EquipmentData
+    @ObservedObject var equipment: EquipmentData
     @Binding var exercise: Exercise
     @State private var isPressed: Bool = false
-    @State private var showingAdjustmentsView: Bool = false
+    @State private var showAdjustmentsView: Bool = false
     @State private var shouldDisableNext: Bool = false
     @State private var showOverlay: Bool = false
-    let progress: TemplateProgress
+    @State private var showPlateVisualizer: Bool = false
+    var progress: TemplateProgress
     var goToNextSetOrExercise: () -> Void
     var onClose: () -> Void
     var viewDetail: () -> Void
-    //let getPriorMax: (String) -> Double
-    let getPriorMax: (UUID) -> Double
+    let getPriorMax: (Exercise.ID) -> PeakMetric?
     var onPerformanceUpdate: (PerformanceUpdate) -> Void
     var saveTemplate: (Binding<SetDetail>, Binding<Exercise>) -> Void
 
@@ -32,7 +31,13 @@ struct ExerciseSetOverlay: View {
             if let detail = currentSetBinding(for: $exercise) {
                 // Equipment Adjustments + Info button
                 adjustmentsSection
-
+                
+                if exercise.usesPlates(equipmentData: equipment) {
+                    Button("View Plate Configuration") {
+                        showPlateVisualizer = true
+                    }
+                }
+                
                 // Display the set editor
                 ExerciseSetDisplay(
                     setDetail: detail,
@@ -42,7 +47,7 @@ struct ExerciseSetOverlay: View {
                         saveTemplate(detail, $exercise)
                     }
                 )
-
+                
                 if !exercise.isCompleted {
                     NextButton(
                         timerManager: timerManager,
@@ -50,7 +55,8 @@ struct ExerciseSetOverlay: View {
                         isPressed: $isPressed,
                         isLastExercise: progress.isLastExercise,
                         restTimerEnabled: progress.restTimerEnabled,
-                        restPeriod: progress.restPeriod,
+                        restPeriods: progress.restPeriods,
+                        isDisabled: shouldDisableNext,
                         goToNextSetOrExercise: goToNextSetOrExercise,
                         getPriorMax: { id in
                             getPriorMax(id)
@@ -59,7 +65,6 @@ struct ExerciseSetOverlay: View {
                             onPerformanceUpdate(update)
                         }
                     )
-                    .disabled(shouldDisableNext)
                 }
             } else {
                 Text("No current set available")
@@ -67,16 +72,34 @@ struct ExerciseSetOverlay: View {
         }
         .padding()
         .disabled(exercise.isCompleted)
-        .sheet(isPresented: $showingAdjustmentsView, onDismiss: { showingAdjustmentsView = false }) {
-            AdjustmentsView(AdjustmentsData: adjustments, exercise: exercise)
+        .sheet(isPresented: $showAdjustmentsView) {
+            AdjustmentsView(exercise: exercise)
+        }
+        /*.sheet(isPresented: $showPlateVisualizer) {
+            if let detail = currentSetBinding(for: $exercise) {
+                PlateVisualizer(
+                    weight: detail.weight.wrappedValue,
+                    exercise: exercise
+                )
+                .presentationDetents([.fraction(0.75)]) // only 3/4 height
+                .presentationDragIndicator(.visible)
+            }
+        }*/
+        .navigationDestination(isPresented: $showPlateVisualizer) {
+            if let detail = currentSetBinding(for: $exercise) {
+                PlateVisualizer(
+                    weight: detail.weight.wrappedValue,
+                    exercise: exercise
+                )
+            }
         }
     }
-    
+
     private var exerciseToolbar: some View {
         HStack {
             Text("Exercise \n\(progress.exerciseIdx + 1) of \(progress.numExercises)")
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.15)
-                .foregroundColor(.gray)
+                .foregroundStyle(.gray)
                 .font(.caption)
                 .multilineTextAlignment(.center)
                 .padding(.bottom)
@@ -87,15 +110,15 @@ struct ExerciseSetOverlay: View {
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: UIScreen.main.bounds.width * 0.5)  // ≈ 1/2 screen
                 
-                Text("Sets: \(exercise.sets)")
+                Text("Sets: \(exercise.workingSets)")
                     .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
             }.padding(.horizontal).zIndex(1)
             
             Button(action: onClose) {
                 Image(systemName: "xmark.circle.fill")
                     .imageScale(.large)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                     .padding()
             }.contentShape(Rectangle())
            
@@ -105,11 +128,8 @@ struct ExerciseSetOverlay: View {
     
     private var adjustmentsSection: some View {
         HStack {
-            AdjustmentsSection(adjustments: adjustments, equipmentData: equipmentData, showingAdjustmentsView: $showingAdjustmentsView, exercise: exercise)
-            Button(action: viewDetail) {
-                ExEquipImage(exercise.fullImage)
-            }
-            .buttonStyle(PlainButtonStyle())
+            AdjustmentsSection(showingAdjustmentsView: $showAdjustmentsView, exercise: exercise)
+            ExEquipImage(image: exercise.fullImage, button: .info, onTap: { viewDetail() })
         }
     }
     

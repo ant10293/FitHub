@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SplitSelection: View {
-    @Environment(\.presentationMode) var dismiss
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var vm: SplitSelectionVM
     @State private var donePressed: Bool = false
     @State private var askSave: Bool = false
@@ -15,52 +15,17 @@ struct SplitSelection: View {
     var body: some View {
         NavigationStack {
             VStack {
-                // 1) Muscle-group grid
-                ForEach(0..<3) { col in
-                    HStack(spacing: 3) {
-                        ForEach(SplitCategory.columnGroups[col], id: \.self) { cat in
-                            let list = vm.binding(for: vm.selectedDay).wrappedValue
-                            let selected = list.contains(cat)
-                            let disabled = vm.shouldDisable(cat, on: vm.selectedDay)
-                            
-                            if vm.shouldShow(cat, in: list) {
-                                Button(vm.displayName(for: cat, on: vm.selectedDay)) {
-                                    vm.toggle(cat, on: vm.selectedDay)
-                                }
-                                .muscleButtonStyle(selected: selected, disabled: disabled)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, -10)
-                }
-
-                // 2) Body overlay
-                if let day = vm.selectedDay {
-                    ZStack {
-                        SimpleMuscleGroupsView(showFront: $vm.showFrontView, gender: userData.physical.gender, selectedSplit: vm.binding(for: day).wrappedValue)
-                            .frame(height: 450)
-                        
-                        VStack {
-                            Spacer()
-                            HStack {
-                                Spacer()
-                                Button(action: {
-                                    vm.showFrontView.toggle()
-                                }) {
-                                    Image(systemName: "arrow.2.circlepath")
-                                        .resizable()
-                                        .frame(width: 25, height: 25)
-                                        .padding()
-                                        .background(Color.blue)
-                                        .foregroundColor(.white)
-                                        .clipShape(Circle())
-                                }
-                                .padding(.trailing, 20)
-                                .padding(.top, -100)
-                            }
-                        }
-                    }
-                }
+                //  replace the whole “Muscle‑group grid + overlay” block
+                MuscleSelection(
+                    selectedCategories: vm.binding(for: vm.selectedDay),
+                    showFront:          $vm.showFrontView,
+                    gender:             userData.physical.gender,
+                    displayName:        { vm.displayName(for: $0, on: vm.selectedDay) },
+                    toggle:             { vm.toggle($0, on: vm.selectedDay) },
+                    shouldDisable:      { vm.shouldDisable($0, on: vm.selectedDay) },
+                    shouldShow:         { cat, list in vm.shouldShow(cat, in: list) }
+                )
+                .frame(maxHeight: .infinity)          // keeps existing layout
 
                 // 3) Day selector
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -80,17 +45,17 @@ struct SplitSelection: View {
             .navigationBarTitle("Customize Split", displayMode: .inline)
             .onDisappear { if !donePressed { vm.saveIfNeeded() } }
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button("Clear All") { vm.clearDay(vm.selectedDay) }
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") {
                         if vm.hasUnsavedChanges {
                             askSave = true                  // show alert
                         } else {
                             donePressed = true
-                            dismiss.wrappedValue.dismiss()
+                            dismiss()
                         }
                     }
                 }
@@ -99,12 +64,12 @@ struct SplitSelection: View {
                  Button("Discard", role: .destructive) {
                      vm.revertChanges()
                      donePressed = true
-                     dismiss.wrappedValue.dismiss()
+                     dismiss()
                  }
                  Button("Save") {
                      vm.saveIfNeeded()
                      donePressed = true
-                     dismiss.wrappedValue.dismiss()
+                     dismiss()
                  }
              },
              message: { Text("Do you want to save your changes or discard them?") })
@@ -120,7 +85,7 @@ extension View {
             .padding()
             .frame(minWidth: 80)
             .background(selected ? Color.blue : Color.gray)
-            .foregroundColor(.white)
+            .foregroundStyle(.white)
             .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }

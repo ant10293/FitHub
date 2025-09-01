@@ -7,15 +7,44 @@
 
 import SwiftUI
 
-
+struct MeasurementEditor: View {
+    var measurement: MeasurementValue
+    var measurementType: MeasurementType
+    var onSave: ((Double) -> Void)?
+    var onExit: () -> Void
+    
+    var body: some View {
+        GenericEditor(
+            title: "Edit \(measurementType.rawValue)",
+            placeholder: getString,
+            initialValue: measurement.displayValueString,
+            onSave: { newValue in
+                let new = measurement.metricDouble(from: newValue)
+                onSave?(new)
+            },
+            onExit: onExit
+        )
+    }
+    
+    private var getString: String {
+        if let unitLabel = measurementType.unitLabel {
+            return MeasurementType.bodyPartMeasurements.contains(measurementType)
+                ? "Enter Circumference (\(unitLabel))"
+                : "Enter Value (\(unitLabel))"
+        } else {
+            return "Enter Value"
+        }
+    }
+}
+/*
 struct MeasurementEditor: View {
     @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
-    var measurementType: MeasurementType
-    @Binding var value: Double
-    @Binding var isPresented: Bool
     @State private var inputValue: String = ""
     @FocusState private var isFocused: Bool
+    var measurement: MeasurementValue
+    var measurementType: MeasurementType
     var onSave: ((Double) -> Void)?
+    var onExit: () -> Void
     
     var body: some View {
         VStack {
@@ -23,14 +52,11 @@ struct MeasurementEditor: View {
                 .font(.headline)
                 .padding()
             
-            TextField(getString(), text: $inputValue)
+            TextField(getString, text: $inputValue)
                 .keyboardType(.decimalPad)
                 .focused($isFocused)
                 .padding(8)
-                .background(
-                    RoundedRectangle(cornerRadius: 4) // Background shape
-                    .fill(colorScheme == .dark ? Color(UIColor.systemBackground) : Color(UIColor.secondarySystemBackground))
-                )
+                .roundedBackground()
                 .padding(.horizontal)
                 .onChange(of: inputValue) { oldValue, newValue in
                     inputValue = InputLimiter.filteredWeight(old: oldValue, new: newValue)
@@ -40,8 +66,7 @@ struct MeasurementEditor: View {
                 Spacer()
                 
                 Button(action: {
-                    isFocused = false
-                    isPresented = false
+                    buttonAction()
                 }) {
                     Label("Cancel", systemImage: "xmark")
                 }
@@ -49,12 +74,11 @@ struct MeasurementEditor: View {
                 .tint(.red)
                 
                 Button(action: {
-                    isFocused = false
                     if let newValue = Double(inputValue) {
-                        value = newValue
-                        onSave?(newValue)
+                        let new = measurement.metricDouble(from: newValue)
+                        onSave?(new)
                     }
-                    isPresented = false
+                    buttonAction()
                 }) {
                     Label("Save", systemImage: "checkmark")
                 }
@@ -65,39 +89,31 @@ struct MeasurementEditor: View {
             }
             .padding()
         }
-        .frame(width: 300, height: 200)
         .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color(UIColor.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .shadow(radius: 10)
         .padding()
-        .onAppear {
-            inputValue = Format.smartFormat(value)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                isFocused = true
-            }
-        }
-        .onDisappear {
-            NotificationCenter.default.removeObserver(self)
-        }
-        .onAppear {
-            NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
-                self.isFocused = true
-            }
-            NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-                self.isFocused = false
-            }
-        }
+        .onAppear(perform: appearAction)
     }
     
-    private func getString() -> String {
-        var stringValue: String = ""
-        
+    private func appearAction() {
+        inputValue = measurement.displayValueString
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { isFocused = true }
+    }
+    
+    private func buttonAction() {
+        isFocused = false
+        onExit()
+    }
+    
+    private var getString: String {
         if let unitLabel = measurementType.unitLabel {
-            stringValue = MeasurementType.bodyPartMeasurements.contains(measurementType) ? "Enter Circumference (\(unitLabel))" : "Enter Value (\(unitLabel))"
+            return MeasurementType.bodyPartMeasurements.contains(measurementType)
+                ? "Enter Circumference (\(unitLabel))"
+                : "Enter Value (\(unitLabel))"
         } else {
-            stringValue = "Enter Value"
+            return "Enter Value"
         }
-        return stringValue
     }
 }
-
+*/

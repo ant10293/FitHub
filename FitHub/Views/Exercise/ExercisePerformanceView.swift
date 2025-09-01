@@ -3,80 +3,111 @@ import SwiftUI
 
 struct ExercisePerformanceView: View {
     @State private var selectedTimeRange: TimeRange = .allTime
+    // MARK: – Inputs
     let exercise: Exercise
-    let maxValue: Double?
-    let repsXweight: RepsXWeight?
-    let currentMaxDate: Date?
-    let pastMaxes: [MaxRecord]
-    
+    let performance: ExercisePerformance?     // ← optional wrapper
+    var onDelete: (MaxRecord.ID) -> Void 
+    var onSetMax: (MaxRecord.ID) -> Void
+
     var body: some View {
-        VStack {
+        VStack(spacing: 6) {
+            // ─────────  Time‑Range Picker  ─────────
             HStack {
                 Text("Sort by").bold()
-                    .padding(.trailing)
                 Picker("Select Time Range", selection: $selectedTimeRange) {
                     ForEach(TimeRange.allCases, id: \.self) { range in
                         Text(range.rawValue.capitalized).tag(range)
                     }
                 }
-                .pickerStyle(MenuPickerStyle())
-                .padding(.trailing)
+                .pickerStyle(.menu)
             }
-            .padding(.bottom, -10)
-            .zIndex(0)
-            
+            .padding(.horizontal)
+            .padding(.bottom, -4)
+
+            // ─────────  List of Records  ─────────
             List {
-                if sortedMaxRecords.isEmpty {
+                if sortedRecords.isEmpty {
                     Text("No data available for this exercise.")
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                         .padding()
+                        .frame(maxWidth: .infinity, alignment: .center)
                 } else {
-                    ForEach(sortedMaxRecords, id: \.id) { record in
+                    ForEach(sortedRecords, id: \.id) { record in
                         HStack {
-                            VStack(alignment: .leading) {
-                                Text("Date: \(Format.formatDate(record.date, dateStyle: .short, timeStyle: .none))")
-                                Text(exercise.type.usesWeight ? "One Rep Max: \(Format.smartFormat(record.value)) lbs" : "Max Reps: \(Format.smartFormat(record.value)) reps")
-                                if exercise.type.usesWeight {
-                                    if let repsWeight = record.repsXweight {
-                                        Text("\(Format.smartFormat(repsWeight.weight)) lbs x \(repsWeight.reps) reps")
-                                    }
+                            Menu {
+                                Button {
+                                    onSetMax(record.id)
+                                } label: {
+                                    Label("Set as Current Max", systemImage: "star")
+                                }
+                                .disabled(record.id == performance?.currentMax?.id)
+
+                                Button(role: .destructive) {
+                                    onDelete(record.id)
+                                } label: {
+                                    Label("Delete Entry", systemImage: "trash")
+                                }
+                            } label: {
+                                Image(systemName: "ellipsis.circle")
+                                    .imageScale(.large)
+                                    .accessibilityLabel("More options")
+                                    .foregroundStyle(Color.blue)
+                            }
+                            .buttonStyle(.plain) // no row highlight on tap
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Date: ").bold()
+                                + Text(Format.formatDate(record.date, dateStyle: .short, timeStyle: .none))
+                                
+                                record.value.formattedText
+
+                                if exercise.type.usesWeight, let repsW = record.repsXweight {
+                                    repsW.formattedText           // already styled
                                 }
                             }
+
                             Spacer()
-                            if record.date == currentMaxDate {
+
+                            if record.id == performance?.currentMax?.id {
                                 Image(systemName: "star.fill")
-                                    .foregroundColor(.yellow)
+                                    .foregroundStyle(.yellow)
                             }
                         }
-                        .padding()
+                        .padding(.vertical, 4)
                     }
                 }
             }
         }
     }
-    
-    private var sortedMaxRecords: [MaxRecord] {
-        let startDate = Calendar.current.date(byAdding: timeInterval(for: selectedTimeRange), to: Date())!
-        var records = pastMaxes.filter { $0.date >= startDate }
-        if let currentMaxDate = currentMaxDate, let maxValue = maxValue {
-            let currentRecord = MaxRecord(id: UUID(), value: maxValue, repsXweight: repsXweight, date: currentMaxDate)
-            records.append(currentRecord)
-        }
-        return records.sorted(by: { $0.date > $1.date })
+
+    // MARK: – Helpers
+    private var allRecords: [MaxRecord] {
+        guard let perf = performance else { return [] }
+        var recs = perf.pastMaxes ?? []
+        if let current = perf.currentMax { recs.append(current) }
+        return recs
     }
-    
-    private func timeInterval(for range: TimeRange) -> DateComponents {
-        switch range {
-        case .month:
-            return DateComponents(month: -1)
-        case .sixMonths:
-            return DateComponents(month: -6)
-        case .year:
-            return DateComponents(year: -1)
-        case .allTime:
-            return DateComponents(year: -100) // Arbitrary long time ago
-        }
+
+    private var sortedRecords: [MaxRecord] {
+        guard !allRecords.isEmpty else { return [] }
+
+        let startCutoff: Date = {
+            switch selectedTimeRange {
+            case .month:
+                return CalendarUtility.shared.monthsAgo(1) ?? Date()
+            case .sixMonths:
+                return CalendarUtility.shared.monthsAgo(6) ?? Date()
+            case .year:
+                return CalendarUtility.shared.yearsAgo(1) ?? Date()
+            case .allTime:
+                // 100 years back is “good enough” to show everything
+                return CalendarUtility.shared.yearsAgo(100) ?? Date()
+            }
+        }()
+
+        return allRecords
+            .filter { $0.date >= startCutoff }
+            .sorted { $0.date > $1.date }
     }
 }
-
 

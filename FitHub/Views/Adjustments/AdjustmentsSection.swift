@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct AdjustmentsSection: View {
-    @ObservedObject var adjustments: AdjustmentsData
-    @ObservedObject var equipmentData: EquipmentData
+    @EnvironmentObject var ctx: AppContext
     @Binding var showingAdjustmentsView: Bool
     let exercise: Exercise
     
@@ -21,16 +20,16 @@ struct AdjustmentsSection: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            if equipmentData.hasEquipmentAdjustments(for: exercise) {
+            if ctx.equipment.hasEquipmentAdjustments(for: exercise) {
                 Button(action: { showingAdjustmentsView.toggle() }) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Equipment Adjustments")
                             .font(titleFont)
                             .bold()
-                            .foregroundColor(titleColor)
+                            .foregroundStyle(titleColor)
                             .minimumScaleFactor(0.8)
 
-                        if let adjustments = adjustments.getEquipmentAdjustments(for: exercise), !adjustments.isEmpty {
+                        if let adjustments = ctx.adjustments.getEquipmentAdjustments(for: exercise), !adjustments.isEmpty {
                             let nonEmpty = adjustments.filter { !$0.value.displayValue.isEmpty }
                             if nonEmpty.isEmpty {
                                 addAdjustmentPlaceholder
@@ -39,10 +38,10 @@ struct AdjustmentsSection: View {
                                     if let val = nonEmpty[cat]?.displayValue {
                                         Text("\(cat.rawValue): ")
                                             .font(.caption)
-                                            .foregroundColor(.secondary)
+                                            .foregroundStyle(Color.secondary)
                                         + Text(val)
                                             .font(.caption)
-                                            .foregroundColor(.secondary)
+                                            .foregroundStyle(Color.secondary)
                                             .bold()
                                     }
                                 }

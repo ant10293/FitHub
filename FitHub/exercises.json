@@ -26,6 +26,57 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Bench Pull",
+		"id" : "7E2A1B4C-9D3F-4A58-AB12-EF3C6D9B0A47",
+		"image" : "bench_pull",
+		"url" : "bench-pull",
+		"aliases" : ["Prone Barbell Row"],
+		"description" : "Lying face-down on a flat bench and pulling a barbell up toward the torso, targeting the latissimus dorsi and upper back.",
+		"equipmentRequired" : ["Barbell", "Flat Bench"],
+		"muscles" : [
+			{ "engagementPercentage" : 60, "isPrimary" : true, "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Upper Lats" },
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Lower Lats" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Middle Traps" }
+			] },
+			{ "engagementPercentage" : 5, "isPrimary" : false, "muscleWorked" : "Biceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Biceps Long Head" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Dumbbell Bench Pull",
+		"id" : "E1F2D3C4-B5A6-47D8-9E0F-1A2B3C4D5E6F",
+		"image" : "dumbbell_bench_pull",
+		"url" : "dumbbell-bench-pull",
+		"aliases" : ["Prone Dumbbell Row"],
+		"description" : "Lying face-down on a bench and rowing dumbbells toward the torso, targeting the lats and upper back with unilateral control.",
+		"equipmentRequired" : ["Dumbbells", "Flat Bench"],
+		"muscles" : [
+			{ "engagementPercentage" : 60, "isPrimary" : true, "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Upper Lats" },
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Lower Lats" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Middle Traps" }
+			] },
+			{ "engagementPercentage" : 5, "isPrimary" : false, "muscleWorked" : "Biceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Biceps Long Head" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Unilateral",
+		"type" : "Free Weight",
+		"repsInstruction" : "Per Arm"
+	},
+	{
 		"name" : "Decline Bench Press",
 		"id" : "9B3DFF7F-74EA-4818-B8F0-1085AEE17AF8",
 		"image" : "decline_bench_press",
@@ -73,6 +124,28 @@
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
+		"name" : "Incline Dumbbell Fly",
+		"id" : "6E2F7A3C-9B41-4A53-9C0E-1D4F2B6A8C90",
+		"image" : "incline_dumbbell_fly",
+		"url" : "incline-dumbbell-fly",
+		"aliases" : ["Incline DB Chest Fly", "Incline Flyes"],
+		"description" : "Performs a fly on an incline bench to bias the upper chest through a wide, controlled arc.",
+		"equipmentRequired" : ["Dumbbells", "Incline Bench Rack"],
+		"muscles" : [
+			{ "engagementPercentage" : 85, "isPrimary" : true, "muscleWorked" : "Pectorals", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
+			] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Isolation",
+		"limbMovementType" : "Bilateral Independent",
+		"type" : "Free Weight",
+		"weightInstruction" : "Per Dumbbell"
+	},
+	{
 		"name" : "Dumbbell Bench Press",
 		"id" : "0CCB4F74-F4EB-4FE5-A9B8-CD029ED4C9F5",
 		"image" : "dumbbell_bench_press",
@@ -87,6 +160,56 @@
 			{ "engagementPercentage" : 35, "isPrimary" : false, "muscleWorked" : "Triceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+			] },
+			{ "engagementPercentage" : 5, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Independent",
+		"type" : "Free Weight",
+		"weightInstruction" : "Per Dumbbell"
+	},
+	{
+		"name" : "Wide-Grip Bench Press",
+		"id" : "4E5F6A7B-8C9D-0A1B-2C3D-4E5F6A7B8C9D",
+		"image" : "wide_grip_bench_press",
+		"url" : "wide-grip-bench-press",
+		"aliases" : ["Wide Bench Press"],
+		"description" : "Performs a bench press with a wider-than-shoulder grip to emphasize the outer chest and shoulders.",
+		"equipmentRequired" : ["Barbell", "Flat Bench Rack"],
+		"muscles" : [
+			{ "engagementPercentage" : 65, "isPrimary" : true, "muscleWorked" : "Pectorals", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
+			] },
+			{ "engagementPercentage" : 25, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Triceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Triceps Lateral Head" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Close-Grip Dumbbell Bench Press",
+		"id" : "E3B1C4D5-A6F7-48B9-8C0D-2E3F4A5B6C7D",
+		"image" : "close_grip_dumbbell_bench_press",
+		"url" : "close-grip-dumbbell-bench-press",
+		"aliases" : ["Close-Grip Chest Press"],
+		"description" : "Performs a bench press with dumbbells held close together to emphasize triceps and inner chest activation.",
+		"equipmentRequired" : ["Dumbbells", "Flat Bench"],
+		"muscles" : [
+			{ "engagementPercentage" : 55, "isPrimary" : true, "muscleWorked" : "Triceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+			] },
+			{ "engagementPercentage" : 40, "isPrimary" : false, "muscleWorked" : "Pectorals", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
 			] },
 			{ "engagementPercentage" : 5, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
 				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
@@ -175,6 +298,60 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Barbell Pullover",
+		"id" : "F8C3A92E-2154-42AC-AFF7-6F3FAFCDB9D9",
+		"image" : "barbell_pullover",
+		"url" : "barbell-pullover",
+		"aliases" : ["Barbell Chest Pullover", "Barbell Lats Pullover"],
+		"description" : "A compound movement using a barbell to target both the chest and lats, engaging the serratus anterior and promoting shoulder mobility.",
+		"equipmentRequired" : ["Barbell", "Flat Bench"],
+		"muscles" : [
+			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Pectorals", "submusclesWorked" : [
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Clavicular Head" },
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Sternocostal Head" },
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Serratus Anterior" }
+			] },
+			{ "engagementPercentage" : 50, "isPrimary" : false, "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Upper Lats" },
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Lower Lats" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Rear Delt" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Bent-Arm Barbell Pullover",
+		"id" : "A1F2B3C4-D5E6-47F8-9A0B-C1D2E3F4A5B6",
+		"image" : "bent_arm_barbell_pullover",
+		"url" : "bent-arm-barbell-pullover",
+		"aliases" : ["Bent-Arm Pullover"],
+		"description" : "Performs the pullover with elbows flexed throughout, placing extra emphasis on the lats and serratus while maintaining tension in the chest.",
+		"equipmentRequired" : ["Barbell", "Flat Bench"],
+		"muscles" : [
+			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Pectorals", "submusclesWorked" : [
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Clavicular Head" },
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Sternocostal Head" },
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Serratus Anterior" }
+			] },
+			{ "engagementPercentage" : 50, "isPrimary" : false, "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Upper Lats" },
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Lower Lats" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Rear Delt" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
 		"name" : "Floor Press",
 		"id" : "159E4A5E-52D2-4900-94C8-374F1D43E709",
 		"image" : "floor_press",
@@ -217,6 +394,31 @@
 			] }
 		],
 		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Close-Grip Incline Bench Press",
+		"id" : "A9D4C7E2-3B5F-4A1C-8E9D-0B2F3C4D5E6A",
+		"image" : "close_grip_incline_bench_press",
+		"url" : "close-grip-incline-bench-press",
+		"aliases" : ["Close-Grip Incline Press"],
+		"description" : "Performs an incline bench press with a narrow grip to target the upper chest and triceps with greater emphasis on elbow extension.",
+		"equipmentRequired" : ["Barbell", "Incline Bench Rack"],
+		"muscles" : [
+			{ "engagementPercentage" : 55, "isPrimary" : true, "muscleWorked" : "Triceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+			] },
+			{ "engagementPercentage" : 40, "isPrimary" : false, "muscleWorked" : "Pectorals", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
+			] },
+			{ "engagementPercentage" : 5, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+			] }
+		],
+		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Free Weight"
@@ -276,7 +478,6 @@
 		"name" : "Pec Deck Fly",
 		"id" : "C339B93F-9BE1-475D-93A4-BC7222112F6D",
 		"image" : "pec_deck_fly",
-		"url" : "pec-deck-fly",
 		"aliases" : ["Butterfly Machine"],
 		"description" : "Bring arms together on a pec deck to isolate the chest with constant tension.",
 		"equipmentRequired" : ["Pec Deck"],
@@ -335,7 +536,6 @@
 		"name" : "Plate-Loaded Chest Press",
 		"id" : "E82CBEC9-664A-4660-9418-069641BAC1A8",
 		"image" : "plate_loaded_chest_press",
-		"url" : "plate-loaded-chest-press",
 		"aliases" : ["Iso-Lateral Chest Press"],
 		"description" : "Press weight plates from a seated machine to train chest with guided motion.",
 		"equipmentRequired" : ["Chest Press - Plate Loaded"],
@@ -353,7 +553,6 @@
 		"name" : "Plate-Loaded Decline Chest Press",
 		"id" : "B88314B0-C0A9-4628-918B-02A16BA824FA",
 		"image" : "plate_loaded_decline_chest_press",
-		"url" : "plate-loaded-decline-press",
 		"aliases" : ["Decline Iso Chest Press"],
 		"description" : "Plate-loaded decline press emphasising costal pec fibres under stable path.",
 		"equipmentRequired" : ["Decline Chest Press - Plate Loaded"],
@@ -371,7 +570,6 @@
 		"name" : "Plate-Loaded Incline Chest Press",
 		"id" : "16F7A746-35D5-4A7D-8FB6-CFBED1F210AC",
 		"image" : "plate_loaded_incline_chest_press",
-		"url" : "plate-loaded-incline-press",
 		"aliases" : ["Incline Iso Chest Press"],
 		"description" : "Load plates on an incline press to strengthen upper pecs under heavier loads.",
 		"equipmentRequired" : ["Incline Chest Press - Plate Loaded"],
@@ -389,7 +587,6 @@
 		"name" : "Incline Chest Press",
 		"id" : "0EAE35F5-CA82-441F-B0C1-123AE33EA0D4",
 		"image" : "incline_chest_press_machine",
-		"url" : "machine-incline-chest-press",
 		"aliases" : ["Machine Incline Press"],
 		"description" : "Press upward on an incline machine to bias the upper chest in a fixed track.",
 		"equipmentRequired" : ["Incline Chest Press"],
@@ -601,7 +798,6 @@
 		"name" : "Low to High Cable Chest Fly",
 		"id" : "94156A67-FACF-4CE4-B259-E7B189310F69",
 		"image" : "cable_chest_fly",
-		"url" : "low-to-high-cable-chest-fly",
 		"aliases" : ["Lo-Hi Cable Fly", "Low-High Cable Fly"],
 		"description" : "Targets the upper chest by moving from a low position upward, enhancing upper-chest development and definition.",
 		"equipmentRequired" : ["Cable Crossover"],
@@ -619,7 +815,6 @@
 		"name" : "High to Low Cable Chest Fly",
 		"id" : "B1CDD4A1-DC6D-4DAE-B51C-3993387C71DB",
 		"image" : "cable_chest_fly",
-		"url" : "high-to-low-cable-chest-fly",
 		"aliases" : ["Hi-Lo Cable Fly", "High-Low Cable Fly"],
 		"description" : "Focuses on the lower chest by moving from a high position downward, perfect for emphasizing the lower pectorals.",
 		"equipmentRequired" : ["Cable Crossover"],
@@ -637,7 +832,6 @@
 		"name" : "Standing Resistance Band Chest Fly",
 		"id" : "77EB887A-D914-4D94-A47A-D005ACFF944D",
 		"image" : "standing_resistance_band_chest_fly",
-		"url" : "standing-resistance-band-chest-fly",
 		"aliases" : ["Band Chest Fly", "Standing Band Fly"],
 		"description" : "Mimics the cable-fly pattern with resistance bands, allowing for flexible setup and lighter loading.",
 		"equipmentRequired" : ["Loop Bands"],
@@ -647,13 +841,12 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Machine"
+		"type" : "Banded"
 	},
 	{
 		"name" : "Kneeling Incline Push-Up",
 		"id" : "5FB19801-1D9E-4EBE-9BB1-4D014C048FDC",
 		"image" : "kneeling_incline_push_up",
-		"url" : "kneeling-incline-push-up",
 		"aliases" : ["Modified Incline Push-Up"],
 		"description" : "A reduced-load incline push-up that targets the upper chest while being beginner-friendly.",
 		"equipmentRequired" : [],
@@ -674,7 +867,6 @@
 		"name" : "Kneeling Push-Up",
 		"id" : "8F460F11-8B2F-4A82-8ACF-8986299D03D6",
 		"image" : "kneeling_push_up",
-		"url" : "kneeling-push-up",
 		"aliases" : ["Modified Push-Up"],
 		"description" : "A beginner-friendly push-up variation that reduces loading on the arms and chest.",
 		"equipmentRequired" : [],
@@ -694,7 +886,6 @@
 		"name" : "Close-Grip Feet-Up Bench Press",
 		"id" : "7ACFDF6B-1416-433D-B223-63EA77C66021",
 		"image" : "close_grip_feet_up_bench_press",
-		"url" : "close-grip-feet-up-bench-press",
 		"aliases" : ["Feet-Up Close-Grip Bench"],
 		"description" : "Emphasises triceps by eliminating leg drive; chest serves as a secondary mover.",
 		"equipmentRequired" : ["Flat Bench", "Barbell"],
@@ -711,7 +902,6 @@
 		"name" : "Feet-Up Bench Press",
 		"id" : "682FB1D3-FF4E-4E71-860B-53498681B54C",
 		"image" : "feet_up_bench_press",
-		"url" : "feet-up-bench-press",
 		"aliases" : ["Bench Press (Feet-Up)"],
 		"description" : "Lifting the feet increases core demand while keeping focus on chest and arms.",
 		"equipmentRequired" : ["Barbell", "Flat Bench"],
@@ -731,7 +921,6 @@
 		"name" : "Smith Machine Incline Bench Press",
 		"id" : "BE4E5EAE-92C4-47FD-B4D3-B946E033718D",
 		"image" : "smith_machine_incline_bench_press",
-		"url" : "smith-machine-incline-bench-press",
 		"aliases" : ["Smith Incline Bench"],
 		"description" : "Targets the upper chest with extra stability from the Smith machine, reducing balance requirements.",
 		"equipmentRequired" : ["Smith Machine", "Adjustable Bench"],
@@ -753,7 +942,6 @@
 		"name" : "Guillotine Press",
 		"id" : "1314D793-7CF6-4C42-B6C1-44671D773CA9",
 		"image" : "guillotine_press",
-		"url" : "guillotine-press",
 		"aliases" : ["Neck Press", "Barbell Guillotine Bench"],
 		"description" : "Lower the bar to the upper chest/neck to emphasise the clavicular fibres of the pecs.",
 		"equipmentRequired" : ["Flat Bench Rack", "Barbell"],
@@ -796,7 +984,6 @@
 		"name" : "Costal Dip",
 		"id" : "1718181A-6FB6-40FF-A4A3-F7299038CE1E",
 		"image" : "costal_dip",
-		"url" : "costal-dip",
 		"aliases" : ["Lower-Chest Dip"],
 		"description" : "Lean forward on parallel bars to shift dip emphasis to the lower chest.",
 		"equipmentRequired" : ["Dip Bar"],
@@ -820,7 +1007,6 @@
 		"name" : "Ring Push-Up",
 		"id" : "FAAF4A2F-B7BA-4853-9BBC-022D9D4280C5",
 		"image" : "ring_push_up",
-		"url" : "ring-push-up",
 		"aliases" : ["Suspension Push-Up"],
 		"description" : "Perform push-ups on rings for greater chest activation and shoulder stability demand.",
 		"equipmentRequired" : ["Rings"],
@@ -841,35 +1027,9 @@
 		"type" : "Bodyweight"
 	},
 	{
-		"name" : "Archer Push-Up (Chest)",
-		"id" : "C9F3EF58-DA5E-4C29-A649-2D24BDCC5297",
-		"image" : "archer_push_up_chest",
-		"url" : "archer-push-up-chest",
-		"aliases" : ["Chest Archer Push-Up"],
-		"description" : "Shift body weight side-to-side, loading one pec heavily while the other assists.",
-		"equipmentRequired" : [],
-		"muscles" : [
-			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
-			] },
-			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
-		"repsInstruction" : "Per Side"
-	},
-	{
 		"name" : "Dumbbell Squeeze Press",
 		"id" : "E6C1BA03-38DE-41F8-ACC5-C203AEA3D118",
 		"image" : "dumbbell_squeeze_press",
-		"url" : "dumbbell-squeeze-press",
 		"aliases" : ["DB Crush Press"],
 		"description" : "Press two dumbbells together, maintaining inward squeeze to heighten inner-chest tension.",
 		"equipmentRequired" : ["Dumbbells", "Flat Bench"],
@@ -894,7 +1054,6 @@
 		"name" : "Standing Cable Chest Press",
 		"id" : "8880F704-7053-4A6A-AC41-C5FF8ED5F9A5",
 		"image" : "standing_cable_chest_press",
-		"url" : "standing-cable-chest-press",
 		"aliases" : ["Cable Press"],
 		"description" : "Press cables forward from a staggered stance, keeping constant pec tension through the line of pull.",
 		"equipmentRequired" : ["Cable Crossover"],
@@ -919,7 +1078,6 @@
 		"name" : "Single-Arm Dumbbell Bench Press",
 		"id" : "57B7B767-0D23-404A-9858-3EB6DEFF9778",
 		"image" : "single_arm_db_bench_press",
-		"url" : "single-arm-dumbbell-bench-press",
 		"aliases" : ["Unilateral DB Bench"],
 		"description" : "Press one dumbbell while the opposite side stabilises the torso, enhancing unilateral pec development.",
 		"equipmentRequired" : ["Dumbbells", "Flat Bench"],
@@ -938,14 +1096,13 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
 		"type" : "Free Weight",
-		"repsInstruction" : "Per Arm",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Arm"
 	},
 	{
 		"name" : "Isometric Chest Squeeze",
 		"id" : "B2C7E33C-3316-4E5D-9608-FD94743E8658",
 		"image" : "isometric_chest_squeeze",
-		"url" : "isometric-chest-squeeze",
 		"aliases" : ["Plate Chest Squeeze"],
 		"description" : "Press palms against a weight plate and squeeze to generate maximal pec contraction without movement.",
 		"equipmentRequired" : ["Weight Plate"],
@@ -963,7 +1120,6 @@
 		"name" : "Landmine Floor Press",
 		"id" : "4E0EB3EF-52BD-42DB-A7A6-F0674D34F931",
 		"image" : "landmine_floor_press",
-		"url" : "landmine-floor-press",
 		"description" : "Press a landmine bar from the floor, limiting shoulder extension and loading the mid-pecs.",
 		"equipmentRequired" : ["Landmine"],
 		"muscles" : [
@@ -984,7 +1140,6 @@
 		"name" : "Smith-Machine Guillotine Press",
 		"id" : "B191EAB0-CA9A-4770-B0AC-E59455057C95",
 		"image" : "smith_machine_guillotine_press",
-		"url" : "smith-machine-guillotine-press",
 		"aliases" : ["Smith Neck Press"],
 		"description" : "Use the guided bar path to safely lower to the neck, isolating the upper chest.",
 		"equipmentRequired" : ["Smith Machine"],
@@ -1008,7 +1163,6 @@
 		"name" : "Reverse-Grip Dumbbell Press",
 		"id" : "06B6D435-A4EA-445C-9E88-AFF5BA5D0C3F",
 		"image" : "reverse_grip_db_press",
-		"url" : "reverse-grip-dumbbell-press",
 		"aliases" : ["Underhand DB Bench"],
 		"description" : "Press dumbbells with a supinated grip to bias the upper-pec fibres while sparing the shoulders.",
 		"equipmentRequired" : ["Dumbbells", "Flat Bench"],
@@ -1033,7 +1187,6 @@
 		"name" : "Wide-Grip Push-Up",
 		"id" : "35FFE1C1-5BCA-499A-A6B7-3068EDB80A60",
 		"image" : "wide_grip_push_up",
-		"url" : "wide-grip-push-up",
 		"aliases" : ["Wide Push-Up"],
 		"description" : "Hands set wider than shoulder-width to place greater load on the pecs and reduce triceps involvement.",
 		"equipmentRequired" : [],
@@ -1057,7 +1210,6 @@
 		"name" : "Medicine-Ball Push-Up",
 		"id" : "EE1FB9A4-0C4A-4A9D-8437-4B34543921BD",
 		"image" : "medicine_ball_push_up",
-		"url" : "medicine-ball-push-up",
 		"aliases" : ["MB Push-Up"],
 		"description" : "Place hands on a medicine ball to increase range of motion and chest activation through instability.",
 		"equipmentRequired" : ["Medicine Ball"],
@@ -1081,7 +1233,6 @@
 		"name" : "Converging Smith Bench Press",
 		"id" : "4B24F2DF-4973-4E13-A8DC-304F9B73BCD3",
 		"image" : "converging_smith_bench_press",
-		"url" : "converging-smith-bench-press",
 		"aliases" : ["Converging Chest Press"],
 		"description" : "Smith-machine press with converging bar path that matches natural arm arc, emphasizing mid-chest while reducing shoulder stress.",
 		"equipmentRequired" : ["Converging Smith Press"],
@@ -1106,7 +1257,6 @@
 		"name" : "Converging Smith Incline Bench Press",
 		"id" : "A2ED4F71-CD5C-42D2-A8E7-B56572305CBF",
 		"image" : "converging_smith_incline_press",
-		"url" : "converging-smith-incline-press",
 		"aliases" : ["Converging Incline Chest Press"],
 		"description" : "Incline variation targets upper-chest fibers with converging path for a stronger contraction and guided stability.",
 		"equipmentRequired" : ["Converging Smith Press"],
@@ -1127,31 +1277,30 @@
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Machine"
 	},
-    {
-        "name" : "Converging Smith Decline Bench Press",
-        "id" : "9A3D7211-FDDE-4C94-A51E-A2F9E642B3C9",
-        "image" : "converging_smith_decline_press",
-        "url" : "converging-smith-decline-press",
-        "aliases" : ["Converging Decline Chest Press"],
-        "description" : "Decline-angle converging Smith press that emphasizes the lower chest while providing guided bar path and added stability.",
-        "equipmentRequired" : ["Converging Smith Press"],
-        "muscles" : [
-            { "engagementPercentage" : 60, "isPrimary" : true,  "muscleWorked" : "Pectorals", "submusclesWorked" : [
-                { "engagementPercentage" : 100, "submuscleWorked" : "Costal Head" }
-            ] },
-            { "engagementPercentage" : 35, "isPrimary" : false, "muscleWorked" : "Triceps",   "submusclesWorked" : [
-                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-            ] },
-            { "engagementPercentage" : 5,  "isPrimary" : false, "muscleWorked" : "Deltoids",  "submusclesWorked" : [
-                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-            ] }
-        ],
-        "difficulty" : "Nov.",
-        "effort" : "Compound",
-        "limbMovementType" : "Bilateral Dependent",
-        "type" : "Machine"
-    },
+	{
+		"name" : "Converging Smith Decline Bench Press",
+		"id" : "9A3D7211-FDDE-4C94-A51E-A2F9E642B3C9",
+		"image" : "converging_smith_decline_press",
+		"aliases" : ["Converging Decline Chest Press"],
+		"description" : "Decline-angle converging Smith press that emphasizes the lower chest while providing guided bar path and added stability.",
+		"equipmentRequired" : ["Converging Smith Press"],
+		"muscles" : [
+			{ "engagementPercentage" : 60, "isPrimary" : true, "muscleWorked" : "Pectorals", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Costal Head" }
+			] },
+			{ "engagementPercentage" : 35, "isPrimary" : false, "muscleWorked" : "Triceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+			] },
+			{ "engagementPercentage" : 5, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Machine"
+	},
 	{
 		"name" : "Arnold Press",
 		"id" : "A0CF44D8-36BA-4629-8CE8-01BBAABA2872",
@@ -1215,6 +1364,28 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Free Weight"
+	},
+	{
+		"name" : "Cable Upright Row",
+		"id" : "F2E1D3C4-B5A6-47F8-9D0E-1A2B3C4D5E6F",
+		"image" : "cable_upright_row",
+		"url" : "cable-upright-row",
+		"aliases" : ["Cable High Pull"],
+		"description" : "Using a low\u2011pulley cable, pull the bar up toward the chin to engage the deltoids and traps with constant tension.",
+		"equipmentRequired" : ["Cable Crossover"],
+		"muscles" : [
+			{ "engagementPercentage" : 70, "isPrimary" : true, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Front Delt" },
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Side Delt" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Machine"
 	},
 	{
 		"name" : "Dumbbell Upright Row",
@@ -1362,6 +1533,28 @@
 		"type" : "Machine"
 	},
 	{
+		"name" : "Dumbbell Face Pull",
+		"id" : "A7D5C3B1-9E8F-4A2B-8C7D-0E1F2A3B4C5D",
+		"image" : "dumbbell_face_pull",
+		"url" : "dumbbell-face-pull",
+		"aliases" : ["DB Face Pull"],
+		"description" : "Pulls dumbbells toward the face in a seated or bent-over position to target the rear delts and upper traps with free\u2011weight control.",
+		"equipmentRequired" : ["Dumbbells", "Bench"],
+		"muscles" : [
+			{ "engagementPercentage" : 60, "isPrimary" : true, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Rear Delt" }
+			] },
+			{ "engagementPercentage" : 40, "isPrimary" : false, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Upper Traps" },
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Lower Traps" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Independent",
+		"type" : "Free Weight"
+	},
+	{
 		"name" : "Machine Lateral Raise",
 		"id" : "DE677D3C-EA6C-486D-9637-0044A334728F",
 		"image" : "machine_lateral_raise",
@@ -1426,6 +1619,35 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Push Jerk",
+		"id" : "F3E2D1C0-B9A8-4765-4E3F-2D1C0B9A8E7D",
+		"image" : "push_jerk",
+		"url" : "push-jerk",
+		"aliases" : ["Dip Jerk"],
+		"description" : "From the rack or shoulders, dip under the bar and drive with the legs to catch the bar overhead in a partial squat, emphasizing explosive leg drive and shoulder stability.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 40, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Vastus Lateralis" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Front Delt" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Side Delt" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Triceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Triceps Long Head" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] }
+		],
+		"difficulty" : "Adv.",
+		"effort" : "Plyometric",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
 		"name" : "Push Press",
 		"id" : "BAB10CC2-4703-48EB-8E54-52534C492371",
 		"image" : "push_press",
@@ -1447,6 +1669,30 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Free Weight"
+	},
+	{
+		"name" : "Dumbbell Push Press",
+		"id" : "E8A9B7C6-D5F4-43E2-9A1B-0C2D3E4F5A6B",
+		"image" : "dumbbell_push_press",
+		"url" : "dumbbell-push-press",
+		"aliases" : ["DB Push Press"],
+		"description" : "Uses a slight dip and leg drive to press dumbbells overhead, emphasizing shoulder and triceps power with free\u2011weight stabilization.",
+		"equipmentRequired" : ["Dumbbells"],
+		"muscles" : [
+			{ "engagementPercentage" : 70, "isPrimary" : true, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Front Delt" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Side Delt" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Triceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Long Head" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Lateral Head" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight",
+		"weightInstruction" : "Per Dumbbell"
 	},
 	{
 		"name" : "Cable Reverse Fly",
@@ -1635,7 +1881,7 @@
 	},
 	{
 		"name" : "Shoulder Pin Press",
-		"id" : "3AD6D8CD-CF76-420E-931D-8E0FAA698B61",
+		"id" : "F3E2D1C0-B9A8-4765-4E3F-2D1C0B9A8E7D",
 		"image" : "shoulder_pin_press",
 		"url" : "shoulder-pin-press",
 		"aliases" : ["Rack Overhead Press"],
@@ -1683,7 +1929,6 @@
 		"name" : "Front Hold",
 		"id" : "B016D7A5-8E58-468E-8430-19A2261AAA0F",
 		"image" : "front_hold",
-		"url" : "front-hold",
 		"aliases" : ["Static Front Raise", "Dumbbell Front Hold"],
 		"description" : "Challenges the anterior deltoids by statically holding weights at shoulder height in front of the body.",
 		"equipmentRequired" : ["Dumbbells"],
@@ -1721,7 +1966,6 @@
 		"name" : "Dumbbell Rear Delt Row",
 		"id" : "26DFBB55-56B6-4BE4-92C4-323F54DA407B",
 		"image" : "dumbbell_rear_delt_row",
-		"url" : "dumbbell-rear-delt-row",
 		"aliases" : ["DB Rear-Delt Row"],
 		"description" : "Rowing motion emphasising the rear delts while assisting the upper trapezius.",
 		"equipmentRequired" : ["Dumbbells"],
@@ -1742,7 +1986,6 @@
 		"name" : "Barbell Rear Delt Row",
 		"id" : "D18DABC1-74C8-4F51-860C-C62080DD76D9",
 		"image" : "barbell_rear_delt_row",
-		"url" : "barbell-rear-delt-row",
 		"aliases" : ["BB Rear-Delt Row"],
 		"description" : "Barbell variation targeting rear delts with substantial lower-trapezius engagement.",
 		"equipmentRequired" : ["Barbell"],
@@ -1763,7 +2006,6 @@
 		"name" : "Band Pull-Apart",
 		"id" : "B16BCDA0-BBB9-427E-B3AD-19AB18AE6F56",
 		"image" : "band_pull_apart",
-		"url" : "band-pull-apart",
 		"aliases" : ["Band Face-Pull-Apart"],
 		"description" : "Rear-delt and postural exercise that also activates the upper trapezius.",
 		"equipmentRequired" : ["Handle Bands", "Mini Loop Bands", "Loop Bands"],
@@ -1784,7 +2026,6 @@
 		"name" : "Cable Rear Delt Row",
 		"id" : "65C8762D-D6D5-4E5F-9F7B-C8004CB5BEEF",
 		"image" : "cable_rear_delt_row",
-		"url" : "cable-rear-delt-row",
 		"aliases" : ["Face-Pull Row"],
 		"description" : "Rows the cable toward the face/chest to ignite rear delts and upper trapezius.",
 		"equipmentRequired" : ["Cable Crossover", "Cable Hi-Lo Pulley"],
@@ -1805,7 +2046,6 @@
 		"name" : "Band External Shoulder Rotation",
 		"id" : "3C0D0256-70CD-4F01-8E84-08EB2E6F69E1",
 		"image" : "band_external_shoulder_rotation",
-		"url" : "band-external-shoulder-rotation",
 		"aliases" : ["Band ER", "External Rotation (Band)"],
 		"description" : "Reinforces rotator-cuff function and rear-delt strength through external rotation.",
 		"equipmentRequired" : ["Handle Bands", "Mini Loop Bands", "Loop Bands"],
@@ -1820,10 +2060,27 @@
 		"type" : "Bodyweight"
 	},
 	{
+		"name" : "Cable External Rotation",
+		"id" : "5A7D9C1E-2F3B-4D6A-8E0B-F1C2D3E4A5B6",
+		"image" : "cable_external_rotation",
+		"url" : "cable-external-rotation",
+		"aliases" : ["Cable ER", "External Rotation (Cable)"],
+		"description" : "Uses a cable machine to perform shoulder external rotation, targeting the rotator cuff and rear deltoids with constant tension.",
+		"equipmentRequired" : ["Cable Crossover"],
+		"muscles" : [
+			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Rear Delt" }
+			] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Isolation",
+		"limbMovementType" : "Unilateral",
+		"type" : "Machine"
+	},
+	{
 		"name" : "Band Internal Shoulder Rotation",
 		"id" : "0DCF3B61-96BF-42F3-B0B1-0BABC412729F",
 		"image" : "band_internal_shoulder_rotation",
-		"url" : "band-internal-shoulder-rotation",
 		"aliases" : ["Band IR", "Internal Rotation (Band)"],
 		"description" : "Strengthens sub-scapular and front-delt fibres via internal rotation against band tension.",
 		"equipmentRequired" : ["Handle Bands", "Mini Loop Bands", "Loop Bands"],
@@ -1841,7 +2098,6 @@
 		"name" : "Barbell Front Hold",
 		"id" : "B27628FD-6317-4077-85CA-9EB0D912428A",
 		"image" : "front_hold",
-		"url" : "barbell-front-hold",
 		"aliases" : ["Static Barbell Front Raise"],
 		"description" : "Maintains a barbell at shoulder-height to tax the anterior delts isometrically.",
 		"equipmentRequired" : ["Barbell"],
@@ -1859,7 +2115,6 @@
 		"name" : "Lying Dumbbell External Shoulder Rotation",
 		"id" : "469C13B5-7876-400F-86DC-5B9CE8B9FCF9",
 		"image" : "lying_dumbbell_external_shoulder_rotation",
-		"url" : "lying-dumbbell-external-shoulder-rotation",
 		"aliases" : ["Side-Lying DB ER"],
 		"description" : "Side-lying variation providing constant tension to the external rotators and rear delt.",
 		"equipmentRequired" : ["Dumbbells"],
@@ -1874,10 +2129,27 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Seated Dumbbell External Shoulder Rotation",
+		"id" : "D2A7B8C9-E0F1-4A2B-8C3D-4E5F6A7B8C9D",
+		"image" : "seated_dumbbell_external_shoulder_rotation",
+		"url" : "dumbbell-external-rotation",
+		"aliases" : ["Seated DB ER"],
+		"description" : "Performs external shoulder rotation while seated, providing stability and isolation for the rotator cuff and rear deltoid.",
+		"equipmentRequired" : ["Dumbbells", "Bench"],
+		"muscles" : [
+			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Rear Delt" }
+			] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Isolation",
+		"limbMovementType" : "Unilateral",
+		"type" : "Free Weight"
+	},
+	{
 		"name" : "Lying Dumbbell Internal Shoulder Rotation",
 		"id" : "C4240A3F-2731-4C3E-824B-5C9005F16528",
 		"image" : "lying_dumbbell_internal_shoulder_rotation",
-		"url" : "lying-dumbbell-internal-shoulder-rotation",
 		"aliases" : ["Side-Lying DB IR"],
 		"description" : "Strengthens the internal rotators from a side-lying position with targeted front-delt activation.",
 		"equipmentRequired" : ["Dumbbells"],
@@ -1895,7 +2167,6 @@
 		"name" : "Cuban Press",
 		"id" : "DBFD37CD-5C09-4703-A9B1-2C1E0E80952E",
 		"image" : "cuban_press",
-		"url" : "cuban-press",
 		"aliases" : ["DB Cuban Rotation Press"],
 		"description" : "Clean the dumbbells to shoulder-height, externally rotate, then press overhead, building rotator-cuff strength and delt stability.",
 		"equipmentRequired" : ["Dumbbells"],
@@ -1918,7 +2189,6 @@
 		"name" : "Y Press",
 		"id" : "C8C8F339-2A20-4336-AE53-5AD018908D53",
 		"image" : "y_press",
-		"url" : "y-press",
 		"aliases" : ["Dumbbell Y Press"],
 		"description" : "Press dumbbells upward and outward forming a \u2018Y\u2019, enhancing overhead stability and upper-delt recruitment.",
 		"equipmentRequired" : ["Dumbbells"],
@@ -1941,7 +2211,6 @@
 		"name" : "Plate Raise",
 		"id" : "BCB5FC52-C2C3-43E5-9FE2-F612299843A9",
 		"image" : "plate_raise",
-		"url" : "plate-raise",
 		"aliases" : ["Front Plate Raise"],
 		"description" : "Lift a weight plate from thighs to eye-level to isolate the anterior deltoids and develop front-shoulder size.",
 		"equipmentRequired" : ["Weight Plate"],
@@ -1959,7 +2228,6 @@
 		"name" : "Scaption Raise",
 		"id" : "6A525709-96F4-44BF-A90E-0CADF0436D38",
 		"image" : "scaption_raise",
-		"url" : "scaption-raise",
 		"aliases" : ["Dumbbell Scaption"],
 		"description" : "Raise dumbbells in the scapular plane (~30\u00b0 forward) to strengthen the rotator cuff and medial delts.",
 		"equipmentRequired" : ["Dumbbells"],
@@ -1979,7 +2247,6 @@
 		"name" : "Snatch-Grip BTN Press",
 		"id" : "7DF9AECD-EBEF-40E8-B387-076246D8B052",
 		"image" : "snatch_grip_btn_press",
-		"url" : "snatch-grip-btn-press",
 		"aliases" : ["Wide-Grip Behind-Neck Press"],
 		"description" : "With a snatch-width grip, press the bar from behind the neck to overhead, boosting delt and upper-back strength.",
 		"equipmentRequired" : ["Barbell"],
@@ -2001,7 +2268,6 @@
 		"name" : "Pike Push-Up",
 		"id" : "3AE6B370-A3E7-4686-927B-AAA8D8DE54F7",
 		"image" : "pike_push_up",
-		"url" : "pike-push-up",
 		"description" : "Hip-hinged push-up that mimics a bodyweight overhead press, stressing shoulders and triceps.",
 		"equipmentRequired" : [],
 		"muscles" : [
@@ -2022,7 +2288,7 @@
 		"name" : "Archer Push-Up",
 		"id" : "8672F1E4-9F7F-449A-B245-687C67281B7F",
 		"image" : "archer_push_up",
-		"url" : "archer-push-up",
+		"url" : "archer-push-ups",
 		"description" : "One arm bends while the other stays extended, creating unilateral loading that builds shoulder stability and pushing strength.",
 		"equipmentRequired" : [],
 		"muscles" : [
@@ -2047,7 +2313,6 @@
 		"name" : "KB Bottoms-Up Press",
 		"id" : "00F5D530-03B3-4DFF-AD66-643C1AC60918",
 		"image" : "kb_bottoms_up_press",
-		"url" : "kb-bottoms-up-press",
 		"aliases" : ["Bottoms-Up Kettlebell Press"],
 		"description" : "Press an inverted kettlebell overhead, demanding immense shoulder stability and grip control.",
 		"equipmentRequired" : ["Kettlebells"],
@@ -2070,7 +2335,6 @@
 		"name" : "KB Halo",
 		"id" : "C88DE516-461C-4C31-A67C-22B07F725072",
 		"image" : "kb_halo",
-		"url" : "kettlebell-halo",
 		"aliases" : ["Kettlebell Halo"],
 		"description" : "Circle a kettlebell around the head to mobilise shoulders and strengthen the entire girdle through 360\u00b0 control.",
 		"equipmentRequired" : ["Kettlebells"],
@@ -2092,7 +2356,6 @@
 		"name" : "High Pull",
 		"id" : "083FD786-8341-48B6-8EB3-ABC519E386EC",
 		"image" : "high_pull",
-		"url" : "high-pull",
 		"aliases" : ["Barbell High Pull"],
 		"description" : "Explosively pull a barbell to chest height, developing power in traps and medial delts.",
 		"equipmentRequired" : ["Barbell"],
@@ -2110,10 +2373,30 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Dumbbell High Pull",
+		"id" : "F4B7C9D1-2E3F-4A5B-8C6D-1E2F3A4B5C6D",
+		"image" : "dumbbell_high_pull",
+		"url" : "dumbbell-high-pull",
+		"aliases" : ["DB High Pull"],
+		"description" : "Explosively pull dumbbells to chest height, developing power in the traps and deltoids.",
+		"equipmentRequired" : ["Dumbbells"],
+		"muscles" : [
+			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] },
+			{ "engagementPercentage" : 50, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Side Delt" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
 		"name" : "Bradford Press",
 		"id" : "BE7702C5-AE28-4727-98A4-19E925C730A9",
 		"image" : "bradford_press",
-		"url" : "bradford-press",
 		"description" : "Press the bar alternately in front and behind the head without lock-out, maintaining constant shoulder tension.",
 		"equipmentRequired" : ["Barbell"],
 		"muscles" : [
@@ -2158,7 +2441,6 @@
 		"name" : "Banded Lateral Raise",
 		"id" : "17418419-039B-4F68-A326-D887A9C85249",
 		"image" : "banded_lateral_raise",
-		"url" : "banded-lateral-raise",
 		"aliases" : ["Resistance-Band Lateral Raise"],
 		"description" : "Step on a loop band and raise arms to shoulder-height, applying ascending resistance to the lateral delts.",
 		"equipmentRequired" : ["Loop Bands"],
@@ -2170,13 +2452,13 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Bodyweight"
+		"type" : "Banded"
 	},
 	{
-		"name" : "Standing Military Press",
+		"name" : "Military Press",
 		"id" : "3D2F2B62-40C5-4F7E-82C6-1C928BE81800",
 		"image" : "standing_military_press",
-		"url" : "standing-military-press",
+		"url" : "military-press",
 		"aliases" : ["Strict Overhead Press"],
 		"description" : "Press a barbell overhead from clavicle level with no leg drive, emphasising pure shoulder strength.",
 		"equipmentRequired" : ["Barbell"],
@@ -2198,7 +2480,6 @@
 		"name" : "Z Press",
 		"id" : "14532E34-D349-48E8-A4E8-3ABF39957071",
 		"image" : "z_press",
-		"url" : "z-press",
 		"description" : "Seated on the floor with legs extended, press the bar overhead, demanding core and shoulder rigidity.",
 		"equipmentRequired" : ["Barbell"],
 		"muscles" : [
@@ -2216,10 +2497,32 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Dumbbell Z Press",
+		"id" : "0F6D9E28-1B47-4B56-9A7F-5E2C4D3B1A79",
+		"image" : "dumbbell_z_press",
+		"url" : "dumbbell-z-press",
+		"aliases" : ["DB Z Press", "Seated Floor DB Press (Z)"],
+		"description" : "Seated on the floor with legs extended, press dumbbells overhead to build shoulder strength and core rigidity without leg drive.",
+		"equipmentRequired" : ["Dumbbells"],
+		"muscles" : [
+			{ "engagementPercentage" : 70, "isPrimary" : true, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Front Delt" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Side Delt" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Triceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Triceps Long Head" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Independent",
+		"type" : "Free Weight",
+		"weightInstruction" : "Per Dumbbell"
+	},
+	{
 		"name" : "Half-Kneeling Landmine Press",
 		"id" : "AC78E281-EFF2-40BA-9399-25B75BBCD9DF",
 		"image" : "half_kneeling_landmine_press",
-		"url" : "half-kneeling-landmine-press",
 		"description" : "From a half-kneel, press a landmine bar upward on an arc, fostering unilateral shoulder power and core stability.",
 		"equipmentRequired" : ["Landmine"],
 		"muscles" : [
@@ -2241,7 +2544,6 @@
 		"name" : "Alternating DB Front Raise",
 		"id" : "B24FEB1B-4C3C-4080-AE5F-DD8663B47773",
 		"image" : "alternating_db_front_raise",
-		"url" : "alternating-dumbbell-front-raise",
 		"aliases" : ["Alt Dumbbell Front Raise"],
 		"description" : "Lift one dumbbell to eye-level while the other lowers, maintaining tension and reducing swing for anterior-delt focus.",
 		"equipmentRequired" : ["Dumbbells"],
@@ -2254,14 +2556,13 @@
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
 		"type" : "Free Weight",
-		"repsInstruction" : "Per Arm",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Arm"
 	},
 	{
 		"name" : "Reverse Cable Crossover",
 		"id" : "045A699A-1652-4EEC-B0A6-923E9FC3463C",
 		"image" : "reverse_cable_crossover",
-		"url" : "reverse-cable-crossover",
 		"aliases" : ["Rear-Delt Cable Crossover"],
 		"description" : "Cross hands on opposite cables and pull outward, isolating rear delts with continuous tension.",
 		"equipmentRequired" : ["Cable Crossover"],
@@ -2284,7 +2585,6 @@
 		"name" : "Converging Smith Shoulder Press",
 		"id" : "CB79D5E6-F663-452D-9FBC-39BEA8502FCB",
 		"image" : "converging_smith_shoulder_press",
-		"url" : "converging-smith-shoulder-press",
 		"aliases" : ["Converging Overhead Press"],
 		"description" : "Guided overhead press where bar path converges slightly at lock-out, enhancing shoulder recruitment while sparing wrists.",
 		"equipmentRequired" : ["Converging Smith Press"],
@@ -2307,7 +2607,6 @@
 		"name" : "Plate-Loaded Shoulder Press",
 		"id" : "606D38F3-571F-4E8F-AB36-874564EF3D4A",
 		"image" : "plate_loaded_shoulder_press",
-		"url" : "plate-loaded-shoulder-press",
 		"aliases" : ["Iso Shoulder Press"],
 		"description" : "Press weight overhead on a plate-loaded machine to hammer delts with extra stability.",
 		"equipmentRequired" : ["Shoulder Press - Plate Loaded"],
@@ -2317,14 +2616,13 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
+		"limbMovementType" : "Bilateral Independent",
 		"type" : "Machine"
 	},
 	{
 		"name" : "Log Clean and Press",
 		"id" : "75360DA6-B790-4E27-B27A-A469A2559F4A",
 		"image" : "strongman_log_press",
-		"url" : "log-clean-press",
 		"aliases" : ["Strongman Log Press"],
 		"description" : "Clean a strongman log to shoulders then press overhead for total-body power.",
 		"equipmentRequired" : ["Strongman Log"],
@@ -2442,8 +2740,8 @@
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
 		"type" : "Free Weight",
-		"repsInstruction" : "Per Arm",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Arm"
 	},
 	{
 		"name" : "EZ Bar Curl",
@@ -2487,8 +2785,8 @@
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
 		"type" : "Free Weight",
-		"repsInstruction" : "Per Arm",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Arm"
 	},
 	{
 		"name" : "Incline Dumbbell Curl",
@@ -2782,7 +3080,6 @@
 		"name" : "Cable Curl With Rope",
 		"id" : "3E7330E2-D5E8-42F1-BE51-F57FAC76D526",
 		"image" : "cable_curl_with_rope",
-		"url" : "cable-curl-with-rope",
 		"aliases" : ["Rope Cable Curl"],
 		"description" : "Adds variation to standard curls with a rope attachment, emphasising peak contraction.",
 		"equipmentRequired" : ["Cable Hi-Lo Pulley"],
@@ -2804,7 +3101,6 @@
 		"name" : "Concentration Curl",
 		"id" : "443949F2-EE4E-4E61-B690-95AA87F86466",
 		"image" : "concentration_curl",
-		"url" : "concentration-curl",
 		"aliases" : ["Seated Concentration Curl"],
 		"description" : "Strict seated curl with elbow braced on the thigh to maximise biceps peak contraction.",
 		"equipmentRequired" : ["Dumbbells"],
@@ -2823,7 +3119,6 @@
 		"name" : "Drag Curl",
 		"id" : "A07E89A5-C9C4-44B5-B219-1C46CB95A759",
 		"image" : "drag_curl",
-		"url" : "drag-curl",
 		"aliases" : ["Body Drag Curl"],
 		"description" : "Curls the barbell up the torso to emphasise the long head while minimising shoulder flexion.",
 		"equipmentRequired" : ["Barbell"],
@@ -2845,7 +3140,6 @@
 		"name" : "EZ-Bar Reverse Curl",
 		"id" : "E34D0120-E516-457D-B6BA-DB248C4AB21B",
 		"image" : "ez_bar_reverse_curl",
-		"url" : "ez-bar-reverse-curl",
 		"aliases" : ["Pronated EZ Curl"],
 		"description" : "Uses a pronated grip on an EZ bar to target the brachialis and forearm extensors alongside the biceps.",
 		"equipmentRequired" : ["EZ Bar"],
@@ -2867,7 +3161,6 @@
 		"name" : "EZ-Bar Preacher Curl",
 		"id" : "BA68B573-5258-434C-A6B2-799181D90B39",
 		"image" : "ez_bar_preacher_curl",
-		"url" : "ez-bar-preacher-curl",
 		"aliases" : ["EZ Preacher Curl"],
 		"description" : "Isolates the biceps by preventing body sway while curling an EZ bar on a preacher bench.",
 		"equipmentRequired" : ["EZ Bar", "Preacher Curl Bench"],
@@ -2886,7 +3179,6 @@
 		"name" : "21s Curl",
 		"id" : "2447A9AF-C4A8-410A-AA64-47B2E509CC95",
 		"image" : "21s_curl",
-		"url" : "21s-curl",
 		"aliases" : ["Twenty Ones Curl"],
 		"description" : "Seven lower-half, seven upper-half and seven full-range barbell curls completed consecutively for metabolic stress.",
 		"equipmentRequired" : ["Barbell"],
@@ -2908,7 +3200,6 @@
 		"name" : "Band Biceps Curl",
 		"id" : "3DE3E114-FA06-41C1-94DC-BC8D04CA00C0",
 		"image" : "band_biceps_curl",
-		"url" : "band-biceps-curl",
 		"aliases" : ["Resistance Band Curl"],
 		"description" : "Performs curls against elastic resistance, offering ascending tension for the biceps through each rep.",
 		"equipmentRequired" : ["Handle Bands", "Loop Bands"],
@@ -2924,13 +3215,12 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"type" : "Banded"
 	},
 	{
 		"name" : "Reverse-Grip Preacher Curl",
 		"id" : "1C1B9A49-7655-47E9-A344-C4284EE392F3",
 		"image" : "reverse_grip_preacher_curl",
-		"url" : "reverse-grip-preacher-curl",
 		"aliases" : ["Pronated Preacher Curl"],
 		"description" : "Uses a pronated grip on a preacher bench to bias the brachialis and forearm extensors.",
 		"equipmentRequired" : ["EZ Bar", "Preacher Curl Bench"],
@@ -2952,7 +3242,6 @@
 		"name" : "Bayesian Curl",
 		"id" : "971CE050-5126-44A6-AD04-137223429FFA",
 		"image" : "bayesian_curl",
-		"url" : "bayesian-curl",
 		"aliases" : ["Cable Bayesian Curl"],
 		"description" : "Cable curl performed with the arm extended behind the torso to maximise biceps stretch and tension.",
 		"equipmentRequired" : ["Cable Hi-Lo Pulley"],
@@ -2972,7 +3261,6 @@
 		"name" : "Cable Concentration Curl",
 		"id" : "F7B2331C-6357-4481-B81F-F91C3BA6956A",
 		"image" : "cable_concentration_curl",
-		"url" : "cable-concentration-curl",
 		"aliases" : ["Kneeling Cable Concentration Curl"],
 		"description" : "Kneeling close to the weight stack, curls a single cable handle for peak contraction and strict form.",
 		"equipmentRequired" : ["Cable Hi-Lo Pulley"],
@@ -2992,7 +3280,6 @@
 		"name" : "Standing Cable Curl",
 		"id" : "68963D75-DB9E-483E-8554-FB4F9779BD1F",
 		"image" : "standing_cable_curl",
-		"url" : "standing-cable-curl",
 		"aliases" : ["Cable Bar Curl"],
 		"description" : "Straight-bar cable curls deliver constant tension across the full range for balanced biceps loading.",
 		"equipmentRequired" : ["Cable Hi-Lo Pulley"],
@@ -3014,7 +3301,6 @@
 		"name" : "Barbell Spider Curl",
 		"id" : "95229C1F-1CAF-4D78-81C4-C90159EA99BA",
 		"image" : "barbell_spider_curl",
-		"url" : "barbell-spider-curl",
 		"aliases" : ["Incline Spider Curl"],
 		"description" : "Prone on an incline bench, curls a barbell straight down to eliminate cheating and smash the biceps peak.",
 		"equipmentRequired" : ["Barbell", "Incline Bench Rack"],
@@ -3402,7 +3688,6 @@
 		"name" : "Skull Crusher (EZ-Bar)",
 		"id" : "5FCF8E42-AD0B-44E6-A214-478F8AD23386",
 		"image" : "ez_bar_skull_crusher",
-		"url" : "ez-bar-skull-crusher",
 		"aliases" : ["EZ-Bar Skull Crusher", "Lying EZ Triceps Extension"],
 		"description" : "Lying on a flat bench, lower an EZ-bar toward the forehead then extend the elbows, isolating all three triceps heads.",
 		"equipmentRequired" : ["EZ Bar", "Flat Bench"],
@@ -3421,7 +3706,6 @@
 		"name" : "Overhead Rope Triceps Extension",
 		"id" : "4B047321-6A66-4CB2-B189-5465624ECDF5",
 		"image" : "overhead_rope_triceps_extension",
-		"url" : "overhead-rope-triceps-extension",
 		"aliases" : ["Rope Overhead Extension"],
 		"description" : "With a rope attached high, extend the elbows overhead to emphasise the long head through a deep stretch.",
 		"equipmentRequired" : ["Cable Hi-Lo Pulley"],
@@ -3439,7 +3723,6 @@
 		"name" : "One-Arm Cable Triceps Extension",
 		"id" : "A9B1E5A3-AEAA-4E75-A0F2-F632F30BB711",
 		"image" : "one_arm_cable_triceps_extension",
-		"url" : "one-arm-cable-triceps-extension",
 		"aliases" : ["Single-Arm Cable Extension"],
 		"description" : "Standing side-on to the stack, extend one arm downward for unilateral triceps isolation and balanced development.",
 		"equipmentRequired" : ["Cable Hi-Lo Pulley"],
@@ -3459,7 +3742,6 @@
 		"name" : "Single-Arm DB Skull Crusher",
 		"id" : "D4E78BAC-685F-4EA8-BFCA-3A3B3EF1D8EE",
 		"image" : "single_arm_db_skull_crusher",
-		"url" : "single-arm-dumbbell-skull-crusher",
 		"aliases" : ["Unilateral Dumbbell Skull Crusher"],
 		"description" : "Performed one arm at a time on a flat bench, enabling strict elbow tracking and equal triceps stimulus.",
 		"equipmentRequired" : ["Dumbbells", "Flat Bench"],
@@ -3473,14 +3755,13 @@
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
 		"type" : "Free Weight",
-		"repsInstruction" : "Per Arm",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Arm"
 	},
 	{
 		"name" : "Cable Triceps Kickback",
 		"id" : "5F9E1F82-4F62-44FD-80A5-959B6ED1C6E8",
 		"image" : "cable_triceps_kickback",
-		"url" : "cable-triceps-kickback",
 		"aliases" : ["Cable Kickback"],
 		"description" : "Hinge at the hips and extend the elbow against cable tension, keeping the upper arm fixed for maximal lateral-head engagement.",
 		"equipmentRequired" : ["Cable Hi-Lo Pulley"],
@@ -3499,7 +3780,6 @@
 		"name" : "Bent-Over DB Triceps Extension",
 		"id" : "16C5DCB1-B4E0-4989-AE62-E51427D3EA14",
 		"image" : "bent_over_dumbbell_triceps_extension",
-		"url" : "bent-over-dumbbell-triceps-extension",
 		"aliases" : ["Dumbbell Kickback"],
 		"description" : "In a bent-over stance, extend the elbow to drive dumbbell rearward, isolating the triceps with free-weight control.",
 		"equipmentRequired" : ["Dumbbells"],
@@ -3512,14 +3792,13 @@
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
 		"type" : "Free Weight",
-		"repsInstruction" : "Per Arm",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Arm"
 	},
 	{
 		"name" : "Close-Grip Push-Up (Knees)",
 		"id" : "E29B0B81-7CF8-4231-AA55-9B5E273B222F",
 		"image" : "close_grip_knee_push_up",
-		"url" : "close-grip-knee-push-up",
 		"aliases" : ["Modified Narrow Push-Up"],
 		"description" : "With knees on the floor and hands narrow, push up to emphasise triceps while reducing overall load.",
 		"equipmentRequired" : [],
@@ -3544,7 +3823,6 @@
 		"name" : "Diamond Cutter Push-Up",
 		"id" : "992875B1-8A2A-4DAB-B78C-F933416B9FCA",
 		"image" : "diamond_cutter_push_up",
-		"url" : "diamond-cutter-push-up",
 		"aliases" : ["Heart Push-Up"],
 		"description" : "Hands form a diamond beneath the chest, lowering until sternum touches then explosively pressing back for intense arm engagement.",
 		"equipmentRequired" : [],
@@ -3569,7 +3847,6 @@
 		"name" : "Body-Weight Triceps Extension (Rack)",
 		"id" : "A7AD9831-0678-4408-8F8C-95673430F4D4",
 		"image" : "bodyweight_triceps_extension",
-		"url" : "rack-triceps-extension",
 		"aliases" : ["Rack Triceps Extension"],
 		"description" : "Using a bar in a rack, lean forward and flex the elbows, then extend to press the body back, isolating the triceps with body weight.",
 		"equipmentRequired" : ["Smith Machine", "Squat Rack"],
@@ -3588,7 +3865,6 @@
 		"name" : "Tate Push-Up",
 		"id" : "F895AC05-24F3-46F7-B6C6-3B8DB94F6B67",
 		"image" : "tate_push_up",
-		"url" : "tate-push-up",
 		"aliases" : ["Elbows-Out Push-Up"],
 		"description" : "Hands turned inward, lower elbows outward then press back, mimicking the dumbbell Tate press for body-weight triceps overload.",
 		"equipmentRequired" : [],
@@ -3613,7 +3889,6 @@
 		"name" : "Bench Dip (Feet Elevated)",
 		"id" : "08C383EA-6997-46E5-9031-587174BE9F7D",
 		"image" : "bench_dip_feet_elevated",
-		"url" : "bench-dip-feet-elevated",
 		"aliases" : ["Elevated Bench Dip"],
 		"description" : "Hands on one bench, heels on another, lower hips below elbows then press up for greater triceps loading than standard dips.",
 		"equipmentRequired" : ["Flat Bench"],
@@ -3639,7 +3914,6 @@
 		"name" : "Weighted Dip",
 		"id" : "B69BFF63-2547-40D8-A5C0-02D72816C5AD",
 		"image" : "weighted_parallel_bar_dip",
-		"url" : "weighted-parallel-bar-dip",
 		"aliases" : ["Weighted Parallel Dip", "Weighted Bar Dip"],
 		"description" : "Using a dip belt for extra load, lower to 90\u00b0 elbows then press up, intensifying triceps and lower-chest activation.",
 		"equipmentRequired" : ["Dip Bar"],
@@ -3771,6 +4045,34 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Half Squat",
+		"id" : "4B6E3DA8-1C57-4C59-9F1C-8A0D5B3F2C91",
+		"image" : "half_squat",
+		"url" : "half-squat",
+		"aliases" : ["Partial Squat"],
+		"description" : "Back squat performed to a reduced depth (about parallel or slightly above) to emphasize quadriceps with less hip flexion and shorter range of motion.",
+		"equipmentRequired" : ["Barbell", "Squat Rack"],
+		"muscles" : [
+			{ "engagementPercentage" : 60, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 25, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Semitendinosus" },
+				{ "engagementPercentage" : 20, "submuscleWorked" : "Semimembranosus" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Femoris" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
 		"name" : "Smith Machine Squat",
 		"id" : "19E889B1-F8FC-4B31-AE08-F080A58857A6",
 		"image" : "smith_machine_squat",
@@ -3822,6 +4124,56 @@
 			] }
 		],
 		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Pin Squat",
+		"id" : "D3A9F1B2-4C5D-6E7F-890A-1B2C3D4E5F6A",
+		"image" : "pin_squat",
+		"url" : "pin-squat",
+		"aliases" : ["Squat to Pins", "Rack Squat"],
+		"description" : "Performs a back squat to safety pins set at a specific depth, reinforcing consistent bottom position and concentric strength.",
+		"equipmentRequired" : ["Barbell", "Power Rack"],
+		"muscles" : [
+			{ "engagementPercentage" : 60, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Zercher Deadlift",
+		"id" : "D7E4C3B2-A1F9-48D0-8E7B-6C5A4D3F2E1B",
+		"image" : "zercher_deadlift",
+		"url" : "zercher-deadlift",
+		"aliases" : ["Elbow Cradle Deadlift"],
+		"description" : "Lifts the barbell from the floor with the bar cradled in the crook of the elbows, emphasizing the posterior chain and core stability.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Semitendinosus" },
+				{ "engagementPercentage" : 20, "submuscleWorked" : "Semimembranosus" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Femoris" }
+			] }
+		],
+		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Free Weight"
@@ -3911,6 +4263,31 @@
 		"type" : "Machine"
 	},
 	{
+		"name" : "Single-Leg Squat",
+		"id" : "1A2B3C4D-5E6F-7A8B-9C0D-1E2F3A4B5C6D",
+		"image" : "single_leg_squat",
+		"url" : "single-leg-squat",
+		"aliases" : ["Pistol Squat"],
+		"description" : "Performs a deep squat on one leg with the other leg extended forward, targeting quads, glutes, and improving balance.",
+		"equipmentRequired" : [],
+		"muscles" : [
+			{ "engagementPercentage" : 65, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 25, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Adv.",
+		"effort" : "Compound",
+		"limbMovementType" : "Unilateral",
+		"type" : "Bodyweight",
+		"repsInstruction" : "Per Leg"
+	},
+	{
 		"name" : "Pistol Squat",
 		"id" : "F6E12131-5E71-4954-89BE-D2D85E5609E9",
 		"image" : "pistol_squat",
@@ -3985,6 +4362,31 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Free Weight"
+	},
+	{
+		"name" : "Single-Leg Press",
+		"id" : "D4F7A6C2-8B1E-4A3D-9F0B-7C6E5D4A3B2F",
+		"image" : "single_leg_press",
+		"url" : "single-leg-press",
+		"aliases" : ["Unilateral Leg Press"],
+		"description" : "Performs the leg press one leg at a time to reduce imbalances and focus tension on each side.",
+		"equipmentRequired" : ["Leg Press"],
+		"muscles" : [
+			{ "engagementPercentage" : 60, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Compound",
+		"limbMovementType" : "Unilateral",
+		"type" : "Machine",
+		"repsInstruction" : "Per Leg"
 	},
 	{
 		"name" : "Leg Press",
@@ -4103,6 +4505,35 @@
 		"repsInstruction" : "Per Leg"
 	},
 	{
+		"name" : "Barbell Reverse Lunge",
+		"id" : "76938A87-24BE-4F5B-8AC9-F8290C650CB8",
+		"image" : "barbell_reverse_lunge",
+		"url" : "barbell-reverse-lunge",
+		"aliases" : ["Barbell Step-Back Lunge", "Loaded Reverse Lunge"],
+		"description" : "A unilateral lower-body movement performed with a barbell on the back, stepping backward into a lunge to build strength, balance, and coordination in the glutes, quads, and hamstrings.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 55, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 35, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 35, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [
+				{ "engagementPercentage" : 34, "submuscleWorked" : "Semitendinosus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Semimembranosus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Biceps Femoris" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Unilateral",
+		"type" : "Free Weight",
+		"repsInstruction" : "Per Leg"
+	},
+	{
 		"name" : "Barbell Walking Lunge",
 		"id" : "184B9BD6-69BB-43C9-86F1-1F332F3A07D6",
 		"image" : "barbell_walking_lunge",
@@ -4148,14 +4579,13 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
 		"type" : "Free Weight",
-		"repsInstruction" : "Per Leg",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Leg"
 	},
 	{
 		"name" : "Chair Squat",
 		"id" : "601CC8BB-F14E-4C88-BE25-F1120E575123",
 		"image" : "chair_squat",
-		"url" : "chair-squat",
 		"aliases" : ["Box Squat to Chair"],
 		"description" : "Beginner-friendly squat that builds control by sitting back to a chair.",
 		"equipmentRequired" : [],
@@ -4179,7 +4609,6 @@
 		"name" : "Step Up",
 		"id" : "7FC05939-CD15-45C2-BA22-FAB893B1F852",
 		"image" : "step_up",
-		"url" : "step-up",
 		"aliases" : ["Bench Step Up"],
 		"description" : "Strengthens legs and glutes by stepping onto an elevated surface.",
 		"equipmentRequired" : ["Flat Bench"],
@@ -4281,11 +4710,40 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Dumbbell Front Squat",
+		"id" : "F1E2D3C4-B5A6-4C7D-8E9F-0A1B2C3D4E5F",
+		"image" : "dumbbell_front_squat",
+		"url" : "dumbbell-front-squat",
+		"aliases" : ["DB Front Squat"],
+		"description" : "Holds dumbbells at shoulder level and squats down to emphasize quadriceps and core stabilization.",
+		"equipmentRequired" : ["Dumbbells"],
+		"muscles" : [
+			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [
+				{ "engagementPercentage" : 8, "submuscleWorked" : "Semitendinosus" },
+				{ "engagementPercentage" : 4, "submuscleWorked" : "Semimembranosus" },
+				{ "engagementPercentage" : 8, "submuscleWorked" : "Biceps Femoris" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight",
+		"weightInstruction" : "Per Dumbbell"
+	},
+	{
 		"name" : "Goblet Squat",
 		"id" : "A48F67D4-4FFA-4FDF-B673-AEC9CEC73A52",
 		"image" : "goblet_squat",
 		"url" : "goblet-squat",
-		"aliases" : ["Dumbbell Front Squat"],
+		"aliases" : [],
 		"description" : "A squat variation holding a dumbbell or kettlebell in front of the chest, targeting the quads.",
 		"equipmentRequired" : ["Dumbbells"],
 		"muscles" : [
@@ -4335,6 +4793,35 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Free Weight"
+	},
+	{
+		"name" : "Barbell Split Squat",
+		"id" : "D2A3B4C5-6D7E-8F90-1A2B-3C4D5E6F7A8B",
+		"image" : "barbell_split_squat",
+		"url" : "split-squat",
+		"aliases" : ["Static Lunge (Barbell)"],
+		"description" : "A stationary lunge variation performed with a barbell on the back, emphasizing unilateral leg strength and stability with both feet on the floor.",
+		"equipmentRequired" : ["Barbell", "Squat Rack"],
+		"muscles" : [
+			{ "engagementPercentage" : 55, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [
+				{ "engagementPercentage" : 34, "submuscleWorked" : "Semitendinosus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Semimembranosus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Biceps Femoris" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Unilateral",
+		"type" : "Free Weight",
+		"repsInstruction" : "Per Leg"
 	},
 	{
 		"name" : "Barbell Bulgarian Split Squat",
@@ -4394,8 +4881,38 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
 		"type" : "Free Weight",
-		"repsInstruction" : "Per Leg",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Leg"
+	},
+	{
+		"name" : "Dumbbell Split Squat",
+		"id" : "0D8F2A1C-5E7B-4E6B-9F30-7A9D2C1B3E45",
+		"image" : "dumbbell_split_squat",
+		"url" : "dumbbell-split-squat",
+		"aliases" : ["DB Split Squat", "Static Lunge (DB)"],
+		"description" : "Stationary split\u2011stance squat holding dumbbells at the sides to emphasize the front leg\u2019s quads and glutes while improving balance and stability.",
+		"equipmentRequired" : ["Dumbbells"],
+		"muscles" : [
+			{ "engagementPercentage" : 55, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [
+				{ "engagementPercentage" : 34, "submuscleWorked" : "Semitendinosus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Semimembranosus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Biceps Femoris" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Unilateral",
+		"type" : "Free Weight",
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Leg"
 	},
 	{
 		"name" : "Leg Extension",
@@ -4456,6 +4973,49 @@
 		"type" : "Machine"
 	},
 	{
+		"name" : "Hip Extension",
+		"id" : "7CB5F6E1-2A34-4D8C-9F07-3B1E6A4D2C58",
+		"image" : "hip_extension",
+		"url" : "hip-extension",
+		"aliases" : ["Quadruped Hip Extension", "Donkey Kick"],
+		"description" : "From hands-and-knees, extend the hip by driving the heel upward, isolating the gluteus maximus with minimal lumbar motion.",
+		"equipmentRequired" : [],
+		"muscles" : [
+			{ "engagementPercentage" : 80, "isPrimary" : true, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [
+				{ "engagementPercentage" : 34, "submuscleWorked" : "Semitendinosus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Semimembranosus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Biceps Femoris" }
+			] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Isolation",
+		"limbMovementType" : "Unilateral",
+		"type" : "Bodyweight",
+		"repsInstruction" : "Per Leg"
+	},
+	{
+		"name" : "Floor Hip Extension",
+		"id" : "2E7B1C53-4F8A-4B93-9C1D-6F5A2D3C4B1E",
+		"image" : "floor_hip_extension",
+		"url" : "floor-hip-extension",
+		"aliases" : ["Side-Lying Hip Adduction", "Inner Thigh Raise"],
+		"description" : "Lying on one side, lift the bottom leg inward across the midline to isolate the inner thigh.",
+		"equipmentRequired" : [],
+		"muscles" : [
+			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Hip Complex", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Adductors" }
+			] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Isolation",
+		"limbMovementType" : "Unilateral",
+		"type" : "Bodyweight",
+		"repsInstruction" : "Per Leg"
+	},
+	{
 		"name" : "Trap Bar Deadlift",
 		"id" : "E301EA58-B367-418F-9E9A-9A470AE79AA1",
 		"image" : "trap_bar_deadlift",
@@ -4484,7 +5044,6 @@
 		"name" : "Pendulum Squat",
 		"id" : "DCD2A61E-A107-4D06-BF40-93DD601A011E",
 		"image" : "pendulum_squat",
-		"url" : "pendulum-squat",
 		"aliases" : ["Pendulum Machine Squat"],
 		"description" : "Squat along a pendulum arc to smash quads with joint-friendly mechanics.",
 		"equipmentRequired" : ["Pendelum Squat"],
@@ -4525,7 +5084,6 @@
 		"name" : "Cossack Squat",
 		"id" : "C11D6EDB-3654-476D-8D19-E491186A40FF",
 		"image" : "cossack_squat",
-		"url" : "cossack-squat",
 		"aliases" : ["Side Deep Squat"],
 		"description" : "Shift weight laterally into a deep single-leg squat while straightening the opposite leg, developing strength and mobility across hips and quads.",
 		"equipmentRequired" : [],
@@ -4550,7 +5108,6 @@
 		"name" : "Curtsy Lunge",
 		"id" : "44C4801D-4E1C-4843-B8AD-9FE3D13CCAA5",
 		"image" : "curtsy_lunge",
-		"url" : "curtsy-lunge",
 		"aliases" : ["Cross-Behind Lunge"],
 		"description" : "Step one leg diagonally behind the other into a deep lunge, emphasising glute medius activation and inner-thigh stability.",
 		"equipmentRequired" : [],
@@ -4575,7 +5132,6 @@
 		"name" : "Spanish Squat",
 		"id" : "6DC1C171-6F30-46BA-BE17-B77D911E0D33",
 		"image" : "spanish_squat",
-		"url" : "spanish-squat",
 		"aliases" : ["Banded Quad Squat"],
 		"description" : "Anchor a band behind knees, sit back while maintaining vertical shins to heavily bias quadriceps through terminal knee extension.",
 		"equipmentRequired" : ["Loop Bands"],
@@ -4593,6 +5149,30 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Bodyweight"
+	},
+	{
+		"name" : "Jefferson Deadlift",
+		"id" : "8F1B0D24-3C7E-4A97-9B53-5A2F4D7C1E8A",
+		"image" : "jefferson_deadlift",
+		"url" : "jefferson-deadlift",
+		"aliases" : ["Straddle Deadlift"],
+		"description" : "Stand straddling the bar with a mixed grip and lift to lockout, emphasizing spinal erectors, quads, and adductors with anti-rotation demand.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 35, "isPrimary" : true, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 35, "isPrimary" : false, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
 	},
 	{
 		"name" : "Jefferson Squat",
@@ -4626,7 +5206,6 @@
 		"name" : "Sissy Hack Squat",
 		"id" : "D6C97A61-5477-402D-9DD1-5A3AB2C94046",
 		"image" : "sissy_hack_squat",
-		"url" : "sissy-hack-squat",
 		"aliases" : ["Vertical Hack Sissy"],
 		"description" : "Position the body far forward on a hack-squat sled and descend with hips extended to replicate a loaded sissy squat for maximal quad tension.",
 		"equipmentRequired" : ["Hack Squat"],
@@ -4649,7 +5228,6 @@
 		"name" : "Goblet Bulgarian Split Squat",
 		"id" : "0387A7F2-DD70-4EF8-819B-810B58ED06FC",
 		"image" : "goblet_bulgarian_split_squat",
-		"url" : "goblet-bulgarian-split-squat",
 		"aliases" : ["Goblet Rear-Foot Elevated Split Squat"],
 		"description" : "Hold a dumbbell at the chest while performing a split squat with rear foot elevated to intensify quad and glute recruitment.",
 		"equipmentRequired" : ["Dumbbells", "Flat Bench"],
@@ -4679,7 +5257,6 @@
 		"name" : "Cyclist Squat",
 		"id" : "05288D19-8223-4BBC-8FB1-6EE2C16AD977",
 		"image" : "cyclist_squat",
-		"url" : "cyclist-squat",
 		"aliases" : ["Heels-Elevated Narrow Squat"],
 		"description" : "Squat with narrow stance and raised heels to maintain an upright torso and place greater load on the quadriceps.",
 		"equipmentRequired" : ["Barbell"],
@@ -4702,7 +5279,6 @@
 		"name" : "Trap-Bar Jump Squat",
 		"id" : "EDD5574E-3C17-4A4B-931E-BB2288436224",
 		"image" : "trap_bar_jump_squat",
-		"url" : "trap-bar-jump-squat",
 		"aliases" : ["Hex-Bar Jump Squat"],
 		"description" : "Explosively jump from a squat while holding a trap bar, enhancing power through quads, glutes and calves.",
 		"equipmentRequired" : ["Trap Bar"],
@@ -4728,7 +5304,6 @@
 		"name" : "Split-Squat Jump",
 		"id" : "577B0796-F04A-4B5E-9435-DA1D45038FB6",
 		"image" : "split_squat_jump",
-		"url" : "split-squat-jump",
 		"aliases" : ["Plyo Split Squat"],
 		"description" : "Drive explosively out of a split-squat stance to leave the ground, building unilateral power and lower-body strength.",
 		"equipmentRequired" : [],
@@ -4752,7 +5327,6 @@
 		"name" : "V-Squat",
 		"id" : "1BE60188-A873-4D7D-B0F4-192D2E47EEE6",
 		"image" : "v_squat_machine",
-		"url" : "v-squat",
 		"aliases" : ["Hack V-Squat"],
 		"description" : "Perform squats on a V-squat machine for quad focus with fixed back support.",
 		"equipmentRequired" : ["V-Squat"],
@@ -4901,11 +5475,11 @@
 		"type" : "Free Weight"
 	},
 	{
-		"name" : "Nordic Ham Curl",
+		"name" : "Nordic Hamstring Curl",
 		"id" : "47C4FC6D-E322-43B6-AA97-64302319B095",
 		"image" : "nordic_ham_curl",
-		"url" : "nordic-ham-curl",
-		"aliases" : ["Nordic Curl", "Nordic Hamstring Curl"],
+		"url" : "nordic-hamstring-curl",
+		"aliases" : ["Nordic Curl", "Nordic Ham Curl"],
 		"description" : "Anchor the heels and lower under control, then contract the hamstrings to return upright.",
 		"equipmentRequired" : [],
 		"muscles" : [
@@ -4970,7 +5544,6 @@
 		"name" : "Bodyweight Reverse Hyperextension",
 		"id" : "512B9F4B-60EE-4A0C-A952-68C192D86E57",
 		"image" : "bodyweight_reverse_hyperextension",
-		"url" : "bodyweight-reverse-hyperextension",
 		"aliases" : ["Reverse Hyper"],
 		"description" : "Lie prone on a glute-ham raise bench, hinging at the hips to lift both legs behind the body; trains hamstrings and glutes while keeping spinal load minimal.",
 		"equipmentRequired" : ["Glute Ham Raise Bench"],
@@ -4993,7 +5566,6 @@
 		"name" : "Slider Leg Curl",
 		"id" : "314C06A3-B4F8-49C8-8B7B-0929BA78F113",
 		"image" : "slider_leg_curl",
-		"url" : "slider-leg-curl",
 		"aliases" : ["Glider Leg Curl", "Hamstring Slider Curl"],
 		"description" : "From a bridge position, extend and curl the legs on floor sliders to isolate the hamstrings.",
 		"equipmentRequired" : [],
@@ -5013,7 +5585,6 @@
 		"name" : "Swiss-Ball Leg Curl",
 		"id" : "4AC4F646-7FE7-4DB7-A6F1-B31E8013C64F",
 		"image" : "swiss_ball_leg_curl",
-		"url" : "swiss-ball-leg-curl",
 		"aliases" : ["Swiss-Ball Ham Curl"],
 		"description" : "Bridge on shoulders and roll a Swiss ball toward the hips by flexing the knees.",
 		"equipmentRequired" : ["Exercise Ball"],
@@ -5033,7 +5604,6 @@
 		"name" : "Stability-Ball Hamstring Curl",
 		"id" : "A0FE2DB0-C297-4BA3-A74D-2078CB8074A6",
 		"image" : "stability_ball_hamstring_curl",
-		"url" : "stability-ball-hamstring-curl",
 		"aliases" : ["Physio-Ball Ham Curl"],
 		"description" : "Similar to the Swiss-ball curl, maintaining bridge while bending the knees to draw the ball inward.",
 		"equipmentRequired" : ["Exercise Ball"],
@@ -5053,7 +5623,6 @@
 		"name" : "Reverse Nordic Curl",
 		"id" : "F6A9CD77-B86A-48D8-8840-B0441878449C",
 		"image" : "reverse_nordic_curl",
-		"url" : "reverse-nordic-curl",
 		"aliases" : ["Reverse Nordic"],
 		"description" : "Lean back from tall-kneeling and return upright, lengthening and loading the anterior thigh while engaging hamstrings as stabilisers.",
 		"equipmentRequired" : [],
@@ -5076,7 +5645,6 @@
 		"name" : "Single-Leg Hip Thrust",
 		"id" : "BF9E47D4-BC97-4ED6-B3FB-106D3CF34A43",
 		"image" : "single_leg_hip_thrust",
-		"url" : "single-leg-hip-thrust",
 		"aliases" : ["Unilateral Hip Thrust"],
 		"description" : "Elevate the back on a bench and drive one leg upward, extending the hip to target hamstrings and glutes unilaterally.",
 		"equipmentRequired" : ["Flat Bench"],
@@ -5172,6 +5740,27 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Dumbbell Walking Calf Raise",
+		"id" : "A2B6B6AC-6B1B-4B8C-9A3B-7B7C5F4F8F21",
+		"image" : "dumbbell_walking_calf_raise",
+		"url" : "dumbbell-walking-calf-raise",
+		"aliases" : ["Walking Calf Raise (DB)"],
+		"description" : "Performs calf raises step by step while walking, holding dumbbells for added load and balance demand.",
+		"equipmentRequired" : ["Dumbbells"],
+		"muscles" : [
+			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Calves", "submusclesWorked" : [
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Calves Gastrocnemius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Calves Soleus" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Isolation",
+		"limbMovementType" : "Unilateral",
+		"type" : "Free Weight",
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Leg"
+	},
+	{
 		"name" : "Bodyweight Calf Raise",
 		"id" : "4354E004-15BC-4560-B760-E2A4C020684D",
 		"image" : "bodyweight_calf_raise",
@@ -5232,7 +5821,6 @@
 		"name" : "Donkey Calf Raise",
 		"id" : "A4752D8F-2F76-40CF-A55A-585FAF4AA5E1",
 		"image" : "donkey_calf_raise",
-		"url" : "donkey-calf-raise",
 		"aliases" : ["Bent-Over Calf Raise"],
 		"description" : "Bend forward at the hips with straight knees and rise onto the balls of the feet to emphasise the gastrocnemius through a full stretch.",
 		"equipmentRequired" : ["Donkey Calf Raise"],
@@ -5251,7 +5839,6 @@
 		"name" : "Calf Press",
 		"id" : "9D39BEBC-E703-4A77-8266-610AF2E41CA5",
 		"image" : "calf_press_leg_machine",
-		"url" : "calf-press-leg-machine",
 		"aliases" : ["Leg Press Calf Press"],
 		"description" : "Extend the ankles against the sled of a leg-press machine to train the calves under heavy load while hips and knees stay fixed.",
 		"equipmentRequired" : ["Leg Press"],
@@ -5270,7 +5857,6 @@
 		"name" : "Standing Dumbbell Calf Raise",
 		"id" : "B4C7C24E-4A60-4599-A4B7-3CE78958B945",
 		"image" : "standing_dumbbell_calf_raise",
-		"url" : "standing-dumbbell-calf-raise",
 		"aliases" : ["DB Standing Calf Raise"],
 		"description" : "Hold dumbbells at the sides and elevate the heels to strengthen the calves with added resistance.",
 		"equipmentRequired" : ["Dumbbells"],
@@ -5290,7 +5876,6 @@
 		"name" : "Tibialis Raise",
 		"id" : "19EC6510-2F7A-4B36-B756-0FA09E35ADC5",
 		"image" : "tibialis_raise",
-		"url" : "tibialis-raise",
 		"aliases" : ["Anterior Tib Raise"],
 		"description" : "Lean back against a wall and lift the toes toward the shins to isolate and strengthen the tibialis anterior.",
 		"equipmentRequired" : [],
@@ -5308,7 +5893,6 @@
 		"name" : "Toe Walk",
 		"id" : "A64FF2AB-ADCF-4E6F-B2C8-A7B65CD7F277",
 		"image" : "toe_walk",
-		"url" : "toe-walk",
 		"aliases" : ["Tiptoe Walk"],
 		"description" : "Walk forward on the balls of the feet to build endurance in both heads of the calf muscles.",
 		"equipmentRequired" : [],
@@ -5327,7 +5911,6 @@
 		"name" : "Plate-Loaded Standing Calf Raise",
 		"id" : "FBD63A70-4915-415F-A5F0-A145257CBCD2",
 		"image" : "plate_loaded_standing_calf_raise",
-		"url" : "plate-loaded-standing-calf-raise",
 		"aliases" : ["Standing Calf Machine"],
 		"description" : "Raise heels on a plate-loaded machine to grow gastrocnemius and soleus.",
 		"equipmentRequired" : ["Standing Calf Raise - Plate Loaded"],
@@ -5435,6 +6018,29 @@
 		"type" : "Bodyweight"
 	},
 	{
+		"name" : "Barbell Glute Bridge",
+		"id" : "C5F6D76E-4AA3-4E47-8A49-8F490D2A6C97",
+		"image" : "barbell_glute_bridge",
+		"url" : "barbell-glute-bridge",
+		"aliases" : ["Weighted Glute Bridge", "Barbell Hip Bridge"],
+		"description" : "A glute-focused floor exercise where the hips are driven upward with a barbell across the pelvis, maximizing glute contraction with external resistance.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 75, "isPrimary" : true, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 25, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [
+				{ "engagementPercentage" : 10, "submuscleWorked" : "Semitendinosus" },
+				{ "engagementPercentage" : 5, "submuscleWorked" : "Semimembranosus" },
+				{ "engagementPercentage" : 10, "submuscleWorked" : "Biceps Femoris" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
 		"name" : "Machine Hip Abduction",
 		"id" : "154EF045-D15E-46C4-A016-356EC23F38E1",
 		"image" : "hip_abduction_machine",
@@ -5452,6 +6058,46 @@
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Machine"
+	},
+	{
+		"name" : "Floor Hip Abduction",
+		"id" : "A4E1C8B2-9D7F-4F31-8E52-6B3A4F1D8C20",
+		"image" : "floor_hip_abduction",
+		"url" : "floor-hip-abduction",
+		"aliases" : ["Side-Lying Hip Abduction"],
+		"description" : "Lying on one side, raise the top leg into hip abduction to target the lateral glutes with strict control.",
+		"equipmentRequired" : [],
+		"muscles" : [
+			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gluteus Medius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Gluteus Minimus" }
+			] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Isolation",
+		"limbMovementType" : "Unilateral",
+		"type" : "Bodyweight",
+		"repsInstruction" : "Per Leg"
+	},
+	{
+		"name" : "Side Leg Raise",
+		"id" : "5A7C1E2D-3B4F-6A8C-9E0D-1F2B3C4D5E6F",
+		"image" : "side_leg_raise",
+		"url" : "side-leg-raise",
+		"aliases" : ["Side-Lying Hip Abduction", "Floor Hip Abduction"],
+		"description" : "Lying on one side, lift the top leg upward to target the lateral glutes and outer hip muscles with strict control.",
+		"equipmentRequired" : [],
+		"muscles" : [
+			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gluteus Medius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Gluteus Minimus" }
+			] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Isolation",
+		"limbMovementType" : "Unilateral",
+		"type" : "Bodyweight",
+		"repsInstruction" : "Per Leg"
 	},
 	{
 		"name" : "Machine Glute Kickback",
@@ -5518,7 +6164,6 @@
 		"name" : "Frog Pump",
 		"id" : "8867B980-C358-419B-BB8B-4F4EAB96BB23",
 		"image" : "frog_pump",
-		"url" : "frog-pump",
 		"aliases" : ["Butterfly Hip Thrust"],
 		"description" : "With soles together and knees out, drive hips upward to contract the glutes through hip extension.",
 		"equipmentRequired" : [],
@@ -5541,7 +6186,6 @@
 		"name" : "Single-Leg Glute Bridge",
 		"id" : "76CD81D8-5042-4858-91E5-D2CEB217BE85",
 		"image" : "single_leg_glute_bridge",
-		"url" : "single-leg-glute-bridge",
 		"aliases" : ["Unilateral Glute Bridge"],
 		"description" : "Elevate one leg and drive the opposite hip upward to isolate glutes and hamstrings on a single side.",
 		"equipmentRequired" : [],
@@ -5565,7 +6209,6 @@
 		"name" : "Barbell Hip Thrust",
 		"id" : "0098FE0E-20FD-487B-AC9D-A29BD542B892",
 		"image" : "barbell_hip_thrust",
-		"url" : "barbell-hip-thrust",
 		"aliases" : ["Weighted Hip Thrust"],
 		"description" : "Rest upper back on a bench and drive hips upward against a barbell to maximally load the glutes.",
 		"equipmentRequired" : ["Flat Bench", "Barbell"],
@@ -5591,7 +6234,6 @@
 		"name" : "Banded Hip Thrust",
 		"id" : "3A8E4268-0485-4C76-8A6D-B5FD0DEBB663",
 		"image" : "banded_hip_thrust",
-		"url" : "banded-hip-thrust",
 		"aliases" : ["Resistance Band Hip Thrust"],
 		"description" : "Loop a band over the hips and thrust upward to emphasise glute contraction with accommodating resistance.",
 		"equipmentRequired" : ["Loop Bands", "Flat Bench"],
@@ -5611,13 +6253,12 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"type" : "Banded"
 	},
 	{
 		"name" : "Hip Airplane",
 		"id" : "8D554BC7-BC11-48B6-977A-4F5703BDACC5",
 		"image" : "hip_airplane",
-		"url" : "hip-airplane",
 		"aliases" : ["Airplane Lunge"],
 		"description" : "Balance on one leg, hinge forward, then rotate the torso side-to-side to develop hip stability and glute strength.",
 		"equipmentRequired" : [],
@@ -5642,7 +6283,6 @@
 		"name" : "Copenhagen Plank",
 		"id" : "224A1AEC-CC47-4EA3-9569-9051769DBE05",
 		"image" : "copenhagen_plank",
-		"url" : "copenhagen-plank",
 		"aliases" : ["Adductor Side Plank"],
 		"description" : "Support the upper leg on an elevated surface and hold a side plank, intensifying glute medius and adductor engagement.",
 		"equipmentRequired" : ["Flat Bench"],
@@ -5706,6 +6346,32 @@
 		"type" : "Machine"
 	},
 	{
+		"name" : "Single-Leg Deadlift",
+		"id" : "4C9D8E7F-6A5B-4C3D-8E1F-2A3B4C5D6E7F",
+		"image" : "single_leg_deadlift",
+		"url" : "single-leg-deadlift",
+		"aliases" : ["Unilateral Deadlift"],
+		"description" : "Standing on one leg, hinge at the hip and lower a dumbbell to the floor, targeting hamstrings and glutes with balance and core engagement.",
+		"equipmentRequired" : ["Dumbbells"],
+		"muscles" : [
+			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Hamstrings", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Semitendinosus" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Semimembranosus" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Biceps Femoris" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Unilateral",
+		"type" : "Free Weight",
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Leg"
+	},
+	{
 		"name" : "Deadlift",
 		"id" : "B61A4A76-D761-4A08-8C66-25AB3662AC35",
 		"image" : "deadlift",
@@ -5727,6 +6393,32 @@
 			] }
 		],
 		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Behind the Back Deadlift",
+		"id" : "D4F7A19E-3B2C-4E5A-8F3B-7C9D2E1A5B6C",
+		"image" : "behind_the_back_deadlift",
+		"url" : "behind-the-back-deadlift",
+		"aliases" : ["BTB Deadlift", "Reverse Grip Deadlift"],
+		"description" : "Performs a conventional deadlift with the barbell held behind the legs, emphasizing posterior chain engagement through an altered bar path and grip position.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [
+				{ "engagementPercentage" : 12, "submuscleWorked" : "Semitendinosus" },
+				{ "engagementPercentage" : 6, "submuscleWorked" : "Semimembranosus" },
+				{ "engagementPercentage" : 12, "submuscleWorked" : "Biceps Femoris" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] }
+		],
+		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Free Weight"
@@ -5785,6 +6477,32 @@
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
+		"name" : "Single\u2011Leg Dumbbell Deadlift",
+		"id" : "A4D9F3E1-7B2C-4A5D-8E6F-1B2C3D4E5F6A",
+		"image" : "single_leg_dumbbell_deadlift",
+		"url" : "single-leg-dumbbell-deadlift",
+		"aliases" : ["Unilateral DB Deadlift"],
+		"description" : "Standing on one leg, hinge at the hip and lower a dumbbell toward the floor, targeting the hamstrings and glutes while challenging balance.",
+		"equipmentRequired" : ["Dumbbells"],
+		"muscles" : [
+			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Hamstrings", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Semitendinosus" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Semimembranosus" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Biceps Femoris" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Unilateral",
+		"type" : "Free Weight",
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Leg"
+	},
+	{
 		"name" : "Pause Deadlift",
 		"id" : "0A10C93B-87F3-47CA-BD7A-E288E3AFA0E6",
 		"image" : "pause_deadlift",
@@ -5835,6 +6553,27 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Snatch Pull",
+		"id" : "F9B3E2A7-6D4C-4A1F-8E5B-3C2D1F0A9B8E",
+		"image" : "snatch_pull",
+		"url" : "snatch-pull",
+		"aliases" : ["Snatch High Pull"],
+		"description" : "An explosive pull using a snatch grip to develop power in the first and second pull without receiving the bar overhead.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 35, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] },
+			{ "engagementPercentage" : 35, "isPrimary" : false, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Quadriceps", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Adv.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
 		"name" : "Stiff-Legged Deadlift",
 		"id" : "D942C43F-CC00-41E8-8AFF-DEB0A56918E9",
 		"image" : "stiff_legged_deadlift",
@@ -5848,6 +6587,32 @@
 				{ "engagementPercentage" : 16, "submuscleWorked" : "Semitendinosus" },
 				{ "engagementPercentage" : 8, "submuscleWorked" : "Semimembranosus" },
 				{ "engagementPercentage" : 16, "submuscleWorked" : "Biceps Femoris" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Sumo Squat",
+		"id" : "9A1B2C3D-4E5F-6A7B-8C9D-0E1F2A3B4C5D",
+		"image" : "sumo_squat",
+		"url" : "sumo-squat",
+		"aliases" : ["Wide-Stance Squat"],
+		"description" : "Performs a squat with a wide stance and toes turned out to emphasize the glutes, adductors, and quads through a deeper hip hinge.",
+		"equipmentRequired" : ["Barbell", "Squat Rack"],
+		"muscles" : [
+			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gluteus Maximus" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Hip Complex", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Adductors" }
 			] }
 		],
 		"difficulty" : "Nov.",
@@ -5883,7 +6648,7 @@
 		"name" : "Snatch Grip Deadlift",
 		"id" : "B312F32F-6168-42CD-B35D-5DF0BBB4FF04",
 		"image" : "snatch_grip_deadlift",
-		"url" : "snatch-grip-deadlift",
+		"url" : "snatch-deadlift",
 		"aliases" : ["Wide-Grip Deadlift"],
 		"description" : "Wide-grip deadlift that increases range of motion and back demand.",
 		"equipmentRequired" : ["Barbell"],
@@ -5907,7 +6672,6 @@
 		"name" : "Jefferson Curl",
 		"id" : "3BE70137-DD4A-4ACF-A5DD-D1E607713B7D",
 		"image" : "jefferson_curl",
-		"url" : "jefferson-curl",
 		"description" : "Slow spinal flexion with weight to build back strength and mobility.",
 		"equipmentRequired" : ["Barbell", "Dumbbells"],
 		"muscles" : [
@@ -5927,7 +6691,6 @@
 		"name" : "Kettlebell Swing",
 		"id" : "1F3E5EE5-3773-4CB9-8B72-88D98CB66DC7",
 		"image" : "kettlebell_swing",
-		"url" : "kettlebell-swing",
 		"aliases" : ["KB Swing"],
 		"description" : "Ballistic hip-hinge movement that builds posterior-chain power.",
 		"equipmentRequired" : ["Kettlebells"],
@@ -5976,7 +6739,6 @@
 		"name" : "Seal Row",
 		"id" : "8D962CE3-8C02-45C7-8433-15F4E45D81C6",
 		"image" : "seal_row",
-		"url" : "seal-row",
 		"aliases" : ["Prone Bench Row"],
 		"description" : "Rowing a barbell while lying face-down on a bench eliminates body momentum to isolate the lats and mid-back.",
 		"equipmentRequired" : ["Barbell", "Flat Bench"],
@@ -6024,7 +6786,6 @@
 		"name" : "Kroc Row",
 		"id" : "6E2192DF-237D-4376-AC9A-124973AA25E9",
 		"image" : "kroc_row",
-		"url" : "kroc-row",
 		"aliases" : ["Heavy Dumbbell Row"],
 		"description" : "High-rep, heavy single-arm dumbbell rows that build back thickness and grip strength.",
 		"equipmentRequired" : ["Dumbbells", "Flat Bench"],
@@ -6042,14 +6803,13 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
 		"type" : "Free Weight",
-		"repsInstruction" : "Per Arm",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Arm"
 	},
 	{
 		"name" : "Iso-Lateral High Row (Machine)",
 		"id" : "745E7252-FC4A-4628-BA4F-9092881BCEEA",
 		"image" : "iso_lateral_high_row",
-		"url" : "iso-lateral-high-row",
 		"aliases" : ["Hammer Strength High Row"],
 		"description" : "Plate-loaded machine row that pulls from a high path, emphasising upper-lat and rear-delt fibres.",
 		"equipmentRequired" : ["High Row"],
@@ -6072,7 +6832,6 @@
 		"name" : "Iso-Lateral Low Row (Machine)",
 		"id" : "9FE29476-3382-4329-A5FF-03793154C9BE",
 		"image" : "iso_lateral_low_row",
-		"url" : "iso-lateral-low-row",
 		"aliases" : ["Hammer Strength Low Row"],
 		"description" : "Iso-lateral plate-loaded machine that rows from a low angle to hit the mid-lats and rhomboids.",
 		"equipmentRequired" : ["Low Row"],
@@ -6095,7 +6854,6 @@
 		"name" : "Landmine Row",
 		"id" : "12563983-538D-4A76-A4DE-A948A59184AE",
 		"image" : "landmine_row",
-		"url" : "landmine-row",
 		"aliases" : ["Parallel-Grip Landmine Row"],
 		"description" : "Rows a landmine-loaded bar using a neutral handle for balanced development of the lats and mid-back.",
 		"equipmentRequired" : ["Landmine"],
@@ -6119,10 +6877,9 @@
 		"name" : "I-Y-T Raise (on Bench)",
 		"id" : "670374B5-9DA7-4D4F-B286-3972FBFF3EEB",
 		"image" : "iyt_raise",
-		"url" : "iyt-raise",
 		"aliases" : ["Incline IYT Raise"],
 		"description" : "Sequence of three raises (I, Y, T) on an incline bench to activate the lower traps and rear delts for scapular stability.",
-		"equipmentRequired" : ["Dumbbells", "Incline Bench Rack"],
+		"equipmentRequired" : ["Dumbbells", "Adjustable Bench"],
 		"muscles" : [
 			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Lower Traps" },
@@ -6139,11 +6896,11 @@
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
-		"name" : "Prone Y Raise",
+		"name" : "Incline Y Raise",
 		"id" : "F0C4F1BE-37BF-4347-83FE-4E5DACC9B9C3",
 		"image" : "prone_y_raise",
-		"url" : "prone-y-raise",
-		"aliases" : ["Incline Y Raise"],
+		"url" : "dumbbell-incline-y-raise",
+		"aliases" : ["Prone Y Raise"],
 		"description" : "Raises light dumbbells into a Y-shape while prone to strengthen the lower traps and rear delts.",
 		"equipmentRequired" : ["Dumbbells", "Incline Bench Rack"],
 		"muscles" : [
@@ -6164,7 +6921,6 @@
 		"name" : "Prone Cobra",
 		"id" : "AB52BA4B-4AD0-4E1A-9A07-6B40AB2BA4AB",
 		"image" : "prone_cobra",
-		"url" : "prone-cobra",
 		"aliases" : ["Back Extension Hold"],
 		"description" : "Isometric hold in a prone, arms-back position that reinforces spinal extensors and postural muscles.",
 		"equipmentRequired" : [],
@@ -6202,7 +6958,6 @@
 		"name" : "Standing T-Bar Row",
 		"id" : "B68C68AA-D33D-4D09-BE31-4C1D08F0B0ED",
 		"image" : "standing_t_bar_row",
-		"url" : "standing-t-bar-row",
 		"aliases" : ["Plate-Loaded T-Bar Row"],
 		"description" : "Rows a plate-loaded T-bar while standing over the platform to build overall back thickness.",
 		"equipmentRequired" : ["T-Bar Row"],
@@ -6247,14 +7002,14 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
 		"type" : "Free Weight",
-		"repsInstruction" : "Per Arm",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+		"repsInstruction" : "Per Arm"
 	},
 	{
 		"name" : "Single-Arm Cable Row",
 		"id" : "B5AA4915-F4E3-4628-BBD4-A0EC656DC1FC",
 		"image" : "single_arm_cable_row",
-		"url" : "single-arm-cable-row",
+		"url" : "one-arm-seated-cable-row",
 		"aliases" : ["Unilateral Cable Row"],
 		"description" : "Uses a single cable handle to row with one arm, promoting balanced lat development and core stability.",
 		"equipmentRequired" : ["Cable Row"],
@@ -6278,7 +7033,6 @@
 		"name" : "Machine Pullover",
 		"id" : "C1A0B900-77A5-44E0-998E-A5C66A25F58B",
 		"image" : "pullover_machine",
-		"url" : "machine-pullover",
 		"aliases" : ["Nautilus Pullover"],
 		"description" : "Pull pads from overhead to hips to strengthen lats and serratus under constant tension.",
 		"equipmentRequired" : ["Pullover Machine"],
@@ -6342,7 +7096,6 @@
 		"name" : "Assisted Chin-Up",
 		"id" : "726CD91A-33F3-4637-8B47-EE76A295E0A4",
 		"image" : "assisted_chin_up",
-		"url" : "assisted-chin-ups",
 		"aliases" : ["Underhand Pull-Up"],
 		"description" : "Uses a counter-weight or band to let beginners practise full-range chin-ups with manageable load.",
 		"equipmentRequired" : ["Assisted Machine"],
@@ -6365,7 +7118,6 @@
 		"name" : "Weighted Chin-Up",
 		"id" : "14C6C0D7-8251-45E9-A91E-0F0C2ED3D38D",
 		"image" : "weighted_chin_up",
-		"url" : "weighted-chin-ups",
 		"aliases" : ["Underhand Pull-Up"],
 		"description" : "Performs a chin-up while wearing a dip belt or loading pin to progress strength beyond body-weight.",
 		"equipmentRequired" : ["Pull-Up Bar", "Dip Belt"],
@@ -6411,7 +7163,6 @@
 		"name" : "Assisted Pull-Up",
 		"id" : "EDBF39AF-ADFE-465B-B919-7A44DFB4F3AA",
 		"image" : "assisted_pull_up",
-		"url" : "assisted-pull-up",
 		"aliases" : ["Gravitron Pull-Up"],
 		"description" : "Machine or band support offsets a percentage of body-weight, letting lifters focus on form and full range.",
 		"equipmentRequired" : ["Assisted Machine"],
@@ -6434,7 +7185,6 @@
 		"name" : "Weighted Pull-Up",
 		"id" : "45B2C4C6-FF43-4085-A09C-5CCC8F6EB2B7",
 		"image" : "weighted_pull_up",
-		"url" : "weighted-pull-ups",
 		"aliases" : ["Overhand Pull-Up"],
 		"description" : "An advanced progression adding external load via dip belt, vest or plates for greater strength stimulus.",
 		"equipmentRequired" : ["Pull-Up Bar", "Dip Belt"],
@@ -6480,7 +7230,6 @@
 		"name" : "Assisted Neutral Grip Pull-Up",
 		"id" : "10ABC801-2B18-401E-B2B7-D75675D67619",
 		"image" : "assisted_neutral_grip_pull_up",
-		"url" : "assisted-neutral-grip-pull-ups",
 		"aliases" : ["Parallel Grip Pull-Up"],
 		"description" : "Neutral-grip version performed on an assisted machine or with bands, ideal for beginners or rehab.",
 		"equipmentRequired" : ["Assisted Machine"],
@@ -6503,7 +7252,6 @@
 		"name" : "Weighted Neutral Grip Pull-Up",
 		"id" : "E48A99B5-1C72-4190-9539-5DAA35AAB8B2",
 		"image" : "weighted_neutral_grip_pull_up",
-		"url" : "weighted-neutral-grip-pull-ups",
 		"aliases" : ["Parallel Grip Pull-Up"],
 		"description" : "Adds external resistance to the joint-friendly neutral pull-up for continued strength gains.",
 		"equipmentRequired" : ["Pull-Up Bar", "Dip Belt"],
@@ -6549,7 +7297,6 @@
 		"name" : "Weighted Muscle-Up",
 		"id" : "ED5C0418-8113-483A-B183-D60F04DC6A0D",
 		"image" : "weighted_muscle_up",
-		"url" : "weighted-muscle-ups",
 		"aliases" : ["Bar Muscle-Up"],
 		"description" : "Muscle-up executed with added load from a dip belt\u2014reserved for athletes with elite pulling & pressing strength.",
 		"equipmentRequired" : ["Pull-Up Bar", "Dip Belt"],
@@ -6567,6 +7314,37 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Bodyweight"
+	},
+	{
+		"name" : "Dumbbell Thruster",
+		"id" : "7F8B4E1C-2A6D-4C01-9E35-8B2D6F3A9C51",
+		"image" : "dumbbell_thruster",
+		"url" : "dumbbell-thruster",
+		"aliases" : ["DB Thruster"],
+		"description" : "Combines a front squat and overhead press with dumbbells to develop leg drive, shoulder strength, and full-body power.",
+		"equipmentRequired" : ["Dumbbells"],
+		"muscles" : [
+			{ "engagementPercentage" : 45, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 25, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Front Delt" },
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Side Delt" }
+			] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Triceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Triceps Lateral Head" }
+			] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Independent",
+		"type" : "Free Weight",
+		"weightInstruction" : "Per Dumbbell"
 	},
 	{
 		"name" : "Seated Cable Row",
@@ -6629,6 +7407,31 @@
 		"url" : "dumbbell-row",
 		"aliases" : ["Single-Arm Row"],
 		"description" : "Engages the upper and middle back muscles by rowing a dumbbell with one arm.",
+		"equipmentRequired" : ["Dumbbells"],
+		"muscles" : [
+			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Traps" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Traps" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Biceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Unilateral",
+		"type" : "Free Weight",
+		"repsInstruction" : "Per Arm"
+	},
+	{
+		"name" : "Bent-Over Dumbbell Row",
+		"id" : "B7F5C3D2-1A9E-4B6C-8D7F-2E1A3B4C5D6E",
+		"image" : "bent_over_dumbbell_row",
+		"url" : "bent-over-dumbbell-row",
+		"aliases" : ["Single-Arm Dumbbell Row"],
+		"description" : "Hinge at the hips and pull a dumbbell toward your torso, targeting the lats and upper back with unilateral focus.",
 		"equipmentRequired" : ["Dumbbells"],
 		"muscles" : [
 			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
@@ -6746,6 +7549,61 @@
 		"type" : "Machine"
 	},
 	{
+		"name" : "One-Arm Pulldown",
+		"id" : "5D3A2C1B-9E8F-4A7B-C6D5-E4F3A2B1C0D9",
+		"image" : "one_arm_pulldown",
+		"url" : "one-arm-pulldown",
+		"aliases" : ["Unilateral Lat Pulldown"],
+		"description" : "Performs a lat pulldown one arm at a time on a cable machine, isolating each side for focused lat and upper-back engagement.",
+		"equipmentRequired" : ["Cable Lat Pulldown"],
+		"muscles" : [
+			{ "engagementPercentage" : 60, "isPrimary" : true, "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Forearms", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Brachioradialis" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Forearm Extensors" }
+			] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Biceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
+			] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Compound",
+		"limbMovementType" : "Unilateral",
+		"type" : "Machine",
+		"repsInstruction" : "Per Arm"
+	},
+	{
+		"name" : "Close-Grip Lat Pulldown",
+		"id" : "C1D2E3F4-5A6B-4C7D-8E9F-0A1B2C3D4E5F",
+		"image" : "close_grip_lat_pulldown",
+		"url" : "close-grip-lat-pulldown",
+		"aliases" : ["Narrow-Grip Pulldown"],
+		"description" : "Pulls a close-grip bar down to the chest on a lat pulldown machine, emphasizing the inner lats and biceps.",
+		"equipmentRequired" : ["Cable Lat Pulldown"],
+		"muscles" : [
+			{ "engagementPercentage" : 60, "isPrimary" : true, "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Biceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Forearms", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Brachioradialis" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Forearm Extensors" }
+			] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Machine"
+	},
+	{
 		"name" : "Reverse Grip Lat Pulldown",
 		"id" : "1A230A1C-0DE7-4B0D-BB09-6B95942AA006",
 		"image" : "reverse_grip_lat_pulldown",
@@ -6816,7 +7674,6 @@
 		"name" : "Wrist Roller",
 		"id" : "6EB692DC-B764-4DD9-910B-9AB490368771",
 		"image" : "wrist_roller",
-		"url" : "wrist-roller",
 		"aliases" : ["Forearm Roller", "Roll-Up Trainer"],
 		"description" : "Roll a weight-loaded cord up and down to build balanced strength in both flexors and extensors.",
 		"equipmentRequired" : ["Wrist Roller", "Weight Plate"],
@@ -6835,7 +7692,6 @@
 		"name" : "Plate Flip",
 		"id" : "440CAA8D-8258-48A6-A4D4-2FD2BFEB202C",
 		"image" : "plate_flip",
-		"url" : "plate-flip",
 		"aliases" : ["Plate Catch", "Grip Plate Flip"],
 		"description" : "Toss and catch a weight plate in mid-air, flipping it to develop explosive wrist-extensor strength and coordination.",
 		"equipmentRequired" : ["Weight Plate"],
@@ -6854,7 +7710,6 @@
 		"name" : "Rice-Bucket Wrist Twist",
 		"id" : "99F761A8-88E5-43D4-BE35-945335E6C390",
 		"image" : "rice_bucket_wrist_twist",
-		"url" : "rice-bucket-wrist-twist",
 		"aliases" : ["Rice Bucket", "Rice Wrist Drill"],
 		"description" : "Twist the hands through deep rice to strengthen flexion, extension, and rotational grip capacity with high volume.",
 		"equipmentRequired" : ["Rice Bucket"],
@@ -6870,10 +7725,9 @@
 		"type" : "Free Weight"
 	},
 	{
-		"name" : "Farmer Walk Pinch-Grip",
+		"name" : "Farmer's Walk Pinch-Grip",
 		"id" : "6627D014-13C3-4166-BF1B-4650E27954EA",
 		"image" : "farmer_walk_pinch_grip",
-		"url" : "farmer-walk-pinch-grip",
 		"aliases" : ["Pinch-Block Carry", "Pinch Farmer Walk"],
 		"description" : "Walk for distance while pinching smooth blocks or plates together to tax thumbs and forearm flexors intensely.",
 		"equipmentRequired" : ["Pinch Blocks", "Weight Plate"],
@@ -6892,7 +7746,6 @@
 		"name" : "Thick-Bar Hold",
 		"id" : "FD7A70F2-5FA6-44D2-9324-D2E6A2F7230A",
 		"image" : "thick_bar_hold",
-		"url" : "thick-bar-hold",
 		"aliases" : ["Fat-Grip Hold", "Axle Hold"],
 		"description" : "Support a heavily loaded thick bar for time to overwhelm gripping surfaces and build crush strength.",
 		"equipmentRequired" : ["Thick Bar"],
@@ -6963,6 +7816,24 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Behind-the-Back Barbell Shrug",
+		"id" : "A5B2C7D3-8E4F-4A1B-9C6D-2F0E3A7B1C9D",
+		"image" : "behind_the_back_barbell_shrug",
+		"url" : "behind-the-back-barbell-shrug",
+		"aliases" : ["BTB Barbell Shrug", "Behind-the-Back Shrug"],
+		"description" : "Targets the upper traps by performing a shoulder shrug with the barbell held behind the hips, altering the range of motion and shoulder angle for added emphasis.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
 		"name" : "Cable Shrug",
 		"id" : "95DC9C65-1793-46E1-B042-BB81AA9086C3",
 		"image" : "cable_shrug",
@@ -6981,10 +7852,10 @@
 		"type" : "Machine"
 	},
 	{
-		"name" : "Trap Bar Shrug",
+		"name" : "Hex Bar Shrug",
 		"id" : "1C767591-4DAC-4EDC-B35B-A8F3994BCA09",
 		"image" : "trap_bar_shrug",
-		"url" : "trap-bar-shrug",
+		"url" : "hex-bar-shrug",
 		"aliases" : ["Hex Bar Shrug"],
 		"description" : "Neutral-grip shrug with trap bar to overload the upper traps.",
 		"equipmentRequired" : ["Trap Bar"],
@@ -6999,28 +7870,10 @@
 		"type" : "Free Weight"
 	},
 	{
-		"name" : "Farmer's Carry",
-		"id" : "B6824124-AEBD-4649-BD0B-DA421AFD6DD0",
-		"image" : "farmers_carry",
-		"url" : "farmers-carry",
-		"aliases" : ["Farmer Walk"],
-		"description" : "Walk for distance or time while holding heavy farmer handles to build grip and upper-back strength.",
-		"equipmentRequired" : ["Farmer's Walk Handles"],
-		"muscles" : [
-			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Forearms", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Abdominals", "submusclesWorked" : [] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
-	},
-	{
 		"name" : "Machine Shoulder Shrug",
 		"id" : "65E1ED2C-6B28-4A26-9047-5E5939B89551",
 		"image" : "machine_shoulder_shrug",
-		"url" : "machine-shoulder-shrug",
+		"url" : "machine-shrug",
 		"aliases" : ["Trap Shrug", "Machine Shrug"],
 		"description" : "Elevate shoulders on a shrug machine to bulk the upper traps safely.",
 		"equipmentRequired" : ["Shoulder Shrug"],
@@ -7085,23 +7938,22 @@
 		"effort" : "Compound",
 		"type" : "Bodyweight"
 	},
-    {
-        "name" : "Elbow-Supported Leg Raise",
-        "id" : "F6D21879-0B9D-4ED1-8A4A-9E9E5FDEA45E",
-        "image" : "elbow_supported_leg_raise",
-        "url" : "elbow-supported-leg-raise",
-        "aliases" : ["Captains Chair Leg Raise", "Dip-Bar Leg Lift"],
-        "description" : "Lower-ab and hip-flexor raise performed with the forearms braced on a captain’s-chair / dip-station so grip fatigue is removed.",
-        "equipmentRequired" : ["Captain's Chair"],
-        "muscles" : [
-            { "engagementPercentage" : 100, "isPrimary" : true,  "muscleWorked" : "Abdominals", "submusclesWorked" : [
-                { "engagementPercentage" : 100, "submuscleWorked" : "Lower Abs" }
-            ] }
-        ],
-        "difficulty" : "Nov.",
-        "effort" : "Compound",
-        "type" : "Bodyweight"
-    },
+	{
+		"name" : "Elbow-Supported Leg Raise",
+		"id" : "F6D21879-0B9D-4ED1-8A4A-9E9E5FDEA45E",
+		"image" : "elbow_supported_leg_raise",
+		"aliases" : ["Captains Chair Leg Raise", "Dip-Bar Leg Lift"],
+		"description" : "Lower-ab and hip-flexor raise performed with the forearms braced on a captain\u2019s-chair / dip-station so grip fatigue is removed.",
+		"equipmentRequired" : ["Captain's Chair"],
+		"muscles" : [
+			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Abdominals", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Lower Abs" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"type" : "Bodyweight"
+	},
 	{
 		"name" : "Hanging Knee Raise",
 		"id" : "7B763D44-132B-40B8-8B65-0527809F2447",
@@ -7119,23 +7971,22 @@
 		"effort" : "Compound",
 		"type" : "Bodyweight"
 	},
-    {
-        "name" : "Elbow-Supported Knee Raise",
-        "id" : "0726A42F-4A1D-4EA3-9C3C-7518F7E4E3A1",
-        "image" : "elbow_supported_knee_raise",
-        "url" : "elbow-supported-knee-raise",
-        "aliases" : ["Captains Chair Knee Raise", "Dip-Station Knee Lift"],
-        "description" : "Lower-ab knee tuck performed with the forearms braced on a captain’s-chair / dip-station so grip fatigue is eliminated.",
-        "equipmentRequired" : ["Captain's Chair"],
-        "muscles" : [
-            { "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Abdominals", "submusclesWorked" : [
-                { "engagementPercentage" : 100, "submuscleWorked" : "Lower Abs" }
-            ] }
-        ],
-        "difficulty" : "Nov.",
-        "effort" : "Compound",
-        "type" : "Bodyweight"
-    },
+	{
+		"name" : "Elbow-Supported Knee Raise",
+		"id" : "0726A42F-4A1D-4EA3-9C3C-7518F7E4E3A1",
+		"image" : "elbow_supported_knee_raise",
+		"aliases" : ["Captains Chair Knee Raise", "Dip-Station Knee Lift"],
+		"description" : "Lower-ab knee tuck performed with the forearms braced on a captain\u2019s-chair / dip-station so grip fatigue is eliminated.",
+		"equipmentRequired" : ["Captain's Chair"],
+		"muscles" : [
+			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Abdominals", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Lower Abs" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"type" : "Bodyweight"
+	},
 	{
 		"name" : "Cable Wood Chop",
 		"id" : "BD91914D-35F9-47D5-AE29-EB535163E5F8",
@@ -7400,7 +8251,6 @@
 		"name" : "Side Plank",
 		"id" : "321A748C-6F7A-4BDF-B069-7CF6AAA89B42",
 		"image" : "side_plank",
-		"url" : "side-plank",
 		"description" : "Core-stability drill holding a straight-body side position.",
 		"equipmentRequired" : [],
 		"muscles" : [
@@ -7418,7 +8268,6 @@
 		"name" : "Kneeling Plank",
 		"id" : "EE5FD372-EAE4-4C96-9493-3B825468E582",
 		"image" : "kneeling_plank",
-		"url" : "kneeling-plank",
 		"description" : "Beginner plank variation on knees focusing on core activation.",
 		"equipmentRequired" : [],
 		"muscles" : [
@@ -7437,7 +8286,6 @@
 		"name" : "Kneeling Side Plank",
 		"id" : "48FB0852-58FE-404D-B971-B4565035F673",
 		"image" : "kneeling_side_plank",
-		"url" : "kneeling-side-plank",
 		"description" : "Side plank regression with knees down for easier balance.",
 		"equipmentRequired" : [],
 		"muscles" : [
@@ -7455,7 +8303,6 @@
 		"name" : "Hollow Body Hold",
 		"id" : "7D6CD89B-6106-492E-B72D-3D3D8145C75B",
 		"image" : "hollow_body_hold",
-		"url" : "hollow-body-hold",
 		"aliases" : ["Hollow Hold", "Gymnast Hollow"],
 		"description" : "A gymnast staple that builds full-body tension by holding a curved \u201chollow\u201d position, firing the entire core.",
 		"equipmentRequired" : [],
@@ -7474,7 +8321,6 @@
 		"name" : "V-Up",
 		"id" : "70109F04-FCBC-41D6-BED7-8F543A6E3258",
 		"image" : "v_up",
-		"url" : "v-up",
 		"aliases" : ["V-Sit Up", "Jackknife V-Up"],
 		"description" : "Snaps the torso and legs together into a sharp \u201cV\u201d, hammering both upper and lower abs.",
 		"equipmentRequired" : [],
@@ -7493,7 +8339,6 @@
 		"name" : "Dragon Flag",
 		"id" : "4A5E437A-C801-4A34-B79B-3F15A46E4938",
 		"image" : "dragon_flag",
-		"url" : "dragon-flag",
 		"aliases" : ["Full Dragon Flag"],
 		"description" : "Advanced core move popularized by Bruce Lee\u2014lower and raise a straight body while shoulders stay pinned.",
 		"equipmentRequired" : ["Flat Bench"],
@@ -7512,7 +8357,7 @@
 		"name" : "Reverse Crunch",
 		"id" : "9BAF7CD4-574E-4382-AF3C-58D2D3DF360F",
 		"image" : "reverse_crunch",
-		"url" : "reverse-crunch",
+		"url" : "reverse-crunches",
 		"aliases" : ["Hip Lift"],
 		"description" : "Rolls the pelvis toward the ribs, lifting the hips to torch the lower abs.",
 		"equipmentRequired" : [],
@@ -7551,7 +8396,6 @@
 		"name" : "Plank",
 		"id" : "C699E355-84F6-4244-ADCC-96B29F39E17C",
 		"image" : "plank",
-		"url" : "plank",
 		"aliases" : ["Front Plank"],
 		"description" : "Classic anti-extension hold that trains global core stability.",
 		"equipmentRequired" : [],
@@ -7571,7 +8415,6 @@
 		"name" : "RKC Plank",
 		"id" : "B552CF20-7BA5-4994-9EED-5E604544DF84",
 		"image" : "rkc_plank",
-		"url" : "rkc-plank",
 		"aliases" : ["Hard-Style Plank"],
 		"description" : "High-tension plank variation\u2014pull elbows to toes and squeeze glutes for a brutal 10-second hold.",
 		"equipmentRequired" : [],
@@ -7591,7 +8434,6 @@
 		"name" : "TRX Pike",
 		"id" : "C4361F65-7A47-42B9-A088-2CCACC946222",
 		"image" : "trx_pike",
-		"url" : "trx-pike",
 		"aliases" : ["Suspension Pike"],
 		"description" : "Feet-in-straps pike that drags hips sky-high, crushing the lower abs and hip-flexors.",
 		"equipmentRequired" : ["Rings"],
@@ -7610,7 +8452,6 @@
 		"name" : "TRX Body Saw",
 		"id" : "12420C2A-DF43-4589-A6AF-B739AB9B12AD",
 		"image" : "trx_body_saw",
-		"url" : "trx-body-saw",
 		"aliases" : ["Suspension Body Saw"],
 		"description" : "Plank on straps\u2014rocking the body forward and back to super-charge core stability.",
 		"equipmentRequired" : ["Rings"],
@@ -7630,7 +8471,6 @@
 		"name" : "Stability Ball Rollout",
 		"id" : "1A01BBB2-0F54-494B-9724-AD80C607DC0D",
 		"image" : "stability_ball_rollout",
-		"url" : "stability-ball-rollout",
 		"aliases" : ["Swiss Ball Rollout"],
 		"description" : "Kneeling rollout on a Swiss ball\u2014ab-wheel intensity with a friendlier learning curve.",
 		"equipmentRequired" : ["Exercise Ball"],
@@ -7649,7 +8489,6 @@
 		"name" : "Stability Ball Pike",
 		"id" : "A717B221-7F03-4B4F-9BD5-FEF44524D0BF",
 		"image" : "stability_ball_pike",
-		"url" : "stability-ball-pike",
 		"aliases" : ["Swiss Ball Pike"],
 		"description" : "Feet on ball, hips snap up into a pike\u2014pure lower-ab domination with balance demand.",
 		"equipmentRequired" : ["Exercise Ball"],
@@ -7668,7 +8507,6 @@
 		"name" : "Jackknife Sit-Up",
 		"id" : "4D70C3C1-CFE4-4A37-96D8-4587DB6AF51F",
 		"image" : "jackknife_sit_up",
-		"url" : "jackknife-sit-up",
 		"aliases" : ["Jackknife Crunch"],
 		"description" : "Both arms and legs rise to meet\u2014creates a powerful contraction across the entire six-pack.",
 		"equipmentRequired" : [],
@@ -7687,7 +8525,6 @@
 		"name" : "Medicine Ball Slam",
 		"id" : "C7D35A34-B406-4333-8C41-7ED8236FB6F8",
 		"image" : "medicine_ball_slam",
-		"url" : "medicine-ball-slam",
 		"aliases" : ["Ball Slam"],
 		"description" : "Explosive overhead slam that channels power through the core, shoulders, and lats.",
 		"equipmentRequired" : ["Medicine Ball"],
@@ -7710,7 +8547,6 @@
 		"name" : "Medicine Ball Russian Twist",
 		"id" : "BB59EA3F-2D61-4E46-BE5F-4D9E2AC79EC9",
 		"image" : "medicine_ball_russian_twist",
-		"url" : "medicine-ball-russian-twist",
 		"aliases" : ["Weighted Russian Twist"],
 		"description" : "Seated torso rotation with a med-ball\u2014oblique-centric with constant load.",
 		"equipmentRequired" : ["Medicine Ball"],
@@ -7729,7 +8565,6 @@
 		"name" : "Dead Bug",
 		"id" : "3F994751-33F7-471E-B7B6-C428156AF986",
 		"image" : "dead_bug",
-		"url" : "dead-bug",
 		"aliases" : ["Deadbug"],
 		"description" : "Alternating arm/leg extension while maintaining a braced core\u2014teaches lumbo-pelvic control.",
 		"equipmentRequired" : [],
@@ -7748,7 +8583,6 @@
 		"name" : "Bird Dog",
 		"id" : "9EE4B25F-4561-48C1-B7C4-897639D98AF3",
 		"image" : "bird_dog",
-		"url" : "bird-dog",
 		"aliases" : ["Quadruped Opposite Arm-Leg Raise"],
 		"description" : "Core-stability drill that pairs opposite arm and leg extension to train anti-rotation and balance.",
 		"equipmentRequired" : [],
@@ -7770,7 +8604,6 @@
 		"name" : "Pallof Press",
 		"id" : "0B352EA5-B99F-47F7-87B4-3C39AC4F727A",
 		"image" : "pallof_press",
-		"url" : "pallof-press",
 		"aliases" : ["Cable Anti-Rotation Press"],
 		"description" : "Press-out hold that resists cable pull, training the core to fight rotation.",
 		"equipmentRequired" : ["Cable Hi-Lo Pulley"],
@@ -7788,7 +8621,6 @@
 		"name" : "Landmine Anti-Rotation",
 		"id" : "C920B6E2-86E1-4268-BFF0-30937B1776F0",
 		"image" : "landmine_anti_rotation",
-		"url" : "landmine-anti-rotation",
 		"aliases" : ["Landmine Rainbow"],
 		"description" : "Steer the bar in an arc from hip to hip\u2014an anti-rotation crusher that also hits shoulders.",
 		"equipmentRequired" : ["Landmine"],
@@ -7881,6 +8713,45 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Roman Chair Side Bend",
+		"id" : "9D2E4F6A-7B8C-4D0E-9F1A-2B3C4D5E6F7A",
+		"image" : "roman_chair_side_bend",
+		"url" : "roman-chair-side-bend",
+		"aliases" : ["Side Bend (Roman Chair)"],
+		"description" : "Perform lateral trunk flexion on a Roman chair to target the obliques with controlled range of motion.",
+		"equipmentRequired" : ["Back Extension Bench"],
+		"muscles" : [
+			{ "engagementPercentage" : 80, "isPrimary" : true, "muscleWorked" : "Abdominals", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Obliques" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Isolation",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Machine",
+		"repsInstruction" : "Per Side"
+	},
+	{
+		"name" : "Dumbbell Side Bend",
+		"id" : "B3C4D5E6-F7A8-49B0-8C1D-2E3F4A5B6C7D",
+		"image" : "dumbbell_side_bend",
+		"url" : "dumbbell-side-bend",
+		"aliases" : ["DB Side Bend"],
+		"description" : "Stands upright and bends the torso laterally with a dumbbell in one hand to isolate and strengthen the obliques.",
+		"equipmentRequired" : ["Dumbbells"],
+		"muscles" : [
+			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Abdominals", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Obliques" }
+			] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Isolation",
+		"limbMovementType" : "Unilateral",
+		"type" : "Free Weight",
+		"weightInstruction" : "Per Dumbbell"
+	},
+	{
 		"name" : "Dumbbell Reverse Curl",
 		"id" : "17A55005-88D9-461A-8C61-36B1C3F3D6F0",
 		"image" : "dumbbell_reverse_curl",
@@ -7923,7 +8794,6 @@
 		"name" : "Pinch-Block Static Hold",
 		"id" : "96BDA4F5-6029-4E6D-89E9-214F1E76294D",
 		"image" : "pinch_block_hold",
-		"url" : "pinch-block-hold",
 		"aliases" : ["Pinch Grip Hold"],
 		"description" : "Grip pinch blocks and hold for time to develop crushing thumb strength.",
 		"equipmentRequired" : ["Pinch Blocks"],
@@ -7936,13 +8806,12 @@
 		"type" : "Free Weight"
 	},
 	{
-		"name" : "Farmers Walk",
+		"name" : "Farmer's Walk",
 		"id" : "05AC06BB-CE8E-4CDC-BF2C-1EFC3C4CB6B3",
 		"image" : "farmers_walk",
-		"url" : "farmers-walk",
-		"aliases" : ["Farmer\u2019s Carry"],
+		"aliases" : ["Farmer's Carry"],
 		"description" : "Builds crushing grip and whole-body stability by carrying heavy implements for distance or time.",
-		"equipmentRequired" : ["Dumbbells", "Kettlebells"],
+		"equipmentRequired" : ["Farmer's Walk Handles"],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Forearms", "submusclesWorked" : [] }
 		],
@@ -7955,7 +8824,6 @@
 		"name" : "One-Handed Bar Hang",
 		"id" : "2582781C-F587-4455-8DD1-15DDB8A62BEB",
 		"image" : "one_handed_bar_hang",
-		"url" : "one-handed-bar-hang",
 		"aliases" : ["Single-Arm Dead Hang"],
 		"description" : "Enhances unilateral grip strength by suspending body-weight from a bar with one hand.",
 		"equipmentRequired" : ["Pull-Up Bar"],
@@ -7971,7 +8839,6 @@
 		"name" : "Plate Pinch",
 		"id" : "A8AF845D-6B0A-4077-AC49-AF052C716641",
 		"image" : "plate_pinch",
-		"url" : "plate-pinch",
 		"description" : "Develops thumb and finger strength by holding weight plates together for time.",
 		"equipmentRequired" : [],
 		"muscles" : [
@@ -7986,7 +8853,6 @@
 		"name" : "Plate Wrist Curl",
 		"id" : "149BB87D-41C9-4687-B420-C564CF3ABCFB",
 		"image" : "plate_wrist_curl",
-		"url" : "plate-wrist-curl",
 		"description" : "Isolates the forearm flexors via wrist flexion with a single plate.",
 		"equipmentRequired" : [],
 		"muscles" : [
@@ -8001,7 +8867,6 @@
 		"name" : "Towel Pull-Up",
 		"id" : "42B56D7B-18D4-410B-9754-6706A9EF8CE0",
 		"image" : "towel_pull_up",
-		"url" : "towel-pull-up",
 		"description" : "Increases grip challenge by performing pull-ups while gripping towels draped over a bar.",
 		"equipmentRequired" : ["Pull-Up Bar", "Towel"],
 		"muscles" : [
@@ -8012,6 +8877,25 @@
 		],
 		"difficulty" : "Int.",
 		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Bodyweight"
+	},
+	{
+		"name" : "Burpees",
+		"id" : "CD3A5B76-E8F1-4C2D-9A07-1234B5678C9D",
+		"image" : "burpees",
+		"url" : "burpees",
+		"aliases" : ["Burpee"],
+		"description" : "A full-body plyometric exercise combining a squat, plank, push-up, and jump to build strength and cardiovascular fitness.",
+		"equipmentRequired" : [],
+		"muscles" : [
+			{ "engagementPercentage" : 40, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Pectorals", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Abdominals", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Bodyweight"
 	},
@@ -8062,6 +8946,34 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Power Shrug",
+		"id" : "84B7C993-3B2C-4FA0-AB4D-A5DAE719F6D1",
+		"image" : "power_shrug",
+		"url" : "barbell-power-shrug",
+		"aliases" : ["Barbell Power Shrug", "Explosive Shrug"],
+		"description" : "An explosive barbell shrug that combines a partial pull with a forceful upward shrug, building trap power and speed for Olympic lifts.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 60, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [
+				{ "engagementPercentage" : 34, "submuscleWorked" : "Iliocostalis" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Longissimus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Spinalis" }
+			] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Front Delt" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Side Delt" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Forearms", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Plyometric",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
 		"name" : "Power Snatch",
 		"id" : "034D8B67-27BE-4F7E-9D39-FE5F676EF096",
 		"image" : "power_snatch",
@@ -8087,6 +8999,30 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Muscle Snatch",
+		"id" : "D9A1C2B3-4E5F-6789-0A1B-2C3D4E5F6A7B",
+		"image" : "muscle_snatch",
+		"url" : "muscle-snatch",
+		"aliases" : ["Power Snatch No Catch"],
+		"description" : "Pulls the bar from floor to overhead without re-bending the knees into a catch, emphasizing upper-back and shoulder power.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 35, "isPrimary" : true, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Front Delt" },
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Side Delt" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Adv.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
 		"name" : "Snatch",
 		"id" : "EF4F8A1B-0E13-4D0C-BF2D-6E1B9C87221D",
 		"image" : "snatch",
@@ -8094,6 +9030,31 @@
 		"aliases" : ["Full Snatch"],
 		"description" : "Classic Olympic lift bringing the bar from floor to overhead in one fluid squat-catch.",
 		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 45, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] },
+			{ "engagementPercentage" : 25, "isPrimary" : false, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [
+				{ "engagementPercentage" : 34, "submuscleWorked" : "Iliocostalis" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Longissimus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Spinalis" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Quadriceps", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Adv.",
+		"effort" : "Plyometric",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Dumbbell Snatch",
+		"id" : "A2F3B4C5-D6E7-48F9-8A0B-1C2D3E4F5A6B",
+		"image" : "dumbbell_snatch",
+		"url" : "dumbbell-snatch",
+		"aliases" : ["DB Snatch"],
+		"description" : "Lifts a dumbbell from floor to overhead in one fluid motion, developing full-body power and coordination.",
+		"equipmentRequired" : ["Dumbbells"],
 		"muscles" : [
 			{ "engagementPercentage" : 45, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [
 				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
@@ -8133,6 +9094,56 @@
 		],
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Clean High Pull",
+		"id" : "D9A4F1B2-3C5E-4761-8A7B-0F2E3D4C5B6A",
+		"image" : "clean_high_pull",
+		"url" : "clean-high-pull",
+		"aliases" : ["High Pull"],
+		"description" : "An explosive pull from the floor to chest height with high elbows, emphasizing upper traps and posterior chain power.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 40, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [
+				{ "engagementPercentage" : 34, "submuscleWorked" : "Iliocostalis" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Longissimus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Spinalis" }
+			] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Quadriceps", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Adv.",
+		"effort" : "Plyometric",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Clean Pull",
+		"id" : "A8C2D4E6-1F3B-4A57-9D8E-0B2C3D4E5F6A",
+		"image" : "clean_pull",
+		"url" : "clean-pull",
+		"aliases" : ["Power Clean Pull"],
+		"description" : "An explosive pull of the barbell from floor to chest height with minimal knee bend, focusing on posterior chain power and trap engagement.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 40, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [
+				{ "engagementPercentage" : 34, "submuscleWorked" : "Iliocostalis" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Longissimus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Spinalis" }
+			] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Quadriceps", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Adv.",
+		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Free Weight"
 	},
@@ -8195,12 +9206,66 @@
 		"type" : "Free Weight"
 	},
 	{
+		"name" : "Dumbbell Clean and Press",
+		"id" : "4B6A2C1D-7E8F-49A0-B3C2-D5E4F6A7B8C9",
+		"image" : "dumbbell_clean_and_press",
+		"url" : "dumbbell-clean-and-press",
+		"aliases" : ["DB Clean & Press"],
+		"description" : "Cleans dumbbells from the floor to shoulders and finishes with a strict overhead press, combining lower-body power and shoulder strength.",
+		"equipmentRequired" : ["Dumbbells"],
+		"muscles" : [
+			{ "engagementPercentage" : 30, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [
+				{ "engagementPercentage" : 34, "submuscleWorked" : "Iliocostalis" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Longissimus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Spinalis" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Quadriceps", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Front Delt" },
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Side Delt" }
+			] }
+		],
+		"difficulty" : "Adv.",
+		"effort" : "Plyometric",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
 		"name" : "Hang Clean",
 		"id" : "E1A0722C-E88A-4B77-B8AC-309FEEFCDD8F",
 		"image" : "hang_clean",
 		"url" : "hang-clean",
 		"description" : "Performed from the hang position to sharpen the second pull and posterior-chain explosiveness.",
 		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 40, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
+			] },
+			{ "engagementPercentage" : 25, "isPrimary" : false, "muscleWorked" : "Erector Spinae", "submusclesWorked" : [
+				{ "engagementPercentage" : 34, "submuscleWorked" : "Iliocostalis" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Longissimus" },
+				{ "engagementPercentage" : 33, "submuscleWorked" : "Spinalis" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Hamstrings", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 15, "isPrimary" : false, "muscleWorked" : "Quadriceps", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Adv.",
+		"effort" : "Plyometric",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Dumbbell Hang Clean",
+		"id" : "B2C3D4E5-F6A7-48B9-8C0D-1E2F3A4B5C6D",
+		"image" : "dumbbell_hang_clean",
+		"url" : "dumbbell-hang-clean",
+		"aliases" : ["DB Hang Clean"],
+		"description" : "Performed from the hang position to sharpen the second pull and posterior-chain explosiveness using dumbbells.",
+		"equipmentRequired" : ["Dumbbells"],
 		"muscles" : [
 			{ "engagementPercentage" : 40, "isPrimary" : true, "muscleWorked" : "Trapezius", "submusclesWorked" : [
 				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
@@ -8247,7 +9312,6 @@
 		"name" : "Hang Power Snatch",
 		"id" : "3C56A1AC-F911-4EB3-A4D5-F436A7417CC5",
 		"image" : "hang_power_snatch",
-		"url" : "hang-power-snatch",
 		"aliases" : ["HPS"],
 		"description" : "Power snatch from hang height, reinforcing explosive hip extension.",
 		"equipmentRequired" : ["Barbell"],
@@ -8296,7 +9360,6 @@
 		"name" : "Power Jerk",
 		"id" : "F0E2A98A-5A65-4239-B4E4-40E32E36237B",
 		"image" : "power_jerk",
-		"url" : "power-jerk",
 		"description" : "Drives the bar overhead with a shallow dip-catch, stressing shoulder power.",
 		"equipmentRequired" : ["Barbell"],
 		"muscles" : [
@@ -8316,7 +9379,6 @@
 		"name" : "Squat Jerk",
 		"id" : "6B7DD39A-55C7-4BC1-9446-A18329EABC81",
 		"image" : "squat_jerk",
-		"url" : "squat-jerk",
 		"description" : "Catches the jerk in a full squat, demanding elite mobility and stability.",
 		"equipmentRequired" : ["Barbell"],
 		"muscles" : [
@@ -8336,7 +9398,6 @@
 		"name" : "Cambered Bar Squat",
 		"id" : "6EA6C6E4-56DA-4AB8-91D4-1C0F4A7D9B58",
 		"image" : "placeholder_ex_img",
-		"url" : "cambered-bar-squat",
 		"aliases" : [],
 		"description" : "Squat with a cambered bar to reduce shoulder stress while emphasizing quads and glutes.",
 		"equipmentRequired" : ["Cambered Squat Bar"],
@@ -8354,7 +9415,6 @@
 		"name" : "Chair Bulgarian Split Squat",
 		"id" : "A2E9CA1B-2F28-43A4-9C06-0FA2ECA54DBD",
 		"image" : "placeholder_ex_img",
-		"url" : "chair-bulgarian-split-squat",
 		"aliases" : ["Rear-Foot-Elevated Split Squat"],
 		"description" : "Rear-foot-elevated split squat using a sturdy chair to build unilateral leg strength.",
 		"equipmentRequired" : ["Chair"],
@@ -8371,7 +9431,6 @@
 		"name" : "Compact Leg Press",
 		"id" : "D71F2B30-71F1-4DE0-8C98-0A593CFD9F16",
 		"image" : "placeholder_ex_img",
-		"url" : "compact-leg-press",
 		"aliases" : ["Seated Leg Press (Compact)"],
 		"description" : "Seated leg press machine with a compact sled to train the lower body safely.",
 		"equipmentRequired" : ["Compact Leg Press"],
@@ -8386,46 +9445,9 @@
 		"type" : "Machine"
 	},
 	{
-		"name" : "Farmer's Walk",
-		"id" : "462D31AE-57C0-4F3D-9F90-1F2C3C518F5E",
-		"image" : "placeholder_ex_img",
-		"url" : "farmers-walk",
-		"aliases" : ["Farmer Carry"],
-		"description" : "Carry heavy farmer\u2019s handles for distance or time to tax grip, traps and legs.",
-		"equipmentRequired" : ["Farmer's Walk Handles"],
-		"muscles" : [
-			{ "engagementPercentage" : 40, "isPrimary" : true, "muscleWorked" : "Forearms", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 35, "isPrimary" : false, "muscleWorked" : "Trapezius", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 25, "isPrimary" : false, "muscleWorked" : "Quadriceps", "submusclesWorked" : [] }
-		],
-		"difficulty" : "Adv.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight"
-	},
-	{
-		"name" : "Plate-Loaded Incline Chest Press",
-		"id" : "E85FF83C-D079-42B8-BC5F-0475D8EA1C7E",
-		"image" : "placeholder_ex_img",
-		"url" : "incline-chest-press-plate-loaded",
-		"aliases" : [],
-		"description" : "Plate-loaded variant of the incline chest press for heavy progressive overload.",
-		"equipmentRequired" : ["Incline Chest Press - Plate Loaded"],
-		"muscles" : [
-			{ "engagementPercentage" : 55, "isPrimary" : true, "muscleWorked" : "Pectorals", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 25, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Triceps", "submusclesWorked" : [] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
-	},
-	{
 		"name" : "Incline Row",
 		"id" : "347728AA-6D05-4C27-96D5-99613F9FD963",
 		"image" : "placeholder_ex_img",
-		"url" : "incline-row",
 		"aliases" : ["Chest-Supported Row"],
 		"description" : "Chest-supported incline row machine targeting the upper-back musculature.",
 		"equipmentRequired" : ["Incline Row"],
@@ -8443,7 +9465,6 @@
 		"name" : "Pendulum Squat",
 		"id" : "C4092AA1-BEAB-4E67-A6F5-1DF3B7C36C9D",
 		"image" : "placeholder_ex_img",
-		"url" : "pendulum-squat",
 		"aliases" : [],
 		"description" : "Lever-based pendulum squat providing quad dominance with reduced spinal load.",
 		"equipmentRequired" : ["Pendulum Squat"],
@@ -8461,7 +9482,6 @@
 		"name" : "Pinch Block Hold",
 		"id" : "0A6971AE-7DEF-43DC-94A2-337C135C8577",
 		"image" : "placeholder_ex_img",
-		"url" : "pinch-block-hold",
 		"aliases" : [],
 		"description" : "Grip blocks between the fingers and thumb to build pinch-grip strength.",
 		"equipmentRequired" : ["Pinch Blocks"],
@@ -8477,7 +9497,6 @@
 		"name" : "Machine Preacher Curl",
 		"id" : "12A445B6-6E78-4ABC-9AFA-C92801F9C7E3",
 		"image" : "placeholder_ex_img",
-		"url" : "preacher-curl-machine",
 		"aliases" : ["preacher curl machine"],
 		"description" : "Curl forearms on a preacher pad to isolate the biceps with machine resistance.",
 		"equipmentRequired" : ["Preacher Curl"],
@@ -8494,7 +9513,6 @@
 		"name" : "Prowler Sled Push",
 		"id" : "5BE0A3BA-3328-4DA6-B550-27F598F2C8BD",
 		"image" : "placeholder_ex_img",
-		"url" : "prowler-sled-push",
 		"aliases" : [],
 		"description" : "Drive a loaded sled over turf for full-body power and conditioning.",
 		"equipmentRequired" : ["Prowler Sled"],
@@ -8512,7 +9530,6 @@
 		"name" : "Rotary Torso Twist",
 		"id" : "7D2882B7-988E-4910-92F6-144F84027811",
 		"image" : "placeholder_ex_img",
-		"url" : "rotary-torso-twist",
 		"aliases" : ["Seated Torso Rotation"],
 		"description" : "Seated torso rotation machine for obliques and core stability.",
 		"equipmentRequired" : ["Rotary Torso"],
@@ -8529,7 +9546,6 @@
 		"name" : "Parallel Bar Dip",
 		"id" : "FA635339-A1C5-43C3-BD93-14B4E8E43E79",
 		"image" : "placeholder_ex_img",
-		"url" : "parallel-bar-dip",
 		"aliases" : ["Triceps Dip"],
 		"description" : "Vertical pressing with bodyweight to develop triceps and lower chest.",
 		"equipmentRequired" : ["Tricep Dip"],
@@ -8547,7 +9563,6 @@
 		"name" : "Yoke Carry",
 		"id" : "C1B7D38B-04C5-43F6-88B9-28EE0F6E6DEF",
 		"image" : "placeholder_ex_img",
-		"url" : "yoke-carry",
 		"aliases" : [],
 		"description" : "Carry a loaded yoke frame for distance to build full-body strength and stability.",
 		"equipmentRequired" : ["Yoke"],
@@ -8558,14 +9573,12 @@
 		],
 		"difficulty" : "Elite",
 		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Independent",
 		"type" : "Free Weight"
 	},
 	{
 		"name" : "Towel Row",
 		"id" : "07F5F61A-1D17-4BB1-9E9D-CB047A994F5A",
 		"image" : "placeholder_ex_img",
-		"url" : "towel-row",
 		"aliases" : ["Towel Inverted Row"],
 		"description" : "Row bodyweight using towels over a bar to challenge grip and lats.",
 		"equipmentRequired" : ["Towel"],
@@ -8578,5 +9591,129 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"type" : "Bodyweight"
+	},
+	{
+		"name" : "Neck Extension",
+		"id" : "F2A9B3C7-5D4E-4F81-9A6B-7C3D2E1F4A5B",
+		"image" : "neck_extension",
+		"url" : "neck-extension",
+		"aliases" : ["Lying Neck Extension"],
+		"description" : "Lying face-down on a bench with the head hanging off, extend the neck upward against gravity to strengthen the posterior neck muscles.",
+		"equipmentRequired" : ["Flat Bench"],
+		"muscles" : [
+			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Cervical Spine", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Isolation",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Bodyweight"
+	},
+	{
+		"name" : "Neck Curl",
+		"id" : "E3D4C5B6-A7F8-4920-BC1D-2E3F4A5B6C7D",
+		"image" : "neck_curl",
+		"url" : "neck-curl",
+		"aliases" : ["Supine Neck Curl"],
+		"description" : "Lying on a bench with head hanging off the edge, flex the neck to lift the head toward the torso, targeting the neck flexors.",
+		"equipmentRequired" : ["Flat Bench"],
+		"muscles" : [
+			{ "engagementPercentage" : 100, "isPrimary" : true, "muscleWorked" : "Cervical Spine", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Isolation",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Bodyweight"
+	},
+	{
+		"name" : "Spoto Press",
+		"id" : "5C8D3E1B-7A2F-4A6C-9B0E-1D2F3A4B5C6D",
+		"image" : "spoto_press",
+		"url" : "spoto-press",
+		"aliases" : ["Paused Hover Bench"],
+		"description" : "Pause the bar just above the chest in a bench press to improve mid-range strength and control.",
+		"equipmentRequired" : ["Barbell", "Flat Bench Rack"],
+		"muscles" : [
+			{ "engagementPercentage" : 60, "isPrimary" : true, "muscleWorked" : "Pectorals", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Triceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+			] },
+			{ "engagementPercentage" : 10, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Squat Thrust",
+		"id" : "7A1B2C3D-4E5F-6A7B-8C9D-0E1F2A3B4C5D",
+		"image" : "squat_thrust",
+		"url" : "squat-thrust",
+		"aliases" : ["Burpee (No Push-Up/Jump)"],
+		"description" : "From standing, squat down, kick back into a plank, return feet to squat, omitting the push-up or jump for a conditioning movement.",
+		"equipmentRequired" : [],
+		"muscles" : [
+			{ "engagementPercentage" : 40, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Abdominals", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Gluteus", "submusclesWorked" : [] }
+		],
+		"difficulty" : "Beg.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Bodyweight"
+	},
+	{
+		"name" : "Thruster",
+		"id" : "C7D8E9F0-1A2B-3C4D-5E6F-7A8B9C0D1E2F",
+		"image" : "thruster",
+		"url" : "thruster",
+		"aliases" : ["Barbell Thruster"],
+		"description" : "Combines a front squat and overhead press with a barbell to develop leg drive and shoulder strength in one fluid movement.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Quadriceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
+			] },
+			{ "engagementPercentage" : 30, "isPrimary" : false, "muscleWorked" : "Deltoids", "submusclesWorked" : [
+				{ "engagementPercentage" : 60, "submuscleWorked" : "Front Delt" },
+				{ "engagementPercentage" : 40, "submuscleWorked" : "Side Delt" }
+			] },
+			{ "engagementPercentage" : 20, "isPrimary" : false, "muscleWorked" : "Triceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Triceps Lateral Head" }
+			] }
+		],
+		"difficulty" : "Int.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
+	},
+	{
+		"name" : "Yates Row",
+		"id" : "1F2E3D4C-5B6A-7980-9E8F-7D6C5B4A3E2F",
+		"image" : "yates_row",
+		"url" : "yates-row",
+		"aliases" : ["Underhand Barbell Row"],
+		"description" : "Performs a row with an underhand grip and torso leaned forward to target the lats and biceps with reduced lower-back strain.",
+		"equipmentRequired" : ["Barbell"],
+		"muscles" : [
+			{ "engagementPercentage" : 50, "isPrimary" : true, "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 25, "isPrimary" : false, "muscleWorked" : "Biceps", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Biceps Long Head" }
+			] },
+			{ "engagementPercentage" : 25, "isPrimary" : false, "muscleWorked" : "Trapezius", "submusclesWorked" : [
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Middle Traps" }
+			] }
+		],
+		"difficulty" : "Nov.",
+		"effort" : "Compound",
+		"limbMovementType" : "Bilateral Dependent",
+		"type" : "Free Weight"
 	}
 ]

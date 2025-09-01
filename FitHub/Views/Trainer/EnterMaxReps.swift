@@ -53,26 +53,26 @@ struct EnterMaxReps: View {
     private func handleSubmit() {
         var maxValuesEntered = false
         
-        if let situps = Double(situpReps) {
+        if let situps = Int(situpReps) {
             if let situp = exerciseData.exercise(named: "Sit-Up") {
                 // "D011FE15-0E04-411E-BF9E-5153634CE050"
-                exerciseData.updateExercisePerformance(for: situp, newValue: situps, csvEstimate: false)
+                exerciseData.updateExercisePerformance(for: situp, newValue: .maxReps(situps))
             }
             maxValuesEntered = true
         }
         
-        if let pushups = Double(pushupReps) {
+        if let pushups = Int(pushupReps) {
             if let pushup = exerciseData.exercise(named: "Push-Up") {
                 // "D314DC2A-60C4-4C25-A2CB-F46023462D2E"
-                exerciseData.updateExercisePerformance(for: pushup, newValue: pushups, csvEstimate: false)
+                exerciseData.updateExercisePerformance(for: pushup, newValue: .maxReps(pushups))
             }
             maxValuesEntered = true
         }
         
-        if let squats = Double(squatReps) {
+        if let squats = Int(squatReps) {
             if let squat = exerciseData.exercise(named: "Bodyweight Squat") {
                 // "7A4E8270-424C-432F-9459-C9E2065773F4"
-                exerciseData.updateExercisePerformance(for: squat, newValue: squats, csvEstimate: false)
+                exerciseData.updateExercisePerformance(for: squat, newValue: .maxReps(squats))
             }
             maxValuesEntered = true
         }

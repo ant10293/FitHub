@@ -2,7 +2,7 @@ import SwiftUI
 
 
 struct CategorySelection: View {
-    @Environment(\.presentationMode) var dismiss
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var vm: SplitSelectionVM
     @State private var donePressed: Bool = false // tracks explicit ‘Done’
     @State private var askSave: Bool = false // controls alert
@@ -20,49 +20,21 @@ struct CategorySelection: View {
     var body: some View {
         NavigationStack {
             VStack {
-                // Muscle-group grid (no day selector)
-                ForEach(0..<3) { col in
-                    HStack(spacing: 3) {
-                        ForEach(SplitCategory.columnGroups[col], id: \.self) { cat in
-                            let list = vm.binding().wrappedValue
-                            let selected = list.contains(cat)
-                            let disabled = vm.shouldDisable(cat)
-                            
-                            if vm.shouldShow(cat, in: list) {
-                                Button(vm.displayName(for: cat)) {
-                                    vm.toggle(cat)
-                                }
-                                .muscleButtonStyle(selected: selected, disabled: disabled)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, -10)
-                }
-                
-                ZStack {
-                    SimpleMuscleGroupsView(showFront: $vm.showFrontView, gender: gender, selectedSplit: vm.binding().wrappedValue)
-                        .frame(height: 550)
-                    
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                vm.showFrontView.toggle()
-                            }) {
-                                Image(systemName: "arrow.2.circlepath")
-                                    .resizable()
-                                    .frame(width: 25, height: 25)
-                                    .padding()
-                                    .background(Color.blue)
-                                    .foregroundColor(.white)
-                                    .clipShape(Circle())
-                            }
-                            .padding(.trailing, 20)
-                            .padding(.top, -100)
-                        }
-                    }
-                }
+                //  replace the whole “Muscle‑group grid + overlay” block
+                MuscleSelection(
+                    selectedCategories: vm.binding(for: vm.selectedDay),
+                    showFront:          $vm.showFrontView,
+                    gender:             gender,
+                    displayName:        { vm.displayName(for: $0, on: vm.selectedDay) },
+
+                    // convert (SplitCategory, DaysOfWeek?) → (SplitCategory) on the fly
+                    toggle: { category in
+                        vm.toggle(category, on: vm.selectedDay)     // still runs on MainActor
+                    },
+
+                    shouldDisable:      { vm.shouldDisable($0, on: vm.selectedDay) },
+                    shouldShow:         { cat, list in vm.shouldShow(cat, in: list) }
+                )
 
                 Spacer()
             }
@@ -74,11 +46,11 @@ struct CategorySelection: View {
             }
             .navigationBarTitle("Customize Split", displayMode: .inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button("Clear All") { vm.clearDay() }
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") {
                         if newTemplate {
                             saveExitAction()
@@ -87,7 +59,7 @@ struct CategorySelection: View {
                                 askSave = true           // trigger alert
                             } else {
                                 donePressed = true
-                                dismiss.wrappedValue.dismiss()
+                                dismiss()
                             }
                         }
                     }
@@ -97,7 +69,7 @@ struct CategorySelection: View {
                 Button("Discard", role: .destructive) {
                     vm.revertChanges()
                     donePressed = true
-                    dismiss.wrappedValue.dismiss()
+                    dismiss()
                 }
                 Button("Save") {
                     saveExitAction()
@@ -108,10 +80,10 @@ struct CategorySelection: View {
         }
     }
     
-    func saveExitAction() {
+    private func saveExitAction() {
         vm.saveIfNeeded(singleSave: onSave)
         donePressed = true
-        dismiss.wrappedValue.dismiss()
+        dismiss()
     }
 }
 
@@ -126,7 +98,7 @@ extension View {
             .background(disabled
                         ? Color.gray
                         : (selected ? Color.blue : Color.secondary.opacity(0.8)))
-            .foregroundColor(disabled
+            .foregroundStyle(disabled
                              ? Color.white.opacity(0.5)
                              : Color.white)
             .disabled(disabled)

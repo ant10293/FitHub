@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ExerciseSelection: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
@@ -19,21 +19,14 @@ struct ExerciseSelection: View {
         NavigationStack {
             VStack {
                 SplitCategoryPicker(
-                    enableSortPicker: ctx.userData.settings.enableSortPicker,
-                    saveSelectedSort: ctx.userData.settings.saveSelectedSort,
-                    sortByTemplateCategories: ctx.userData.settings.sortByTemplateCategories,
-                    sortOption: ctx.userData.sessionTracking.exerciseSortOption,
-                    templateCategories: templateCategories,
+                    userData: ctx.userData,
                     selectedCategory: $selectedCategory,
+                    templateCategories: templateCategories,
                     onChange: { sortOption in
                         if sortOption == .templateCategories {
                             templateFilter = true
                         } else {
                             templateFilter = false
-                        }
-                        if ctx.userData.sessionTracking.exerciseSortOption != sortOption, ctx.userData.settings.saveSelectedSort {
-                            ctx.userData.sessionTracking.exerciseSortOption = sortOption
-                            ctx.userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
                         }
                     }
                 )
@@ -46,31 +39,32 @@ struct ExerciseSelection: View {
                 // The List of Exercises
                 List {
                     if filteredExercises.isEmpty {
-                        Text("No exercises found.")
-                            .foregroundColor(.gray)
+                        Text("No exercises found \(forPerformanceView ? "with performance data" : "").")
                             .padding()
+                            .multilineTextAlignment(.center)
                     } else {
                         Section {
                             ForEach(filteredExercises, id: \.id) { exercise in
-                                let favState: FavoriteState = ctx.userData.evaluation.favoriteExercises.contains(exercise.id) ? .favorite
-                                : (ctx.userData.evaluation.dislikedExercises.contains(exercise.id) ? .disliked : .unmarked)
+                                let favState = FavoriteState.getState(for: exercise, userData: ctx.userData)
                                 
-                                ExerciseRow(exercise, heartOverlay: favState != .unmarked ? true : false, favState: favState, accessory: {
-                                    // trailing icon: chevron or checkbox
-                                    Image(systemName: forPerformanceView
-                                          ? "chevron.right"
-                                          : (selectedExercises.contains(where: { $0.id == exercise.id })
-                                             ? "checkmark.square.fill"
-                                             : "square"))
-                                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                                ExerciseRow(
+                                    exercise,
+                                    heartOverlay: true,
+                                    favState: favState,
+                                    accessory: {
+                                        // trailing icon: chevron or checkbox
+                                        Image(systemName: forPerformanceView
+                                              ? "chevron.right"
+                                              : (selectedExercises.contains(where: { $0.id == exercise.id })
+                                                 ? "checkmark.square.fill"
+                                                 : "square"))
+                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
                                     },
-                                    detail: {
-                                        EmptyView() // no subtitle or extra detail here
-                                    },
+                                    detail: { EmptyView() },
                                     onTap: {
                                         if forPerformanceView {
                                             onDone([exercise])
-                                            presentationMode.wrappedValue.dismiss()
+                                            dismiss()
                                         } else {
                                             if let index = selectedExercises.firstIndex(where: { $0.id == exercise.id }) {
                                                 selectedExercises.remove(at: index)
@@ -93,18 +87,18 @@ struct ExerciseSelection: View {
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
             .onDisappear(perform: disappearAction)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button(action: { showingFavorites.toggle() }) {
                         Image(systemName: "heart.fill")
-                            .foregroundColor(showingFavorites ? .red : .gray)
+                            .foregroundStyle(showingFavorites ? .red : .gray)
                             .padding(10)
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
                         donePressed = true
                         onDone(selectedExercises)
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }) {
                         Text(forPerformanceView ? "Close" : "Done")
                             .padding(10)
@@ -134,15 +128,14 @@ struct ExerciseSelection: View {
         // If `forPerformanceView` is true, filter out exercises with no performance or maxValue <= 0
         if forPerformanceView {
             let perfByName = ctx.exercises.allExercisePerformance // Grab the lookup once
-            
             let filtered = base.filter { ex in // Filter out the ones you don’t want
-                guard let perf = perfByName[ex.id], let max = perf.maxValue, max > 0 else { return false }
+                guard let perf = perfByName[ex.id], let max = perf.currentMax, max.value.displayValue > 0 else { return false }
                 return true
             }
             
             return filtered.sorted { a, b in // Sort in one pass, looking up each date on the fly
-                let da = perfByName[a.id]?.currentMaxDate ?? .distantPast
-                let db = perfByName[b.id]?.currentMaxDate ?? .distantPast
+                let da = perfByName[a.id]?.currentMax?.date ?? .distantPast
+                let db = perfByName[b.id]?.currentMax?.date ?? .distantPast
                 return da > db
             }
         } else {

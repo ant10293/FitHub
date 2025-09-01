@@ -4,29 +4,30 @@
 //
 //  Created by Anthony Cantu on 8/3/24.
 //
-
 import SwiftUI
 
 struct AdjustmentsView: View {
-    @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var AdjustmentsData: AdjustmentsData
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
     @State private var showAddCategoryPicker = false
-    var exercise: Exercise
+    @State private var donePressed: Bool = false
+
+    // Local working copy (no disk writes while typing)
+    @State private var local: ExerciseEquipmentAdjustments
+    let exercise: Exercise
     
+    init(exercise: Exercise) {
+        self.exercise = exercise
+        _local = State(initialValue: ExerciseEquipmentAdjustments(id: exercise.id, equipmentAdjustments: [:], adjustmentImage: ""))
+    }
+
     var body: some View {
         NavigationStack {
             VStack {
-                // Header
                 headerSection
-                
-                // Adjustments List
-                adjustmentList(
-                    for: AdjustmentsData.adjustments[exercise.id]
-                    ?? ExerciseEquipmentAdjustments(id: exercise.id, equipmentAdjustments: [:], adjustmentImage: "")
-                )
-                
-                Spacer()
+                adjustmentList(for: local)
+                Spacer(minLength: 0)
             }
             .padding()
             .navigationBarTitle("Equipment Adjustments", displayMode: .inline)
@@ -34,104 +35,103 @@ struct AdjustmentsView: View {
             .sheet(isPresented: $showAddCategoryPicker) {
                 AddCategoryPicker(
                     exercise: exercise,
-                    existingCategories: Set(AdjustmentsData.getEquipmentAdjustments(for: exercise)?.keys.map { $0 } ?? []),
+                    existingCategories: Set(local.equipmentAdjustments.keys.map { $0 }),
                     onAddCategory: { category in
-                        AdjustmentsData.addAdjustmentCategory(exercise, category: category)
+                        // Create with a sensible default; keep it local
+                        if local.equipmentAdjustments[category] == nil {
+                            local.equipmentAdjustments[category] = .string("")
+                        }
                     }
                 )
             }
             .toolbar {
-                toolbarContent
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") {
+                        commitIfChanged()
+                        dismiss()
+                        donePressed = true
+                    }
+                }
             }
+            .onAppear(perform: onAppear)
+            .onDisappear(perform: commitIfChanged)
         }
     }
-    
+
     // MARK: – Header
     private var headerSection: some View {
-        let imageSize = UIScreen.main.bounds.height * 0.14    // square side
-
+        let imageSize = UIScreen.main.bounds.height * 0.14
         return HStack {
             Text(exercise.name.isEmpty ? "Unnamed\nExercise" : exercise.name)
                 .font(.title2)
                 .padding(.trailing, 8)
                 .multilineTextAlignment(.center)
 
-            // Try to load the exercise image; fall back to a placeholder
-            exercise.fullImage
-            .resizable()
-            .scaledToFit()
-            .frame(width: imageSize, height: imageSize)       // ← always square
-            .clipShape(RoundedRectangle(cornerRadius: 6))
+            exercise.fullImageView(favState: FavoriteState.getState(for: exercise, userData: ctx.userData))
+                .frame(width: imageSize, height: imageSize)
         }
     }
-    
-    private var noAdjustmentsText: some View {
-        Text("No adjustments found for this exercise.")
-            .foregroundStyle(.red)
-    }
-    
-    // MARK: - Adjustment list with “Add” button as a section footer
+
+    // MARK: - List
     private func adjustmentList(for exerciseAdjustment: ExerciseEquipmentAdjustments) -> some View {
         List {
             Section {
                 if exerciseAdjustment.equipmentAdjustments.isEmpty {
-                    noAdjustmentsText
+                    Text("No adjustments found for this exercise.")
+                        .foregroundStyle(.red)
                 } else {
                     ForEach(exerciseAdjustment.equipmentAdjustments.keys.sorted(), id: \.self) { category in
-                        adjustmentRow(for: category, in: exerciseAdjustment)
+                        adjustmentRow(for: category)
                     }
                     .onDelete { indexSet in
-                        handleDelete(indexSet, in: exerciseAdjustment)
+                        let sorted = exerciseAdjustment.equipmentAdjustments.keys.sorted()
+                        for index in indexSet {
+                            let categoryToDelete = sorted[index]
+                            // Remove locally only; persist later on commit
+                            local.equipmentAdjustments.removeValue(forKey: categoryToDelete)
+                        }
                     }
                 }
-                
             } footer: {
                 Button {
                     showAddCategoryPicker = true
                 } label: {
                     Label("Add Adjustment", systemImage: "plus.circle.fill")
                         .font(.headline)
-                        .foregroundColor(.blue)
+                        .foregroundStyle(.blue)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .buttonStyle(.plain)
                 .padding(.vertical, 4)
             }
         }
-        .listStyle(.insetGrouped)   // optional, looks good with a footer CTA
+        .listStyle(.insetGrouped)
     }
-    
-    private func handleDelete(_ indexSet: IndexSet, in adjustment: ExerciseEquipmentAdjustments) {
-        for index in indexSet {
-            let categoryToDelete = adjustment.equipmentAdjustments.keys.sorted()[index]
-            AdjustmentsData.deleteAdjustment(exercise: exercise, category: categoryToDelete)
-        }
-    }
-    
-    private func adjustmentRow(for category: AdjustmentCategory, in adjustment: ExerciseEquipmentAdjustments) -> some View {
+
+    // MARK: - Row
+    private func adjustmentRow(for category: AdjustmentCategory) -> some View {
         VStack {
             HStack {
                 Text(category.rawValue)
-                
                 Spacer()
-                
-                // TextField for adjustment value
-                TextField("Value", text: bindingForCategory(category, in: adjustment))
-                    .keyboardType(determineKeyboardType(for: adjustment.equipmentAdjustments[category]))
+
+                TextField("Value", text: bindingForCategory(category))
+                    .keyboardType(determineKeyboardType(for: local.equipmentAdjustments[category]))
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .frame(width: 80)
-                
-                // Clear button
-                Button(action: {
-                    AdjustmentsData.clearAdjustmentValue(exercise: exercise, for: category, in: adjustment)
-                }) {
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled(true)
+
+                Button {
+                    // Clear locally; keep the key but blank out value
+                    local.equipmentAdjustments[category] = .string("")
+                } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                 }
-                .buttonStyle(BorderlessButtonStyle())
+                .buttonStyle(.borderless)
             }
-            
-            // Adjustment image
+
             Image(category.image)
                 .resizable()
                 .scaledToFit()
@@ -139,37 +139,58 @@ struct AdjustmentsView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 6))
         }
     }
-    
-    private var toolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarTrailing) {
-            Button(action: { presentationMode.wrappedValue.dismiss() }) {
-                Text("Done").bold()
-                    .padding(.trailing)
-            }
-        }
-    }
-    
-    // MARK: - Helper Methods
-    private func bindingForCategory(_ category: AdjustmentCategory, in adjustment: ExerciseEquipmentAdjustments) -> Binding<String> {
+
+    // MARK: - Bindings
+    private func bindingForCategory(_ category: AdjustmentCategory) -> Binding<String> {
         Binding(
             get: {
-                AdjustmentsData.adjustmentInputs["\(adjustment.id)-\(category.rawValue)", default: ""]
+                displayString(for: local.equipmentAdjustments[category])
             },
-            set: { newValue in
-                let adjustmentValue = AdjustmentValue.from(newValue)
-                AdjustmentsData.updateAdjustmentValue(for: exercise, category: category, newValue: adjustmentValue)
+            set: { newString in
+                // Parse into typed value, stored locally only
+                local.equipmentAdjustments[category] = AdjustmentValue.from(newString)
             }
         )
     }
-    
-    private func determineKeyboardType(for adjustmentValue: AdjustmentValue?) -> UIKeyboardType {
-        switch adjustmentValue {
+
+    private func displayString(for value: AdjustmentValue?) -> String {
+        switch value {
+        case .integer(let n): return String(n)
+        case .string(let s):  return s
+        case .none:           return ""
+        }
+    }
+
+    private func determineKeyboardType(for value: AdjustmentValue?) -> UIKeyboardType {
+        switch value {
         case .integer: return .numbersAndPunctuation
         case .string, .none: return .default
         }
     }
+    
+    private func onAppear() {
+        if let initial = ctx.adjustments.adjustments[exercise.id] {
+            local = initial
+        }
+    }
+
+    // MARK: - Commit
+    private func commitIfChanged() {
+        if !donePressed {
+            let original = ctx.adjustments.adjustments[exercise.id]
+            ?? ExerciseEquipmentAdjustments(id: exercise.id, equipmentAdjustments: [:], adjustmentImage: "")
+            
+            if !modelsEqual(original, local) {
+                // One write, one save
+                ctx.adjustments.adjustments[exercise.id] = local
+                ctx.adjustments.saveAdjustmentsToFile()
+            }
+        }
+    }
+
+    private func modelsEqual(_ a: ExerciseEquipmentAdjustments, _ b: ExerciseEquipmentAdjustments) -> Bool {
+        a.id == b.id &&
+        a.adjustmentImage == b.adjustmentImage &&
+        a.equipmentAdjustments == b.equipmentAdjustments
+    }
 }
-
-
-
-

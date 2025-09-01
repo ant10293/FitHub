@@ -8,22 +8,9 @@
 import SwiftUI
 
 struct RecentlyCompletedSetsView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var userData: UserData
     var muscle: SubMuscles
-    var onClose: () -> Void
-    
-    var recentlyWorkedSets: [ExerciseWithSetDetails] {
-        userData.workoutPlans.completedWorkouts.flatMap { workout in
-            workout.template.exercises.compactMap { exercise in
-                let sets = exercise.setDetails.filter { set in
-                    (set.repsCompleted ?? 0) > 0
-                    && exercise.allSubMuscles?.contains(muscle) == true
-                }
-                return sets.isEmpty ? nil : ExerciseWithSetDetails(exerciseName: exercise.name, sets: sets, usesWeight: exercise.type.usesWeight, completionDate: workout.date)
-            }
-        }.filter { $0.completionDate > Date().addingTimeInterval(-Double(userData.settings.muscleRestDuration) * 60 * 60) }
-    }
     
     var body: some View {
         NavigationStack {
@@ -34,16 +21,8 @@ struct RecentlyCompletedSetsView: View {
                             Section {
                                 ForEach(exerciseWithSetDetails.sets) { setDetail in
                                     VStack(alignment: .leading) {
-                                        Text("Set \(setDetail.setNumber)")
-                                            .font(.subheadline)
-                                        HStack {
-                                            Text("Reps: \(setDetail.repsCompleted ?? 0)")
-                                            if exerciseWithSetDetails.usesWeight {
-                                                Text("Weight: \(setDetail.weight, specifier: "%.2f") lbs")
-                                            }
-                                        }
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
+                                        setDetail.formattedCompletedText(usesWeight: exerciseWithSetDetails.usesWeight)
+                                            .font(.caption)
                                     }
                                     .padding(.vertical, 5)
                                 }
@@ -54,13 +33,13 @@ struct RecentlyCompletedSetsView: View {
                                         .padding(.vertical, 5)
                                     Text("Completed on: \(Format.formatDate(exerciseWithSetDetails.completionDate, dateStyle: .short, timeStyle: .short))")
                                         .font(.subheadline)
-                                        .foregroundColor(.gray)
+                                        .foregroundStyle(.gray)
                                 }
                             }
                         }
                     } else {
                         Text("No recently worked sets for this submuscle.")
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                             .padding()
                     }
                 }
@@ -68,17 +47,52 @@ struct RecentlyCompletedSetsView: View {
             }
             .navigationBarTitle("\(muscle.rawValue)", displayMode: .inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: onClose) {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        dismiss()
+                    }) {
                         Image(systemName: "xmark.circle.fill")
                             .imageScale(.large)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                             .contentShape(Rectangle())
                     }
                 }
             }
         }
     }
+    
+    private var recentlyWorkedSets: [ExerciseWithSetDetails] {
+        let cutoff = Date().addingTimeInterval(-Double(userData.settings.muscleRestDuration) * 3600)
+
+        return userData.workoutPlans.completedWorkouts
+            .filter { $0.date > cutoff }
+            .flatMap { workout in
+                workout.template.exercises.compactMap { exercise in
+                    // only exercises that hit this muscle
+                    guard exercise.allSubMuscles?.contains(muscle) == true else { return nil }
+
+                    // only sets with a non-zero completion
+                    let sets = exercise.setDetails.filter { set in
+                        guard let c = set.completed else { return false }
+                        switch c {
+                        case .reps(let r): return r > 0
+                        case .hold(let t): return t.inSeconds > 0
+                        }
+                    }
+
+                    return sets.isEmpty
+                        ? nil
+                        : ExerciseWithSetDetails(
+                            exerciseName: exercise.name,
+                            sets: sets,
+                            usesWeight: exercise.type.usesWeight,
+                            completionDate: workout.date
+                        )
+                }
+            }
+    }
+
+    
     // for filtering rest calculation
     struct ExerciseWithSetDetails: Identifiable, Hashable {
         var id = UUID()

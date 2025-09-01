@@ -6,39 +6,26 @@
 //
 
 import Foundation
+import SwiftUI
 
 final class AdjustmentsData: ObservableObject {
     @Published var adjustments: [UUID: ExerciseEquipmentAdjustments] = [:] // Store adjustments using a dictionary for fast lookups
     @Published var adjustmentInputs: [String: String] = [:] // Store inputs as strings
     
-    func clearAdjustmentValue(exercise: Exercise, for category: AdjustmentCategory, in adjustment: ExerciseEquipmentAdjustments) {
-        adjustmentInputs["\(adjustment.id)-\(category.rawValue)"] = ""
-        updateAdjustmentValue(for: exercise, category: category, newValue: .string(""))
-    }
-    
-    func addAdjustmentCategory(_ exercise: Exercise, category: AdjustmentCategory) {
-        updateAdjustmentValue(for: exercise, category: category, newValue: .string(""))
-    }
-    
-    func deleteAdjustment(exercise: Exercise, category: AdjustmentCategory) {
-        guard var adjustments = adjustments[exercise.id] else { return }
-        adjustments.equipmentAdjustments.removeValue(forKey: category)
-        self.adjustments[exercise.id] = adjustments
-        saveAdjustmentsToFile() // Save changes
-    }
-    
-    func getEquipmentAdjustments(for exercise: Exercise) -> [AdjustmentCategory: AdjustmentValue]? {
-        if let adjustment = adjustments[exercise.id] {
-            return adjustment.equipmentAdjustments
+    // MARK: – Persistence Logic
+    static func loadAdjustmentsFromFile() -> AdjustmentsData? {
+        guard let savedAdjustments = JSONFileManager.shared.loadAdjustments(from: "adjustments.json") else {
+            return nil
         }
-        return nil
+        
+        let viewModel = AdjustmentsData()
+        viewModel.adjustments = savedAdjustments
+        return viewModel
     }
     
-    /*
-    func hasEquipmentAdjustments(for exercise: Exercise) -> Bool {
-        return adjustments[exercise.name]?.equipmentAdjustments.isEmpty == false
+    func saveAdjustmentsToFile() {
+        JSONFileManager.shared.save(adjustments, to: "adjustments.json")
     }
-    */
     
     // Load adjustments for all exercises
     func loadAllAdjustments(for exercises: [Exercise], allEquipment: [GymEquipment]) {
@@ -47,10 +34,8 @@ final class AdjustmentsData: ObservableObject {
         }
         //print("Loaded all adjustments: \(adjustments)")
     }
-
     
     func loadAdjustments(for exercise: Exercise, allEquipment: [GymEquipment]) {
-
         // ── 0. If we already have an adjustments object, just hydrate the UI
         if let existing = adjustments[exercise.id] {
             for (cat, value) in existing.equipmentAdjustments {
@@ -84,9 +69,10 @@ final class AdjustmentsData: ObservableObject {
         )
         adjustments[exercise.id] = newEntry
     }
-    
-    func hasAdjustments(for exercise: Exercise) -> Bool { adjustments[exercise.id]?.equipmentAdjustments.isEmpty == false }
-    
+}
+
+extension AdjustmentsData {
+    // MARK: – Mutations
     func deleteAdjustments(for exercise: Exercise, shouldSave: Bool = true) {
         // Guard: nothing to delete
          guard hasAdjustments(for: exercise) else { return }
@@ -118,47 +104,30 @@ final class AdjustmentsData: ObservableObject {
         if shouldSave { saveAdjustmentsToFile() }
     }
     
-    func saveAdjustmentsToFile() {
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            guard let self = self else {
-                DispatchQueue.main.async {
-                    print("Instance was deinitialized before saving could complete.")
-                }
-                return
-            }
-            
-            do {
-                let encoder = JSONEncoder()
-                let data = try encoder.encode(self.adjustments) // Use 'self' safely as it is now weakly captured
-                let url = getDocumentsDirectory().appendingPathComponent("adjustments.json")
-                try data.write(to: url, options: [.atomicWrite, .completeFileProtection])
-                DispatchQueue.main.async {
-                    print("Adjustments successfully saved to file.")
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    print("Failed to save adjustments: \(error.localizedDescription)")
-                }
-            }
-        }
+    func clearAdjustmentValue(exercise: Exercise, for category: AdjustmentCategory, in adjustment: ExerciseEquipmentAdjustments) {
+        adjustmentInputs["\(adjustment.id)-\(category.rawValue)"] = ""
+        updateAdjustmentValue(for: exercise, category: category, newValue: .string(""))
     }
     
-    static func loadAdjustmentsFromFile() -> AdjustmentsData? {
-        do {
-            let url = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent("adjustments.json")
-            let data = try Data(contentsOf: url)
-            let decoder = JSONDecoder()
-           // let savedAdjustments = try decoder.decode([String: ExerciseEquipmentAdjustments].self, from: data)
-            let savedAdjustments = try decoder.decode([UUID: ExerciseEquipmentAdjustments].self, from: data)
-            
-            let viewModel = AdjustmentsData()
-            viewModel.adjustments = savedAdjustments
-            return viewModel
-        } catch {
-            print("Failed to load adjustments: \(error)")
-            return nil
+    func addAdjustmentCategory(_ exercise: Exercise, category: AdjustmentCategory) {
+        updateAdjustmentValue(for: exercise, category: category, newValue: .string(""))
+    }
+    
+    func deleteAdjustment(exercise: Exercise, category: AdjustmentCategory) {
+        guard var adjustments = adjustments[exercise.id] else { return }
+        adjustments.equipmentAdjustments.removeValue(forKey: category)
+        self.adjustments[exercise.id] = adjustments
+        saveAdjustmentsToFile() // Save changes
+    }
+    
+    // MARK: – Helpers
+    func hasAdjustments(for exercise: Exercise) -> Bool { adjustments[exercise.id]?.equipmentAdjustments.isEmpty == false }
+    
+    func getEquipmentAdjustments(for exercise: Exercise) -> [AdjustmentCategory: AdjustmentValue]? {
+        if let adjustment = adjustments[exercise.id] {
+            return adjustment.equipmentAdjustments
         }
+        return nil
     }
 }
-
 

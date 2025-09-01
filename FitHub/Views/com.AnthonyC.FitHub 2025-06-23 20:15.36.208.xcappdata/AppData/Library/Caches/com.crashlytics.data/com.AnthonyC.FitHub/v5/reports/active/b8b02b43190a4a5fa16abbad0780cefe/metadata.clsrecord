@@ -1,4 +1,0 @@
-{"identity":{"generator":"Crashlytics iOS SDK/10.28.1","display_version":"10.28.1","build_version":"10.28.1","started_at":1750727662,"session_id":"b8b02b43190a4a5fa16abbad0780cefe","app_quality_session_id":"cc2ca0ecc09c41159420c72faf677efd","install_id":"","beta_token":"","absolute_log_timestamps":true}}
-{"host":{"model":"iPhone15,2","machine":"D73AP","os_build_version":"21G93","os_display_version":"17.6.1","platform":"ios","firebase_platform":"ios","locale":"en_US"}}
-{"application":{"bundle_id":"com.AnthonyC.FitHub","custom_bundle_id":null,"build_version":"1","display_version":"1.0","extension_id":null}}
-{"executable":{"architecture":"arm64","uuid":"2e8ec60e6b1e3c939306ea2338720548","base":4329619456,"size":49152,"encrypted":false,"minimum_sdk_version":"0.0.0","built_sdk_version":"0.0.0"}}

@@ -57,24 +57,6 @@ enum SplitCategory: String, CaseIterable, Identifiable, Codable {
     static let armsFocus: Set<SplitCategory> = [.biceps, .triceps, .forearms]
     static let legsFocus: Set<SplitCategory> = [.quads, .hamstrings, .glutes, .calves]
     
-   /* static let muscles: [SplitCategory: [Muscle]] = [
-        .all: [.all],
-        .back: [.trapezius, .latissimusDorsi, .erectorSpinae, .scapularRetractors, .serratus],
-        .legs: [.quadriceps, .hamstrings, .gluteus, .calves, .hipComplex, .deepHipRotators, .tibialis, .peroneals],
-        .arms: [.biceps, .triceps, .forearms],
-        .abs: [.abdominals],
-        .shoulders: [.deltoids, .rotatorCuff, .serratus],
-        .chest: [.pectorals],
-        .biceps: [.biceps],
-        .triceps: [.triceps],
-        .forearms: [.forearms],
-        .quads: [.quadriceps],
-        .hamstrings: [.hamstrings],
-        .glutes: [.gluteus],
-        .calves: [.calves]
-    ]
-    */
-    
     static let muscles: [SplitCategory: [Muscle]] = [
         .all: [.all],
         .abs: [.abdominals],
@@ -226,26 +208,3 @@ enum SplitType: String, CaseIterable, Identifiable, Codable {
     }
 }
 
-/*
- enum MuscleSplits: String, CaseIterable, Identifiable, Codable {
- case freshMuscles = "Fresh Muscles"
- case pushMuscles = "Push Muscles"
- case pullMuscles = "Pull Muscles"
- case upperBody = "Upper Body"
- case lowerBody = "Lower Body"
- case arms = "Arms"
- case fullBody = "Full Body"
- 
- var id: String { self.rawValue }
- }
- 
- enum TrainingStyle: String, CaseIterable, Identifiable, Codable {
- case strengthTraining = "Strength Training"
- case hypertrophy = "Hypertrophy"
- case circuitTraining = "Circuit Training"
- case generalFitness = "General Fitness"
- case powerlifting = "Powerlifting"
- case olympicLifting = "Olympic Lifting"
- 
- var id: String { self.rawValue }
- }*/

@@ -52,7 +52,7 @@ struct EquipmentPopupView: View {
                 Button("Save and Continue") {
                     onContinue()
                 }
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .padding()
                 .background(Color.blue)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -63,11 +63,8 @@ struct EquipmentPopupView: View {
     private var EquipmentList: some View {
         List(selectedEquipment, id: \.id) { gymEquip in
             HStack {
-                gymEquip.fullImage
-                    .resizable()
-                    .scaledToFit()
+                gymEquip.fullImageView
                     .frame(width: UIScreen.main.bounds.width * 0.15)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 
                 Text(gymEquip.name)
 

@@ -8,118 +8,71 @@
 import Foundation
 
 final class ExerciseData: ObservableObject {
-    private let saveQueue = DispatchQueue(label: "ExerciseSaveQueue")
-
     private let bundledExercises: [Exercise]          // read-only
     @Published private(set) var userExercises: [Exercise]  // can mutate & save
    
     // MARK: - Public unified view
     var allExercises: [Exercise] { bundledExercises + userExercises }
        
-    var allExercisePerformance: [UUID: ExercisePerformance] = [:]
+    @Published var allExercisePerformance: [UUID: ExercisePerformance] = [:]
+        
+    var exercisesWithData: [Exercise] {
+        allExercises.filter { ex in
+            if let peak = peakMetric(for: ex.id), peak.actualValue > 0 { return true }
+            if let est = estimatedPeakMetric(for: ex.id), est.actualValue > 0 { return true }
+            return ex.url != nil
+        }
+    }
     
     init() {
-        bundledExercises = ExerciseData.loadBundledExercises(from: "exercises.json")
+        bundledExercises = ExerciseData.loadBundledExercises()
         userExercises = ExerciseData.loadUserExercises(from: "user_exercises.json")
         loadPerformanceData(from: "performance.json")
     }
     
-    private static func loadBundledExercises(from file: String) -> [Exercise] {
+    // MARK: – Persistence Logic
+    private static func loadBundledExercises() -> [Exercise] {
         do {
-            let seed: [InitExercise] = try Bundle.main.decode(file)
-            return seed.map(Exercise.init(from:))
+            let seed: [InitExercise] = try Bundle.main.decode("exercises.json")
+            let mapping = seed.map { Exercise(from: $0) }
+            print("✅ Successfully loaded \(mapping.count) exercises from exercises.json")
+            return mapping
         } catch {
-            fatalError("❌ Couldn’t load bundled exercises: \(error)")
-        }
-    }
-
-    private static func loadUserExercises(from file: String) -> [Exercise] {
-        let url = getDocumentsDirectory().appendingPathComponent(file)
-        guard let data = try? Data(contentsOf: url) else { return [] }
-        do { return try JSONDecoder().decode([Exercise].self, from: data) }
-        catch {
-            print("⚠️  Corrupt user file – starting fresh. \(error)")
-            return []
+            print("❌ Standard decoding from exercises.json failed. Falling back to manual parsing...")
+            return JSONFileManager.loadBundledData(
+                filename: "exercises",
+                itemType: "exercise",
+                decoder: { jsonDict in
+                    let exerciseData = try JSONSerialization.data(withJSONObject: jsonDict)
+                    let initExercise = try JSONDecoder().decode(InitExercise.self, from: exerciseData)
+                    return Exercise(from: initExercise)
+                },
+                validator: { exercise in
+                    !exercise.name.isEmpty && !exercise.image.isEmpty
+                }
+            )
         }
     }
     
-    /*private func save() {
-        do {
-            // 2️⃣ Destination file • …/Documents/exercises.json
-            let fileURL = getDocumentsDirectory().appendingPathComponent("exercises.json")
-
-
-            // 3️⃣ Encode & write
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-            let data = try encoder.encode(allExercises1)
-
-            try data.write(to: fileURL, options: .atomic)
-
-            #if DEBUG
-            print("✅ Saved \(allExercises1.count) exercises to \(fileURL.path)")
-            #endif
-        } catch {
-            // Handle or surface the error as you prefer
-            print("❌ Failed to save exercises:", error.localizedDescription)
-        }
-    }*/
+    private static func loadUserExercises(from file: String) -> [Exercise] {
+        return JSONFileManager.shared.loadUserExercises(from: file) ?? []
+    }
     
     private func loadPerformanceData(from fileName: String) {
-        let filename = getDocumentsDirectory().appendingPathComponent(fileName)
-        do {
-            let data = try Data(contentsOf: filename)
-            let jsonDecoder = JSONDecoder()
-            jsonDecoder.dateDecodingStrategy = .iso8601
-            let performanceData = try jsonDecoder.decode([ExercisePerformance].self, from: data)
-            allExercisePerformance = Dictionary(uniqueKeysWithValues: performanceData.map { ($0.id, $0) })
-        } catch {
-            print("Could not load performance data: \(error.localizedDescription)")
-        }
+        allExercisePerformance = JSONFileManager.shared.loadPerformanceData(from: fileName) ?? [:]
     }
     
     func savePerformanceData() {
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            guard let self = self else {
-                DispatchQueue.main.async {
-                    print("Instance was deinitialized before the operation could complete.")
-                }
-                return
-            }
-            
-            let filename = getDocumentsDirectory().appendingPathComponent("performance.json")
-            let performanceArray = Array(self.allExercisePerformance.values)
-            do {
-                let jsonEncoder = JSONEncoder()
-                jsonEncoder.dateEncodingStrategy = .iso8601
-                let data = try jsonEncoder.encode(performanceArray)
-                try data.write(to: filename, options: [.atomicWrite, .completeFileProtection])
-                DispatchQueue.main.async {
-                    print("Successfully saved performance data to \(filename.path)")
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    print("Failed to save performance data: \(error.localizedDescription)")
-                }
-            }
-        }
+        JSONFileManager.shared.save(Array(allExercisePerformance.values), to: "performance.json", dateEncoding: true)
     }
     
-    private func saveUserExercises() {
-        saveQueue.async {
-            do {
-                let url = getDocumentsDirectory().appendingPathComponent("user_exercises.json")
-                let data = try JSONEncoder().encode(self.userExercises)
-                try data.write(to: url, options: [.atomicWrite, .completeFileProtection])
-                #if DEBUG
-                print("✅ Saved \(self.userExercises.count) user exercises.")
-                #endif
-            } catch {
-                print("❌ Failed saving user exercises:", error.localizedDescription)
-            }
-        }
+    private func persistUserExercises() {
+        let snapshot = userExercises                 // value copy, thread-safe
+        JSONFileManager.shared.save(snapshot, to: "user_exercises.json")
     }
-    
+}
+
+extension ExerciseData {
     // MARK: – Mutations
     func addExercise(_ newExercise: Exercise) {
         guard !allExercises.contains(where: { $0.id == newExercise.id }) else { return }
@@ -138,32 +91,12 @@ final class ExerciseData: ObservableObject {
         persistUserExercises()
     }
     
-    // MARK: – Private helper
-    private func persistUserExercises() {
-        let snapshot = userExercises                 // value copy, thread-safe
-        saveQueue.async {
-            let url = getDocumentsDirectory()
-                .appendingPathComponent("user_exercises.json")
-            do {
-                let data = try JSONEncoder().encode(snapshot)
-                try data.write(to: url,
-                               options: [.atomicWrite, .completeFileProtection])
-                #if DEBUG
-                print("✅ Saved \(snapshot.count) user exercises.")
-                #endif
-            } catch {
-                print("❌ Failed saving user equipment:", error.localizedDescription)
-            }
-        }
-    }
-    
     func isUserExercise(_ exercise: Exercise) -> Bool {
         return userExercises.contains(where: { $0.id == exercise.id })
     }
 }
 
 extension ExerciseData {
-    
     func filteredExercises(
         searchText: String,
         selectedCategory: CategorySelections,
@@ -179,8 +112,8 @@ extension ExerciseData {
         let removingSet      = CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
         let normalizedSearch = searchText.normalized(removing: removingSet)
         
-        let favSet      = Set(userData.evaluation.favoriteExercises)
-        let dislikedSet = Set(userData.evaluation.dislikedExercises)
+        let favoriteSet = userData.evaluation.favoriteExercises
+        let dislikedSet = userData.evaluation.dislikedExercises
         
         let hideUnequipped = userData.settings.hideUnequippedExercises
         let hideDisliked   = userData.settings.hideDislikedExercises
@@ -238,24 +171,13 @@ extension ExerciseData {
                 
             // -------- Exercise-type selections -------------------------------
             case .resistanceType(let type):
-                switch type {
-                    case .bodyweight:  return !ex.type.usesWeight
-                    case .weighted:    return  ex.type.usesWeight
-                    case .freeWeight:  return  ex.type == .freeWeight
-                    case .machine:     return  ex.type == .machine
-                   // case .banded:      return ex.type == .banded
-                   // case .cardio:      return ex.type == .cardio
-                    case .other:       return  ex.type == .other
-                    case .any:         return  true
-                }
+                return ex.resistanceOK(type)
                 
             case .effortType(let type):
-                switch type {
-                    case .compound: return ex.effort == .compound
-                    case .isolation: return ex.effort == .isolation
-                    case .isometric: return ex.effort == .isometric
-                    case .plyometric: return ex.effort == .plyometric
-                }
+                return ex.effort == type
+                                
+            case .limbMovement(let type):
+                return ex.limbMovementType == type
             }
         }
         
@@ -265,14 +187,18 @@ extension ExerciseData {
         
         for ex in allExercises {
             // a) Fav / disliked quick gates
-            let isFav       = favSet.contains(ex.id)
-            let isDisliked  = dislikedSet.contains(ex.id)
-            if favoritesOnly && !isFav { continue }
+            let isFavorite = favoriteSet.contains(ex.id)
+            let isDisliked = dislikedSet.contains(ex.id)
+            if favoritesOnly && !isFavorite { continue }
             if dislikedOnly  && !isDisliked { continue }
             if hideDisliked  &&  isDisliked { continue }
             
             // b) Equipment / difficulty gates
-            if hideUnequipped && !userData.canPerformExercise(ex, equipmentData: equipmentData) { continue }
+            if hideUnequipped &&
+                !ex.canPerform(
+                    equipmentData: equipmentData,
+                    equipmentSelected: userData.evaluation.equipmentSelected
+                ) { continue }
             if hideDifficult && ex.difficulty.strengthValue > maxStrength { continue }
             
             // c) Category gate
@@ -310,179 +236,229 @@ extension ExerciseData {
         return results
     }
     
-    func similarExercises(to exercise: Exercise, user: UserData, equipmentData: EquipmentData, existing: [Exercise], replaced: Set<String>) -> [Exercise] {
-        let allExercises        = allExercises
-        let exercisePrimarySet  = Set(exercise.primaryMuscles)
-        let existingNames       = Set(existing.map(\.name))
+    func similarExercises(
+        to exercise: Exercise,
+        equipmentData: EquipmentData,
+        availableEquipmentIDs: [UUID],
+        existing: [Exercise],
+        replaced: Set<String>
+    ) -> [Exercise] {
+        let pool           = allExercises
+        let targetPrimSet  = Set(exercise.primaryMuscles)
+        let existingNames  = Set(existing.map(\.name))
+        let targetEffort   = exercise.effort
 
-        // 1️⃣ strict filter
-        var similar = allExercises.filter { candidate in
-            guard candidate.name != exercise.name else { return false }
+        var strict:  [Exercise] = []
+        var relaxed: [Exercise] = []
+        strict.reserveCapacity(8)
+        relaxed.reserveCapacity(8)
 
-            let candidatePrimarySet = Set(candidate.primaryMuscles)
-            let samePrimary   = candidatePrimarySet == exercisePrimarySet
-            let equipmentOK   = user.canPerformExercise(exercise, equipmentData: equipmentData)
-            let sameDist      = candidate.effort == exercise.effort
-            let notExisting   = !existingNames.contains(candidate.name)
-            let notReplaced   = !replaced.contains(candidate.name)
+        for cand in pool {
+            // quick rejects
+            if cand.id == exercise.id || cand.name == exercise.name { continue }        // keep old-name behavior too
+            if existingNames.contains(cand.name) || replaced.contains(cand.name) { continue }
+            if !cand.canPerform(
+                equipmentData: equipmentData,
+                equipmentSelected: availableEquipmentIDs
+            ) { continue } // ✅ check candidate
 
-            return samePrimary && equipmentOK && sameDist && notExisting && notReplaced
-        }
-
-        // 2️⃣ relaxed fallback
-        if similar.isEmpty {
-            similar = allExercises.filter { candidate in
-                guard candidate.name != exercise.name else { return false }
-
-                let candidatePrimarySet = Set(candidate.primaryMuscles)
-                let shareAnyPrimary = !candidatePrimarySet.isDisjoint(with: exercisePrimarySet)
-                let equipmentOK   = user.canPerformExercise(exercise, equipmentData: equipmentData)
-                let notExisting = !existingNames.contains(candidate.name)
-                let notReplaced = !replaced.contains(candidate.name)
-
-                return shareAnyPrimary && equipmentOK && notExisting && notReplaced
+            // primary-muscle logic (match original set semantics)
+            let candSet = Set(cand.primaryMuscles)
+            if candSet == targetPrimSet, cand.effort == targetEffort {
+                // strict: exact primary muscles AND same effort
+                strict.append(cand)
+            } else if !candSet.isDisjoint(with: targetPrimSet) {
+                // relaxed: any shared primary muscle (no effort requirement)
+                relaxed.append(cand)
             }
         }
 
-        return similar
-    }
-    
-    func distributeExercisesEvenly(_ exercises: [Exercise]) -> [Exercise] {
-        var distributedExercises: [Exercise] = []
-        // Tracks unique combinations of primary and secondary muscle groups.
-        var muscleCombinationsUsed: [(primary: Set<SubMuscles>, secondary: Set<SubMuscles>)] = []
-        
-        // Check if the combination of primary and secondary muscles is unique
-        func isUniqueCombination(_ exercise: Exercise) -> Bool {
-            let primarySet = Set(exercise.primarySubMuscles ?? [])
-            let secondarySet = Set(exercise.secondarySubMuscles ?? [])
-            
-            for combo in muscleCombinationsUsed {
-                if combo.primary == primarySet && combo.secondary == secondarySet {
-                    //print("Combination already used: Primary: \(combo.primary), Secondary: \(combo.secondary)")
-                    return false
-                }
-            }
-            //print("Combination is unique")
-            return true
-        }
-        
-        // Add the combination to the tracking set
-        func addCombination(_ exercise: Exercise) {
-            let primarySet = Set(exercise.primarySubMuscles ?? [])
-            let secondarySet = Set(exercise.secondarySubMuscles ?? [])
-            
-            muscleCombinationsUsed.append((primary: primarySet, secondary: secondarySet))
-            //print("Added combination: Primary: \(primarySet), Secondary: \(secondarySet)")
-        }
-        
-        // Attempt to distribute compound exercises first
-        exercises.filter({ $0.effort == .compound }).forEach { exercise in
-            //print("Processing compound exercise: \(exercise.name)")
-            if isUniqueCombination(exercise) {
-                distributedExercises.append(exercise)
-                addCombination(exercise)
-            }
-        }
-        
-        // Follow with isolation exercises, ensuring no overlap in muscle combinations
-        exercises.filter({ $0.effort == .isolation }).forEach { exercise in
-            //print("Processing isolation exercise: \(exercise.name)")
-            if isUniqueCombination(exercise) {
-                distributedExercises.append(exercise)
-                addCombination(exercise)
-            }
-        }
-        
-        //print("Distributed exercises: \(distributedExercises.map { $0.name })")
-        return distributedExercises
-    }
-    
-    // overload func
-    func updateExercisePerformance(for exercise: Exercise, newValue: Double, reps: Int? = nil, weight: Double? = nil, csvEstimate: Bool, date: Date? = nil) {
-        updateExercisePerformance(for: exercise.id, exerciseName: exercise.name, newValue: newValue, reps: reps, weight: weight, csvEstimate: csvEstimate, date: date)
+        return strict.isEmpty ? relaxed : strict
     }
     
     func updateExercisePerformance(
-        for exerciseId: UUID,
-        exerciseName: String,
-        newValue: Double,
-        reps: Int? = nil,
-        weight: Double? = nil,
-        csvEstimate: Bool,
-        date: Date? = nil
+         for exerciseId: UUID,
+         newValue: PeakMetric,
+         repsXweight: RepsXWeight? = nil,
+         csvEstimate: Bool = false
+     ) {
+         if let exercise = exercise(for: exerciseId) {
+             updateExercisePerformance(for: exercise, newValue: newValue, repsXweight: repsXweight, csvEstimate: csvEstimate)
+         }
+    }
+    
+    func updateExercisePerformance(
+        for exercise: Exercise,
+        newValue: PeakMetric,
+        repsXweight: RepsXWeight? = nil,
+        csvEstimate: Bool = false
     ) {
-        let now = date ?? Date()
-        let calendar = Calendar.current
-        let roundedDate = calendar.startOfDay(for: now)
-        
-        var repsXweight: RepsXWeight?
-        
-        if let reps = reps, let weight = weight {
-            repsXweight = RepsXWeight(reps: reps, weight: weight)
+        let roundedDate = CalendarUtility.shared.startOfDay(for: Date())
+
+        // Pull or create a performance record (struct – value copy)
+        var perf = allExercisePerformance[exercise.id] ?? ExercisePerformance(exerciseId: exercise.id)
+
+        // ────────────────────────────────────────────────────────────────
+        // 1) Helpers
+        // ────────────────────────────────────────────────────────────────
+
+        func makeRecord() -> MaxRecord {
+            MaxRecord(value: newValue, repsXweight: repsXweight, date: roundedDate)
         }
-        
-        if var existingPerformance = allExercisePerformance[exerciseId] {
-            if csvEstimate {
-                existingPerformance.estimatedValue = newValue
-            } else {
-                // only update if new max is greater than current max
-                if let currentMax = existingPerformance.maxValue, newValue > currentMax,
-                   let date = existingPerformance.currentMaxDate {
-                    
-                    let record = MaxRecord(value: currentMax, repsXweight: existingPerformance.repsXweight, date: date)
-                    if existingPerformance.pastMaxes != nil {
-                        existingPerformance.pastMaxes!.append(record)
-                    } else {
-                        existingPerformance.pastMaxes = [record]
-                    }
-                    print("Updated past max for \(exerciseName): \(currentMax) saved with date \(String(describing: existingPerformance.currentMaxDate))")
-                }
-                
-                existingPerformance.maxValue = newValue
-                existingPerformance.currentMaxDate = roundedDate
-                if let repsWeight = repsXweight {
-                    existingPerformance.repsXweight = repsWeight
-                    print("New max for \(exerciseName): \(newValue) (\(repsWeight.weight) x \(repsWeight.reps))")
+
+        func archive(_ record: MaxRecord) {
+            perf.pastMaxes = (perf.pastMaxes ?? []) + [record]
+        }
+
+        // ────────────────────────────────────────────────────────────────
+        // 2) CSV estimate?  → seed only `estimatedValue` and bail out
+        // ────────────────────────────────────────────────────────────────
+        if csvEstimate {
+            perf.estimatedValue = newValue
+            allExercisePerformance[exercise.id] = perf
+            print("Seeded CSV estimate for \(exercise.name): \(newValue).")
+            return
+        }
+
+        // ────────────────────────────────────────────────────────────────
+        // 3) User‑entered true performance
+        // ────────────────────────────────────────────────────────────────
+        if var current = perf.currentMax {
+            let sameDay = CalendarUtility.shared.isDate(current.date, inSameDayAs: roundedDate)
+
+            if sameDay {
+                // Same calendar day → treat as correction / improvement
+                if newValue.actualValue >= current.value.actualValue {
+                    current.value        = newValue
+                    current.repsXweight  = repsXweight
+                    current.date         = roundedDate      // stays "today"
+                    perf.currentMax      = current
+                    print("Updated today's max for \(exercise.name) → \(current.value.actualValue).")
+                } // else ignore accidental lower entry on same day
+            }
+            else {
+                // Different day
+                if newValue.actualValue > current.value.actualValue {
+                    // New all‑time PR
+                    archive(current)                     // move old PR to history
+                    perf.currentMax = makeRecord()       // promote new PR
+                    print("🎉 New all‑time max for \(exercise.name): \(newValue).")
                 } else {
-                    print("New max for \(exerciseName): \(newValue)")
+                    // Sub‑max attempt → just archive
+                    archive(makeRecord())
+                    print("Logged sub‑max attempt \(newValue) for \(exercise.name).")
                 }
-                existingPerformance.estimatedValue = nil // no need for estimated value is true max value was added
             }
-            // Save the updated performance data
-            allExercisePerformance[exerciseId] = existingPerformance
-            //savePerformanceData()
-            print("Performance data for \(exerciseName) saved.")
-            
+
         } else {
-            // Create new performance entry if none exists
-            var newPerformance = ExercisePerformance(exerciseId: exerciseId)
-            if csvEstimate {
-                newPerformance.estimatedValue = newValue
-            } else {
-                newPerformance.maxValue = newValue
-                newPerformance.currentMaxDate = roundedDate
-                if let repsWeight = repsXweight {
-                    newPerformance.repsXweight = repsWeight
-                    print("New max for \(exerciseName): \(newValue) (\(repsWeight.weight) x \(repsWeight.reps))")
-                }
-                newPerformance.estimatedValue = nil // no need for estimated value is true max value was added
+            // First ever PR for this exercise
+            perf.currentMax = makeRecord()
+            print("Initial max for \(exercise.name): \(newValue).")
+        }
+
+        // Any real PR removes a stale CSV estimate
+        perf.estimatedValue = nil
+
+        // Persist in the dictionary
+        allExercisePerformance[exercise.id] = perf
+        print("Performance data for \(exercise.name) saved.")
+    }
+    
+    func applyPerformanceUpdates(updates: [PerformanceUpdate]?, csvEstimate: Bool) {
+        if let updates = updates, !updates.isEmpty {
+            for update in updates {
+                applyPerformanceUpdate(update: update, csvEstimate: csvEstimate, shouldSave: false)
             }
-            print("New performance entry created for \(exerciseName) with date \(roundedDate)")
-            
-            allExercisePerformance[exerciseId] = newPerformance
-            //savePerformanceData()
-            print("New performance data for \(exerciseName) saved.")
+            savePerformanceData()
         }
     }
     
-    func getEstimatedMax(for exerciseId: UUID) -> Double? { allExercisePerformance[exerciseId]?.estimatedValue }
+    func applyPerformanceUpdate(update: PerformanceUpdate, csvEstimate: Bool, shouldSave: Bool) {
+        updateExercisePerformance(for: update.exerciseId, newValue: update.value, repsXweight: update.repsXweight, csvEstimate: csvEstimate)
+        if shouldSave { savePerformanceData() }
+    }
     
-    func getMax(for exerciseId: UUID) -> Double? { allExercisePerformance[exerciseId]?.maxValue }
+    // Delete a record by id. If it's the current max, promote the best remaining past record.
+    // If nothing remains, remove the performance entry entirely.
+    func deleteEntry(id: MaxRecord.ID, exercise: Exercise) {
+        guard var perf = allExercisePerformance[exercise.id] else { return }
+
+        var past = perf.pastMaxes ?? []
+
+        if let current = perf.currentMax, current.id == id {
+            // Delete the current max
+            // (Just in case it also exists in past, remove it there too)
+            past.removeAll { $0.id == id }
+
+            // Promote the best remaining past record (highest actualValue)
+            if let next = past.max(by: { $0.value.actualValue < $1.value.actualValue }) {
+                perf.currentMax = next
+                past.removeAll { $0.id == next.id }
+            } else {
+                perf.currentMax = nil
+            }
+
+            perf.pastMaxes = past.isEmpty ? nil : past
+        } else {
+            // Delete from history
+            let before = past.count
+            past.removeAll { $0.id == id }
+            if past.count != before {
+                perf.pastMaxes = past.isEmpty ? nil : past
+            } else {
+                // ID not found; nothing to do
+                return
+            }
+        }
+
+        // If everything is gone (and no estimate), drop the entry from the map
+        if perf.currentMax == nil, (perf.pastMaxes?.isEmpty ?? true), perf.estimatedValue == nil {
+            allExercisePerformance.removeValue(forKey: exercise.id)
+        } else {
+            allExercisePerformance[exercise.id] = perf
+        }
+        
+        savePerformanceData()
+    }
+
+    // Promote a historical record to be the current max by id.
+    // Demotes the existing current into history. No value checks — this is a user override.
+    func setAsCurrentMax(id: MaxRecord.ID, exercise: Exercise) {
+        guard var perf = allExercisePerformance[exercise.id] else { return }
+
+        // If it's already current, nothing to do
+        if let current = perf.currentMax, current.id == id { return }
+
+        var past = perf.pastMaxes ?? []
+
+        // Find the target in history
+        guard let idx = past.firstIndex(where: { $0.id == id }) else { return }
+        let chosen = past.remove(at: idx)
+
+        // Demote existing current (if any) into history
+        if let current = perf.currentMax {
+            past.append(current)
+        }
+
+        perf.currentMax = chosen
+        perf.pastMaxes = past.isEmpty ? nil : past
+
+        // Optional: clearing an old CSV estimate if you treat a manual promote as authoritative
+        perf.estimatedValue = nil
+
+        allExercisePerformance[exercise.id] = perf
+        savePerformanceData()
+    }
     
+    func estimatedPeakMetric(for exerciseId: UUID) -> PeakMetric? { allExercisePerformance[exerciseId]?.estimatedValue }
+    
+    func getMax(for exerciseId: UUID) -> MaxRecord? { allExercisePerformance[exerciseId]?.currentMax }
+    
+    func peakMetric(for exerciseId: UUID) -> PeakMetric? { getMax(for: exerciseId)?.value }
+            
     func getPastMaxes(for exerciseId: UUID) -> [MaxRecord] { allExercisePerformance[exerciseId]?.pastMaxes ?? [] }
     
-    func getDateForMax(for exerciseId: UUID) -> Date? { allExercisePerformance[exerciseId]?.currentMaxDate }
+    func getDateForMax(for exerciseId: UUID) -> Date? { getMax(for: exerciseId)?.date }
     
     func exercise(named name: String) -> Exercise? { allExercises.first { $0.name == name } }
     

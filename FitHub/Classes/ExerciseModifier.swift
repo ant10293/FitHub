@@ -7,8 +7,6 @@ import SwiftUI
 // replace exercise with specific exercise
 // remove exercise
 
-import Foundation
-import SwiftUI
 
 /// Instance-based helper.  Hold a single copy wherever you need it
 /// (`let modifier = ExerciseModifier()`).
@@ -23,11 +21,17 @@ struct ExerciseModifier {
         guard let idx = template.exercises.firstIndex(where: { $0.id == target.id }) else { return nil }
 
         // Build candidate pool
-        let candidates = ctx.exercises.similarExercises(to: target, user: ctx.userData, equipmentData: ctx.equipment, existing: template.exercises, replaced: Set(replaced))
+        let candidates = ctx.exercises.similarExercises(
+            to: target,
+            equipmentData: ctx.equipment,
+            availableEquipmentIDs: ctx.userData.evaluation.equipmentSelected,
+            existing: template.exercises,
+            replaced: Set(replaced)
+        )
 
         guard let newEx = candidates.first else { return nil }
 
-        let detailed = Self.detailed(from: newEx, ctx: ctx)
+        let detailed = Self.detailed(exercise: newEx, ctx: ctx)
 
         template.exercises[idx] = detailed
         replaced.append(target.name)
@@ -41,10 +45,14 @@ struct ExerciseModifier {
     @MainActor func replaceSpecific(currentExercise: Exercise, with newExercise: Exercise, in template: inout WorkoutTemplate, ctx: AppContext) {
         guard let idx = template.exercises.firstIndex(where: { $0.id == currentExercise.id }) else { return }
 
-        let detailed = Self.detailed(from: newExercise, ctx: ctx)
+        let detailed = Self.detailed(exercise: newExercise, ctx: ctx)
 
         template.exercises[idx] = detailed
         _ = ctx.userData.updateTemplate(template: template)
+    }
+    
+    @MainActor static func detailed(exercise: Exercise, ctx: AppContext) -> Exercise {
+        return ctx.userData.calculateDetailedExercise(exerciseData: ctx.exercises, equipmentData: ctx.equipment, exercise: exercise, nextWeek: false)
     }
 
     /// Remove the exercise entirely.
@@ -65,81 +73,153 @@ struct ExerciseModifier {
         }
     }
 
-    /// Toggle favourite / dislike — same API you had before.
     func toggleFavorite(for exerciseId: UUID, userData: UserData) {
-        if let i = userData.evaluation.favoriteExercises.firstIndex(of: exerciseId) {
-            userData.evaluation.favoriteExercises.remove(at: i)
+        if userData.evaluation.favoriteExercises.contains(exerciseId) {
+            userData.evaluation.favoriteExercises.remove(exerciseId)
         } else {
-            userData.evaluation.dislikedExercises.removeAll { $0 == exerciseId }
-            userData.evaluation.favoriteExercises.append(exerciseId)
+            userData.evaluation.dislikedExercises.remove(exerciseId)   // exclusivity
+            userData.evaluation.favoriteExercises.insert(exerciseId)
         }
         userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
     }
 
     func toggleDislike(for exerciseId: UUID, userData: UserData) {
-        if let i = userData.evaluation.dislikedExercises.firstIndex(of: exerciseId) {
-            userData.evaluation.dislikedExercises.remove(at: i)
+        if userData.evaluation.dislikedExercises.contains(exerciseId) {
+            userData.evaluation.dislikedExercises.remove(exerciseId)
         } else {
-            userData.evaluation.favoriteExercises.removeAll { $0 == exerciseId }
-            userData.evaluation.dislikedExercises.append(exerciseId)
+            userData.evaluation.favoriteExercises.remove(exerciseId)   // exclusivity
+            userData.evaluation.dislikedExercises.insert(exerciseId)
         }
         userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
     }
-
-    // MARK:  Static helpers
-    // ─────────────────────────────────────────────────────────────
-
-    /// Make a fully–detailed exercise via the old `calculateDetailedExercise`.
-    @MainActor private static func detailed(from exercise: Exercise, ctx: AppContext) -> Exercise {
-        let rAndS = RepsAndSets.determineRepsAndSets(
-            customRestPeriod: ctx.userData.workoutPrefs.customRestPeriod,
-            goal:             ctx.userData.physical.goal,
-            customRepsRange:  ctx.userData.workoutPrefs.customRepsRange,
-            customSets:       ctx.userData.workoutPrefs.customSets)
-
-        return ctx.userData.calculateDetailedExercise(exerciseData: ctx.exercises, equipmentData: ctx.equipment, exercise: exercise, repsAndSets: rAndS, nextWeek: false)
-    }
     
-    // for ExerciseSetDetail:
+    /// Establish / clear a 2‑way superset relationship and keep the paired
+    /// exercises adjacent. The *edited* exercise stays where it is; the
+    /// partner is moved next to it (before if the partner originally came
+    /// earlier in the array, after if later).
+    ///
+    /// Pass `"None"` in `newValue` to clear the superset.
     func handleSupersetSelection(for exercise: inout Exercise, with newValue: String, in template: inout WorkoutTemplate) {
-        let oldPartnerID = exercise.isSupersettedWith          // may be `nil`
-        let myIDString = exercise.id.uuidString              // safe copy
+        // ------------------------------------------------------------------
+        // Locate "me" (the exercise whose picker just changed)
+        // ------------------------------------------------------------------
+        guard let myIdx = template.exercises.firstIndex(where: { $0.id == exercise.id }) else {
+            print("Superset: edited exercise not found in template.")
+            return
+        }
+        let myID  = exercise.id.uuidString
+        var me    = template.exercises[myIdx]   // working copy
         
-        // ─────────────────────────────────────────────────────────────────────
-        // 1. Break the OLD two-way link (if any) when the partner changes
-        // ---------------------------------------------------------------------
-        if let oldID = oldPartnerID, oldID != newValue {
-            if let idx = template.exercises.firstIndex(where: { $0.id.uuidString == oldID }) {
-                template.exercises[idx].isSupersettedWith = nil
+        // Normalize partner selection
+        let newPartnerID: String? = (newValue == "None") ? nil : newValue
+        
+        // ------------------------------------------------------------------
+        // Break OLD link if it's changing
+        // ------------------------------------------------------------------
+        if let oldID = me.isSupersettedWith, oldID != newPartnerID {
+            if let oldPartnerIdx = template.exercises.firstIndex(where: { $0.id.uuidString == oldID }) {
+                template.exercises[oldPartnerIdx].isSupersettedWith = nil
             }
+            me.isSupersettedWith = nil
         }
         
-        // ─────────────────────────────────────────────────────────────────────
-        if newValue == "None" {
-            // 2. Clear *my* link
-            exercise.isSupersettedWith = nil
-            
-            // 3. Clear anyone that points **to me**
-            if let idx = template.exercises.firstIndex(where: { $0.isSupersettedWith == myIDString }) {
-                template.exercises[idx].isSupersettedWith = nil
-            }
+        // Also clear any stray reverse link pointing *to me* unless it matches newPartnerID
+        for i in template.exercises.indices where template.exercises[i].isSupersettedWith == myID && template.exercises[i].id.uuidString != newPartnerID {
+            template.exercises[i].isSupersettedWith = nil
+        }
+        
+        // ------------------------------------------------------------------
+        // Clearing case → done
+        // ------------------------------------------------------------------
+        guard let partnerID = newPartnerID else {
+            template.exercises[myIdx] = me
+            exercise = me
             return
         }
         
-        // ─────────────────────────────────────────────────────────────────────
-        // 4. Establish the NEW two-way link
-        // ---------------------------------------------------------------------
-        exercise.isSupersettedWith = newValue                  // I → partner
-        
-        if let idx = template.exercises.firstIndex(where: { $0.id.uuidString == newValue }) {
-            template.exercises[idx].isSupersettedWith = myIDString   // partner → me
+        // Prevent self‑link
+        if partnerID == myID {
+            print("⚠️ Attempted to superset exercise with itself; ignoring.")
+            template.exercises[myIdx] = me
+            exercise = me
+            return
         }
+        
+        // ------------------------------------------------------------------
+        // Find partner
+        // ------------------------------------------------------------------
+        guard let partnerIdx0 = template.exercises.firstIndex(where: { $0.id.uuidString == partnerID }) else {
+            print("⚠️ Superset partner id \(partnerID) not found; clearing link.")
+            template.exercises[myIdx] = me
+            exercise = me
+            return
+        }
+        var partner = template.exercises[partnerIdx0]
+        
+        // Break partner's old link if not me
+        if let pOld = partner.isSupersettedWith, pOld != myID {
+            if let otherIdx = template.exercises.firstIndex(where: { $0.id.uuidString == pOld }) {
+                template.exercises[otherIdx].isSupersettedWith = nil
+            }
+            partner.isSupersettedWith = nil
+        }
+        
+        // ------------------------------------------------------------------
+        // Link the two in local copies
+        // ------------------------------------------------------------------
+        me.isSupersettedWith      = partnerID
+        partner.isSupersettedWith = myID
+        
+        // ------------------------------------------------------------------
+        // Reorder so pair is adjacent (move partner next to me)
+        // ------------------------------------------------------------------
+        var exercises = template.exercises   // temp working array
+        
+        // Remove partner at its original index
+        let removed = exercises.remove(at: partnerIdx0)
+        
+        if partnerIdx0 < myIdx {
+            // Partner was *before* me → insert BEFORE current me index (which shifted -1 after removal)
+            // After removal, my exercise has slid back by 1.
+            let newMyIdx = myIdx - 1
+            exercises.insert(removed, at: newMyIdx)
+            
+            // After insert: partner at newMyIdx, me at newMyIdx + 1
+        } else if partnerIdx0 > myIdx {
+            // Partner was *after* me → insert AFTER me (index myIdx + 1; unaffected by removal)
+            exercises.insert(removed, at: myIdx + 1)
+            // After insert: me at myIdx, partner at myIdx + 1
+        } else {
+            // Should never happen (same index), but guard anyway
+            exercises.insert(removed, at: myIdx + 1)
+        }
+        
+        // ------------------------------------------------------------------
+        // Write updated copies back into their final slots
+        // ------------------------------------------------------------------
+        // Find final indices (post-reorder)
+        guard let finalMyIdx = exercises.firstIndex(where: { $0.id.uuidString == myID }) else {
+            print("Superset: lost track of edited exercise after reorder.")
+            return
+        }
+        guard let finalPartnerIdx = exercises.firstIndex(where: { $0.id.uuidString == partnerID }) else {
+            print("Superset: lost track of partner after reorder.")
+            return
+        }
+        
+        exercises[finalMyIdx]      = me
+        exercises[finalPartnerIdx] = partner
+        
+        // Commit back to template & caller
+        template.exercises = exercises
+        exercise = me
     }
     
     func addNewSet(_ exercise: Exercise, from template: inout WorkoutTemplate, user: UserData) {
         if let index = template.exercises.firstIndex(where: { $0.id == exercise.id }) {
-            let currentSets = template.exercises[index].sets
-            let newSet = SetDetail(setNumber: currentSets + 1, weight: 0, reps: 0)
+            let newSetNumber = template.exercises[index].workingSets + 1
+            let planned = exercise.getPlannedMetric(value: 0)
+            let newSet = SetDetail(setNumber: newSetNumber, weight: Mass(kg: 0), planned: planned)
             template.exercises[index].setDetails.append(newSet)
             _ = user.updateTemplate(template: template)
         }

@@ -20,25 +20,31 @@ enum InputLimiter {
     }
     /// digits-only, max: (4 chars before decimal, 2 chars after decimal) **no leading zeros**
     static func filteredWeight(old: String, new raw: String) -> String {
-        // 1. keep only digits + the *first* dot
+        // 1) keep digits + at most one dot (regex will reject extra dots anyway)
         let cleaned = raw.filter { "0123456789.".contains($0) }
 
-        // 2. still valid?  0-4 integer digits + opt “.XX”
+        // 2) Valid shape?  0–4 integer digits + optional ".XX"
         let pattern = #"^(\d{0,4})(\.\d{0,2})?$"#
         guard cleaned.range(of: pattern, options: .regularExpression) != nil else {
-              return old            // reject this keystroke
+            return old // reject this keystroke
         }
 
-        // 3. split   123.45  -> ["123" , "45"]
+        // 3) split into integer / fraction
         let parts = cleaned.split(separator: ".", maxSplits: 1, omittingEmptySubsequences: false)
-        var intPart = trimLeadingZeros(String(parts[0]))
+        let rawInt = parts.isEmpty ? "" : String(parts.first ?? "")
 
-        //      an isolated “0” becomes empty (user probably deleting)
-        if intPart == "0" { intPart = "" }
+        // 3a) normalize integer: collapse leading zeros, but keep a single "0"
+        let intPart = trimLeadingZeros(rawInt)
 
-        // 4. rebuild with optional fractional section
+        // 4) rebuild with optional fractional section (already <= 2 digits via regex)
         if parts.count == 2 {
-            return intPart + "." + parts[1]
+            // If user typed ".xx" first, you can choose to show ".xx" or "0.xx".
+            // To keep behavior close to your original, preserve empty before dot:
+            let frac = String(parts[1])
+            // If you'd rather always show a leading zero, use:
+            // let lhs = intPart.isEmpty ? "0" : intPart
+            let lhs = intPart
+            return lhs + "." + frac
         } else {
             return intPart
         }
@@ -147,19 +153,12 @@ enum Format {
         let hours = totalSeconds / 3600
         let minutes = (totalSeconds % 3600) / 60
         let seconds = totalSeconds % 60
-        if hours > 0 {
-            return String(format: "%d:%02d:%02d", hours, minutes, seconds)
-        } else {
-            return String(format: "%02d:%02d", minutes, seconds)
-        }
+        
+        return formatDurationCompact(h: hours, m: minutes, s: seconds)
     }
     
     static func formatTimeComponents(_ components: DateComponents) -> String {
-        let calendar = Calendar.current
-        
-        guard let date = calendar.date(from: components) else {
-            return "--:--"
-        }
+        guard let date = CalendarUtility.shared.date(from: components) else { return "--:--" }
         
         let formatter = DateFormatter()
         formatter.dateFormat = "h:mm a"
@@ -195,6 +194,27 @@ enum Format {
         if secs    > 0 { parts.append("\(secs) sec") }
 
         return parts.isEmpty ? "0 sec" : parts.joined(separator: " ")
+    }
+    
+    static func formatDurationCompact(h: Int, m: Int, s: Int, roundSeconds: Bool = false) -> String {
+        let hh = max(0, h), mm = max(0, m), ss = max(0, s)
+        var total = hh * 3_600 + mm * 60 + ss
+
+        if roundSeconds {
+            total = ((total + 30) / 60) * 60   // nearest minute
+        }
+
+        let H = total / 3_600
+        let M = (total % 3_600) / 60
+        let S = total % 60
+
+        return H > 0
+            ? String(format: "%d:%02d:%02d", H, M, S)
+            : String(format: "%d:%02d", M, S)
+    }
+    
+    static func formatRange(range: ClosedRange<Int>) -> String {
+        "\(range.lowerBound)-\(range.upperBound)"
     }
 }
 

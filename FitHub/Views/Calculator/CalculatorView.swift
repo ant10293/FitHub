@@ -2,79 +2,94 @@ import SwiftUI
 
 struct CalculatorView: View {
     @EnvironmentObject private var ctx: AppContext
+    @State private var navPath = NavigationPath()
 
     var body: some View {
-        NavigationStack {
-            VStack {
-                List {
-                    Section {
-                        NavigationLink(destination: OneRMCalculator()) {
-                            CalculatorRow(title: "1 Rep Max Calculator", systemImageName: "scalemass")
-                        }
-                        // premium only
-                        NavigationLink(destination: TemplateSelection(userTemplates: ctx.userData.workoutPlans.userTemplates, trainerTemplates: ctx.userData.workoutPlans.trainerTemplates)) {
-                            CalculatorRow(title: "Progressive Overload Calculator", systemImageName: "chart.line.uptrend.xyaxis")
-                        }
-                    } header: {
-                        Text("Strength")
+        NavigationStack(path: $navPath) {
+            List {
+                Section(header: Text("Strength")) {
+                    Button {
+                        navPath.append(CalculatorRoute.oneRepMax)
+                    } label: {
+                        CalculatorRow(title: "1 Rep Max Calculator", systemName: "scalemass")
                     }
-                    
-                    Section {
-                        NavigationLink(destination: BMICalculator(userData: ctx.userData)) {
-                            CalculatorRow(title: "BMI Calculator", systemImageName: "heart.text.square")
-                        }
-                        NavigationLink(destination: KcalCalculator(userData: ctx.userData)) {
-                            CalculatorRow(title: "Daily Caloric Intake Calculator", systemImageName: "flame")
-                        }
-                        NavigationLink(destination: BFCalculator(userData: ctx.userData)) {
-                            CalculatorRow(title: "Body Fat Calculator", systemImageName: "percent")
-                        }
-                        NavigationLink(destination: MacroCalculator(userData: ctx.userData)) {
-                            CalculatorRow(title: "Macronutrient Calculator", systemImageName: "fork.knife.circle")
-                        }
-                    } header: {
-                        Text("Health")
+
+                    Button {
+                        navPath.append(CalculatorRoute.progressiveOverload)
+                    } label: {
+                        CalculatorRow(title: "Progressive Overload Calculator", systemName: "chart.line.uptrend.xyaxis")
                     }
-                    .listStyle(GroupedListStyle())
+                }
+
+                Section(header: Text("Health")) {
+                    Button {
+                        navPath.append(CalculatorRoute.bmi)
+                    } label: {
+                        CalculatorRow(title: "BMI Calculator", systemName: "heart.text.square")
+                    }
+
+                    Button {
+                        navPath.append(CalculatorRoute.kcal)
+                    } label: {
+                        CalculatorRow(title: "Daily Caloric Intake Calculator", systemName: "flame")
+                    }
+
+                    Button {
+                        navPath.append(CalculatorRoute.bodyFat)
+                    } label: {
+                        CalculatorRow(title: "Body Fat Calculator", systemName: "percent")
+                    }
+
+                    Button {
+                        navPath.append(CalculatorRoute.macros)
+                    } label: {
+                        CalculatorRow(title: "Macronutrient Calculator", systemName: "fork.knife.circle")
+                    }
                 }
             }
             .navigationTitle("Calculators")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    NavigationLink(destination: SettingsView()) {
-                        Image(systemName: "gear")
-                            .imageScale(.large)
-                            .padding()
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: MenuView()) {
-                        Image(systemName: "line.horizontal.3")
-                            .imageScale(.large)
-                            .padding()
-                    }
+            .customToolbar(
+                settingsDestination: { AnyView(SettingsView()) },
+                menuDestination: { AnyView(MenuView()) }
+            )
+            .navigationDestination(for: CalculatorRoute.self) { route in
+                switch route {
+                case .oneRepMax:
+                    OneRMCalculator()
+                case .progressiveOverload:
+                    TemplateSelection(
+                        userTemplates: ctx.userData.workoutPlans.userTemplates,
+                        trainerTemplates: ctx.userData.workoutPlans.trainerTemplates
+                    )
+                case .bmi:
+                    BMICalculator(userData: ctx.userData)
+                case .kcal:
+                    KcalCalculator(userData: ctx.userData)
+                case .bodyFat:
+                    BFCalculator(userData: ctx.userData)
+                case .macros:
+                    MacroCalculator(userData: ctx.userData)
                 }
             }
+            
         }
     }
-    struct CalculatorRow: View {
-        var title: String
-        var systemImageName: String
-        
-        var body: some View {
-            HStack {
-                Image(systemName: systemImageName)
-                    .foregroundColor(.blue)
-                    .imageScale(.large)
-                Text(title)
-                    .foregroundColor(.primary)
-            }
-            .padding(.vertical, 8)
+    
+    private enum CalculatorRoute: Hashable {
+        case oneRepMax, progressiveOverload, bmi, kcal, bodyFat, macros
+    }
+
+    private func CalculatorRow(title: String, systemName: String) -> some View {
+        HStack {
+            Image(systemName: systemName)
+                .foregroundStyle(.blue)
+                .imageScale(.large)
+            Text(title)
+                .foregroundStyle(Color.primary)
         }
+        .padding(.vertical, 8)
     }
 }
-
-
 
 
 

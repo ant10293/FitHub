@@ -19,7 +19,6 @@ final class WeekWorkoutVM: ObservableObject {
     @Published var earliestFutureDate: Date   = Date()
 
     private var cancellables                  = Set<AnyCancellable>()
-    private let calendar                      = Calendar.current
     private let userData: UserData            // weak reference not needed – UD is @Observed
 
     init(userData: UserData) {
@@ -42,43 +41,46 @@ final class WeekWorkoutVM: ObservableObject {
 
     // ------------------------------------------------------------------
     private func recalculate() {
-        let cal          = calendar
-        let today        = Date().startOfDay(using: cal)
-        let startDate    = userData.workoutPlans.workoutsStartDate ?? Date()
-        let weekRange    = startDate.datesOfWeek(using: cal)
+        let today     = CalendarUtility.shared.startOfDay(for: Date())
+        let startDate = userData.workoutPlans.workoutsStartDate ?? Date()
+        let weekRange = startDate.datesOfWeek(using: Calendar.current)
 
         // Group templates by date
         let workoutsByDate: [Date?: [WorkoutTemplate]] = Dictionary(
             grouping: userData.workoutPlans.trainerTemplates
         ) { tpl -> Date? in
-            if let d = tpl.date {
-                return d.startOfDay(using: cal)
-            }
+            if let d = tpl.date { return CalendarUtility.shared.startOfDay(for: d) }
             if let cw = userData.workoutPlans.completedWorkouts.first(where: { $0.template.id == tpl.id }),
                let d2 = cw.template.date {
-                return d2.startOfDay(using: cal)
+                return CalendarUtility.shared.startOfDay(for: d2)
             }
-            return nil                           // no date found
+            return nil
         }
 
         // Build DayInfo objects
         dayInfos = weekRange.map { date in
-            let midnight  = date.startOfDay(using: cal)
-            let workouts  = workoutsByDate[midnight] ?? []
+            let midnight = CalendarUtility.shared.startOfDay(for: date)
+            let workouts = workoutsByDate[midnight] ?? []
+
+            let todaysCompleted = userData.workoutPlans.completedWorkouts.filter {
+                CalendarUtility.shared.isDate(($0.template.date ?? $0.date), inSameDayAs: date)
+            }
+
+            // Only mark completed if a completion matches a planned template for this day
+            let plannedIDs = Set(workouts.map(\.id))
+            let hasMatchedCompletion = todaysCompleted.contains { plannedIDs.contains($0.template.id) }
 
             let status: DayInfo.Status = {
-                if userData.workoutPlans.completedWorkouts.contains(where: {
-                    cal.isDate($0.template.date ?? Date(), inSameDayAs: date)
-                }) {
-                    return .completed
-                }
-                if let first = workouts.first, let tplDate = first.date,
-                   cal.isDate(tplDate, inSameDayAs: date) {
-                    let endOfDay = cal.date(bySettingHour: 23, minute: 59, second: 59, of: date)!
+                if hasMatchedCompletion { return .completed }
+                if !workouts.isEmpty,
+                   let tplDate = workouts.first?.date,
+                   CalendarUtility.shared.isDate(tplDate, inSameDayAs: date) {
+                    if let endOfDay = CalendarUtility.shared.date(bySettingHour: 23, minute: 59, second: 59, of: date) {
                     return Date() > endOfDay ? .pastPlanned : .planned
+                    }
+                    return .planned
                 }
-                
-                return .planned
+                return .rest
             }()
 
             let rows = workouts.map {
@@ -93,13 +95,13 @@ final class WeekWorkoutVM: ObservableObject {
                 id: midnight,
                 dayName: Format.dayOfWeek(from: midnight),
                 shortDate: Format.shortDate(from: midnight),
-                isToday: cal.isDateInToday(midnight),
+                isToday: CalendarUtility.shared.isDateInToday(midnight),
                 status: status,
                 workouts: rows
             )
         }
 
-        earliestFutureDate =
-            dayInfos.first(where: { $0.id >= today })?.id ?? today
+        earliestFutureDate = dayInfos.first(where: { $0.id >= today })?.id ?? today
     }
 }
+

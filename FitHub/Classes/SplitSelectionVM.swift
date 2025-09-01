@@ -11,18 +11,18 @@ import Combine
 @MainActor
 final class SplitSelectionVM: ObservableObject {
     // ───── Public reactive state ──────────────────────────────────────
-    @Published var selectedDay: daysOfWeek?          // nil ⇒ single-template mode
+    @Published var selectedDay: DaysOfWeek?          // nil ⇒ single-template mode
     @Published var showFrontView: Bool = true
 
     /// Per-day selections (or just one “virtual day” in single mode)
-    @Published private(set) var selections: [daysOfWeek: [SplitCategory]] = [:]
+    @Published private(set) var selections: [DaysOfWeek: [SplitCategory]] = [:]
 
     // ───── Dependencies / constants ───────────────────────────────────
     private let userData: UserData
-    let workoutDays: [daysOfWeek]
+    let workoutDays: [DaysOfWeek]
 
     // Keep a copy so we know when the user really changed something
-    private var originalSelections: [daysOfWeek: [SplitCategory]] = [:]
+    private var originalSelections: [DaysOfWeek: [SplitCategory]] = [:]
     
     var hasUnsavedChanges: Bool { selections != originalSelections }
 
@@ -32,7 +32,7 @@ final class SplitSelectionVM: ObservableObject {
     /// Multi-day constructor (used by **SplitSelection**)
     init(userData: UserData) {
         self.userData    = userData
-        self.workoutDays = userData.workoutPrefs.customWorkoutDays ?? daysOfWeek.defaultDays(for: userData.workoutPrefs.workoutDaysPerWeek)
+        self.workoutDays = userData.workoutPrefs.customWorkoutDays ?? DaysOfWeek.defaultDays(for: userData.workoutPrefs.workoutDaysPerWeek)
         self.selectedDay = workoutDays.first
 
         // Seed with the saved split (or an empty template)
@@ -61,7 +61,7 @@ final class SplitSelectionVM: ObservableObject {
     // ───── API the views call ­­­­­­­­­­­­­­­­­­­­­­­­­­­­–––––––––––––
 
     /// Returns the array the view should bind to for *this* day (or the single template).
-    func binding(for day: daysOfWeek? = nil) -> Binding<[SplitCategory]> {
+    func binding(for day: DaysOfWeek? = nil) -> Binding<[SplitCategory]> {
         let key = day ?? .monday
         return Binding(
             get: { self.selections[key] ?? [] },
@@ -75,7 +75,7 @@ final class SplitSelectionVM: ObservableObject {
         return !(legFocused && list.contains(cat))
     }
 
-    func toggle(_ muscleGroup: SplitCategory, on day: daysOfWeek? = nil) {
+    func toggle(_ muscleGroup: SplitCategory, on day: DaysOfWeek? = nil) {
         // 0️⃣  Resolve the key exactly once
         let key = day ?? .monday                        // .monday is the single-template bucket
 
@@ -99,7 +99,7 @@ final class SplitSelectionVM: ObservableObject {
         selections[key] = list
     }
 
-    func shouldDisable(_ category: SplitCategory, on day: daysOfWeek? = nil) -> Bool {
+    func shouldDisable(_ category: SplitCategory, on day: DaysOfWeek? = nil) -> Bool {
         let list          = binding(for: day).wrappedValue
         let pickedLegCats = list.filter { SplitCategory.legsFocus.contains($0) }
 
@@ -109,7 +109,7 @@ final class SplitSelectionVM: ObservableObject {
         return false
     }
 
-    func displayName(for category: SplitCategory, on day: daysOfWeek? = nil) -> String {
+    func displayName(for category: SplitCategory, on day: DaysOfWeek? = nil) -> String {
         guard category == .legs else { return category.rawValue }
 
         let list  = binding(for: day).wrappedValue
@@ -118,7 +118,7 @@ final class SplitSelectionVM: ObservableObject {
 
         if focus.isEmpty { return "Legs" }
         if list.contains(.legs)  {
-            return "Legs: " + focusFormatted.joined(separator: ", ") + " focused"
+            return "Legs: " + focusFormatted.joined(separator: ", ") + " focus"
         }
         
         return category.rawValue
@@ -157,7 +157,7 @@ final class SplitSelectionVM: ObservableObject {
         originalSelections = selections
     }
 
-    func clearDay(_ day: daysOfWeek? = nil) { binding(for: day).wrappedValue.removeAll() }
+    func clearDay(_ day: DaysOfWeek? = nil) { binding(for: day).wrappedValue.removeAll() }
     
     func clearAll() { for day in workoutDays { selections[day] = [] } }
 

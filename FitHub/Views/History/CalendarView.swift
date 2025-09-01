@@ -1,5 +1,5 @@
 //
-//  Calender.swift
+//  Calendar.swift
 //  FitHub
 //
 //  Created by Anthony Cantu on 5/3/25.
@@ -7,30 +7,37 @@
 
 import SwiftUI
 
+
 struct CalendarView: View {
-    @Environment(\.calendar) var calendar
     @Environment(\.colorScheme) var colorScheme
     @Binding var currentMonth: Date
     let workoutDates: [Date]
     let plannedWorkoutDates: [Date]
     let completedWorkouts: [CompletedWorkout]
 
-    
+    // One grid definition reused for headers + days
+    private var columns: [GridItem] {
+        Array(repeating: GridItem(.flexible(), spacing: 0, alignment: .center), count: 7)
+    }
+
+    private let weekdayHeaders = ["SUN","MON","TUE","WED","THU","FRI","SAT"] 
+
     var body: some View {
         VStack {
+            // ── Month nav bar ─────────────────────────────────────────────
             HStack {
                 Button(action: moveToPreviousMonth) {
                     Image(systemName: "arrow.left").bold()
                         .contentShape(Rectangle())
                 }
-                
+
                 Spacer()
-                
+
                 Text("\(Format.monthName(from: currentMonth)) \(String(year(from: currentMonth)))")
                     .font(.headline)
-                
+
                 Spacer()
-                
+
                 if !isNextMonth(currentMonth) {
                     Button(action: moveToNextMonth) {
                         Image(systemName: "arrow.right").bold()
@@ -42,149 +49,156 @@ struct CalendarView: View {
             .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .padding(.horizontal)
-            
-            HStack {
-                ForEach(["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"], id: \.self) { day in
-                    Text(day)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity)
-                }
-            }
-            .padding(.horizontal)
-            
-            LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 15) {
-                ForEach(Array(offsetDays.enumerated()), id: \.offset) { index, day in
-                    if let day = day {
-                        if let workout = workout(for: day) {
-                            NavigationLink(destination: CompletedDetails(workout: workout, categories: SplitCategory.concatenateCategories(for: workout.template.categories))) {
-                                DayView(day: day,
-                                        completedWorkouts: workoutDates,
-                                        plannedWorkouts: plannedWorkoutDates,
-                                        today: Date())
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        } else {
-                            DayView(day: day,
-                                    completedWorkouts: workoutDates,
-                                    plannedWorkouts: plannedWorkoutDates,
-                                    today: Date())
-                        }
-                    } else {
-                        DayView(day: Date(),
-                                completedWorkouts: workoutDates,
-                                plannedWorkouts: plannedWorkoutDates,
-                                today: Date())
-                        .hidden()
+
+            // ── Headers + Days share the SAME grid ───────────────────────
+            LazyVGrid(columns: columns, spacing: 0) {
+                // Header row
+                Group {
+                    ForEach(weekdayHeaders, id: \.self) { day in
+                        Text(day)
+                            .font(.subheadline)
+                            .foregroundStyle(.gray)
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
                 }
+                .padding(.bottom)
+
+                // Day cells
+                ForEach(offsetDays.indices, id: \.self) { i in
+                    dayCell(for: offsetDays[i])
+                }
             }
+            .padding(.horizontal)   // same horizontal padding for both rows
             .padding(.vertical)
         }
         .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .padding(.horizontal)
     }
-    
+
+    // MARK: - Day cell plumbing (unchanged)
+    @ViewBuilder
+    private func dayCell(for day: Date?) -> some View {
+        if let day {
+            if let w = workout(for: day) {
+                NavigationLink(
+                    destination: CompletedDetails(
+                        workout: w,
+                        categories: SplitCategory.concatenateCategories(for: w.template.categories)
+                    )
+                ) { baseDayView(for: day) }
+                .buttonStyle(.plain)
+            } else {
+                baseDayView(for: day)
+            }
+        } else {
+            placeholderDayCell
+        }
+    }
+
+    private func baseDayView(for day: Date) -> some View {
+        DayView(
+            day: day,
+            completedWorkouts: workoutDates,
+            plannedWorkouts: plannedWorkoutDates,
+            today: Date()
+        )
+    }
+
+    private var placeholderDayCell: some View {
+        DayView(
+            day: Date(),
+            completedWorkouts: workoutDates,
+            plannedWorkouts: plannedWorkoutDates,
+            today: Date()
+        )
+        .hidden()
+    }
+
+    // MARK: - Helpers (unchanged)
     private func workout(for date: Date) -> CompletedWorkout? {
-        return completedWorkouts.first { Calendar.current.isDate($0.date, inSameDayAs: date) }
+        return completedWorkouts.first {
+            CalendarUtility.shared.isDate(($0.template.date ?? $0.date), inSameDayAs: date)
+            && !$0.template.exercises.isEmpty
+        }
     }
-    
+
     private func moveToPreviousMonth() {
-        if let newMonth = calendar.date(byAdding: .month, value: -1, to: currentMonth) {
+        if let newMonth = CalendarUtility.shared.previousMonth(from: currentMonth) {
             currentMonth = newMonth
         }
     }
-    
+
     private func moveToNextMonth() {
-        if let newMonth = calendar.date(byAdding: .month, value: 1, to: currentMonth) {
+        if let newMonth = CalendarUtility.shared.nextMonth(from: currentMonth) {
             currentMonth = newMonth
         }
     }
-    
+
     private func year(from date: Date) -> Int {
-        let calendar = Calendar.current
-        return calendar.component(.year, from: date)
+        CalendarUtility.shared.year(from: date)
     }
-    
+
     private var days: [Date] {
-        guard let interval = calendar.dateInterval(of: .month, for: currentMonth) else { return [] }
-        return calendar.generateDates(inside: interval, matching: DateComponents(hour: 0, minute: 0, second: 0))
+        guard let interval = CalendarUtility.shared.dateInterval(of: .month, for: currentMonth) else { return [] }
+        return CalendarUtility.shared.generateDates(inside: interval, matching: DateComponents(hour: 0, minute: 0, second: 0))
     }
-    
+
     private var offsetDays: [Date?] {
-        let firstDayOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: currentMonth))!
-        let weekdayOffset = calendar.component(.weekday, from: firstDayOfMonth) - 1
-        
+        guard let firstDayOfMonth = CalendarUtility.shared.startOfMonth(for: currentMonth) else { return days }
+        let weekdayOffset = CalendarUtility.shared.weekday(from: firstDayOfMonth) - 1 // Sunday-first
         var daysWithOffset: [Date?] = Array(repeating: nil, count: weekdayOffset)
         daysWithOffset.append(contentsOf: days)
-        
         return daysWithOffset
     }
-    
-    private func isCurrentMonth(_ date: Date) -> Bool {
-        calendar.isDate(date, equalTo: Date(), toGranularity: .month)
-    }
-    
+
     private func isNextMonth(_ date: Date) -> Bool {
-        guard let nextMonth = calendar.date(byAdding: .month, value: 1, to: Date()) else { return false }
-        return calendar.isDate(date, equalTo: nextMonth, toGranularity: .month)
+        guard let nextMonth = CalendarUtility.shared.nextMonth(from: Date()) else { return false }
+        return CalendarUtility.shared.isDate(date, equalTo: nextMonth, toGranularity: .month)
     }
-    
+
     struct DayView: View {
+        @Environment(\.colorScheme) var colorScheme
         let day: Date
         let completedWorkouts: [Date]
         let plannedWorkouts: [Date]
         let today: Date
-        @Environment(\.calendar) var calendar
-        @Environment(\.colorScheme) var colorScheme
-        
+
         var body: some View {
             ZStack {
-                Text("\(calendar.component(.day, from: day))")
-                    .foregroundColor(workoutColor)
+                Text("\(CalendarUtility.shared.day(from: day))")
+                    .foregroundStyle(workoutColor)
                     .frame(width: 30, height: 30)
                     .background(backgroundView)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
-                // Outer circle if today:
-                if calendar.isDate(day, inSameDayAs: today) {
+
+                if CalendarUtility.shared.isDate(day, inSameDayAs: today) {
                     Circle()
                         .fill(Color.gray.opacity(0.3))
                         .frame(width: 35, height: 35)
                         .zIndex(1)
                 }
             }
+            .frame(maxWidth: .infinity, minHeight: 36) // ensure each cell takes full column width
         }
-        
+
         private var isWorkoutDay: Bool {
-            completedWorkouts.contains(where: { calendar.isDate($0, inSameDayAs: day) })
+            completedWorkouts.contains { CalendarUtility.shared.isDate($0, inSameDayAs: day) }
         }
-        
+
         private var isPlannedWorkoutDay: Bool {
-            plannedWorkouts.contains { workoutDate in
-                calendar.isDate(workoutDate, inSameDayAs: day)
-            }
+            plannedWorkouts.contains { CalendarUtility.shared.isDate($0, inSameDayAs: day) }
         }
-        
+
         private var workoutColor: Color {
-            if isWorkoutDay || isPlannedWorkoutDay {
-                return .white
-            } else {
-                return colorScheme == .dark ? .white : .black
-            }
+            (isWorkoutDay || isPlannedWorkoutDay) ? .white : (colorScheme == .dark ? .white : .black)
         }
-        
+
         private var backgroundView: some View {
             Group {
-                if isWorkoutDay {
-                    Circle().fill(.green)
-                        .shadow(radius: 2.5)
-                } else if isPlannedWorkoutDay {
-                    Circle().fill(.blue)
-                        .shadow(radius: 2.5)
-                } else {
-                    Color.clear
-                }
+                if isWorkoutDay { Circle().fill(.green).shadow(radius: 2.5) }
+                else if isPlannedWorkoutDay { Circle().fill(.blue).shadow(radius: 2.5) }
+                else { Color.clear }
             }
         }
     }

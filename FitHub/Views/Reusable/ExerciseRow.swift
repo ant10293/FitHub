@@ -57,30 +57,19 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
         self.onTap     = onTap
     }
     
+    private var resolvedState: FavoriteState {
+        if !heartOverlay { return .unmarked }
+        else { return favState }
+    }
+    
     // ------------------------------------------------------------------
     // Body
     // ------------------------------------------------------------------
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 12) {
-                exercise.fullImage
-                    .resizable()
-                    .scaledToFit()
+                exercise.fullImageView(favState: resolvedState)
                     .frame(width: UIScreen.main.bounds.width * imageSize)
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
-                    .overlay(alignment: .bottomTrailing, content: {
-                        if heartOverlay {
-                            if favState == .favorite {
-                                Image(systemName: "heart.fill")
-                                    .imageScale(.small)
-                                    .foregroundColor(.red)
-                            } else if favState == .disliked {
-                                Image(systemName: "hand.thumbsdown.fill")
-                                    .imageScale(.small)
-                                    .foregroundColor(.blue)
-                            }
-                        }
-                    })
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(exercise.name)

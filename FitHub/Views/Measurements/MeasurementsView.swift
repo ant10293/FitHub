@@ -3,146 +3,143 @@
 //  FitHub1
 //
 //  Created by Anthony Cantu on 6/7/24.
+//
+//  MeasurementsView.swift
+//  FitHub1
+//
+//  Created by Anthony Cantu on 6/7/24.
 
 import SwiftUI
 
 struct MeasurementsView: View {
     @ObservedObject var userData: UserData
-    @State private var showMeasurementEditor = false
-    @State private var showMeasurementGraph = false
-    @State private var currentMeasurementType: MeasurementType = .weight
-    @State private var currentMeasurementValue: Double = 0.0
+    @State private var currentMeasurementType: MeasurementType? = nil
+    @State private var showMeasurementEditor: Bool = false
+    @State private var showMeasurementGraph: Bool = false
     @State private var showGraph: Bool = false
-    
+
     var body: some View {
-        ZStack {
-            List {
-                Section {
-                    ForEach(MeasurementType.coreMeasurements, id: \.self) { measurement in
-                        MeasurementRow(
-                            showMeasurementEditor: $showMeasurementEditor,
-                            showMeasurementGraph: $showMeasurementGraph,
-                            showGraph: $showGraph,
-                            title: measurement.rawValue,
-                            value: userData.physical.currentMeasurements[measurement]?.value ?? 0.0,
-                            onSelectMeasurement: { type, value in
-                                currentMeasurementType = type
-                                currentMeasurementValue = value
-                            }
-                        )
-                    }
-                } header: {
-                    Text("CORE")
-                }
-                
-                Section {
-                    ForEach(MeasurementType.bodyPartMeasurements, id: \.self) { measurement in
-                        MeasurementRow(
-                            showMeasurementEditor: $showMeasurementEditor,
-                            showMeasurementGraph: $showMeasurementGraph,
-                            showGraph: $showGraph,
-                            title: measurement.rawValue,
-                            value: userData.physical.currentMeasurements[measurement]?.value ?? 0.0,
-                            onSelectMeasurement: { type, value in
-                                currentMeasurementType = type
-                                currentMeasurementValue = value
-                            }
-                        )
-                    }
-                } header: {
-                    Text("BODY PART (Circumference)")
+        List {
+            Section(header: Text("CORE")) {
+                ForEach(MeasurementType.coreMeasurements, id: \.self) { measurement in
+                    MeasurementRow(
+                        showGraph: showGraph,
+                        type: measurement,
+                        measurement: userData.currentMeasurementValue(for: measurement),
+                        onSelectMeasurement: {
+                            handleSelection(type: measurement)
+                        }
+                    )
                 }
             }
-            .disabled(showMeasurementEditor)
-            .listStyle(InsetGroupedListStyle())
-            .navigationTitle("Measurements")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showGraph.toggle() }) {
-                        Image(systemName: showGraph ? "chart.bar" : "square.and.pencil")
-                    }
+
+            Section(header: Text("BODY PART (Circumference)")) {
+                ForEach(MeasurementType.bodyPartMeasurements, id: \.self) { measurement in
+                    MeasurementRow(
+                        showGraph: showGraph,
+                        type: measurement,
+                        measurement: userData.currentMeasurementValue(for: measurement),
+                        onSelectMeasurement: {
+                            handleSelection(type: measurement)
+                        }
+                    )
                 }
             }
-            .sheet(isPresented: $showMeasurementGraph) {
+        }
+        .disabled(showMeasurementEditor)
+        .listStyle(InsetGroupedListStyle())
+        .navigationTitle("Measurements")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: { showGraph.toggle() }) {
+                    Image(systemName: showGraph ? "chart.bar" : "square.and.pencil")
+                }
+            }
+        }
+        .sheet(isPresented: $showMeasurementGraph) {
+            if let type = currentMeasurementType {
                 NavigationStack {
                     MeasurementsGraph(
-                        selectedMeasurement: currentMeasurementType,
-                        currentMeasurement: userData.physical.currentMeasurements[currentMeasurementType],
-                        pastMeasurements: userData.physical.pastMeasurements[currentMeasurementType]
+                        selectedMeasurement: type,
+                        currentMeasurement: userData.physical.currentMeasurements[type],
+                        pastMeasurements: userData.physical.pastMeasurements[type]
                     )
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Button("Close") {
                                 showMeasurementGraph = false
                             }
-                            .foregroundColor(.red)
+                            .foregroundStyle(.red)
                         }
                     }
                 }
             }
-            if showMeasurementEditor {
+        }
+        .overlay(alignment: .center, content: {
+            if showMeasurementEditor, let type = currentMeasurementType {
                 MeasurementEditor(
-                    measurementType: currentMeasurementType,
-                    value: $currentMeasurementValue,
-                    isPresented: $showMeasurementEditor,
+                    measurement: userData.currentMeasurementValue(for: type),
+                    measurementType: type,
                     onSave: { newValue in
-                        userData.updateMeasurementValue(for: currentMeasurementType, with: newValue, shouldSave: true)
+                        userData.updateMeasurementValue(for: type, with: newValue, shouldSave: true)
+                        closeEditor()
+                    },
+                    onExit: {
+                        closeEditor()
                     }
                 )
+                .id(type)
+                .padding(.horizontal)
             }
-        }
+        })
     }
     
+    private func closeEditor() {
+        currentMeasurementType = nil
+        showMeasurementEditor = false
+    }
+    
+    private func handleSelection(type: MeasurementType) {
+        currentMeasurementType = type
+        if showGraph {
+            showMeasurementGraph = true
+        } else {
+            showMeasurementEditor = true
+        }
+    }
+
     struct MeasurementRow: View {
-        @Binding var showMeasurementEditor: Bool
-        @Binding var showMeasurementGraph: Bool
-        @Binding var showGraph: Bool
-        var title: String
-        var value: Double
-        var onSelectMeasurement: (MeasurementType, Double) -> Void // Closure to handle selection
-        
+        var showGraph: Bool
+        var type: MeasurementType
+        var measurement: MeasurementValue
+        var onSelectMeasurement: () -> Void
+
         var body: some View {
             HStack {
-                Text(title)
+                Text(type.rawValue)
                 Spacer()
-                if value > 0 {
+                if measurement.displayValue > 0 {
                     HStack {
-                        Text(Format.smartFormat(value))
-                            .padding(.trailing, -2.5)
-                            .foregroundStyle(Color.gray)
-                        if let measurementType = MeasurementType(rawValue: title)?.unitLabel {
-                            Text(measurementType)
-                                .foregroundStyle(Color.gray)
-                                .fontWeight(.light)
-                        }
+                        measurement.formattedText
+                            .foregroundStyle(.gray)
+                        
                         if showGraph {
                             Image(systemName: "chevron.right")
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(.blue)
                         }
                     }
                 } else {
                     if showGraph {
                         Image(systemName: "chevron.right")
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(.blue)
                     } else {
                         Image(systemName: "plus")
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(.blue)
                     }
                 }
             }
             .contentShape(Rectangle())
-            .onTapGesture(perform: handleTap)
-        }
-        
-        private func handleTap() {
-            if let measurementType = MeasurementType(rawValue: title) {
-                onSelectMeasurement(measurementType, value)
-                if showGraph {
-                    showMeasurementGraph = true
-                } else {
-                    showMeasurementEditor = true
-                }
-            }
+            .onTapGesture(perform: onSelectMeasurement)
         }
     }
 }

@@ -7,28 +7,8 @@
 
 import Foundation
 
-/*
-struct CSVEntry: Codable {
-    var id: UUID = UUID()
-    let exerciseName: String
-    let ageTable: [CSVTable]
-    let bwTable: [CSVTable]
-}
+enum CSVKey: String { case age = "Age"; case bodyweight = "BW" }
 
-struct CSVTable: Codable {
-    let key: String // "Age" or "BW"
-    let rows: [CSVRow]
-}
-
-struct CSVRow: Codable {
-    let keyValue: Int
-    let beg: Double // "Beg."
-    let nov: Double // "Nov."
-    let int: Double // "Int."
-    let adv: Double // "Adv."
-    let elite: Double // "Elite"
-}
-*/
 
 final class CSVLoader {
     static let shared = CSVLoader()      // <– universal entry point
@@ -62,21 +42,61 @@ final class CSVLoader {
             return []
         }
     }
+        
+    static func getBasePaths(gender: Gender) -> (basePathAge: String, basePathBW: String) {
+        var basePath: String = "FitHubAssets/Datasets/"
+        if gender == .male {
+            basePath += "Male/"
+            return ("\(basePath)Age/", "\(basePath)Bodyweight/")
+        } else {
+            basePath += "Female/"
+            return ("\(basePath)Age/", "\(basePath)Bodyweight/")
+        }
+    }
     
-    static func get1RMValues(for exercise: String, key: String, value: Double, userData: UserData) -> [String: Double] {
-        let (basePathAge, basePathBW) = getBasePaths(userData: userData)
-        let fileName = key == "Age" ? "\(basePathAge)\(exercise)" : "\(basePathBW)\(exercise)"
+    static func getExercisePaths(exercise: String, gender: Gender) -> (agePath: String, pathBW: String) {
+        let (basePathAge, basePathBW) = getBasePaths(gender: gender)
+        let pathAge = "\(basePathAge)\(exercise)"
+        let pathBW = "\(basePathBW)\(exercise)"
+        return (pathAge, pathBW)
+    }
+    
+    static func getExerciseData(exercise: String, gender: Gender) -> (dataAge: [[String: String]], dataBW: [[String: String]]) {
+        let (pathAge, pathBW) = getExercisePaths(exercise: exercise, gender: gender)
+        let dataAge = loadCSV(fileName: pathAge)
+        let dataBW = loadCSV(fileName: pathBW)
+        return (dataAge, dataBW)
+    }
+    
+    struct ExCat {
+        var exerciseName: String
+        var maxValue: Double?
+        var bwPath: String = ""
+        var agePath: String = ""
+        var fitnessCategory: StrengthLevel?
+        var percentile: Int?
+    }
+}
+
+
+extension CSVLoader {
+    
+    static func getMaxValues(for exercise: Exercise, key: CSVKey, value: Double, userData: UserData) -> [String: PeakMetric] {
+        guard let url = exercise.url else { return [:] }
+
+        let (pathAge, pathBW) = getExercisePaths(exercise: url, gender: userData.physical.gender)
+        let fileName = key == .age ? pathAge : pathBW
         let rows = loadCSV(fileName: fileName)
         let roundedValue = value.rounded()
 
         let sortedRows: [(Double, [String: Double])] = rows.compactMap { row in
-            guard let keyString = row[key], let keyValue = Double(keyString) else {
+            guard let keyString = row[key.rawValue], let keyValue = Double(keyString) else {
                 return nil // malformed row
             }
 
             // Convert every other column that can be parsed to Double.
             var dict: [String: Double] = [:]
-            for (column, string) in row where column != key {
+            for (column, string) in row where column != key.rawValue {
                 if let doubleVal = (string.contains("< 1") ? Double(0) : Double(string)) { dict[column] = doubleVal }
             }
             return (keyValue, dict)
@@ -85,23 +105,31 @@ final class CSVLoader {
 
         guard !sortedRows.isEmpty else { return [:] }
 
-        for i in 0..<(sortedRows.count - 1) {
-            let current = sortedRows[i]
-            let next    = sortedRows[i + 1]
+        // Pick the user's bracket row
+                let chosen: [String: Double] = {
+                    for i in 0..<(sortedRows.count - 1) {
+                        let a = sortedRows[i].0
+                        let b = sortedRows[i + 1].0
+                        if roundedValue >= a && roundedValue < b {
+                            return sortedRows[i].1
+                        }
+                    }
+                    return sortedRows.last?.1 ?? [:]
+                }()
 
-            if roundedValue >= current.0 && roundedValue < next.0 {
-                return current.1
-            }
-        }
-
-        return sortedRows.last!.1
+                // Wrap doubles into PeakMetric using exercise.getPeakMetric(for:)
+                var out: [String: PeakMetric] = [:]
+                for (k, v) in chosen {
+                    out[k] = exercise.getPeakMetric(metricValue: v)
+                }
+                return out
     }
 
-    static func predict1RM(using data: [[String: String]], key: String, value: Double, fitnessLevel: StrengthLevel) -> Double {
+    static func predict1RM(using data: [[String: String]], key: CSVKey, value: Double, fitnessLevel: StrengthLevel) -> Double {
         let fitnessLevel = fitnessLevel.rawValue
         
         let filteredData = data.compactMap { row -> (Double, Double)? in
-            if let keyValue = Double(row[key] ?? ""), let fitnessValue = Double(row[fitnessLevel] ?? "") {
+            if let keyValue = Double(row[key.rawValue] ?? ""), let fitnessValue = Double(row[fitnessLevel] ?? "") {
                 return (keyValue, fitnessValue)
             }
             return nil
@@ -118,46 +146,20 @@ final class CSVLoader {
                     let y0 = filteredData[i].1
                     let x1 = filteredData[i + 1].0
                     let y1 = filteredData[i + 1].1
-                    return y0 + (value - x0) * (y1 - y0) / (x1 - x0)
+                    let interpolatedValue = y0 + (value - x0) * (y1 - y0) / (x1 - x0)
+                    return interpolatedValue
                 }
             }
         }
         return filteredData.last?.1 ?? 0.0
     }
-    
-    static func getBasePaths(userData: UserData) -> (basePathAge: String, basePathBW: String) {
-        var basePath: String = "FitHubAssets/Datasets/"
-        if userData.physical.gender == .male {
-            basePath += "Male/"
-            return ("\(basePath)Age/", "\(basePath)Bodyweight/")
-        } else {
-            basePath += "Female/"
-            return ("\(basePath)Age/", "\(basePath)Bodyweight/")
-        }
-    }
-    
-    static func calculateFinal1RM(userData: UserData, exercise: String) -> Double {
-        let (basePathAge, basePathBW) = getBasePaths(userData: userData)
-        let pathAge = "\(basePathAge)\(exercise)"
-        let pathBW = "\(basePathBW)\(exercise)"
-        
-        let dataAge = loadCSV(fileName: pathAge)
-        let dataBW = loadCSV(fileName: pathBW)
-        
-        let predicted1RM_BW = predict1RM(using: dataBW, key: "BW", value: userData.currentMeasurementValue(for: .weight), fitnessLevel: userData.evaluation.strengthLevel)
-        let predicted1RM_Age = predict1RM(using: dataAge, key: "Age", value: Double(userData.profile.age), fitnessLevel: userData.evaluation.strengthLevel)
-        
-        let final1RM = (2 * predicted1RM_BW + predicted1RM_Age) / 3.0
-        //print("Predicted 1RM for \(exercise) - BW: \(predicted1RM_BW), Age: \(predicted1RM_Age), Final: \(final1RM)")
-        return final1RM
-    }
-    
-    static func predictRepsForExercise(using data: [[String: String]], key: String, value: Double, fitnessLevel: StrengthLevel) -> Int {
+
+    static func predictRepsForExercise(using data: [[String: String]], key: CSVKey, value: Double, fitnessLevel: StrengthLevel) -> Int {
         let fitnessLevel = fitnessLevel.rawValue
         
         // First, filter and transform the data to match expected types
         let filteredData = data.compactMap { row -> (Double, Int)? in
-            if let keyValue = Double(row[key] ?? ""), let reps = Int(row[fitnessLevel] ?? "") {
+            if let keyValue = Double(row[key.rawValue] ?? ""), let reps = Int(row[fitnessLevel] ?? "") {
                 return (keyValue, reps)
             }
             return nil
@@ -185,57 +187,95 @@ final class CSVLoader {
         return filteredData.last?.1 ?? 0
     }
     
-    static func calculateFinalReps(userData: UserData, exercise: String) -> Int {
-        let (basePathAge, basePathBW) = getBasePaths(userData: userData)
-        let pathAge = "\(basePathAge)\(exercise)"
-        let pathBW = "\(basePathBW)\(exercise)"
+    static func calculateFinal1RM(userData: UserData, exercise: String) -> PeakMetric {
+        let (dataAge, dataBW) = getExerciseData(exercise: exercise, gender: userData.physical.gender)
         
-        let dataAge = loadCSV(fileName: pathAge)
-        let dataBW = loadCSV(fileName: pathBW)
+        let predicted1RM_BW = predict1RM(using: dataBW, key: .bodyweight, value: userData.currentMeasurementValue(for: .weight).actualValue, fitnessLevel: userData.evaluation.strengthLevel)
+        let predicted1RM_Age = predict1RM(using: dataAge, key: .age, value: Double(userData.profile.age), fitnessLevel: userData.evaluation.strengthLevel)
         
-        let predictedReps_BW = predictRepsForExercise(using: dataBW, key: "BW", value: userData.currentMeasurementValue(for: .weight), fitnessLevel: userData.evaluation.strengthLevel)
-        let predictedReps_Age = predictRepsForExercise(using: dataAge, key: "Age", value: Double(userData.profile.age), fitnessLevel: userData.evaluation.strengthLevel)
+        let predictedCombined = predicted1RM_BW + predicted1RM_Age
+        guard predictedCombined > 0 else { return .oneRepMax(Mass(kg: 0)) }
         
-        let finalReps = (2 * predictedReps_BW + predictedReps_Age) / 3
-        //print("Predicted Reps for \(exercise) - BW: \(predictedReps_BW), Age: \(predictedReps_Age), Final: \(finalReps)")
-        return finalReps
+        let final1RM = (2 * predictedCombined) / 3.0
+        //print("Predicted 1RM for \(exercise) - BW: \(predicted1RM_BW), Age: \(predicted1RM_Age), Final: \(final1RM)")
+        return .oneRepMax(Mass(kg: final1RM))
     }
     
-    static func calculateExercisePercentile(userData: UserData, exercise: Exercise, maxValue: Double) -> Int {
-        let (basePathAge, basePathBW) = getBasePaths(userData: userData)
-        let pathAge = "\(basePathAge)\(exercise.url)"
-        let pathBW = "\(basePathBW)\(exercise.url)"
+    static func calculateFinalReps(userData: UserData, exercise: String) -> PeakMetric {
+        let (dataAge, dataBW) = getExerciseData(exercise: exercise, gender: userData.physical.gender)
         
-        let dataAge = loadCSV(fileName: pathAge)
-        let dataBW = loadCSV(fileName: pathBW)
+        let predictedReps_BW = predictRepsForExercise(using: dataBW, key: .bodyweight, value: userData.currentMeasurementValue(for: .weight).actualValue, fitnessLevel: userData.evaluation.strengthLevel)
+        let predictedReps_Age = predictRepsForExercise(using: dataAge, key: .age, value: Double(userData.profile.age), fitnessLevel: userData.evaluation.strengthLevel)
         
-        let agePercentile = findPercentile(data: dataAge, key: "Age", value: Double(userData.profile.age), maxValue: maxValue)
-        let bwPercentile = findPercentile(data: dataBW, key: "BW", value: userData.currentMeasurementValue(for: .weight), maxValue: maxValue)
+        let predictedCombined = predictedReps_BW + predictedReps_Age
+        guard predictedCombined > 0 else { return .maxReps(0) }
+        
+        let finalReps = (2 * predictedCombined) / 3
+        //print("Predicted Reps for \(exercise) - BW: \(predictedReps_BW), Age: \(predictedReps_Age), Final: \(finalReps)")
+        return .maxReps(finalReps)
+    }
+    
+    static func calculateExercisePercentile(for exercise: Exercise, maxValue: Double, userData: UserData) -> Int? {
+        guard let url = exercise.url else { return nil }
+
+        let (dataAge, dataBW) = getExerciseData(exercise: url, gender: userData.physical.gender)
+        
+        let percentile = derivePercentile(userData: userData, maxValue: maxValue, dataAge: dataAge, dataBW: dataBW)
+        return percentile
+    }
+    
+    static private func calculateStrengthPercentile(userData: UserData, exercises: inout [ExCat]) -> Int {
+        var percentiles: [Int] = []
+
+        for i in 0..<exercises.count {
+            if let maxValue = exercises[i].maxValue {
+                let percentile = calculatePercentile(
+                    userData: userData,
+                    basePathAge: exercises[i].agePath,
+                    basePathBW: exercises[i].bwPath,
+                    maxValue: maxValue
+                )
+                exercises[i].percentile = percentile
+                percentiles.append(percentile)
+            }
+        }
+
+        guard !percentiles.isEmpty else { return 0 }
+
+        let average = percentiles.reduce(0, +) / percentiles.count
+        print("Strength percentiles: \(percentiles), Average: \(average)")
+        return average
+    }
+    
+    static private func calculatePercentile(userData: UserData, basePathAge: String, basePathBW: String, maxValue: Double) -> Int {
+        let dataAge = loadCSV(fileName: basePathAge)
+        let dataBW = loadCSV(fileName: basePathBW)
+        
+        let percentile = derivePercentile(userData: userData, maxValue: maxValue, dataAge: dataAge, dataBW: dataBW)
+        return percentile
+    }
+    
+    private static func derivePercentile(userData: UserData, maxValue: Double, dataAge: [[String: String]], dataBW: [[String: String]]) -> Int {
+        let agePercentile = findPercentile(data: dataAge, key: .age, value: Double(userData.profile.age), maxValue: maxValue)
+        let bwPercentile = findPercentile(data: dataBW, key: .bodyweight, value: userData.currentMeasurementValue(for: .weight).actualValue, maxValue: maxValue)
         
         print("Percentiles determined: Age - \(agePercentile), BW - \(bwPercentile)")
         
         return (agePercentile + bwPercentile) / 2
     }
     
-    struct ExCat {
-        var exerciseName: String
-        var maxValue: Double?
-        var bwPath: String = ""
-        var agePath: String = ""
-        var fitnessCategory: StrengthLevel?
-        var percentile: Int?
-    }
-    
     static func estimateStrengthCategories(userData: UserData, exerciseData: ExerciseData) {
-        let (basePathAge, basePathBW) = getBasePaths(userData: userData)
+        let (basePathAge, basePathBW) = getBasePaths(gender: userData.physical.gender)
         var categories = [StrengthLevel]()
         let exerciseNames: [String] = ["Bench Press", "Back Squat", "Deadlift", "Push-Up", "Sit-Up", "Bodyweight Squat"]
         var exercises: [ExCat] = []
         
         for name in exerciseNames {
-            if let exercise = exerciseData.exercise(named: name), let maxValue = exerciseData.getMax(for: exercise.id) {
-                let bwPath = "\(basePathBW)\(exercise.url)"
-                let agePath = "\(basePathAge)\(exercise.url)"
+            if let exercise = exerciseData.exercise(named: name),
+                let maxValue = exerciseData.peakMetric(for: exercise.id)?.actualValue,
+                let url = exercise.url {
+                let bwPath = "\(basePathBW)\(url)"
+                let agePath = "\(basePathAge)\(url)"
                 exercises.append(ExCat(exerciseName: name, maxValue: maxValue, bwPath: bwPath, agePath: agePath))
             }
         }
@@ -268,11 +308,12 @@ final class CSVLoader {
         
         let selectedCategory: String
         if mostFrequentCategories.count == 1 {
-            selectedCategory = mostFrequentCategories.first! // Return the most frequent category
+            selectedCategory = mostFrequentCategories.first ?? "beginner" // Return the most frequent category
         } else {
             // If there is a tie or all different, sort and choose the middle
             let sortedCategories = mostFrequentCategories.sorted()
-            selectedCategory = sortedCategories[sortedCategories.count / 2]
+            let middleIndex = sortedCategories.count / 2
+            selectedCategory = sortedCategories[safe: middleIndex] ?? "beginner"
         }
         print("Selected fitness category: \(selectedCategory)")
         
@@ -288,13 +329,14 @@ final class CSVLoader {
         let dataAge = loadCSV(fileName: basePathAge)
         let dataBW = loadCSV(fileName: basePathBW)
         
-        let fitnessLevelAge = findFitnessLevel(data: dataAge, key: "Age", value: Double(userData.profile.age), maxValue: maxValue)
-        let fitnessLevelBW = findFitnessLevel(data: dataBW, key: "BW", value: userData.currentMeasurementValue(for: .weight), maxValue: maxValue)
+        let fitnessLevelAge = findFitnessLevel(data: dataAge, key: .age, value: Double(userData.profile.age), maxValue: maxValue)
+        let fitnessLevelBW = findFitnessLevel(data: dataBW, key: .bodyweight, value: userData.currentMeasurementValue(for: .weight).actualValue, maxValue: maxValue)
         
         print("Fitness levels determined: Age - \(fitnessLevelAge), BW - \(fitnessLevelBW)")
         return decideFinalFitnessLevel(fitnessLevelAge, fitnessLevelBW)
     }
     
+    // this is not good for accomodating older users
     static private func decideFinalFitnessLevel(_ ageLevel: StrengthLevel, _ bwLevel: StrengthLevel) -> StrengthLevel {
         let ageWeight = 0.3  // 30% weight to the age level
         let bwWeight = 0.7   // 70% weight to the bodyweight level
@@ -316,58 +358,26 @@ final class CSVLoader {
         return .beginner
     }
     
-    static private func calculateStrengthPercentile(userData: UserData, exercises: inout [ExCat]) -> Int {
-        var percentiles: [Int] = []
+    private static func makeFilteredData(from data: [[String: String]], key: CSVKey) -> [(Double, [String: Double])] {
+        data.compactMap { row -> (Double, [String: Double])? in
+            // Parse the key column as Double
+            guard let x = Double(row[key.rawValue] ?? "") else { return nil }
 
-        for i in 0..<exercises.count {
-            if let maxValue = exercises[i].maxValue {
-                let percentile = calculatePercentile(
-                    userData: userData,
-                    basePathAge: exercises[i].agePath,
-                    basePathBW: exercises[i].bwPath,
-                    maxValue: maxValue
-                )
-                exercises[i].percentile = percentile
-                percentiles.append(percentile)
-            }
-        }
-
-        guard !percentiles.isEmpty else {
-            print("No valid percentiles found.")
-            return 0
-        }
-
-        let average = percentiles.reduce(0, +) / percentiles.count
-        print("Strength percentiles: \(percentiles), Average: \(average)")
-        return average
-    }
-    
-    static private func calculatePercentile(userData: UserData, basePathAge: String, basePathBW: String, maxValue: Double) -> Int {
-        let dataAge = loadCSV(fileName: basePathAge)
-        let dataBW = loadCSV(fileName: basePathBW)
-        
-        let agePercentile = findPercentile(data: dataAge, key: "Age", value: Double(userData.profile.age), maxValue: maxValue)
-        let bwPercentile = findPercentile(data: dataBW, key: "BW", value: userData.currentMeasurementValue(for: .weight), maxValue: maxValue)
-        
-        print("Percentiles determined: Age - \(agePercentile), BW - \(bwPercentile)")
-        
-        return (agePercentile + bwPercentile) / 2
-    }
-    
-    static func findPercentile(data: [[String: String]], key: String, value: Double, maxValue: Double) -> Int {
-        let maxValue = round(maxValue)
-        let filteredData = data.compactMap { row -> (Double, [String: Double])? in
-            if let keyValue = Double(row[key] ?? "") {
-                var maxValues: [String: Double] = [:]
-                for (category, stringValue) in row {
-                    if let doubleValue = Double(stringValue) {
-                        maxValues[category] = doubleValue
-                    }
+            // Collect every column that parses as Double
+            var numeric: [String: Double] = [:]
+            for (col, str) in row {
+                if let d = Double(str) {
+                    numeric[col] = d
                 }
-                return (keyValue, maxValues)
             }
-            return nil
-        }.sorted(by: { $0.0 < $1.0 })
+            return (x, numeric)
+        }
+        .sorted(by: { $0.0 < $1.0 })
+    }
+
+    static func findPercentile(data: [[String: String]], key: CSVKey, value: Double, maxValue: Double) -> Int {
+        let maxValue = round(maxValue)
+        let filteredData = makeFilteredData(from: data, key: key)
                 
         // Ensure there are at least two elements in filteredData
         guard filteredData.count > 1 else {
@@ -385,23 +395,20 @@ final class CSVLoader {
         }
         
         print("No appropriate bracket found; using last record.")
-        return calculateCategoryPercentile(current: filteredData.last!, next: filteredData.last!, maxValue: maxValue)
+        if let lastRecord = filteredData.last {
+            return calculateCategoryPercentile(current: lastRecord, next: lastRecord, maxValue: maxValue)
+        }
+        return 0
     }
     
-    static private func findFitnessLevel(data: [[String: String]], key: String, value: Double, maxValue: Double) -> StrengthLevel{
+    static private func findFitnessLevel(data: [[String: String]], key: CSVKey, value: Double, maxValue: Double) -> StrengthLevel {
         let maxValue = round(maxValue)
-        let filteredData = data.compactMap { row -> (Double, [String: Double])? in
-            if let keyValue = Double(row[key] ?? "") {
-                var maxValues: [String: Double] = [:]
-                for (category, stringValue) in row {
-                    if let doubleValue = Double(stringValue) {
-                        maxValues[category] = doubleValue
-                    }
-                }
-                return (keyValue, maxValues)
-            }
-            return nil
-        }.sorted(by: { $0.0 < $1.0 })
+        let filteredData = makeFilteredData(from: data, key: key)
+        
+        guard filteredData.count > 1 else {
+            print("Insufficient data to determine fitness category.")
+            return .beginner
+        }
                 
         for i in 0..<filteredData.count-1 {
             let current = filteredData[i]
@@ -409,20 +416,20 @@ final class CSVLoader {
             if value >= current.0 && value < next.0 {
                 print("User value falls between \(current.0) and \(next.0)")
                 // Compare oneRepMax to the fitness levels in 'current' row
-                return compareOneRepMaxToLevels(row: current.1, maxValue: maxValue)
+                return compareMaxValueToLevels(row: current.1, maxValue: maxValue)
             }
         }
         // Handle values greater than the last range
         if let last = filteredData.last, maxValue >= last.0 {
             print("Rounded oneRepMax \(maxValue) exceeds last range starting at \(last.0).")
-            return compareOneRepMaxToLevels(row: last.1, maxValue: maxValue)
+            return compareMaxValueToLevels(row: last.1, maxValue: maxValue)
         }
         
         print("No appropriate bracket found; using last record.")
         return .beginner
     }
     
-    static private func compareOneRepMaxToLevels(row: [String: Double], maxValue: Double) -> StrengthLevel {
+    static private func compareMaxValueToLevels(row: [String: Double], maxValue: Double) -> StrengthLevel {
         for category in StrengthLevel.categories.reversed() {
             if let level = row[category], maxValue >= level {
                 print("User's max of \(maxValue) qualifies for \(category)")
@@ -460,28 +467,28 @@ final class CSVLoader {
             let nextCategory = index < StrengthLevel.categories.count - 1 ? StrengthLevel.categories[index + 1] : nil
             
             minForCategory = 0
-            maxForCategory = nextCategory != nil ? (current.1[nextCategory!] ?? 0) - 1 : (current.1[category] ?? 0)
-        }
-        else if category == "Elite" {
+            maxForCategory = nextCategory != nil ? (current.1[nextCategory ?? ""] ?? 0) - 1 : (current.1[category] ?? 0)
+        } else if category == "Elite" {
             print("Elite")
             let nextCategory = index < StrengthLevel.categories.count - 1 ? StrengthLevel.categories[index + 1] : nil
             let currentCategory = index > 0 ? StrengthLevel.categories[index - 1] : nil
             
-            minForCategory = currentCategory != nil ? (current.1[currentCategory!] ?? 0) : (current.1[category] ?? 0)
-            maxForCategory = nextCategory != nil ? (current.1[currentCategory!] ?? 0) * 1.25 : (current.1[category] ?? 0)
-        }
-        else {
+            minForCategory = currentCategory != nil ? (current.1[currentCategory ?? ""] ?? 0) : (current.1[category] ?? 0)
+            maxForCategory = nextCategory != nil ? (current.1[currentCategory ?? ""] ?? 0) * 1.25 : (current.1[category] ?? 0)
+        } else {
             print("Normal")
             // normal case
             let nextCategory = index < StrengthLevel.categories.count - 1 ? StrengthLevel.categories[index + 1] : nil
             let currentCategory = index > 0 ? StrengthLevel.categories[index - 1] : nil
             
-            minForCategory = currentCategory != nil ? (current.1[currentCategory!] ?? 0) : (current.1[category] ?? 0)
-            maxForCategory = nextCategory != nil ? (current.1[nextCategory!] ?? 0) - 1 : (current.1[category] ?? 0)
+            minForCategory = currentCategory != nil ? (current.1[currentCategory ?? ""] ?? 0) : (current.1[category] ?? 0)
+            maxForCategory = nextCategory != nil ? (current.1[nextCategory ?? ""] ?? 0) - 1 : (current.1[category] ?? 0)
         }
         print("Max for category \(category): \(maxForCategory), Min for category: \(minForCategory)")
         
         let effectiveMax = max(maxForCategory, minForCategory)
+        guard effectiveMax > 0 else { return 0 }
+        
         let proportion = maxValue / effectiveMax
         
         let enumCategory = StrengthLevel(rawValue: category)

@@ -47,13 +47,13 @@ struct Questionnaire: View {
                             .padding()
                             .frame(maxWidth: .infinity)
                             .background(Color.blue)
-                            .foregroundColor(Color.white)
+                            .foregroundStyle(Color.white)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                         
                         Spacer()
                         if answers[currentQuestionIndex] == option {
                             Image(systemName: "checkmark")
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                         }
                     }
                 }
@@ -81,11 +81,13 @@ struct Questionnaire: View {
                         // Before moving to the next question, save answers if needed
                         switch currentQuestionIndex {
                             case 0: // "Are you familiar with gym equipment and exercise techniques?"
-                            ctx.userData.evaluation.isFamiliarWithGym = answers[0] == "Yes"
-                            ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
+                            if let firstAnswer = answers.first {
+                                ctx.userData.evaluation.isFamiliarWithGym = firstAnswer == "Yes"
+                                ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
+                            }
                             
                             case 2: // "How many days per week do you plan on exercising?"
-                                if let workoutDays = Int(answers[2]) {
+                                if answers.count > 2, let workoutDays = Int(answers[2]) {
                                     ctx.userData.workoutPrefs.workoutDaysPerWeek = workoutDays
                                     ctx.userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
                                 }
@@ -96,7 +98,7 @@ struct Questionnaire: View {
                             currentQuestionIndex += 1
                     } else {
                         // Last question answered, proceed to equipment selection or final processing
-                        ctx.userData.evaluation.equipmentSelected = ctx.equipment.selectEquipment(basedOn: answers[3]) // Assuming this is how you want to process the last answer
+                        updateSelectedEquipment()
                         processAnswers()
                         showingPopup = true
                     }
@@ -113,18 +115,19 @@ struct Questionnaire: View {
         }
         .padding()
         .onAppear(perform: initializeQuestions)
-        .sheet(isPresented: $showingPopup) {
-            let selectedEquipment = ctx.userData.evaluation.equipmentSelected
+        .sheet(isPresented: $showingPopup) {            
             EquipmentPopupView(
-                selectedEquipment: selectedEquipment,
+                selectedEquipment: ctx.equipment.equipmentObjects(for: ctx.userData.evaluation.equipmentSelected),
                 onClose: {
                     showingPopup = false
-                }, onContinue: {
+                },
+                onContinue: {
                     showingPopup = false
                     ctx.userData.setup.isEquipmentSelected = true
                     ctx.userData.saveToFile()
                     handleNavigation()
-                }, onEdit: {
+                },
+                onEdit: {
                     showingPopup = false
                     handleNavigation()
                 }
@@ -136,8 +139,15 @@ struct Questionnaire: View {
         if ctx.userData.setup.questionAnswers.count == questions.count {
             currentQuestionIndex = questions.count - 1
             answers = ctx.userData.setup.questionAnswers
-            ctx.userData.evaluation.equipmentSelected = ctx.equipment.selectEquipment(basedOn: answers[3]) // Assuming this is how you want to process the last answer
+            updateSelectedEquipment()
             showingPopup = true
+        }
+    }
+    
+    private func updateSelectedEquipment() {
+        if answers.count > 3 {
+            let equipment = ctx.equipment.selectEquipment(basedOn: answers[3])
+            ctx.userData.evaluation.equipmentSelected = equipment.map(\.id)
         }
     }
     

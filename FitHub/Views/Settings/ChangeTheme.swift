@@ -25,7 +25,7 @@ struct ChangeTheme: View {
             
             Text("Default mode will follow the device's theme settings.")
                 .font(.subheadline)
-                .foregroundColor(.gray)
+                .foregroundStyle(.gray)
                 .padding(.top)
         }
         .padding()

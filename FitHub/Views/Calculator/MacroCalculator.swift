@@ -7,70 +7,81 @@
 
 import SwiftUI
 
+
 struct MacroCalculator: View {
     @ObservedObject var userData: UserData
     @StateObject private var kbd = KeyboardManager.shared
-    @State private var weight: String
-    @State private var heightFeet: Int
-    @State private var heightInches: Int
-    @State private var age: String
-    @State private var bmi: Double
-    @State private var caloricIntake: Double
-    @State private var result: (calories: Double, carbs: Double, proteins: Double, fats: Double)? = nil
-    @State private var showingResult: Bool = false
-    
+
+    // Inputs
+    @State private var weight: Mass
+    @State private var height: Length
+    @State private var ageText: String
+    @State private var activityLevel: ActivityLevel
+
+    // Outputs
+    @State private var baseCalories: Double = 0
+    @State private var macroResult: MacroResult?
+    @State private var showingResult = false
+
     init(userData: UserData) {
         _userData = ObservedObject(wrappedValue: userData)
-        _weight = State(initialValue: String(Format.smartFormat(userData.currentMeasurementValue(for: .weight))))
-        _heightFeet = State(initialValue: userData.physical.heightFeet)
-        _heightInches = State(initialValue: userData.physical.heightInches)
-        _age = State(initialValue: String(userData.profile.age))
-        _bmi = State(initialValue: userData.currentMeasurementValue(for: .bmi))
-        _caloricIntake = State(initialValue: userData.currentMeasurementValue(for: .caloricIntake))
+
+        let storedWeightKg = userData.currentMeasurementValue(for: .weight).actualValue
+        _weight        = State(initialValue: Mass(kg: storedWeightKg))
+        _height        = State(initialValue: userData.physical.height)
+        _ageText       = State(initialValue: userData.profile.age > 0 ? "\(userData.profile.age)" : "")
+        _activityLevel = State(initialValue: userData.physical.activityLevel)
     }
-    
+
     var body: some View {
         Form {
+            // Age
             Section {
-                TextField("Age", text: $age)
-                    .keyboardType(.numberPad)
-                TextField("Weight (lbs)", text: $weight)
+                TextField("Age", text: digitsBinding($ageText))
                     .keyboardType(.numberPad)
             } header: {
-                Text("Enter your Age and Weight")
+                Text("Enter your Age")
             }
-            
+
+            // Weight
             Section {
-                HeightPicker(feet: $heightFeet, inches: $heightInches)
+                WeightSelectorRow(weight: $weight)
             } header: {
-                Text("Enter your height")
+                Text("Enter your Weight")
             }
-            
+
+            // Height
             Section {
-                Picker("Activity Level", selection: $userData.physical.activityLevel) {
+                HeightSelectorRow(height: $height)
+            } header: {
+                Text("Enter your Height")
+            }
+
+            // Activity level
+            Section {
+                Picker("Activity Level", selection: $activityLevel) {
                     ForEach(ActivityLevel.allCases) { level in
                         Text(level.rawValue).tag(level)
-                        
                     }
                 }
-                if userData.physical.activityLevel != .select {
-                    Text(userData.physical.activityLevel.description).font(.subheadline).foregroundColor(.gray)
+                if activityLevel != .select {
+                    Text(activityLevel.description)
+                        .font(.subheadline)
+                        .foregroundStyle(.gray)
                 }
             } header: {
                 Text("Select your Activity Level")
             }
-            
+
+            // Calculate
             Section {
-                // No rows in this section—just a footer
                 EmptyView()
             } footer: {
                 if !kbd.isVisible {
                     ActionButton(
                         title: "Calculate Macros",
                         enabled: isCalculateEnabled,
-                        action: {
-                            buttonPress()
-                        }
+                        action: calculate
                     )
                     .padding(.top, 6)
                     .padding(.bottom, 16)
@@ -79,145 +90,128 @@ struct MacroCalculator: View {
         }
         .disabled(showingResult)
         .blur(radius: showingResult ? 10 : 0)
-        .background(Color(UIColor.systemGroupedBackground)) // make button background color match list
-        .overlay(
-            Group {
-                if showingResult {
-                    if let result = result {
-                        MacroResultView(
-                            calories: result.calories,
-                            carbs: result.carbs,
-                            proteins: result.proteins,
-                            fats: result.fats,
-                            dismissAction: { showingResult = false }
-                        )
-                        .padding(.all)
-                    }
-                }
-            }
-        )
+        .background(Color(UIColor.systemGroupedBackground))
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .navigationBarTitle("Macro Calculator", displayMode: .inline)
+        .overlay {
+            if showingResult, let r = macroResult {
+                MacroResultView(result: r) {
+                    persistInputs()
+                    showingResult = false
+                }
+                .padding()
+            }
+        }
     }
-    
-    private func buttonPress() {
-        userData.profile.age = Int(age) ?? 0
+
+    // MARK: - Derived
+
+    private var isCalculateEnabled: Bool {
+        guard let age = Int(ageText), age > 0 else { return false }
+        return weight.inKg > 0 && height.inCm > 0 && activityLevel != .select
+    }
+
+    // MARK: - Actions
+
+    private func calculate() {
+        guard let age = Int(ageText) else { return }
+
+        // Base BMR
+        let bmr = BMR.calculateBMR(
+            gender: userData.physical.gender,
+            weightKg: weight.inKg,
+            heightCm: height.inCm,
+            age: Double(age)
+        )
+
+        // Multiply by activity level
+        let maintenance = bmr * activityLevel.multiplier
+        let goal: FitnessGoal = userData.physical.goal
         
-        let currentWeight = userData.currentMeasurementValue(for: .weight).rounded()
-        let newWeight = Double(weight)?.rounded()
-        
-        if currentWeight != newWeight {
-            userData.updateMeasurementValue(for: .weight, with: Double(weight) ?? currentWeight, shouldSave: false)
-        }
-        // check if this value even exists first
-        bmi = userData.currentMeasurementValue(for: .bmi)
-        
-        if userData.currentMeasurementValue(for: .caloricIntake) == 0 {
-            caloricIntake = calculateDailyCaloricIntake()
-            userData.updateMeasurementValue(for: .caloricIntake, with: caloricIntake, shouldSave: false)
-        } else {
-            caloricIntake = userData.currentMeasurementValue(for: .caloricIntake)
-        }
-        
-        userData.physical.heightFeet = heightFeet
-        userData.physical.heightInches = heightInches
-                
-        result = calculateMacros()
+        // Adjust by goal
+        let adjustedCalories: Double = maintenance * goal.maintenanceMultiplierDefault
+
+        // Macros
+        let carbs    = (adjustedCalories * 0.50) / 4.0
+        let proteins = (adjustedCalories * 0.30) / 4.0
+        let fats     = (adjustedCalories * 0.20) / 9.0
+
+        macroResult = MacroResult(
+            totalCalories: adjustedCalories,
+            carbs: carbs,
+            proteins: proteins,
+            fats: fats
+        )
         showingResult = true
     }
-    
-    func calculateMacros() -> (calories: Double, carbs: Double, proteins: Double, fats: Double)? {
-        guard let age = Int(age),
-              let weight = Double(weight) else { return nil }
-        
-        // BMR calculation using Mifflin-St Jeor Equation
-        let bmr: Double
-        if userData.physical.gender == .male {
-            bmr = 10 * (weight * 0.453592) + 6.25 * ((Double(heightFeet) * 30.48) + (Double(heightInches) * 2.54)) - 5 * Double(age) + 5
-        } else {
-            bmr = 10 * (weight * 0.453592) + 6.25 * ((Double(heightFeet) * 30.48) + (Double(heightInches) * 2.54)) - 5 * Double(age) - 161
+
+    private func persistInputs() {
+        // Persist age / activity
+        userData.profile.age = Int(ageText) ?? 0
+        userData.physical.activityLevel = activityLevel
+
+        // Persist weight/height (always metric in storage)
+        let kg = round(weight.inKg * 100) / 100
+        userData.updateMeasurementValue(for: .weight, with: kg, shouldSave: false)
+        userData.physical.height = height
+
+        // Persist macros & calories
+        if let r = macroResult {
+            userData.physical.carbs    = r.carbs
+            userData.physical.proteins = r.proteins
+            userData.physical.fats     = r.fats
+            userData.updateMeasurementValue(for: .caloricIntake, with: r.totalCalories, shouldSave: false)
         }
-        
-        // Daily calorie needs
-        let calories = bmr * userData.physical.activityLevel.multiplier
-        
-        // Adjust for goals
-        // needs modification
-        let adjustedCalories: Double
-        switch userData.physical.goal {
-        case .buildMuscle:
-            adjustedCalories = calories - 500
-        case .buildMuscleGetStronger:
-            adjustedCalories = calories + 500
-        default:
-            adjustedCalories = calories
-        }
-        
-        // Macronutrient distribution
-        let carbs = (adjustedCalories * 0.5) / 4
-        let proteins = (adjustedCalories * 0.3) / 4
-        let fats = (adjustedCalories * 0.2) / 9
-        
-        userData.physical.carbs = carbs
-        userData.physical.proteins = proteins
-        userData.physical.fats = fats
-        userData.updateMeasurementValue(for: .caloricIntake, with: adjustedCalories, shouldSave: false)
+
         userData.saveToFile()
-        
-        return (calories: adjustedCalories, carbs: carbs, proteins: proteins, fats: fats)
     }
-    
-    func calculateDailyCaloricIntake() -> Double {
-        let weightValue = Double(weight) ?? 0
-        let heightValue = (heightFeet * 12) + heightInches
-        let ageValue = Int(age) ?? 0
-        let stepsValue = Double(userData.physical.avgSteps == 0 ? userData.physical.activityLevel.estimatedSteps : userData.physical.avgSteps)
-        
-        // BMR calculation using Mifflin-St Jeor Equation
-        let bmr: Double
-        if userData.physical.gender == .male {
-            bmr = 66 + (6.23 * weightValue) + (12.7 * Double(heightValue)) - (6.8 * Double(ageValue))
-        } else {
-            bmr = 655 + (4.35 * weightValue) + (4.7 * Double(heightValue)) - (4.7 * Double(ageValue))
-        }
-        
-        // Caloric needs based on activity level
-        let calories = bmr + Double(100 * stepsValue / 1000)
-        
-        return calories
+
+    // MARK: - Helpers
+
+    private func digitsBinding(_ src: Binding<String>) -> Binding<String> {
+        Binding(
+            get: { src.wrappedValue },
+            set: { src.wrappedValue = $0.replacingOccurrences(of: "\\D", with: "", options: .regularExpression) }
+        )
     }
-    
-    private var isCalculateEnabled: Bool {
-        // Check if weight and height values have been entered
-        return !weight.isEmpty && !age.isEmpty && (heightFeet > 0 || heightInches > 0) && userData.physical.activityLevel != .select
-    }
-    
-    struct MacroResultView: View {
-        @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
-        let calories: Double
+
+    // MARK: - View Models
+
+    struct MacroResult {
+        let totalCalories: Double
         let carbs: Double
         let proteins: Double
         let fats: Double
+    }
+
+    struct MacroResultView: View {
+        @Environment(\.colorScheme) var colorScheme
+        let result: MacroResult
         var dismissAction: () -> Void
-        
+
         var body: some View {
-            VStack {
+            VStack(spacing: 8) {
                 Text("Your Macros").font(.headline)
-                Text("Calories: \(Int(round(calories)))") + Text(" kcal").fontWeight(.light)
-                Text("Carbohydrates: \(Int(round(carbs)))") + Text(" g").fontWeight(.light)
-                Text("Proteins: \(Int(round(proteins)))") + Text(" g").fontWeight(.light)
-                Text("Fats: \(Int(round(fats)))") + Text(" g").fontWeight(.light)
-                            
-                RingView(dailyCaloricIntake: calories, carbs: carbs, fats: fats, proteins: proteins)
-                    .padding()
-                ActionButton(title: "Done", action: { dismissAction() })
+
+                Group {
+                    Text("Calories: \(Int(round(result.totalCalories)))") + Text(" kcal").fontWeight(.light)
+                    Text("Carbohydrates: \(Int(round(result.carbs)))") + Text(" g").fontWeight(.light)
+                    Text("Proteins: \(Int(round(result.proteins)))") + Text(" g").fontWeight(.light)
+                    Text("Fats: \(Int(round(result.fats)))") + Text(" g").fontWeight(.light)
+                }
+
+                RingView(dailyCaloricIntake: result.totalCalories,
+                         carbs: result.carbs,
+                         fats: result.fats,
+                         proteins: result.proteins)
+                    .padding(.vertical)
+
+                ActionButton(title: "Done", action: dismissAction)
             }
             .padding()
-            .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
+            .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : .white)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .shadow(radius: 10)
         }
     }
 }
-
-

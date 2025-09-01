@@ -68,7 +68,7 @@ struct UploadImageDemo: View {
                     .frame(maxHeight: 250)
             } else {
                 Text("No image selected")
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(Color.secondary)
             }
             
             Button("Choose Photo") { showingPicker = true }

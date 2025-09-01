@@ -20,18 +20,18 @@ struct MuscleRest: View {
             
             Text("The typical rest duration is 48 hours, but you can adjust it to suit your recovery needs.")
                 .font(.subheadline)
-                .foregroundColor(.gray)
+                .foregroundStyle(.gray)
                 .padding(.top)
         }
         .padding()
         .navigationBarTitle("Muscle Rest Duration", displayMode: .inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {
                     userData.settings.muscleRestDuration = 48
                 }) {
                     Text("Reset")
-                        .foregroundColor(isDefault ? Color.gray : Color.red)        // make the label red
+                        .foregroundStyle(isDefault ? Color.gray : Color.red)        // make the label red
                         .disabled(isDefault)
                 }
             }

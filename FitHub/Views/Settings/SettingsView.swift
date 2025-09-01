@@ -22,7 +22,7 @@ struct SettingsView: View {
             navigationLink("arrow.up.arrow.down", "Exercise Sorting", SortSettings(userData: ctx.userData))
            // navigationLink("calendar", "Start Week On", StartWeekOn())
             navigationLink("globe", "Change Language", ChangeLanguage(userData: ctx.userData))
-            navigationLink("ruler", "US/Metric Selection", UnitSelection(userData: ctx.userData))
+            navigationLink("ruler", "Imperial / Metric", UnitSelection(userData: ctx.userData))
             navigationLink("paintbrush", "Change Theme", ChangeTheme(userData: ctx.userData))
             
             DisclosureGroup(isExpanded: $isNotificationsExpanded) {

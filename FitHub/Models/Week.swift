@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 
 struct WorkoutWeek: Identifiable, Codable, Equatable {
@@ -61,22 +62,15 @@ struct WorkoutWeek: Identifiable, Codable, Equatable {
     
     func categoryForDay(index: Int) -> [SplitCategory] {
         // Ensure we loop around if the index exceeds the length of the categories array
-        if categories.isEmpty {
-            return []
-        }
+        if categories.isEmpty { return [] }
         return categories[index % categories.count]
     }
     
-    mutating func setCategoriesForDay(index: Int, categories: [SplitCategory]) {
-        if index < self.categories.count {
-            self.categories[index] = categories
-        } else {
-            // Handle error or dynamically adjust the array size
-        }
+    static func determineSplit(customSplit: WorkoutWeek?, daysPerWeek: Int) -> WorkoutWeek {
+        customSplit ?? WorkoutWeek.createSplit(forDays: daysPerWeek)
     }
 }
-
-// 2.  Pretty printer for WorkoutWeek
+// Pretty printer for WorkoutWeek
 extension WorkoutWeek: CustomStringConvertible {
     public var description: String {
         let dayLines = categories.enumerated().map { idx, cats -> String in
@@ -89,7 +83,7 @@ extension WorkoutWeek: CustomStringConvertible {
     }
 }
 
-enum daysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
+enum DaysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
     case monday = "Monday"
     case tuesday = "Tuesday"
     case wednesday = "Wednesday"
@@ -110,14 +104,15 @@ enum daysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
         }
     }
     // Explicitly define the order of the week days
-    static let orderedDays: [daysOfWeek] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
-
-    // Implement custom comparison method for sorting
-    static func < (lhs: daysOfWeek, rhs: daysOfWeek) -> Bool {
-        return orderedDays.firstIndex(of: lhs)! < orderedDays.firstIndex(of: rhs)!
+    static let orderedDays: [DaysOfWeek] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
+    
+    static func < (lhs: DaysOfWeek, rhs: DaysOfWeek) -> Bool {
+        guard let lIdx = orderedDays.firstIndex(of: lhs), let rIdx = orderedDays.firstIndex(of: rhs)
+        else { return false }
+        return lIdx < rIdx
     }
     
-    static func defaultDays(for workoutDaysPerWeek: Int) -> [daysOfWeek] {
+    static func defaultDays(for workoutDaysPerWeek: Int) -> [DaysOfWeek] {
         switch workoutDaysPerWeek {
         case 2:
             return [.monday, .friday]
@@ -153,17 +148,17 @@ enum daysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
         }
     }
     
-    static func calculateWorkoutDayIndexes(customWorkoutDays: [daysOfWeek]?, workoutDaysPerWeek: Int) -> [Int] {
+    static func calculateWorkoutDayIndexes(customWorkoutDays: [DaysOfWeek]?, workoutDaysPerWeek: Int) -> [Int] {
         if let customDays = customWorkoutDays, !customDays.isEmpty {
             // Use custom workout days if they are set
-            return customDays.compactMap { daysOfWeek.orderedDays.firstIndex(of: $0) }
+            return customDays.compactMap { DaysOfWeek.orderedDays.firstIndex(of: $0) }
         } else {
             // Fallback to default indexes if no custom days are set
             return getWorkoutDayIndexes(for: workoutDaysPerWeek)
         }
     }
     
-    static func resolvedWorkoutDays(customWorkoutDays: [daysOfWeek]?, workoutDaysPerWeek: Int) -> [daysOfWeek] {
+    static func resolvedWorkoutDays(customWorkoutDays: [DaysOfWeek]?, workoutDaysPerWeek: Int) -> [DaysOfWeek] {
         // ❶ Start with any custom days the user already chose
         var result = (customWorkoutDays ?? [])
             .uniqued()            // remove accidental duplicates while preserving order
@@ -187,13 +182,40 @@ enum daysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
         // ❹ Final guarantee: sorted & sized correctly
         return result.sorted()
     }
-}
+    
+    /// Returns a single `Text` containing all day short-names, comma-separated and bold.
+    static func dayListText(_ days: [DaysOfWeek]) -> Text {
+        let pieces = days
+            .sorted() // keep a stable order (Mon…Sun)
+            .map { Text($0.shortName).bold() }
 
-
-extension Array where Element: Hashable {
-    func uniqued() -> [Element] {
-        var seen = Set<Element>()
-        return filter { seen.insert($0).inserted }
+        // stitch `Text` values together with “, ” separators
+        return pieces.enumerated().reduce(Text("")) { acc, elem in
+            let (idx, txt) = elem
+            let sep = idx < pieces.count - 1 ? Text(", ") : Text("")
+            return acc + txt + sep
+        }
     }
 }
+
+/*
+struct WorkoutSchedule: Codable {
+    var customWorkoutTimes: [DaysOfWeek: DateComponents] = [:]
+    var customWorkoutDays: [DaysOfWeek]? // Optional array to store custom days of the week
+    var workoutDaysPerWeek: Int = 3 // days per week user wants to work out
+    var customWorkoutSplit: WorkoutWeek? // Optional custom split, overrides default logic based on days per week
     
+    // Helper to get workout time for a specific day
+    func workoutTime(for day: DaysOfWeek) -> DateComponents? {
+        return customWorkoutTimes[day]
+    }
+    
+    // Helper to check if a day has a scheduled workout
+    func hasWorkoutScheduled(for day: DaysOfWeek) -> Bool {
+        return customWorkoutTimes[day] != nil
+    }
+    
+    // Helper to get all scheduled workout days
+    var scheduledDays: [DaysOfWeek] { return Array(customWorkoutTimes.keys) }
+}
+*/

@@ -7,77 +7,166 @@
 
 import Foundation
 
-
 final class TimerManager: ObservableObject {
     @Published var secondsElapsed: Int = 0
     @Published var isActive: Bool = false
     private var timer: Timer?
-    
-    // new “rest clock”
+
+    // Rest
     @Published var restTimeRemaining: Int = 0
     @Published var restIsActive: Bool = false
+    @Published var restTotalSeconds: Int = 0
     private var restTimer: Timer?
+
+    // Hold
+    @Published var holdTimeRemaining: Int = 0
+    @Published var holdIsActive: Bool = false
+    @Published var holdTotalSeconds: Int = 0
+    private var holdTimer: Timer?
+
+    // MARK: - Public API
+
+    func startRest(for seconds: Int) {
+        startCountdown(
+            seconds: seconds,
+            total: \.restTotalSeconds,
+            remaining: \.restTimeRemaining,
+            isActive: \.restIsActive,
+            timerStorage: \.restTimer
+        )
+    }
+
+    func stopRest() {
+        stopCountdown(
+            total: \.restTotalSeconds,
+            remaining: \.restTimeRemaining,
+            isActive: \.restIsActive,
+            timerStorage: \.restTimer
+        )
+    }
+
+    func pauseHold() {
+        holdTimer?.invalidate()
+        holdTimer = nil
+        holdIsActive = false
+    }
     
+    func resumeHold() {
+        guard holdTimeRemaining > 0, holdTotalSeconds > 0, holdIsActive == false else { return }
+        resumeCountdown(
+            remaining: \.holdTimeRemaining,
+            isActive: \.holdIsActive,
+            timerStorage: \.holdTimer
+        )
+    }
+    
+    func startHold(for seconds: Int) {
+        startCountdown(
+            seconds: seconds,
+            total: \.holdTotalSeconds,
+            remaining: \.holdTimeRemaining,
+            isActive: \.holdIsActive,
+            timerStorage: \.holdTimer
+        )
+    }
+
+    func stopHold() {
+        stopCountdown(
+            total: \.holdTotalSeconds,
+            remaining: \.holdTimeRemaining,
+            isActive: \.holdIsActive,
+            timerStorage: \.holdTimer
+        )
+    }
+
+    // MARK: - Stopwatch (unchanged)
     func startTimer() {
-        // 1. Invalidate any existing timer
         timer?.invalidate()
-
-        // 2. Flip the flag (will redraw your play/pause button)
         isActive = true
-
-        // 3. Schedule a 1-s repeating timer…
-        let t = Timer(timeInterval: 1.0, repeats: true) { [weak self] _ in
-            guard let self = self else { return }
-            self.secondsElapsed += 1
+        let t = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
+            self?.secondsElapsed += 1
         }
-
-        // 4. Add to the main run-loop in the common mode so it fires during scrolling, sheets, etc.
         RunLoop.main.add(t, forMode: .common)
         timer = t
     }
-    
+
     func stopTimer() {
         isActive = false
         timer?.invalidate()
         timer = nil
     }
-    
+
     func resetTimer() {
         stopTimer()
         secondsElapsed = 0
     }
-    
-    /// start a rest countdown
-    func startRest(for seconds: Int) {
-      restTimer?.invalidate()
-      restTimeRemaining = seconds
-      restIsActive = true
 
-      // add to .common to survive scrolls, modal changes, etc.
-      let t = Timer(timeInterval: 1, repeats: true) { [weak self] timer in
-        guard let self = self else { timer.invalidate(); return }
-        if self.restTimeRemaining > 0 {
-          self.restTimeRemaining -= 1
-        } else {
-          timer.invalidate()
-          self.restIsActive = false
-        }
-      }
-      restTimer = t
-      RunLoop.main.add(t, forMode: .common)
-    }
-
-    /// cancel a rest countdown
-    func stopRest() {
-      restTimer?.invalidate()
-      restTimer = nil
-      restIsActive = false
-      restTimeRemaining = 0
-    }
-    
     deinit {
         timer?.invalidate()
-        print("TimerManager deallocated")
+        restTimer?.invalidate()
+        holdTimer?.invalidate()
+    }
+
+    // MARK: - Shared countdown logic
+
+    private func startCountdown(
+        seconds: Int,
+        total: ReferenceWritableKeyPath<TimerManager, Int>,
+        remaining: ReferenceWritableKeyPath<TimerManager, Int>,
+        isActive: ReferenceWritableKeyPath<TimerManager, Bool>,
+        timerStorage: ReferenceWritableKeyPath<TimerManager, Timer?>
+    ) {
+        // cancel any existing timer of this kind
+        self[keyPath: timerStorage]?.invalidate()
+
+        self[keyPath: total] = max(1, seconds)
+        self[keyPath: remaining] = self[keyPath: total]
+        self[keyPath: isActive] = true
+
+        let t = Timer(timeInterval: 1, repeats: true) { [weak self] timer in
+            guard let self else { timer.invalidate(); return }
+            if self[keyPath: remaining] > 0 {
+                self[keyPath: remaining] -= 1
+            } else {
+                timer.invalidate()
+                self[keyPath: isActive] = false
+            }
+        }
+        self[keyPath: timerStorage] = t
+        RunLoop.main.add(t, forMode: .common)
+    }
+
+    private func stopCountdown(
+        total: ReferenceWritableKeyPath<TimerManager, Int>,
+        remaining: ReferenceWritableKeyPath<TimerManager, Int>,
+        isActive: ReferenceWritableKeyPath<TimerManager, Bool>,
+        timerStorage: ReferenceWritableKeyPath<TimerManager, Timer?>
+    ) {
+        self[keyPath: timerStorage]?.invalidate()
+        self[keyPath: timerStorage] = nil
+        self[keyPath: isActive] = false
+        self[keyPath: remaining] = 0
+        self[keyPath: total] = 0
+    }
+    
+    private func resumeCountdown(
+        remaining: ReferenceWritableKeyPath<TimerManager, Int>,
+        isActive: ReferenceWritableKeyPath<TimerManager, Bool>,
+        timerStorage: ReferenceWritableKeyPath<TimerManager, Timer?>
+    ) {
+        self[keyPath: timerStorage]?.invalidate()
+        self[keyPath: isActive] = true
+
+        let t = Timer(timeInterval: 1, repeats: true) { [weak self] timer in
+            guard let self else { timer.invalidate(); return }
+            if self[keyPath: remaining] > 0 {
+                self[keyPath: remaining] -= 1
+            } else {
+                timer.invalidate()
+                self[keyPath: isActive] = false
+            }
+        }
+        self[keyPath: timerStorage] = t
+        RunLoop.main.add(t, forMode: .common)
     }
 }
-

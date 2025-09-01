@@ -4,7 +4,8 @@ struct ExerciseView: View {
     @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
-    @State private var selectedExercise: Exercise?
+    @State private var viewDetail: Bool = false
+    @State private var selectedExerciseId: UUID?
     @State private var searchText: String = ""
     @State private var selectedCategory: CategorySelections = .split(.all)
     @State private var showingFavorites: Bool = false
@@ -12,18 +13,8 @@ struct ExerciseView: View {
 
     var body: some View {
         VStack {
-            SplitCategoryPicker(
-                enableSortPicker: ctx.userData.settings.enableSortPicker,
-                saveSelectedSort: ctx.userData.settings.saveSelectedSort,
-                sortOption: ctx.userData.sessionTracking.exerciseSortOption,
-                selectedCategory: $selectedCategory,
-                onChange: { sortOption in
-                    if ctx.userData.sessionTracking.exerciseSortOption != sortOption, ctx.userData.settings.saveSelectedSort {
-                        ctx.userData.sessionTracking.exerciseSortOption = sortOption
-                        ctx.userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
-                    }
-                }
-            ).padding(.bottom, -5)
+            SplitCategoryPicker(userData: ctx.userData, selectedCategory: $selectedCategory)
+                .padding(.bottom, -5)
             
             SearchBar(text: $searchText, placeholder: "Search Exercises")
                 .padding(.horizontal)
@@ -31,12 +22,12 @@ struct ExerciseView: View {
             exerciseListView
         }
         .navigationBarTitle("Exercises", displayMode: .inline)
-        .navigationDestination(item: $selectedExercise) { exercise in
-            if ctx.exercises.allExercises.contains(where: { $0.id == exercise.id }) {
-                ExerciseDetailView(viewingDuringWorkout: false, exercise: exercise, onClose: { selectedExercise = nil })
+        .navigationDestination(isPresented: $viewDetail) {
+            if let exerciseId = selectedExerciseId, let exercise = ctx.exercises.exercise(for: exerciseId) {
+                ExerciseDetailView(viewingDuringWorkout: false, exercise: exercise)
             } else {
                 // exercise got deleted while we were on the detail screen → pop
-                Color.clear.onAppear { selectedExercise = nil }
+                Color.clear.onAppear { selectedExerciseId = nil; viewDetail = false }
             }
         }
         .overlay(!kbd.isVisible ?
@@ -47,10 +38,10 @@ struct ExerciseView: View {
         .sheet(isPresented: $showExerciseCreation) { NewExercise() }
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 Button(action: { showingFavorites.toggle() }) {
                     Image(systemName: "heart.fill")
-                        .foregroundColor(showingFavorites ? .red : .gray)
+                        .foregroundStyle(showingFavorites ? .red : .gray)
                 }
             }
         }
@@ -70,14 +61,12 @@ struct ExerciseView: View {
         List {
             if filteredExercises.isEmpty {
                 Text("No exercises available in this category.")
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                     .padding()
             } else {
                 Section {
                     ForEach(filteredExercises, id: \.self) { exercise in
-                        let favState: FavoriteState = ctx.userData.evaluation.favoriteExercises.contains(exercise.id)
-                        ? .favorite
-                        : (ctx.userData.evaluation.dislikedExercises.contains(exercise.id) ? .disliked : .unmarked)
+                        let favState = FavoriteState.getState(for: exercise, userData: ctx.userData)
                         
                         ExerciseRow(
                             exercise,
@@ -96,31 +85,31 @@ struct ExerciseView: View {
                                             +
                                             Text(aliases.joined(separator: ", "))
                                                 .font(.caption)
-                                                .foregroundColor(.gray)
+                                                .foregroundStyle(.gray)
                                         )
                                     }
                                     
                                     // 🏆 1RM
-                                    if let max = ctx.exercises.getMax(for: exercise.id) {
+                                    if let max = ctx.exercises.peakMetric(for: exercise.id) {
                                         HStack(spacing: 4) {
                                             Image(systemName: "trophy.fill")
                                                 .resizable()
                                                 .scaledToFit()
                                                 .frame(width: 8.5, height: 8.5)
                                             
-                                            Text(exercise.type.usesWeight ? "1rm: " : "Max Reps: ")
+                                            Text(exercise.type.usesWeight ? "1rm: " : (exercise.effort.usesReps ? "Max: " : "Time: "))
                                                 .bold()
                                                 .font(.caption2)
                                             +
-                                            Text(Format.smartFormat(max))
+                                            max.labeledText
                                                 .font(.caption2)
                                         }
-                                        .padding(.top, -4)
                                     }
                                 }
                             },
                             onTap: {
-                                selectedExercise = exercise
+                                selectedExerciseId = exercise.id
+                                viewDetail = true
                             }
                         )
                     }

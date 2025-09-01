@@ -2,39 +2,35 @@
 import SwiftUI
 
 
-
-
 struct DetailsView: View {
+    @AppStorage(UnitSystem.storageKey) private var unit: UnitSystem = .metric
     @ObservedObject var userData: UserData
     @State private var userName: String = ""
     @State private var age: String = ""
     @State private var selectedGender: Gender?
     @State private var dob: Date = Date()
-    @State private var heightFeet: Int = 0
-    @State private var heightInches: Int = 0
-    @State private var currentWeight: CGFloat = 80
+
+    @State private var height: Length
+    @State private var weight: Mass
+    
     @State private var activePicker: ActivePicker = .none
-    let heightRange = Array(48...96) // Height range from 4 feet (48 inches) to 8 feet (96 inches)
-    let feetRange = 0...8 // Example range for feet
-    let inchesRange = 0..<12 // Range for inches
-    let weightRange = Array(80...400) // Weight range from 80 to 400 pounds
 
     init(userData: UserData) {
         self.userData = userData
         _userName = State(initialValue: userData.profile.userName)
         _dob = State(initialValue: userData.profile.dob)
-        _currentWeight = State(initialValue: round(userData.currentMeasurementValue(for: .weight)))
-        _heightFeet = State(initialValue: userData.physical.heightFeet)
-        _heightInches = State(initialValue: userData.physical.heightInches)
+        _height = State(initialValue: userData.physical.height)
+        _weight = State(initialValue: Mass(kg: userData.currentMeasurementValue(for: .weight).actualValue))
         _selectedGender = State(initialValue: userData.physical.gender)
     }
     
     var body: some View {
         VStack {
             heightSection
-            dobSection
-            
+                .padding(.top)
             weightSection
+            
+            dobSection
             genderSection
             
             Spacer()
@@ -44,7 +40,23 @@ struct DetailsView: View {
         .navigationTitle("Hello \(userName)")
         .navigationBarBackButtonHidden(true)
     }
-
+    
+    private var unitPicker: some View {
+        VStack {
+            Text(unit.desc)
+                .font(.subheadline)
+            
+            Picker("Unit of Measurement", selection: $unit) {
+                ForEach(UnitSystem.allCases, id: \.self) { unit in
+                    Text(unit.rawValue).tag(unit)
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding(.horizontal)
+            .padding(.bottom)
+        }
+    }
+    
     // MARK: - Height
     private var heightSection: some View {
         VStack(spacing: 0) {
@@ -55,8 +67,10 @@ struct DetailsView: View {
                 HStack {
                     Text("Select Height").font(.headline)
                     Spacer()
-                    Text("\(heightFeet) ft \(heightInches) in")
-                        .foregroundColor(.gray)
+
+                    height.heightFormatted
+                        .foregroundStyle(.gray)
+
                     Image(systemName: "chevron.right")
                         .rotationEffect(.degrees(activePicker == .height ? 90 : 0))
                 }
@@ -66,60 +80,12 @@ struct DetailsView: View {
             
             // Picker
             if activePicker == .height {
-                HStack {
-                    Picker("", selection: $heightFeet) {
-                        ForEach(feetRange, id: \.self) { Text("\($0)") }
-                    }
-                    .labelsHidden()
-                    .overlay(Text("ft").bold().foregroundColor(.gray).offset(x: -60),
-                             alignment: .trailing)
-                    
-                    Picker("", selection: $heightInches) {
-                        ForEach(inchesRange, id: \.self) { Text("\($0)") }
-                    }
-                    .labelsHidden()
-                    .overlay(Text("in").bold().foregroundColor(.gray).offset(x: -55),
-                             alignment: .trailing)
-                }
-                .pickerStyle(.wheel)
-                .frame(height: UIScreen.main.bounds.height * 0.2)
+                HeightSelectorRow(height: $height)
                 
                 floatingDoneButton
-                    .padding(.vertical, 6)
-            }
-        }
-        .background(Color(UIColor.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .padding(.horizontal)
-    }
-
-    // MARK: - Date of Birth
-    private var dobSection: some View {
-        VStack(spacing: 0) {
-            Button {
-                activePicker = .dob
-            } label: {
-                HStack {
-                    Text("Select DOB").font(.headline)
-                    Spacer()
-                    Text(Format.formatDate(dob, dateStyle: .long, timeStyle: .none))
-                        .foregroundColor(.gray)
-                    Image(systemName: "chevron.right")
-                        .rotationEffect(.degrees(activePicker == .dob ? 90 : 0))
-                }
-                .padding()
-            }
-            .contentShape(Rectangle())
-            
-            if activePicker == .dob {
-                DatePicker("", selection: $dob, displayedComponents: .date)
-                    .datePickerStyle(.wheel)
-                    .labelsHidden()
-                    .frame(height: UIScreen.main.bounds.height * 0.2)
-                    .padding(.top)
+                    .padding(.top, 6)
                 
-                floatingDoneButton
-                    .padding(.vertical, 6)
+                unitPicker
             }
         }
         .background(Color(UIColor.secondarySystemBackground))
@@ -136,8 +102,10 @@ struct DetailsView: View {
                 HStack {
                     Text("Select Weight").font(.headline)
                     Spacer()
-                    Text("\(Int(currentWeight)) lbs")
-                        .foregroundColor(.gray)
+                    
+                    weight.formattedText(asInteger: true)
+                        .foregroundStyle(.gray)
+
                     Image(systemName: "chevron.right")
                         .rotationEffect(.degrees(activePicker == .weight ? 90 : 0))
                 }
@@ -146,8 +114,44 @@ struct DetailsView: View {
             .contentShape(Rectangle())
             
             if activePicker == .weight {
-                WeightSelectorView(value: $currentWeight)
+                WeightSelectorRow(weight: $weight)
+                .padding(.top)
+
+                floatingDoneButton
+                    .padding(.top, 6)
+                
+                unitPicker
+            }
+        }
+        .background(Color(UIColor.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .padding(.horizontal)
+    }
+    
+    // MARK: - Date of Birth
+    private var dobSection: some View {
+        VStack(spacing: 0) {
+            Button {
+                activePicker = .dob
+            } label: {
+                HStack {
+                    Text("Select DOB").font(.headline)
+                    Spacer()
+                    Text(Format.formatDate(dob, dateStyle: .long, timeStyle: .none))
+                        .foregroundStyle(.gray)
+                    Image(systemName: "chevron.right")
+                        .rotationEffect(.degrees(activePicker == .dob ? 90 : 0))
+                }
+                .padding()
+            }
+            .contentShape(Rectangle())
+            
+            if activePicker == .dob {
+                DatePicker("", selection: $dob, displayedComponents: .date)
+                    .datePickerStyle(.wheel)
+                    .labelsHidden()
                     .frame(height: UIScreen.main.bounds.height * 0.2)
+                    .padding(.top)
                 
                 floatingDoneButton
                     .padding(.vertical, 6)
@@ -206,7 +210,7 @@ struct DetailsView: View {
         .aspectRatio(contentMode: .fit)
         .frame(maxWidth: UIScreen.main.bounds.width * 0.33)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .overlay {                                         
+        .overlay {
             if isSelected {
                 RoundedRectangle(cornerRadius: 8)
                     .inset(by: -5)
@@ -220,13 +224,12 @@ struct DetailsView: View {
     private func saveUserData(gender: Gender) {
         userData.checkAndUpdateAge()
         // 1️⃣ Update everything in memory first
-        userData.updateMeasurementValue(for: .weight, with: Double(currentWeight), shouldSave: false)
-        userData.setup.setupState    = .goalView
-        userData.profile.userName      = userName
-        userData.physical.heightFeet    = heightFeet
-        userData.physical.heightInches  = heightInches
-        userData.profile.dob           = dob
-        userData.physical.gender        = gender
+        userData.updateMeasurementValue(for: .weight, with: weight.inKg, shouldSave: false)
+        userData.setup.setupState = .goalView
+        userData.profile.userName = userName
+        userData.profile.dob      = dob
+        userData.physical.height  = height
+        userData.physical.gender  = gender
 
         // 2️⃣ Persist _all_ changes together
         userData.saveToFile()
@@ -240,12 +243,14 @@ struct DetailsView: View {
         
         // Check that height is selected and not at some default or invalid value
         // Assuming heightFeet or heightInches being > 0 is a valid selection
-        guard heightFeet > 0 || heightInches > 0 else {
+
+        guard height.displayValue > 0 else {
             return false
         }
         
+        
         // Check that a weight is selected and not at some default or invalid value
-        guard currentWeight > 0 else {
+        guard weight.displayValue > 0 else {
             return false
         }
         

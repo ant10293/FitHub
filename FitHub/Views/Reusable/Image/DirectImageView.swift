@@ -17,7 +17,7 @@ struct DirectImageView: View {
             image.resizable().scaledToFit()
         } else {
             Text("Image not available")
-                .foregroundColor(.red)
+                .foregroundStyle(.red)
         }
     }
     

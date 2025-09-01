@@ -35,8 +35,7 @@ struct WelcomeView: View {
                     SignInWithAppleButton(.signIn) { req in
                         req.requestedScopes = [.email, .fullName]
                     } onCompletion: { result in
-                        authService.signIn(with: result,
-                                           into: userData) { res in
+                        authService.signIn(with: result, into: userData) { res in
                             switch res {
                             case .success:
                                 handleNavigation(saveSingleVar: true)
@@ -59,7 +58,7 @@ struct WelcomeView: View {
                     }
                     .bold()
                     .frame(width: btnW, height: btnH)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .background(Color.black)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
 
@@ -76,7 +75,7 @@ struct WelcomeView: View {
         var body: some View {
             Rectangle()
                 .frame(height: 1)
-                .foregroundColor(.secondary)
+                .foregroundStyle(Color.secondary)
         }
     }
 

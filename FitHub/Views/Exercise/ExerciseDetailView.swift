@@ -9,19 +9,19 @@ import SwiftUI
 
 // this view is an abomination and must be fixed
 struct ExerciseDetailView: View {
-    @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
     @State private var showingAdjustmentsView: Bool = false
     @State private var showingUpdate1RMView: Bool = false
-    @State private var showingSortPicker = false
+    @State private var showingSortPicker: Bool = false
     @State private var showingList: Bool = false
     @State private var editingExercise: Bool = false
     @State private var selectedOption: String = "Standards"
-    @State private var selectedView: String = "About"
+    @State private var selectedView: Views = .about
     var viewingDuringWorkout: Bool
     var exercise: Exercise
-    var onClose: () -> Void = {}
     
     var body: some View {
         VStack {
@@ -30,26 +30,26 @@ struct ExerciseDetailView: View {
             }
             
             Picker("View", selection: $selectedView) {
-                Text("About").tag("About")
-                Text("History").tag("History")
-                Text("PRs").tag("PRs")
-                Text("Percentile").tag("Percentile")
+                ForEach(Views.allCases) { v in
+                    Text(v.rawValue).tag(v)
+                }
             }
             .padding(.horizontal)
             .pickerStyle(SegmentedPickerStyle())
             
             Group {
                 switch selectedView {
-                case "About":
+                case .about:
                     aboutView
-                case "History":
-                    historyView(completedWorkouts: ctx.userData.workoutPlans.completedWorkouts, exerciseName: exercise.name)
-                case "Percentile":
+                case .history:
+                    historyView(
+                        completedWorkouts: ctx.userData.workoutPlans.completedWorkouts,
+                        exerciseId: exercise.id
+                    )
+                case .percentile:
                     percentileView
-                case "PRs":
+                case .prs:
                     PRsView
-                default:
-                    aboutView
                 }
             }
             .padding()
@@ -58,8 +58,8 @@ struct ExerciseDetailView: View {
         }
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .navigationTitle(exercise.name).multilineTextAlignment(.center)
-        .sheet(isPresented: $showingAdjustmentsView, onDismiss: { showingAdjustmentsView = false }) {
-            AdjustmentsView(AdjustmentsData: ctx.adjustments, exercise: exercise)
+        .sheet(isPresented: $showingAdjustmentsView) {
+            AdjustmentsView(exercise: exercise)
         }
         .sheet(isPresented: $editingExercise) { NewExercise(original: exercise) }
         .toolbar {
@@ -73,6 +73,15 @@ struct ExerciseDetailView: View {
         }
     }
     
+    private enum Views: String, CaseIterable, Identifiable {
+        case about = "About"
+        case history = "History"
+        case prs = "PRs"
+        case percentile = "Percentile"
+        
+        var id: String { self.rawValue }
+    }
+        
     private var workoutToolbar: some View {
         HStack {
             Text("\(exercise.name)").bold()
@@ -80,10 +89,10 @@ struct ExerciseDetailView: View {
                 .multilineTextAlignment(.center)
                 .centerHorizontally()
                 .overlay(
-                    Button(action: onClose) {
+                    Button(action: { dismiss() }) {
                         Image(systemName: "xmark.circle.fill")
                             .imageScale(.large)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                     }
                     .padding(.trailing),
                     alignment: .trailing
@@ -95,7 +104,7 @@ struct ExerciseDetailView: View {
     private var aboutView: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
-                ExEquipImage(exercise.fullImage, infoCircle: false)
+                ExEquipImage(image: exercise.fullImage, button: .expand)
                     .centerHorizontally()
                 
                 //Text(exercise.description)
@@ -104,18 +113,22 @@ struct ExerciseDetailView: View {
                 //Text("Description: ").bold() + Text(exercise.description)
                 Text("How to perform: ").bold() // Placeholder text
                 
+                if let limbMovementType = exercise.limbMovementType {
+                    limbMovementType.displayInfoText
+                }
+                                
                 Text("Primary Muscles: ").bold()
                 exercise.primaryMusclesFormatted
                     .multilineTextAlignment(.leading)
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(Color.secondary)
                 
                 // Join all secondary muscles into a single comma-separated string
                 Text("Secondary Muscles: ").bold()
                 exercise.secondaryMusclesFormatted
                     .multilineTextAlignment(.leading)
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(Color.secondary)
                 
                 if !exercise.equipmentRequired.isEmpty {
                     Text("Equipment Required: ").bold()
@@ -128,14 +141,15 @@ struct ExerciseDetailView: View {
                                     normalize($0.name) == normalize(equipmentName)
                                 }) {
                                     VStack {
-                                        equipment.fullImage
-                                            .resizable()
-                                            .scaledToFit()
+                                        equipment.fullImageView
                                             .frame(width: size, height: size)
-                                            .clipShape(RoundedRectangle(cornerRadius: 6))
                                         
-                                        Text(equipment.name)          // ← no .rawValue anymore
+                                        Text(equipment.name)
                                             .font(.caption)
+                                            .multilineTextAlignment(.center)      // wrap + center
+                                            .lineLimit(nil)                       // unlimited lines
+                                            .frame(maxWidth: size * 1.1)          // ≤ 110 % of image width
+                                            .fixedSize(horizontal: false, vertical: true) // grow down, not sideways
                                     }
                                 }
                             }
@@ -147,16 +161,16 @@ struct ExerciseDetailView: View {
                 if ctx.equipment.hasEquipmentAdjustments(for: exercise) {
                     Button(action: { showingAdjustmentsView.toggle() }) {
                         Label("Equipment Adjustments", systemImage: "slider.horizontal.3")
-                            .foregroundColor(.green)
+                            .foregroundStyle(.green)
                             .padding()
+                            .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
                     .tint(.green)
-                    .centerHorizontally()
+                    .padding(.horizontal)
                 }
                 
                 Spacer()
-
             }
         }
     }
@@ -164,7 +178,7 @@ struct ExerciseDetailView: View {
     struct historyView: View {
         @State private var selectedSortOption: CompletedExerciseSortOption = .mostRecent
         let completedWorkouts: [CompletedWorkout]
-        let exerciseName: String
+        let exerciseId: UUID
 
         var body: some View {
             VStack {
@@ -185,31 +199,19 @@ struct ExerciseDetailView: View {
                 List {
                     if sortedExercise.isEmpty {
                         Text("No recent sets available for this exercise.")
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                             .padding()
                     } else {
                         ForEach(sortedExercise, id: \.self) { workout in
                             VStack(alignment: .leading) {
                                 Text("\(workout.date.formatted(date: .abbreviated, time: .shortened))")
                                     .font(.subheadline)
-                                    .foregroundColor(.gray)
+                                    .foregroundStyle(.gray)
                                 Text("\(workout.template.name)")
-                                ForEach(workout.template.exercises.filter { $0.name == exerciseName }) { ex in
+                                ForEach(workout.template.exercises.filter { $0.id == exerciseId }) { ex in
                                     ForEach(ex.setDetails, id: \.self) { set in
-                                        let repsCompleted = set.repsCompleted ?? 0
-                                        
-                                        HStack {
-                                            Text("Set \(set.setNumber):").bold()
-                                                .font(.caption)
-                                            // this implementation sucks but it works
-                                            if !ex.type.usesWeight {
-                                                Text("\(repsCompleted) reps completed")
-                                                    .font(.caption)
-                                            } else {
-                                                Text("\(Format.smartFormat(set.weight)) lb x \(repsCompleted) reps")
-                                                    .font(.caption)
-                                            }
-                                        }
+                                        set.formattedCompletedText(usesWeight: ex.type.usesWeight)
+                                            .font(.caption)
                                     }
                                 }
                             }
@@ -222,7 +224,7 @@ struct ExerciseDetailView: View {
         
         private var sortedExercise: [CompletedWorkout] {
             let filteredWorkouts = completedWorkouts.filter { workout in
-                workout.template.exercises.contains(where: { $0.name == exerciseName })
+                workout.template.exercises.contains(where: { $0.id == exerciseId })
             }
             
             switch selectedSortOption {
@@ -231,15 +233,14 @@ struct ExerciseDetailView: View {
             case .leastRecent:
                 return filteredWorkouts.sorted { $0.date < $1.date }
             case .thisWeek:
-                let calendar = Calendar.current
-                let weekOfYear = calendar.component(.weekOfYear, from: Date())
+                let weekOfYear = CalendarUtility.shared.weekOfYear(from: Date())
                 return filteredWorkouts.filter {
-                    calendar.component(.weekOfYear, from: $0.date) == weekOfYear
+                    CalendarUtility.shared.weekOfYear(from: $0.date) == weekOfYear
                 }
             case .thisMonth:
-                let currentMonth = Calendar.current.component(.month, from: Date())
+                let currentMonth = CalendarUtility.shared.month(from: Date())
                 return filteredWorkouts.filter {
-                    Calendar.current.component(.month, from: $0.date) == currentMonth
+                    CalendarUtility.shared.month(from: $0.date) == currentMonth
                 }
             case .mostSets:
                 return filteredWorkouts.sorted {
@@ -259,48 +260,41 @@ struct ExerciseDetailView: View {
     
     private var percentileView: some View {
         VStack {
-            let maxValue = ctx.exercises.getMax(for: exercise.id) ?? 0.0
-
+            let maxValue = ctx.exercises.peakMetric(for: exercise.id) ?? exercise.getPeakMetric(metricValue: 0)
+            let bw = Mass(kg: ctx.userData.currentMeasurementValue(for: .weight).actualValue)
             if selectedOption == "Standards" {
                 VStack {
                     StrengthPercentileView(
                         maxValue: maxValue,
                         age: ctx.userData.profile.age,
-                        weight: ctx.userData.currentMeasurementValue(for: .weight),
+                        bodyweight: bw,
                         gender: ctx.userData.physical.gender,
                         exercise: exercise,
-                        maxValuesAge: CSVLoader.get1RMValues(for: exercise.url, key: "Age", value: Double(ctx.userData.profile.age), userData: ctx.userData),
-                        maxValuesBW: CSVLoader.get1RMValues(for: exercise.url, key: "BW", value: ctx.userData.currentMeasurementValue(for: .weight), userData: ctx.userData),
-                        percentile: CSVLoader.calculateExercisePercentile(userData: ctx.userData, exercise: exercise, maxValue: maxValue),
+                        maxValuesAge: CSVLoader.getMaxValues(for: exercise, key: .age, value: Double(ctx.userData.profile.age), userData: ctx.userData),
+                        maxValuesBW: CSVLoader.getMaxValues(for: exercise, key: .bodyweight, value: bw.inKg, userData: ctx.userData),
+                        percentile: CSVLoader.calculateExercisePercentile(for: exercise, maxValue: maxValue.actualValue, userData: ctx.userData)
                     )
                 }
             } else if selectedOption == "Percentages" {
-                let usesWeight = exercise.type.usesWeight
-                    VStack {
-                        Text(usesWeight ? "1RM Percentages" : "Max Rep Percentages")
-                            .font(.title2)
-                            .padding(.vertical)
-                        
-                        Text(usesWeight ?
-                             "Use this table to determine your working weight for each rep range."
-                             : "Use this table to determine your working reps based on exertion percentage.")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                            .multilineTextAlignment(.center)
-                            .padding(.bottom)
-                            .padding(.horizontal, 25)
-                        
-                        Section {
-                            if usesWeight {
-                                OneRMTable(oneRepMax: maxValue)
-                            } else {
-                                MaxRepsTable(maxReps: Int(maxValue))
-                            }
-                        }
+                VStack {
+                    Text("\(exercise.performanceTitle) Percentages")
+                        .font(.title2)
                         .padding(.vertical)
+                    
+                    Text(maxValue.percentileHeader)
+                        .font(.subheadline)
+                        .foregroundStyle(.gray)
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom)
+                        .padding(.horizontal, 25)
+                    
+                    Section {
+                        MaxTable(peak: maxValue)
                     }
-                
+                    .padding(.vertical)
+                }
             }
+            
             Picker("Options", selection: $selectedOption) {
                 Text("Standards").tag("Standards")
                 Text("Percentages").tag("Percentages")
@@ -314,46 +308,39 @@ struct ExerciseDetailView: View {
         VStack {
             let perf = ctx.exercises.allExercisePerformance[exercise.id]
             if !showingList {
-                ExercisePerformanceGraph(
-                    exercise: exercise,
-                    value: perf?.maxValue,
-                    currentMaxDate: perf?.currentMaxDate,
-                    pastMaxes: perf?.pastMaxes ?? []
-                )
+                ExercisePerformanceGraph(exercise: exercise, performance: perf)
             } else {
                 ExercisePerformanceView(
                     exercise: exercise,
-                    maxValue: perf?.maxValue,
-                    repsXweight: perf?.repsXweight,
-                    currentMaxDate: perf?.currentMaxDate,
-                    pastMaxes: perf?.pastMaxes ?? []
+                    performance: perf,
+                    onDelete: { entryID in
+                        ctx.exercises.deleteEntry(id: entryID, exercise: exercise)
+                    },
+                    onSetMax: { entryID in
+                        ctx.exercises.setAsCurrentMax(id: entryID, exercise: exercise)
+                    }
                 )
             }
             
-            if !showingList, !showingUpdate1RMView {
-                Button(action: { showingUpdate1RMView = true }) {
-                    HStack {
-                        Text(exercise.type.usesWeight ? "Update 1 Rep Max" : "Update Max Reps")
-                            .foregroundColor(.white)
-                        Image(systemName: "square.and.pencil")
-                            .foregroundColor(.white)
+            if !showingUpdate1RMView {
+                ActionButton(
+                    title: "Update Max",
+                    systemImage: "square.and.pencil",
+                    width: .fit,
+                    action: {
+                        showingUpdate1RMView = true
                     }
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.blue)
-                    .clipShape(Capsule())
-                }
+                )
+                .clipShape(.capsule)
                 .padding(.vertical)
-                
-                Spacer()
             }
         }
         .overlay(alignment: .center) {
             if showingUpdate1RMView {
-                UpdateMaxView(
-                    usesWeight: exercise.type.usesWeight,
-                    onSave: { newOneRepMax in
-                        ctx.exercises.updateExercisePerformance(for: exercise, newValue: newOneRepMax, reps: nil, weight: nil, csvEstimate: false)
+                UpdateMaxEditor(
+                    exercise: exercise,
+                    onSave: { newMax in
+                        ctx.exercises.updateExercisePerformance(for: exercise, newValue: newMax)
                         ctx.exercises.savePerformanceData()
                         showingUpdate1RMView = false
                         kbd.dismiss()

@@ -23,8 +23,31 @@ struct MuscleEngagement: Hashable, Codable {
 }
 extension MuscleEngagement {
     /// Returns a list of SubMuscles for the muscle engagement, or an empty array if `submusclesWorked` is nil.
-    var allSubMuscles: [SubMuscles] {
-        submusclesWorked?.map { $0.submuscleWorked } ?? []
+    var allSubMuscles: [SubMuscles] { submusclesWorked?.map { $0.submuscleWorked } ?? [] }
+}
+
+extension Sequence where Element == MuscleEngagement {
+    /// Only primary movers
+    var primary: [MuscleEngagement] { filter(\.isPrimary) }
+
+    /// Only assistants
+    var secondary: [MuscleEngagement] { filter { !$0.isPrimary } }
+
+    /// Primary muscles only
+    var primaryMuscles: [Muscle] { primary.map(\.muscleWorked) }
+
+    /// Secondary muscles only
+    var secondaryMuscles: [Muscle] { secondary.map(\.muscleWorked) }
+
+    /// All muscles (primary + secondary)
+    var allMuscles: [Muscle] { map(\.muscleWorked) }
+
+    /// Flatten all submuscles across engagements
+    var allSubMuscles: [SubMuscles] { flatMap(\.allSubMuscles) }
+
+    /// Highest-engagement primary muscle (nil if none)
+    var topPrimaryMuscle: Muscle? {
+        primary.max { $0.engagementPercentage < $1.engagementPercentage }?.muscleWorked
     }
 }
 
@@ -101,14 +124,6 @@ enum Muscle: String, CaseIterable, Identifiable, Codable {
         }
     }
     
-    /*
-    static let Groups: [SplitCategory: [Muscle]] = [
-           .arms: [.biceps, .triceps, .forearms],
-           .legs: [.hipComplex, .quadriceps, .hamstrings, .gluteus, .calves, .tibialis],
-           .back: [.trapezius, .latissimusDorsi, .erectorSpinae, .scapularStabilizers]
-    ]
-     */
-    
     static let SubMuscles: [Muscle: [SubMuscles]] = [
         .abdominals: [.upperAbs, .lowerAbs, .obliques, .externalObliques, .transverseAbdominis],
         .pectorals: [.clavicularHead, .sternocostalHead, .costalHead],
@@ -155,6 +170,14 @@ extension Muscle {
         let imageName = category.rawValue.replacingOccurrences(of: " ", with: "-")
         let fullPath = startPath + imageName
         return Image(fullPath)
+    }
+    
+    var splitCategory: SplitCategory? {
+        SplitCategory.muscles.first { _, muscles in muscles.contains(self) }?.key
+    }
+    
+    var groupCategory: SplitCategory? {
+        SplitCategory.groups.first { _, muscles in muscles.contains(self) }?.key
     }
 }
 

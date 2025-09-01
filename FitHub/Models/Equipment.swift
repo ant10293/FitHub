@@ -8,7 +8,7 @@ import Foundation
 import SwiftUI
 
 
-struct InitEquipment: Identifiable, Codable {
+struct InitEquipment: Identifiable, Hashable, Codable {
     var id: UUID = UUID()
     var name: String
     var aliases: [String]?
@@ -16,8 +16,9 @@ struct InitEquipment: Identifiable, Codable {
     var image: String
     var equCategory: EquipmentCategory // Ensure this includes a case for "All"
     var adjustments: [AdjustmentCategory]?
-    var baseWeight: Int?
-    var singlePeg: Bool?
+    var baseWeight: BaseWeight?
+    var pegCount: PegCountOption?
+    var implementation: ImplementationType?
     var description: String
 }
 extension InitEquipment {
@@ -31,11 +32,11 @@ extension InitEquipment {
         self.equCategory          = equip.equCategory
         self.adjustments          = equip.adjustments
         self.baseWeight           = equip.baseWeight
-        self.singlePeg            = equip.singlePeg
+        self.pegCount             = equip.pegCount
+        self.implementation       = equip.implementation
         self.description          = equip.description
     }
 }
-
 
 struct GymEquipment: Identifiable, Hashable, Codable {
     let id: UUID
@@ -45,8 +46,9 @@ struct GymEquipment: Identifiable, Hashable, Codable {
     let image: String
     let equCategory: EquipmentCategory // Ensure this includes a case for "All"
     let adjustments: [AdjustmentCategory]?
-    let baseWeight: Int?
-    let singlePeg: Bool?
+    var baseWeight: BaseWeight?
+    let pegCount: PegCountOption? // weight pegs
+    let implementation: ImplementationType?
     let description: String
 }
 extension GymEquipment {
@@ -54,11 +56,19 @@ extension GymEquipment {
     
     var fullImage: Image { getFullImage(image, fullImagePath) }
     
+    var fullImageView: some View {
+        fullImage
+            .resizable()
+            .scaledToFit()
+            .clipShape(RoundedRectangle(cornerRadius: 6))
+    }
+    
     /// Returns the rounding bucket for this piece of equipment.
     var roundingCategory: RoundingCategory? {
         switch equCategory {
         case .platedMachines, .barsPlates:
-            return singlePeg == true ? .platedSinglePeg : .plated
+            let pegs = pegCount?.count ?? 0
+            return pegs == 1 ? .platedSinglePeg : .plated
         case .weightMachines, .cableMachines:
             return .pinLoaded
         case .smallWeights:
@@ -80,17 +90,61 @@ extension GymEquipment {
         self.equCategory          = initEquip.equCategory
         self.adjustments          = initEquip.adjustments
         self.baseWeight           = initEquip.baseWeight
-        self.singlePeg            = initEquip.singlePeg
+        self.pegCount             = initEquip.pegCount
+        self.implementation       = initEquip.implementation
         self.description          = initEquip.description
-        // everything else already has a default
     }
 }
 
+enum PegCountOption: Int, Codable, CaseIterable {
+    case none = 0      // No plates loaded
+    case single = 1    // Plates loaded on one side
+    case both = 2      // Plates loaded on both sides
+
+    var count: Int { rawValue }
+
+    var label: String {
+        switch self {
+        case .none:   return "No plates"
+        case .single: return "One side"
+        case .both:   return "Both sides"
+        }
+    }
+    
+    var helpText: String {
+        switch self {
+        case .none:
+            return "No plates are loaded. Use this for pin-stack or non-plated equipment."
+        case .single:
+            return "Plates load on a single peg (one side). Common on some lever machines or t-bar setups."
+        case .both:
+            return "Plates load on both sides (mirrored pegs). Typical barbell/plate-loaded setups."
+        }
+    }
+}
+
+
+// should impact WeightPlates
 struct RoundingPreference: Codable, Equatable {
-    var plated: Double = 5
-    var platedSinglePeg : Double = 2.5
-    var pinLoaded: Double = 2.5
-    var smallWeights: Double = 5
+    var lb: Rounding = Rounding(
+        plated: Mass(lb: 5),
+        platedSinglePeg: Mass(lb: 2.5),
+        pinLoaded: Mass(lb: 2.5),
+        smallWeights: Mass(lb: 5)
+    )
+    var kg: Rounding = Rounding(
+        plated: Mass(kg: 2.5),
+        platedSinglePeg: Mass(kg: 1.25),
+        pinLoaded: Mass(kg: 1.25),
+        smallWeights: Mass(kg: 2.5)
+    )
+}
+
+struct Rounding: Codable, Equatable {
+    var plated: Mass
+    var platedSinglePeg: Mass
+    var pinLoaded: Mass
+    var smallWeights: Mass
 }
 
 enum RoundingCategory: String, Codable, Equatable {
@@ -122,4 +176,115 @@ enum EquipmentCategory: String, CaseIterable, Identifiable, Codable {
     static let machineCats: Set<EquipmentCategory> = [.platedMachines, .weightMachines, .cableMachines]
     static let freeWeightCats: Set<EquipmentCategory> = [.smallWeights, .barsPlates]
     static let baseWeightCats: Set<EquipmentCategory> = [.barsPlates, .cableMachines, .platedMachines, .weightMachines, .other]
+}
+
+enum ImplementationType: String, Codable, Hashable, CaseIterable {
+    case unified = "Unified"         // One implement, shared load (barbell, pin-loaded machines)
+    case divided = "Divided"         // One implement, load divided per limb (lever machines)
+    case individual = "Individual"   // Individual implements per limb (dumbbells, kettlebells)
+    
+    var helpText: String {
+        switch self {
+        case .unified:
+            return "One implement with shared load. Both limbs work together on the same implement (barbell, pin-loaded machines)."
+        case .divided:
+            return "One implement with load divided per limb. Each limb has its own handle/arm on the same machine (lever machines)."
+        case .individual:
+            return "Individual implements per limb. Each limb works with its own separate implement (dumbbells, kettlebells)."
+        }
+    }
+    
+    func movementCount(for movementType: LimbMovementType) -> MovementCount {
+        switch (self, movementType) {
+        // MARK: – Unified
+        case (.unified, .bilateralDependent), (.unified, .bilateralIndependent), (.unified, .unilateral):
+            return MovementCount(implementsUsed: 1, baseWeightMultiplier: 1)
+        
+        // MARK: – Divided
+        case (.divided, .bilateralDependent), (.divided, .unilateral):
+            return MovementCount(implementsUsed: 1, baseWeightMultiplier: 1)
+        case (.divided, .bilateralIndependent):
+            return MovementCount(implementsUsed: 1, baseWeightMultiplier: 2)
+            
+        // MARK: – Individual
+        case (.individual, .bilateralDependent), (.individual, .unilateral):
+            return MovementCount(implementsUsed: 1, baseWeightMultiplier: 1)
+        case (.individual, .bilateralIndependent):
+            return MovementCount(implementsUsed: 2, baseWeightMultiplier: 2)
+        }
+    }
+}
+
+struct MovementCount: Codable, Equatable, Hashable {
+    var implementsUsed: Int            // How many implements are actually used
+    var baseWeightMultiplier: Int      // How many times to count the base weight
+}
+
+struct BaseWeight: Codable, Equatable, Hashable {
+    // MARK: – Per Implement
+    var lb: Double
+    var kg: Double
+    
+    var resolvedMass: Mass {
+        switch UnitSystem.current {
+        case .imperial: return .init(lb: lb)
+        case .metric: return .init(kg: kg)
+        }
+    }
+    
+    mutating func setWeight(_ weight: Double) {
+        switch UnitSystem.current {
+        case .imperial: lb = weight
+        case .metric: kg = weight
+        }
+    }
+}
+
+// should impact RoundingPreference
+struct WeightPlates: Hashable, Codable {
+    var lb: [Mass] = [
+        Mass(lb: 2.5),
+        Mass(lb: 5),
+        Mass(lb: 10),
+        Mass(lb: 25),
+        Mass(lb: 35),
+        Mass(lb: 45),
+        Mass(lb: 100)
+       ]
+    var kg: [Mass] = [
+        Mass(kg: 1.25),
+        Mass(kg: 2.5),
+        Mass(kg: 5),
+        Mass(kg: 10),
+        Mass(kg: 15),
+        Mass(kg: 20),
+        Mass(kg: 25)
+    ]
+    
+    var resolvedPlates: [Mass] {
+        switch UnitSystem.current {
+        case .imperial: return lb
+        case .metric: return kg
+        }
+    }
+    
+    /// Fixed color palette by index (shared across lb + kg)
+    private static let plateColors: [Color] = [
+        .gray,    // index 0 (2.5 lb / 1.25 kg)
+        .orange,   // index 1 (5 lb / 2.5 kg)
+        .purple,   // index 2 (10 lb / 5 kg)
+        .green,   // index 3 (25 lb / 10 kg)
+        .yellow,  // index 4 (35 lb / 15 kg)
+        .blue,    // index 5 (45 lb / 20 kg)
+        .red      // index 6 (100 lb / 25 kg)
+    ]
+     
+     /// Get the fixed color for a given plate
+    static func color(for mass: Mass) -> Color {
+        let plates = WeightPlates().resolvedPlates
+        if let idx = plates.firstIndex(of: mass), idx < plateColors.count {
+            return plateColors[idx]
+        }
+        return .secondary
+    }
 }

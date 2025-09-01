@@ -23,8 +23,6 @@ struct DetailedMuscleGroupsView: View {
     
     var body: some View {
         VStack {
-           // nameHeader()
-            
             ZStack {
                 muscleView()
                 VStack {
@@ -42,8 +40,8 @@ struct DetailedMuscleGroupsView: View {
         .padding()
         .navigationBarTitle(nameHeader, displayMode: .inline)
         .onAppear(perform: determineDefaultViewSide)
-        .sheet(item: $selectedSubMuscle) { subMuscle in
-            RecentlyCompletedSetsView(userData: userData, muscle: subMuscle) { selectedSubMuscle = nil }
+        .sheet(item: $selectedSubMuscle, onDismiss: { selectedSubMuscle = nil }) { subMuscle in
+            RecentlyCompletedSetsView(userData: userData, muscle: subMuscle)
         }
     }
     
@@ -73,10 +71,10 @@ struct DetailedMuscleGroupsView: View {
             ForEach(Muscle.getSubMuscles(for: muscle), id: \.self) { subMuscle in
                 ForEach(AssetPath.getDetailedMuscleImages(category: subMuscle, gender: userData.physical.gender).filter { $0.contains(front ? "Front" : "Rear") }, id: \.self) { imagePath in
                     DirectImageView(imageName: imagePath)
-                    .opacity(calculateOpacity(for: subMuscle))
-                    .onTapGesture {
-                        selectedSubMuscle = subMuscle
-                    }
+                        .opacity(calculateOpacity(for: subMuscle))
+                        .onTapGesture {
+                            selectedSubMuscle = subMuscle
+                        }
                 }
             }
         } else {
@@ -110,12 +108,12 @@ struct DetailedMuscleGroupsView: View {
                             HStack {
                                 if !hasImage {
                                     Text(subMuscle.simpleName)
-                                        .foregroundColor(.gray)
+                                        .foregroundStyle(.gray)
                                     + Text(" (Deep)") // we will remove this upon color coding the visible muscles
                                         .fontWeight(.light)
                                 } else {
                                     Text(subMuscle.simpleName)
-                                        .foregroundColor(determineTextColor(for: subMuscle))
+                                        .foregroundStyle(determineTextColor(for: subMuscle))
                                 }
                                 
                                 Spacer()
@@ -123,7 +121,7 @@ struct DetailedMuscleGroupsView: View {
                                 if selectedView == .recovery {
                                     Text("\(restPercentages[subMuscle] ?? 100)%")
                                     Image(systemName: "chevron.right")
-                                        .foregroundColor(.gray)
+                                        .foregroundStyle(.gray)
                                 } else {
                                     if hasImage {
                                         RoundedRectangle(cornerRadius: 2)
@@ -136,13 +134,13 @@ struct DetailedMuscleGroupsView: View {
                             if !subMuscle.rawValue.contains(subMuscle.simpleName) {
                                 Text(subMuscle.rawValue)
                                     .font(.caption)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(Color.secondary)
                                     .italic(true)
                             }
                             if let note = subMuscle.note {
                                 Text(note)
                                     .font(.caption)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(Color.secondary)
                                     .lineLimit(2)
                                     .minimumScaleFactor(0.5)
                             }
@@ -195,43 +193,52 @@ struct DetailedMuscleGroupsView: View {
     // MARK: - Sub-muscle rest % (single pass) -------------------------------
     private func calculateRestPercentages() {
         let now         = Date()
-        let windowHours = Double(userData.settings.muscleRestDuration)
+        let windowHours = max(1.0, Double(userData.settings.muscleRestDuration)) // avoid divide-by-zero
 
-        // temp buckets keyed by sub-muscle
-        var buckets: [SubMuscles:(rest: Double, weight: Double)] = [:]
+        // temp buckets keyed by sub-muscle: (Σ weight×pct , Σ weight)
+        var buckets: [SubMuscles: (rest: Double, weight: Double)] = [:]
 
-        // 1️⃣ recent workouts once
-        let recent = userData.workoutPlans.completedWorkouts
-            .filter { now.timeIntervalSince($0.date) / 3600 <= windowHours }
+        // 1️⃣ recent workouts only within [0, windowHours]
+        let recent = userData.workoutPlans.completedWorkouts.filter {
+            let h = now.timeIntervalSince($0.date) / 3600.0
+            return h >= 0 && h <= windowHours
+        }
 
         for workout in recent {
-            let hoursSince = now.timeIntervalSince(workout.date) / 3600
-            let pctRest    = min(1, hoursSince / windowHours) * 100
+            let hoursSince = now.timeIntervalSince(workout.date) / 3600.0
+            let ratio      = hoursSince / windowHours
+            let pctRest    = max(0.0, min(1.0, ratio)) * 100.0   // clamp 0…100
 
             for exercise in workout.template.exercises {
-                let sets = exercise.setDetails.filter { $0.repsCompleted != nil }.count
+                // ✅ Count completed sets under the new SetMetric model
+                let sets = exercise.setDetails.filter { sd in
+                    guard let c = sd.completed else { return false }
+                    switch c {
+                    case .reps(let r):     return r > 0
+                    case .hold(let span):  return span.inSeconds > 0
+                    }
+                }.count
                 guard sets > 0 else { continue }
 
-                // cache primary/secondary lists once per exercise
                 let primarySubs   = Set(exercise.primarySubMuscles ?? [])
                 let secondarySubs = Set(exercise.secondarySubMuscles ?? [])
 
-                // walk every sub-muscle engagement in this exercise
                 for engage in exercise.muscles {
                     guard let subs = engage.submusclesWorked else { continue }
 
                     for subEng in subs {
-                        let sub       = subEng.submuscleWorked
-                        // pick 1.0 | 0.5 | skip
+                        let sub = subEng.submuscleWorked
+
+                        // primary/secondary factor
                         let psFactor: Double
-                        if  primarySubs.contains(sub) { psFactor = 1.0 }
+                        if      primarySubs.contains(sub)   { psFactor = 1.0 }
                         else if secondarySubs.contains(sub) { psFactor = 0.5 }
                         else { continue }
 
-                        // engagement % × primary/secondary × set count
-                        let weight = (subEng.engagementPercentage / 100) * psFactor * Double(sets)
+                        // engagement% × primary/secondary × set count
+                        let weight = (Double(subEng.engagementPercentage) / 100.0) * psFactor * Double(sets)
 
-                        var bucket = buckets[sub] ?? (0,0)
+                        var bucket = buckets[sub] ?? (0, 0)
                         bucket.rest   += weight * pctRest
                         bucket.weight += weight
                         buckets[sub]   = bucket
@@ -240,15 +247,14 @@ struct DetailedMuscleGroupsView: View {
             }
         }
 
-        // 2️⃣ convert buckets → 0–100 ints; default 100
+        // 2️⃣ convert buckets → 0–100 ints; default 100 when untouched, clamp for safety
         restPercentages = Dictionary(
             uniqueKeysWithValues:
                 Muscle.getSubMuscles(for: muscle).map { sub in
-                    let bucket = buckets[sub] ?? (0,0)
-                    let pct = bucket.weight > 0
-                            ? Int((bucket.rest / bucket.weight).rounded())
-                            : 100
-                    return (sub, pct)
+                    let bucket = buckets[sub] ?? (0, 0)
+                    let raw = bucket.weight > 0 ? (bucket.rest / bucket.weight).rounded() : 100.0
+                    let clamped = max(0.0, min(100.0, raw))
+                    return (sub, Int(clamped))
                 }
         )
     }

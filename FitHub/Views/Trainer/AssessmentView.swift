@@ -28,7 +28,7 @@ struct AssessmentView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(Color.red)
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                 .font(.headline)
                         }
@@ -40,7 +40,7 @@ struct AssessmentView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(Color.blue)
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                 .font(.headline)
                         }
@@ -75,6 +75,7 @@ struct AssessmentView: View {
             }
         }
     }
+    
     private func handleCompletion() {
         ctx.userData.setup.infoCollected = true
         ctx.userData.saveSingleStructToFile(\.setup, for: .setup)
@@ -87,7 +88,7 @@ struct AssessmentView: View {
             handleCompletion()
         }) {
             Text(ctx.userData.setup.maxRepsEntered || ctx.userData.setup.oneRepMaxesEntered ? "Continue" : "Skip")
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(ctx.userData.setup.maxRepsEntered || ctx.userData.setup.oneRepMaxesEntered ? Color.green : Color.gray)
@@ -104,28 +105,33 @@ struct AssessmentView: View {
     }
     
     func calculateFitnessLevel() {
+        let bmi = ctx.userData.currentMeasurementValue(for: .bmi).displayValue
+        let bfPct = ctx.userData.currentMeasurementValue(for: .bodyFatPercentage).displayValue
+        let gender = ctx.userData.physical.gender
+        let questionAnswers = ctx.userData.setup.questionAnswers
+        
         // Reset fitness level score
         var fitnessLevelScore = 0
         
         // Evaluate questionnaire answers
         // Familiarity with gym equipment and techniques
-        if let gymFamiliarity = ctx.userData.setup.questionAnswers[safe: 0], gymFamiliarity == "Yes" {
+        if let gymFamiliarity = questionAnswers[safe: 0], gymFamiliarity == "Yes" {
             fitnessLevelScore += 2
-        } else if let gymFamiliarity = ctx.userData.setup.questionAnswers[safe: 0], gymFamiliarity == "Somewhat" {
+        } else if let gymFamiliarity = questionAnswers[safe: 0], gymFamiliarity == "Somewhat" {
             fitnessLevelScore += 1
         }
         
         // Currently following a structured workout program
-        if let workoutHabit = ctx.userData.setup.questionAnswers[safe: 1], workoutHabit.starts(with: "Yes, I am currently following a structured workout program") {
+        if let workoutHabit = questionAnswers[safe: 1], workoutHabit.starts(with: "Yes, I am currently following a structured workout program") {
             fitnessLevelScore += 3
-        } else if let workoutConsistency = ctx.userData.setup.questionAnswers[safe: 1], workoutConsistency.contains("consistently") {
+        } else if let workoutConsistency = questionAnswers[safe: 1], workoutConsistency.contains("consistently") {
             fitnessLevelScore += 2
-        } else if let workoutConsistency = ctx.userData.setup.questionAnswers[safe: 1], workoutConsistency.contains("occassionally") {
+        } else if let workoutConsistency = questionAnswers[safe: 1], workoutConsistency.contains("occassionally") {
             fitnessLevelScore += 1
         }
         
-        let isHealthyBMI = ctx.userData.currentMeasurementValue(for: .bmi) > 18.5 && ctx.userData.currentMeasurementValue(for: .bmi) < 25
-        let isHealthyBodyFat = (ctx.userData.physical.gender == .male && ctx.userData.currentMeasurementValue(for: .bodyFatPercentage) <= 24) || (ctx.userData.physical.gender == .female && ctx.userData.currentMeasurementValue(for: .bodyFatPercentage) <= 31)
+        let isHealthyBMI = bmi > 18.5 && bmi < 25
+        let isHealthyBodyFat = (gender == .male && bfPct <= 24) || (gender == .female && bfPct <= 31)
         
         if isHealthyBMI {
             fitnessLevelScore += 1

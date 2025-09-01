@@ -30,7 +30,7 @@ struct ExerciseOptions: View {
                 Button(action: onClose) {
                     Image(systemName: "xmark.circle.fill")
                         .imageScale(.large)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                 }
                 .padding()
             }
@@ -38,14 +38,14 @@ struct ExerciseOptions: View {
             VStack(alignment: .leading, spacing: 10) {
                 Button(action: { modifier.toggleFavorite(for: exercise.id, userData: ctx.userData) }) {
                     HStack {
-                        Image(systemName: ctx.userData.evaluation.favoriteExercises.contains(exercise.id) ? "star.fill" : "star")
+                        Image(systemName: ctx.userData.evaluation.favoriteExercises.contains(exercise.id) ? "heart.fill" : "heart")
                         Text("Favorite Exercise")
                             .font(.headline)
                     }
                 }.padding(.vertical, -5)
                 Text("Select this exercise as a favorite to ensure that it will be included in future generated workouts.")
                     .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                     .padding(.bottom)
                 
                 Button(action: { modifier.toggleDislike(for: exercise.id, userData: ctx.userData) }) {
@@ -57,7 +57,7 @@ struct ExerciseOptions: View {
                 }.padding(.vertical, -5)
                 Text("Disliking this exercise will ensure that it will not be included in future generated workouts.")
                     .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                     .padding(.bottom)
                 
                 // add an alert when replacing or deleting exercises
@@ -71,7 +71,7 @@ struct ExerciseOptions: View {
                 }.padding(.vertical, -5)
                 Text("Replace '\(exercise.name)' with a similar exercise that works the same muscles.")
                     .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                     .padding(.bottom)
                 
                 Button(action: { showSimilarExercises = true }) {
@@ -83,7 +83,7 @@ struct ExerciseOptions: View {
                 }.padding(.vertical, -5)
                 Text("Find a replacement exercise by viewing similar exercises that work the same muscles.")
                     .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                     .padding(.bottom)
                 
                 Button(action: { removeExercise() }) {
@@ -95,7 +95,7 @@ struct ExerciseOptions: View {
                 }.padding(.vertical, -5)
                 Text("Remove '\(exercise.name)' from this template.")
                     .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                     .padding(.bottom)
             }
             .padding(.horizontal)
@@ -106,8 +106,7 @@ struct ExerciseOptions: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(radius: 10)
         .sheet(isPresented: $showSimilarExercises) {
-            SimilarExercisesView(currentExercise: exercise, template: template, allExercises: ctx.exercises.allExercises) { replacedExercise in
-                // Handle the replacement logic here
+            SimilarExercises(userData: ctx.userData, currentExercise: exercise, template: template, allExercises: ctx.exercises.allExercises) { replacedExercise in
                 modifier.replaceSpecific(currentExercise: exercise, with: replacedExercise, in: &template, ctx: ctx)
             }
         }

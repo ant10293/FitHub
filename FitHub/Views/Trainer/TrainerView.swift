@@ -9,7 +9,7 @@ struct TrainerView: View {
             if !ctx.userData.setup.questionsAnswered {
                 Questionnaire()
             } else if !ctx.userData.setup.isEquipmentSelected {
-                EquipmentSelection(selection: ctx.userData.evaluation.equipmentSelected)
+                EquipmentManagement()
             } else if !ctx.userData.setup.infoCollected {
                 AssessmentView()
             } else {

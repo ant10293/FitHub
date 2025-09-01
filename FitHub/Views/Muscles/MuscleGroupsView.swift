@@ -33,8 +33,7 @@ struct MuscleGroupsView: View {
     }
     
     private func opacity(for muscle: Muscle) -> Double {
-        let opacity = 1.0 - Double(restPercentages[muscle] ?? 0) / 100.0
-        return opacity
+        return 1.0 - Double(restPercentages[muscle] ?? 0) / 100.0
     }
 }
 

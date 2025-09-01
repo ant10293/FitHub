@@ -84,7 +84,7 @@ struct UserProfileView: View {
                                     Spacer()
                                     Image(systemName: "lock.fill")
                                 }
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color.secondary)
                                 .textSelection(.disabled)
                             } header: {
                                 Text("Email")
@@ -99,14 +99,14 @@ struct UserProfileView: View {
                                 if let creationDate = ctx.userData.profile.accountCreationDate {
                                     Text("Account Created: \(Format.formatDate(creationDate))")
                                         .font(.caption)
-                                        .foregroundColor(.secondary)
+                                        .foregroundStyle(Color.secondary)
                                 }
                                 Button(action: handleSignOut) {
                                     Text("Logout")
                                         .frame(maxWidth: .infinity)
                                         .padding()
                                         .background(Color.red)
-                                        .foregroundColor(.white)
+                                        .foregroundStyle(.white)
                                         .clipShape(RoundedRectangle(cornerRadius: 10))
                                 }
                             }

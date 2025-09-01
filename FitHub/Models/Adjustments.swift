@@ -14,10 +14,8 @@ enum AdjustmentValue: Codable, Equatable, Hashable {
     
     var displayValue: String {
         switch self {
-        case .integer(let value):
-            return "\(value)"
-        case .string(let value):
-            return value
+        case .integer(let value): return "\(value)"
+        case .string(let value): return value
         }
     }
     
@@ -30,7 +28,7 @@ enum AdjustmentValue: Codable, Equatable, Hashable {
     }
 }
 
-enum AdjustmentCategory: String, CaseIterable, Identifiable, Codable, Comparable, Hashable {
+enum AdjustmentCategory: String, CaseIterable, Identifiable, Codable, Comparable, Equatable, Hashable {
     case seatHeight = "Seat Height"
     case benchAngle = "Bench Angle"
     
@@ -66,7 +64,6 @@ enum AdjustmentCategory: String, CaseIterable, Identifiable, Codable, Comparable
         return basePath + formattedName
     }
     
-    
     static func < (lhs: AdjustmentCategory, rhs: AdjustmentCategory) -> Bool {
         return lhs.rawValue < rhs.rawValue
     }
@@ -76,10 +73,4 @@ struct ExerciseEquipmentAdjustments: Codable, Identifiable, Equatable, Hashable 
     let id: UUID
     var equipmentAdjustments: [AdjustmentCategory: AdjustmentValue]
     let adjustmentImage: String
-
-    static func ==(lhs: ExerciseEquipmentAdjustments, rhs: ExerciseEquipmentAdjustments) -> Bool {
-        return lhs.id == rhs.id &&
-        lhs.equipmentAdjustments == rhs.equipmentAdjustments &&
-        lhs.adjustmentImage == rhs.adjustmentImage
-    }
 }

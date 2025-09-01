@@ -23,7 +23,7 @@ struct SearchBar: View {
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
-                .foregroundColor(.secondary)
+                .foregroundStyle(Color.secondary)
 
             // Actual text field
             TextField(placeholder, text: $text)
@@ -36,7 +36,7 @@ struct SearchBar: View {
                     text = ""
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                 }
                 .buttonStyle(.plain) // removes tap-area inset
             }

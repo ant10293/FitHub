@@ -10,7 +10,7 @@ import SwiftUI
 
 struct NewEquipment: View {
     // ────────── Environment
-    @Environment(\.presentationMode) private var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
     @EnvironmentObject var ctx: AppContext
     
@@ -51,8 +51,9 @@ struct NewEquipment: View {
                         alternativeSection
                         categoryPicker
                         
-                        if draft.equCategory == .barsPlates || draft.equCategory == .weightMachines {
-                            singlePegToggle
+                        if isPlated {
+                            pegCountPicker
+                            implementationPicker
                         }
                         
                         AdjustmentPicker(adjustments: $draft.adjustments)
@@ -89,7 +90,7 @@ struct NewEquipment: View {
                                 }
                             }
                             
-                            presentationMode.wrappedValue.dismiss()
+                            dismiss()
                         }
                         .padding()
                         
@@ -104,24 +105,24 @@ struct NewEquipment: View {
             }
             .navigationTitle(isEditing ? "Edit Equipment" : "New Equipment").navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel", role: .destructive) {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
             }
         }
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .sheet(isPresented: $selectingEquipment, onDismiss: { selectingEquipment = false }) {
-            EquipmentSelection(selection: alternativeEquipment, forNewExercise: true) { selection in
+            EquipmentSelection(selection: alternativeEquipment, onDone: { selection in
                 setEquipment(selection: selection)
-            }
+            })
         }
         .alert("Delete this equipment?", isPresented: $showDeleteAlert) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
                 ctx.equipment.removeEquipment(equipment)  // actual deletion
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             }
         } message: {
             Text("This action can’t be undone.")
@@ -137,6 +138,10 @@ struct NewEquipment: View {
     
     private var equipment: GymEquipment { GymEquipment(from: draft) }
     
+    private var isPlated: Bool {
+        draft.equCategory == .platedMachines || draft.equCategory == .barsPlates || draft.equCategory == .smallWeights
+    }
+    
     // ────────── Sub-views ------------------------------------------------
     private var alternativeSection: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -146,7 +151,7 @@ struct NewEquipment: View {
                     .font(.headline)
                 +
                 Text(alt.isEmpty ? "None" : alt.joined(separator: ", "))
-                    .foregroundColor(alt.isEmpty ? .secondary : .primary)
+                    .foregroundStyle(alt.isEmpty ? .secondary : .primary)
             )
             .multilineTextAlignment(.leading)
 
@@ -159,7 +164,7 @@ struct NewEquipment: View {
                         Text("Select Equipment")
                     }
                 }
-                .foregroundColor(.blue)
+                .foregroundStyle(.blue)
                 .buttonStyle(.plain)
             }
         }
@@ -182,12 +187,13 @@ struct NewEquipment: View {
     
     private var baseWeightField: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Base Weight (lbs)").font(.headline)
+            Text("Base Weight (\(UnitSystem.current.weightUnit))").font(.headline)
             
             TextField("Optional", text: Binding(
-                get: { draft.baseWeight.map(String.init) ?? "" },
+                get: { draft.baseWeight?.resolvedMass.displayString ?? "" },
                 set: { input in
-                    draft.baseWeight = Int(input)          // nil if not a valid Int
+                    let value = Double(input) ?? 0
+                    draft.baseWeight?.setWeight(value)
                 }
             ))
             .keyboardType(.numberPad)
@@ -201,13 +207,50 @@ struct NewEquipment: View {
         }
     }
     
-    private var singlePegToggle: some View {
-        Toggle("Single-peg weight carriage",
-               isOn: Binding(
-                   get: { draft.singlePeg ?? false },
-                   set: { draft.singlePeg = $0 }
-               ))
-            .toggleStyle(.switch)
+    private var pegCountPicker: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Plate pegs").font(.headline)
+
+            let pegs: Binding<PegCountOption> = Binding<PegCountOption>(
+                get: { draft.pegCount ?? .none },
+                set: { draft.pegCount = $0 }
+            )
+            
+            Picker("Plate pegs", selection: pegs) {   // draft.pegCount: Int
+                ForEach(PegCountOption.allCases, id: \.self) { option in
+                    Text(option.label).tag(option.rawValue)      // tag: Int
+                }
+            }
+            .pickerStyle(.segmented)
+
+            Text(pegs.wrappedValue.helpText)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            
+        }
+    }
+    
+    private var implementationPicker: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Implement Type").font(.headline)
+
+            let implementation: Binding<ImplementationType> = Binding<ImplementationType>(
+                get: { draft.implementation ?? .unified },
+                set: { draft.implementation = $0 }
+            )
+            
+            Picker("Implement Type", selection: implementation) {
+                ForEach(ImplementationType.allCases, id: \.self) { option in
+                    Text(option.rawValue).tag(option.rawValue)
+                }
+            }
+            .pickerStyle(.segmented)
+
+            Text(implementation.wrappedValue.helpText)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            
+        }
     }
     
     private var isDuplicateName: Bool {

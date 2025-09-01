@@ -4,6 +4,7 @@ import HealthKit
 
 struct HealthKitRequestView: View {
     @Environment(\.colorScheme) var colorScheme
+    @AppStorage(UnitSystem.storageKey) var unit: UnitSystem = .metric
     @ObservedObject var userData: UserData
     @StateObject private var healthKit = HealthKitManager()
     @State var userName: String = ""
@@ -17,7 +18,7 @@ struct HealthKitRequestView: View {
             if userData.settings.allowedCredentials {
                 Text("Loading...")
                     .font(.headline)
-                    .foregroundColor(isPrimaryColor ? primaryColor : secondaryColor)
+                    .foregroundStyle(isPrimaryColor ? primaryColor : secondaryColor)
                     .onAppear {
                         startBlinking()
                     }
@@ -37,7 +38,7 @@ struct HealthKitRequestView: View {
                     userData.saveSingleStructToFile(\.profile, for: .profile)
                     healthKit.requestAuthorization(userData: userData)
                 }
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .padding()
                 .background(userName.isEmpty ? Color.gray : Color.black) // Disable the visual of the button when userName is empty
                 .disabled(userName.isEmpty) // Disable the button when userName is empty
@@ -47,6 +48,7 @@ struct HealthKitRequestView: View {
         .navigationBarBackButtonHidden(true) // Hiding the back button
         .onAppear {
             if userData.settings.allowedCredentials {
+                unit = UnitSystem.preferredUnitSystem()
                 healthKit.requestAuthorization(userData: userData)
             } else {
                 userName = userData.profile.userName
@@ -54,15 +56,11 @@ struct HealthKitRequestView: View {
         }
     }
     
-    var primaryColor: Color {
-        colorScheme == .dark ? .white : .black
-    }
+    private var primaryColor: Color { colorScheme == .dark ? .white : .black }
     
-    var secondaryColor: Color {
-        colorScheme == .dark ? .black : .white
-    }
+    private var secondaryColor: Color { colorScheme == .dark ? .black : .white }
 
-    func startBlinking() {
+    private func startBlinking() {
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
             withAnimation {
                 isPrimaryColor.toggle()

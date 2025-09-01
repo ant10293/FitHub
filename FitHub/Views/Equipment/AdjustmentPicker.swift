@@ -26,7 +26,7 @@ struct AdjustmentPicker: View {
 
             // ── Existing rows ───────────────────────────
             if (adjustments ?? []).isEmpty {
-                Text("None added").foregroundColor(.secondary)
+                Text("None added").foregroundStyle(Color.secondary)
             } else {
                 ForEach(adjustments ?? [], id: \.self) { cat in
                     HStack {
@@ -36,7 +36,7 @@ struct AdjustmentPicker: View {
                             remove(cat)
                         } label: {
                             Image(systemName: "minus.circle")
-                                .foregroundColor(.red)
+                                .foregroundStyle(.red)
                         }
                     }
                 }
@@ -72,8 +72,16 @@ struct AdjustmentPicker: View {
     // ── Actions ───────────────────────────────────────
     private func add() {
         guard let c = chosen else { return }
-        if adjustments == nil { adjustments = [] }             // lazy create
-        if !(adjustments!.contains(c)) { adjustments!.append(c) }
+
+        if var list = adjustments {
+            if !list.contains(c) {
+                list.append(c)
+                adjustments = list                                 // write back!
+            }
+        } else {
+            adjustments = [c]                                      // first item
+        }
+
         chosen = nil
     }
 

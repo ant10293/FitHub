@@ -1,0 +1,159 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "DC5BEAD6",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "89.99",
+      "familyShareable" : false,
+      "internalID" : "6749919672",
+      "localizations" : [
+        {
+          "description" : "All Pro features, no renewals. One-time",
+          "displayName" : "FitHub Lifetime Pass",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.FitHub.premium.lifetime",
+      "referenceName" : "Lifetime Pass",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6749919587",
+    "_developerTeamID" : "L26773524X",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 776747630.31164205,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21754245",
+      "localizations" : [
+
+      ],
+      "name" : "Reoccuring Subscription",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "29.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6749919859",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "All Pro features—auto-renewing annually.",
+              "displayName" : "FitHub Annual Subscription",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.FitHub.premium.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Annual",
+          "subscriptionGroupID" : "21754245",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "3.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6749919881",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "All Pro features—auto-renewing monthly.",
+              "displayName" : "FitHub Monthly Subscription",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.FitHub.premium.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly",
+          "subscriptionGroupID" : "21754245",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

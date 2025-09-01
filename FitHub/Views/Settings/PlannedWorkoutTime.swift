@@ -13,28 +13,32 @@ import SwiftUI
 // Select Default Workout Time
 struct PlannedWorkoutTime: View {
     @ObservedObject var userData: UserData
-    @State private var selectedHours: Int = 1
-    @State private var selectedMinutes: Int = 0
+    @State private var duration: TimeSpan = .hrMinToSec(hours: 1, minutes: 0)
     @State private var isPickerExpanded: Bool = false
-    @State private var draftTime       = Date()     // temp value
+    @State private var draftTime: Date = Date()     // temp value
     @State private var selectedWorkoutTime: Date
     
     init(userData: UserData) {
         self.userData = userData
-        // Initialize `selectedWorkoutTime` with `defaultWorkoutTime` or fallback to current date.
-        _selectedWorkoutTime = State(initialValue: userData.settings.defaultWorkoutTime ?? Date())
+        let base = Date()
+        if let t = userData.settings.defaultWorkoutTime,
+           let h = t.hour, let m = t.minute {
+            _selectedWorkoutTime = State(initialValue:
+                CalendarUtility.shared.date(bySettingHour: h, minute: m, second: 0, of: base) ?? base
+            )
+        } else {
+            _selectedWorkoutTime = State(initialValue: base)
+        }
     }
-    
+
     var body: some View {
         List {
             generalSection
             
             notificationSection
-            
         }
         .listStyle(InsetGroupedListStyle())
-        .navigationTitle("Workout Time Settings")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle("Workout Time Settings", displayMode: .inline)
     }
     
     private var generalSection: some View {
@@ -47,7 +51,6 @@ struct PlannedWorkoutTime: View {
                 Text(userData.settings.useDateOnly ? "Notifications will be based on the date only." : "Notifications will include time of day.")
                     .multilineTextAlignment(.leading)
                     .font(.caption)
-                    //.foregroundColor(.gray)
             }
             
             VStack {
@@ -60,25 +63,35 @@ struct PlannedWorkoutTime: View {
                 Text(userData.settings.notifyBeforePlannedTime ? "You will be notified before the planned workout time." : "You will be dynamically notified the day of your workout.")
                     .multilineTextAlignment(.leading)
                     .font(.caption)
-                    //.foregroundColor(.gray)
             }
             
             if !userData.settings.useDateOnly {
                  VStack {
-                     DatePicker("Select Default Workout Time", selection: Binding(
-                        get: { selectedWorkoutTime },
-                        set: { newDate in
-                            selectedWorkoutTime = newDate
-                            userData.settings.defaultWorkoutTime = newDate
-                            userData.saveSingleStructToFile(\.settings, for: .settings)
-                        }
-                     ), displayedComponents: .hourAndMinute)
+                     DatePicker(
+                         "Select Default Workout Time",
+                         selection: Binding<Date>(
+                             get: {
+                                 // build a date for today with stored H/M (or fallback to now)
+                                 let base = Date()
+                                 if let t = userData.settings.defaultWorkoutTime, let h = t.hour, let m = t.minute {
+                                     return CalendarUtility.shared.date(bySettingHour: h, minute: m, second: 0, of: base) ?? base
+                                 }
+                                 return base
+                             },
+                             set: { newDate in
+                                 // store *only* hour/minute (no seconds)
+                                 let comps = CalendarUtility.shared.dateComponents([.hour, .minute], from: newDate)
+                                 userData.settings.defaultWorkoutTime = comps
+                                 userData.saveSingleStructToFile(\.settings, for: .settings)
+                             }
+                         ),
+                         displayedComponents: .hourAndMinute
+                     )
                      .padding(.vertical, 5)
                      
                      Text("When generating a new workout, this time will be used as the default. You can change this time later.")
                          .multilineTextAlignment(.leading)
-                         .font(.subheadline)
-                         .foregroundColor(.gray)
+                         .font(.caption)
                  }
             }
         } header: {
@@ -120,39 +133,21 @@ struct PlannedWorkoutTime: View {
         Text("Set a reminder for an amount of time before your workout.")
             .multilineTextAlignment(.leading)
             .font(.subheadline)
-            //.foregroundColor(.gray)
         
         if isPickerExpanded {
             HStack {
-                Picker("Hours", selection: $selectedHours) {
-                    ForEach(0..<24, id: \.self) { hour in
-                        Text("\(hour) hr").tag(hour)
-                    }
-                }
-                .pickerStyle(WheelPickerStyle())
-                .frame(width: 100)
-                .clipped()
-                
-                Picker("Minutes", selection: $selectedMinutes) {
-                    ForEach(0..<60, id: \.self) { minute in
-                        Text("\(minute) min").tag(minute)
-                    }
-                }
-                .pickerStyle(WheelPickerStyle())
-                .frame(width: 100)
-                .clipped()
-                
+                DurationPicker(time: $duration)
                 Button(action: addInterval) {
                     HStack {
                         Text("Add")
                         Image(systemName: "checkmark")
                     }
                     .padding()
-                    .background(ButtonDisabled() ? Color.gray : Color.green)
-                    .foregroundColor(.white)
+                    .background(buttonDisabled ? Color.gray : Color.green)
+                    .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
-                .disabled(ButtonDisabled())
+                .disabled(buttonDisabled)
             }
             .padding(.vertical, 5)
         }
@@ -162,7 +157,6 @@ struct PlannedWorkoutTime: View {
         Text("Set a reminder for a time on the day of your workout.")
             .multilineTextAlignment(.leading)
             .font(.subheadline)
-            .foregroundColor(.gray)
         
         if isPickerExpanded {
             ZStack {
@@ -182,11 +176,11 @@ struct PlannedWorkoutTime: View {
                                 Image(systemName: "checkmark")
                             }
                             .padding()
-                            .background(ButtonDisabled() ? Color.gray : Color.green)
-                            .foregroundColor(.white)
+                            .background(buttonDisabled ? Color.gray : Color.green)
+                            .foregroundStyle(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
-                        .disabled(ButtonDisabled())
+                        .disabled(buttonDisabled)
                     }
                     Spacer()
                 }
@@ -196,30 +190,20 @@ struct PlannedWorkoutTime: View {
     
     private var intervalList: some View {
         Section {
-            if userData.settings.notificationIntervals.isEmpty {
+            if userData.settings.notifications.intervals.isEmpty {
                 Text("No Notification intervals set.")
                     .padding()
             }
             else {
-                ForEach(userData.settings.notificationIntervals, id: \.self) { interval in
-                    let hours = Int(interval) / 3600
-                    let minutes = (Int(interval) % 3600) / 60
+                ForEach(userData.settings.notifications.intervals, id: \.self) { interval in
                     HStack {
-                        if minutes == 0 {
-                            Text("\(hours) hr Before Workout")
-                        }
-                        else if hours == 0 {
-                            Text("\(minutes) min Before Workout")
-                        }
-                        else {
-                            Text("\(hours) hr \(minutes) min Before Workout")
-                        }
+                        Text(Format.formatDuration(Int(interval)))
                         Spacer()
                         Button(action: {
                             removeInterval(interval)
                         }) {
                             Image(systemName: "trash")
-                                .foregroundColor(.red)
+                                .foregroundStyle(.red)
                         }
                     }
                     .padding(.vertical, 5)
@@ -232,12 +216,12 @@ struct PlannedWorkoutTime: View {
     
     private var timeOfDayList: some View {
         Section {
-            if userData.settings.notificationTimes.isEmpty {
+            if userData.settings.notifications.times.isEmpty {
                 Text("No Notification times set.")
                     .padding()
             }
             else {
-                ForEach(userData.settings.notificationTimes, id: \.self) { time in
+                ForEach(userData.settings.notifications.times, id: \.self) { time in
                     HStack {
                         Text("\(Format.formatTimeComponents(time))")
                         Spacer()
@@ -245,7 +229,7 @@ struct PlannedWorkoutTime: View {
                             removeTime(time)
                         }) {
                             Image(systemName: "trash")
-                                .foregroundColor(.red)
+                                .foregroundStyle(.red)
                         }
                     }
                     .padding(.vertical, 5)
@@ -256,52 +240,43 @@ struct PlannedWorkoutTime: View {
         }
     }
     
-    var totalSeconds: Int { return (selectedHours * 3600) + (selectedMinutes * 60) }
-    
-    var components: DateComponents {
-        return Calendar.current.dateComponents([.hour, .minute], from: draftTime)
+   private var totalSeconds: Int { duration.inSeconds }
+        
+    private var components: DateComponents {
+        return CalendarUtility.shared.dateComponents([.hour, .minute], from: draftTime)
     }
     
-    private func ButtonDisabled() -> Bool {
+    private var buttonDisabled: Bool {
         return userData.settings.useDateOnly
-            ? userData.settings.notificationTimes.contains(components)
-            : totalSeconds == 0 || userData.settings.notificationIntervals.contains(TimeInterval(totalSeconds))
+            ? userData.settings.notifications.contains(components)
+            : totalSeconds == 0 || userData.settings.notifications.contains(TimeInterval(totalSeconds))
     }
     
     private func addInterval() {
-        guard !userData.settings.notificationIntervals.contains(TimeInterval(totalSeconds)) else {
-            isPickerExpanded = false; return
-        }
-        if totalSeconds > 0 {
-            userData.settings.notificationIntervals.append(TimeInterval(totalSeconds))
-            userData.settings.notificationIntervals.sort() // Sort to ensure times are in ascending order
-            selectedHours = 1 // Reset to default 1 hour
-            selectedMinutes = 0 // Reset to 0 minutes
-            isPickerExpanded = false // Collapse picker after adding
-            userData.saveSingleStructToFile(\.settings, for: .settings)
-        }
+        let added = userData.settings.notifications.addInterval(totalSeconds: totalSeconds)
+        if added { duration = .hrMinToSec(hours: 1, minutes: 0) }
+        isPickerExpanded = false
+        save(shouldSave: added)
     }
     
     private func removeInterval(_ interval: TimeInterval) {
-        if let index = userData.settings.notificationIntervals.firstIndex(of: interval) {
-            userData.settings.notificationIntervals.remove(at: index)
-            userData.saveSingleStructToFile(\.settings, for: .settings)
-        }
+        let removed = userData.settings.notifications.removeInterval(interval)
+        save(shouldSave: removed)
     }
     
     // MARK: - Time-of-day helpers
     private func addTime() {
-        guard !userData.settings.notificationTimes.contains(components) else {
-            isPickerExpanded = false; return
-        }
-        userData.settings.notificationTimes.append(components)
-        userData.settings.notificationTimes.sort { ($0.hour ?? 0, $0.minute ?? 0) < ($1.hour ?? 0, $1.minute ?? 0) }
-        userData.saveSingleStructToFile(\.settings, for: .settings)
+        let added = userData.settings.notifications.addTime(components: components)
         isPickerExpanded = false
+        save(shouldSave: added)
     }
 
     private func removeTime(_ comps: DateComponents) {
-        userData.settings.notificationTimes.removeAll { $0 == comps }
-        userData.saveSingleStructToFile(\.settings, for: .settings)
+        let removed = userData.settings.notifications.removeTime(comps)
+        save(shouldSave: removed)
+    }
+    
+    private func save(shouldSave: Bool) {
+        if shouldSave { userData.saveSingleStructToFile(\.settings, for: .settings) }
     }
 }

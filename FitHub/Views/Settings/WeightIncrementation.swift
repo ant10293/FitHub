@@ -113,7 +113,7 @@ struct WeightIncrementation: View {
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(Color.blue)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                         .padding(.vertical)
                 }
@@ -134,10 +134,10 @@ struct WeightIncrementation: View {
             )
         }
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 Button(action: { reset() }) {
                     Text("Reset")
-                        .foregroundColor(isDefault ? Color.gray : Color.red)        // make the label red
+                        .foregroundStyle(isDefault ? Color.gray : Color.red)        // make the label red
                         .disabled(isDefault)       // disable when no items
                 }
             }
@@ -158,30 +158,57 @@ struct WeightIncrementation: View {
         return formatter
     }
     
+    private var isImperial: Bool { UnitSystem.current == .imperial }
+    
     private var isDefault: Bool {
-        platedRounding == 5 && singlePegPlatedRounding == 2.5 && smallWeightsRounding == 5 && pinLoadedRounding == 2.5
+        if isImperial {
+            platedRounding == 5 && singlePegPlatedRounding == 2.5 && smallWeightsRounding == 5 && pinLoadedRounding == 2.5
+        } else {
+            platedRounding == 2.5 && singlePegPlatedRounding == 1.25 && smallWeightsRounding == 2.5 && pinLoadedRounding == 1.25
+        }
     }
     
     private func initializeVariables() {
-        platedRounding = ctx.userData.settings.roundingPreference.plated
-        singlePegPlatedRounding = ctx.userData.settings.roundingPreference.platedSinglePeg
-        pinLoadedRounding = ctx.userData.settings.roundingPreference.pinLoaded
-        smallWeightsRounding = ctx.userData.settings.roundingPreference.smallWeights
+        if isImperial {
+            platedRounding = ctx.userData.settings.roundingPreference.lb.plated.inLb
+            singlePegPlatedRounding = ctx.userData.settings.roundingPreference.lb.platedSinglePeg.inLb
+            pinLoadedRounding = ctx.userData.settings.roundingPreference.lb.pinLoaded.inLb
+            smallWeightsRounding = ctx.userData.settings.roundingPreference.lb.smallWeights.inLb
+        } else {
+            platedRounding = ctx.userData.settings.roundingPreference.kg.plated.inKg
+            singlePegPlatedRounding = ctx.userData.settings.roundingPreference.kg.platedSinglePeg.inKg
+            pinLoadedRounding = ctx.userData.settings.roundingPreference.kg.pinLoaded.inKg
+            smallWeightsRounding = ctx.userData.settings.roundingPreference.kg.smallWeights.inKg
+        }
     }
     
     private func reset() {
-        platedRounding = 5
-        singlePegPlatedRounding = 2.5
-        pinLoadedRounding = 2.5
-        smallWeightsRounding = 5
+        if isImperial {
+            platedRounding = 5
+            singlePegPlatedRounding = 2.5
+            pinLoadedRounding = 2.5
+            smallWeightsRounding = 5
+        } else {
+            platedRounding = 2.5
+            singlePegPlatedRounding = 1.25
+            pinLoadedRounding = 1.25
+            smallWeightsRounding = 2.5
+        }
         saveChanges()
     }
     
-    private func saveChanges() {        
-        ctx.userData.settings.roundingPreference.plated = platedRounding
-        ctx.userData.settings.roundingPreference.platedSinglePeg = singlePegPlatedRounding
-        ctx.userData.settings.roundingPreference.pinLoaded = pinLoadedRounding
-        ctx.userData.settings.roundingPreference.smallWeights = smallWeightsRounding
+    private func saveChanges() {
+        if isImperial {
+            ctx.userData.settings.roundingPreference.lb.plated = Mass(lb: platedRounding)
+            ctx.userData.settings.roundingPreference.lb.platedSinglePeg = Mass(lb: singlePegPlatedRounding)
+            ctx.userData.settings.roundingPreference.lb.pinLoaded = Mass(lb: pinLoadedRounding)
+            ctx.userData.settings.roundingPreference.lb.smallWeights = Mass(lb: smallWeightsRounding)
+        } else {
+            ctx.userData.settings.roundingPreference.kg.plated = Mass(kg: platedRounding)
+            ctx.userData.settings.roundingPreference.kg.platedSinglePeg = Mass(kg: singlePegPlatedRounding)
+            ctx.userData.settings.roundingPreference.kg.pinLoaded = Mass(kg: pinLoadedRounding)
+            ctx.userData.settings.roundingPreference.kg.smallWeights = Mass(kg: smallWeightsRounding)
+        }
         
         ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
         ctx.toast.showSaveConfirmation()  // Trigger the notification

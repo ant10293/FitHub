@@ -49,7 +49,6 @@ final class Logger {
             entry += "[\(stamp)] "
         }
         
-        
         entry += message
 
         switch lineBreak {
@@ -64,8 +63,11 @@ final class Logger {
 extension Logger {
     /// Documents/ + filename
     static func url(for fileName: String) -> URL {
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                     .appendingPathComponent(fileName)
+        guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            // Fallback to home directory if documents directory is unavailable
+            return URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(fileName)
+        }
+        return documentsURL.appendingPathComponent(fileName)
     }
 
     /// Flush the buffer and return the *filename* (not the URL).
@@ -89,6 +91,118 @@ extension Logger {
     private static func deleteLog(at url: URL) -> Bool {
         do    { try FileManager.default.removeItem(at: url); return true }
         catch { return false }
+    }
+}
+
+
+import Foundation
+
+extension Logger {
+    // MARK: - Timing token
+    struct TimingToken {
+        let label: String
+        let start: DispatchTime
+        let indentTabs: Int
+        let lineBreak: LineBreakPosition
+        let numLines: Int
+    }
+
+    /// Begin a timed section. Pair with `end(_:)`.
+    @discardableResult
+    func start(_ label: String,
+               indentTabs: Int = 0,
+               lineBreak: LineBreakPosition = .none,
+               numLines: Int = 1) -> TimingToken
+    {
+        TimingToken(
+            label: label,
+            start: .now(),
+            indentTabs: indentTabs,
+            lineBreak: lineBreak,
+            numLines: numLines
+        )
+    }
+
+    /// Finish a timed section and emit `⏱ label — N.nn ms`.
+    func end(_ token: TimingToken,
+             minMs: Double = 0,
+             suffix: String? = nil,
+             lineBreak: LineBreakPosition? = nil)
+    {
+        let end = DispatchTime.now()
+        let ns  = Double(end.uptimeNanoseconds &- token.start.uptimeNanoseconds)
+        let ms  = ns / 1_000_000.0
+        guard ms >= minMs else { return }
+
+        let tail = (suffix.map { " (\($0))" }) ?? ""
+        let msg  = String(format: "⏱ %@ — %.1f ms%@", token.label, ms, tail)
+
+        add(msg,
+            timestamp: false,
+            lineBreak: lineBreak ?? token.lineBreak,
+            numLines: token.numLines,
+            indentTabs: token.indentTabs)
+    }
+
+    /// Time a synchronous closure.
+    @discardableResult
+    func time<T>(_ label: String,
+                 indentTabs: Int = 0,
+                 minMs: Double = 0,
+                 lineBreak: LineBreakPosition = .none,
+                 numLines: Int = 1,
+                 _ work: () -> T) -> T
+    {
+        let tok = start(label, indentTabs: indentTabs, lineBreak: lineBreak, numLines: numLines)
+        let result = work()
+        end(tok, minMs: minMs)
+        return result
+    }
+
+    /// Time an async closure.
+    @discardableResult
+    func timeAsync<T>(_ label: String,
+                      indentTabs: Int = 0,
+                      minMs: Double = 0,
+                      lineBreak: LineBreakPosition = .none,
+                      numLines: Int = 1,
+                      _ work: () async -> T) async -> T
+    {
+        let tok = start(label, indentTabs: indentTabs, lineBreak: lineBreak, numLines: numLines)
+        let result = await work()
+        end(tok, minMs: minMs)
+        return result
+    }
+
+    // MARK: - RAII scope (auto-logs on scope exit)
+    final class Scope {
+        private let logger: Logger
+        private let token: TimingToken
+        private let minMs: Double
+        private let suffix: () -> String?
+
+        init(logger: Logger, token: TimingToken, minMs: Double, suffix: @escaping () -> String?) {
+            self.logger = logger
+            self.token  = token
+            self.minMs  = minMs
+            self.suffix = suffix
+        }
+
+        deinit {
+            logger.end(token, minMs: minMs, suffix: suffix())
+        }
+    }
+
+    /// Create a scope that ends automatically on `deinit`.
+    func scope(_ label: String,
+               indentTabs: Int = 0,
+               minMs: Double = 0,
+               lineBreak: LineBreakPosition = .none,
+               numLines: Int = 1,
+               suffix: @escaping () -> String? = { nil }) -> Scope
+    {
+        let tok = start(label, indentTabs: indentTabs, lineBreak: lineBreak, numLines: numLines)
+        return Scope(logger: self, token: tok, minMs: minMs, suffix: suffix)
     }
 }
 

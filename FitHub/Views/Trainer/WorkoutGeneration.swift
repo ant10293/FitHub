@@ -16,6 +16,7 @@ struct WorkoutGeneration: View {
     @State private var showingTemplateDetail: Bool = false // control the navigation to TemplateDetailView
     @State private var showingExerciseOptions: Bool = false
     @State private var showingLogDetail: Bool = false   // ← add near other @State vars
+    @State private var expandList: Bool = false
     @State private var currentTemplateIndex: Int = 0
     @State private var selectedExercise: Exercise?
     @State private var alertMessage: String = ""
@@ -27,110 +28,20 @@ struct WorkoutGeneration: View {
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
-                if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Workout Plan Generated!", height: 150).zIndex(1) }
-                VStack {
-                    HStack {
-                        Spacer()
-                        Button(action: previousTemplate) {
-                            Image(systemName: "arrow.left").bold()
-                                .contentShape(Rectangle())
-                                .disabled(showingExerciseOptions)
-                        }
-                        
-                        HStack {
-                            VStack(spacing: 4) {
-                                Text(ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex]?.name ?? "No Template")
-                                
-                                if let categories = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex]?.categories {
-                                    Text(SplitCategory.concatenateCategories(for: categories))
-                                        .font(.subheadline)
-                                        .lineLimit(2)
-                                        .minimumScaleFactor(0.7)
-                                        .multilineTextAlignment(.center)
-                                        .foregroundColor(.gray)
-                                        .zIndex(1)  // Ensures is above all other content
-                                }
-                            }
-                            
-                            Image(systemName: "square.and.pencil")
-                                .foregroundColor(.blue)
-                                .padding(.leading, -5)
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture { showingTemplateDetail = true }
-                        .frame(alignment: .center)
-                        .padding(.horizontal)
-                        
-                        Button(action: nextTemplate) {
-                            Image(systemName: "arrow.right").bold()
-                                .contentShape(Rectangle())
-                                .disabled(showingExerciseOptions)
-                        }
-                        Spacer()
-                    }
+                if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Workout Plan Generated!").zIndex(1) }
+                
+                selectionBar
+                ExpandCollapseList(expandList: $expandList)
+                exerciseList
+                manageSection
                     
-                    List {
-                        if let template = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] {
-                            Section {
-                                ForEach(template.exercises, id: \.id) { exercise in
-                                    ExerciseRow(exercise, secondary: true) {
-                                        Button(action: {
-                                            selectedExercise = exercise
-                                            showingExerciseOptions = true
-                                        }) {
-                                            Image(systemName: "ellipsis")
-                                                .imageScale(.medium)
-                                                .contentShape(Rectangle())
-                                        }
-                                        .buttonStyle(PlainButtonStyle())
-                                    } detail: {
-                                        Text(subtitle(for: exercise))
-                                            .font(.subheadline)
-                                            .foregroundColor(.gray)
-                                    }
-                                }
-                            } header: {
-                                Text("\(template.numExercises) Exercises")
-                                    .font(.caption)
-                            }
-                        }
-                    }
-                    .disabled(showingExerciseOptions)
-                    .padding(.top, -5) // Reduce space above the list
-                }
-                .padding(.horizontal)
-                
-                Button("Modify Workout Generation") { showingCustomizationForm = true }
-                .disabled(showingExerciseOptions)
-                .font(.subheadline)
-                .padding()
-                
-                Button("Generate Workout Plan") {
-                    print("keepCurrentExercises: \(ctx.userData.workoutPrefs.keepCurrentExercises)")
-                    ctx.userData.generateWorkoutPlan(exerciseData: ctx.exercises, equipmentData: ctx.equipment, keepCurrentExercises: ctx.userData.workoutPrefs.keepCurrentExercises, nextWeek: false)
-                    ctx.toast.showSaveConfirmation(duration: 2)
-                }
-                .disabled(showingExerciseOptions)
-                .foregroundColor(.white)
-                .padding()
-                .background(!showingExerciseOptions ? Color.blue : Color.gray)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .clipShape(Rectangle())
-                
-                if let creationDate = ctx.userData.workoutPlans.workoutsCreationDate {
-                    Text("Last Generated on: \(Format.formatDate(creationDate))")
-                        .font(.caption)
-                        .padding(.vertical)
-                        .padding(.horizontal, 30)
-                        .multilineTextAlignment(.center)
-                }
-                
                 Spacer()
             }
+            .padding(.horizontal)
         }
         .navigationBarTitle("Workout Generation", displayMode: .inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 if ctx.userData.workoutPlans.logFileURL != nil {      // only show when we have a file
                     Button {
                         showingLogDetail = true                       // push detail view
@@ -154,9 +65,7 @@ struct WorkoutGeneration: View {
             }
         }
         .navigationDestination(isPresented: $showingCustomizationForm) { WorkoutCustomization() }
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text("Template updated"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-        }
+        .alert(isPresented: $showAlert) { Alert(title: Text("Template updated"), message: Text(alertMessage), dismissButton: .default(Text("OK"))) }
         .overlay(
             Group {
                 if showingExerciseOptions, let exercise = selectedExercise {
@@ -164,7 +73,7 @@ struct WorkoutGeneration: View {
                         showAlert: $showAlert,
                         alertMessage: $alertMessage,
                         replacedExercises: $replacedExercises,
-                        template: $ctx.userData.workoutPlans.trainerTemplates[currentTemplateIndex],
+                        template: $ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] ?? .constant(WorkoutTemplate(name: "Default", exercises: [], categories: [])),
                         exercise: exercise,
                         onClose: {
                             showingExerciseOptions = false
@@ -175,17 +84,116 @@ struct WorkoutGeneration: View {
         )
     }
     
-    private func subtitle(for exercise: Exercise) -> String {
-        let repRange = getRepRange(for: exercise)
-        return "Sets: \(exercise.sets), Reps: \(repRange)"
+    private var selectionBar: some View {
+        HStack {
+            Spacer()
+            Button(action: previousTemplate) {
+                Image(systemName: "arrow.left").bold()
+                    .contentShape(Rectangle())
+                    .disabled(showingExerciseOptions)
+            }
+            
+            HStack {
+                VStack(spacing: 4) {
+                    Text(ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex]?.name ?? "No Template")
+                    
+                    if let categories = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex]?.categories {
+                        Text(SplitCategory.concatenateCategories(for: categories))
+                            .font(.subheadline)
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.7)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.gray)
+                            .zIndex(1)  // Ensures is above all other content
+                    }
+                }
+                
+                Image(systemName: "square.and.pencil")
+                    .foregroundStyle(.blue)
+                    .padding(.leading, -5)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture { showingTemplateDetail = true }
+            .frame(alignment: .center)
+            .padding(.horizontal)
+            
+            Button(action: nextTemplate) {
+                Image(systemName: "arrow.right").bold()
+                    .contentShape(Rectangle())
+                    .disabled(showingExerciseOptions)
+            }
+            Spacer()
+        }
     }
     
-    private func getRepRange(for exercise: Exercise) -> String {
-        let reps = exercise.setDetails.compactMap { $0.reps }
-        guard let minReps = reps.min(), let maxReps = reps.max() else {
-            return "0-0"
+    private var exerciseList: some View {
+        List {
+            if let template = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] {
+                Section {
+                    ForEach(template.exercises, id: \.id) { exercise in
+                        ExerciseRow(
+                            exercise,
+                            secondary: true,
+                            heartOverlay: true,
+                            favState: FavoriteState.getState(for: exercise, userData: ctx.userData)
+                        ) {
+                            Button(action: {
+                                selectedExercise = exercise
+                                showingExerciseOptions = true
+                            }) {
+                                Image(systemName: "ellipsis")
+                                    .imageScale(.medium)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        } detail: {
+                            exercise.setsSubtitle
+                                .font(.subheadline)
+                                .foregroundStyle(Color.secondary)
+                        }
+                    }
+                } header: {
+                    Text("\(template.numExercises) Exercises")
+                        .font(.caption)
+                }
+            }
         }
-        return "\(minReps)-\(maxReps)"
+        .disabled(showingExerciseOptions)
+        .padding(.top, -5) // Reduce space above the list
+        .frame(maxHeight: !expandList ? UIScreen.main.bounds.height * 0.66 : .infinity)
+    }
+    
+    @ViewBuilder private var manageSection: some View {
+        if !expandList {
+            Button("Modify Workout Generation") { showingCustomizationForm = true }
+                .disabled(showingExerciseOptions)
+                .font(.subheadline)
+                .padding()
+            
+            ActionButton(
+                title: "Generate Workout Plan",
+                enabled: !showingExerciseOptions,
+                width: .fit,
+                action: {
+                    ctx.userData.generateWorkoutPlan(
+                        exerciseData: ctx.exercises,
+                        equipmentData: ctx.equipment,
+                        keepCurrentExercises: ctx.userData.workoutPrefs.keepCurrentExercises,
+                        nextWeek: false,
+                        onDone: {
+                            ctx.toast.showSaveConfirmation(duration: 2)
+                        }
+                    )
+                }
+            )
+            
+            if let creationDate = ctx.userData.workoutPlans.workoutsCreationDate {
+                Text("Last Generated on: \(Format.formatDate(creationDate))")
+                    .font(.caption)
+                    .padding(.vertical)
+                    .multilineTextAlignment(.center)
+            }
+        }
     }
     
     private func previousTemplate() {

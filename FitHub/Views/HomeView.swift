@@ -6,7 +6,6 @@ struct HomeView: View {
     @EnvironmentObject private var ctx: AppContext
     @State private var showingFavoriteExercises: Bool = false
     @State private var showingExerciseSelection: Bool = false
-    //@State private var selectedExercise: String = "Bench Press"
     @State private var selectedExercise: UUID?
     @State private var selectedMeasurement: MeasurementType = .weight
     @State private var selectedView: GraphView = .exercisePerformance
@@ -20,22 +19,10 @@ struct HomeView: View {
             .onAppear(perform: initializeVariables)
             .listStyle(InsetGroupedListStyle())
             .navigationTitle("Home")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    NavigationLink(destination: SettingsView()) {
-                        Image(systemName: "gear")
-                            .imageScale(.large)
-                            .padding()
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: MenuView()) {
-                        Image(systemName: "line.horizontal.3")
-                            .imageScale(.large)
-                            .padding()
-                    }
-                }
-            }
+            .customToolbar(
+                settingsDestination: { AnyView(SettingsView()) },
+                menuDestination: { AnyView(MenuView()) }
+            )
         }
     }
     
@@ -56,21 +43,21 @@ struct HomeView: View {
     private var profileSection: some View {
         Section {
             HStack {
-                NavigationLink(destination: UserProfileView()) {
+                NavigationLink(destination: LazyDestination { UserProfileView() }) {
                     Image(systemName: "person.crop.circle")
                         .resizable()
                         .scaledToFit()
                         .frame(width: UIScreen.main.bounds.width * 0.125) 
-                        .foregroundColor(colorScheme == .dark ? .gray : .black)
+                        .foregroundStyle(colorScheme == .dark ? .gray : .black)
                     
                     VStack(alignment: .leading) {
                         Text(ctx.userData.profile.userName)
                             .font(.title2)
-                            .foregroundColor(colorScheme == .dark ? .white : .black)
+                            .foregroundStyle(colorScheme == .dark ? .white : .black)
                         
                         Text("\(ctx.userData.sessionTracking.totalNumWorkouts) workouts")
                             .font(.subheadline)
-                            .foregroundColor(colorScheme == .dark ? .gray : .black)
+                            .foregroundStyle(colorScheme == .dark ? .gray : .black)
                     }
                     Spacer()
                 }
@@ -80,13 +67,13 @@ struct HomeView: View {
             Button(action: { showingFavoriteExercises = true }) {
                 HStack {
                     Text("Favorite Exercises")
-                        .foregroundColor(colorScheme == .dark ? .white : .black)
+                        .foregroundStyle(colorScheme == .dark ? .white : .black)
                         .font(.headline)
                         .fontWeight(.medium)
                         .frame(alignment: .leading)
                     Spacer()
                     Image(systemName: "heart.fill")
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                         .frame(alignment: .trailing)
                 }
                 .padding()
@@ -141,12 +128,7 @@ struct HomeView: View {
                 let perf = ctx.exercises.allExercisePerformance[selectedExercise]
                 
                 if let ex = ctx.exercises.exercise(for: selectedExercise) {
-                    ExercisePerformanceGraph(
-                        exercise: ex,
-                        value: perf?.maxValue,
-                        currentMaxDate: perf?.currentMaxDate,
-                        pastMaxes: perf?.pastMaxes ?? []
-                    )
+                    ExercisePerformanceGraph(exercise: ex, performance: perf)
                 }
             }
             
@@ -208,15 +190,15 @@ struct HomeView: View {
         HStack(spacing: 5) {
             if let exercise = unwrappedExercise {
                 Text(exercise.name)
-                    .foregroundColor(.blue)
+                    .foregroundStyle(.blue)
             } else {
                 Text("Select Exercise")
-                    .foregroundColor(.blue)
+                    .foregroundStyle(.blue)
             }
             Image(systemName: "chevron.up.chevron.down")
                 .font(.caption)
                 .fontWeight(.semibold)
-                .foregroundColor(.blue)
+                .foregroundStyle(.blue)
         }
     }
 }

@@ -1,88 +1,106 @@
 import SwiftUI
 
 struct StrengthPercentileView: View {
-    var maxValue: Double
+    var maxValue: PeakMetric
     var age: Int
-    var weight: Double
+    var bodyweight: Mass
     var gender: Gender
     var exercise: Exercise
-    var maxValuesAge: [String: Double]
-    var maxValuesBW: [String: Double]
-    var percentile: Int
-    
+    var maxValuesAge: [String: PeakMetric]
+    var maxValuesBW: [String: PeakMetric]
+    var percentile: Int?
     
     var body: some View {
         VStack {
-            headerView
-            if exercise.type.usesWeight {
-                maxView(usesWeight: true)
-            } else {
-                maxView(usesWeight: false)
-            }
-            Text(getTitle())
-                .font(.headline)
-                .padding(.top, 15)
+            Text("Strength Standards")
+                .font(.title2)
+                .padding(.bottom, 10)
             
-            statsViews
+            maxView(usesWeight: exercise.type.usesWeight)
+
+            Text("\(exercise.performanceTitle) values for \(exercise.name):")
+                .font(.headline)
+                .padding(.top)
+            
+            ageBasedStats
+                .padding(.bottom)
+            weightBasedStats
         }
     }
     
     // MARK: - Subviews
-    
-    private var headerView: some View {
-        Text("Strength Standards")
-            .font(.title2)
-            .padding(.bottom, 10)
-    }
-    
     private func maxView(usesWeight: Bool) -> some View {
-        if maxValue == 0 {
+        if maxValue.actualValue <= 0 {
             return AnyView(
-                Text(usesWeight ? "No one rep max available for this exercise." : "No max reps available for this exercise.")
+                Text("No \(exercise.performanceTitle) available for this exercise.")
                     .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                     .padding(.bottom)
             )
         } else {
             return AnyView(
                 VStack {
-                    Text(usesWeight ? "Your one rep max of " : "Your max of ") +
-                    Text("\(Format.smartFormat(maxValue)) \(usesWeight ? "lbs" : "reps")").bold() +
-                    Text(" makes you stronger than ") +
-                    Text("\(percentile)%").bold() +
-                    Text(" of \(gender)s in your weight and age range.")
+                    if let percentile = percentile {
+                        (Text(usesWeight ? "Your one rep max of " : "Your max of ")
+                         + maxValue.labeledText.bold()
+                         + Text(" makes you stronger than ")
+                         + Text("\(percentile)%").bold()
+                         + Text(" of \(gender)s in your weight and age range."))
+                    } else {
+                        Text("No percentile data available for this exercise.")
+                            .font(.subheadline)
+                            .foregroundStyle(.gray)
+                            .padding(.bottom)
+                    }
                 }
                 .padding(.horizontal)
             )
         }
     }
     
-    private var statsViews: some View {
-        VStack(spacing: 24) {
-            ageBasedStats
-            weightBasedStats
-        }
-    }
-    
+    // NOTE: Titles were already correct; these sections just show the table and a gray detail.
     private var ageBasedStats: some View {
-        VStack(alignment: .leading) {
-            Text("Based on Age") + Text(" (\(age) years)").foregroundColor(.gray)
-            Divider()
-            HorizontalTableView(values: get1RMValues(key: "Age"), oneRepMax: maxValue)
-        }
-        .font(.headline)
-        .padding()
-        .background(Color(UIColor.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        statSection(
+            title: "Based on Body Weight",
+            key: .bodyweight,
+            detail:
+                Text(" (").foregroundStyle(.gray)
+                + bodyweight.formattedText(asInteger: true).foregroundStyle(.gray)
+                + Text(")").foregroundStyle(.gray)
+        )
     }
     
     private var weightBasedStats: some View {
+        statSection(
+            title: "Based on Age",
+            key: .age,
+            detail:
+                Text(" (\(age) ").foregroundStyle(.gray)
+                + Text("years").foregroundStyle(.gray).fontWeight(.light)
+                + Text(")").foregroundStyle(.gray)
+        )
+    }
+    
+    private func statSection(title: String, key: CSVKey, detail: Text? = nil) -> some View {
         VStack(alignment: .leading) {
-            Text("Based on Body Weight") + Text(" (\(weight, specifier: "%.0f") lbs)").foregroundColor(.gray)
+            // Header
+            let header: Text = {
+                if let detail { return Text(title).font(.headline) + detail }
+                return Text(title)
+            }()
+            header
+
             Divider()
-            HorizontalTableView(values: get1RMValues(key: "BW"), oneRepMax: maxValue)
+
+            if let values = get1RMValues(key: key) {
+                HorizontalTableView(values: values, maxValue: maxValue.actualValue)
+            } else {
+                Text("No data available for \(key).")
+                    .font(.subheadline)
+                    .foregroundStyle(.red)
+                    .padding()
+            }
         }
-        .font(.headline)
         .padding()
         .background(Color(UIColor.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -90,42 +108,46 @@ struct StrengthPercentileView: View {
     
     // MARK: - Helper Methods
     
-    private func getTitle() -> String {
-        return exercise.type.usesWeight ? "1RM Values for \(exercise.name):" : "Max Reps for \(exercise.name):"
-    }
-    
-    private func get1RMValues(key: String) -> [(key: String, value: Double)] {
-        var values: [String: Double] = [:]
-        if key == "Age" {
+    // Return only the *category* thresholds as PeakMetric, in display order.
+    private func get1RMValues(key: CSVKey) -> [(key: String, value: PeakMetric)]? {
+        var values: [String: PeakMetric] = [:]
+        
+        if key == .age {
             values = maxValuesAge
-        } else if key == "BW" {
+        } else if key == .bodyweight {
             values = maxValuesBW
         }
-        return values.filter { ["BW", "Age", "Beg.", "Nov.", "Int.", "Adv.", "Elite"].contains($0.key) }
+        if values.isEmpty { return nil }
+
+        // Only include strength categories (no "Age"/"BW" cells in the table)
+        let wanted = ["Beg.", "Nov.", "Int.", "Adv.", "Elite"]
+        let filtered = values.filter { wanted.contains($0.key) }
+        if filtered.isEmpty { return nil }
+
+        // Stable sort by our explicit order
+        return filtered
+            .map { ($0.key, $0.value) }
             .sorted { lhs, rhs in
-                let order = ["BW", "Age", "Beg.", "Nov.", "Int.", "Adv.", "Elite"]
-                return order.firstIndex(of: lhs.key)! < order.firstIndex(of: rhs.key)!
+                (wanted.firstIndex(of: lhs.0) ?? .max) < (wanted.firstIndex(of: rhs.0) ?? .max)
             }
     }
     
     struct HorizontalTableView: View {
-        var values: [(key: String, value: Double)]
-        var oneRepMax: Double
+        var values: [(key: String, value: PeakMetric)]
+        var maxValue: Double
             
         var body: some View {
-            let userCategory = oneRepMax > 0 ? findUserCategory(oneRepMax, values: values) : nil
+            let userCategory = maxValue > 0 ? findUserCategory(maxValue, values: values) : nil
             
             HStack {
-                ForEach(values, id: \.key) { category, value in
+                ForEach(values, id: \.key) { category, metric in
                     VStack {
-                        let isAgeBW = isAge_BW(category: category)
                         Text(category)
                             .font(.subheadline)
-                            .bold(isAgeBW)
                         Divider().bold()
-                        Text("\(Int(value))")
+                        // PeakMetric handles unit rendering (e.g., "120 kg" or "18 reps")
+                        Text("\(Int(round(metric.displayValue)))")
                             .font(.body)
-                            .bold(isAgeBW)
                             .padding(4)
                             .background(category == userCategory ? Color.yellow.opacity(0.4) : Color.clear)
                             .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -134,58 +156,25 @@ struct StrengthPercentileView: View {
             }
         }
         
-        private func isAge_BW(category: String) -> Bool { return category == "Age" || category == "BW" }
-        
-        private func findUserCategory(_ oneRepMax: Double, values: [(key: String, value: Double)]) -> String {
-            let rounded1RM     = round(oneRepMax)
+        private func findUserCategory(_ maxValue: Double, values: [(key: String, value: PeakMetric)]) -> String {
+            let rm = round(maxValue)
 
-            // Look up the threshold numbers by enum instead of raw strings
-            let threshold: [StrengthLevel: Double] =
-                Dictionary(uniqueKeysWithValues: values.compactMap { row in
+            // Map raw keys → enum and compare on numeric thresholds
+            let thresholds: [StrengthLevel: Double] = Dictionary(
+                uniqueKeysWithValues: values.compactMap { row in
                     guard let lvl = StrengthLevel(rawValue: row.key) else { return nil }
-                    return (lvl, row.value)
-                })
+                    return (lvl, row.value.actualValue)
+                }
+            )
 
-            // Walk the enum from top to bottom; the first hit wins
-            for level in StrengthLevel.allCases.reversed() {
-                if isUser(in: level, oneRepMax: rounded1RM, threshold: threshold) {
-                    return level.rawValue
+            // Iterate in the enum's natural order; pick the highest level you meet
+            var winner = StrengthLevel.beginner.rawValue
+            for level in StrengthLevel.allCases {
+                if let t = thresholds[level], rm >= t {
+                    winner = level.rawValue
                 }
             }
-            return StrengthLevel.beginner.rawValue         // should never fall through
-        }
-
-        /// Decide whether `oneRepMax` belongs inside the given `level`,
-        /// based on the surrounding threshold table.
-        private func isUser(in level: StrengthLevel, oneRepMax: Double, threshold: [StrengthLevel: Double]) -> Bool {
-            // Helper to grab a threshold safely
-            func t(_ lvl: StrengthLevel) -> Double { threshold[lvl] ?? 0 }
-
-            // Figure out lower / upper bounds for this level
-            let all  = StrengthLevel.allCases
-            guard let idx = all.firstIndex(of: level) else { return false }
-
-            let lower: Double
-            let upper: Double
-
-            switch level {
-
-            case .beginner:
-                lower = 0
-                upper = (idx + 1 < all.count) ? t(all[idx + 1]) - 1 : .greatestFiniteMagnitude
-
-            case .elite:
-                lower = t(.elite)
-                upper = lower * 1.25          // ← your “elite buffer”
-
-            default:
-                lower = t(level)
-                upper = (idx + 1 < all.count) ? t(all[idx + 1]) - 1 : .greatestFiniteMagnitude
-            }
-
-            return (lower ... upper).contains(oneRepMax)
+            return winner
         }
     }
 }
-
-

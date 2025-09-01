@@ -17,7 +17,7 @@ struct InfoBanner: View {
     var body: some View {
         VStack {
             Text(text)
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .padding()
                 .background(bgColor)
                 .clipShape(RoundedRectangle(cornerRadius: 10))

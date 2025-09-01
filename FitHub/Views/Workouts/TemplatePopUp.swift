@@ -9,71 +9,39 @@ import SwiftUI
 
 struct TemplatePopup: View {
     @Environment(\.colorScheme) var colorScheme
+    @ObservedObject var userData: UserData
     @Binding var template: WorkoutTemplate
     @State private var disableMessage: String = "Invalid exercise(s) in template."
     var onClose: () -> Void
     var onBeginWorkout: () -> Void
     var onEdit: () -> Void
-    
-    var disableTemplate: Bool { WorkoutTemplate.shouldDisableTemplate(template: template) }
+    private var disableTemplate: Bool { template.shouldDisableTemplate }
 
     var body: some View {
         VStack {
-            HStack {
-                Button(action: onClose) {
-                    Image(systemName: "xmark")
-                        .contentShape(Rectangle())
-                        .padding()
-                }
-                
-                Spacer()
-                Text(template.name).bold().zIndex(1).multilineTextAlignment(.center)
-                Spacer()
-                
-                Button(action: onEdit) {
-                    Text("Edit")
-                        .padding()
-                }
-                .contentShape(Rectangle())
-            }
+            headerToolbar
             
             if let completionTime = template.estimatedCompletionTime, !template.exercises.isEmpty {
-                Text("Est. Completion Time: \(Format.formatDuration(completionTime, roundSeconds: true))")
+                Text("Est. Completion Time: \(Format.formatDuration(completionTime.inSeconds, roundSeconds: true))")
                     .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
             }
-            
-            Divider()
-          
+                      
             List {
                 if template.exercises.isEmpty {
-                    VStack {
-                        Image(systemName: "figure.walk")
-                            .font(.largeTitle)
-                            .padding()
-                            .foregroundColor(.blue)
-                        Text("Nothing Here...")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .multilineTextAlignment(.center)
-                            .fixedSize(horizontal: false, vertical: true)
-                        Text("Press 'Edit' to Build your Workout!")
-                            .foregroundColor(.primary)
-                            .multilineTextAlignment(.center)
-                            .fixedSize(horizontal: false, vertical: true) // Allow text to grow vertically
-                            .padding(.bottom)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .background(RoundedRectangle(cornerRadius: 12).fill(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground)))
+                    emptyView
                 } else {
                     Section {
                         ForEach(template.exercises, id: \.id) { exercise in
-                            ExerciseRow(exercise, secondary: true) { } detail: {
-                                Text("Sets: ")
+                            ExerciseRow(
+                                exercise,
+                                secondary: true,
+                                heartOverlay: true,
+                                favState: FavoriteState.getState(for: exercise, userData: userData)
+                            ) { } detail: {
+                                exercise.setsSubtitle
                                     .font(.caption)
-                                    .bold() +
-                                Text("\(exercise.sets)")
-                                    .font(.caption)
+                                    .foregroundStyle(Color.secondary)
                             }
                             .listRowBackground(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground))
                         }
@@ -89,23 +57,55 @@ struct TemplatePopup: View {
             if disableTemplate, !template.exercises.isEmpty {
                 Text(disableMessage)
                     .font(.caption)
-                    .foregroundColor(Color.red)
+                    .foregroundStyle(Color.red)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
             }
             
-            Button(action: onBeginWorkout) {
-                Text("Begin Workout")
-                .padding()
-                .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue))
-                .foregroundColor(.white)
-                .disabled(disableTemplate)
-            }
-            
-        
-            
+            ActionButton(title: "Begin Workout", enabled: !disableTemplate, width: .fit, action: onBeginWorkout)
         }
         .padding()
         .background(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground).opacity(0.6))
+    }
+    
+    private var emptyView: some View {
+        VStack {
+            Image(systemName: "figure.walk")
+                .font(.largeTitle)
+                .padding()
+                .foregroundStyle(.blue)
+            Text("Nothing Here...")
+                .font(.title2)
+                .fontWeight(.semibold)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("Press 'Edit' to Build your Workout!")
+                .foregroundStyle(Color.primary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true) // Allow text to grow vertically
+                .padding(.bottom)
+        }
+        .frame(maxWidth: .infinity)
+        .background(RoundedRectangle(cornerRadius: 12).fill(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground)))
+    }
+    
+    private var headerToolbar: some View {
+        HStack {
+            Button(action: onClose) {
+                Image(systemName: "xmark")
+                    .contentShape(Rectangle())
+                    .padding()
+            }
+            
+            Spacer()
+            Text(template.name).bold().zIndex(1).multilineTextAlignment(.center)
+            Spacer()
+            
+            Button(action: onEdit) {
+                Text("Edit")
+                    .padding()
+            }
+            .contentShape(Rectangle())
+        }
     }
 }

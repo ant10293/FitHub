@@ -82,7 +82,7 @@ struct SortSettings: View {
 
                     Text("Hides any exercise that requires equipment you haven’t selected.")
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(Color.secondary)
                 }
 
                 // ── Hide Difficult ─────────────────────────────
@@ -94,7 +94,7 @@ struct SortSettings: View {
 
                     Text("Filters out exercises that exceed your current strength level of '\(userData.evaluation.strengthLevel.fullName)'.")
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(Color.secondary)
                 }
 
                 // ── Hide Disliked ──────────────────────────────
@@ -106,7 +106,7 @@ struct SortSettings: View {
 
                     Text("Hides any exercise you’ve marked as “disliked.”")
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(Color.secondary)
                 }
             } header: {
                 Text("Visibility Filters")
@@ -114,9 +114,9 @@ struct SortSettings: View {
         }
         .navigationBarTitle("Exercise Sorting", displayMode: .inline)
         .toolbar {
-             ToolbarItem(placement: .navigationBarTrailing) {
+             ToolbarItem(placement: .topBarTrailing) {
                  Button("Reset") { resetAll() }
-                     .foregroundColor(isDefault ? Color.gray : Color.red)        // make the label red
+                     .foregroundStyle(isDefault ? Color.gray : Color.red)        // make the label red
                      .disabled(isDefault)       // disable when no items
              }
          }
@@ -125,7 +125,7 @@ struct SortSettings: View {
     private func resetAll() {
         userData.settings.saveSelectedSort = false
         userData.settings.enableSortPicker = true
-        userData.sessionTracking.exerciseSortOption = .simple
+        userData.sessionTracking.exerciseSortOption = .moderate
         userData.settings.sortByTemplateCategories = true
 
         userData.settings.hideUnequippedExercises = false
@@ -137,7 +137,7 @@ struct SortSettings: View {
 
     private var isDefault: Bool {
         return userData.settings.enableSortPicker
-            && userData.sessionTracking.exerciseSortOption == .simple
+            && userData.sessionTracking.exerciseSortOption == .moderate
             && userData.settings.sortByTemplateCategories
             && !userData.settings.saveSelectedSort
             && !userData.settings.hideUnequippedExercises

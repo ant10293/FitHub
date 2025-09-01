@@ -12,7 +12,8 @@ struct HistoryView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
+            //VStack(spacing: 20) {
+            ScrollView {
                 headerSection
                 
                 if showCalendar {
@@ -34,25 +35,13 @@ struct HistoryView: View {
                 
                 Spacer()
             }
-            .navigationTitle("History")
+           // .navigationBarTitle("History", displayMode: .inline)
             .background(Color(UIColor.systemGroupedBackground))
             .onAppear(perform: onAppearAction)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    NavigationLink(destination: SettingsView()) {
-                        Image(systemName: "gear")
-                            .imageScale(.large)
-                            .padding()
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: MenuView()) {
-                        Image(systemName: "line.horizontal.3")
-                            .imageScale(.large)
-                            .padding()
-                    }
-                }
-            }
+            .customToolbar(
+                settingsDestination: { AnyView(SettingsView()) },
+                menuDestination: { AnyView(MenuView()) }
+            )
         }
     }
     
@@ -89,6 +78,7 @@ struct HistoryView: View {
             )
             .padding(.trailing)
         }
+        .padding(.vertical)
     }
 
     private var LegendView: some View {
@@ -115,7 +105,7 @@ struct HistoryView: View {
                     Spacer()
                     Image(systemName: "chevron.right")
                         .frame(width: 15, height: 15)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                         .padding(.horizontal)
                 }
                 .contentShape(Rectangle())
@@ -126,14 +116,14 @@ struct HistoryView: View {
                 VStack {
                     Text("Last Month")
                         .font(.subheadline)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                     Text("\(workoutCountForLastMonth())")
                 }
                 .padding()
                 VStack {
                     Text("This Month")
                         .font(.subheadline)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                     
                     Text("\(workoutCountForCurrentMonth())")
                 }
@@ -148,12 +138,14 @@ struct HistoryView: View {
     }
     
     private func workoutCountForLastMonth() -> Int {
-        let lastMonth = calendar.date(byAdding: .month, value: -1, to: currentMonth)!
-        return workoutDates.filter { calendar.isDate($0, equalTo: lastMonth, toGranularity: .month) }.count
+        if let lastMonth = CalendarUtility.shared.previousMonth(from: currentMonth) {
+            return workoutDates.filter { CalendarUtility.shared.isDate($0, equalTo: lastMonth, toGranularity: .month) }.count
+        }
+        return 0
     }
     
     private func workoutCountForCurrentMonth() -> Int {
-        return workoutDates.filter { calendar.isDate($0, equalTo: currentMonth, toGranularity: .month) }.count
+        return workoutDates.filter { CalendarUtility.shared.isDate($0, equalTo: currentMonth, toGranularity: .month) }.count
     }
 }
 
@@ -183,3 +175,4 @@ extension Calendar {
         return self.isDate(date1, inSameDayAs: date2)
     }
 }
+

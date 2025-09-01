@@ -6,7 +6,7 @@ import Charts
 struct ConsistencyGraph: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var selectedTimeRange: TimeRange = .allTime
-    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
+    @State private var selectedYear: Int = CalendarUtility.shared.currentYear
     let workoutDates: [Date]
     let workoutDaysPerWeek: Int
     
@@ -47,7 +47,7 @@ struct ConsistencyGraph: View {
                             }
                         }
                         .chartYAxis {
-                            AxisMarks(position: .leading) {
+                            AxisMarks(position: .trailing) {
                                 AxisValueLabel()
                                 AxisTick()
                             }
@@ -59,11 +59,12 @@ struct ConsistencyGraph: View {
                             }
                         }
                         .padding()
+                        .chartYScale(domain: 0...7)
                         .frame(width: max(CGFloat(workoutData.count) * 60, UIScreen.main.bounds.width - 40), height: UIScreen.main.bounds.height * 0.33)
                         .overlay(alignment: .center) {
                             if workoutData.isEmpty {
                                 Text("No workout data available.")
-                                    .foregroundColor(.red)
+                                    .foregroundStyle(.red)
                                     .multilineTextAlignment(.center)
                             }
                         }
@@ -99,21 +100,24 @@ struct ConsistencyGraph: View {
     
     // Filter workoutDates based on selected time range
     private var filteredWorkoutDates: [Date] {
-        let calendar = Calendar.current
-        let now = Date()
         switch selectedTimeRange {
         case .month:
-            guard let oneMonthAgo = calendar.date(byAdding: .month, value: -1, to: now) else { return workoutDates }
-            return workoutDates.filter { $0 >= oneMonthAgo }
+            if let oneMonthAgo = CalendarUtility.shared.monthsAgo(1) {
+                return workoutDates.filter { $0 >= oneMonthAgo }
+            }
+            return workoutDates
         case .sixMonths:
-            guard let sixMonthsAgo = calendar.date(byAdding: .month, value: -6, to: now) else { return workoutDates }
-            return workoutDates.filter { $0 >= sixMonthsAgo }
+            if let sixMonthsAgo = CalendarUtility.shared.monthsAgo(6) {
+                return workoutDates.filter { $0 >= sixMonthsAgo }
+            }
+            return workoutDates
         case .year:
             // Use the selectedYear to compute start and end of the year.
-            guard let startDate = calendar.date(from: DateComponents(year: selectedYear, month: 1, day: 1)),
-                  let endDate = calendar.date(from: DateComponents(year: selectedYear, month: 12, day: 31))
-            else { return workoutDates }
-            return workoutDates.filter { $0 >= startDate && $0 <= endDate }
+            if let startDate = CalendarUtility.shared.startOfYear(selectedYear),
+               let endDate = CalendarUtility.shared.endOfYear(selectedYear) {
+                return workoutDates.filter { $0 >= startDate && $0 <= endDate }
+            }
+            return workoutDates
         case .allTime:
             return workoutDates
         }
@@ -121,40 +125,12 @@ struct ConsistencyGraph: View {
     
     // Generate workout data using filtered dates
     private var workoutData: [WorkoutData] {
-        let calendar = Calendar.current
-        let weeks = calendar.generateWeeklyIntervals(for: filteredWorkoutDates)
+        let weeks = CalendarUtility.shared.generateWeeklyIntervals(for: filteredWorkoutDates)
         return weeks.map { week in
-            let workoutCount = filteredWorkoutDates.filter { calendar.isDate($0, equalTo: week.start, toGranularity: .weekOfYear) }.count
+            let workoutCount = filteredWorkoutDates.filter { CalendarUtility.shared.isDate($0, equalTo: week.start, toGranularity: .weekOfYear) }.count
             let formattedWeek = Format.monthDay(week.start)
             return WorkoutData(week: week.start, formattedWeek: formattedWeek, workoutCount: workoutCount)
         }
     }
 }
 
-extension Calendar {
-    func generateWeeklyIntervals(for dates: [Date]) -> [DateInterval] {
-        guard let minDate = dates.min(), let maxDate = dates.max() else { return [] }
-        var intervals = [DateInterval]()
-        var currentStartDate = startOfWeek(for: minDate)
-        let endDate = endOfWeek(for: maxDate)
-        
-        while currentStartDate <= endDate {
-            if let interval = dateInterval(of: .weekOfYear, for: currentStartDate) {
-                intervals.append(interval)
-                currentStartDate = interval.end
-            } else {
-                break
-            }
-        }
-        
-        return intervals
-    }
-    
-    func startOfWeek(for date: Date) -> Date {
-        return dateInterval(of: .weekOfYear, for: date)!.start
-    }
-    
-    func endOfWeek(for date: Date) -> Date {
-        return dateInterval(of: .weekOfYear, for: date)!.end
-    }
-}

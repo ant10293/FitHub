@@ -9,6 +9,9 @@ import SwiftUI
 import Charts
 
 
+import SwiftUI
+import Charts
+
 struct WorkoutSummary: View {
     let summary: WorkoutSummaryData
     let exercises: [Exercise]
@@ -20,111 +23,107 @@ struct WorkoutSummary: View {
                 .font(.title)
                 .fontWeight(.bold)
                 .padding()
-            
-            // Pass exercises to the BarChartView
-            BarChartView(exercises: exercises, prExerciseNames: summary.exercisePRs)
-            
+
+            // Use precomputed per-exercise totals from summary
+            BarChartView(
+                exercises: exercises,
+                prExerciseIDs: summary.exercisePRs,
+                weightByExercise: summary.weightByExercise
+            )
+
             VStack(spacing: 20) {
-                StatRow(title: "Total Weight Lifted", value: String(format: "%.2f", summary.totalVolume).trimmingCharacters(in: CharacterSet(charactersIn: "0")).trimmingCharacters(in: CharacterSet(charactersIn: ".")) + " lbs")
+                // Label uses totalVolume (tonnage) – keep if that’s your intent
+                StatRow(title: "Total Weight Lifted", value: "\(summary.totalVolume.displayString)")
                 StatRow(title: "Total Reps Completed", value: "\(summary.totalReps)")
-                StatRow(title: "Time Elapsed", value: summary.totalTime)
+                StatRow(title: "Time Elapsed", value: summary.totalTime.displayString)
             }
             .padding()
-            
+
             ActionButton(title: "Done", color: .blue, action: onDone)
                 .padding()
-            
+
         }
-        .background(Color(.systemBackground).opacity(0.95))
+        .background(Color(.secondarySystemBackground).opacity(0.8))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .padding()
         .shadow(radius: 5)
     }
-    
+
     struct BarChartView: View {
         let exercises: [Exercise]
-        let prExerciseNames: [String] // List of exercise names that had a PR
+        let prExerciseIDs: [UUID]
+        let weightByExercise: [UUID: Double]
 
-        // Compute the total weight lifted for each exercise
-        var totalWeights: [Double] {
-            exercises.map { exercise in
-                exercise.setDetails.reduce(0) { total, set in
-                    total + (set.weight * Double(set.reps))
-                }
+        private var totalWeights: [Double] {
+            exercises.map { ex in
+                let v = weightByExercise[ex.id] ?? 0
+                return Mass(kg: v).displayValue
             }
         }
-        // Compute shortened names by extracting unique words
-        var shortenedExerciseNames: [String] {
+
+        private var shortenedExerciseNames: [String] {
             let wordFrequencies = exercises
                 .flatMap { $0.name.split(separator: " ") }
                 .reduce(into: [String: Int]()) { counts, word in
                     counts[String(word), default: 0] += 1
                 }
-            
+
             return exercises.map { exercise in
                 let words = exercise.name.split(separator: " ").map(String.init)
-                let uniqueWords = words.filter { wordFrequencies[$0] == 1 }
-                return uniqueWords.isEmpty ? exercise.name : uniqueWords.joined(separator: " ")
+                let unique = words.filter { wordFrequencies[$0] == 1 }
+                return unique.isEmpty ? exercise.name : unique.joined(separator: " ")
             }
         }
-        
-        var maxY: Double {
+
+        private var maxY: Double {
             let maxWeight = totalWeights.max() ?? 0
-            return maxWeight + (maxWeight * 0.1) // 10% padding on max weight
+            return maxWeight + (maxWeight * 0.1) // 10% headroom
         }
-        
+
         var body: some View {
             VStack {
                 Text("Total Weight Lifted per Exercise")
                     .font(.headline)
-                
-                // Plot the total weight lifted for each exercise
+
                 Chart {
                     ForEach(exercises.indices, id: \.self) { index in
                         let exercise = exercises[index]
                         let totalWeight = totalWeights[index]
-                        
-                        let isShortBar    = totalWeight < maxY * 0.30     // 30 % threshold
-                        let annotationPosition : AnnotationPosition = isShortBar ? .top     : .overlay
-                        let annotationAlignment : Alignment = isShortBar ? .bottom  : .top
+
+                        let isShortBar = totalWeight < maxY * 0.30
+                        let annotationPosition: AnnotationPosition = isShortBar ? .top : .overlay
+                        let annotationAlignment: Alignment = isShortBar ? .bottom : .top
 
                         BarMark(
-                            x: .value("Exercise", shortenedExerciseNames[index]), // Use shortened names
+                            x: .value("Exercise", shortenedExerciseNames[index]),
                             y: .value("Total Weight", totalWeight)
                         )
                         .annotation(position: annotationPosition, alignment: annotationAlignment) {
-                           if prExerciseNames.contains(exercise.name) {
-                               Image(systemName: "trophy.fill")
-                                   .foregroundColor(.yellow)
-                           }
-                       }
+                            if prExerciseIDs.contains(exercise.id) {
+                                Image(systemName: "trophy.fill")
+                                    .foregroundStyle(Color.gold)
+                            }
+                        }
                     }
                 }
-                .chartYScale(domain: 0...maxY) // Adjust the y-axis scale dynamically
+                .chartYScale(domain: 0...maxY)
                 .frame(height: 150)
             }
             .padding()
         }
     }
-    
+
     struct StatRow: View {
         let title: String
         let value: String
-        
+
         var body: some View {
             HStack {
-                Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+                Text(title).font(.subheadline).fontWeight(.semibold)
                 Spacer()
-                Text(value)
-                    .font(.subheadline)
+                Text(value).font(.subheadline)
             }
             .padding(.horizontal)
         }
     }
 }
-
-
-
-

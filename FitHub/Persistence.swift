@@ -22,24 +22,36 @@ struct PersistenceController {
 
         if let desc = container.persistentStoreDescriptions.first {
             desc.shouldInferMappingModelAutomatically = true
-            desc.shouldMigrateStoreAutomatically       = true
+            desc.shouldMigrateStoreAutomatically = true
+
             if inMemory {
                 desc.url = URL(fileURLWithPath: "/dev/null")
             } else {
-                desc.url = FileManager.default
-                    .urls(for: .applicationSupportDirectory, in: .userDomainMask)
-                    .first!
-                    .appendingPathComponent("FitHub.sqlite")
+                if let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+                    // ensure the directory exists
+                    try? FileManager.default.createDirectory(at: appSupport, withIntermediateDirectories: true)
+                    desc.url = appSupport.appendingPathComponent("FitHub.sqlite")
+                } else {
+                    // optional fallback: Documents
+                    if let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                        desc.url = docs.appendingPathComponent("FitHub.sqlite")
+                    } else {
+                        // Last resort fallback
+                        desc.url = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent("FitHub.sqlite")
+                    }
+                }
             }
         }
 
         container.loadPersistentStores { _, error in
             if let error = error as NSError? {
                 #if DEBUG
-                fatalError("CoreData load error \(error), \(error.userInfo)")
+                print("❌ CoreData load error: \(error), \(error.userInfo)")
                 #else
                 print("⚠️ CoreData load error:", error.localizedDescription)
                 #endif
+                // In production, we could show a user-friendly error message
+                // or attempt to recover from the error
             }
         }
 

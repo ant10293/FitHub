@@ -8,58 +8,71 @@
 import SwiftUI
 
 
+import SwiftUI
+
 struct BFCalculator: View {
     @ObservedObject var userData: UserData
     @StateObject private var kbd = KeyboardManager.shared
-    @State private var waist: String = ""
-    @State private var neck: String = ""
-    @State private var hip: String = ""
-    @State private var heightFeet: Int
-    @State private var heightInches: Int
-    @State private var showingResult: Bool = false
-    
+
+    // Store canonically (cm) but the UI will show / edit in the user’s unit via Binding adapter
+    @State private var waist: Length
+    @State private var neck:  Length
+    @State private var hip:   Length    // only used for female
+    @State private var height: Length
+
+    @State private var showingResult = false
+    @State private var computedBF: Double = 0
+
     init(userData: UserData) {
         _userData = ObservedObject(wrappedValue: userData)
-        _waist = State(initialValue: userData.currentMeasurementValue(for: .waist) == 0 ? "" : String(Format.smartFormat(userData.currentMeasurementValue(for: .waist))))
-        _neck = State(initialValue: userData.currentMeasurementValue(for: .neck) == 0 ? "" : String(Format.smartFormat(userData.currentMeasurementValue(for: .neck))))
-        _hip = State(initialValue: userData.currentMeasurementValue(for: .hips) == 0 ? "" : String(Format.smartFormat(userData.currentMeasurementValue(for: .hips))))
-        _heightFeet = State(initialValue: userData.physical.heightFeet)
-        _heightInches = State(initialValue: userData.physical.heightInches)
+
+        // Safely unwrap stored values (default to 0 cm if missing)
+        let waistLen  = userData.currentMeasurementValue(for: .waist).asLength ?? Length(cm: 0)
+        let neckLen   = userData.currentMeasurementValue(for: .neck).asLength  ?? Length(cm: 0)
+        let hipLen    = userData.currentMeasurementValue(for: .hips).asLength  ?? Length(cm: 0)
+        let heightLen = userData.physical.height
+
+        _waist  = State(initialValue: waistLen)
+        _neck   = State(initialValue: neckLen)
+        _hip    = State(initialValue: hipLen)
+        _height = State(initialValue: heightLen)
     }
-    
+
     var body: some View {
         Form {
+            // ───────────────── Waist / Neck / Hip
             Section {
-                TextField("Waist (inches)", text: $waist)
+                let unit = UnitSystem.current.sizeUnit
+                TextField("Waist (\(unit))", text: $waist.asText())
                     .keyboardType(.decimalPad)
-                TextField("Neck (inches)", text: $neck)
+
+                TextField("Neck (\(unit))", text: $neck.asText())
                     .keyboardType(.decimalPad)
+
                 if userData.physical.gender == .female {
-                    TextField("Hip (inches)", text: $hip)
+                    TextField("Hip (\(unit))", text: $hip.asText())
                         .keyboardType(.decimalPad)
                 }
             } header: {
                 Text("Enter Waist and Neck Measurements")
             }
-            
+
+            // ───────────────── Height
             Section {
-                HeightPicker(feet: $heightFeet, inches: $heightInches)
+                HeightSelectorRow(height: $height)
             } header: {
                 Text("Enter your Height")
             }
-            
+
+            // ───────────────── Action
             Section {
-                // No rows in this section—just a footer
                 EmptyView()
             } footer: {
                 if !kbd.isVisible {
                     ActionButton(
                         title: "Calculate Body Fat %",
                         enabled: isCalculateEnabled,
-                        action: {
-                            calculatebodyFatPercentage()
-                            showingResult = true
-                        }
+                        action: calculateAndShow
                     )
                     .padding(.top, 6)
                     .padding(.bottom, 16)
@@ -68,91 +81,82 @@ struct BFCalculator: View {
         }
         .disabled(showingResult)
         .blur(radius: showingResult ? 10 : 0)
-        .background(Color(UIColor.systemGroupedBackground)) // make button background color match list
+        .background(Color(UIColor.systemGroupedBackground))
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .navigationBarTitle("Body Fat % Calculator", displayMode: .inline)
         .overlay(
             Group {
                 if showingResult {
-                    BodyFatResultView(bodyFat: userData.currentMeasurementValue(for: .bodyFatPercentage)) {
-                        self.showingResult = false
+                    BodyFatResultView(bodyFat: computedBF) {
+                        showingResult = false
                     }
                 }
             }
         )
     }
-    
+
+    // MARK: - Computations
+
     private var isCalculateEnabled: Bool {
-        // For males, we do not need the hip measurement
+        // Always work in canonical cm to determine validity
+        let hasCore = waist.inCm > 0 && neck.inCm > 0 && height.inCm > 0
         if userData.physical.gender == .male {
-            return !waist.isEmpty && !neck.isEmpty && (heightFeet > 0 || heightInches > 0)
-        }
-        
-        // For females, all fields including hip are required
-        return !waist.isEmpty && !neck.isEmpty && !hip.isEmpty && (heightFeet > 0 || heightInches > 0)
-    }
-    
-    private func calculatebodyFatPercentage() {
-        let heightValue = Double(heightInches).addingProduct(Double(heightFeet), 12)
-        let waistValue = Double(waist) ?? 0
-        let neckValue = Double(neck) ?? 0
-        let hipValue = Double(hip) ?? 0
-        
-        let bfP: Double
-        if userData.physical.gender == .male {
-            let logWaistNeck = log10(waistValue - neckValue)
-            
-            let logHeight = log10(heightValue)
-            bfP = 86.010 * logWaistNeck - 70.041 * logHeight + 36.76
-            
+            return hasCore
         } else {
-            let logWaistHipNeck = log10(waistValue + hipValue - neckValue)
-            let logHeight = log10(heightValue)
-            
-            bfP = 163.205 * logWaistHipNeck - 97.684 * logHeight - 78.387
-            
-        }
-        
-        // Update bodyfat if it's different
-        if userData.currentMeasurementValue(for: .bodyFatPercentage) != bfP {
-            userData.updateMeasurementValue(for: .bodyFatPercentage, with: bfP, shouldSave: true)
-        }
-        
-        // Update waist size if it's different
-        if userData.currentMeasurementValue(for: .waist) != waistValue {
-            userData.updateMeasurementValue(for: .waist, with: waistValue, shouldSave: true)
-        }
-        
-        // Update neck size if it's different
-        if userData.currentMeasurementValue(for: .neck) != neckValue {
-            userData.updateMeasurementValue(for: .neck, with: neckValue, shouldSave: true)
-        }
-        
-        // Update hip size if it's different
-        if userData.currentMeasurementValue(for: .hips) != hipValue {
-            userData.updateMeasurementValue(for: .hips, with: hipValue, shouldSave: true)
+            return hasCore && hip.inCm > 0
         }
     }
-    
+
+    private func calculateAndShow() {
+        let w = waist.inCm
+        let n = neck.inCm
+        let h = height.inCm
+        let hp = hip.inCm
+
+        let bf: Double
+        if userData.physical.gender == .male {
+            // US Navy (cm version)
+            bf = 86.010 * log10(w - n) - 70.041 * log10(h) + 36.76
+        } else {
+            bf = 163.205 * log10(w + hp - n) - 97.684 * log10(h) - 78.387
+        }
+
+        // 1) Save back numbers if they changed (stored in metric)
+        userData.updateMeasurementValue(for: .waist, with: w,  shouldSave: false)
+        userData.updateMeasurementValue(for: .neck,  with: n,  shouldSave: false)
+        if userData.physical.gender == .female {
+            userData.updateMeasurementValue(for: .hips, with: hp, shouldSave: false)
+        }
+        userData.updateMeasurementValue(for: .bodyFatPercentage, with: bf, shouldSave: true)
+
+        computedBF = bf
+        showingResult = true
+    }
+
+    // MARK: - Result Overlay
+
     struct BodyFatResultView: View {
-        @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
+        @Environment(\.colorScheme) var colorScheme
         let bodyFat: Double
         var dismissAction: () -> Void
-        
+
         var body: some View {
             VStack {
-                Text("Body Fat Percentage").font(.headline)
-                Text("\(bodyFat, specifier: "%.2f") %").font(.title2)
-                
-                ActionButton(title: "Done", action: { dismissAction() })
+                Text("Body Fat Percentage")
+                    .font(.headline)
+                Text("\(bodyFat, specifier: "%.2f") %")
+                    .font(.title2)
+
+                ActionButton(title: "Done", action: dismissAction)
                     .padding()
             }
-            .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.25)
-            .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
+            .frame(width: UIScreen.main.bounds.width * 0.8,
+                   height: UIScreen.main.bounds.height * 0.25)
+            .background(colorScheme == .dark
+                        ? Color(UIColor.secondarySystemBackground)
+                        : Color.white)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .shadow(radius: 10)
         }
     }
 }
-
-

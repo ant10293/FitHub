@@ -12,6 +12,8 @@ struct ActionButton: View {
     let systemImage: String?
     let enabled: Bool
     let color: Color
+    let width: WidthStyle
+    let bold: Bool
     let action: () -> Void
 
     init(
@@ -19,12 +21,16 @@ struct ActionButton: View {
         systemImage: String? = nil,
         enabled: Bool = true,
         color: Color = .blue,
+        width: WidthStyle = .fill,
+        bold: Bool = false,
         action: @escaping () -> Void
     ) {
         self.title = title
         self.systemImage = systemImage
         self.enabled = enabled
         self.color = color
+        self.width = width
+        self.bold = bold
         self.action = action
     }
 
@@ -35,16 +41,19 @@ struct ActionButton: View {
                     Image(systemName: name)
                 }
                 Text(title)
-                    .font(.headline)
+                    .fontWeight(bold ? .bold : .regular)
+                    
             }
-            .foregroundColor(.primary)
-            .frame(maxWidth: .infinity)
+            .foregroundStyle(Color.primary)
+            .frame(maxWidth: width == .fill ? .infinity : nil)
             .padding()
             .background(enabled ? color : Color.gray)
             .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .disabled(!enabled)
     }
+    
+    enum WidthStyle { case fit, fill }   // fit = text width, fill = full width
 }
 
 

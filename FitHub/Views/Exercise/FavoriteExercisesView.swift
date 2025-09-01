@@ -2,12 +2,13 @@ import SwiftUI
 
 
 struct FavoriteExercisesView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
     @State private var searchText: String = ""
     @State private var selectedFilter: ExerciseFilter = .favorites
     @State private var showingResetConfirmation: Bool = false
+    private let modifier = ExerciseModifier()
 
     var body: some View {
         NavigationStack {
@@ -27,7 +28,7 @@ struct FavoriteExercisesView: View {
                     List {
                         // Display a message if no exercises match the filter
                         Text(selectedFilter == .favorites ? "No favorite exercises found." : (selectedFilter == .disliked ? "No disliked exercises found." : "No exercises found."))
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                             .padding()
                     }
                 } else {
@@ -46,13 +47,13 @@ struct FavoriteExercisesView: View {
                     Button("Reset") {
                         showingResetConfirmation = true
                     }
-                    .foregroundColor(emptyLists() ? Color.gray : Color.red)        // make the label red
+                    .foregroundStyle(emptyLists() ? Color.gray : Color.red)        // make the label red
                     .disabled(emptyLists())       // disable when no items
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
             }
@@ -80,16 +81,16 @@ struct FavoriteExercisesView: View {
         HStack(spacing: 12) {
             if selectedFilter != .favorites {
                 Image(systemName: ctx.userData.evaluation.dislikedExercises.contains(exercise.id) ? "hand.thumbsdown.fill" : "hand.thumbsdown")
-                    .foregroundColor(ctx.userData.evaluation.dislikedExercises.contains(exercise.id) ? .blue : .gray)
+                    .foregroundStyle(ctx.userData.evaluation.dislikedExercises.contains(exercise.id) ? .blue : .gray)
                     .onTapGesture {
-                        toggleDislike(for: exercise)
+                        modifier.toggleDislike(for: exercise.id, userData: ctx.userData)
                     }
             }
             if selectedFilter != .disliked {
                 Image(systemName: ctx.userData.evaluation.favoriteExercises.contains(exercise.id) ? "heart.fill" : "heart")
-                    .foregroundColor(ctx.userData.evaluation.favoriteExercises.contains(exercise.id) ? .red : .gray)
+                    .foregroundStyle(ctx.userData.evaluation.favoriteExercises.contains(exercise.id) ? .red : .gray)
                     .onTapGesture {
-                        toggleFavorite(for: exercise)
+                        modifier.toggleFavorite(for: exercise.id, userData: ctx.userData)
                     }
             }
         }
@@ -102,7 +103,7 @@ struct FavoriteExercisesView: View {
     private func removeAll() {
         ctx.userData.evaluation.favoriteExercises.removeAll()
         ctx.userData.evaluation.dislikedExercises.removeAll()
-        ctx.userData.saveToFile()
+        ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
     }
     
     private var filteredExercises: [Exercise] {
@@ -114,32 +115,6 @@ struct FavoriteExercisesView: View {
             userData: ctx.userData,
             equipmentData: ctx.equipment
         )
-    }
-    
-    private func toggleFavorite(for exercise: Exercise) {
-        if let index = ctx.userData.evaluation.favoriteExercises.firstIndex(of: exercise.id) {
-            ctx.userData.evaluation.favoriteExercises.remove(at: index)
-        } else {
-            // Remove from disliked if it's being favorited
-            if let dislikeIndex = ctx.userData.evaluation.dislikedExercises.firstIndex(of: exercise.id) {
-                ctx.userData.evaluation.dislikedExercises.remove(at: dislikeIndex)
-            }
-            ctx.userData.evaluation.favoriteExercises.append(exercise.id)
-        }
-        ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
-    }
-    
-    private func toggleDislike(for exercise: Exercise) {
-        if let index = ctx.userData.evaluation.dislikedExercises.firstIndex(of: exercise.id) {
-            ctx.userData.evaluation.dislikedExercises.remove(at: index)
-        } else {
-            // Remove from favorites if it's being disliked
-            if let favoriteIndex = ctx.userData.evaluation.favoriteExercises.firstIndex(of: exercise.id) {
-                ctx.userData.evaluation.favoriteExercises.remove(at: favoriteIndex)
-            }
-            ctx.userData.evaluation.dislikedExercises.append(exercise.id)
-        }
-        ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
     }
 }
 
