@@ -75,7 +75,7 @@ struct TemplateEditor: View {
                 .padding(.bottom)
 
                 if !kbd.isVisible {
-                    ActionButton(
+                    RectangularButton(
                         title: mode == .create ? "Create Template" : "Save Changes",
                         enabled: isInputValid,
                         color: isInputValid ? Color.blue : Color.gray,

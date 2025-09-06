@@ -78,7 +78,7 @@ struct RestTimeEditor: View {
                                         .font(.headline)
 
                                     HStack {
-                                        RestPicker(time: $pickerTime)
+                                        MinSecPicker(time: $pickerTime)
                                             .padding(.trailing)
 
                                         Button(action: {

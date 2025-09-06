@@ -51,11 +51,11 @@ struct CompletedDetails: View {
                                 .foregroundStyle(Color.secondary)
                             
                             if !exercise.warmUpDetails.isEmpty {
-                                warmupSets(exercise: exercise)
+                                exerciseSets(exercise: exercise, details: exercise.warmUpDetails, warmup: true)
                                 Divider().padding(.vertical, 4)
                             }
                             
-                            mainSets(exercise: exercise)
+                            exerciseSets(exercise: exercise, details: exercise.setDetails, warmup: false)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)   // ← row block stretches
                         .padding(.bottom, 10)
@@ -71,48 +71,42 @@ struct CompletedDetails: View {
 
 // MARK: - Subviews / helpers
 private extension CompletedDetails {
-    // Warm-ups
-    func warmupSets(exercise: Exercise) -> some View {
-        ForEach(exercise.warmUpDetails) { set in
-            SetRow(set: set, exercise: exercise, warmup: true)
-                .font(.caption)
-                .frame(maxWidth: .infinity, alignment: .leading)
+    func exerciseSets(exercise: Exercise, details: [SetDetail], warmup: Bool) -> some View {
+        ForEach(details) { set in
+            VStack(alignment: .leading, spacing: 2) {
+                // Single line: planned + completed + RPE
+                SetRow(set: set, exercise: exercise, warmup: warmup)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                prBadge(for: exercise, set: set)
+            }
         }
     }
     
-    // Main sets + PR badges
-    func mainSets(exercise: Exercise) -> some View {
-        ForEach(exercise.setDetails) { set in
-            VStack(alignment: .leading, spacing: 2) {
-                // Single line: planned + completed + RPE
-                SetRow(set: set, exercise: exercise, warmup: false)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                // PR line (unchanged logic)
-                if let prUpdate = workout.updatedMax.first(where: {
-                    $0.exerciseId == exercise.id && $0.setNumber == set.setNumber
-                }),
-                   let prRepsWeight = prUpdate.repsXweight {
-                    HStack {
-                        Image(systemName: "trophy.fill")
-                        if exercise.type.usesWeight {
-                            if prRepsWeight.reps > 1 {
-                                prRepsWeight.formattedText +
-                                Text(" = ") +
-                                prUpdate.value.labeledText
-                            } else {
-                                prUpdate.value.labeledText
-                            }
-                        } else {
-                            prUpdate.value.labeledText
-                        }
-                        Spacer(minLength: 0)
+    @ViewBuilder func prBadge(for exercise: Exercise, set: SetDetail) -> some View {
+        // PR line (unchanged logic)
+        if let prUpdate = workout.updatedMax.first(where: {
+            $0.exerciseId == exercise.id && $0.setId == set.id //$0.setNumber == set.setNumber
+        }),
+           let prRepsWeight = prUpdate.repsXweight {
+            HStack {
+                Image(systemName: "trophy.fill")
+                if exercise.type.usesWeight {
+                    if prRepsWeight.reps > 1 {
+                        prRepsWeight.formattedText +
+                        Text(" = ") +
+                        prUpdate.value.labeledText
+                    } else {
+                        prUpdate.value.labeledText
                     }
-                    .font(.caption2)
-                    .foregroundStyle(Color.gold)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                } else {
+                    prUpdate.value.labeledText
                 }
+                Spacer(minLength: 0)
             }
+            .font(.caption2)
+            .foregroundStyle(Color.gold)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }

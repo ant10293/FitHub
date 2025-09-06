@@ -38,7 +38,7 @@ struct PerformanceUpdates: Codable, Hashable {
             if updatedMax[index].value.actualValue < update.value.actualValue {
                 updatedMax[index].value = update.value
                 updatedMax[index].repsXweight = update.repsXweight
-                updatedMax[index].setNumber = update.setNumber
+                updatedMax[index].setId = update.setId
             }
         } else {
             // Add new record
@@ -51,7 +51,7 @@ struct PerformanceUpdate: Codable, Hashable {
     var exerciseId: UUID
     var value: PeakMetric
     var repsXweight: RepsXWeight?
-    var setNumber: Int?
+    var setId: UUID?
 }
 
 struct RepsXWeight: Codable, Hashable {

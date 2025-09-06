@@ -8,10 +8,6 @@
 import SwiftUI
 import Charts
 
-
-import SwiftUI
-import Charts
-
 struct WorkoutSummary: View {
     let summary: WorkoutSummaryData
     let exercises: [Exercise]
@@ -32,14 +28,13 @@ struct WorkoutSummary: View {
             )
 
             VStack(spacing: 20) {
-                // Label uses totalVolume (tonnage) – keep if that’s your intent
-                StatRow(title: "Total Weight Lifted", value: "\(summary.totalVolume.displayString)")
+                StatRow(title: "Total Weight Lifted", text: summary.totalVolume.formattedText())
                 StatRow(title: "Total Reps Completed", value: "\(summary.totalReps)")
                 StatRow(title: "Time Elapsed", value: summary.totalTime.displayString)
             }
             .padding()
 
-            ActionButton(title: "Done", color: .blue, action: onDone)
+            RectangularButton(title: "Done", color: .blue, action: onDone)
                 .padding()
 
         }
@@ -115,13 +110,18 @@ struct WorkoutSummary: View {
 
     struct StatRow: View {
         let title: String
-        let value: String
+        var value: String?
+        var text: Text?
 
         var body: some View {
             HStack {
                 Text(title).font(.subheadline).fontWeight(.semibold)
                 Spacer()
-                Text(value).font(.subheadline)
+                if let value = value {
+                    Text(value).font(.subheadline)
+                } else if let text = text {
+                    text.font(.subheadline)
+                }
             }
             .padding(.horizontal)
         }

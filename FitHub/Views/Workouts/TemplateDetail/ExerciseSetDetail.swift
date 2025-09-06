@@ -21,12 +21,10 @@ struct ExerciseSetDetail: View {
     @State private var showSupersetOptions = false
     @State private var showReplaceAlert = false
 
-    // Local edit buffers so the TextField can hold “100.” etc.
     @State private var weightTexts: [String]
-    @State private var metricTexts: [String]   // now holds reps OR time "mm:ss"/"ss"
+    @State private var metricTexts: [String]   // holds reps OR time "mm:ss"/"ss"
     
-    var rest: RestPeriods
-    
+    let rest: RestPeriods
     let hasEquipmentAdjustments: Bool
     var perform: (CallBackAction) -> Void
     var onSuperset: (String) -> Void
@@ -54,11 +52,11 @@ struct ExerciseSetDetail: View {
         // Seed buffers from current model
         let sets = exercise.wrappedValue.setDetails
         _weightTexts = State(initialValue: sets.map { $0.weightFieldString })
-        _metricTexts    = State(initialValue: sets.map { $0.metricFieldString })
+        _metricTexts = State(initialValue: sets.map { $0.metricFieldString })
 
         self.rest = rest
         self.hasEquipmentAdjustments = hasEquipmentAdjustments
-        self.perform   = perform
+        self.perform = perform
         self.onSuperset = onSuperSet
     }
 
@@ -70,7 +68,7 @@ struct ExerciseSetDetail: View {
             if !isCollapsed {
                 superSetOptions
                 setDetails
-                addDeleteButtons
+                AddDeleteButtons(addSet: addSet, deleteLastSet: deleteLastSet)
                 equipmentAdjustments
             }
         }
@@ -204,24 +202,6 @@ struct ExerciseSetDetail: View {
         }
     }
 
-    // MARK: - Add/Delete
-    private var addDeleteButtons: some View {
-        HStack {
-            Spacer()
-            Button(action: { addSet() }) {
-                Label(" Add Set ", systemImage: "plus").foregroundStyle(.blue)
-            }
-            .buttonStyle(.bordered).tint(.blue)
-
-            Button(action: { deleteLastSet() }) {
-                Label("Delete Set", systemImage: "minus").foregroundStyle(.red)
-            }
-            .buttonStyle(.bordered).tint(.red)
-            Spacer()
-        }
-        .padding(.top)
-    }
-
     // MARK: - Options overlay
     @ViewBuilder private var exerciseDetailOptions: some View {
         ZStack {
@@ -298,21 +278,5 @@ struct ExerciseSetDetail: View {
         let sets = exercise.setDetails
         weightTexts = sets.map { $0.weightFieldString }
         metricTexts = sets.map { $0.metricFieldString }
-    }
-}
-
-
-// Small safety helpers
-private extension Array {
-    subscript(safeEdit index: Index) -> Element? {
-        get { indices.contains(index) ? self[index] : nil }
-        set {
-            guard let new = newValue else { return }
-            if indices.contains(index) {
-                self[index] = new
-            } else if index == endIndex {
-                self.append(new)
-            }
-        }
     }
 }

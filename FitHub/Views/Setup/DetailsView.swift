@@ -195,7 +195,7 @@ struct DetailsView: View {
     }
     
     private var continueButton: some View {
-        ActionButton(title: "Continue", enabled: canContinue, action: {
+        RectangularButton(title: "Continue", enabled: canContinue, action: {
             if let gender = selectedGender {
                 saveUserData(gender: gender)
             }

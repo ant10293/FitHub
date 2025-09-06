@@ -43,7 +43,7 @@ struct EnterOneRepMaxes: View {
                 Spacer()
 
                 if !kbd.isVisible {
-                    ActionButton(
+                    RectangularButton(
                         title: "Submit",
                         enabled: submitEnabled,
                         color: submitEnabled ? .green : .gray,

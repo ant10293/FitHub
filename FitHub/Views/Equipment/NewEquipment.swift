@@ -74,7 +74,7 @@ struct NewEquipment: View {
                     .disabled(isReadOnly)
                     
                     if !kbd.isVisible && !isReadOnly {
-                        ActionButton(
+                        RectangularButton(
                             title: isEditing ? "Save Changes" : "Create Equipment",
                             enabled: isInputValid,
                             color: isInputValid ? .blue : .gray
@@ -95,7 +95,7 @@ struct NewEquipment: View {
                         .padding()
                         
                         if isEditing {
-                            ActionButton(title: "Delete Equipment", systemImage: "trash", color: .red, action: {
+                            RectangularButton(title: "Delete Equipment", systemImage: "trash", color: .red, action: {
                                 showDeleteAlert = true
                             })
                             .padding()

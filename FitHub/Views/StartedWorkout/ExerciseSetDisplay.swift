@@ -7,104 +7,100 @@
 
 import SwiftUI
 
-
 struct ExerciseSetDisplay: View {
     @Environment(\.colorScheme) var colorScheme
+    let timerManager: TimerManager
+    @State private var showTimer: Bool = false
     @Binding var setDetail: SetDetail
     @Binding var shouldDisableNext: Bool
+    @Binding var showPicker: Bool
 
     // Local editable buffers
-    @State private var repInput: String
-    @State private var repsLocal: Int
-
-    @State private var holdInput: String
-    @State private var holdLocal: TimeSpan
-
+    @State private var weightInput: String = ""
+    @State private var plannedInput: String = ""
+    @State private var completedMetric: SetMetric = .reps(0)
     @State private var rpeLocal: Double = 1.0
-
+        
     var exercise: Exercise
     var saveTemplate: () -> Void
-
-    // MARK: - Init
-    init(
-        setDetail: Binding<SetDetail>,
-        shouldDisableNext: Binding<Bool>,
-        exercise: Exercise,
-        saveTemplate: @escaping () -> Void
-    ) {
-        _setDetail         = setDetail
-        _shouldDisableNext = shouldDisableNext
-        self.exercise      = exercise
-        self.saveTemplate  = saveTemplate
-
-        switch setDetail.wrappedValue.planned {
-        case .reps(let plannedReps):
-            _repInput  = State(initialValue: plannedReps > 0 ? String(plannedReps) : "")
-            _repsLocal = State(initialValue: plannedReps)
-
-            _holdInput = State(initialValue: "")
-            _holdLocal = State(initialValue: TimeSpan(seconds: 0))
-
-        case .hold(let plannedTime):
-            let plannedSec = plannedTime.inSeconds
-            _holdInput = State(initialValue: plannedSec > 0 ? TimeSpan(seconds: plannedSec).displayStringCompact : "")
-            _holdLocal = State(initialValue: TimeSpan(seconds: plannedSec))
-
-            _repInput  = State(initialValue: "")
-            _repsLocal = State(initialValue: 0)
-        }
-    }
 
     var body: some View {
         VStack(alignment: .center) {
             // ── Top line (label + inputs) – visuals unchanged ───────────────
-            HStack {
-                setLabel
-                // Weight input (unchanged)
-                weightSection
-
-                // Metric input (reps or hold) – same visual container as reps
-                metricSection
+            if !showPicker {
+                HStack {
+                    setLabel
+                    // Weight input (unchanged)
+                    weightSection
+                    
+                    // Metric input (reps or hold) – same visual container as reps
+                    metricSection
+                }
+                .padding(.horizontal, -20)
+                .padding(.bottom)
             }
-            .padding(.horizontal, -20)
-            .padding(.bottom)
 
             completedEntry
             
-            // ── RPE slider (skip for warmups) – unchanged ────────────────
-            rpeEntry
+            if !showPicker {
+                // ── RPE slider (skip for warmups) – unchanged ────────────────
+                rpeEntry
+            }
         }
         .padding()
-        .onAppear(perform: validateNextButton)
+        .onAppear(perform: resetInputs)
         .onChange(of: exercise) { oldValue, newValue in
+            // if exercise has changed or moved to next set
             if oldValue.id != newValue.id || oldValue.currentSet != newValue.currentSet {
                 saveTemplate()
                 resetInputs()
             }
         }
+        .sheet(isPresented: $showTimer) {
+            if let hold = setDetail.planned.holdTime?.inSeconds {
+                IsometricTimerRing(
+                    manager: timerManager,
+                    holdSeconds: hold,
+                    onCompletion: { seconds in
+                        showTimer = false
+                        let ts = TimeSpan(seconds: seconds)
+                        setDetail.completed = .hold(ts)
+                        completedMetric = .hold(ts)
+                    }
+                )
+                .presentationDetents([.fraction(0.75)])
+                .presentationDragIndicator(.visible)
+            }
+        }
     }
     
     @ViewBuilder private var setLabel: some View {
-        if isWarm {
-            VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 2) {
+            if exercise.isWarmUp {
                 Text("warmup")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
-                Text("Set \(setDetail.setNumber):")
-                    .fontWeight(.bold)
             }
-        } else {
             Text("Set \(setDetail.setNumber):")
                 .fontWeight(.bold)
         }
     }
-    
+
     @ViewBuilder private var weightSection: some View {
         if exercise.type.usesWeight {
             ZStack {
-                let weightText = $setDetail.weight.asText()
-                let width      = calculateTextWidth(text: weightText.wrappedValue, minWidth: 60, maxWidth: 90)
-                let isZero     = (weightText.wrappedValue == "0")
+                //let weightText = $setDetail.weight.asText()
+                let weightText: Binding<String> = Binding(
+                    get: { weightInput },
+                    set: { newText in
+                        weightInput = newText
+                        let val = Double(newText) ?? 0
+                        setDetail.weight.set(val)   // commits in user’s selected unit
+                    }
+                )
+                
+                let width = calculateTextWidth(text: weightText.wrappedValue, minWidth: 60, maxWidth: 90)
+                let isZero = (weightText.wrappedValue == "0")
 
                 RoundedRectangle(cornerRadius: 8)
                     .fill(colorScheme == .dark
@@ -147,10 +143,20 @@ struct ExerciseSetDisplay: View {
             }
 
         case .hold:
-            plannedHoldInputField   // same ZStack look as reps
+            holdInputField   // same ZStack look as reps
             VStack(alignment: .leading) {
-                Text("Time").bold()
-                // (no extra note previously for time)
+                RectangularButton(
+                    title: "Start",
+                    systemImage: "play.fill",
+                    enabled: (setDetail.planned.holdTime?.inSeconds ?? 0) > 0,
+                    color: .green,
+                    width: .fit,
+                    action: {
+                        showTimer = true
+                    }
+                )
+                .clipShape(.capsule)
+                //Text("Time").bold()
             }
         }
     }
@@ -159,82 +165,89 @@ struct ExerciseSetDisplay: View {
         // ── Completed line – keep the row + paddings identical ─────────
         switch setDetail.planned {
         case .reps(let plannedReps):
+            let completed = completedMetric.repsValue ?? plannedReps
+            let completedBinding = Binding<Int>(
+                get: { completed },
+                set: { newValue in
+                    completedMetric = .reps(newValue)
+                    setDetail.completed = .reps(newValue)
+                }
+            )
+            
             HStack {
                 Text("Reps Completed: ").fontWeight(.bold)
                 Spacer()
-                Text("\(repsLocal) ")
-                    .foregroundStyle(repsLocal < plannedReps ? .red :
-                        (repsLocal > plannedReps ? .green : .primary))
+                Text("\(completed) ")
+                    .foregroundStyle(completed < plannedReps ? .red :
+                        (completed > plannedReps ? .green : .primary))
                 Spacer()
 
                 Stepper(
                     "",
-                    value: $repsLocal,
+                    value: completedBinding,
                     in: 0...(max(1, plannedReps) * 5),
                     step: 1
                 )
                 .labelsHidden()
             }
-            .padding(.horizontal, -15)
-            .onChange(of: repsLocal) { setDetail.completed = .reps(repsLocal) }
 
         case .hold(let plannedTime):
-            let plannedSec = plannedTime.inSeconds
-            // Replace stepper with TimeEntryField, keep same HStack + paddings
-            HStack {
-                Text("Time Completed: ").fontWeight(.bold)
-                Spacer()
-                Text("\(holdLocal.displayStringCompact) ")
-                    .foregroundStyle(holdLocal.inSeconds < plannedSec ? .red :
-                        (holdLocal.inSeconds > plannedSec ? .green : .primary))
-                Spacer()
-
-                // Stepper with 1-second increments, binding to holdLocal.inSeconds
-                Stepper(
-                    "",
-                    value: Binding(
-                        get: { holdLocal.inSeconds },
-                        set: { newVal in
-                            let clamped = max(0, newVal)
-                            holdLocal = TimeSpan(seconds: clamped)
-                            setDetail.completed = .hold(holdLocal)
-                        }
-                    ),
-                    in: 0...(max(1, plannedSec) * 3),
-                    step: 1
-                )
-                .labelsHidden()
+            let completed = completedMetric.holdTime ?? plannedTime
+            let completedBinding = Binding<TimeSpan>(
+                get: { completed },
+                set: { newValue in
+                    completedMetric = .hold(newValue)
+                    setDetail.completed = .hold(newValue)
+                }
+            )
+            
+            TappableDisclosure(isExpanded: $showPicker) {
+                // LABEL
+                HStack {
+                    Text("Time Completed: ").fontWeight(.bold)
+                    Spacer()
+                    Text("\(completed.displayString) ")
+                        .foregroundStyle(completed.inSeconds < plannedTime.inSeconds ? .red :
+                            (completed.inSeconds > plannedTime.inSeconds ? .green : .primary))
+                    Spacer()
+                }
+            } content: {
+                VStack {
+                    // CONTENT
+                    MinSecPicker(time: completedBinding)
+                    
+                    HStack {
+                        Spacer()
+                        FloatingButton(image: "checkmark", action: { showPicker = false })
+                            .padding()
+                    }
+                    .padding(.top, 6)
+                }
             }
-            .padding(.horizontal, -15)
+            .padding(.trailing)
         }
     }
     
     @ViewBuilder private var rpeEntry: some View {
-        if !isWarm {
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 0) {
-                    Text("RPE:  ").fontWeight(.bold) + Text(String(format: "%.1f", rpeLocal))
+        if !exercise.isWarmUp {
+            HStack(spacing: 0) {
+                (Text("RPE:  ").fontWeight(.bold) + Text(String(format: "%.1f", rpeLocal)))
+                    .overlay(alignment: .bottom) {
+                        Text("(1 - 10)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .offset(y: 15)
+                    }
 
-                    Slider(
-                        value: Binding(
-                            get: { rpeLocal },
-                            set: { newValue in
-                                rpeLocal = newValue
-                                setDetail.rpe = newValue
-                            }
-                        ),
-                        in: 1...10,
-                        step: 0.5
-                    )
-                    .padding(.horizontal)
-                }
-                .padding(.horizontal, -15)
-
-                Text("(1 - 10)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Slider(value: Binding(
+                    get: { rpeLocal },
+                    set: { newValue in
+                        rpeLocal = newValue
+                        setDetail.rpe = newValue
+                    }
+                ), in: 1...10, step: 0.5)
+                .padding(.horizontal)
             }
-            .padding(.bottom, -10)
         }
     }
 
@@ -242,8 +255,8 @@ struct ExerciseSetDisplay: View {
 
     private var repsInputField: some View {
         ZStack {
-            let width  = calculateTextWidth(text: repInput, minWidth: 45, maxWidth: 70)
-            let isZero = repInput == "0"
+            let width  = calculateTextWidth(text: plannedInput, minWidth: 45, maxWidth: 70)
+            let isZero = plannedInput == "0"
 
             RoundedRectangle(cornerRadius: 8)
                 .fill(colorScheme == .dark
@@ -251,22 +264,17 @@ struct ExerciseSetDisplay: View {
                       : Color(UIColor.secondarySystemBackground))
                 .frame(width: width, height: 35)
 
-            TextField("reps",
-              text: Binding<String>(
-                get: { repInput },
+            TextField("reps", text: Binding<String>(
+                get: { plannedInput },
                 set: { newValue in
                     let filtered = InputLimiter.filteredReps(newValue)
-                    repInput = filtered
-
-                    if let r = Int(filtered), r > 0 {
-                        setDetail.planned = .reps(r)
-                        repsLocal = r
-                        shouldDisableNext = false
-                    } else {
-                        shouldDisableNext = true
-                    }
-                }
-              )
+                    let r = Int(filtered) ?? 0
+                    let reps: SetMetric = .reps(r)
+                    plannedInput = filtered
+                    setDetail.planned = reps
+                    completedMetric = reps
+                    validateSetMetric(actual: r)
+                })
             )
             .keyboardType(.numberPad)
             .multilineTextAlignment(.center)
@@ -276,11 +284,10 @@ struct ExerciseSetDisplay: View {
     }
 
     // this actually needs to be a string to be formatted properly
-    private var plannedHoldInputField: some View {
+    @ViewBuilder private var holdInputField: some View {
         ZStack {
-            let width  = calculateTextWidth(text: holdInput, minWidth: 60, maxWidth: 90)
-            let secs   = TimeSpan.seconds(from: holdInput)
-            let isZero = secs <= 0
+            let width  = calculateTextWidth(text: plannedInput, minWidth: 60, maxWidth: 90)
+            let isZero = TimeSpan.seconds(from: plannedInput) == 0
 
             RoundedRectangle(cornerRadius: 8)
                 .fill(colorScheme == .dark
@@ -289,64 +296,53 @@ struct ExerciseSetDisplay: View {
                 .frame(width: width, height: 35)
 
             // Planned hold using your fixed-mask field (m:ss)
-            TimeEntryField(
-                text: Binding(
-                    get: { holdInput },
-                    set: { newValue in
-                        let s = TimeSpan.seconds(from: newValue)    // ✅ your parser
-                        let ts = TimeSpan.init(seconds: s)
-                        setDetail.planned = .hold(ts)
-                        holdInput = ts.displayStringCompact
-                        holdLocal = ts
-                        shouldDisableNext = s <= 0 || (exercise.type.usesWeight && setDetail.weight.inKg <= 0)
-                    }
-                ),
+            TimeEntryField(text: Binding(
+                get: { plannedInput },
+                set: { newValue in
+                    let s = TimeSpan.seconds(from: newValue)
+                    let ts = TimeSpan.init(seconds: s)
+                    let hold: SetMetric = .hold(ts)
+                    plannedInput = ts.displayStringCompact
+                    setDetail.planned = hold
+                    completedMetric = hold
+                    validateSetMetric(actual: s)
+                }),
                 style: .plain
             )
             .foregroundStyle(isZero ? .red : .primary)
             .frame(width: width, alignment: .center)
         }
     }
-
     // MARK: - Helpers
 
-    private var isWarm: Bool { exercise.currentSet <= exercise.warmUpSets }
-
     private func resetInputs() {
-        switch setDetail.planned {
-        case .reps(let r):
-            repInput  = r > 0 ? String(r) : ""
-            repsLocal = r
-            holdInput = ""
-            holdLocal = .init(seconds: 0)
-
-        case .hold(let t):
-            let s = t.inSeconds
-            holdInput = s > 0 ? TimeSpan(seconds: s).displayStringCompact : ""
-            holdLocal = TimeSpan(seconds: s)
-            repInput  = ""
-            repsLocal = 0
-        }
-        
-        rpeLocal = setDetail.rpe ?? 1
+        initializeVariables()
         validateNextButton()
+    }
+    
+    private func initializeVariables() {
+        rpeLocal = setDetail.rpe ?? 1
+        weightInput = setDetail.weightFieldString
+        plannedInput = setDetail.metricFieldString
+
+        switch setDetail.planned {
+        case .reps(let plannedReps):
+            completedMetric = .reps(setDetail.completed?.repsValue ?? plannedReps)
+
+        case .hold(let plannedTime):
+            let plannedSec = plannedTime.inSeconds
+            completedMetric = .hold(TimeSpan(seconds: setDetail.completed?.holdTime?.inSeconds ?? plannedSec))
+        }
     }
 
     private func validateNextButton() {
         switch setDetail.planned {
-        case .reps(let r):
-            shouldDisableNext = r <= 0 || (exercise.type.usesWeight && setDetail.weight.inKg <= 0)
-
-        case .hold(let t):
-            shouldDisableNext = t.inSeconds <= 0 || (exercise.type.usesWeight && setDetail.weight.inKg <= 0)
+        case .reps(let r): validateSetMetric(actual: r)
+        case .hold(let t): validateSetMetric(actual: t.inSeconds)
         }
     }
-
-    private func calculateTextWidth(text: String, minWidth: CGFloat, maxWidth: CGFloat) -> CGFloat {
-        let font = UIFont.systemFont(ofSize: 17)
-        let measured = (text as NSString).size(withAttributes: [.font: font]).width + 20 // padding
-        return min(max(measured, minWidth), maxWidth)
+    
+    private func validateSetMetric(actual: Int) {
+        shouldDisableNext = actual <= 0 || (exercise.type.usesWeight && setDetail.weight.inKg <= 0)
     }
 }
-
-

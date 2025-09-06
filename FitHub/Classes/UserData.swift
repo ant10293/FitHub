@@ -11,7 +11,8 @@ import Foundation
 import Combine
 
 final class UserData: ObservableObject, Codable {
-    @Published var profile          = Profile()          
+    static let jsonKey: String      = "UserData.json"
+    @Published var profile          = Profile()
     @Published var physical         = PhysicalStats()
     @Published var workoutPrefs     = WorkoutPreferences()
     @Published var setup            = Setup()
@@ -61,23 +62,23 @@ final class UserData: ObservableObject, Codable {
     
     // Method to load the user data from a file
     static func loadFromFile() -> UserData? {
-        return JSONFileManager.shared.loadUserData(from: "UserData.json")
+        return JSONFileManager.shared.loadUserData(from: UserData.jsonKey)
     }
     
     /// Save a single stored struct (debounced).
     func saveSingleStructToFile<T: Encodable>(_ keyPath: KeyPath<UserData, T>, for key: CodingKeys, delay: TimeInterval = 0.4) {
         let value = self[keyPath: keyPath]
-        JSONFileManager.shared.debouncedSingleFieldSave(value, for: key.stringValue, in: "UserData.json", delay: delay)
+        JSONFileManager.shared.debouncedSingleFieldSave(value, for: key.stringValue, in: UserData.jsonKey, delay: delay)
     }
 
     /// Call this when you really need *everything* persisted (debounced).
     func saveToFile(delay: TimeInterval = 0.8) {
-        JSONFileManager.shared.debouncedSave(self, to: "UserData.json", delay: delay)
+        JSONFileManager.shared.debouncedSave(self, to: UserData.jsonKey, delay: delay)
     }
 
     /// Immediate flush – bypasses debounce. Call sparingly.
     func saveToFileImmediate() {
-        JSONFileManager.shared.save(self, to: "UserData.json")
+        JSONFileManager.shared.save(self, to: UserData.jsonKey)
     }
 }
 
@@ -301,7 +302,8 @@ extension UserData {
         onDone: @escaping () -> Void = {}
     ) {
         isGeneratingWorkout = true
-
+        resetWorkoutSession()
+        
         let savedExercises = manageOldTemplates()
         let generator = WorkoutGenerator()
         let input = WorkoutGenerator.Input(

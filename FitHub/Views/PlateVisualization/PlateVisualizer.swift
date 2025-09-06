@@ -29,8 +29,16 @@ struct PlateVisualizer: View {
 
         VStack(spacing: 12) {
             // Total system weight
-            (Text("Total: ") + spec.displayTotal.formattedText())
-                .font(.largeTitle.bold())
+            (Text("Total: ") + spec.displayTotal.formattedText().bold())
+                .font(.largeTitle)
+            
+            Text("Exercise: \(exercise.name)")
+
+            if let name = equip?.name {
+                Text("Equipment: \(name)")
+            }
+                        
+            Spacer()
 
             // Implement visualization
             if implementsCount > 1 {
@@ -68,6 +76,8 @@ struct PlateVisualizer: View {
                     .foregroundStyle(.orange)
                     .font(.footnote)
             }
+            
+            Spacer()
         }
         .padding()
         .overlay(alignment: .center) {

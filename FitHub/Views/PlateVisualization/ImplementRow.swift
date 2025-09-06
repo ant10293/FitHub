@@ -98,10 +98,11 @@ struct ImplementRow: View {
             // Plate visualization
             PlateVisualization(plan: plan, pegCount: pegCount)
         }
+        .padding(.vertical)
     }
     
     private func labelPair(title: String, mass: Mass) -> some View {
-        HStack(spacing: 6) {
+        VStack {
             Text(title)
             mass.formattedText()
         }
@@ -195,22 +196,22 @@ private struct PlateStackColumn: View {
             .animation(.spring(response: 0.25, dampingFraction: 0.9), value: plates)
         } else {
             // Horizontal stack for two pegs
-        HStack(spacing: 6) {
-            ForEach(plates.indices, id: \.self) { i in
-                let w = plates[i]
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(WeightPlates.color(for: w))
-                    .frame(width: 26, height: height(for: w))
-                    .overlay(
-                        Text(w.displayString)
-                            .font(.system(size: 9, weight: .semibold, design: .rounded))
-                            .foregroundStyle(.white)
-                            .shadow(radius: 1, y: 0.5)
-                    )
+            HStack(spacing: 6) {
+                ForEach(plates.indices, id: \.self) { i in
+                    let w = plates[i]
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(WeightPlates.color(for: w))
+                        .frame(width: 26, height: height(for: w))
+                        .overlay(
+                            Text(w.displayString)
+                                .font(.system(size: 9, weight: .semibold, design: .rounded))
+                                .foregroundStyle(.white)
+                                .shadow(radius: 1, y: 0.5)
+                        )
+                }
             }
-        }
-        .frame(minWidth: 100)
-        .animation(.spring(response: 0.25, dampingFraction: 0.9), value: plates)
+            .frame(minWidth: 100)
+            .animation(.spring(response: 0.25, dampingFraction: 0.9), value: plates)
         }
     }
 

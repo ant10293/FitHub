@@ -12,7 +12,7 @@ struct GoalSelectionView: View {
             bmiGoalSection
             selectGoalSection
             
-            ActionButton(
+            RectangularButton(
                 title: userData.setup.setupState == .finished ? "Update Goal" : "Complete Setup",
                 enabled: userGoal != nil,
                 action: {

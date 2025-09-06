@@ -31,8 +31,8 @@ enum SetMetric: Codable, Equatable, Hashable {
         return nil
     }
     
-    var holdSeconds: Int? {
-        if case .hold(let t) = self { return t.inSeconds }
+    var holdTime: TimeSpan? {
+        if case .hold(let t) = self { return t }
         return nil
     }
     
@@ -59,8 +59,8 @@ enum SetMetric: Codable, Equatable, Hashable {
 }
 
 struct SetDetail: Identifiable, Hashable, Codable {
-    var id = UUID()
-    var setNumber: Int
+    var id: UUID = UUID()
+    let setNumber: Int
     var weight: Mass
     var planned: SetMetric
     var completed: SetMetric?

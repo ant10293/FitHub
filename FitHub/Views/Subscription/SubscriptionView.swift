@@ -24,7 +24,7 @@ struct SubscriptionView: View {
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
-                    ActionButton(
+                    RectangularButton(
                         title: "Continue",
                         systemImage: "arrow.forward.circle.fill",
                         enabled: (selectedProductID != nil) && !ctx.store.purchaseInFlight && !isCurrentSelection,

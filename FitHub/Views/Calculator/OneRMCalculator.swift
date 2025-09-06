@@ -53,7 +53,7 @@ struct OneRMCalculator: View {
                         EmptyView()
                     } footer: {
                         if !isCalculated && !kbd.isVisible {
-                            ActionButton(
+                            RectangularButton(
                                 title: "Calculate One Rep Max",
                                 enabled: isCalculateEnabled,
                                 action: calculate

@@ -9,13 +9,13 @@ import SwiftUI
 
 struct ExerciseSetOverlay: View {
     let timerManager: TimerManager
-    @ObservedObject var equipment: EquipmentData
     @Binding var exercise: Exercise
     @State private var isPressed: Bool = false
     @State private var showAdjustmentsView: Bool = false
     @State private var shouldDisableNext: Bool = false
     @State private var showOverlay: Bool = false
     @State private var showPlateVisualizer: Bool = false
+    @State private var showPicker: Bool = false
     var progress: TemplateProgress
     var goToNextSetOrExercise: () -> Void
     var onClose: () -> Void
@@ -28,42 +28,36 @@ struct ExerciseSetOverlay: View {
         VStack {
             exerciseToolbar
             
-            if let detail = currentSetBinding(for: $exercise) {
-                // Equipment Adjustments + Info button
-                adjustmentsSection
-                
-                if exercise.usesPlates(equipmentData: equipment) {
-                    Button("View Plate Configuration") {
-                        showPlateVisualizer = true
-                    }
+            if let detail = currentSetBinding {
+                if !showPicker {
+                    // Equipment Adjustments + Info button
+                    adjustmentsSection
                 }
                 
                 // Display the set editor
                 ExerciseSetDisplay(
+                    timerManager: timerManager,
                     setDetail: detail,
                     shouldDisableNext: $shouldDisableNext,
+                    showPicker: $showPicker,
                     exercise: exercise,
                     saveTemplate: {
                         saveTemplate(detail, $exercise)
                     }
                 )
                 
-                if !exercise.isCompleted {
+                if !exercise.isCompleted && !showPicker {
                     NextButton(
                         timerManager: timerManager,
-                        exercise: $exercise,
                         isPressed: $isPressed,
+                        exercise: exercise,
                         isLastExercise: progress.isLastExercise,
                         restTimerEnabled: progress.restTimerEnabled,
-                        restPeriods: progress.restPeriods,
                         isDisabled: shouldDisableNext,
-                        goToNextSetOrExercise: goToNextSetOrExercise,
-                        getPriorMax: { id in
-                            getPriorMax(id)
+                        onButtonPress: {
+                            return handleButtonPress(setDetail: detail)
                         },
-                        onPerformanceUpdate: { update in 
-                            onPerformanceUpdate(update)
-                        }
+                        goToNextSetOrExercise: goToNextSetOrExercise
                     )
                 }
             } else {
@@ -72,25 +66,15 @@ struct ExerciseSetOverlay: View {
         }
         .padding()
         .disabled(exercise.isCompleted)
-        .sheet(isPresented: $showAdjustmentsView) {
-            AdjustmentsView(exercise: exercise)
-        }
-        /*.sheet(isPresented: $showPlateVisualizer) {
-            if let detail = currentSetBinding(for: $exercise) {
+        .sheet(isPresented: $showAdjustmentsView) { AdjustmentsView(exercise: exercise) }
+        .sheet(isPresented: $showPlateVisualizer) {
+            if let detail = currentSetBinding {
                 PlateVisualizer(
                     weight: detail.weight.wrappedValue,
                     exercise: exercise
                 )
-                .presentationDetents([.fraction(0.75)]) // only 3/4 height
+                .presentationDetents([.fraction(0.75)])
                 .presentationDragIndicator(.visible)
-            }
-        }*/
-        .navigationDestination(isPresented: $showPlateVisualizer) {
-            if let detail = currentSetBinding(for: $exercise) {
-                PlateVisualizer(
-                    weight: detail.weight.wrappedValue,
-                    exercise: exercise
-                )
             }
         }
     }
@@ -113,40 +97,67 @@ struct ExerciseSetOverlay: View {
                 Text("Sets: \(exercise.workingSets)")
                     .font(.subheadline)
                     .foregroundStyle(.gray)
-            }.padding(.horizontal).zIndex(1)
+            }
+            .padding(.horizontal)
+            .zIndex(1)
             
             Button(action: onClose) {
                 Image(systemName: "xmark.circle.fill")
                     .imageScale(.large)
                     .foregroundStyle(.gray)
                     .padding()
-            }.contentShape(Rectangle())
+            }
+            .contentShape(Rectangle())
            
         }
-        .padding(.top, -15)
     }
     
     private var adjustmentsSection: some View {
         HStack {
-            AdjustmentsSection(showingAdjustmentsView: $showAdjustmentsView, exercise: exercise)
+            AdjustmentsSection(
+                showingAdjustmentsView: $showAdjustmentsView,
+                showingPlateVisualizer: $showPlateVisualizer,
+                hidePlateVisualizer: false,
+                exercise: exercise
+            )
             ExEquipImage(image: exercise.fullImage, button: .info, onTap: { viewDetail() })
         }
     }
     
-    private func currentSetBinding(for exercise: Binding<Exercise>) -> Binding<SetDetail>? {
-        let i = exercise.wrappedValue.currentSet - 1               // 0-based
-        guard exercise.wrappedValue.allSetDetails.indices.contains(i) else { return nil }
+    private var currentSetBinding: Binding<SetDetail>? {
+        let i = exercise.currentSetIndex              // 0-based
+        guard exercise.allSetDetails.indices.contains(i) else { return nil }
 
         return Binding(
-            get: { exercise.wrappedValue.allSetDetails[i] },
+            get: { exercise.allSetDetails[i] },
             set: { newVal in
-                if i < exercise.wrappedValue.warmUpSets {
-                    exercise.wrappedValue.warmUpDetails[i] = newVal
+                if i < exercise.warmUpSets {
+                    exercise.warmUpDetails[i] = newVal
                 } else {
-                    exercise.wrappedValue.setDetails[i - exercise.wrappedValue.warmUpSets] = newVal
+                    exercise.setDetails[i - exercise.warmUpSets] = newVal
                 }
             }
         )
+    }
+    
+    private func handleButtonPress(setDetail: Binding<SetDetail>) -> Int {
+        let priorMax = getPriorMax(exercise.id)
+        let defaultRest = exercise.getRestPeriod(isWarm: exercise.isWarmUp, rest: progress.restPeriods)
+        let restForSet = setDetail.wrappedValue.restPeriod ?? defaultRest
+        
+        // ── A) Repetition-driven sets (compound/isolation) ─────────────────────
+        let best: PeakMetric = priorMax ?? exercise.getPeakMetric(metricValue: 0)
+        let result = setDetail.wrappedValue.updateCompletedMetrics(currentBest: best)
+        if let newPR = result.newMax {
+            onPerformanceUpdate(PerformanceUpdate(
+                exerciseId: exercise.id,
+                value: newPR,
+                repsXweight: result.rxw,
+                setId: setDetail.id
+            ))
+        }
+        
+        return restForSet
     }
 }
 

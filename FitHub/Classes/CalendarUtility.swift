@@ -25,29 +25,19 @@ final class CalendarUtility {
     // MARK: - Date Components
     
     /// Safely extracts year component from a date
-    func year(from date: Date) -> Int {
-        calendar.component(.year, from: date)
-    }
+    func year(from date: Date) -> Int { calendar.component(.year, from: date) }
     
     /// Safely extracts month component from a date
-    func month(from date: Date) -> Int {
-        calendar.component(.month, from: date)
-    }
+    func month(from date: Date) -> Int { calendar.component(.month, from: date) }
     
     /// Safely extracts day component from a date
-    func day(from date: Date) -> Int {
-        calendar.component(.day, from: date)
-    }
+    func day(from date: Date) -> Int { calendar.component(.day, from: date) }
     
     /// Safely extracts weekday component from a date
-    func weekday(from date: Date) -> Int {
-        calendar.component(.weekday, from: date)
-    }
+    func weekday(from date: Date) -> Int { calendar.component(.weekday, from: date) }
     
     /// Safely extracts week of year component from a date
-    func weekOfYear(from date: Date) -> Int {
-        calendar.component(.weekOfYear, from: date)
-    }
+    func weekOfYear(from date: Date) -> Int { calendar.component(.weekOfYear, from: date) }
     
     // MARK: - Date Arithmetic (Safe)
     
@@ -57,9 +47,7 @@ final class CalendarUtility {
     }
     
     /// Safely creates a date from components
-    func date(from components: DateComponents) -> Date? {
-        calendar.date(from: components)
-    }
+    func date(from components: DateComponents) -> Date? { calendar.date(from: components) }
     
     /// Safely creates date components from a date
     func dateComponents(_ components: Set<Calendar.Component>, from date: Date) -> DateComponents {
@@ -74,14 +62,10 @@ final class CalendarUtility {
     // MARK: - Common Date Operations
     
     /// Gets the start of day for a given date
-    func startOfDay(for date: Date) -> Date {
-        calendar.startOfDay(for: date)
-    }
+    func startOfDay(for date: Date) -> Date { calendar.startOfDay(for: date) }
     
     /// Gets the end of day for a given date (23:59:59)
-    func endOfDay(for date: Date) -> Date? {
-        calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)
-    }
+    func endOfDay(for date: Date) -> Date? { calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date) }
     
     /// Sets specific time components on a date
     func date(bySettingHour hour: Int, minute: Int, second: Int, of date: Date) -> Date? {
@@ -168,14 +152,10 @@ final class CalendarUtility {
     // MARK: - Date Comparison
     
     /// Checks if two dates are the same day
-    func isDate(_ date1: Date, inSameDayAs date2: Date) -> Bool {
-        calendar.isDate(date1, inSameDayAs: date2)
-    }
+    func isDate(_ date1: Date, inSameDayAs date2: Date) -> Bool { calendar.isDate(date1, inSameDayAs: date2) }
     
     /// Checks if a date is today
-    func isDateInToday(_ date: Date) -> Bool {
-        calendar.isDateInToday(date)
-    }
+    func isDateInToday(_ date: Date) -> Bool { calendar.isDateInToday(date) }
     
     /// Checks if two dates are equal to a specific granularity
     func isDate(_ date1: Date, equalTo date2: Date, toGranularity granularity: Calendar.Component) -> Bool {
@@ -183,14 +163,10 @@ final class CalendarUtility {
     }
     
     /// Checks if a date is in the same month as another date
-    func isDate(_ date1: Date, inSameMonthAs date2: Date) -> Bool {
-        isDate(date1, equalTo: date2, toGranularity: .month)
-    }
+    func isDate(_ date1: Date, inSameMonthAs date2: Date) -> Bool { isDate(date1, equalTo: date2, toGranularity: .month) }
     
     /// Checks if a date is in the same week as another date
-    func isDate(_ date1: Date, inSameWeekAs date2: Date) -> Bool {
-        isDate(date1, equalTo: date2, toGranularity: .weekOfYear)
-    }
+    func isDate(_ date1: Date, inSameWeekAs date2: Date) -> Bool { isDate(date1, equalTo: date2, toGranularity: .weekOfYear) }
     
     // MARK: - Date Intervals
     
@@ -207,58 +183,38 @@ final class CalendarUtility {
     // MARK: - Time Period Calculations
     
     /// Gets a date from a specified number of months ago
-    func monthsAgo(_ months: Int, from date: Date = Date()) -> Date? {
-        self.date(byAdding: .month, value: -months, to: date)
-    }
+    func monthsAgo(_ months: Int, from date: Date = Date()) -> Date? { self.date(byAdding: .month, value: -months, to: date) }
     
     /// Gets a date from a specified number of years ago
-    func yearsAgo(_ years: Int, from date: Date = Date()) -> Date? {
-        self.date(byAdding: .year, value: -years, to: date)
-    }
+    func yearsAgo(_ years: Int, from date: Date = Date()) -> Date? { self.date(byAdding: .year, value: -years, to: date) }
     
     /// Gets a date from a specified number of days ago
-    func daysAgo(_ days: Int, from date: Date = Date()) -> Date? {
-        self.date(byAdding: .day, value: -days, to: date)
-    }
+    func daysAgo(_ days: Int, from date: Date = Date()) -> Date? { self.date(byAdding: .day, value: -days, to: date) }
     
     /// Gets a date from a specified number of hours ago
-    func hoursAgo(_ hours: Int, from date: Date = Date()) -> Date? {
-        self.date(byAdding: .hour, value: -hours, to: date)
-    }
+    func hoursAgo(_ hours: Int, from date: Date = Date()) -> Date? { self.date(byAdding: .hour, value: -hours, to: date) }
     
     // MARK: - Specific Time Periods
     
     /// Gets the date from one month ago
-    var oneMonthAgo: Date? {
-        monthsAgo(1)
-    }
+    var oneMonthAgo: Date? { monthsAgo(1) }
     
     /// Gets the date from six months ago
-    var sixMonthsAgo: Date? {
-        monthsAgo(6)
-    }
+    var sixMonthsAgo: Date? { monthsAgo(6) }
     
     /// Gets the date from one year ago
-    var oneYearAgo: Date? {
-        yearsAgo(1)
-    }
+    var oneYearAgo: Date? { yearsAgo(1) }
     
     /// Gets the date from 100 years ago (for "all time" calculations)
-    var oneHundredYearsAgo: Date? {
-        yearsAgo(100)
-    }
+    var oneHundredYearsAgo: Date? { yearsAgo(100) }
     
     // MARK: - Navigation
     
     /// Gets the previous month from a given date
-    func previousMonth(from date: Date) -> Date? {
-        self.date(byAdding: .month, value: -1, to: date)
-    }
+    func previousMonth(from date: Date) -> Date? { self.date(byAdding: .month, value: -1, to: date) }
     
     /// Gets the next month from a given date
-    func nextMonth(from date: Date) -> Date? {
-        self.date(byAdding: .month, value: 1, to: date)
-    }
+    func nextMonth(from date: Date) -> Date? { self.date(byAdding: .month, value: 1, to: date) }
     
     /// Checks if a date is in the next month relative to today
     func isNextMonth(_ date: Date) -> Bool {
@@ -300,9 +256,7 @@ final class CalendarUtility {
     }
     
     /// Gets the current year
-    var currentYear: Int {
-        year(from: Date())
-    }
+    var currentYear: Int { year(from: Date()) }
     
     // MARK: - Time Component Extraction
     
@@ -328,14 +282,10 @@ final class CalendarUtility {
     }
     
     /// Gets the year from a date as a string
-    func yearString(from date: Date) -> String {
-        String(year(from: date))
-    }
+    func yearString(from date: Date) -> String { String(year(from: date)) }
     
     /// Gets the full month and year string
-    func monthYearString(from date: Date) -> String {
-        "\(monthName(from: date)) \(yearString(from: date))"
-    }
+    func monthYearString(from date: Date) -> String { "\(monthName(from: date)) \(yearString(from: date))" }
     
     // MARK: - Age Calculations
     
@@ -344,13 +294,12 @@ final class CalendarUtility {
         let components = dateComponents([.year], from: birthDate, to: currentDate)
         return components.year ?? 0
     }
-}
-
-// MARK: - Convenience Extensions
-
-extension Date {
-    /// Convenience property to access the calendar utility
-    //var calendar: CalendarUtility { CalendarUtility.shared }
+    
+    static func secondsSince(_ date: Date?) -> Int {
+        guard let date else { return 0 }
+        let delta = Date().timeIntervalSince(date)
+        return max(0, Int(delta.rounded()))
+    }
 }
 
 // MARK: - Calendar Extension for generateWeeklyIntervals (for backward compatibility)

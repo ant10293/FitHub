@@ -91,3 +91,18 @@ extension Collection {
         return indices.contains(index) ? self[index] : nil
     }
 }
+
+// Small safety helpers
+extension Array {
+    subscript(safeEdit index: Index) -> Element? {
+        get { indices.contains(index) ? self[index] : nil }
+        set {
+            guard let new = newValue else { return }
+            if indices.contains(index) {
+                self[index] = new
+            } else if index == endIndex {
+                self.append(new)
+            }
+        }
+    }
+}

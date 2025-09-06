@@ -1,5 +1,5 @@
 //
-//  ActionButton.swift
+//  RectangularButton.swift
 //  FitHub
 //
 //  Created by Anthony Cantu on 5/18/25.
@@ -7,13 +7,17 @@
 
 import SwiftUI
 
-struct ActionButton: View {
+struct RectangularButton: View {
+    enum WidthStyle { case fit, fill }
+    enum IconPosition { case leading, trailing }
+
     let title: String
     let systemImage: String?
     let enabled: Bool
     let color: Color
     let width: WidthStyle
     let bold: Bool
+    let iconPosition: IconPosition
     let action: () -> Void
 
     init(
@@ -23,6 +27,7 @@ struct ActionButton: View {
         color: Color = .blue,
         width: WidthStyle = .fill,
         bold: Bool = false,
+        iconPosition: IconPosition = .leading,
         action: @escaping () -> Void
     ) {
         self.title = title
@@ -31,18 +36,17 @@ struct ActionButton: View {
         self.color = color
         self.width = width
         self.bold = bold
+        self.iconPosition = iconPosition
         self.action = action
     }
 
     var body: some View {
         Button(action: action) {
-            HStack {
-                if let name = systemImage {
-                    Image(systemName: name)
-                }
+            HStack(spacing: 8) {
+                if iconPosition == .leading { icon }
                 Text(title)
                     .fontWeight(bold ? .bold : .regular)
-                    
+                if iconPosition == .trailing { icon }
             }
             .foregroundStyle(Color.primary)
             .frame(maxWidth: width == .fill ? .infinity : nil)
@@ -52,8 +56,11 @@ struct ActionButton: View {
         }
         .disabled(!enabled)
     }
-    
-    enum WidthStyle { case fit, fill }   // fit = text width, fill = full width
+
+    @ViewBuilder
+    private var icon: some View {
+        if let name = systemImage {
+            Image(systemName: name)
+        }
+    }
 }
-
-

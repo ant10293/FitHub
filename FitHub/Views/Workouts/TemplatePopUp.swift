@@ -62,7 +62,7 @@ struct TemplatePopup: View {
                     .padding(.horizontal)
             }
             
-            ActionButton(title: "Begin Workout", enabled: !disableTemplate, width: .fit, action: onBeginWorkout)
+            RectangularButton(title: "Begin Workout", enabled: !disableTemplate, width: .fit, action: onBeginWorkout)
         }
         .padding()
         .background(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground).opacity(0.6))

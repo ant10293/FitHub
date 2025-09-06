@@ -91,6 +91,8 @@ struct Settings: Codable, Equatable {
     var hideDislikedExercises: Bool = false // hide exercises that the user has disliked
     var hiddenExercises: Set<UUID> = []
     // var monthlyStrengthUpdate: Bool = true
+    // var hideRpeSlider: Bool = false
+    // var hideCompletedInput: Bool = false
 }
 
 // evaluation       = Evaluation()

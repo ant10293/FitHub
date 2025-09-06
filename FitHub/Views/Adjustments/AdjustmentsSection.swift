@@ -10,16 +10,18 @@ import SwiftUI
 struct AdjustmentsSection: View {
     @EnvironmentObject var ctx: AppContext
     @Binding var showingAdjustmentsView: Bool
+    @Binding var showingPlateVisualizer: Bool
+    
+    let hidePlateVisualizer: Bool
     let exercise: Exercise
     
     var titleFont: Font = .caption
     var titleColor: Color = .blue
     var bodyFont: Font = .caption
     var bodyColor: Color = .secondary
-    var padding: CGFloat = -10
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack {
             if ctx.equipment.hasEquipmentAdjustments(for: exercise) {
                 Button(action: { showingAdjustmentsView.toggle() }) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -28,7 +30,7 @@ struct AdjustmentsSection: View {
                             .bold()
                             .foregroundStyle(titleColor)
                             .minimumScaleFactor(0.8)
-
+                        
                         if let adjustments = ctx.adjustments.getEquipmentAdjustments(for: exercise), !adjustments.isEmpty {
                             let nonEmpty = adjustments.filter { !$0.value.displayValue.isEmpty }
                             if nonEmpty.isEmpty {
@@ -36,24 +38,33 @@ struct AdjustmentsSection: View {
                             } else {
                                 ForEach(nonEmpty.keys.sorted(), id: \.self) { cat in
                                     if let val = nonEmpty[cat]?.displayValue {
-                                        Text("\(cat.rawValue): ")
-                                            .font(.caption)
-                                            .foregroundStyle(Color.secondary)
-                                        + Text(val)
-                                            .font(.caption)
-                                            .foregroundStyle(Color.secondary)
-                                            .bold()
+                                        (Text("\(cat.rawValue): ")
+                                         + Text(val).bold())
+                                        .font(.caption)
+                                        .foregroundStyle(Color.secondary)
                                     }
                                 }
                             }
                         } else {
-                            addAdjustmentPlaceholder 
+                            addAdjustmentPlaceholder
                         }
                     }
-                    .padding(.leading, padding)
                 }
             }
-        }  
+            
+            if !hidePlateVisualizer, exercise.usesPlates(equipmentData: ctx.equipment) {
+                Button(action: { showingPlateVisualizer.toggle() }) {
+                    Text("Plate Loading Visualizer")
+                        .font(.caption)
+                        .bold()
+                        .foregroundStyle(.blue)
+                        .minimumScaleFactor(0.8)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.top)
+                .padding(.horizontal)
+            }
+        }
     }
     
     private var addAdjustmentPlaceholder: some View {

@@ -105,7 +105,7 @@ struct RestTimerSettings: View {
                 // Disclosure editor
                 if activeEditor == kind {
                     VStack(spacing: 10) {
-                        RestPicker(time: $editTime)
+                        MinSecPicker(time: $editTime)
                             .onChange(of: editTime) { savePicker(into: kind) }
                         
                         HStack {

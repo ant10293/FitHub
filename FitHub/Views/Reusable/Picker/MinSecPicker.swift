@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftUI
 
-struct RestPicker: View {
+struct MinSecPicker: View {
     @Binding var time: TimeSpan
 
     var minuteRange: ClosedRange<Int> = 0...59

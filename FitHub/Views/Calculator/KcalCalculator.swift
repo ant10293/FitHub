@@ -69,7 +69,7 @@ struct KcalCalculator: View {
                 EmptyView()
             } footer: {
                 if !kbd.isVisible {
-                    ActionButton(
+                    RectangularButton(
                         title: "Calculate Daily Caloric Intake",
                         enabled: isCalculateEnabled,
                         action: calculateAndShow
@@ -162,7 +162,7 @@ struct KcalCalculator: View {
                 Text("Daily Caloric Intake").font(.headline)
                 Text("\(Int(calories)) Calories").font(.title2)
 
-                ActionButton(title: "Done", action: dismissAction)
+                RectangularButton(title: "Done", action: dismissAction)
                     .padding(.horizontal)
             }
             .frame(width: UIScreen.main.bounds.width * 0.8,

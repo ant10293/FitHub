@@ -13,7 +13,6 @@ struct WorkoutGeneration: View {
     @EnvironmentObject private var ctx: AppContext
     @State private var showingCustomizationForm: Bool = false
     @State private var showAlert: Bool = false
-    @State private var showingTemplateDetail: Bool = false // control the navigation to TemplateDetailView
     @State private var showingExerciseOptions: Bool = false
     @State private var showingLogDetail: Bool = false   // ← add near other @State vars
     @State private var expandList: Bool = false
@@ -21,67 +20,63 @@ struct WorkoutGeneration: View {
     @State private var selectedExercise: Exercise?
     @State private var alertMessage: String = ""
     @State private var replacedExercises: [String] = [] // Define replacedExercises here
+    @State private var selectedTemplate: SelectedTemplate?
     
     var body: some View {
-        ZStack {
-            Color(UIColor.systemGroupedBackground)
-                .edgesIgnoringSafeArea(.all)
-            
-            VStack {
-                if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Workout Plan Generated!").zIndex(1) }
+        TemplateNavigator(selectedTemplate: $selectedTemplate, usePopupOverlay: false) {
+            ZStack {
+                Color(UIColor.systemGroupedBackground)
+                    .edgesIgnoringSafeArea(.all)
                 
-                selectionBar
-                ExpandCollapseList(expandList: $expandList)
-                exerciseList
-                manageSection
+                VStack {
+                    if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Workout Plan Generated!").zIndex(1) }
                     
-                Spacer()
+                    selectionBar
+                    ExpandCollapseList(expandList: $expandList)
+                    exerciseList
+                    manageSection
+                        
+                    Spacer()
+                }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
-        }
-        .navigationBarTitle("Workout Generation", displayMode: .inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                if ctx.userData.workoutPlans.logFileURL != nil {      // only show when we have a file
-                    Button {
-                        showingLogDetail = true                       // push detail view
-                    } label: {
-                        Image(systemName: "doc.text.magnifyingglass") // pick any icon you like
-                            .imageScale(.medium)
+            .navigationBarTitle("Workout Generation", displayMode: .inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    if ctx.userData.workoutPlans.logFileURL != nil {      // only show when we have a file
+                        Button {
+                            showingLogDetail = true                       // push detail view
+                        } label: {
+                            Image(systemName: "doc.text.magnifyingglass") // pick any icon you like
+                                .imageScale(.medium)
+                        }
                     }
                 }
             }
-        }
-        .navigationDestination(isPresented: $showingLogDetail) {
-            if let url = ctx.userData.workoutPlans.logFileURL {
-                LogDetailView(url: url)      // <— the reader view you built earlier
-            }
-        }
-        .navigationDestination(isPresented: $showingTemplateDetail) {
-            if let template = $ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] {
-                TemplateDetail(template: template, onDone: {
-                    self.showingTemplateDetail = false
-                })
-            }
-        }
-        .navigationDestination(isPresented: $showingCustomizationForm) { WorkoutCustomization() }
-        .alert(isPresented: $showAlert) { Alert(title: Text("Template updated"), message: Text(alertMessage), dismissButton: .default(Text("OK"))) }
-        .overlay(
-            Group {
-                if showingExerciseOptions, let exercise = selectedExercise {
-                    ExerciseOptions(
-                        showAlert: $showAlert,
-                        alertMessage: $alertMessage,
-                        replacedExercises: $replacedExercises,
-                        template: $ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] ?? .constant(WorkoutTemplate(name: "Default", exercises: [], categories: [])),
-                        exercise: exercise,
-                        onClose: {
-                            showingExerciseOptions = false
-                        }
-                    )
+            .navigationDestination(isPresented: $showingLogDetail) {
+                if let url = ctx.userData.workoutPlans.logFileURL {
+                    LogDetailView(url: url)      // <— the reader view you built earlier
                 }
             }
-        )
+            .navigationDestination(isPresented: $showingCustomizationForm) { WorkoutCustomization() }
+            .alert(isPresented: $showAlert) { Alert(title: Text("Template updated"), message: Text(alertMessage), dismissButton: .default(Text("OK"))) }
+            .overlay(showingExerciseOptions ? exerciseOptions : nil)
+        }
+    }
+    
+    @ViewBuilder private var exerciseOptions: some View {
+        if let exercise = selectedExercise {
+            ExerciseOptions(
+                showAlert: $showAlert,
+                alertMessage: $alertMessage,
+                replacedExercises: $replacedExercises,
+                template: $ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] ?? .constant(WorkoutTemplate(name: "Default", exercises: [], categories: [])),
+                exercise: exercise,
+                onClose: {
+                    showingExerciseOptions = false
+                }
+            )
+        }
     }
     
     private var selectionBar: some View {
@@ -113,7 +108,17 @@ struct WorkoutGeneration: View {
                     .padding(.leading, -5)
             }
             .contentShape(Rectangle())
-            .onTapGesture { showingTemplateDetail = true }
+            .onTapGesture { 
+                // Create selectedTemplate for navigation
+                if let template = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] {
+                    selectedTemplate = SelectedTemplate(
+                        id: template.id, 
+                        name: template.name, 
+                        index: currentTemplateIndex, 
+                        isUserTemplate: false
+                    )
+                }
+            }
             .frame(alignment: .center)
             .padding(.horizontal)
             
@@ -170,9 +175,9 @@ struct WorkoutGeneration: View {
                 .font(.subheadline)
                 .padding()
             
-            ActionButton(
+            RectangularButton(
                 title: "Generate Workout Plan",
-                enabled: !showingExerciseOptions,
+                enabled: !showingExerciseOptions && !ctx.userData.isWorkingOut,
                 width: .fit,
                 action: {
                     ctx.userData.generateWorkoutPlan(
@@ -213,6 +218,3 @@ struct WorkoutGeneration: View {
         }
     }
 }
-
-
-

@@ -12,6 +12,7 @@ import SwiftUI
 // also, must create interface for adding muscle and submuscle engagement
 // group category should be: arms, back, legs
 // split category should not include those options ^
+// if equipment is added, fill in the adjustments
 struct NewExercise: View {
     // ────────── Environment
     @Environment(\.dismiss) private var dismiss
@@ -77,7 +78,7 @@ struct NewExercise: View {
                     .disabled(isReadOnly)
                     
                     if !kbd.isVisible && !isReadOnly {
-                        ActionButton(
+                        RectangularButton(
                             title: isEditing ? "Save Changes" : "Create Exercise",
                             enabled: isInputValid,
                             color: isInputValid ? .blue : .gray
@@ -98,7 +99,7 @@ struct NewExercise: View {
                         .padding()
                         
                         if isEditing {
-                            ActionButton(title: "Delete Exercise", systemImage: "trash", color: .red, action: {
+                            RectangularButton(title: "Delete Exercise", systemImage: "trash", color: .red, action: {
                                 showDeleteAlert = true
                             })
                             .padding()
@@ -239,12 +240,13 @@ struct NewExercise: View {
     private var adjustmentsField: some View {
         AdjustmentsSection(
             showingAdjustmentsView: $showingAdjustmentsView,
+            showingPlateVisualizer: .constant(false),
+            hidePlateVisualizer: true,
             exercise: exercise,
             titleFont: .headline,
             titleColor: .primary,
             bodyFont: .body,
-            bodyColor: .blue,
-            padding: 0
+            bodyColor: .blue
         )
     }
     

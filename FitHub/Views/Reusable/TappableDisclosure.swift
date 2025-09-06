@@ -17,9 +17,8 @@ struct TappableDisclosure<Label: View, Content: View>: View {
             HStack(alignment: .firstTextBaseline, spacing: 12) {
                 label()
                 Spacer(minLength: 0)
-                Image(systemName: "chevron.down")
+                Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
                     .foregroundStyle(.secondary)
-                    .rotationEffect(.degrees(isExpanded ? 180 : 0))
                     .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isExpanded)
                     .accessibilityHidden(true)
             }

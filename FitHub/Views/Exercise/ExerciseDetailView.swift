@@ -323,7 +323,7 @@ struct ExerciseDetailView: View {
             }
             
             if !showingUpdate1RMView {
-                ActionButton(
+                RectangularButton(
                     title: "Update Max",
                     systemImage: "square.and.pencil",
                     width: .fit,

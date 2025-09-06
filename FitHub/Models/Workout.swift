@@ -8,11 +8,12 @@
 import Foundation
 
 
-struct SelectedTemplate {
+struct SelectedTemplate: Identifiable, Equatable {
     var id: UUID
     var name: String
     var index: Int
     var isUserTemplate: Bool
+    var resuming: Bool = false
 }
 
 struct WorkoutTemplate: Identifiable, Hashable, Codable, Equatable {
@@ -119,7 +120,6 @@ struct CompletedWorkout: Identifiable, Hashable, Codable {
 
 struct WorkoutInProgress: Codable, Equatable {
     var template: WorkoutTemplate
-    var elapsedTime: Int
     var currentExerciseState: CurrentExerciseState?
     var dateStarted: Date
     var updatedMax: [PerformanceUpdate]

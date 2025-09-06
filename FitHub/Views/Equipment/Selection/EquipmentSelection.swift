@@ -14,7 +14,7 @@ struct EquipmentSelection: View {
     var onDone: ([GymEquipment]) -> Void = { _ in }
 
     var body: some View {
-        //NavigationStack {
+        NavigationStack {
             EquipmentSelectionContent(
                 selectedCategory: $selectedCategory,
                 searchText: $searchText,
@@ -45,7 +45,7 @@ struct EquipmentSelection: View {
                     Color.clear.onAppear { selectedEquipmentId = nil; viewDetail = false }
                 }
             }
-        //}
+        }
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .onDisappear { if !donePressed { onDone(selection) } }
     }

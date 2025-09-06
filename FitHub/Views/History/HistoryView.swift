@@ -31,7 +31,7 @@ struct HistoryView: View {
                 }
                 
                 LegendView
-                    .padding(.horizontal)
+                    .padding()
                 
                 Spacer()
             }
@@ -102,10 +102,11 @@ struct HistoryView: View {
                             .frame(width: 15, height: 15, alignment: .leading)
                     }
                     Text("Completed Workouts")
+                        //.foregroundStyle(.blue)
                     Spacer()
                     Image(systemName: "chevron.right")
                         .frame(width: 15, height: 15)
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(.blue)
                         .padding(.horizontal)
                 }
                 .contentShape(Rectangle())

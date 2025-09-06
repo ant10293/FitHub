@@ -21,22 +21,7 @@ struct WorkoutPlan: View {
             VStack {
                 Spacer()
                                 
-                VStack(alignment: .leading) {
-                    Text("This Week's Workouts")
-                        .font(.headline)
-                        .padding(.leading)
-                    
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(height: 200)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .overlay(WeekWorkoutView(userData: ctx.userData))
-                        .padding(.horizontal)
-                        .overlay(
-                            WeekLegendView()
-                                .padding(.top, 150)
-                        ).frame(alignment: .center)
-                }
+                WeekView(userData: ctx.userData)
                 
                 /*
                  NavigationLink(destination: ViewMusclesView(userData: ctx.userData)) {
@@ -84,49 +69,42 @@ struct WorkoutPlan: View {
                 Spacer()
                 
                 if ctx.userData.workoutPlans.trainerTemplates.isEmpty {
-                    Button(action: {
-                        ctx.userData.generateWorkoutPlan(
-                            exerciseData: ctx.exercises,
-                            equipmentData: ctx.equipment,
-                            keepCurrentExercises: false,
-                            nextWeek: false,
-                            onDone: {
-                                showingSaveConfirmation = true
-                            }
-                        )
-                    }) {
-                        HStack {
-                            Text("Generate Workout Plan")
-                                .foregroundStyle(.white)
-                            Image(systemName: "square.and.pencil")
-                                .foregroundStyle(.white)
+                    RectangularButton(
+                        title: "Generate Workout Plan",
+                        systemImage: "square.and.pencil",
+                        enabled: !ctx.userData.isWorkingOut,
+                        width: .fit,
+                        iconPosition: .trailing,
+                        action: {
+                            ctx.userData.generateWorkoutPlan(
+                                exerciseData: ctx.exercises,
+                                equipmentData: ctx.equipment,
+                                keepCurrentExercises: false,
+                                nextWeek: false,
+                                onDone: {
+                                    showingSaveConfirmation = true
+                                }
+                            )
                         }
-                        .foregroundStyle(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .clipShape(Capsule())
-                    }
+                    )
+                    .clipShape(Capsule())
                 } else {
-                    // Button to start today's workout
-                    Button(action: startWorkoutForDay) {
-                        HStack {
-                            Text("Start Today's Workout")
-                                .foregroundStyle(.white)
-                            Image(systemName: "dumbbell.fill")
-                                .foregroundStyle(.white)
-                        }
-                        .foregroundStyle(.white)
-                        .padding()
-                        .background(shouldDisableWorkoutButton() ? Color.gray : Color.blue)
-                        .clipShape(Capsule())
-                    }
-                    .disabled(shouldDisableWorkoutButton())
+                    RectangularButton(
+                        title: "Start Today's Workout",
+                        systemImage: "dumbbell.fill",
+                        enabled: !disableWorkoutButton,
+                        width: .fit,
+                        iconPosition: .trailing,
+                        action: startWorkoutForDay
+                    )
+                    .clipShape(Capsule())
                     .navigationDestination(isPresented: $isNavigationActive) {
                         if let selectedTemplate = selectedWorkoutTemplate {
                             StartedWorkoutView(viewModel: WorkoutVM(template: selectedTemplate))
                         }
                     }
                 }
+                
                 Spacer()
             }
             .background(Color(UIColor.systemGroupedBackground))
@@ -173,7 +151,7 @@ struct WorkoutPlan: View {
         }
     }
     
-    private func shouldDisableWorkoutButton() -> Bool {
+    private var disableWorkoutButton: Bool {
         return ctx.userData.isWorkingOut || ctx.userData.sessionTracking.activeWorkout != nil
     }
     

@@ -69,7 +69,7 @@ struct BFCalculator: View {
                 EmptyView()
             } footer: {
                 if !kbd.isVisible {
-                    ActionButton(
+                    RectangularButton(
                         title: "Calculate Body Fat %",
                         enabled: isCalculateEnabled,
                         action: calculateAndShow
@@ -147,7 +147,7 @@ struct BFCalculator: View {
                 Text("\(bodyFat, specifier: "%.2f") %")
                     .font(.title2)
 
-                ActionButton(title: "Done", action: dismissAction)
+                RectangularButton(title: "Done", action: dismissAction)
                     .padding()
             }
             .frame(width: UIScreen.main.bounds.width * 0.8,

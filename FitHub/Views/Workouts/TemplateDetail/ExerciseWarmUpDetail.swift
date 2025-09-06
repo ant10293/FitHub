@@ -1,7 +1,7 @@
-//  WarmUpSetsEditorView.swift   – refactor = same visuals, safer state
+//  ExerciseWarmUpDetail.swift
+
 import SwiftUI
 
-//  WarmUpSetsEditorView.swift
 
 // MARK: - Row view-model (typed to SetMetric)
 private struct WarmUpRowVM: Identifiable {
@@ -21,7 +21,7 @@ private struct WarmUpRowVM: Identifiable {
 }
 
 // MARK: - Main editor
-struct WarmUpSetsEditorView: View {
+struct ExerciseWarmUpDetail: View {
     // 1) canonical model from parent
     @Binding var exercise: Exercise
 
@@ -115,20 +115,7 @@ struct WarmUpSetsEditorView: View {
     // MARK: Buttons (add / delete / autofill)
     private var buttonSection: some View {
         VStack {
-            HStack {
-                Spacer()
-                Button(action: addRow) {
-                    Label("Add Set", systemImage: "plus").foregroundStyle(.blue)
-                }
-                .buttonStyle(.bordered).tint(.blue)
-
-                Button(action: deleteRow) {
-                    Label("Delete Set", systemImage: "minus").foregroundStyle(.red)
-                }
-                .buttonStyle(.bordered).tint(.red)
-                Spacer()
-            }
-            .padding(.top)
+           AddDeleteButtons(addSet: addRow, deleteLastSet: deleteRow)
             .listRowSeparator(.hidden)
 
             HStack {

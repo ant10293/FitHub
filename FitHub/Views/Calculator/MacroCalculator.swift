@@ -78,7 +78,7 @@ struct MacroCalculator: View {
                 EmptyView()
             } footer: {
                 if !kbd.isVisible {
-                    ActionButton(
+                    RectangularButton(
                         title: "Calculate Macros",
                         enabled: isCalculateEnabled,
                         action: calculate
@@ -206,7 +206,7 @@ struct MacroCalculator: View {
                          proteins: result.proteins)
                     .padding(.vertical)
 
-                ActionButton(title: "Done", action: dismissAction)
+                RectangularButton(title: "Done", action: dismissAction)
             }
             .padding()
             .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : .white)

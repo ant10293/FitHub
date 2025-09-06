@@ -30,10 +30,7 @@ struct GenericEditor: View {
                 .padding(8)
                 .roundedBackground()
                 .padding(.horizontal)
-                .onChange(of: inputValue) { oldValue, newValue in
-                    inputValue = InputLimiter.filteredWeight(old: oldValue, new: newValue)
-                }
-            
+          
             HStack(spacing: 20) {
                 Spacer()
                 

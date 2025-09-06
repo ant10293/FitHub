@@ -104,7 +104,7 @@ struct PlannedWorkoutTime: View {
             header: Text("Notification Settings"),
             footer:
                 // Footer button to toggle picker visibility
-                ActionButton(
+                RectangularButton(
                     title: isPickerExpanded ? "Hide Picker" : "Add Notification Time",
                     systemImage: isPickerExpanded ? "xmark" : "plus",
                     color: isPickerExpanded ? .red : .blue,

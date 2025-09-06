@@ -11,26 +11,20 @@ struct TemplateArchives: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var userData: UserData
     @State private var selectedTemplate: SelectedTemplate?
-    @State private var navigateToDetail: Bool = false
     @State private var showingActionOverlay: Bool = false
 
     var body: some View {
-        workoutList()
-        .navigationDestination(isPresented: $navigateToDetail) {
-            if let selectedTemplate = selectedTemplate {
-                if userData.workoutPlans.archivedTemplates.indices.contains(selectedTemplate.index) {
-                    TemplateDetail(template: $userData.workoutPlans.archivedTemplates[selectedTemplate.index], onDone: {
-                        navigateToDetail = false
-                    })
-                }
+        TemplateNavigator(selectedTemplate: $selectedTemplate, usePopupOverlay: false) {
+            ZStack {
+                workoutList()
+                .overlay(content: {
+                    if let selected = selectedTemplate {
+                        showingActionOverlay ? actionOverlay(selected: selected) : nil
+                    }
+                })
+                .navigationBarTitle("Manage Templates", displayMode: .inline)
             }
         }
-        .overlay(content: {
-            if let selected = selectedTemplate {
-                showingActionOverlay ? actionOverlay(selected: selected) : nil
-            }
-        })
-        .navigationBarTitle("Manage Templates", displayMode: .inline)
     }
     
     // MARK: – List / empty‑state wrapper
@@ -62,7 +56,7 @@ struct TemplateArchives: View {
             Button(action: {
                 let template = userData.workoutPlans.archivedTemplates[index]
                 selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: true)
-                navigateToDetail = true
+                // The TemplateNavigator will automatically navigate to template detail
             }) {
                 HStack {
                     VStack(alignment: .leading) {

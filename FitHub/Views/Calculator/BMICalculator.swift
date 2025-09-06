@@ -43,7 +43,7 @@ struct BMICalculator: View {
                 EmptyView()
             } footer: {
                 if !kbd.isVisible {
-                    ActionButton(
+                    RectangularButton(
                         title: "Calculate BMI",
                         enabled: isCalculateEnabled,
                         action: {
@@ -98,7 +98,7 @@ struct BMICalculator: View {
                 BMICategoryTable(userBMI: bmi)
                     .frame(height: UIScreen.main.bounds.height * 0.1)
 
-                ActionButton(title: "Done", action: { dismissAction() })
+                RectangularButton(title: "Done", action: { dismissAction() })
                     .padding(.vertical)
             }
             .padding()

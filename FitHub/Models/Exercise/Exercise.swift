@@ -39,6 +39,8 @@ struct Exercise: Identifiable, Hashable, Codable {
     var warmUpSets: Int { warmUpDetails.count }
     var workingSets: Int { setDetails.count }
     var totalSets: Int { warmUpSets + workingSets }
+    var isWarmUp: Bool { currentSet <= warmUpSets }
+    var currentSetIndex: Int { currentSet - 1 }
         
     var currentWeekAvgRPE: Double?
     var previousWeeksAvgRPE: [Double]?
@@ -105,7 +107,7 @@ extension Exercise {
 
         if hasHold {
             // Time range (e.g., "0:30–1:00")
-            let secs = setDetails.compactMap { $0.planned.holdSeconds }
+            let secs = setDetails.compactMap { $0.planned.holdTime?.inSeconds }
             guard let lo = secs.min(), let hi = secs.max() else { return ("Hold", "0:00") }
             let loStr = TimeSpan(seconds: lo).displayStringCompact
             let hiStr = TimeSpan(seconds: hi).displayStringCompact
@@ -470,8 +472,6 @@ extension Exercise {
 
         let setStructure = userData.workoutPrefs.setStructure
         let rounding = userData.settings.roundingPreference
-        //let restPeriods = userData.workoutPrefs.customRestPeriods ?? userData.physical.goal.defaultRest
-        //var rest = restPeriods.rest(for: .warmup)
         
         var details: [SetDetail] = []
         var totalWarmUpSets = 0
@@ -505,30 +505,27 @@ extension Exercise {
                     details.append(SetDetail(
                         setNumber: idx,
                         weight: warmW,
-                        planned: .reps(reps),
-                        //restPeriod: rest
+                        planned: .reps(reps)
                     ))
                 } else {
                     // bodyweight reps warmups: just use the step reps
                     details.append(SetDetail(
                         setNumber: idx,
                         weight: Mass(kg: 0),
-                        planned: .reps(reps),
-                        //restPeriod: rest
+                        planned: .reps(reps)
                     ))
                 }
 
             case .hold:
                 // isometric warmups: shorter holds (seconds), weight stays as baseline (usually 0)
-                let baseSec = baseline.planned.holdSeconds ?? 30
+                let baseSec = baseline.planned.holdTime?.inSeconds ?? 30
                 let factor  = reductionSteps[i]
                 let target  = Int((Double(baseSec) * factor).rounded())
 
                 details.append(SetDetail(
                     setNumber: idx,
                     weight: type.usesWeight ? baseline.weight : Mass(kg: 0),
-                    planned: .hold(.fromSeconds(target)),
-                    //restPeriod: rest
+                    planned: .hold(.fromSeconds(target))
                 ))
             }
         }

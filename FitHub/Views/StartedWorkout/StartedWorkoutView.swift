@@ -17,13 +17,7 @@ struct StartedWorkoutView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-                Text(Format.timeString(from: timer.secondsElapsed))
-                    .font(.largeTitle)
-                    .padding()
-                
-                playPauseButton
-            }
+            TimerHeader(timer: timer)
             
             Divider()
             
@@ -49,11 +43,7 @@ struct StartedWorkoutView: View {
     }
     
     private func performSetup() {
-        if !ctx.userData.isWorkingOut {
-            ctx.userData.isWorkingOut = true
-            selectedExerciseIndex = viewModel.getExerciseIndex(timer: timer)
-            viewModel.setTemplateCompletionStatus(completedWorkouts: ctx.userData.workoutPlans.completedWorkouts)
-        }
+        selectedExerciseIndex = viewModel.performSetup(userData: ctx.userData, timer: timer)
     }
     
     private var exerciseList: some View {
@@ -101,7 +91,6 @@ struct StartedWorkoutView: View {
             ZStack {
                 ExerciseSetOverlay(
                     timerManager: timer,
-                    equipment: ctx.equipment,
                     exercise: $viewModel.template.exercises[selectedExerciseIdx],
                     progress: TemplateProgress(
                         exerciseIdx: selectedExerciseIdx,
@@ -124,7 +113,7 @@ struct StartedWorkoutView: View {
                         showingDetailView = true
                     },
                     getPriorMax: { id in
-                        ctx.exercises.peakMetric(for: id)
+                        return ctx.exercises.peakMetric(for: id)
                     },
                     onPerformanceUpdate: { update in
                         viewModel.updatePerformance(update)
@@ -133,7 +122,6 @@ struct StartedWorkoutView: View {
                         viewModel.saveTemplate(userData: ctx.userData, detailBinding: detailBinding, exerciseBinding: exerciseBinding)
                     }
                 )
-                .padding()
                 .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .shadow(radius: 5)
@@ -160,20 +148,6 @@ struct StartedWorkoutView: View {
                 },
                 secondaryButton: .cancel()
             )
-        }
-    }
-    
-    private var playPauseButton: some View {
-        Button(action: {
-            if timer.isActive { timer.stopTimer() }
-            else { timer.startTimer() }
-        }) {
-            Image(systemName: timer.isActive ? "pause.circle.fill" : "play.circle.fill")
-                .resizable()
-                .frame(width: 60, height: 60)
-                .foregroundStyle(timer.isActive ? .yellow : .green)
-                .background(Circle().fill(Color.black))
-                .overlay(Circle().stroke(Color.white, lineWidth: 2))
         }
     }
 }
