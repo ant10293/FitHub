@@ -14,7 +14,7 @@ struct TemplateSelection: View {
     var trainerTemplates: [WorkoutTemplate]
     
     var body: some View {
-        workoutList()
+        workoutList
         .navigationDestination(isPresented: $navigateToOverload) {
             if let sel = selectedTemplate, let tpl = resolveTemplate(sel) {
                 OverloadCalculator(template: tpl)
@@ -23,18 +23,18 @@ struct TemplateSelection: View {
         .navigationBarTitle("Select Template", displayMode: .inline)
     }
     
-    private func workoutList() -> some View {
+    private var workoutList: some View {
         List {
             if userTemplates.isEmpty && trainerTemplates.isEmpty {
                 Text("No templates found. Create your own or generate them in the trainer tab.")
                     .foregroundStyle(.gray)
                     .padding(.horizontal)
             } else {
-                if !userTemplates.isEmpty {
-                    templatesSection(templates: userTemplates, userTemplates: true)
-                }
                 if !trainerTemplates.isEmpty {
                     templatesSection(templates: trainerTemplates, userTemplates: false)
+                }
+                if !userTemplates.isEmpty {
+                    templatesSection(templates: userTemplates, userTemplates: true)
                 }
             }
         }
@@ -43,37 +43,24 @@ struct TemplateSelection: View {
     private func templatesSection(templates: [WorkoutTemplate], userTemplates: Bool) -> some View {
         Section {
             ForEach(templates.indices, id: \.self) { index in
-                templateButton(for: index, userTemplate: userTemplates)
+                templateButton(for: index, userTemplate: userTemplates, template: templates[index])
             }
         } header: {
             Text(userTemplates ? "Your Templates" : "Trainer Templates")
         }
     }
     
-    private func templateButton(for index: Int, userTemplate: Bool) -> some View {
-        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
-            // Main button action area
-            Button(action: {
-                let template = userTemplate ? userTemplates[index] : trainerTemplates[index]
-                selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: userTemplate)
+    private func templateButton(for index: Int, userTemplate: Bool, template: WorkoutTemplate) -> some View {
+        TemplateRow(
+            template: template,
+            index: index,
+            userTemplate: userTemplate,
+            hideEditButton: true,
+            onSelect: { newSelection in
+                selectedTemplate = newSelection
                 navigateToOverload = true
-            }) {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(userTemplate ? userTemplates[index].name : trainerTemplates[index].name)
-                            .foregroundStyle(Color.primary) // Ensure the text color remains unchanged
-                        Text(SplitCategory.concatenateCategories(for: userTemplate ? userTemplates[index].categories : trainerTemplates[index].categories))
-                            .font(.subheadline)
-                            .foregroundStyle(.gray)
-                    }
-                    .centerVertically()
-                    Spacer()
-                }
-                .frame(maxWidth: .infinity, alignment: .leading) // Ensure the button takes full width and aligns content to the left
-                .contentShape(Rectangle()) // Make the entire area tappable
             }
-            .buttonStyle(PlainButtonStyle())
-        }
+        )
     }
     
     private func resolveTemplate(_ sel: SelectedTemplate) -> WorkoutTemplate? {

@@ -13,7 +13,6 @@ struct SelectedTemplate: Identifiable, Equatable {
     var name: String
     var index: Int
     var isUserTemplate: Bool
-    var resuming: Bool = false
 }
 
 struct WorkoutTemplate: Identifiable, Hashable, Codable, Equatable {

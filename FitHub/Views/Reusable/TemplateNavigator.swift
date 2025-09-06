@@ -8,22 +8,23 @@
 import SwiftUI
 
 struct TemplateNavigator<Content: View>: View {
-    @EnvironmentObject private var ctx: AppContext
     @Environment(\.colorScheme) var colorScheme
+    @ObservedObject var userData: UserData
+    
     @Binding var selectedTemplate: SelectedTemplate?
     @State private var navigateToTemplateDetail: Bool = false
     @State private var navigateToStartedWorkout: Bool = false
-    @State private var activeWorkout: WorkoutInProgress?
-    @State private var currentTemplate: SelectedTemplate? = nil
     
     let usePopupOverlay: Bool
     let content: () -> Content
     
     init(
+        userData: UserData,
         selectedTemplate: Binding<SelectedTemplate?>,
         usePopupOverlay: Bool = false,
         @ViewBuilder content: @escaping () -> Content
     ) {
+        self.userData = userData
         self._selectedTemplate = selectedTemplate
         self.usePopupOverlay = usePopupOverlay
         self.content = content
@@ -32,26 +33,11 @@ struct TemplateNavigator<Content: View>: View {
     var body: some View {
         ZStack {
             content()
-                .navigationDestination(isPresented: $navigateToTemplateDetail) {
-                    templateDetailView
-                }
-                .navigationDestination(isPresented: $navigateToStartedWorkout) {
-                    startedWorkoutView
-                }
+                .navigationDestination(isPresented: $navigateToTemplateDetail) { templateDetailView }
+                .navigationDestination(isPresented: $navigateToStartedWorkout) { startedWorkoutView }
                 .overlay(usePopupOverlay ? templatePopupOverlay : nil)
         }
-        .onAppear {
-            // Set active workout if one exists (only for WorkoutsView context)
-            if let activeWorkout = ctx.userData.sessionTracking.activeWorkout {
-                self.activeWorkout = activeWorkout
-            }
-        }
         .onChange(of: selectedTemplate) { oldValue, newValue in
-            // Store the current template for navigation
-            if let newValue = newValue {
-                currentTemplate = newValue
-            }
-            
             // For direct navigation views (not popup), automatically navigate when template is selected
             if !usePopupOverlay, newValue != nil {
                 navigateToTemplateDetail = true
@@ -60,110 +46,44 @@ struct TemplateNavigator<Content: View>: View {
     }
     
     // MARK: - Navigation Destinations
-    
-    @ViewBuilder
-    private var templateDetailView: some View {
-        if let template = currentTemplate {
-            if template.isUserTemplate, ctx.userData.workoutPlans.userTemplates.indices.contains(template.index) {
-                TemplateDetail(
-                    template: $ctx.userData.workoutPlans.userTemplates[template.index], 
-                    onDone: { 
-                        navigateToTemplateDetail = false 
-                        currentTemplate = nil
-                        selectedTemplate = nil
-                    }
-                )
-            } else if !template.isUserTemplate, ctx.userData.workoutPlans.trainerTemplates.indices.contains(template.index) {
-                TemplateDetail(
-                    template: $ctx.userData.workoutPlans.trainerTemplates[template.index], 
-                    onDone: { 
-                        navigateToTemplateDetail = false 
-                        currentTemplate = nil
-                        selectedTemplate = nil
-                    }
-                )
-            } else {
-                // Fallback for invalid template
-                VStack {
-                    Text("Template not found")
-                        .font(.title2)
-                    Button("Go Back") {
-                        navigateToTemplateDetail = false
-                        currentTemplate = nil
-                        selectedTemplate = nil
-                    }
-                }
-                .navigationTitle("Error")
-            }
+    private func templateBinding(for sel: SelectedTemplate) -> Binding<WorkoutTemplate>? {
+        if sel.isUserTemplate {
+            // Prefer re-locating by id (index can drift); fall back to sel.index if still valid.
+            let idx = userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == sel.id })
+                ?? (userData.workoutPlans.userTemplates.indices.contains(sel.index) ? sel.index : nil)
+            guard let i = idx else { return nil }
+            return $userData.workoutPlans.userTemplates[i]
         } else {
-            // Fallback view if no template is selected
-            VStack {
-                Text("No template selected")
-                    .font(.title2)
-                Button("Go Back") {
-                    navigateToTemplateDetail = false
-                    currentTemplate = nil
-                    selectedTemplate = nil
-                }
-            }
-            .navigationTitle("Template Detail")
+            let idx = userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == sel.id })
+                ?? (userData.workoutPlans.trainerTemplates.indices.contains(sel.index) ? sel.index : nil)
+            guard let i = idx else { return nil }
+            return $userData.workoutPlans.trainerTemplates[i]
         }
     }
-    
+
     @ViewBuilder
-    private var startedWorkoutView: some View {
-        if let template = currentTemplate {
-            if template.isUserTemplate, ctx.userData.workoutPlans.userTemplates.indices.contains(template.index) {
-                StartedWorkoutView(
-                    viewModel: WorkoutVM(
-                        template: ctx.userData.workoutPlans.userTemplates[template.index], 
-                        activeWorkout: activeWorkout
-                    ), 
-                    onExit: {
-                        resetWorkoutState()
-                        navigateToStartedWorkout = false
-                        currentTemplate = nil
-                        selectedTemplate = nil
-                    }
-                )
-            } else if !template.isUserTemplate, ctx.userData.workoutPlans.trainerTemplates.indices.contains(template.index) {
-                StartedWorkoutView(
-                    viewModel: WorkoutVM(
-                        template: ctx.userData.workoutPlans.trainerTemplates[template.index], 
-                        activeWorkout: activeWorkout
-                    ), 
-                    onExit: {
-                        resetWorkoutState()
-                        navigateToStartedWorkout = false
-                        currentTemplate = nil
-                        selectedTemplate = nil
-                    }
-                )
-            } else {
-                // Fallback for invalid template
-                VStack {
-                    Text("Template not found")
-                        .font(.title2)
-                    Button("Go Back") {
-                        navigateToStartedWorkout = false
-                        currentTemplate = nil
-                        selectedTemplate = nil
-                    }
-                }
-                .navigationTitle("Error")
-            }
-        } else {
-            // Fallback view if no template is selected
-            VStack {
-                Text("No template selected")
-                    .font(.title2)
-                Button("Go Back") {
-                    navigateToStartedWorkout = false
-                    currentTemplate = nil
+    private var templateDetailView: some View {
+        if let sel = selectedTemplate, let binding = templateBinding(for: sel) {
+            TemplateDetail(
+                template: binding,
+                onDone: {
+                    navigateToTemplateDetail = false
                     selectedTemplate = nil
                 }
-            }
-            .navigationTitle("Workout")
+            )
+        }
+    }
+
+    @ViewBuilder
+    private var startedWorkoutView: some View {
+        if let sel = selectedTemplate, let tpl = templateBinding(for: sel)?.wrappedValue {
+            StartedWorkoutView(
+                viewModel: WorkoutVM(template: tpl, activeWorkout: userData.sessionTracking.activeWorkout),
+                onExit: {
+                    navigateToStartedWorkout = false
+                    selectedTemplate = nil
+                }
+            )
         }
     }
     
@@ -171,22 +91,18 @@ struct TemplateNavigator<Content: View>: View {
     
     @ViewBuilder
     private var templatePopupOverlay: some View {
-        if let template = selectedTemplate {
+        if let template = selectedTemplate, let tpl = templateBinding(for: template)?.wrappedValue {
             TemplatePopup(
-                userData: ctx.userData, 
-                template: template.isUserTemplate ? 
-                    $ctx.userData.workoutPlans.userTemplates[template.index] : 
-                    $ctx.userData.workoutPlans.trainerTemplates[template.index],
+                userData: userData,
+                template: tpl,
                 onClose: {
                     selectedTemplate = nil
                 }, 
                 onBeginWorkout: {
-                    currentTemplate = template
                     navigateToStartedWorkout = true
                     selectedTemplate = nil
                 }, 
                 onEdit: {
-                    currentTemplate = template
                     navigateToTemplateDetail = true
                     selectedTemplate = nil
                 }
@@ -197,15 +113,5 @@ struct TemplateNavigator<Content: View>: View {
             .shadow(radius: 20)
             .transition(.scale)
         }
-    }
-    
-    // MARK: - Public Methods
-    
-    func setActiveWorkout(_ workout: WorkoutInProgress?) {
-        activeWorkout = workout
-    }
-    
-    private func resetWorkoutState() {
-        activeWorkout = nil
     }
 }

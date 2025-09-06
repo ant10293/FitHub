@@ -10,7 +10,6 @@ struct WorkoutsView: View {
     @State private var navigateToTemplateDetail: Bool = false
     @State private var navigateToStartedWorkout: Bool = false
     @State private var selectedTemplate: SelectedTemplate?
-    @State private var activeWorkout: WorkoutInProgress?
     
     var body: some View {
         NavigationStack {
@@ -29,23 +28,14 @@ struct WorkoutsView: View {
             .navigationDestination(isPresented: $navigateToStartedWorkout) {
                 if let selectedTemplate = selectedTemplate {
                     if selectedTemplate.isUserTemplate, ctx.userData.workoutPlans.userTemplates.indices.contains(selectedTemplate.index) {
-                        StartedWorkoutView(viewModel: WorkoutVM(template: ctx.userData.workoutPlans.userTemplates[selectedTemplate.index], activeWorkout: activeWorkout), onExit: {
-                            resetWorkoutState()
-                        })
+                        StartedWorkoutView(viewModel: WorkoutVM(template: ctx.userData.workoutPlans.userTemplates[selectedTemplate.index], activeWorkout: activeWorkout))
                     } else if !selectedTemplate.isUserTemplate, ctx.userData.workoutPlans.trainerTemplates.indices.contains(selectedTemplate.index) {
-                        StartedWorkoutView(viewModel: WorkoutVM(template: ctx.userData.workoutPlans.trainerTemplates[selectedTemplate.index], activeWorkout: activeWorkout), onExit: {
-                            resetWorkoutState()
-                        })
+                        StartedWorkoutView(viewModel: WorkoutVM(template: ctx.userData.workoutPlans.trainerTemplates[selectedTemplate.index], activeWorkout: activeWorkout))
                     }
                 }
             }
-            .onChange(of: ctx.userData.workoutPlans.workoutsCreationDate) {
-                if let selectedTemplate = selectedTemplate, !selectedTemplate.isUserTemplate {
-                    navigateToTemplateDetail = false
-                }
-            }
             .disabled(showResumeWorkoutOverlay || shouldDisableWorkoutButton || showingPopup)
-            .overlay(templatePopupOverlay)
+            .overlay(showingPopup ? templatePopupOverlay : nil)
             .overlay(showResumeWorkoutOverlay ? resumeWorkoutOverlay : nil)
             .navigationTitle("Start a Workout")
             .navigationBarHidden(showingPopup)
@@ -59,17 +49,14 @@ struct WorkoutsView: View {
     private var resumeWorkoutOverlay: some View {
         ResumeWorkoutOverlay(
             cancel: {
-                if let workoutInProgress = ctx.userData.sessionTracking.activeWorkout {
+                if let workoutInProgress = activeWorkout {
                     ctx.userData.resetExercisesInTemplate(for: workoutInProgress.template, shouldSave: true)
-                    resetWorkoutState()
                 }
                 showResumeWorkoutOverlay = false
             },
             resume: {
                 // Navigate to the workout in progress
-                if let workoutInProgress = ctx.userData.sessionTracking.activeWorkout {
-                    activeWorkout = workoutInProgress
-                    
+                if let workoutInProgress = activeWorkout {
                     // First search in userTemplates
                     if let index = ctx.userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == workoutInProgress.template.id }) {
                         let template = ctx.userData.workoutPlans.userTemplates[index]
@@ -92,8 +79,8 @@ struct WorkoutsView: View {
         return ctx.userData.isWorkingOut || ctx.userData.sessionTracking.activeWorkout != nil
     }
     
-    private func resetWorkoutState() {
-        activeWorkout = nil
+    private var activeWorkout: WorkoutInProgress? {
+        return ctx.userData.sessionTracking.activeWorkout
     }
     
     private var workoutList: some View {
@@ -108,7 +95,7 @@ struct WorkoutsView: View {
     private func templatesSection(templates: [WorkoutTemplate], userTemplates: Bool) -> some View {
         Section {
             ForEach(templates.indices, id: \.self) { index in
-                templateButton(for: index, userTemplate: userTemplates)
+                templateButton(for: index, userTemplate: userTemplates, template: templates[index])
             }
             .onDelete { offset in
                 if userTemplates {
@@ -130,45 +117,21 @@ struct WorkoutsView: View {
         }
     }
     
-    private func templateButton(for index: Int, userTemplate: Bool) -> some View {
-        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
-            // Main button action area
-            Button(action: {
-                let template = userTemplate ? ctx.userData.workoutPlans.userTemplates[index] : ctx.userData.workoutPlans.trainerTemplates[index]
-                selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: userTemplate)
+    private func templateButton(for index: Int, userTemplate: Bool, template: WorkoutTemplate) -> some View {
+        TemplateRow(
+            template: template,
+            index: index,
+            userTemplate: userTemplate,
+            disabled: showingPopup || showingTemplateEditor,
+            onSelect: { newSelection in
+                selectedTemplate = newSelection
                 showingPopup = true
-            }) {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(userTemplate ? ctx.userData.workoutPlans.userTemplates[index].name : ctx.userData.workoutPlans.trainerTemplates[index].name)
-                            .foregroundStyle(Color.primary) // Ensure the text color remains unchanged
-                        Text(SplitCategory.concatenateCategories(for: userTemplate ? ctx.userData.workoutPlans.userTemplates[index].categories : ctx.userData.workoutPlans.trainerTemplates[index].categories))
-                            .font(.subheadline)
-                            .foregroundStyle(.gray)
-                    }
-                    .centerVertically()
-                    Spacer()
-                }
-                .frame(maxWidth: .infinity, alignment: .leading) // Ensure the button takes full width and aligns content to the left
-                .contentShape(Rectangle()) // Make the entire area tappable
+            },
+            onEdit: { newSelection in
+                selectedTemplate = newSelection
+                showingTemplateEditor = true
             }
-            .buttonStyle(PlainButtonStyle())
-            .disabled(showingPopup || showingTemplateEditor)
-            
-            if userTemplate {
-                // Dedicated button for rename/delete actions
-                Button(action: {
-                    let template = userTemplate ? ctx.userData.workoutPlans.userTemplates[index] : ctx.userData.workoutPlans.trainerTemplates[index]
-                    selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: userTemplate)
-                    showingTemplateEditor = true
-                }) {
-                    Image(systemName: "ellipsis.circle")
-                        .imageScale(.large)
-                }
-                .buttonStyle(BorderlessButtonStyle())
-                .disabled(showingPopup || showingTemplateEditor)
-            }
-        }
+        )
     }
     
     private var templateCreationView: some View {
@@ -224,10 +187,10 @@ struct WorkoutsView: View {
     }
     
     @ViewBuilder private var templatePopupOverlay: some View {
-        if let template = selectedTemplate, showingPopup {
+        if let template = selectedTemplate {
             TemplatePopup(
                 userData: ctx.userData,
-                template: template.isUserTemplate ? $ctx.userData.workoutPlans.userTemplates[template.index] : $ctx.userData.workoutPlans.trainerTemplates[template.index],
+                template: template.isUserTemplate ? ctx.userData.workoutPlans.userTemplates[template.index] : ctx.userData.workoutPlans.trainerTemplates[template.index],
                 onClose: {
                     showingPopup = false
                 }, onBeginWorkout: {

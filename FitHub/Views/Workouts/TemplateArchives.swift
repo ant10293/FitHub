@@ -14,7 +14,7 @@ struct TemplateArchives: View {
     @State private var showingActionOverlay: Bool = false
 
     var body: some View {
-        workoutList()
+        workoutList
         .navigationDestination(isPresented: $navigateToDetail) {
             if let selectedTemplate = selectedTemplate {
                 if userData.workoutPlans.archivedTemplates.indices.contains(selectedTemplate.index) {
@@ -33,7 +33,7 @@ struct TemplateArchives: View {
     }
     
     // MARK: – List / empty‑state wrapper
-    private func workoutList() -> some View {
+    private var workoutList: some View {
         ZStack {
             if !userData.workoutPlans.archivedTemplates.isEmpty {
                 List {
@@ -48,48 +48,25 @@ struct TemplateArchives: View {
     private func templatesSection(templates: [WorkoutTemplate]) -> some View {
         Section {
             ForEach(templates.indices, id: \.self) { index in
-                templateButton(for: index)
+                templateButton(for: index, template: templates[index])
             }
         } header: {
             Text("Archived Templates")
         }
     }
     
-    private func templateButton(for index: Int) -> some View {
-        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
-            // Main button action area
-            Button(action: {
-                let template = userData.workoutPlans.archivedTemplates[index]
-                selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: true)
+    private func templateButton(for index: Int, template: WorkoutTemplate) -> some View {
+        TemplateRow(
+            template: template,
+            index: index,
+            userTemplate: true,
+            disabled: showingActionOverlay,
+            hideEditButton: true,
+            onSelect: { newSelection in
+                selectedTemplate = newSelection
                 navigateToDetail = true
-            }) {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(userData.workoutPlans.archivedTemplates[index].name)
-                            .foregroundStyle(Color.primary) // Ensure the text color remains unchanged
-                        Text(SplitCategory.concatenateCategories(for: userData.workoutPlans.archivedTemplates[index].categories))
-                            .font(.subheadline)
-                            .foregroundStyle(.gray)
-                    }
-                    .centerVertically()
-                    Spacer()
-                }
-                .frame(maxWidth: .infinity, alignment: .leading) // Ensure the button takes full width and aligns content to the left
-                .contentShape(Rectangle()) // Make the entire area tappable
             }
-            .buttonStyle(PlainButtonStyle())
-            
-            Button(action: {
-                let template = userData.workoutPlans.archivedTemplates[index]
-                selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: true)
-                showingActionOverlay = true
-            }) {
-                Image(systemName: "ellipsis.circle")
-                    .imageScale(.large)
-            }
-            .buttonStyle(BorderlessButtonStyle())
-            .disabled(showingActionOverlay)
-        }
+        )
     }
     
     private func actionOverlay(selected: SelectedTemplate) -> some View {

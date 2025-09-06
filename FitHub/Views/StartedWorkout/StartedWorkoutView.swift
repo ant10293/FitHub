@@ -80,7 +80,9 @@ struct StartedWorkoutView: View {
             summary: viewModel.calculateWorkoutSummary(secondsElapsed: timer.secondsElapsed),
             exercises: viewModel.template.exercises,
             onDone: {
-                viewModel.finishWorkoutAndDismiss(ctx: ctx, timer: timer, completion: { dismiss() })
+                viewModel.finishWorkoutAndDismiss(ctx: ctx, timer: timer, completion: {
+                    closeAction()
+                })
             }
         )
     }
@@ -142,13 +144,17 @@ struct StartedWorkoutView: View {
                 message: Text("Doing so will end your workout."),
                 primaryButton: .destructive(Text("End Workout")) {
                     viewModel.endWorkoutAndDismiss(ctx: ctx, timer: timer, shouldRemoveDate: false, completion: {
-                        onExit()
-                        dismiss()
+                        closeAction()
                     })
                 },
                 secondaryButton: .cancel()
             )
         }
+    }
+    
+    private func closeAction() {
+        onExit()
+        dismiss()
     }
 }
 
