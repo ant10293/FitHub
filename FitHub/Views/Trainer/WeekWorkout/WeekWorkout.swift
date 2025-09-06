@@ -42,25 +42,23 @@ struct WeekWorkout: View {
     }
 
     var body: some View {
-        TemplateNavigator(selectedTemplate: $selectedTemplate, usePopupOverlay: true) {
-            ScrollViewReader { proxy in
-                ScrollView(.horizontal, showsIndicators: true) {
-                    HStack(spacing: 12) {
-                        ForEach(vm.dayInfos) { info in
-                            DayWorkout(info: info, onSelect: { template in
-                                // Find the template index in the appropriate array
-                               if let trainerIndex = userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == template.id }) {
-                                    selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: trainerIndex, isUserTemplate: false)
-                                }
-                            })
-                            .id(info.id)
-                        }
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: true) {
+                HStack(spacing: 12) {
+                    ForEach(vm.dayInfos) { info in
+                        DayWorkout(info: info, onSelect: { template in
+                            // Find the template index in the appropriate array
+                           if let trainerIndex = userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == template.id }) {
+                                selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: trainerIndex, isUserTemplate: false)
+                            }
+                        })
+                        .id(info.id)
                     }
-                    .padding([.horizontal, .bottom])
                 }
-                .onAppear {
-                    proxy.scrollTo(vm.earliestFutureDate, anchor: .center)
-                }
+                .padding([.horizontal, .bottom])
+            }
+            .onAppear {
+                proxy.scrollTo(vm.earliestFutureDate, anchor: .center)
             }
         }
     }

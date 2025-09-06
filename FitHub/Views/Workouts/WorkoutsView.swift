@@ -3,97 +3,97 @@ import SwiftUI
 struct WorkoutsView: View {
     @EnvironmentObject private var ctx: AppContext
     @Environment(\.colorScheme) var colorScheme
+    @Binding var showResumeWorkoutOverlay: Bool
     @State private var showingTemplateCreation: Bool = false
     @State private var showingTemplateEditor: Bool = false
+    @State private var showingPopup: Bool = false
+    @State private var navigateToTemplateDetail: Bool = false
+    @State private var navigateToStartedWorkout: Bool = false
     @State private var selectedTemplate: SelectedTemplate?
-    @Binding var showResumeWorkoutOverlay: Bool
+    @State private var activeWorkout: WorkoutInProgress?
     
     var body: some View {
         NavigationStack {
-            let useOverlay: Bool = !(selectedTemplate?.resuming ?? false)
-            TemplateNavigator(selectedTemplate: $selectedTemplate, usePopupOverlay: useOverlay) {
-                workoutList
-                .sheet(isPresented: $showingTemplateCreation) { templateCreation }
-                .sheet(isPresented: $showingTemplateEditor) { templateEditor }
-                .onChange(of: ctx.userData.workoutPlans.workoutsCreationDate) {
-                    if let template = selectedTemplate, !template.isUserTemplate {
-                        selectedTemplate = nil
+            workoutList
+            .sheet(isPresented: $showingTemplateCreation) { templateCreationView }
+            .sheet(isPresented: $showingTemplateEditor) { templateEditorView }
+            .navigationDestination(isPresented: $navigateToTemplateDetail) {
+                if let selectedTemplate = selectedTemplate {
+                    if selectedTemplate.isUserTemplate, ctx.userData.workoutPlans.userTemplates.indices.contains(selectedTemplate.index) {
+                        TemplateDetail(template: $ctx.userData.workoutPlans.userTemplates[selectedTemplate.index], onDone: { navigateToTemplateDetail = false })
+                    } else if !selectedTemplate.isUserTemplate, ctx.userData.workoutPlans.trainerTemplates.indices.contains(selectedTemplate.index) {
+                        TemplateDetail(template: $ctx.userData.workoutPlans.trainerTemplates[selectedTemplate.index], onDone: { navigateToTemplateDetail = false })
                     }
                 }
-                .disabled(showResumeWorkoutOverlay || shouldDisableWorkoutButton)
-                .overlay(showResumeWorkoutOverlay ? resumeWorkoutOverlay : nil)
-                .navigationTitle("Start a Workout")
-                .customToolbar(
-                    settingsDestination: { AnyView(SettingsView()) },
-                    menuDestination: { AnyView(MenuView()) }
-                )
             }
+            .navigationDestination(isPresented: $navigateToStartedWorkout) {
+                if let selectedTemplate = selectedTemplate {
+                    if selectedTemplate.isUserTemplate, ctx.userData.workoutPlans.userTemplates.indices.contains(selectedTemplate.index) {
+                        StartedWorkoutView(viewModel: WorkoutVM(template: ctx.userData.workoutPlans.userTemplates[selectedTemplate.index], activeWorkout: activeWorkout), onExit: {
+                            resetWorkoutState()
+                        })
+                    } else if !selectedTemplate.isUserTemplate, ctx.userData.workoutPlans.trainerTemplates.indices.contains(selectedTemplate.index) {
+                        StartedWorkoutView(viewModel: WorkoutVM(template: ctx.userData.workoutPlans.trainerTemplates[selectedTemplate.index], activeWorkout: activeWorkout), onExit: {
+                            resetWorkoutState()
+                        })
+                    }
+                }
+            }
+            .onChange(of: ctx.userData.workoutPlans.workoutsCreationDate) {
+                if let selectedTemplate = selectedTemplate, !selectedTemplate.isUserTemplate {
+                    navigateToTemplateDetail = false
+                }
+            }
+            .disabled(showResumeWorkoutOverlay || shouldDisableWorkoutButton || showingPopup)
+            .overlay(templatePopupOverlay)
+            .overlay(showResumeWorkoutOverlay ? resumeWorkoutOverlay : nil)
+            .navigationTitle("Start a Workout")
+            .navigationBarHidden(showingPopup)
+            .customToolbar(
+                settingsDestination: { AnyView(SettingsView()) },
+                menuDestination: { AnyView(MenuView()) }
+            )
         }
     }
     
     private var resumeWorkoutOverlay: some View {
-        VStack {
-            Spacer()
-            VStack {
-                Text("You still have a workout in progress.")
-                    .font(.title2)
-                    .padding(.bottom, 10)
-                Text("Would you like to resume this workout?")
-                    .font(.subheadline)
-                    .foregroundStyle(Color.secondary)
-                
-                HStack {
-                    Button(action: {
-                        if let workoutInProgress = ctx.userData.sessionTracking.activeWorkout {
-                            ctx.userData.resetExercisesInTemplate(for: workoutInProgress.template, shouldSave: true)
-                        }
-                        showResumeWorkoutOverlay = false
-                    }) {
-                        Text("Cancel")
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                    }
-                    .background(Color.red)
-                    .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    
-                    Button(action: {
-                        // Navigate to the workout in progress
-                        if let workoutInProgress = ctx.userData.sessionTracking.activeWorkout {
-                            // First search in userTemplates
-                            if let index = ctx.userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == workoutInProgress.template.id }) {
-                                let template = ctx.userData.workoutPlans.userTemplates[index]
-                                selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: true, resuming: true)
-                            }
-                            // If not found, search in trainerTemplates
-                            else if let trainerIndex = ctx.userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == workoutInProgress.template.id }) {
-                                let template = ctx.userData.workoutPlans.trainerTemplates[trainerIndex]
-                                selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: trainerIndex, isUserTemplate: false, resuming: true)
-                            }
-                        }
-                        showResumeWorkoutOverlay = false
-                    }) {
-                        Text("Resume")
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                    }
-                    .background(Color.blue)
-                    .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+        ResumeWorkoutOverlay(
+            cancel: {
+                if let workoutInProgress = ctx.userData.sessionTracking.activeWorkout {
+                    ctx.userData.resetExercisesInTemplate(for: workoutInProgress.template, shouldSave: true)
+                    resetWorkoutState()
                 }
-                .padding(.top, 10)
+                showResumeWorkoutOverlay = false
+            },
+            resume: {
+                // Navigate to the workout in progress
+                if let workoutInProgress = ctx.userData.sessionTracking.activeWorkout {
+                    activeWorkout = workoutInProgress
+                    
+                    // First search in userTemplates
+                    if let index = ctx.userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == workoutInProgress.template.id }) {
+                        let template = ctx.userData.workoutPlans.userTemplates[index]
+                        selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: true)
+                    }
+                    // If not found, search in trainerTemplates
+                    else if let trainerIndex = ctx.userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == workoutInProgress.template.id }) {
+                        let template = ctx.userData.workoutPlans.trainerTemplates[trainerIndex]
+                        selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: trainerIndex, isUserTemplate: false)
+                    }
+                    
+                    navigateToStartedWorkout = true
+                }
+                showResumeWorkoutOverlay = false
             }
-            .padding()
-            .background(Color(UIColor.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .shadow(radius: 10)
-            .padding(.horizontal, 40)
-            Spacer()
-        }
+        )
     }
     
     private var shouldDisableWorkoutButton: Bool {
         return ctx.userData.isWorkingOut || ctx.userData.sessionTracking.activeWorkout != nil
+    }
+    
+    private func resetWorkoutState() {
+        activeWorkout = nil
     }
     
     private var workoutList: some View {
@@ -117,12 +117,13 @@ struct WorkoutsView: View {
                     ctx.userData.deleteTrainerTemplate(at: offset)
                 }
             }
+            .disabled(showingPopup)
             
             if userTemplates {
                 Button(action: { showingTemplateCreation = true }) {
                     Label("Create New Template", systemImage: "square.and.pencil")
                 }
-                .disabled(showingTemplateEditor)
+                .disabled(showingPopup || showingTemplateEditor)
             }
         } header: {
             Text(userTemplates ? "Your Templates" : "Trainer Templates")
@@ -135,6 +136,7 @@ struct WorkoutsView: View {
             Button(action: {
                 let template = userTemplate ? ctx.userData.workoutPlans.userTemplates[index] : ctx.userData.workoutPlans.trainerTemplates[index]
                 selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: userTemplate)
+                showingPopup = true
             }) {
                 HStack {
                     VStack(alignment: .leading) {
@@ -151,7 +153,7 @@ struct WorkoutsView: View {
                 .contentShape(Rectangle()) // Make the entire area tappable
             }
             .buttonStyle(PlainButtonStyle())
-            .disabled(showingTemplateEditor)
+            .disabled(showingPopup || showingTemplateEditor)
             
             if userTemplate {
                 // Dedicated button for rename/delete actions
@@ -164,12 +166,12 @@ struct WorkoutsView: View {
                         .imageScale(.large)
                 }
                 .buttonStyle(BorderlessButtonStyle())
-                .disabled(showingTemplateEditor)
+                .disabled(showingPopup || showingTemplateEditor)
             }
         }
     }
     
-    private var templateCreation: some View {
+    private var templateCreationView: some View {
         NewTemplate(
             template: WorkoutTemplate(name: uniqueTemplateName, exercises: [], categories: []),
             gender: ctx.userData.physical.gender,
@@ -182,6 +184,7 @@ struct WorkoutsView: View {
                     ctx.userData.addUserTemplate(template: newTemplate)
                     if let index = ctx.userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == newTemplate.id }) {
                         selectedTemplate = SelectedTemplate(id: newTemplate.id, name: newTemplate.name, index: index, isUserTemplate: true)
+                        showingPopup = true
                     }
                     showingTemplateCreation = false
                 }
@@ -189,7 +192,7 @@ struct WorkoutsView: View {
         )
     }
     
-    @ViewBuilder private var templateEditor: some View {
+    @ViewBuilder private var templateEditorView: some View {
         if let index = selectedTemplate?.index {
             let currentTemplate = ctx.userData.workoutPlans.userTemplates[index]
             EditTemplate(
@@ -217,6 +220,28 @@ struct WorkoutsView: View {
                     }
                 }
             )
+        }
+    }
+    
+    @ViewBuilder private var templatePopupOverlay: some View {
+        if let template = selectedTemplate, showingPopup {
+            TemplatePopup(
+                userData: ctx.userData,
+                template: template.isUserTemplate ? $ctx.userData.workoutPlans.userTemplates[template.index] : $ctx.userData.workoutPlans.trainerTemplates[template.index],
+                onClose: {
+                    showingPopup = false
+                }, onBeginWorkout: {
+                    navigateToStartedWorkout = true
+                    showingPopup = false
+                }, onEdit: {
+                    navigateToTemplateDetail = true
+                }
+            )
+            .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.5)
+            .background(colorScheme == .dark ? Color.black : Color.white)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .shadow(radius: 20)
+            .transition(.scale)
         }
     }
     

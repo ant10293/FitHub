@@ -58,6 +58,7 @@
 		6550ADB22E6B66DC002072C1 /* WeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550ADB12E6B66DC002072C1 /* WeekView.swift */; };
 		6550ADB42E6B6768002072C1 /* WeekLegend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550ADB32E6B6768002072C1 /* WeekLegend.swift */; };
 		6550ADBA2E6BAC12002072C1 /* TemplateNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550ADB92E6BAC12002072C1 /* TemplateNavigator.swift */; };
+		6550ADBC2E6BBCD1002072C1 /* ResumeWorkoutOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550ADBB2E6BBCD1002072C1 /* ResumeWorkoutOverlay.swift */; };
 		6570679E2E3F29BE0063090C /* RepRangeEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6570679D2E3F29BE0063090C /* RepRangeEditor.swift */; };
 		657067A02E4172300063090C /* DistributionEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6570679F2E4172300063090C /* DistributionEditor.swift */; };
 		657067A22E4434FE0063090C /* TimeEntryField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657067A12E4434FE0063090C /* TimeEntryField.swift */; };
@@ -276,6 +277,7 @@
 		6550ADB12E6B66DC002072C1 /* WeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekView.swift; sourceTree = "<group>"; };
 		6550ADB32E6B6768002072C1 /* WeekLegend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekLegend.swift; sourceTree = "<group>"; };
 		6550ADB92E6BAC12002072C1 /* TemplateNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateNavigator.swift; sourceTree = "<group>"; };
+		6550ADBB2E6BBCD1002072C1 /* ResumeWorkoutOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumeWorkoutOverlay.swift; sourceTree = "<group>"; };
 		6570679D2E3F29BE0063090C /* RepRangeEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepRangeEditor.swift; sourceTree = "<group>"; };
 		6570679F2E4172300063090C /* DistributionEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionEditor.swift; sourceTree = "<group>"; };
 		657067A12E4434FE0063090C /* TimeEntryField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeEntryField.swift; sourceTree = "<group>"; };
@@ -909,6 +911,7 @@
 				65CD3C142DD3C84F00C2B671 /* TemplatePopUp.swift */,
 				65CD3C162DD3C84F00C2B671 /* WorkoutsView.swift */,
 				65362BE52E0244830044AF72 /* TemplateArchives.swift */,
+				6550ADBB2E6BBCD1002072C1 /* ResumeWorkoutOverlay.swift */,
 			);
 			path = Workouts;
 			sourceTree = "<group>";
@@ -1081,6 +1084,7 @@
 				65CD3C342DD3C84F00C2B671 /* AddCategoryPicker.swift in Sources */,
 				65CD3C352DD3C84F00C2B671 /* AdjustmentsView.swift in Sources */,
 				65CD3C362DD3C84F00C2B671 /* BFCalculator.swift in Sources */,
+				6550ADBC2E6BBCD1002072C1 /* ResumeWorkoutOverlay.swift in Sources */,
 				657067A02E4172300063090C /* DistributionEditor.swift in Sources */,
 				65CD3C372DD3C84F00C2B671 /* BMICalculator.swift in Sources */,
 				653136332E552B4000EECCA5 /* TemplateSelection.swift in Sources */,
