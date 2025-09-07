@@ -8,7 +8,7 @@ struct StartedWorkoutView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var kbd = KeyboardManager.shared
-    @StateObject var viewModel: WorkoutVM
+    @ObservedObject var viewModel: WorkoutVM
     @StateObject private var timer = TimerManager()
     @State private var showingExitConfirmation = false
     @State private var selectedExerciseIndex: Int?
@@ -17,7 +17,10 @@ struct StartedWorkoutView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            TimerHeader(timer: timer)
+            Text(Format.timeString(from: timer.secondsElapsed))
+                .font(.largeTitle)
+                .monospacedDigit()
+                .padding()
             
             Divider()
             
@@ -157,4 +160,3 @@ struct StartedWorkoutView: View {
         dismiss()
     }
 }
-

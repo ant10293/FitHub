@@ -15,44 +15,29 @@ struct WorkoutPlan: View {
     @State private var showingAlert: Bool = false
     @State private var showingSaveConfirmation: Bool = false
     @State private var showingTemplateChoice: Bool = false
+    @State private var selectedTemplate: SelectedTemplate?
     
     var body: some View {
         NavigationStack {
-            VStack {
-                Spacer()
-                                
-                WeekView(userData: ctx.userData)
-                
-                /*
-                 NavigationLink(destination: ViewMusclesView(userData: ctx.userData)) {
-                    HStack {
-                        Text("View Muscle Groups")
-                            .foregroundStyle(colorScheme == .dark ? .white : .black)
-                            .font(.headline)
-                            .fontWeight(.medium)
-                        //Image(systemName: "figure.strengthtraining.traditional")
-                        Image(systemName: "figure.wave")
-                            .foregroundStyle(.gray)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundStyle(.gray)
-                    }
-                    .padding()
-                    .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .shadow(radius: 5)
-                }
-                .padding(.horizontal)
-                */
-                
-                if !ctx.userData.workoutPlans.trainerTemplates.isEmpty {
-                    NavigationLink(destination: LazyDestination { WorkoutGeneration() }) {
+            TemplateNavigator(
+                userData: ctx.userData,
+                selectedTemplate: $selectedTemplate,
+                navigationMode: .mixed
+            ) {
+                VStack {
+                    Spacer()
+                                    
+                    WeekView(userData: ctx.userData, selectedTemplate: $selectedTemplate)
+                    
+                    /*
+                     NavigationLink(destination: ViewMusclesView(userData: ctx.userData)) {
                         HStack {
-                            Text("Workout Generation")
+                            Text("View Muscle Groups")
                                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                                 .font(.headline)
                                 .fontWeight(.medium)
-                            Image(systemName: "square.and.pencil")
+                            //Image(systemName: "figure.strengthtraining.traditional")
+                            Image(systemName: "figure.wave")
                                 .foregroundStyle(.gray)
                             Spacer()
                             Image(systemName: "chevron.right")
@@ -64,89 +49,100 @@ struct WorkoutPlan: View {
                         .shadow(radius: 5)
                     }
                     .padding(.horizontal)
+                    */
+                    
+                    if !ctx.userData.workoutPlans.trainerTemplates.isEmpty {
+                        NavigationLink(destination: LazyDestination { WorkoutGeneration() }) {
+                            HStack {
+                                Text("Workout Generation")
+                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    .font(.headline)
+                                    .fontWeight(.medium)
+                                Image(systemName: "square.and.pencil")
+                                    .foregroundStyle(.gray)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(.gray)
+                            }
+                            .padding()
+                            .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .shadow(radius: 5)
+                        }
+                        .padding(.horizontal)
+                    }
+                    
+                    Spacer()
+                    
+                    if ctx.userData.workoutPlans.trainerTemplates.isEmpty {
+                        RectangularButton(
+                            title: "Generate Workout Plan",
+                            systemImage: "square.and.pencil",
+                            enabled: !ctx.userData.isWorkingOut,
+                            width: .fit,
+                            iconPosition: .trailing,
+                            action: {
+                                ctx.userData.generateWorkoutPlan(
+                                    exerciseData: ctx.exercises,
+                                    equipmentData: ctx.equipment,
+                                    keepCurrentExercises: false,
+                                    nextWeek: false,
+                                    onDone: {
+                                        showingSaveConfirmation = true
+                                    }
+                                )
+                            }
+                        )
+                        .clipShape(Capsule())
+                    } else {
+                        RectangularButton(
+                            title: "Start Today's Workout",
+                            systemImage: "dumbbell.fill",
+                            enabled: !disableWorkoutButton,
+                            width: .fit,
+                            iconPosition: .trailing,
+                            action: startWorkoutForDay
+                        )
+                        .clipShape(Capsule())
+                    }
+                    
+                    Spacer()
                 }
-                
-                Spacer()
-                
-                if ctx.userData.workoutPlans.trainerTemplates.isEmpty {
-                    RectangularButton(
-                        title: "Generate Workout Plan",
-                        systemImage: "square.and.pencil",
-                        enabled: !ctx.userData.isWorkingOut,
-                        width: .fit,
-                        iconPosition: .trailing,
-                        action: {
-                            ctx.userData.generateWorkoutPlan(
-                                exerciseData: ctx.exercises,
-                                equipmentData: ctx.equipment,
-                                keepCurrentExercises: false,
-                                nextWeek: false,
-                                onDone: {
-                                    showingSaveConfirmation = true
-                                }
-                            )
-                        }
+                .background(Color(UIColor.systemGroupedBackground))
+                .navigationBarTitle("Trainer")
+                .customToolbar(
+                    settingsDestination: { AnyView(SettingsView()) },
+                    menuDestination: { AnyView(MenuView()) }
+                )
+                .alert(isPresented: $showingSaveConfirmation) {
+                    Alert(
+                        title: Text("Workout Plan Generated!"),
+                        message: Text("These templates can be edited in the 'Workouts' Tab."),
+                        dismissButton: .default(Text("OK"))
                     )
-                    .clipShape(Capsule())
-                } else {
-                    RectangularButton(
-                        title: "Start Today's Workout",
-                        systemImage: "dumbbell.fill",
-                        enabled: !disableWorkoutButton,
-                        width: .fit,
-                        iconPosition: .trailing,
-                        action: startWorkoutForDay
-                    )
-                    .clipShape(Capsule())
-                    .navigationDestination(isPresented: $isNavigationActive) {
-                        if let selectedTemplate = selectedWorkoutTemplate {
-                            StartedWorkoutView(viewModel: WorkoutVM(template: selectedTemplate))
-                        }
-                    }
                 }
-                
-                Spacer()
-            }
-            .background(Color(UIColor.systemGroupedBackground))
-            .navigationBarTitle("Trainer")
-            .customToolbar(
-                settingsDestination: { AnyView(SettingsView()) },
-                menuDestination: { AnyView(MenuView()) }
-            )
-            .alert(isPresented: $showingSaveConfirmation) {
-                Alert(
-                    title: Text("Workout Plan Generated!"),
-                    message: Text("These templates can be edited in the 'Workouts' Tab."),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
-            .alert(isPresented: $showingAlert) {
-                Alert(
-                    title: Text("No Workouts Today"),
-                    message: Text("There are no workouts planned for today."),
-                    dismissButton: .default(Text("Okay"))
-                )
-            }
-            .alert("Multiple Workouts Found for Today", isPresented: $showingTemplateChoice) {
-                Button("User Template", action: {
-                    selectedWorkoutTemplate = ctx.userData.workoutPlans.userTemplates.first { template in
-                        if let date = template.date {
-                            return CalendarUtility.shared.isDate(date, inSameDayAs: Date())
+                .alert(isPresented: $showingAlert) {
+                    Alert(
+                        title: Text("No Workouts Today"),
+                        message: Text("There are no workouts planned for today."),
+                        dismissButton: .default(Text("Okay"))
+                    )
+                }
+                .alert("Multiple Workouts Found for Today", isPresented: $showingTemplateChoice) {
+                    Button("User Template", action: {
+                        selectedWorkoutTemplate = ctx.userData.workoutPlans.userTemplates.first { template in
+                            return isTemplateToday(template: template)
                         }
-                        return false
-                    }
-                    proceedToWorkout()
-                })
-                Button("Trainer Template", action: {
-                    selectedWorkoutTemplate = ctx.userData.workoutPlans.trainerTemplates.first { template in
-                        if let date = template.date {
-                            return CalendarUtility.shared.isDate(date, inSameDayAs: Date())
+                        proceedToWorkout()
+                    })
+                    Button("Trainer Template", action: {
+                        selectedWorkoutTemplate = ctx.userData.workoutPlans.trainerTemplates.first { template in
+                            return isTemplateToday(template: template)
                         }
-                        return false
-                    }
-                    proceedToWorkout()
-                })
-                Button("Cancel", role: .cancel) {}
+                        proceedToWorkout()
+                    })
+                    Button("Cancel", role: .cancel) {}
+                }
             }
         }
     }
@@ -156,29 +152,13 @@ struct WorkoutPlan: View {
     }
     
     private func startWorkoutForDay() {
-        let today = Date()
-                
         // Find templates where `date` is not nil and matches today
         let userTemplate = ctx.userData.workoutPlans.userTemplates.first { template in
-            if let date = template.date {
-                if template.shouldDisableTemplate {
-                    return false
-                } else {
-                    return CalendarUtility.shared.isDate(date, inSameDayAs: today)
-                }
-            }
-            return false
+            return isTemplateToday(template: template)
         }
         
         let trainerTemplate = ctx.userData.workoutPlans.trainerTemplates.first { template in
-            if let date = template.date {
-                if template.shouldDisableTemplate {
-                    return false
-                } else {
-                    return CalendarUtility.shared.isDate(date, inSameDayAs: today)
-                }
-            }
-            return false
+            return isTemplateToday(template: template)
         }
         
         // Handle different cases based on whether templates are found
@@ -198,8 +178,25 @@ struct WorkoutPlan: View {
         }
     }
     
+    private func isTemplateToday(template: WorkoutTemplate) -> Bool {
+        if let date = template.date {
+            if template.shouldDisableTemplate {
+                return false
+            } else {
+                return CalendarUtility.shared.isDateInToday(date)
+            }
+        }
+        return false
+    }
+    
     private func proceedToWorkout() {
-        isNavigationActive = true
-        print("Starting workout for template: \(selectedWorkoutTemplate?.name ?? "Unknown")")
+        guard let template = selectedWorkoutTemplate else { return }
+        
+        // Find the template index and create SelectedTemplate
+        if let index = ctx.userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == template.id }) {
+            selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: true)
+        } else if let index = ctx.userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == template.id }) {
+            selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: false)
+        }
     }
 }

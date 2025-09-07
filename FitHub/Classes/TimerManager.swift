@@ -31,6 +31,13 @@ final class TimerManager: ObservableObject {
         workoutTimer?.invalidate()
         restTimer?.invalidate()
         holdTimer?.invalidate()
+        print("timer denitialized")
+    }
+    
+    func stopAll() {
+        stopTimer()
+        stopRest()
+        stopHold()
     }
 
     // MARK: - WORKOUT (stopwatch, date-driven)

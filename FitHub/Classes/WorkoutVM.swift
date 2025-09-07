@@ -274,8 +274,9 @@ final class WorkoutVM: ObservableObject {
         ctx.exercises.applyPerformanceUpdates(updates: updates.updatedMax, csvEstimate: false)
         
         // Reset timer
-        timer.resetTimer()
-        timer.stopRest()
+        //timer.resetTimer()
+        //timer.stopRest()
+        timer.stopAll()
         
         // CRITICAL: Reset all workout state atomically
         ctx.userData.resetExercisesInTemplate(for: template, shouldRemoveDate: shouldRemoveDate)

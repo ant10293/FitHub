@@ -10,38 +10,29 @@ struct TemplateArchives: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var userData: UserData
     @State private var selectedTemplate: SelectedTemplate?
-    @State private var navigateToDetail: Bool = false
     @State private var showingActionOverlay: Bool = false
 
     var body: some View {
-        workoutList
-        .navigationDestination(isPresented: $navigateToDetail) {
-            if let selectedTemplate = selectedTemplate {
-                if userData.workoutPlans.archivedTemplates.indices.contains(selectedTemplate.index) {
-                    TemplateDetail(template: $userData.workoutPlans.archivedTemplates[selectedTemplate.index], onDone: {
-                        navigateToDetail = false
-                    })
+        TemplateNavigator(
+            userData: userData,
+            selectedTemplate: $selectedTemplate,
+            navigationMode: .directToDetail
+        ) {
+            ZStack {
+                if !userData.workoutPlans.archivedTemplates.isEmpty {
+                    List {
+                        templatesSection(templates: userData.workoutPlans.archivedTemplates)
+                    }
+                } else {
+                    EmptyTemplatesState
                 }
             }
-        }
-        .overlay(content: {
-            if let selected = selectedTemplate {
-                showingActionOverlay ? actionOverlay(selected: selected) : nil
-            }
-        })
-        .navigationBarTitle("Manage Templates", displayMode: .inline)
-    }
-    
-    // MARK: – List / empty‑state wrapper
-    private var workoutList: some View {
-        ZStack {
-            if !userData.workoutPlans.archivedTemplates.isEmpty {
-                List {
-                    templatesSection(templates: userData.workoutPlans.archivedTemplates)
+            .overlay(content: {
+                if let selected = selectedTemplate {
+                    showingActionOverlay ? actionOverlay(selected: selected) : nil
                 }
-            } else {
-                EmptyTemplatesState
-            }
+            })
+            .navigationBarTitle("Manage Templates", displayMode: .inline)
         }
     }
     
@@ -64,7 +55,6 @@ struct TemplateArchives: View {
             hideEditButton: true,
             onSelect: { newSelection in
                 selectedTemplate = newSelection
-                navigateToDetail = true
             }
         )
     }

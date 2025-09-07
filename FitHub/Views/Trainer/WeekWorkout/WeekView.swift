@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WeekView: View {
     @ObservedObject var userData: UserData
-    @State private var selectedTemplate: SelectedTemplate?
+    @Binding var selectedTemplate: SelectedTemplate?
 
     var body: some View {
         VStack(alignment: .leading) {
