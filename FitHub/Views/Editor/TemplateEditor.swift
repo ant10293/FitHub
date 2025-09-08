@@ -19,7 +19,6 @@ struct TemplateEditor: View {
     let mode: Mode
     @Binding var template: WorkoutTemplate
     let originalName: String?        // pass originalTemplate.name for edit; nil for create
-    let gender: Gender
     let useDateOnly: Bool
     let checkDuplicate: (String) -> Bool
 
@@ -38,7 +37,6 @@ struct TemplateEditor: View {
         mode: Mode,
         template: Binding<WorkoutTemplate>,
         originalName: String?,
-        gender: Gender,
         useDateOnly: Bool,
         checkDuplicate: @escaping (String) -> Bool,
         onSubmit: @escaping (WorkoutTemplate?) -> Void,
@@ -49,7 +47,6 @@ struct TemplateEditor: View {
         self.mode = mode
         self._template = template
         self.originalName = originalName
-        self.gender = gender
         self.useDateOnly = useDateOnly
         self.checkDuplicate = checkDuplicate
         self.onSubmit = onSubmit
@@ -117,11 +114,11 @@ struct TemplateEditor: View {
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .sheet(isPresented: $showingCategorySelection) {
             if mode == .create {
-                CategorySelection(initial: template.categories, newTemplate: true, gender: gender) { selected in
+                CategorySelection(initial: template.categories, newTemplate: true) { selected in
                     template.categories = selected
                 }
             } else {
-                CategorySelection(initial: template.categories, gender: gender) { selected in
+                CategorySelection(initial: template.categories) { selected in
                     template.categories = selected
                 }
             }

@@ -25,8 +25,7 @@ struct WorkoutGeneration: View {
     var body: some View {
         TemplateNavigator(
             userData: ctx.userData,
-            selectedTemplate: $selectedTemplate,
-            navigationMode: .directToDetail
+            selectedTemplate: $selectedTemplate
         ) {
             ZStack {
                 Color(UIColor.systemGroupedBackground)
@@ -118,7 +117,8 @@ struct WorkoutGeneration: View {
                         id: template.id, 
                         name: template.name, 
                         index: currentTemplateIndex, 
-                        isUserTemplate: false
+                        isUserTemplate: false,
+                        navigation: .directToDetail
                     )
                 }
             }

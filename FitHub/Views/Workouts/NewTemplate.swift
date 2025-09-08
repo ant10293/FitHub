@@ -11,7 +11,6 @@ import SwiftUI
 struct NewTemplate: View {
     @Environment(\.dismiss) private var dismiss
     @State var template: WorkoutTemplate
-    let gender: Gender
     let useDateOnly: Bool
     let checkDuplicate: (String) -> Bool
     var onCreate: (WorkoutTemplate?) -> Void
@@ -21,7 +20,6 @@ struct NewTemplate: View {
             mode: .create,
             template: $template,
             originalName: nil,
-            gender: gender,
             useDateOnly: useDateOnly,
             checkDuplicate: checkDuplicate,
             onSubmit: onCreate,

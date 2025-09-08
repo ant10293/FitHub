@@ -167,59 +167,50 @@ private struct PlateVisualization: View {
 
 // MARK: - Plate Stack Column
 private struct PlateStackColumn: View {
+    enum Orientation { case vertical, horizontal } // vertical = single peg; horizontal = two pegs
+
     let plates: [Mass]
-    let isVertical: Bool
-    
+    let orientation: Orientation
+
     init(plates: [Mass], isVertical: Bool = false) {
         self.plates = plates
-        self.isVertical = isVertical
+        self.orientation = isVertical ? .vertical : .horizontal
     }
 
     var body: some View {
-        if isVertical {
-            // Vertical stack for single peg - plates oriented horizontally
-            VStack(spacing: 2) {
-                ForEach(plates.indices, id: \.self) { i in
-                    let w = plates[i]
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(WeightPlates.color(for: w))
-                        .frame(width: width(for: w), height: 26)
-                        .overlay(
-                            Text(w.displayString)
-                                .font(.system(size: 9, weight: .semibold, design: .rounded))
-                                .foregroundStyle(.white)
-                                .shadow(radius: 1, y: 0.5)
-                        )
-                }
+        stack {
+            ForEach(plates.indices, id: \.self) { i in
+                let w = plates[i]
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(WeightPlates.color(for: w, in: plates))
+                    .frame(width: size(for: w).width, height: size(for: w).height)
+                    .overlay(
+                        Text(w.displayString)
+                            .font(.system(size: 9, weight: .semibold, design: .rounded))
+                            .foregroundStyle(.white)
+                            .shadow(radius: 1, y: 0.5)
+                    )
             }
-            .frame(minWidth: 26)
-            .animation(.spring(response: 0.25, dampingFraction: 0.9), value: plates)
-        } else {
-            // Horizontal stack for two pegs
-            HStack(spacing: 6) {
-                ForEach(plates.indices, id: \.self) { i in
-                    let w = plates[i]
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(WeightPlates.color(for: w))
-                        .frame(width: 26, height: height(for: w))
-                        .overlay(
-                            Text(w.displayString)
-                                .font(.system(size: 9, weight: .semibold, design: .rounded))
-                                .foregroundStyle(.white)
-                                .shadow(radius: 1, y: 0.5)
-                        )
-                }
-            }
-            .frame(minWidth: 100)
-            .animation(.spring(response: 0.25, dampingFraction: 0.9), value: plates)
+        }
+        .frame(minWidth: orientation == .vertical ? 26 : 100)
+        .animation(.spring(response: 0.25, dampingFraction: 0.9), value: plates)
+    }
+
+    // MARK: - Layout helpers (no duplication)
+
+    @ViewBuilder
+    private func stack<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        switch orientation {
+        case .vertical:   VStack(spacing: 2, content: content)
+        case .horizontal: HStack(spacing: 6, content: content)
         }
     }
 
-    private func height(for w: Mass) -> CGFloat {
-        max(12, CGFloat(log(w.inKg + 1.5) * 15))
-    }
-    
-    private func width(for w: Mass) -> CGFloat {
-        max(26, CGFloat(log(w.inKg + 1.5) * 15))
+    private func size(for w: Mass) -> CGSize {
+        let base = CGFloat(log(w.inKg + 1.5) * 15)  // same growth curve as before
+        switch orientation {
+        case .vertical:   return CGSize(width: max(26, base), height: 26)   // variable width, fixed height
+        case .horizontal: return CGSize(width: 26, height: max(12, base))   // fixed width, variable height
+        }
     }
 }

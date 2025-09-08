@@ -8,7 +8,16 @@
 import SwiftUI
 
 enum NavigationMode {
-    case popupOverlay, directToDetail, directToWorkout, mixed
+    case popupOverlay, directToDetail, directToWorkout
+}
+
+// Use an identifiable route for workout destinations so dismissal drops the view immediately
+private struct WorkoutRoute: Identifiable, Hashable {
+    let id: UUID
+    let sel: SelectedTemplate
+    
+    static func == (lhs: WorkoutRoute, rhs: WorkoutRoute) -> Bool { lhs.id == rhs.id }
+    func hash(into hasher: inout Hasher) { hasher.combine(id) }
 }
 
 struct TemplateNavigator<Content: View>: View {
@@ -17,26 +26,21 @@ struct TemplateNavigator<Content: View>: View {
     
     @Binding var selectedTemplate: SelectedTemplate?
     @State private var navigateToTemplateDetail: Bool = false
-    @State private var navigateToStartedWorkout: Bool = false
     @State private var currentTemplate: SelectedTemplate? = nil
     
-    let navigationMode: NavigationMode
-    let skipPopupForResume: Bool
+    @State private var workoutRoute: WorkoutRoute? = nil
+    
     let onTemplateEditingComplete: (() -> Void)?
     let content: () -> Content
     
     init(
         userData: UserData,
         selectedTemplate: Binding<SelectedTemplate?>,
-        navigationMode: NavigationMode = .popupOverlay,
-        skipPopupForResume: Bool = false,
         onTemplateEditingComplete: (() -> Void)? = nil,
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.userData = userData
         self._selectedTemplate = selectedTemplate
-        self.navigationMode = navigationMode
-        self.skipPopupForResume = skipPopupForResume
         self.onTemplateEditingComplete = onTemplateEditingComplete
         self.content = content
     }
@@ -46,7 +50,9 @@ struct TemplateNavigator<Content: View>: View {
             content()
                 .disabled(shouldDisableContent)
                 .navigationDestination(isPresented: $navigateToTemplateDetail) { templateDetailView }
-                .navigationDestination(isPresented: $navigateToStartedWorkout) { startedWorkoutView }
+                .navigationDestination(item: $workoutRoute) { route in
+                    startedWorkoutView(route: route)
+                }
             
             // Popup overlay with proper centering
             if shouldShowPopup {
@@ -74,26 +80,16 @@ struct TemplateNavigator<Content: View>: View {
         // Store the current template for navigation
         currentTemplate = template
         
-        // Check if we should skip popup for resume workout
-        if skipPopupForResume && userData.sessionTracking.activeWorkout != nil {
-            navigateToStartedWorkout = true
-            return
-        }
-        
-        // Handle different navigation modes
-        switch navigationMode {
+        switch template.navigation {
         case .popupOverlay: break
         case .directToDetail: navigateToTemplateDetail = true
-        case .directToWorkout: navigateToStartedWorkout = true
-        case .mixed: 
-            // For mixed mode, show popup for template selection from WeekView
-            // Direct navigation will be handled by the parent view
-            break
+        case .directToWorkout:
+            workoutRoute = WorkoutRoute(id: UUID(), sel: template)
         }
     }
     
     private var shouldShowPopup: Bool {
-        return (navigationMode == .popupOverlay || navigationMode == .mixed) && selectedTemplate != nil
+        return selectedTemplate?.navigation == .popupOverlay && selectedTemplate != nil
     }
     
     private var shouldDisableContent: Bool {
@@ -132,12 +128,13 @@ struct TemplateNavigator<Content: View>: View {
     }
 
     @ViewBuilder
-    private var startedWorkoutView: some View {
-        if let sel = currentTemplate, let tpl = templateBinding(for: sel)?.wrappedValue {
+    private func startedWorkoutView(route: WorkoutRoute) -> some View {
+        let sel = route.sel
+        if let tpl = templateBinding(for: sel)?.wrappedValue {
             StartedWorkoutView(
                 viewModel: WorkoutVM(template: tpl, activeWorkout: userData.sessionTracking.activeWorkout),
                 onExit: {
-                    navigateToStartedWorkout = false
+                    workoutRoute = nil
                     currentTemplate = nil
                     selectedTemplate = nil
                 }
@@ -161,7 +158,7 @@ struct TemplateNavigator<Content: View>: View {
                     }, 
                     onBeginWorkout: {
                         currentTemplate = template
-                        navigateToStartedWorkout = true
+                        workoutRoute = WorkoutRoute(id: UUID(), sel: template)
                     },
                     onEdit: {
                         currentTemplate = template

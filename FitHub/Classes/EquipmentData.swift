@@ -223,6 +223,17 @@ extension EquipmentData {
     func equipmentForCategory(for rounding: RoundingCategory) -> [GymEquipment] {
         allEquipment.filter { $0.roundingCategory == rounding }
     }
+    
+    func alternativesFor(equipment: [GymEquipment]) -> [GymEquipment] {
+        let altFromOwned: Set<String> = Set(
+            equipment
+                .compactMap(\.alternativeEquipment)
+                .flatMap { $0 }
+                .map(normalize)
+        )
+        
+        return getEquipment(from: Array(altFromOwned))
+    }
 
     func hasEquipmentAdjustments(for exercise: Exercise) -> Bool {
         exercise.equipmentRequired.contains { req in

@@ -12,6 +12,7 @@ struct EquipmentDetail: View {
     @State private var expandList: Bool = false
     @State private var editingEquipment: Bool = false
     var equipment: GymEquipment
+    var alternative: [GymEquipment]?
     let allExercises: [Exercise]
     let allEquipment: [GymEquipment]
 
@@ -27,6 +28,14 @@ struct EquipmentDetail: View {
                         .multilineTextAlignment(.center)
                         .lineLimit(3)
                         .minimumScaleFactor(0.7)
+                    
+                    /*if let alternative = alternative {
+                        ScrollView {
+                            EquipmentScrollRow(equipment: alternative, title: "Alternative Equipment")
+                        }
+                        .padding(0)
+                        .scrollDisabled(true)
+                    }*/
                 }
 
                 ExpandCollapseList(expandList: $expandList)

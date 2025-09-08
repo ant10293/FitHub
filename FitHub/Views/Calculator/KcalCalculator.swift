@@ -36,7 +36,7 @@ struct KcalCalculator: View {
         Form {
             // Age
             Section {
-                TextField("Age in years", text: digitsBinding($ageText))
+                TextField("Age in years", text: $ageText)
                     .keyboardType(.numberPad)
             } header: {
                 Text("Enter Age")
@@ -58,7 +58,7 @@ struct KcalCalculator: View {
 
             // Steps
             Section {
-                TextField("Avg Steps per Day", text: digitsBinding($stepsText))
+                TextField("Avg Steps per Day", text: $stepsText)
                     .keyboardType(.numberPad)
             } header: {
                 Text("Enter Steps per Day")
@@ -136,18 +136,6 @@ struct KcalCalculator: View {
         userData.profile.age       = Int(ageText) ?? 0
 
         userData.saveToFile()
-    }
-
-    // MARK: - Bindings
-
-    /// Wraps a `String` state into a digits-only binding.
-    private func digitsBinding(_ src: Binding<String>) -> Binding<String> {
-        Binding(
-            get: { src.wrappedValue },
-            set: { new in
-                src.wrappedValue = new.replacingOccurrences(of: "\\D", with: "", options: .regularExpression)
-            }
-        )
     }
 
     // MARK: - Result view

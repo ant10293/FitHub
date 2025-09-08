@@ -11,7 +11,6 @@ struct EditTemplate: View {
     @Environment(\.dismiss) private var dismiss
     @State var template: WorkoutTemplate
     let originalTemplate: WorkoutTemplate
-    let gender: Gender
     let useDateOnly: Bool
     let checkDuplicate: (String) -> Bool
     var onDelete: () -> Void
@@ -23,7 +22,6 @@ struct EditTemplate: View {
             mode: .edit,
             template: $template,
             originalName: originalTemplate.name,
-            gender: gender,
             useDateOnly: useDateOnly,
             checkDuplicate: checkDuplicate,
             onSubmit: { updated in

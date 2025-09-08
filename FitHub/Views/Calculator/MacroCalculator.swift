@@ -37,7 +37,7 @@ struct MacroCalculator: View {
         Form {
             // Age
             Section {
-                TextField("Age", text: digitsBinding($ageText))
+                TextField("Age", text: $ageText)
                     .keyboardType(.numberPad)
             } header: {
                 Text("Enter your Age")
@@ -123,21 +123,21 @@ struct MacroCalculator: View {
             heightCm: height.inCm,
             age: Double(age)
         )
-
+        /*
         // Multiply by activity level
         let maintenance = bmr * activityLevel.multiplier
         let goal: FitnessGoal = userData.physical.goal
         
         // Adjust by goal
         let adjustedCalories: Double = maintenance * goal.maintenanceMultiplierDefault
-
+        */
         // Macros
-        let carbs    = (adjustedCalories * 0.50) / 4.0
-        let proteins = (adjustedCalories * 0.30) / 4.0
-        let fats     = (adjustedCalories * 0.20) / 9.0
+        let carbs    = (bmr * 0.50) / 4.0
+        let proteins = (bmr * 0.30) / 4.0
+        let fats     = (bmr * 0.20) / 9.0
 
         macroResult = MacroResult(
-            totalCalories: adjustedCalories,
+            totalCalories: bmr,
             carbs: carbs,
             proteins: proteins,
             fats: fats
@@ -164,15 +164,6 @@ struct MacroCalculator: View {
         }
 
         userData.saveToFile()
-    }
-
-    // MARK: - Helpers
-
-    private func digitsBinding(_ src: Binding<String>) -> Binding<String> {
-        Binding(
-            get: { src.wrappedValue },
-            set: { src.wrappedValue = $0.replacingOccurrences(of: "\\D", with: "", options: .regularExpression) }
-        )
     }
 
     // MARK: - View Models

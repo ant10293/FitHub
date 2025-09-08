@@ -74,7 +74,8 @@ struct SettingsView: View {
     private func advancedWorkoutSection() -> some View {
         Section {
             navigationLink("gearshape.2", "Workout Generation", WorkoutCustomization())
-            navigationLink("scalemass", "Weight Rounding", WeightIncrementation())
+            navigationLink("plusminus.circle", "Weight Rounding", WeightIncrementation())
+            navigationLink("scalemass", "Available Weight Plates", PlateSelection(userData: ctx.userData))
             navigationLink("chart.bar", "Progressive Overload", OverloadSettings(userData: ctx.userData))
             navigationLink("slider.horizontal.3", "Volume Deloading", DeloadSettings(userData: ctx.userData))
             navigationLink("figure.walk", "Muscle Rest Duration", MuscleRest(userData: ctx.userData))
@@ -103,6 +104,7 @@ struct SettingsView: View {
         }
     }
     
+    // need to use LazyDestination
     private func navigationLink<Destination: View>(_ imageName: String, _ label: String, _ destination: Destination) -> some View {
         NavigationLink {
             destination

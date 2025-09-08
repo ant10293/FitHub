@@ -8,7 +8,7 @@ struct StartedWorkoutView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var kbd = KeyboardManager.shared
-    @ObservedObject var viewModel: WorkoutVM
+    @StateObject var viewModel: WorkoutVM
     @StateObject private var timer = TimerManager()
     @State private var showingExitConfirmation = false
     @State private var selectedExerciseIndex: Int?
@@ -84,7 +84,7 @@ struct StartedWorkoutView: View {
             exercises: viewModel.template.exercises,
             onDone: {
                 viewModel.finishWorkoutAndDismiss(ctx: ctx, timer: timer, completion: {
-                    closeAction()
+                    onExit()
                 })
             }
         )
@@ -147,16 +147,11 @@ struct StartedWorkoutView: View {
                 message: Text("Doing so will end your workout."),
                 primaryButton: .destructive(Text("End Workout")) {
                     viewModel.endWorkoutAndDismiss(ctx: ctx, timer: timer, shouldRemoveDate: false, completion: {
-                        closeAction()
+                        onExit()
                     })
                 },
                 secondaryButton: .cancel()
             )
         }
-    }
-    
-    private func closeAction() {
-        onExit()
-        dismiss()
     }
 }

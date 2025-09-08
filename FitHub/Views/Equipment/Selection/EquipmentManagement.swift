@@ -19,38 +19,37 @@ struct EquipmentManagement: View {
     @State private var selectedEquipmentId: UUID?
 
     var body: some View {
-        //NavigationStack {
-            EquipmentSelectionContent(
-                selectedCategory: $selectedCategory,
-                searchText: $searchText,
-                isSelected: { ge in idsSet.contains(ge.id) },
-                onToggle: { ge in toggle(ge) },
-                onViewDetail: { id in selectedEquipmentId = id; viewDetail = true },
-                showSaveBanner: ctx.toast.showingSaveConfirmation
-            )
-            .navigationBarTitle("\(ctx.userData.profile.userName)'s Gym", displayMode: .inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    if ctx.userData.setup.isEquipmentSelected {
-                        Button("Save") {
-                            ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
-                            ctx.toast.showSaveConfirmation()
-                        }
+        EquipmentSelectionContent(
+            selectedCategory: $selectedCategory,
+            searchText: $searchText,
+            isSelected: { ge in idsSet.contains(ge.id) },
+            onToggle: { ge in toggle(ge) },
+            onViewDetail: { id in selectedEquipmentId = id; viewDetail = true },
+            showSaveBanner: ctx.toast.showingSaveConfirmation
+        )
+        .navigationBarTitle("\(ctx.userData.profile.userName)'s Gym", displayMode: .inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                if ctx.userData.setup.isEquipmentSelected {
+                    Button("Save") {
+                        ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
+                        ctx.toast.showSaveConfirmation()
                     }
                 }
             }
-            .sheet(isPresented: $showEquipmentCreation) { NewEquipment() }
-            .navigationDestination(isPresented: $viewDetail) {
-                if let id = selectedEquipmentId,
-                   let equipment = ctx.equipment.equipment(for: id) {
-                    EquipmentDetail(equipment: equipment,
-                                    allExercises: ctx.exercises.allExercises,
-                                    allEquipment: ctx.equipment.allEquipment)
-                } else {
-                    Color.clear.onAppear { selectedEquipmentId = nil; viewDetail = false }
-                }
+        }
+        .sheet(isPresented: $showEquipmentCreation) { NewEquipment() }
+        .navigationDestination(isPresented: $viewDetail) {
+            if let id = selectedEquipmentId,
+               let equipment = ctx.equipment.equipment(for: id) {
+                EquipmentDetail(equipment: equipment,
+                                alternative: ctx.equipment.alternativesFor(equipment: Array(arrayLiteral: equipment)),
+                                allExercises: ctx.exercises.allExercises,
+                                allEquipment: ctx.equipment.allEquipment)
+            } else {
+                Color.clear.onAppear { selectedEquipmentId = nil; viewDetail = false }
             }
-        //}
+        }
         .overlay(
             Group {
                 if saveVisible {

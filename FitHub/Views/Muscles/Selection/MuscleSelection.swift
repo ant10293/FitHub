@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 /// Reusable muscle–group picker + body overlay.
 ///
 /// ⬇︎  You feed it just the things that _differ_ between the two screens
@@ -18,7 +16,6 @@ struct MuscleSelection: View {
     // MARK: ‑ Dependencies that vary between the two screens
     @Binding var selectedCategories: [SplitCategory]          // whichever “list” is current
     @Binding var showFront: Bool                              // same backing state object both screens use
-    let gender: Gender                                        // userData.physical.gender or `gender` param
     let displayName: (SplitCategory) -> String                // vm.displayName(…)
     let toggle: (SplitCategory) -> Void                       // vm.toggle(…)
     let shouldDisable: (SplitCategory) -> Bool                // vm.shouldDisable(…)
@@ -47,7 +44,7 @@ struct MuscleSelection: View {
             ZStack {
                 SimpleMuscleGroupsView(
                     showFront: $showFront,
-                    gender: gender,
+                    gender: .male,
                     selectedSplit: selectedCategories
                 )
                 

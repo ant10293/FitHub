@@ -7,13 +7,11 @@ struct CategorySelection: View {
     @State private var donePressed: Bool = false // tracks explicit ‘Done’
     @State private var askSave: Bool = false // controls alert
     let newTemplate: Bool
-    var gender: Gender
     let onSave: ([SplitCategory]) -> Void
 
-    init(initial: [SplitCategory], newTemplate: Bool = false, gender: Gender, onSave: @escaping ([SplitCategory]) -> Void) {
+    init(initial: [SplitCategory], newTemplate: Bool = false, onSave: @escaping ([SplitCategory]) -> Void) {
         _vm    = StateObject(wrappedValue: SplitSelectionVM(initialCategories: initial))
         self.newTemplate = newTemplate
-        self.gender = gender
         self.onSave = onSave
     }
 
@@ -24,14 +22,11 @@ struct CategorySelection: View {
                 MuscleSelection(
                     selectedCategories: vm.binding(for: vm.selectedDay),
                     showFront:          $vm.showFrontView,
-                    gender:             gender,
                     displayName:        { vm.displayName(for: $0, on: vm.selectedDay) },
-
                     // convert (SplitCategory, DaysOfWeek?) → (SplitCategory) on the fly
                     toggle: { category in
                         vm.toggle(category, on: vm.selectedDay)     // still runs on MainActor
                     },
-
                     shouldDisable:      { vm.shouldDisable($0, on: vm.selectedDay) },
                     shouldShow:         { cat, list in vm.shouldShow(cat, in: list) }
                 )

@@ -21,8 +21,7 @@ struct WorkoutPlan: View {
         NavigationStack {
             TemplateNavigator(
                 userData: ctx.userData,
-                selectedTemplate: $selectedTemplate,
-                navigationMode: .mixed
+                selectedTemplate: $selectedTemplate
             ) {
                 VStack {
                     Spacer()
@@ -194,9 +193,9 @@ struct WorkoutPlan: View {
         
         // Find the template index and create SelectedTemplate
         if let index = ctx.userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == template.id }) {
-            selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: true)
+            selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: true, navigation: .directToWorkout)
         } else if let index = ctx.userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == template.id }) {
-            selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: false)
+            selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: false, navigation: .directToWorkout)
         }
     }
 }

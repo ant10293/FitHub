@@ -52,7 +52,7 @@ struct WorkoutCustomization: View {
         .navigationBarTitle("Generation Parameters", displayMode: .inline)
         .onAppear(perform: initializeVariables)
         .onChange(of: ctx.userData.workoutPrefs) { ctx.userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs) }
-        .sheet(isPresented: $showingSplitSelection) { SplitSelection(userData: ctx.userData) }
+        .sheet(isPresented: $showingSplitSelection) { SplitSelection(vm: SplitSelectionVM(userData: ctx.userData)) }
         .sheet(isPresented: $showingDayPicker) { DaysEditor(selectedDays: $selectedDays, numDays: $daysPerWeek) }
         .sheet(isPresented: $showingTimePicker) { TimesEditor(userData: ctx.userData, days: selectedDays) }
         .toolbar { ToolbarItem(placement: .topBarTrailing) {

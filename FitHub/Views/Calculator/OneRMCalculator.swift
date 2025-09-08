@@ -38,7 +38,7 @@ struct OneRMCalculator: View {
                     }
                     
                     Section {
-                        TextField("Enter Reps", text: digitsBinding($repsText))
+                        TextField("Enter Reps", text: $repsText)
                             .keyboardType(.numberPad)
                     } header: {
                         Text("Reps Performed")
@@ -192,15 +192,6 @@ struct OneRMCalculator: View {
         isCalculated = false
         searchText = ""
         exerciseToSave = nil
-    }
-
-    // MARK: - Small utils
-
-    private func digitsBinding(_ src: Binding<String>) -> Binding<String> {
-        Binding(
-            get: { src.wrappedValue },
-            set: { src.wrappedValue = $0.replacingOccurrences(of: "\\D", with: "", options: .regularExpression) }
-        )
     }
 }
 

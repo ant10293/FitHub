@@ -131,31 +131,8 @@ struct ExerciseDetailView: View {
                     .foregroundStyle(Color.secondary)
                 
                 if !exercise.equipmentRequired.isEmpty {
-                    Text("Equipment Required: ").bold()
-                    ScrollView(.horizontal) {
-                        LazyHStack {
-                            let size: CGFloat = UIScreen.main.bounds.height * 0.1
-                            
-                            ForEach(exercise.equipmentRequired, id: \.self) { equipmentName in
-                                if let equipment = ctx.equipment.allEquipment.first(where: {
-                                    normalize($0.name) == normalize(equipmentName)
-                                }) {
-                                    VStack {
-                                        equipment.fullImageView
-                                            .frame(width: size, height: size)
-                                        
-                                        Text(equipment.name)
-                                            .font(.caption)
-                                            .multilineTextAlignment(.center)      // wrap + center
-                                            .lineLimit(nil)                       // unlimited lines
-                                            .frame(maxWidth: size * 1.1)          // ≤ 110 % of image width
-                                            .fixedSize(horizontal: false, vertical: true) // grow down, not sideways
-                                    }
-                                }
-                            }
-                        }
-                        .padding(.bottom)
-                    }
+                    let equipment = ctx.equipment.equipmentForExercise(exercise)
+                    EquipmentScrollRow(equipment: equipment, title: "Equipment Required")
                 }
                 
                 if ctx.equipment.hasEquipmentAdjustments(for: exercise) {

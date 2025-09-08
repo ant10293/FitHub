@@ -49,7 +49,7 @@ struct WeekWorkout: View {
                         DayWorkout(info: info, onSelect: { template in
                             // Find the template index in the appropriate array
                            if let trainerIndex = userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == template.id }) {
-                                selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: trainerIndex, isUserTemplate: false)
+                               selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: trainerIndex, isUserTemplate: false, navigation: .popupOverlay)
                             }
                         })
                         .id(info.id)

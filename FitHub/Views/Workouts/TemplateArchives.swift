@@ -15,8 +15,7 @@ struct TemplateArchives: View {
     var body: some View {
         TemplateNavigator(
             userData: userData,
-            selectedTemplate: $selectedTemplate,
-            navigationMode: .directToDetail
+            selectedTemplate: $selectedTemplate
         ) {
             ZStack {
                 if !userData.workoutPlans.archivedTemplates.isEmpty {

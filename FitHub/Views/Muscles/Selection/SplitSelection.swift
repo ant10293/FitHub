@@ -2,15 +2,9 @@ import SwiftUI
 
 struct SplitSelection: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var vm: SplitSelectionVM
+    @StateObject var vm: SplitSelectionVM
     @State private var donePressed: Bool = false
     @State private var askSave: Bool = false
-    let userData: UserData
-
-    init(userData: UserData) {
-        _vm = StateObject(wrappedValue: SplitSelectionVM(userData: userData))
-        self.userData = userData
-    }
 
     var body: some View {
         NavigationStack {
@@ -19,7 +13,6 @@ struct SplitSelection: View {
                 MuscleSelection(
                     selectedCategories: vm.binding(for: vm.selectedDay),
                     showFront:          $vm.showFrontView,
-                    gender:             userData.physical.gender,
                     displayName:        { vm.displayName(for: $0, on: vm.selectedDay) },
                     toggle:             { vm.toggle($0, on: vm.selectedDay) },
                     shouldDisable:      { vm.shouldDisable($0, on: vm.selectedDay) },
