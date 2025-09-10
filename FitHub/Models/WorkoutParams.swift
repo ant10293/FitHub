@@ -90,7 +90,7 @@ enum WorkoutParams {
         customDuration: Int?
     ) -> Int {
         return customDuration
-        ?? defaultWorkoutDuration(age: age, frequency: frequency, strengthLevel: strengthLevel, goal: goal)
+        ?? defaultWorkoutDuration(age: age, frequency: frequency, strengthLevel: strengthLevel, goal: goal).inMinutes
     }
     
     /// Heuristic workout duration (minutes) based on user profile.
@@ -100,7 +100,7 @@ enum WorkoutParams {
         frequency: Int,
         strengthLevel: StrengthLevel,
         goal: FitnessGoal
-    ) -> Int {
+    ) -> TimeSpan {
         var minutes = 45 // base
 
         // Age
@@ -154,10 +154,15 @@ enum WorkoutParams {
             }
         }()
 
-        // Clamp and round to nearest 5
+        // Clamp and round to nearest 15
         minutes = min(max(minutes, 25), 90)
-        let remainder = minutes % 5
-        if remainder >= 3 { minutes += (5 - remainder) } else { minutes -= remainder }
-        return minutes
+        let remainder = minutes % 15
+        if remainder >= 8 {
+            minutes += (15 - remainder)   // round up
+        } else {
+            minutes -= remainder          // round down
+        }
+        
+        return TimeSpan.fromMinutes(minutes)
     }
 }

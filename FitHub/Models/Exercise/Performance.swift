@@ -136,11 +136,9 @@ enum PeakMetric: Codable, Equatable, Hashable {
     }
     
     var loggingEntry: String {
-        switch self {
-        case .oneRepMax: return "\(performanceTitle): \(displayValueString) kg"
-        case .maxReps: return "\(performanceTitle): \(displayValueString) reps"
-        case .maxHold: return "\(performanceTitle): \(displayValueString)"
-        }
+        let base = "\(performanceTitle): \(displayValueString)"
+        guard let label = unitLabel, !label.isEmpty else { return base }
+        return base + " " + label
     }
     
     private var performanceTitle: String {

@@ -58,7 +58,8 @@ final class JSONFileManager {
                 let item = try decoder(jsonDict)
                 validItems.append(item)
             } catch {
-                print("⚠️ Skipping \(itemType) at index \(index): \(error.localizedDescription)")
+                let name = jsonDict["name"] as? String ?? "<no name>"
+                print("⚠️ Skipping \(itemType) '\(name)' at index \(index): \(error.localizedDescription)")
                 skippedCount += 1
                 continue
             }
@@ -183,20 +184,6 @@ final class JSONFileManager {
         debounceQueue.asyncAfter(deadline: .now() + delay, execute: work)
     }
     
-    func debouncedSaveAdjustments(_ adjustments: [UUID: ExerciseEquipmentAdjustments], delay: TimeInterval = 1.0) {
-        // Cancel previous save for adjustments
-        pendingFullSaves["adjustments.json"]?.cancel()
-        
-        let work = DispatchWorkItem { [weak self] in
-            guard let self = self else { return }
-            self.save(adjustments, to: "adjustments.json")
-            self.pendingFullSaves["adjustments.json"] = nil
-        }
-        
-        pendingFullSaves["adjustments.json"] = work
-        debounceQueue.asyncAfter(deadline: .now() + delay, execute: work)
-    }
-    
     func debouncedSingleFieldSave<T: Encodable>(_ value: T, for key: String, in filename: String, delay: TimeInterval = 0.4) {
         let saveKey = "\(filename)-\(key)"
         
@@ -238,11 +225,4 @@ final class JSONFileManager {
         pendingSingleSaves[saveKey] = work
         debounceQueue.asyncAfter(deadline: .now() + delay, execute: work)
     }
-}
-
-// MARK: - Save Operation Model
-
-struct SaveOperation {
-    let filename: String
-    let data: Encodable
 }

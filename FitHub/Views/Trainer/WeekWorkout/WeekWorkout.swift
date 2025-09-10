@@ -49,7 +49,7 @@ struct WeekWorkout: View {
                         DayWorkout(info: info, onSelect: { template in
                             // Find the template index in the appropriate array
                            if let trainerIndex = userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == template.id }) {
-                               selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: trainerIndex, isUserTemplate: false, navigation: .popupOverlay)
+                               selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: trainerIndex, isUserTemplate: false, mode: .popupOverlay)
                             }
                         })
                         .id(info.id)
@@ -133,17 +133,3 @@ struct WeekWorkout: View {
     }
 }
 
-extension Date {
-    func startOfWeek(using calendar: Calendar = .current) -> Date {
-        return CalendarUtility.shared.startOfWeek(for: self) ?? self
-    }
-    
-    func startOfDay(using calendar: Calendar = .current) -> Date {
-        CalendarUtility.shared.startOfDay(for: self) 
-    }
-    
-    func datesOfWeek(using calendar: Calendar = .current) -> [Date] {
-        let start = self.startOfWeek(using: calendar)
-        return (0..<7).compactMap { CalendarUtility.shared.date(byAdding: .day, value: $0, to: start) }
-    }
-}

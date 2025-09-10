@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct SimilarExerciseRow: View {
-    @ObservedObject var userData: UserData
     @State private var showDetails = false
+    let userData: UserData
     let exercise: Exercise
     let baseExercise: Exercise          // used only for %-match math
-    let onReplace: () -> Void           // 🔵 arrow button only!
+    let onReplace: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

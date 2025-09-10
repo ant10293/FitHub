@@ -4,7 +4,7 @@
 //
 //  Created by Anthony Cantu on 7/21/24.
 //
-
+/*
 import SwiftUI
 import Foundation
 
@@ -303,3 +303,4 @@ extension Muscle {
         ) + slug
     }
 }
+*/

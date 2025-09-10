@@ -7,14 +7,14 @@
 
 import Foundation
 
+// TODO: strengthCeiling should be applied unless we dont have enough exercises
 // MARK: - ExerciseSelector (Simplified & Reliable)
-
 final class ExerciseSelector {
     // MARK: Dependencies
     private let idx: ExerciseIndex
     private let favorites: Set<Exercise.ID>
     private let disliked: Set<Exercise.ID>
-    private let strengthCeiling: Int
+    private let strengthCeiling: StrengthLevel
     private let resistance: ResistanceType
     private let policy: Policy
     private let logger: Logger?
@@ -28,7 +28,7 @@ final class ExerciseSelector {
         favorites: Set<Exercise.ID>,
         disliked: Set<Exercise.ID>,
         resistance: ResistanceType,
-        strengthCeiling: Int,
+        strengthCeiling: StrengthLevel,
         policy: Policy = Policy(),
         logger: Logger? = nil,
         seed: UInt64 = 0
@@ -93,19 +93,6 @@ final class ExerciseSelector {
         }
     }
 
-    // MARK: Deterministic RNG
-    private struct SeededRNG: RandomNumberGenerator {
-        private var state: UInt64
-        init(seed: UInt64) { self.state = seed == 0 ? 0x9E3779B97F4A7C15 : seed }
-        mutating func next() -> UInt64 {
-            state &+= 0x9E3779B97F4A7C15
-            var z = state
-            z = (z ^ (z >> 30)) &* 0xBF58476D1CE4E5B9
-            z = (z ^ (z >> 27)) &* 0x94D049BB133111EB
-            return z ^ (z >> 31)
-        }
-    }
-
     // MARK: Public API - Simplified & Reliable
     func select(
         dayIndex: Int,
@@ -116,9 +103,7 @@ final class ExerciseSelector {
         dayLabel: String
     ) -> [Exercise] {
         let clampedTotal = max(policy.minCount, min(policy.maxCount, total))
-        guard clampedTotal > 0 else { 
-            return [] 
-        }
+        guard clampedTotal > 0 else { return [] }
 
         var rng = seededRNG(for: dayIndex)
         let expanded = expand(categories)
@@ -142,7 +127,7 @@ final class ExerciseSelector {
             return []
         }
 
-        // 2. Apply distribution logic - SIMPLIFIED AND RELIABLE
+        // 2. Apply distribution logic - removes exercises with effortType of 0% or setCount of 0
         let selectedExercises = applyDistributionLogic(
             exercises: eligibleExercises,
             targetCount: clampedTotal,
@@ -151,6 +136,7 @@ final class ExerciseSelector {
         )
 
         logger?.add("[\(dayLabel)] Selected: \(selectedExercises.count) exercises")
+        print("[\(dayLabel)] Selected: \(selectedExercises.map(\.name).joined(separator: ", "))")
 
         // 3. Apply balancing and return
         var finalSelection = selectedExercises
@@ -253,11 +239,10 @@ final class ExerciseSelector {
             let exercisesOfType = remainingExercises.filter { $0.effort == effort }
             let availableCount = exercisesOfType.count
             
-            if availableCount == 0 {
-                continue
-            }
+            if availableCount == 0 { continue }
             
             let actualCount = min(targetForType, availableCount)
+            print("ExercisesOfType: \(exercisesOfType.map(\.name).joined(separator: ", "))")
             let selected = selectRandomExercises(from: exercisesOfType, count: actualCount, rng: &rng)
             
             selectedExercises.append(contentsOf: selected)
@@ -277,6 +262,7 @@ final class ExerciseSelector {
         return selectedExercises
     }
     
+    // FIXME: needs to work with muscleEngagement changes
     private func distributeExercisesEvenly(_ exercises: [Exercise]) -> [Exercise] {
         var distributedExercises: [Exercise] = []
         // Tracks unique combinations of primary and secondary muscle groups.
@@ -323,19 +309,6 @@ final class ExerciseSelector {
         //print("Distributed exercises: \(distributedExercises.map { $0.name })")
         return distributedExercises
     }
-
-    // MARK: - Simple Random Selection
-    private func selectRandomExercises<T>(from array: [T], count: Int, rng: inout SeededRNG) -> [T] {
-        let actualCount = min(count, array.count)
-        guard actualCount > 0 else { return [] }
-        
-        if actualCount == array.count {
-            return array.shuffled(using: &rng)
-        }
-        
-        let shuffled = array.shuffled(using: &rng)
-        return Array(shuffled.prefix(actualCount))
-    }
     
     // MARK: - Exercise Selection with Favorite Prioritization
     private func selectRandomExercises(from array: [Exercise], count: Int, rng: inout SeededRNG) -> [Exercise] {
@@ -381,6 +354,19 @@ final class ExerciseSelector {
         }
         return Array(out)
     }
+    
+    // MARK: Deterministic RNG
+    private struct SeededRNG: RandomNumberGenerator {
+        private var state: UInt64
+        init(seed: UInt64) { self.state = seed == 0 ? 0x9E3779B97F4A7C15 : seed }
+        mutating func next() -> UInt64 {
+            state &+= 0x9E3779B97F4A7C15
+            var z = state
+            z = (z ^ (z >> 30)) &* 0xBF58476D1CE4E5B9
+            z = (z ^ (z >> 27)) &* 0x94D049BB133111EB
+            return z ^ (z >> 31)
+        }
+    }
 
     private func seededRNG(for dayIndex: Int) -> SeededRNG {
         let mix: UInt64 = 0x9E3779B97F4A7C15 &* UInt64(1 + dayIndex)
@@ -388,14 +374,3 @@ final class ExerciseSelector {
     }
 }
 
-// MARK: - Array Extension for Shuffling with RNG
-extension Array {
-    func shuffled<T: RandomNumberGenerator>(using generator: inout T) -> [Element] {
-        var array = self
-        for i in stride(from: array.count - 1, through: 1, by: -1) {
-            let j = Int.random(in: 0...i, using: &generator)
-            array.swapAt(i, j)
-        }
-        return array
-    }
-}

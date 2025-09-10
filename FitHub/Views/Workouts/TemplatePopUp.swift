@@ -10,8 +10,8 @@ import SwiftUI
 struct TemplatePopup: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var userData: UserData
-    var template: WorkoutTemplate
     @State private var disableMessage: String = "Invalid exercise(s) in template."
+    var template: WorkoutTemplate
     var onClose: () -> Void
     var onBeginWorkout: () -> Void
     var onEdit: () -> Void

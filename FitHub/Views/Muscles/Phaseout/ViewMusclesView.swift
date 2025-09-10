@@ -1,3 +1,4 @@
+/*
 import SwiftUI
 
 
@@ -337,7 +338,7 @@ struct ViewMusclesView: View {
 
                 for engage in exercise.muscles {
                     let base   = engage.engagementPercentage / 100.0
-                    let ps     = engage.isPrimary ? 1.0 : 0.5
+                    let ps     = engage.mover == .primary ? 1.0 : 0.5
                     let weight = base * ps * Double(setCount)
 
                     var bucket = buckets[engage.muscleWorked] ?? (0, 0)
@@ -375,7 +376,7 @@ extension DaysOfWeek {
         }
     }
 }
-
+*/
 
 
 

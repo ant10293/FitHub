@@ -8,6 +8,10 @@
 import Foundation
 
 final class ExerciseData: ObservableObject {
+    private static let bundledExercisesFileName: String = "exercises.json"
+    private static let userExercisesFileName: String = "user_exercises.json"
+    private static let performanceFileName: String = "performance.json"
+    
     private let bundledExercises: [Exercise]          // read-only
     @Published private(set) var userExercises: [Exercise]  // can mutate & save
    
@@ -26,16 +30,16 @@ final class ExerciseData: ObservableObject {
     
     init() {
         bundledExercises = ExerciseData.loadBundledExercises()
-        userExercises = ExerciseData.loadUserExercises(from: "user_exercises.json")
-        loadPerformanceData(from: "performance.json")
+        userExercises = ExerciseData.loadUserExercises(from: ExerciseData.userExercisesFileName)
+        loadPerformanceData(from: ExerciseData.performanceFileName)
     }
     
     // MARK: – Persistence Logic
     private static func loadBundledExercises() -> [Exercise] {
         do {
-            let seed: [InitExercise] = try Bundle.main.decode("exercises.json")
+            let seed: [InitExercise] = try Bundle.main.decode(ExerciseData.bundledExercisesFileName)
             let mapping = seed.map { Exercise(from: $0) }
-            print("✅ Successfully loaded \(mapping.count) exercises from exercises.json")
+            print("✅ Successfully loaded \(mapping.count) exercises from \(ExerciseData.bundledExercisesFileName)")
             return mapping
         } catch {
             print("❌ Standard decoding from exercises.json failed. Falling back to manual parsing...")
@@ -63,12 +67,12 @@ final class ExerciseData: ObservableObject {
     }
     
     func savePerformanceData() {
-        JSONFileManager.shared.save(Array(allExercisePerformance.values), to: "performance.json", dateEncoding: true)
+        JSONFileManager.shared.save(Array(allExercisePerformance.values), to: ExerciseData.performanceFileName, dateEncoding: true)
     }
     
     private func persistUserExercises() {
         let snapshot = userExercises                 // value copy, thread-safe
-        JSONFileManager.shared.save(snapshot, to: "user_exercises.json")
+        JSONFileManager.shared.save(snapshot, to: ExerciseData.userExercisesFileName)
     }
 }
 

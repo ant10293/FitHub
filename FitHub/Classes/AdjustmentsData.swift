@@ -6,15 +6,15 @@
 //
 
 import Foundation
-import SwiftUI
 
 final class AdjustmentsData: ObservableObject {
+    private static let jsonKey: String = "adjustments.json"
     @Published var adjustments: [UUID: ExerciseEquipmentAdjustments] = [:] // Store adjustments using a dictionary for fast lookups
     @Published var adjustmentInputs: [String: String] = [:] // Store inputs as strings
     
     // MARK: – Persistence Logic
     static func loadAdjustmentsFromFile() -> AdjustmentsData? {
-        guard let savedAdjustments = JSONFileManager.shared.loadAdjustments(from: "adjustments.json") else {
+        guard let savedAdjustments = JSONFileManager.shared.loadAdjustments(from: AdjustmentsData.jsonKey) else {
             return nil
         }
         
@@ -24,7 +24,7 @@ final class AdjustmentsData: ObservableObject {
     }
     
     func saveAdjustmentsToFile() {
-        JSONFileManager.shared.save(adjustments, to: "adjustments.json")
+        JSONFileManager.shared.save(adjustments, to: AdjustmentsData.jsonKey)
     }
     
     // Load adjustments for all exercises

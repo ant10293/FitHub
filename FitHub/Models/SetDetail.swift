@@ -67,9 +67,24 @@ struct SetDetail: Identifiable, Hashable, Codable {
     var rpe: Double?
     var restPeriod: Int?
     
+    func completedPeakMetric(peak: PeakMetric) -> PeakMetric? {
+        let metric = completed ?? planned
+        
+        switch peak {
+        case .maxReps: if let reps = metric.repsValue { return .maxReps(reps) }
+        case .maxHold: if let held = metric.holdTime { return .maxHold(held) }
+        case .oneRepMax:
+            if let reps = metric.repsValue {
+                let oneRM = OneRMFormula.calculateOneRepMax(weight: weight, reps: reps, formula: .brzycki)
+                return .oneRepMax(oneRM)
+            }
+        }
+        
+        return nil
+    }
+    
     mutating func updateCompletedMetrics(currentBest: PeakMetric) -> (newMax: PeakMetric?, rxw: RepsXWeight?) {
         // If nothing was logged, persist the plan as the completion.
-        if completed == nil { completed = planned }
         let metric = completed ?? planned
 
         switch currentBest {

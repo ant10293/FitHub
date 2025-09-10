@@ -133,7 +133,7 @@ struct WorkoutCustomization: View {
 
     private var setStructureSelector: some View {
         VStack {
-            Picker("Set-weight Structure", selection: $selectedSetStructure) {
+            Picker("Set Structure", selection: $selectedSetStructure) {
                 ForEach(SetStructures.allCases, id: \.self) { structure in
                     Text(structure.rawValue)
                 }
@@ -182,14 +182,22 @@ struct WorkoutCustomization: View {
         
     private var workoutDurationSelector: some View {
         DisclosureGroup(isExpanded: $isDurationExpanded) {
-            DurationPicker(time: $duration, hourRange: 0...3)
+            DurationPicker(time: $duration, hourRange: 0...2, minuteStep: 15)
                 .listRowSeparator(.hidden, edges: .top)
                 .padding(.trailing)
+                .overlay(alignment: .top, content: {
+                    if duration.inMinutes < 15 {
+                        Text("Invalid Duration (< 15 min) will not be used.")
+                            .font(.footnote)
+                            .foregroundStyle(.red)
+                            .lineLimit(1)
+                    }
+                })
         } label: {
             HStack {
                 Text("Workout Duration")
                 Spacer()
-                Text(duration.displayString)
+                Text(duration.inMinutes < 15 ? defaultDuration.displayString : duration.displayString)
                     .font(.callout)
                     .foregroundStyle(.secondary)
             }
@@ -198,7 +206,7 @@ struct WorkoutCustomization: View {
         .tint(.gray) // makes the disclosure arrow gray
         .onChange(of: duration.inMinutes) { oldValue, newValue in
             if oldValue != newValue {
-                if newValue == defaultDuration {
+                if newValue == defaultDuration.inMinutes || newValue < 15 {
                     ctx.userData.workoutPrefs.customDuration = nil
                 } else {
                     ctx.userData.workoutPrefs.customDuration = newValue
@@ -278,7 +286,7 @@ struct WorkoutCustomization: View {
     
     private var defaultRepsAndSets: RepsAndSets { RepsAndSets.defaultRepsAndSets(for: ctx.userData.physical.goal) }
     
-    private var defaultDuration: Int {
+    private var defaultDuration: TimeSpan {
         WorkoutParams.defaultWorkoutDuration(
             age: ctx.userData.profile.age,
             frequency: ctx.userData.workoutPrefs.workoutDaysPerWeek,
@@ -293,7 +301,7 @@ struct WorkoutCustomization: View {
         keepCurrentExercises = ctx.userData.workoutPrefs.keepCurrentExercises
         selectedResistanceType = ctx.userData.workoutPrefs.ResistanceType
         selectedSetStructure = ctx.userData.workoutPrefs.setStructure
-        duration.setMin(minutes: ctx.userData.workoutPrefs.customDuration ?? defaultDuration)
+        duration.setMin(minutes: ctx.userData.workoutPrefs.customDuration ?? defaultDuration.inMinutes)
     }
     
     private func resetToDefaults() {

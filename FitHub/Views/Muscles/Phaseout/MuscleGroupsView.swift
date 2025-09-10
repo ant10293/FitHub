@@ -4,7 +4,7 @@
 //
 //  Created by Anthony Cantu on 6/29/24.
 //
-
+/*
 import SwiftUI
 import UIKit
 
@@ -36,4 +36,4 @@ struct MuscleGroupsView: View {
         return 1.0 - Double(restPercentages[muscle] ?? 0) / 100.0
     }
 }
-
+*/

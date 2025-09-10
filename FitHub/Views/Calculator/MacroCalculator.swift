@@ -9,6 +9,7 @@ import SwiftUI
 
 
 struct MacroCalculator: View {
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var userData: UserData
     @StateObject private var kbd = KeyboardManager.shared
 
@@ -98,6 +99,7 @@ struct MacroCalculator: View {
                 MacroResultView(result: r) {
                     persistInputs()
                     showingResult = false
+                    dismiss()
                 }
                 .padding()
             }
@@ -123,21 +125,22 @@ struct MacroCalculator: View {
             heightCm: height.inCm,
             age: Double(age)
         )
-        /*
+        
         // Multiply by activity level
         let maintenance = bmr * activityLevel.multiplier
+        /*
         let goal: FitnessGoal = userData.physical.goal
         
         // Adjust by goal
         let adjustedCalories: Double = maintenance * goal.maintenanceMultiplierDefault
         */
         // Macros
-        let carbs    = (bmr * 0.50) / 4.0
-        let proteins = (bmr * 0.30) / 4.0
-        let fats     = (bmr * 0.20) / 9.0
+        let carbs    = (maintenance * 0.50) / 4.0
+        let proteins = (maintenance * 0.30) / 4.0
+        let fats     = (maintenance * 0.20) / 9.0
 
         macroResult = MacroResult(
-            totalCalories: bmr,
+            totalCalories: maintenance,
             carbs: carbs,
             proteins: proteins,
             fats: fats

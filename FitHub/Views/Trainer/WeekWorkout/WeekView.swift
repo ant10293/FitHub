@@ -23,10 +23,34 @@ struct WeekView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .overlay(WeekWorkout(userData: userData, selectedTemplate: $selectedTemplate))
                 .padding(.horizontal)
-                .overlay(alignment: .center, content: {
-                    WeekLegend()
-                        .padding(.top, 150)
+                .overlay(alignment: .bottom, content: {
+                    weekLegend
                 })
+        }
+    }
+    
+    private var weekLegend: some View {
+        HStack(spacing: 15) {
+            LegendItem(color: .blue, label: "Planned")
+            LegendItem(color: .green, label: "Completed")
+            LegendItem(color: .red, label: "Missed")
+        }
+        .padding()
+    }
+    
+    private struct LegendItem: View {
+        var color: Color
+        var label: String
+        
+        var body: some View {
+            HStack(spacing: 4) {
+                RoundedRectangle(cornerRadius: 2)
+                    .fill(color)
+                    .frame(width: 12, height: 12)
+                Text(label)
+                    .font(.caption)
+                    .foregroundStyle(Color.primary)
+            }
         }
     }
 }

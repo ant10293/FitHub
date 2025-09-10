@@ -131,6 +131,11 @@ struct ContentView: View {
         }
 
         if allDatesArePast {
+            // only generate if we are updating existing templates
+            if !ctx.userData.workoutPlans.trainerTemplates.isEmpty {
+                ctx.userData.generateWorkoutPlan(exerciseData: ctx.exercises, equipmentData: ctx.equipment, keepCurrentExercises: true, nextWeek: true, shouldSave: false)
+            }
+            /*
             // Get the start of the current week
             guard let currentWeekStart = CalendarUtility.shared.startOfWeek(for: currentDate) else { return }
 
@@ -147,6 +152,7 @@ struct ContentView: View {
                     print("The current week is not different from the last workout week. No need to generate a new workout plan.")
                 }
             }
+            */
         } else {
             print("No past dates found. No need to generate a new workout plan.")
         }

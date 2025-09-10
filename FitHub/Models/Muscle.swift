@@ -9,16 +9,15 @@ import Foundation
 import SwiftUI
 
 
-
 struct SubMuscleEngagement: Hashable, Codable {
     var submuscleWorked: SubMuscles
     var engagementPercentage: Double
 }
-
+ 
 struct MuscleEngagement: Hashable, Codable {
     var muscleWorked: Muscle
     var engagementPercentage: Double
-    var isPrimary: Bool
+    var mover: MoverType
     var submusclesWorked: [SubMuscleEngagement]?
 }
 extension MuscleEngagement {
@@ -28,10 +27,10 @@ extension MuscleEngagement {
 
 extension Sequence where Element == MuscleEngagement {
     /// Only primary movers
-    var primary: [MuscleEngagement] { filter(\.isPrimary) }
+    var primary: [MuscleEngagement] { filter { $0.mover == .primary } }
 
     /// Only assistants
-    var secondary: [MuscleEngagement] { filter { !$0.isPrimary } }
+    var secondary: [MuscleEngagement] { filter { $0.mover == .secondary } }
 
     /// Primary muscles only
     var primaryMuscles: [Muscle] { primary.map(\.muscleWorked) }
@@ -48,6 +47,19 @@ extension Sequence where Element == MuscleEngagement {
     /// Highest-engagement primary muscle (nil if none)
     var topPrimaryMuscle: Muscle? {
         primary.max { $0.engagementPercentage < $1.engagementPercentage }?.muscleWorked
+    }
+}
+
+enum MoverType: String, Codable, Hashable, CaseIterable {
+    case primary, secondary, tertiary, stabilizer
+    
+    var displayName: String {
+        switch self {
+        case .primary: return "Primary"
+        case .secondary: return "Secondary"
+        case .tertiary: return "Tertiary"
+        case .stabilizer: return "Stabilizer"
+        }
     }
 }
 
@@ -93,7 +105,7 @@ enum Muscle: String, CaseIterable, Identifiable, Codable {
         case .erectorSpinae: return "Erectors"
         case .quadriceps: return "Quads"
         case .gluteus: return "Glutes"
-            // case .hamstrings: return "Hams"
+        // case .hamstrings: return "Hams"
         case .lumbarStabilizers: return "Lumbar"
         case .hipComplex: return "Hips"
         case .scapularRetractors: return "Scapular"

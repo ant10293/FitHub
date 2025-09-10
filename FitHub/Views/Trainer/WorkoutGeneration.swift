@@ -118,7 +118,7 @@ struct WorkoutGeneration: View {
                         name: template.name, 
                         index: currentTemplateIndex, 
                         isUserTemplate: false,
-                        navigation: .directToDetail
+                        mode: .directToDetail
                     )
                 }
             }

@@ -11,7 +11,7 @@ import Foundation
 import Combine
 
 final class UserData: ObservableObject, Codable {
-    static let jsonKey: String      = "UserData.json"
+    static private let jsonKey: String = "UserData.json"
     @Published var profile          = Profile()
     @Published var physical         = PhysicalStats()
     @Published var workoutPrefs     = WorkoutPreferences()
@@ -97,6 +97,12 @@ extension UserData {
         
         _ = updateTemplate(template: updatedTemplate, shouldRemoveDate: shouldRemoveDate, shouldSave: false)
         if shouldSave { saveToFile() }
+    }
+    
+    func deleteArchivedTemplate(at idx: Int) {
+        NotificationManager.remove(ids: workoutPlans.archivedTemplates[idx].notificationIDs)
+        workoutPlans.archivedTemplates.remove(at: idx)
+        saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
     }
     
     func deleteTrainerTemplate(at offsets: IndexSet) {
@@ -249,6 +255,17 @@ extension UserData {
     func checkAndUpdateAge() {
         let calculatedAge = CalendarUtility.shared.age(from: profile.dob, to: Date())
         if calculatedAge != profile.age { profile.age = calculatedAge }
+    }
+    
+    func getTemplate(for template: WorkoutTemplate) -> SelectedTemplate? {
+        if let index = workoutPlans.userTemplates.firstIndex(where: { $0.id == template.id }) {
+            let template = workoutPlans.userTemplates[index]
+            return SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: true, mode: .directToWorkout)
+        } else if let trainerIndex = workoutPlans.trainerTemplates.firstIndex(where: { $0.id == template.id }) {
+            let template = workoutPlans.trainerTemplates[trainerIndex]
+            return SelectedTemplate(id: template.id, name: template.name, index: trainerIndex, isUserTemplate: false, mode: .directToWorkout)
+        }
+        return nil
     }
 }
 

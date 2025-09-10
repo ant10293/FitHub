@@ -7,27 +7,6 @@
 
 import Foundation
 
-/*
-enum MuscleGroup: String, CaseIterable, Identifiable, Codable {
-    // Primary
-    case abs, back, biceps, chest, glutes, hamstrings, quadriceps, shoulders, triceps, lowerBack
-    
-    // Accessory
-    case calves, trapezius, abductors, adductors, forearms, neck
-    
-    var id: String { rawValue }
-    
-    /// True for what used to be AccessoryMuscleGroup
-    var isAccessory: Bool {
-        switch self {
-        case .calves, .trapezius, .abductors, .adductors, .forearms, .neck:
-            return true
-        default:
-            return false
-        }
-    }
-}
-*/
 
 enum SplitCategory: String, CaseIterable, Identifiable, Codable {
     // MARK: - Muscle Group

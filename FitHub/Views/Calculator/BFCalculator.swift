@@ -7,10 +7,8 @@
 
 import SwiftUI
 
-
-import SwiftUI
-
 struct BFCalculator: View {
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var userData: UserData
     @StateObject private var kbd = KeyboardManager.shared
 
@@ -89,6 +87,7 @@ struct BFCalculator: View {
                 if showingResult {
                     BodyFatResultView(bodyFat: computedBF) {
                         showingResult = false
+                        dismiss()
                     }
                 }
             }

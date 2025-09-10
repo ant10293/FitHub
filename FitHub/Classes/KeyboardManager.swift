@@ -11,7 +11,6 @@ import Combine
 /// Simple helper that publishes **`true`** when the keyboard is showing,
 /// **`false`** when it’s hidden.  Nothing to instantiate in every view.
 final class KeyboardManager: ObservableObject {
-
     // ---- singleton ------------------------------------------------------
     static let shared = KeyboardManager()          // use .shared everywhere
     @Published private(set) var isVisible = false

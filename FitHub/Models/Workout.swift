@@ -13,7 +13,7 @@ struct SelectedTemplate: Identifiable, Equatable {
     var name: String
     var index: Int
     var isUserTemplate: Bool
-    var navigation: NavigationMode
+    var mode: NavigationMode
 }
 
 struct WorkoutTemplate: Identifiable, Hashable, Codable, Equatable {

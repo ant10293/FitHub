@@ -11,11 +11,10 @@ struct WorkoutPlan: View {
     @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
     @EnvironmentObject private var ctx: AppContext
     @State private var selectedWorkoutTemplate: WorkoutTemplate?
-    @State private var isNavigationActive: Bool = false
+    @State private var selectedTemplate: SelectedTemplate?
     @State private var showingAlert: Bool = false
     @State private var showingSaveConfirmation: Bool = false
     @State private var showingTemplateChoice: Bool = false
-    @State private var selectedTemplate: SelectedTemplate?
     
     var body: some View {
         NavigationStack {
@@ -28,29 +27,7 @@ struct WorkoutPlan: View {
                                     
                     WeekView(userData: ctx.userData, selectedTemplate: $selectedTemplate)
                     
-                    /*
-                     NavigationLink(destination: ViewMusclesView(userData: ctx.userData)) {
-                        HStack {
-                            Text("View Muscle Groups")
-                                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                .font(.headline)
-                                .fontWeight(.medium)
-                            //Image(systemName: "figure.strengthtraining.traditional")
-                            Image(systemName: "figure.wave")
-                                .foregroundStyle(.gray)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(.gray)
-                        }
-                        .padding()
-                        .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .shadow(radius: 5)
-                    }
-                    .padding(.horizontal)
-                    */
-                    
-                    if !ctx.userData.workoutPlans.trainerTemplates.isEmpty {
+                    if ctx.userData.workoutPlans.workoutsCreationDate != nil {
                         NavigationLink(destination: LazyDestination { WorkoutGeneration() }) {
                             HStack {
                                 Text("Workout Generation")
@@ -190,12 +167,8 @@ struct WorkoutPlan: View {
     
     private func proceedToWorkout() {
         guard let template = selectedWorkoutTemplate else { return }
-        
-        // Find the template index and create SelectedTemplate
-        if let index = ctx.userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == template.id }) {
-            selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: true, navigation: .directToWorkout)
-        } else if let index = ctx.userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == template.id }) {
-            selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: false, navigation: .directToWorkout)
-        }
+        if let selected = ctx.userData.getTemplate(for: template) {
+           selectedTemplate = selected
+       }
     }
 }

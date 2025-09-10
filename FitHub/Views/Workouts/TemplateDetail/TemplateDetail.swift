@@ -120,7 +120,7 @@ struct TemplateDetail: View {
             
             // Spacer row at the end
             Color.clear
-                .frame(height: 200)
+                .frame(height: 100)
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
         }

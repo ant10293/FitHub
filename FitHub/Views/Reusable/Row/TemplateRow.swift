@@ -14,7 +14,7 @@ struct TemplateRow: View {
     var disabled: Bool = false
     var hideEditButton: Bool = false
     var onSelect: (SelectedTemplate) -> Void
-    var onEdit: () -> Void = { }
+    var onEdit: (SelectedTemplate) -> Void = { _ in }
 
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
@@ -38,7 +38,7 @@ struct TemplateRow: View {
             
             if userTemplate && !hideEditButton {
                 // Dedicated button for rename/delete actions
-                Button(action: { onEdit() } ) {
+                Button(action: { onEdit(selectedTemplate) } ) {
                     Image(systemName: "ellipsis.circle")
                         .imageScale(.large)
                 }
@@ -49,6 +49,6 @@ struct TemplateRow: View {
     }
     
     private var selectedTemplate: SelectedTemplate {
-        SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: userTemplate, navigation: .popupOverlay)
+        SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: userTemplate, mode: .popupOverlay)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  WorkoutChangLog.swift
+//  ChangeLog.swift
 //  FitHub
 //
 //  Created by Anthony Cantu on 8/17/25.
@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-// Models/WorkoutChangelog.swift
 struct WorkoutChangelog: Codable, Identifiable {
     var id: UUID = UUID()
     let generationDate: Date
@@ -27,7 +26,6 @@ struct GenerationStats: Codable {
     let progressiveOverloadApplied: Int
     let deloadsApplied: Int
 }
-
 
 struct TemplateChangelog: Codable, Identifiable {
     var id: UUID = UUID()
@@ -91,7 +89,7 @@ struct MaxRecordInfo: Codable {
     
     var displayText: String {
         if let currentMax = currentMax {
-            return "Current \(currentMax.value.formattedText) (set \(Format.shortDate(from: currentMax.date)))"
+            return "Current \(currentMax.value.loggingEntry) (set \(Format.shortDate(from: currentMax.date)))"
         } else if let csvEstimate = csvEstimate {
             return "Estimated \(csvEstimate.loggingEntry) (from CSV data)"
         } else {

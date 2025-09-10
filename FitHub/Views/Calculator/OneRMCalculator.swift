@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct OneRMCalculator: View {
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
     @State private var weightLifted: Mass = .init(kg: 0)   // canonical
-    @State private var repsText: String = ""               // keep as text for the TF
+    @State private var repsText: String = ""              
     @State private var searchText: String = ""
     @State private var exerciseToSave: Exercise?
     @State private var tappedExercise: Exercise?
@@ -77,24 +78,31 @@ struct OneRMCalculator: View {
 
                         Section {
                             SearchBar(text: $searchText, placeholder: "Search Exercises")
-
-                            ForEach(filteredExercises) { exercise in
-                                ExerciseRow(
-                                    exercise,
-                                    heartOverlay: true,
-                                    favState: FavoriteState.getState(for: exercise, userData: ctx.userData),
-                                    accessory: { EmptyView() },
-                                    detail: {
-                                        let cur = ctx.exercises.peakMetric(for: exercise.id)?.displayValue ?? 0.0
-                                        Text("Current 1RM: ").foregroundStyle(.gray)
-                                        + Text(cur > 0 ? Format.smartFormat(cur) : "-")
-                                        + Text(" \(unitLabel)").fontWeight(.light)
-                                    },
-                                    onTap: { exerciseTap(exercise) }
-                                )
-                            }
                         } header: {
                             Text("Save 1RM to Exercise")
+                        }
+
+                        Section {
+                            if filteredExercises.isEmpty {
+                                Text("No matching exercises.")
+                                    .foregroundStyle(.secondary)
+                            } else {
+                                ForEach(filteredExercises) { exercise in
+                                    ExerciseRow(
+                                        exercise,
+                                        heartOverlay: true,
+                                        favState: FavoriteState.getState(for: exercise, userData: ctx.userData),
+                                        accessory: { EmptyView() },
+                                        detail: {
+                                            let cur = current1RM(for: exercise.id)
+                                            Text("Current 1RM: ").foregroundStyle(.gray)
+                                            + Text(cur > 0 ? Format.smartFormat(cur) : "-")
+                                            + Text(" \(unitLabel)").fontWeight(.light)
+                                        },
+                                        onTap: { exerciseTap(exercise) }
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -131,6 +139,7 @@ struct OneRMCalculator: View {
                         ctx.exercises.savePerformanceData()
                         ctx.toast.showSaveConfirmation(duration: 2) {
                             resetView()
+                            dismiss()
                         }
                     }
                 },
@@ -138,9 +147,18 @@ struct OneRMCalculator: View {
             )
         }
     }
+    
+    // Add this helper in OneRMCalculator (pure, no publish)
+    private func current1RM(for id: UUID) -> Double {
+        // Read from the snapshot dictionary; don't call methods that mutate/publish
+        if let perf = ctx.exercises.allExercisePerformance[id],
+           let max = perf.currentMax?.value {
+            return max.displayValue   // or whatever your Mass/Value exposes
+        }
+        return 0
+    }
 
     // MARK: - Filters / Derived
-
     private var filteredExercises: [Exercise] {
         ctx.exercises.filteredExercises(
             searchText: searchText,
@@ -164,7 +182,6 @@ struct OneRMCalculator: View {
     }
 
     // MARK: - Actions
-
     private func calculate() {
         let repsVal = Int(repsText) ?? 0
 

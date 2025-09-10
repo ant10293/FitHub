@@ -116,12 +116,13 @@ struct ExerciseDetailView: View {
                 if let limbMovementType = exercise.limbMovementType {
                     limbMovementType.displayInfoText
                 }
-                                
+                
                 Text("Primary Muscles: ").bold()
                 exercise.primaryMusclesFormatted
                     .multilineTextAlignment(.leading)
                     .font(.caption)
                     .foregroundStyle(Color.secondary)
+                
                 
                 // Join all secondary muscles into a single comma-separated string
                 Text("Secondary Muscles: ").bold()

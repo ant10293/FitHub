@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct KcalCalculator: View {
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var userData: UserData
     @StateObject private var kbd = KeyboardManager.shared
 
@@ -89,6 +90,7 @@ struct KcalCalculator: View {
                 ResultView(calories: calories) {
                     persistInputs()
                     showingResult = false
+                    dismiss()
                 }
             }
         }

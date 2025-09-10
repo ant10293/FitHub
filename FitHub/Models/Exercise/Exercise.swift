@@ -16,13 +16,14 @@ struct Exercise: Identifiable, Hashable, Codable {
     let image: String
     let muscles: [MuscleEngagement]
     let description: String
+   // let instructions: ExerciseInstructions
     let equipmentRequired: [String]
     let effort: EffortType
     let url: String?
     let type: ResistanceType
     let difficulty: StrengthLevel
     let equipmentAdjustments: ExerciseEquipmentAdjustments?
-    let limbMovementType: LimbMovementType?
+    let limbMovementType: LimbMovementType? // no longer optional
     let repsInstruction: RepsInstruction?
     let weightInstruction: WeightInstruction?
     
@@ -42,8 +43,8 @@ struct Exercise: Identifiable, Hashable, Codable {
     var isWarmUp: Bool { currentSet <= warmUpSets }
     var currentSetIndex: Int { currentSet - 1 }
         
-    var currentWeekAvgRPE: Double?
-    var previousWeeksAvgRPE: [Double]?
+    var currentWeekAvgRPE: RPEentry?
+    var previousWeeksAvgRPE: RPEentries?
     var weeksStagnated: Int = 0
     var overloadProgress: Int = 0
 }
@@ -55,6 +56,7 @@ extension Exercise {
         self.image                = initEx.image
         self.muscles              = initEx.muscles
         self.description          = initEx.description
+        //self.instructions         = initEx.instructions
         self.equipmentRequired    = initEx.equipmentRequired
         self.effort               = initEx.effort
         self.url                  = initEx.url
@@ -169,7 +171,7 @@ extension Exercise {
     }
     
     func usesPlates(equipmentData: EquipmentData) -> Bool {
-        let equipmentList = equipmentData.getEquipment(from: equipmentRequired)
+        let equipmentList = equipmentData.equipmentForExercise(self, includeAlternatives: true)
 
         // If ANY equipment in the list is a weight machine → false
         if equipmentList.contains(where: { ($0.pegCount ?? .none).count > 0 }) {
@@ -227,7 +229,7 @@ extension Exercise {
     }
     
     /// Returns `true` if *every* piece of required equipment can be satisfied
-    /// either directly or via a declared alternative.
+    /// either directly or via a declared alternative.    
     func canPerform(equipmentData: EquipmentData, equipmentSelected: [UUID]) -> Bool {
         // Retrieve GymEquipment objects from stored UUIDs
         let equipmentObjects = equipmentData.equipmentObjects(for: equipmentSelected)
@@ -236,12 +238,7 @@ extension Exercise {
         let owned: Set<String> = Set(equipmentObjects.map { normalize($0.name) })
 
         // 2️⃣ Alternatives provided BY the gear the user owns
-        let altFromOwned: Set<String> = Set(
-            equipmentObjects
-                .compactMap(\.alternativeEquipment)
-                .flatMap { $0 }
-                .map(normalize)
-        )
+        let altFromOwned: Set<String> = equipmentData.altFromOwned(equipmentObjects)
         
         let allowed = owned.union(altFromOwned)
         
@@ -285,29 +282,44 @@ extension Exercise {
             if let avgRPE = currentWeekAvgRPE {
                 print("existing rpe found. Setting \(avgRPE) as last week rpe")
                 if previousWeeksAvgRPE == nil {
-                    previousWeeksAvgRPE = [avgRPE]
+                    previousWeeksAvgRPE = RPEentries(entries: [avgRPE])
                 } else {
-                    previousWeeksAvgRPE?.append(avgRPE)
+                    previousWeeksAvgRPE?.entries.append(avgRPE)
                 }
                 if let prevList = previousWeeksAvgRPE {
                     print("previous weeks rpes: \(prevList)")
                 }
             }
             
-            let RPEs = setDetails.compactMap(\.rpe)
-            if !RPEs.isEmpty {
-                let averageRPE: Double = {
-                    let sum = RPEs.reduce(0, +)
-                    return Double(sum) / Double(RPEs.count)
-                }()
-                
-                currentWeekAvgRPE = averageRPE
-                print("\(name), avg rpe: \(averageRPE)")
+            let (avgPeakMetric, avgRPE) = avgPeakAndRPE
+            if let avgRPE = avgRPE {
+                currentWeekAvgRPE = RPEentry(rpe: avgRPE, completion: avgPeakMetric)
+                print("\(name), avg rpe: \(avgRPE), avg peak: \(avgPeakMetric)")
             }
         } else {
+            print("new pr set this week. resetting rpe")
             currentWeekAvgRPE = nil
             previousWeeksAvgRPE = nil
         }
+    }
+    
+    private var avgPeakAndRPE: (peak: PeakMetric, rpe: Double?) {
+        let zero = getPeakMetric(metricValue: 0)
+
+        let acc = setDetails.reduce(into: (pSum: 0.0, pCnt: 0, rSum: 0.0, rCnt: 0)) { a, s in
+            if let pm = s.completedPeakMetric(peak: zero) {
+                a.pSum += pm.actualValue          // adjust if your value prop differs
+                a.pCnt += 1
+            }
+            if let r = s.rpe {                    // Int? or Double? -> cast to Double
+                a.rSum += Double(r)
+                a.rCnt += 1
+            }
+        }
+
+        let peak = acc.pCnt > 0 ? getPeakMetric(metricValue: acc.pSum / Double(acc.pCnt)) : zero
+        let rpe  = acc.rCnt > 0 ? acc.rSum / Double(acc.rCnt) : nil
+        return (peak, rpe)
     }
 }
 
@@ -541,6 +553,7 @@ extension Exercise {
     var secondaryMusclesFormatted: Text { formattedMuscles(from: secondaryMuscleEngagements) }
     
     // MARK: – Shared formatter
+    
     private func formattedMuscles(from engagements: [MuscleEngagement]) -> Text {
         // Build a bullet-point line for every engagement
         let lines: [Text] = engagements.map { e in

@@ -15,12 +15,12 @@ struct TemplateSelection: View {
     
     var body: some View {
         workoutList
-        .navigationDestination(isPresented: $navigateToOverload) {
-            if let sel = selectedTemplate, let tpl = resolveTemplate(sel) {
-                OverloadCalculator(template: tpl)
+            .navigationDestination(isPresented: $navigateToOverload) {
+                if let sel = selectedTemplate, let tpl = resolveTemplate(sel) {
+                    OverloadCalculator(template: tpl)
+                }
             }
-        }
-        .navigationBarTitle("Select Template", displayMode: .inline)
+            .navigationBarTitle("Select Template", displayMode: .inline)
     }
     
     private var workoutList: some View {

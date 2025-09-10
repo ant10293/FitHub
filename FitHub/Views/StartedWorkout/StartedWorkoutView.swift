@@ -58,7 +58,7 @@ struct StartedWorkoutView: View {
                 favState: FavoriteState.getState(for: exercise, userData: ctx.userData)
               ) { }
               detail: {
-                  Text("Sets: \(exercise.workingSets)")
+                  exercise.setsSubtitle
                       .font(.subheadline)
                       .foregroundStyle(Color.secondary)
               } onTap: {

@@ -32,7 +32,7 @@ struct PlateVisualizer: View {
             (Text("Total: ") + spec.displayTotal.formattedText().bold())
                 .font(.largeTitle)
             
-            Text("Exercise: \(exercise.name)")
+            //Text("Exercise: \(exercise.name)")
 
             if let name = equip?.name {
                 Text("Equipment: \(name)")
@@ -102,7 +102,7 @@ struct PlateVisualizer: View {
     // MARK: - Base mass + count + kind from equipment
     private func baseSpecForExercise() -> (base: Mass, equip: GymEquipment?, baseCount: Int, implementsCount: Int, pegCount: PegCountOption?) {
         let movement = exercise.limbMovementType ?? .bilateralDependent
-        let gear = ctx.equipment.equipmentForExercise(exercise)
+        let gear = ctx.equipment.equipmentForExercise(exercise, includeAlternatives: true)
 
         var bestBase = Mass(kg: 0)
         var bestEquip: GymEquipment?

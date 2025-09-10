@@ -30,18 +30,15 @@ struct TemplateNavigator<Content: View>: View {
     
     @State private var workoutRoute: WorkoutRoute? = nil
     
-    let onTemplateEditingComplete: (() -> Void)?
     let content: () -> Content
     
     init(
         userData: UserData,
         selectedTemplate: Binding<SelectedTemplate?>,
-        onTemplateEditingComplete: (() -> Void)? = nil,
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.userData = userData
         self._selectedTemplate = selectedTemplate
-        self.onTemplateEditingComplete = onTemplateEditingComplete
         self.content = content
     }
     
@@ -80,7 +77,7 @@ struct TemplateNavigator<Content: View>: View {
         // Store the current template for navigation
         currentTemplate = template
         
-        switch template.navigation {
+        switch template.mode {
         case .popupOverlay: break
         case .directToDetail: navigateToTemplateDetail = true
         case .directToWorkout:
@@ -89,7 +86,7 @@ struct TemplateNavigator<Content: View>: View {
     }
     
     private var shouldShowPopup: Bool {
-        return selectedTemplate?.navigation == .popupOverlay && selectedTemplate != nil
+        return selectedTemplate?.mode == .popupOverlay && selectedTemplate != nil
     }
     
     private var shouldDisableContent: Bool {
@@ -111,7 +108,7 @@ struct TemplateNavigator<Content: View>: View {
             return $userData.workoutPlans.trainerTemplates[i]
         }
     }
-
+     
     @ViewBuilder
     private var templateDetailView: some View {
         if let sel = currentTemplate, let binding = templateBinding(for: sel) {
@@ -121,7 +118,6 @@ struct TemplateNavigator<Content: View>: View {
                     navigateToTemplateDetail = false
                     currentTemplate = nil
                     selectedTemplate = nil
-                    onTemplateEditingComplete?()
                 }
             )
         }

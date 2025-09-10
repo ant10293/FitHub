@@ -39,17 +39,9 @@ struct WorkoutsView: View {
             },
             resume: {
                 // Navigate to the workout in progress
-                if let workoutInProgress = activeWorkout {
-                    // First search in userTemplates
-                    if let index = ctx.userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == workoutInProgress.template.id }) {
-                        let template = ctx.userData.workoutPlans.userTemplates[index]
-                        selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: true, navigation: .directToWorkout)
-                    }
-                    // If not found, search in trainerTemplates
-                    else if let trainerIndex = ctx.userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == workoutInProgress.template.id }) {
-                        let template = ctx.userData.workoutPlans.trainerTemplates[trainerIndex]
-                        selectedTemplate = SelectedTemplate(id: template.id, name: template.name, index: trainerIndex, isUserTemplate: false, navigation: .directToWorkout)
-                    }
+                // FIXME: use the actual template from activeWorkout
+                if let workoutInProgress = activeWorkout, let selected = ctx.userData.getTemplate(for: workoutInProgress.template) {
+                    selectedTemplate = selected
                 }
                 showResumeWorkoutOverlay = false
             }
@@ -106,7 +98,7 @@ struct WorkoutsView: View {
             onSelect: { newSelection in
                 selectedTemplate = newSelection
             },
-            onEdit: {
+            onEdit: { editSelection in
                 // For editing, only show the sheet directly - don't set selectedTemplate
                 // This prevents the popup from appearing
                 editingTemplateIndex = index
@@ -126,7 +118,7 @@ struct WorkoutsView: View {
                 if let newTemplate = newTemplate {
                     ctx.userData.addUserTemplate(template: newTemplate)
                     if let index = ctx.userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == newTemplate.id }) {
-                        selectedTemplate = SelectedTemplate(id: newTemplate.id, name: newTemplate.name, index: index, isUserTemplate: true, navigation: .popupOverlay)
+                        selectedTemplate = SelectedTemplate(id: newTemplate.id, name: newTemplate.name, index: index, isUserTemplate: true, mode: .popupOverlay)
                     }
                     showingTemplateCreation = false
                 }

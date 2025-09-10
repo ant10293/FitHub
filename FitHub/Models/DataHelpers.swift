@@ -7,13 +7,6 @@
 
 import Foundation
 import SwiftUI
-
-extension Array where Element: Hashable {
-    func uniqued() -> [Element] {
-        var seen = Set<Element>()
-        return filter { seen.insert($0).inserted }
-    }
-}
     
 func getDocumentsDirectory() -> URL {
     let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -48,15 +41,28 @@ func normalize(_ s: String) -> String {
     s.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 }
 
-
 extension Collection {
     /// Return `nil` if empty; otherwise the collection.
     var nilIfEmpty: Self? { isEmpty ? nil : self }
 }
 
+// A safe subscript to prevent out of range errors.
+extension Collection {
+    subscript(safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}
+
 extension UIApplication {
     func endEditing() {
         sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
+extension Array where Element: Hashable {
+    func uniqued() -> [Element] {
+        var seen = Set<Element>()
+        return filter { seen.insert($0).inserted }
     }
 }
 
@@ -71,24 +77,20 @@ extension Array where Element: Numeric {
         return nil
     }
 }
+
 // Extension for safe array indexing
 extension Array {
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
     }
 }
+
 // Splits an array into chunks of a given size.
 extension Array {
     func chunked(into size: Int) -> [[Element]] {
         stride(from: 0, to: count, by: size).map {
             Array(self[$0..<Swift.min($0 + size, count)])
         }
-    }
-}
-// A safe subscript to prevent out of range errors.
-extension Collection {
-    subscript(safe index: Index) -> Element? {
-        return indices.contains(index) ? self[index] : nil
     }
 }
 
@@ -104,5 +106,17 @@ extension Array {
                 self.append(new)
             }
         }
+    }
+}
+
+// MARK: - Array Extension for Shuffling with RNG - ExerciseSelector()
+extension Array {
+    func shuffled<T: RandomNumberGenerator>(using generator: inout T) -> [Element] {
+        var array = self
+        for i in stride(from: array.count - 1, through: 1, by: -1) {
+            let j = Int.random(in: 0...i, using: &generator)
+            array.swapAt(i, j)
+        }
+        return array
     }
 }

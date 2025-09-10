@@ -11,7 +11,6 @@ import Foundation
 struct RepsAndSets {
     var reps: RepDistribution
     var sets: SetDistribution
-    //var restPeriod: Int  // Seconds of rest between sets
     var rest: RestPeriods
     var distribution: ExerciseDistribution
 }
@@ -23,7 +22,6 @@ extension RepsAndSets {
     
     static func determineRepsAndSets(
         for goal: FitnessGoal,
-        //customRestPeriod: Int?,
         customRestPeriod: RestPeriods?,
         customRepsRange: RepDistribution?,
         customSets: SetDistribution?,

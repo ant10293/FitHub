@@ -33,15 +33,11 @@ struct HealthKitRequestView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 
-                Button("Get Started") {
+                RectangularButton(title: "Get Started", enabled: !userName.isEmpty, action: {
                     userData.profile.userName = userName
                     userData.saveSingleStructToFile(\.profile, for: .profile)
                     healthKit.requestAuthorization(userData: userData)
-                }
-                .foregroundStyle(.white)
-                .padding()
-                .background(userName.isEmpty ? Color.gray : Color.black) // Disable the visual of the button when userName is empty
-                .disabled(userName.isEmpty) // Disable the button when userName is empty
+                })
                 .clipShape(Capsule())
             }
         }

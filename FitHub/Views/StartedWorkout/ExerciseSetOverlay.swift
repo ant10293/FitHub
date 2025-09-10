@@ -108,7 +108,6 @@ struct ExerciseSetOverlay: View {
                     .padding()
             }
             .contentShape(Rectangle())
-           
         }
     }
     

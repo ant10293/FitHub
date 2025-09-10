@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct BMICalculator: View {
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var userData: UserData
     @StateObject private var kbd = KeyboardManager.shared
     @State private var weight: Mass
@@ -64,7 +65,8 @@ struct BMICalculator: View {
             Group {
                 if showingResult {
                     BMIResultView(bmi: bmi) {
-                        self.showingResult = false
+                        showingResult = false
+                        dismiss()
                     }
                 }
             }

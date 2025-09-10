@@ -18,9 +18,10 @@ struct StrengthPercentileView: View {
             
             maxView(usesWeight: exercise.type.usesWeight)
 
-            Text("\(exercise.performanceTitle) values for \(exercise.name):")
+            Text("\(exercise.performanceTitle) values for \(exercise.name) \(exercise.weightInstruction?.rawValue ?? ""):")
                 .font(.headline)
                 .padding(.top)
+
             
             ageBasedStats
                 .padding(.bottom)

@@ -6,7 +6,7 @@
         "aliases" : ["dumb bells", "hand weights", "free weights"],
         "description" : "A pair of handheld free weights that allow unilateral training and a full range of motion across countless strength and conditioning movements.",
         "equCategory" : "Small Weights",
-        "baseWeight" : { "lb": 2.5, "kg": 1 },
+        "baseWeight" : { "lb": 5, "kg": 2.5 },
         "pegCount" : 2,
         "implementation" : "Individual"
     },
@@ -17,6 +17,7 @@
         "aliases" : ["k‑bells", "kettle bells", "girya"],
         "description" : "A cannonball‑shaped weight with an offset handle that enables ballistic, hinging, and rotational exercises such as swings, cleans, snatches, and Turkish get‑ups.",
         "equCategory" : "Small Weights",
+        "alternativeEquipment" : ["Adjustable Kettlebells"],
         "implementation" : "Individual"
     },
     {

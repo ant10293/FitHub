@@ -10,9 +10,9 @@ import Foundation
 
 /// One global instance you inject where needed
 final class EquipmentData: ObservableObject {
-    static let userEquipmentFilename: String = "user_equipment.json"
-    static let bundledBaseWeightsFilename: String = "base_weights.json"
-    static let bundledEquipmentFilename: String = "equipment.json"
+    private static let userEquipmentFilename: String = "user_equipment.json"
+    private static let bundledBaseWeightsFilename: String = "base_weights.json"
+    private static let bundledEquipmentFilename: String = "equipment.json"
 
     // MARK: – Single shared instance
     static let shared = EquipmentData()
@@ -32,7 +32,6 @@ final class EquipmentData: ObservableObject {
     // MARK: – Init
     init() {
         let overrides = EquipmentData.loadBaseWeightsForBundle()
-        print(overrides)
         let bundled = EquipmentData.loadBundledEquipment(overrides: overrides)
         let user = EquipmentData.loadUserEquipment(from: EquipmentData.userEquipmentFilename)
 
@@ -47,10 +46,7 @@ final class EquipmentData: ObservableObject {
             let seed: [InitEquipment] = try Bundle.main.decode(bundledEquipmentFilename)
             let mapping = seed.map { item -> GymEquipment in
                 var eq = GymEquipment(from: item)
-                if let bw = overrides[eq.id] {
-                    eq.baseWeight = bw
-                    //print("override of \(bw) applied for \(eq.name)")
-                }   // <-- apply override
+                if let bw = overrides[eq.id] { eq.baseWeight = bw }   // <-- apply override
                 return eq
             }
             print("✅ Successfully loaded \(mapping.count) equipment items from \(bundledEquipmentFilename)")
@@ -64,10 +60,7 @@ final class EquipmentData: ObservableObject {
                     let equipmentData = try JSONSerialization.data(withJSONObject: jsonDict)
                     let initEquipment = try JSONDecoder().decode(InitEquipment.self, from: equipmentData)
                     var eq = GymEquipment(from: initEquipment)
-                    if let bw = overrides[eq.id] {
-                        eq.baseWeight = bw
-                        // print("override of \(bw) applied for \(eq.name)")
-                    }   // <-- apply here too
+                    if let bw = overrides[eq.id] { eq.baseWeight = bw }   // <-- apply override
                     return eq
                 },
                 validator: { equipment in
@@ -214,7 +207,14 @@ extension EquipmentData {
         return allEquipment.filter { want.contains(normalize($0.name)) }
     }
 
-    func equipmentForExercise(_ ex: Exercise) -> [GymEquipment] { getEquipment(from: ex.equipmentRequired) }
+    func equipmentForExercise(_ ex: Exercise, includeAlternatives: Bool = false) -> [GymEquipment] {
+        let equipment = getEquipment(from: ex.equipmentRequired)
+        if includeAlternatives {
+            return equipment + alternativesFor(equipment: equipment)
+        } else {
+            return equipment
+        }
+    }
     
     func equipment(for id: UUID) -> GymEquipment? { allEquipment.first { $0.id == id } }
     
@@ -225,14 +225,16 @@ extension EquipmentData {
     }
     
     func alternativesFor(equipment: [GymEquipment]) -> [GymEquipment] {
-        let altFromOwned: Set<String> = Set(
+        return getEquipment(from: Array(altFromOwned(equipment)))
+    }
+    
+    func altFromOwned(_ equipment: [GymEquipment]) -> Set<String> {
+        return Set(
             equipment
                 .compactMap(\.alternativeEquipment)
                 .flatMap { $0 }
                 .map(normalize)
         )
-        
-        return getEquipment(from: Array(altFromOwned))
     }
 
     func hasEquipmentAdjustments(for exercise: Exercise) -> Bool {

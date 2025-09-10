@@ -62,7 +62,6 @@ extension GymEquipment {
             .scaledToFit()
             .clipShape(RoundedRectangle(cornerRadius: 6))
     }
-    
     /// Returns the rounding bucket for this piece of equipment.
     var roundingCategory: RoundingCategory? {
         switch equCategory {
@@ -122,7 +121,6 @@ enum PegCountOption: Int, Codable, CaseIterable {
         }
     }
 }
-
 
 // should impact WeightPlates
 struct RoundingPreference: Codable, Equatable {
@@ -241,6 +239,7 @@ struct BaseWeight: Codable, Equatable, Hashable {
 }
 
 // should impact RoundingPreference
+// TODO: Add sorting here
 struct WeightPlates: Hashable, Codable {
     // default options (lb, kg)
     var lb: [Mass] = .init(WeightPlates.defaultLbPlates)

@@ -41,9 +41,10 @@ final class WeekWorkoutVM: ObservableObject {
 
     // ------------------------------------------------------------------
     private func recalculate() {
-        let today     = CalendarUtility.shared.startOfDay(for: Date())
-        let startDate = userData.workoutPlans.workoutsStartDate ?? Date()
-        let weekRange = startDate.datesOfWeek(using: Calendar.current)
+        let today = CalendarUtility.shared.startOfDay(for: Date())
+        let stored = userData.workoutPlans.workoutsStartDate ?? Date()
+        let startDate = CalendarUtility.shared.startOfWeek(for: stored) ?? stored
+        let weekRange = CalendarUtility.shared.datesInWeek(startingFrom: startDate)
 
         // Group templates by date
         let workoutsByDate: [Date?: [WorkoutTemplate]] = Dictionary(

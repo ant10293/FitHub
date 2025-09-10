@@ -171,6 +171,20 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
             return false
         }
     }
+    
+    // TODO: order in which the exercise with type should occur in the generated workout
+    /*var order: Int {
+        switch self {
+        case .compound:
+            return 1
+        case .plyometric:
+            return 2
+        case .isolation:
+            return 3
+        case .isometric:
+            return 4
+        }
+    }*/
 }
 
 struct CurrentExerciseState: Codable, Equatable {
@@ -220,4 +234,26 @@ struct ExerciseInstructions: Codable, Hashable {
 
 enum CallBackAction: String {
     case addSet, deleteSet, removeExercise, replaceExercise, viewDetail, viewAdjustments, saveTemplate
+}
+
+struct RPEentry: Hashable, Codable {
+    var rpe: Double
+    var completion: PeakMetric
+}
+
+struct RPEentries: Hashable, Codable {
+    var entries: [RPEentry]
+    
+    var avgRPE: Double? {
+        guard !entries.isEmpty else { return nil }
+        let sum = entries.reduce(0.0) { $0 + $1.rpe }
+        return sum / Double(entries.count)
+    }
+
+    var avgPeakValue: Double? {
+        guard !entries.isEmpty else { return nil }
+        let sum = entries.reduce(0.0) { $0 + $1.completion.actualValue }
+        let avg = sum / Double(entries.count)
+        return avg
+    }
 }
