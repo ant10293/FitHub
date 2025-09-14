@@ -10,7 +10,8 @@ import SwiftUI
 struct TemplateRow: View {
     var template: WorkoutTemplate
     var index: Int
-    var userTemplate: Bool
+    var location: TemplateLocation
+    var mode: NavigationMode = .popupOverlay
     var disabled: Bool = false
     var hideEditButton: Bool = false
     var onSelect: (SelectedTemplate) -> Void
@@ -36,7 +37,7 @@ struct TemplateRow: View {
             }
             .buttonStyle(PlainButtonStyle())
             
-            if userTemplate && !hideEditButton {
+            if location != .trainer && !hideEditButton {
                 // Dedicated button for rename/delete actions
                 Button(action: { onEdit(selectedTemplate) } ) {
                     Image(systemName: "ellipsis.circle")
@@ -49,6 +50,6 @@ struct TemplateRow: View {
     }
     
     private var selectedTemplate: SelectedTemplate {
-        SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: userTemplate, mode: .popupOverlay)
+        .init(template: template, location: location, mode: mode)
     }
 }

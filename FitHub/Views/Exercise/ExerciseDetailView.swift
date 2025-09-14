@@ -117,6 +117,8 @@ struct ExerciseDetailView: View {
                     limbMovementType.displayInfoText
                 }
                 
+                Text("Difficulty: ").bold() + Text(exercise.difficulty.fullName)
+                
                 Text("Primary Muscles: ").bold()
                 exercise.primaryMusclesFormatted
                     .multilineTextAlignment(.leading)

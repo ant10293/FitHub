@@ -14,7 +14,7 @@ final class ExerciseSelector {
     private let idx: ExerciseIndex
     private let favorites: Set<Exercise.ID>
     private let disliked: Set<Exercise.ID>
-    private let strengthCeiling: Int
+    private let strengthCeiling: StrengthLevel
     private let resistance: ResistanceType
     private let policy: Policy
     private let logger: Logger?
@@ -28,7 +28,7 @@ final class ExerciseSelector {
         favorites: Set<Exercise.ID>,
         disliked: Set<Exercise.ID>,
         resistance: ResistanceType,
-        strengthCeiling: Int,
+        strengthCeiling: StrengthLevel,
         policy: Policy = Policy(),
         logger: Logger? = nil,
         seed: UInt64 = 0
@@ -97,6 +97,7 @@ final class ExerciseSelector {
     func select(
         dayIndex: Int,
         categories: [SplitCategory],
+        usedNames: Set<String>,
         total: Int,
         rAndS: RepsAndSets,
         dayLabel: String
@@ -113,6 +114,7 @@ final class ExerciseSelector {
         // 1. Filter exercises based on basic criteria
         let eligibleExercises = filterEligibleExercises(
             from: unionIdxs,
+            usedNames: usedNames,
             rAndS: rAndS,
             dayLabel: dayLabel
         )
@@ -189,20 +191,21 @@ final class ExerciseSelector {
     }
      */
     
-    // MARK: - Simplified Filtering with Strength Ceiling
+    // MARK: - Simplified Filtering
     private func filterEligibleExercises(
         from indices: [Int],
+        usedNames: Set<String>,
         rAndS: RepsAndSets,
         dayLabel: String
     ) -> [Exercise] {
         
         var filteredCount = 0
         var dislikedCount = 0
+      //  var usedNamesCount = 0
         var cantPerformCount = 0
         var resistanceCount = 0
         var effortOKCount = 0
-        //var strengthFailCount = 0
-
+        
         var result: [Exercise] = []
         
         for idx in indices {
@@ -214,21 +217,24 @@ final class ExerciseSelector {
                 continue
             }
             
+            // SMART usedNames filter: Only filter if we have plenty of alternatives
+            // This prevents the "all exercises are used" problem while still avoiding duplicates
+           /*
+            if usedNames.contains(ex.name) && usedNames.count >= 3 {
+                usedNamesCount += 1
+                continue
+            }
+            */
+            
             if !self.idx.canPerform[idx] {
                 cantPerformCount += 1
                 continue
             }
-            
-            if !ex.resistanceOK(resistance) {
+            if !ex.resistanceOK(resistance) { 
                 resistanceCount += 1
                 continue
             }
-            /*
-            if !ex.difficultyOK(strengthCeiling) {
-                strengthFailCount += 1
-                continue
-            }
-            */
+            
             // CRITICAL: Only include exercises that have sets configured AND positive distribution
             if !ex.effortOK(rAndS) { 
                 effortOKCount += 1

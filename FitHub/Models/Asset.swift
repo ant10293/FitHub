@@ -75,6 +75,7 @@ enum AssetPath: String, CaseIterable, Codable {
         return images
     }
     
+    /*
     static func getMuscleImages(category: Muscle, gender: Gender) -> [String] {
         let basePathFront = getImagePath(for: .muscle, isfront: true, gender: gender)
         let basePathRear = getImagePath(for: .muscle, isfront: false, gender: gender)
@@ -120,4 +121,6 @@ enum AssetPath: String, CaseIterable, Codable {
         // Return nil if no valid image exists for the current view
         return nil
     }
+    */
 }
+

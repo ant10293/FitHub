@@ -228,6 +228,10 @@ extension Exercise {
         return hasSets && hasDistribution
     }
     
+    func difficultyOK(_ strengthValue: Int) -> Bool {
+        return difficulty.strengthValue <= strengthValue
+    }
+    
     /// Returns `true` if *every* piece of required equipment can be satisfied
     /// either directly or via a declared alternative.    
     func canPerform(equipmentData: EquipmentData, equipmentSelected: [UUID]) -> Bool {
@@ -277,30 +281,31 @@ extension Exercise {
         for setIndex in warmUpDetails.indices { warmUpDetails[setIndex].resetState() }
     }
     
-    mutating func setRPE(hadNewPR: Bool) {
-        if !hadNewPR {
-            if let avgRPE = currentWeekAvgRPE {
-                print("existing rpe found. Setting \(avgRPE) as last week rpe")
-                if previousWeeksAvgRPE == nil {
-                    previousWeeksAvgRPE = RPEentries(entries: [avgRPE])
-                } else {
-                    previousWeeksAvgRPE?.entries.append(avgRPE)
-                }
-                if let prevList = previousWeeksAvgRPE {
-                    print("previous weeks rpes: \(prevList)")
-                }
-            }
-            
-            let (avgPeakMetric, avgRPE) = avgPeakAndRPE
-            if let avgRPE = avgRPE {
-                currentWeekAvgRPE = RPEentry(rpe: avgRPE, completion: avgPeakMetric)
-                print("\(name), avg rpe: \(avgRPE), avg peak: \(avgPeakMetric)")
-            }
-        } else {
-            print("new pr set this week. resetting rpe")
+    mutating func setRPE(hadNewPR: Bool, startDate: Date) {
+        if hadNewPR {
+            //print("new pr set this week. resetting rpe.")
             currentWeekAvgRPE = nil
             previousWeeksAvgRPE = nil
+            return
         }
+        
+        let (avgPeakMetric, avgRPE) = avgPeakAndRPE
+        guard let avgRPE = avgRPE else { return }
+        let new = RPEentry(id: startDate, rpe: avgRPE, completion: avgPeakMetric)
+        
+        if let current = currentWeekAvgRPE, current.id != startDate {
+            //print("existing rpe found. Setting \(current) as last week rpe.")
+            if previousWeeksAvgRPE == nil { previousWeeksAvgRPE = RPEentries(entries: []) }
+            previousWeeksAvgRPE?.entries.removeAll { $0.id == current.id } // avoid duplicates, overwrite with newest
+            previousWeeksAvgRPE?.entries.append(current)
+            //if let prevList = previousWeeksAvgRPE { print("previous weeks rpes: \(prevList)") }
+        }
+        
+        // Ensure no same-week entry lives in 'previous'
+        previousWeeksAvgRPE?.entries.removeAll { $0.id == startDate }
+        
+        // Set/overwrite current week
+        currentWeekAvgRPE = new
     }
     
     private var avgPeakAndRPE: (peak: PeakMetric, rpe: Double?) {

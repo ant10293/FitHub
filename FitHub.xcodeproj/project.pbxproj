@@ -572,9 +572,6 @@
 			children = (
 				65CD3C132DD3C84F00C2B671 /* TemplateDetail.swift */,
 				65CD3C0F2DD3C84F00C2B671 /* ExerciseSetDetail.swift */,
-				65CD3C152DD3C84F00C2B671 /* ExerciseWarmUpDetail.swift */,
-				65CD3C0E2DD3C84F00C2B671 /* ExerciseDetailOptions.swift */,
-				65CD3C122DD3C84F00C2B671 /* RestTimeEditor.swift */,
 				6550ADA72E6A26AD002072C1 /* AddDeleteButtons.swift */,
 			);
 			path = TemplateDetail;
@@ -681,6 +678,58 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		6550ADCF2E726A9E002072C1 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				653BF8A92E5AB284005A07EA /* DataHelpers.swift */,
+				65CFBFA22E1F26B000CD521E /* ViewHelpers.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		6550ADD02E726B1D002072C1 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				65CD3BB02DD3C84F00C2B671 /* HealthKitManager.swift */,
+				65CD3C992DD6DF8500C2B671 /* NotificationManager.swift */,
+				65CD3BB12DD3C84F00C2B671 /* TimerManager.swift */,
+				65CD3BB22DD3C84F00C2B671 /* ToastManager.swift */,
+				65ECFF0F2E221FB80091032A /* KeyboardManager.swift */,
+				653BF8A42E597251005A07EA /* JSONFileManager.swift */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
+		6550ADD12E726B66002072C1 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				65D48DE92DF96A640032F815 /* UserData.swift */,
+				65CD3BAF2DD3C84F00C2B671 /* ExerciseData.swift */,
+				65CD3BAE2DD3C84F00C2B671 /* EquipmentData.swift */,
+				65CD3BAB2DD3C84F00C2B671 /* AdjustmentsData.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		6550ADD42E74D2A4002072C1 /* Options */ = {
+			isa = PBXGroup;
+			children = (
+				6548AB8C2DE8EC3B00BD9DAD /* ExerciseOptions.swift */,
+				653BF8A82E5A5CEB005A07EA /* Similar */,
+			);
+			path = Options;
+			sourceTree = "<group>";
+		};
+		6550ADD52E74D74B002072C1 /* DetailOptions */ = {
+			isa = PBXGroup;
+			children = (
+				65CD3C0E2DD3C84F00C2B671 /* ExerciseDetailOptions.swift */,
+				65CD3C122DD3C84F00C2B671 /* RestTimeEditor.swift */,
+				65CD3C152DD3C84F00C2B671 /* ExerciseWarmUpDetail.swift */,
+			);
+			path = DetailOptions;
+			sourceTree = "<group>";
+		};
 		6584B05A2C30BC2000447EC1 = {
 			isa = PBXGroup;
 			children = (
@@ -732,7 +781,6 @@
 				6531362F2E550E2900EECCA5 /* WorkoutParams.swift */,
 				653136362E552FCA00EECCA5 /* Distribution.swift */,
 				653136382E552FF000EECCA5 /* Notification.swift */,
-				653BF8A92E5AB284005A07EA /* DataHelpers.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -740,17 +788,10 @@
 		65CD3BB52DD3C84F00C2B671 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				6550ADD12E726B66002072C1 /* Data */,
 				6550ADCD2E711BB2002072C1 /* ViewModel */,
 				6550ADCC2E711AF3002072C1 /* Generator */,
-				65D48DE92DF96A640032F815 /* UserData.swift */,
-				65CD3BAF2DD3C84F00C2B671 /* ExerciseData.swift */,
-				65CD3BAE2DD3C84F00C2B671 /* EquipmentData.swift */,
-				65CD3BAB2DD3C84F00C2B671 /* AdjustmentsData.swift */,
-				65CD3BB02DD3C84F00C2B671 /* HealthKitManager.swift */,
-				65CD3C992DD6DF8500C2B671 /* NotificationManager.swift */,
-				65CD3BB12DD3C84F00C2B671 /* TimerManager.swift */,
-				65CD3BB22DD3C84F00C2B671 /* ToastManager.swift */,
-				65ECFF0F2E221FB80091032A /* KeyboardManager.swift */,
+				6550ADD02E726B1D002072C1 /* Manager */,
 				65CD3BAC2DD3C84F00C2B671 /* AuthService.swift */,
 				65CD3BAD2DD3C84F00C2B671 /* CSVLoader.swift */,
 				65362BE92E09ED6B0044AF72 /* Logger.swift */,
@@ -758,7 +799,6 @@
 				65E4E2E22DEE1ABD00AF41B8 /* AppContext.swift */,
 				65817F3D2E49B9E900437560 /* PremiumStore.swift */,
 				653136092E4D416600EECCA5 /* CalendarUtility.swift */,
-				653BF8A42E597251005A07EA /* JSONFileManager.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -811,6 +851,8 @@
 		65CD3BCE2DD3C84F00C2B671 /* Exercise */ = {
 			isa = PBXGroup;
 			children = (
+				6550ADD52E74D74B002072C1 /* DetailOptions */,
+				6550ADD42E74D2A4002072C1 /* Options */,
 				65CD3BC72DD3C84F00C2B671 /* ExerciseDetailView.swift */,
 				65CD3BC82DD3C84F00C2B671 /* ExercisePerformanceView.swift */,
 				65CD3BC92DD3C84F00C2B671 /* ExerciseSelection.swift */,
@@ -819,7 +861,6 @@
 				65CD3BCC2DD3C84F00C2B671 /* StrengthPercentileView.swift */,
 				65CD3BCD2DD3C84F00C2B671 /* UpdateMaxEditor.swift */,
 				65CFBF982E1719F300CD521E /* NewExercise.swift */,
-				653BF8A82E5A5CEB005A07EA /* Similar */,
 			);
 			path = Exercise;
 			sourceTree = "<group>";
@@ -940,7 +981,6 @@
 				6550ADAF2E6B6605002072C1 /* Assessment */,
 				65CD3C072DD3C84F00C2B671 /* TrainerView.swift */,
 				65CD3C092DD3C84F00C2B671 /* WorkoutGeneration.swift */,
-				6548AB8C2DE8EC3B00BD9DAD /* ExerciseOptions.swift */,
 				65CD3C0A2DD3C84F00C2B671 /* WorkoutPlan.swift */,
 				65D0EC142E0A2CC5006860A5 /* LogDetailView.swift */,
 			);
@@ -971,7 +1011,6 @@
 				65CD3C192DD3C84F00C2B671 /* HomeView.swift */,
 				65CD3C1C2DD3C84F00C2B671 /* StatsView.swift */,
 				65CD3C1E2DD3C84F00C2B671 /* UserProfileView.swift */,
-				65CFBFA22E1F26B000CD521E /* ViewHelpers.swift */,
 				653BF8AB2E5AC732005A07EA /* PlateVisualization */,
 				6531362C2E53FB7600EECCA5 /* Editor */,
 				6531362B2E53FB2500EECCA5 /* Subscription */,
@@ -1006,6 +1045,7 @@
 				65C5DC472DEFB00600B09AD2 /* Models */,
 				65CD3BB52DD3C84F00C2B671 /* Classes */,
 				65CD3C1F2DD3C84F00C2B671 /* Views */,
+				6550ADCF2E726A9E002072C1 /* Helpers */,
 				65CD3C202DD3C84F00C2B671 /* Assets.xcassets */,
 				65CD3C232DD3C84F00C2B671 /* FitHub.xcdatamodeld */,
 				65CD3C262DD3C84F00C2B671 /* Persistence.swift */,

@@ -9,31 +9,24 @@ import SwiftUI
 struct TemplateArchives: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var userData: UserData
-    @State private var navigateToDetail: Bool = false
     @State private var showingActionOverlay: Bool = false
     @State private var selectedTemplate: SelectedTemplate?
+    @State private var editingTemplate: WorkoutTemplate?
 
     var body: some View {
-        workoutList()
-        .navigationDestination(isPresented: $navigateToDetail) {
-            if let selectedTemplate = selectedTemplate {
-                if userData.workoutPlans.archivedTemplates.indices.contains(selectedTemplate.index) {
-                    TemplateDetail(template: $userData.workoutPlans.archivedTemplates[selectedTemplate.index], onDone: {
-                        navigateToDetail = false
-                    })
-                }
-            }
+        TemplateNavigator(userData: userData, selectedTemplate: $selectedTemplate) {
+            workoutList
         }
         .overlay(content: {
-            if let selected = selectedTemplate {
-                showingActionOverlay ? actionOverlay(selected: selected) : nil
+            if let template = editingTemplate {
+                showingActionOverlay ? actionOverlay(template: template) : nil
             }
         })
         .navigationBarTitle("Manage Templates", displayMode: .inline)
     }
     
     // MARK: – List / empty‑state wrapper
-    private func workoutList() -> some View {
+    private var workoutList: some View {
         ZStack {
             if !userData.workoutPlans.archivedTemplates.isEmpty {
                 List {
@@ -59,32 +52,32 @@ struct TemplateArchives: View {
         TemplateRow(
             template: template,
             index: index,
-            userTemplate: true,
+            location: .archived,
+            mode: .directToDetail,
             disabled: showingActionOverlay,
             hideEditButton: false,
             onSelect: { newSelection in
                 selectedTemplate = newSelection
-                navigateToDetail = true
             },
             onEdit: { editSelection in
-                selectedTemplate = editSelection
+                editingTemplate = editSelection.template
                 showingActionOverlay = true
             }
         )
     }
     
-    private func actionOverlay(selected: SelectedTemplate) -> some View {
+    private func actionOverlay(template: WorkoutTemplate) -> some View {
         VStack {
             Text("Template Actions")
                 .font(.title2)
             
             Text("Selected: ") +
-            Text("\(selected.name)")
+            Text("\(template.name)")
                 .foregroundStyle(Color.secondary)
                 .italic()
             
             Button("Unarchive", systemImage: "tray.full") {
-                moveTemplateBack(selected: selected)
+                moveTemplateBack(template: template)
             }
             .buttonStyle(.bordered)
             .foregroundStyle(.green)
@@ -93,14 +86,14 @@ struct TemplateArchives: View {
             
             HStack {
                 Button("Delete", systemImage: "trash.fill") {
-                    deleteTemplate(selected: selected)
+                    deleteTemplate(template: template)
                 }
                 .buttonStyle(.bordered)
                 .foregroundStyle(.red)
                 .tint(.red)
                 
                 Button("Cancel", systemImage: "xmark") {
-                    showingActionOverlay = false
+                    resetEditing()
                 }
                 .buttonStyle(.bordered)
                 .foregroundStyle(.gray)
@@ -115,16 +108,26 @@ struct TemplateArchives: View {
         .padding()
     }
     
-    private func moveTemplateBack(selected: SelectedTemplate) {
-        var template = userData.workoutPlans.archivedTemplates.remove(at: selected.index)
+    private func moveTemplateBack(template: WorkoutTemplate) {
+        deleteArchived(at: template.id)
+        var template = template
         template.name = WorkoutTemplate.uniqueTemplateName(initialName: template.name, from: userData.workoutPlans.userTemplates)
         userData.addUserTemplate(template: template)
-        showingActionOverlay = false
+        resetEditing()
     }
 
-    private func deleteTemplate(selected: SelectedTemplate) {
-        userData.deleteArchivedTemplate(at: selected.index)
+    private func deleteTemplate(template: WorkoutTemplate) {
+        deleteArchived(at: template.id)
+        resetEditing()
+    }
+    
+    private func deleteArchived(at id: UUID) {
+        userData.workoutPlans.archivedTemplates.removeAll { $0.id == id }
+    }
+    
+    private func resetEditing() {
         showingActionOverlay = false
+        editingTemplate = nil
     }
     
     // MARK: – Empty state

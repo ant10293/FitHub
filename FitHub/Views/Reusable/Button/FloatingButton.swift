@@ -11,6 +11,7 @@ struct FloatingButton: View {
     var image: String                 // SF-Symbol or asset name
     var foreground: Color = .white
     var background: Color = .blue     // background tint (optional)
+    var disabled: Bool = false
     var size: CGFloat = 24        // icon size   (optional)
     var action: () -> Void            // button tap
     
@@ -21,10 +22,11 @@ struct FloatingButton: View {
                 .frame(width: size, height: size)
                 .padding()
                 .foregroundStyle(foreground)
-                .background(background)
+                .background(disabled ? .gray : background)
                 .clipShape(Circle())
                 .shadow(radius: 10)
                 .padding()
         }
+        .disabled(disabled)
     }
 }

@@ -67,7 +67,7 @@ final class WorkoutGenerator {
             favorites: Set(input.user.evaluation.favoriteExercises),
             disliked: Set(input.user.evaluation.dislikedExercises),
             resistance: input.user.workoutPrefs.ResistanceType,
-            strengthCeiling: input.user.evaluation.strengthLevel,
+            strengthCeiling: input.user.evaluation.strengthLevel.strengthValue,
             policy: .init(minCount: 1, maxCount: 20),
             logger: Logger.shared,
             seed: UInt64(max(1, Int(creationDate.timeIntervalSince1970))) // deterministic per run
@@ -278,15 +278,15 @@ extension WorkoutGenerator {
                 return result
             }
 
-            let usedNames: Set<String> = dayIndex < savedExercises.count ? Set(savedExercises[dayIndex].map(\.name)) : []
+            //let usedNames: Set<String> = dayIndex < savedExercises.count ? Set(savedExercises[dayIndex].map(\.name)) : []
 
             Logger.shared.add("\(dayName) Workout: Selecting new exercises.", lineBreak: .before, numLines: 3)
-
+            print("[\(dayName)] \(categoriesForDay)")
+            
             // Selector enforces exact `exercisesPerWorkout` when the pool allows.
             let result = selector.select(
                 dayIndex: dayIndex,
                 categories: categoriesForDay,
-                usedNames: usedNames,
                 total: params.exercisesPerWorkout,
                 rAndS: params.repsAndSets,
                 dayLabel: dayName
@@ -420,7 +420,7 @@ extension WorkoutGenerator {
                    let previous = ex.previousWeeksAvgRPE,
                    let avgPrevRPEs = previous.avgRPE,
                    let prevPeaks = previous.avgPeakValue,
-                   current.rpe >= avgPrevRPEs, // rpe trend increasing
+                   current.rpe > avgPrevRPEs, // rpe trend increasing (difficulty increasing)
                    current.completion.actualValue <= prevPeaks, // weight completed same or lower
                    previous.entries.count + 1 >= input.user.settings.periodUntilDeload, // using +1 also accounts for the current week
                    input.user.settings.allowDeloading

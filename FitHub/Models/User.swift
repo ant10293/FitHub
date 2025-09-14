@@ -131,6 +131,6 @@ struct WorkoutPlans: Codable, Equatable {
     var workoutsStartDate: Date?
     var logFileName: String?      // ← replace old logFileUrl
     var logFileURL: URL? { logFileName.map { Logger.url(for: $0) } }
-    var generatedWeeksWorkout: Bool = false
+    var generatedWeeksWorkout: Bool = false // TODO: remove
     var completedWorkouts: [CompletedWorkout] = []
 }

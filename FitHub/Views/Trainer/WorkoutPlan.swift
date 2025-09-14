@@ -109,13 +109,13 @@ struct WorkoutPlan: View {
                         selectedWorkoutTemplate = ctx.userData.workoutPlans.userTemplates.first { template in
                             return isTemplateToday(template: template)
                         }
-                        proceedToWorkout()
+                        proceedToWorkout(location: .user)
                     })
                     Button("Trainer Template", action: {
                         selectedWorkoutTemplate = ctx.userData.workoutPlans.trainerTemplates.first { template in
                             return isTemplateToday(template: template)
                         }
-                        proceedToWorkout()
+                        proceedToWorkout(location: .trainer)
                     })
                     Button("Cancel", role: .cancel) {}
                 }
@@ -141,10 +141,10 @@ struct WorkoutPlan: View {
         switch (userTemplate, trainerTemplate) {
         case (let user?, nil):
             selectedWorkoutTemplate = user
-            proceedToWorkout()
+            proceedToWorkout(location: .user)
         case (nil, let trainer?):
             selectedWorkoutTemplate = trainer
-            proceedToWorkout()
+            proceedToWorkout(location: .trainer)
         case (_?, _?):
             showingTemplateChoice = true // Triggers the alert for choosing the template
         case (nil, nil):
@@ -165,10 +165,8 @@ struct WorkoutPlan: View {
         return false
     }
     
-    private func proceedToWorkout() {
+    private func proceedToWorkout(location: TemplateLocation) {
         guard let template = selectedWorkoutTemplate else { return }
-        if let selected = ctx.userData.getTemplate(for: template) {
-           selectedTemplate = selected
-       }
+        selectedTemplate = .init(template: template, location: location, mode: .directToWorkout)
     }
 }

@@ -32,7 +32,7 @@ extension RepsAndSets {
         let reps = customRepsRange ?? goal.defaultReps
         
         let rawDist = customDistribution ?? goal.defaultDistribution
-        let dist = ExerciseDistribution(distribution: rawDist.normalizeDistribution(gatingBy: sets))
+        let dist = ExerciseDistribution(distribution: rawDist.normalizeDistribution)
         
         return RepsAndSets(reps: reps, sets: sets, rest: rest, distribution: dist)
     }
@@ -46,13 +46,13 @@ extension RepsAndSets {
     var setRange: ClosedRange<Int> { sets.overallRange(filteredBy: distribution) }
     var repRange: ClosedRange<Int> { reps.overallRange(filteredBy: distribution) }
     var restRange: ClosedRange<Int> { rest.overallRange }
-    
+}
+
+extension RepsAndSets {
     /// Ensures weights sum to 1.0 and ignores non-positive entries.
-    var normalizedDistribution: [EffortType: Double] {
-        distribution.normalizeDistribution(gatingBy: sets)
-    }
+    private var normalizedDistribution: [EffortType: Double] { distribution.normalizeDistribution }
     
-    var averageRepsPerSet: Double {
+    private var averageRepsPerSet: Double {
         distribution.distribution.reduce(into: 0.0) { running, item in
             let (effort, weight) = item
             let range = repRange(for: effort)
@@ -86,30 +86,5 @@ extension RepsAndSets {
             let mid = Double(r.lowerBound + r.upperBound) / 2.0
             return running + (mid * w)
         }
-    }
-
-    /// Split a target *exercise count* into per-type counts using the distribution.
-    /// Ignores effort types that have zero sets configured.
-    func exerciseAllocation(totalExercises: Int) -> [EffortType: Int] {
-        guard totalExercises > 0 else { return [:] }
-        let dist = normalizedDistribution.filter { (effort, _) in sets.sets(for: effort) > 0 }
-        guard !dist.isEmpty else { return [:] }
-        
-        // Largest-remainder allocation
-        let exacts = dist.mapValues { Double(totalExercises) * $0 }
-        var result: [EffortType: Int] = exacts.mapValues { Int($0.rounded(.towardZero)) }
-        let used = result.values.reduce(0, +)
-        let remainders = exacts.map { ($0.key, $0.value - Double(result[$0.key] ?? 0)) }
-            .sorted { $0.1 > $1.1 }
-        
-        var remaining = totalExercises - used
-        var i = 0
-        while remaining > 0, !remainders.isEmpty {
-            let k = remainders[i % remainders.count].0
-            result[k, default: 0] += 1
-            remaining -= 1
-            i += 1
-        }
-        return result
     }
 }

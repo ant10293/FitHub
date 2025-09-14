@@ -102,17 +102,16 @@ struct ExerciseDistribution: Codable, Hashable {
         distribution[type] = value
     }
     
-    func normalizeDistribution(gatingBy sets: SetDistribution) -> [EffortType: Double] {
-        // keep only positive weights and types that have sets
-        let sets = sets.distribution
-        let filtered = distribution.filter { $0.value > 0 && (sets[$0.key] ?? 0) > 0 }
+    var normalizeDistribution: [EffortType: Double] {
+        let filtered = distribution.filter { $0.value > 0 }
         let sum = filtered.values.reduce(0, +)
-        if sum > 0 { return filtered.mapValues { $0 / sum } }
-        // fallback: uniform over types that actually have sets
-        let keys = sets.filter { $0.value > 0 }.map(\.key)
-        guard !keys.isEmpty else { return [:] }
-        let w = 1.0 / Double(keys.count)
-        return Dictionary(uniqueKeysWithValues: keys.map { ($0, w) })
+        guard sum > 0 else {
+            let keys = Array(distribution.keys)
+            guard !keys.isEmpty else { return [:] }
+            let w = 1.0 / Double(keys.count)
+            return Dictionary(uniqueKeysWithValues: keys.map { ($0, w) })
+        }
+        return filtered.mapValues { $0 / sum }
     }
 }
 

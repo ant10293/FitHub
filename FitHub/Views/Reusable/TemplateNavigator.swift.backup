@@ -65,15 +65,19 @@ struct TemplateNavigator<Content: View>: View {
             }
         }
         .onChange(of: selectedTemplate) { oldValue, newValue in
-             handleTemplateSelection(newValue)
-         }
+            print("selected template changed")
+            handleTemplateSelection(newValue)
+        }
     }
     
     // MARK: - Template Selection Logic
     
     private func handleTemplateSelection(_ template: SelectedTemplate?) {
-        guard let template = template else { return }
-        
+        guard let template = template else {
+            print("no template")
+            return
+        }
+        print(template.template.name)
         // Store the current template for navigation
         currentTemplate = template
         
@@ -97,15 +101,15 @@ struct TemplateNavigator<Content: View>: View {
     private func templateBinding(for sel: SelectedTemplate) -> Binding<WorkoutTemplate>? {
         switch sel.location {
         case .user:
-            let idx = userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == sel.template.id })
+            let idx = userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == sel.id })
             guard let i = idx else { return nil }
             return $userData.workoutPlans.userTemplates[safe: i]
         case .trainer:
-            let idx = userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == sel.template.id })
+            let idx = userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == sel.id })
             guard let i = idx else { return nil }
             return $userData.workoutPlans.trainerTemplates[safe: i]
         case .archived:
-            let idx = userData.workoutPlans.archivedTemplates.firstIndex(where: { $0.id == sel.template.id })
+            let idx = userData.workoutPlans.archivedTemplates.firstIndex(where: { $0.id == sel.id })
             guard let i = idx else { return nil }
             return $userData.workoutPlans.archivedTemplates[safe: i]
         }
@@ -116,7 +120,6 @@ struct TemplateNavigator<Content: View>: View {
         if let sel = currentTemplate, let binding = templateBinding(for: sel) {
             TemplateDetail(
                 template: binding,
-                isArchived: sel.location == .archived,
                 onDone: {
                     navigateToTemplateDetail = false
                     currentTemplate = nil

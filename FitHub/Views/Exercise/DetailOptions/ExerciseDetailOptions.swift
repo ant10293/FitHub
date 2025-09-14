@@ -16,7 +16,6 @@ struct ExerciseDetailOptions: View {
     @State private var replacedExercises: [String] = []
     @State private var showRestTimeEditor: Bool = false
     @State private var showWarmupSets: Bool = false
-    var rest: RestPeriods
     var onReplaceExercise: () -> Void
     var onRemoveExercise: () -> Void
     var onClose: () -> Void
@@ -62,7 +61,7 @@ struct ExerciseDetailOptions: View {
             )
         }
         .sheet(isPresented: $showRestTimeEditor) {
-            RestTimeEditor(exercise: $exercise, rest: rest, onSave: {
+            RestTimeEditor(exercise: $exercise, onSave: {
                 onSave()
             })
         }

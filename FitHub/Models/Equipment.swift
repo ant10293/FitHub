@@ -173,7 +173,7 @@ enum EquipmentCategory: String, CaseIterable, Identifiable, Codable {
     
     static let machineCats: Set<EquipmentCategory> = [.platedMachines, .weightMachines, .cableMachines]
     static let freeWeightCats: Set<EquipmentCategory> = [.smallWeights, .barsPlates]
-    static let baseWeightCats: Set<EquipmentCategory> = [.barsPlates, .cableMachines, .platedMachines, .weightMachines, .other]
+    static let platedCats: Set<EquipmentCategory> = [.platedMachines, .smallWeights, .barsPlates]
 }
 
 enum ImplementationType: String, Codable, Hashable, CaseIterable {
@@ -252,6 +252,14 @@ struct WeightPlates: Hashable, Codable {
         }
     }
     
+    mutating func setPlates(_ plates: [Mass]) {
+        switch UnitSystem.current {
+        case .imperial: self.lb = plates
+        case .metric: self.kg = plates
+        }
+    }
+}
+extension WeightPlates {
     /// Fixed color palette by index (shared across lb + kg)
     private static let plateColors: [Color] = [
         .gray,    // index 0 (2.5 lb / 1.25 kg)
@@ -270,11 +278,10 @@ struct WeightPlates: Hashable, Codable {
         }
         return .secondary
     }
-    
+}
+extension WeightPlates {
     static func defaultOptions() -> [Mass] {
-        UnitSystem.current == .imperial ?
-        defaultLbPlates
-        : defaultKgPlates
+        UnitSystem.current == .imperial ? defaultLbPlates : defaultKgPlates
     }
     
     private static let defaultLbPlates: [Mass] = [
@@ -284,11 +291,10 @@ struct WeightPlates: Hashable, Codable {
     private static let defaultKgPlates: [Mass] = [
         Mass(kg: 1.25), Mass(kg: 2.5), Mass(kg: 5), Mass(kg: 10), Mass(kg: 15), Mass(kg: 20), Mass(kg: 25)
     ]
-    
+}
+extension WeightPlates {
     static func allOptions() -> [Mass] {
-        UnitSystem.current == .imperial ?
-        allLbPlates
-        : allKgPlates
+        UnitSystem.current == .imperial ? allLbPlates : allKgPlates
     }
     
     private static let allLbPlates: [Mass] = [
@@ -298,11 +304,4 @@ struct WeightPlates: Hashable, Codable {
     private static let allKgPlates: [Mass] = [
         Mass(kg: 1.25), Mass(kg: 2.5), Mass(kg: 5), Mass(kg: 10), Mass(kg: 15), Mass(kg: 20), Mass(kg: 25)
     ]
-    
-    mutating func setPlates(_ plates: [Mass]) {
-        switch UnitSystem.current {
-        case .imperial: self.lb = plates
-        case .metric: self.kg = plates
-        }
-    }
 }

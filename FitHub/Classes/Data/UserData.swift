@@ -257,13 +257,14 @@ extension UserData {
         if calculatedAge != profile.age { profile.age = calculatedAge }
     }
     
-    func getTemplate(for template: WorkoutTemplate) -> SelectedTemplate? {
+    // TODO: replace
+    func getTemplate(for template: WorkoutTemplate, mode: NavigationMode = .directToWorkout) -> SelectedTemplate? {
         if let index = workoutPlans.userTemplates.firstIndex(where: { $0.id == template.id }) {
             let template = workoutPlans.userTemplates[index]
-            return SelectedTemplate(id: template.id, name: template.name, index: index, isUserTemplate: true, mode: .directToWorkout)
+            return SelectedTemplate.init(template: template, location: .user, mode: mode)
         } else if let trainerIndex = workoutPlans.trainerTemplates.firstIndex(where: { $0.id == template.id }) {
             let template = workoutPlans.trainerTemplates[trainerIndex]
-            return SelectedTemplate(id: template.id, name: template.name, index: trainerIndex, isUserTemplate: false, mode: .directToWorkout)
+            return SelectedTemplate.init(template: template, location: .trainer, mode: mode)
         }
         return nil
     }

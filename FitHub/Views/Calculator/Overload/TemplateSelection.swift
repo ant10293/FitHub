@@ -16,8 +16,8 @@ struct TemplateSelection: View {
     var body: some View {
         workoutList
             .navigationDestination(isPresented: $navigateToOverload) {
-                if let sel = selectedTemplate, let tpl = resolveTemplate(sel) {
-                    OverloadCalculator(template: tpl)
+                if let sel = selectedTemplate {
+                    OverloadCalculator(template: sel.template)
                 }
             }
             .navigationBarTitle("Select Template", displayMode: .inline)
@@ -31,45 +31,35 @@ struct TemplateSelection: View {
                     .padding(.horizontal)
             } else {
                 if !trainerTemplates.isEmpty {
-                    templatesSection(templates: trainerTemplates, userTemplates: false)
+                    templatesSection(templates: trainerTemplates, location: .trainer)
                 }
                 if !userTemplates.isEmpty {
-                    templatesSection(templates: userTemplates, userTemplates: true)
+                    templatesSection(templates: userTemplates, location: .user)
                 }
             }
         }
     }
     
-    private func templatesSection(templates: [WorkoutTemplate], userTemplates: Bool) -> some View {
+    private func templatesSection(templates: [WorkoutTemplate], location: TemplateLocation) -> some View {
         Section {
             ForEach(templates.indices, id: \.self) { index in
-                templateButton(for: index, userTemplate: userTemplates, template: templates[index])
+                templateButton(for: index, location: location, template: templates[index])
             }
         } header: {
-            Text(userTemplates ? "Your Templates" : "Trainer Templates")
+            Text(location.label)
         }
     }
     
-    private func templateButton(for index: Int, userTemplate: Bool, template: WorkoutTemplate) -> some View {
+    private func templateButton(for index: Int, location: TemplateLocation, template: WorkoutTemplate) -> some View {
         TemplateRow(
             template: template,
             index: index,
-            userTemplate: userTemplate,
+            location: location,
             hideEditButton: true,
             onSelect: { newSelection in
                 selectedTemplate = newSelection
                 navigateToOverload = true
             }
         )
-    }
-    
-    private func resolveTemplate(_ sel: SelectedTemplate) -> WorkoutTemplate? {
-        if sel.isUserTemplate {
-            guard userTemplates.indices.contains(sel.index) else { return nil }
-            return userTemplates[sel.index]
-        } else {
-            guard trainerTemplates.indices.contains(sel.index) else { return nil }
-            return trainerTemplates[sel.index]
-        }
     }
 }

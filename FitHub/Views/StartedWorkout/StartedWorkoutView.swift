@@ -46,7 +46,9 @@ struct StartedWorkoutView: View {
     }
     
     private func performSetup() {
-        selectedExerciseIndex = viewModel.performSetup(userData: ctx.userData, timer: timer)
+        if selectedExerciseIndex == nil {
+            selectedExerciseIndex = viewModel.performSetup(timer: timer, userData: ctx.userData)
+        }
     }
     
     private var exerciseList: some View {

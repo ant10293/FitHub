@@ -171,20 +171,21 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
             return false
         }
     }
-    
+    /*
     // TODO: order in which the exercise with type should occur in the generated workout
-    /*var order: Int {
+    var order: Int {
         switch self {
-        case .compound:
-            return 1
         case .plyometric:
+            return 1
+        case .compound:
             return 2
         case .isolation:
             return 3
         case .isometric:
             return 4
         }
-    }*/
+    }
+    */
 }
 
 struct CurrentExerciseState: Codable, Equatable {
@@ -237,6 +238,7 @@ enum CallBackAction: String {
 }
 
 struct RPEentry: Hashable, Codable {
+    var id: Date // workout start date
     var rpe: Double
     var completion: PeakMetric
 }

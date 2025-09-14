@@ -84,7 +84,8 @@ struct SetDetail: Identifiable, Hashable, Codable {
     }
     
     mutating func updateCompletedMetrics(currentBest: PeakMetric) -> (newMax: PeakMetric?, rxw: RepsXWeight?) {
-        // If nothing was logged, persist the plan as the completion.
+        // If nothing was logged, persist the planned as the completion.
+        if completed == nil { completed = planned } // MARK: Essential for updating peakMetric
         let metric = completed ?? planned
 
         switch currentBest {

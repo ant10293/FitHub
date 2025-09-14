@@ -59,41 +59,41 @@ struct WorkoutsView: View {
     private var workoutList: some View {
         List {
             if !ctx.userData.workoutPlans.trainerTemplates.isEmpty {
-                templatesSection(templates: ctx.userData.workoutPlans.trainerTemplates, userTemplates: false)
+                templatesSection(templates: ctx.userData.workoutPlans.trainerTemplates, location: .trainer)
             }
-            templatesSection(templates: ctx.userData.workoutPlans.userTemplates, userTemplates: true)
+            templatesSection(templates: ctx.userData.workoutPlans.userTemplates, location: .user)
         }
     }
     
-    private func templatesSection(templates: [WorkoutTemplate], userTemplates: Bool) -> some View {
+    private func templatesSection(templates: [WorkoutTemplate], location: TemplateLocation) -> some View {
         Section {
             ForEach(templates.indices, id: \.self) { index in
-                templateButton(for: index, userTemplate: userTemplates, template: templates[index])
+                templateButton(for: index, location: location, template: templates[index])
             }
             .onDelete { offset in
-                if userTemplates {
+                if location == .user {
                     ctx.userData.deleteUserTemplate(at: offset)
                 } else {
                     ctx.userData.deleteTrainerTemplate(at: offset)
                 }
             }
             
-            if userTemplates {
+            if location == .user {
                 Button(action: { showingTemplateCreation = true }) {
                     Label("Create New Template", systemImage: "square.and.pencil")
                 }
                 .disabled(showingTemplateEditor)
             }
         } header: {
-            Text(userTemplates ? "Your Templates" : "Trainer Templates")
+            Text(location.label)
         }
     }
     
-    private func templateButton(for index: Int, userTemplate: Bool, template: WorkoutTemplate) -> some View {
+    private func templateButton(for index: Int, location: TemplateLocation, template: WorkoutTemplate) -> some View {
         TemplateRow(
             template: template,
             index: index,
-            userTemplate: userTemplate,
+            location: location,
             disabled: showingTemplateEditor,
             onSelect: { newSelection in
                 selectedTemplate = newSelection
@@ -117,9 +117,7 @@ struct WorkoutsView: View {
             onCreate: { newTemplate in
                 if let newTemplate = newTemplate {
                     ctx.userData.addUserTemplate(template: newTemplate)
-                    if let index = ctx.userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == newTemplate.id }) {
-                        selectedTemplate = SelectedTemplate(id: newTemplate.id, name: newTemplate.name, index: index, isUserTemplate: true, mode: .popupOverlay)
-                    }
+                    selectedTemplate = .init(template: newTemplate, location: .user, mode: .popupOverlay)
                     showingTemplateCreation = false
                 }
             }

@@ -22,12 +22,13 @@ struct TemplateDetail: View {
     @State private var originalTemplate: WorkoutTemplate?
     @State private var undoStack: [WorkoutTemplate] = []
     @State private var redoStack: [WorkoutTemplate] = []
-    @State private var replacedExercises: [UUID: [String]] = [:]
+    @State private var replacedExercises: [Exercise.ID: [String]] = [:]
     @State private var exercisePendingDeletion: Exercise? = nil
     @State private var activeAlert: ActiveAlert? = nil
     @State private var selectedExercise: Exercise? // State to manage selected exercise for detail view
     @State private var activeDetailID: UUID? = nil   // nil = no menu open
     private let modifier = ExerciseModifier()
+    var isArchived: Bool = false
     var onDone: () -> Void
     
     var body: some View {
@@ -42,6 +43,16 @@ struct TemplateDetail: View {
                 
                 Spacer()
                 
+                if isArchived {
+                    Label("Editing Locked for Archived Templates", systemImage: "exclamationmark.triangle.fill")
+                        .font(.headline)
+                        .foregroundStyle(.red)           // keeps icon + text red (like your original)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                        .symbolVariant(.fill)            // ensures filled triangle
+                        .imageScale(.medium)
+                }
+                
                 if !template.exercises.isEmpty {
                     setDetailList
                 }
@@ -49,8 +60,8 @@ struct TemplateDetail: View {
         }
         .overlay(alignment: .center, content: { template.exercises.isEmpty ? emptyView() : nil })
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-        .overlay(!kbd.isVisible ? FloatingButton(image: "plus", action: { showingExerciseSelection = true }) : nil, alignment: .bottomTrailing)
-        .navigationBarItems(trailing: Button(isEditing ? "Close" : "Edit") { isEditing.toggle() })
+        .overlay(!kbd.isVisible ? FloatingButton(image: "plus", disabled: isArchived, action: { showingExerciseSelection = true }) : nil, alignment: .bottomTrailing)
+        .navigationBarItems(trailing: Button(isEditing ? "Close" : "Edit") { isEditing.toggle() }.disabled(isArchived))
         .sheet(isPresented: $showingExerciseSelection) { exerciseSelectionSheet }
         .sheet(item: $selectedExercise, onDismiss: { handleSheetDismiss() }) { exercise in
             if showingDetailView {
@@ -83,7 +94,7 @@ struct TemplateDetail: View {
             }
         }
         .navigationBarTitle(template.name, displayMode: .inline)
-        .onDisappear { saveTemplate() }
+        .onDisappear { if !isArchived { saveTemplate() } }
     }
     
     private var setDetailList: some View {
@@ -101,7 +112,6 @@ struct TemplateDetail: View {
                         get: { replacedExercises[exercise.id] ?? [] },
                         set: { replacedExercises[exercise.id] = $0 }
                     ),
-                    rest: ctx.userData.workoutPrefs.customRestPeriods ?? ctx.userData.physical.goal.defaultRest,
                     hasEquipmentAdjustments: ctx.equipment.hasEquipmentAdjustments(for: exercise),
                     perform: { action in
                         performCallBackAction(action: action, exercise: $exercise)
@@ -114,6 +124,7 @@ struct TemplateDetail: View {
                 .listRowBackground(Color.clear) // Ensure list rows have a clear background
                 .listRowSeparator(.hidden)
                 .id(exercise.id)  // this is necessary to refresh the view smoothly when swapping exercises
+                .disabled(isArchived)
             }
             .onDelete { offsets in captureSnapshot(); deleteExercise(at: offsets) }
             .onMove { source, destination in captureSnapshot(); moveExercise(from: source, to: destination) }
@@ -292,7 +303,7 @@ struct TemplateDetail: View {
     }
     
     private func saveTemplate(displaySaveConfirm: Bool = false) {
-        _ = ctx.userData.updateTemplate(template: template)
+        ctx.userData.saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) // no need for userData.updateTemplate since we use $binding
         if displaySaveConfirm { ctx.toast.showSaveConfirmation() }
     }
 }

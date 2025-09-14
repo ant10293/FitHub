@@ -24,8 +24,7 @@ struct ExerciseSetDetail: View {
     @State private var weightTexts: [String]
     @State private var metricTexts: [String]   // holds reps OR time "mm:ss"/"ss"
     
-    let rest: RestPeriods
-    let hasEquipmentAdjustments: Bool
+    var hasEquipmentAdjustments: Bool
     var perform: (CallBackAction) -> Void
     var onSuperset: (String) -> Void
 
@@ -36,7 +35,6 @@ struct ExerciseSetDetail: View {
         isCollapsed: Binding<Bool>,
         isShowingOptions: Binding<Bool>,
         replacedExercises: Binding<[String]>,
-        rest: RestPeriods,
         hasEquipmentAdjustments: Bool,
         perform: @escaping (CallBackAction) -> Void,
         onSuperSet: @escaping (String) -> Void
@@ -54,7 +52,6 @@ struct ExerciseSetDetail: View {
         _weightTexts = State(initialValue: sets.map { $0.weightFieldString })
         _metricTexts = State(initialValue: sets.map { $0.metricFieldString })
 
-        self.rest = rest
         self.hasEquipmentAdjustments = hasEquipmentAdjustments
         self.perform = perform
         self.onSuperset = onSuperSet
@@ -108,13 +105,12 @@ struct ExerciseSetDetail: View {
             let metricText: Binding<String> = Binding(
                 get: { metricTexts[safe: index] ?? "" },
                 set: { newText in
-                    if exercise.effort.usesReps {
-                        // integer-only
+                    switch exercise.setDetails[index].planned {
+                    case .reps:
                         metricTexts[safeEdit: index] = newText
                         let val = Int(newText) ?? 0
                         exercise.setDetails[index].planned = .reps(val)
-                    } else {
-                        // allow "mm:ss" or "ss"
+                    case .hold:
                         let secs = TimeSpan.seconds(from: newText)
                         let ts = TimeSpan.init(seconds: secs)
                         exercise.setDetails[index].planned = .hold(ts)
@@ -191,8 +187,7 @@ struct ExerciseSetDetail: View {
                     template.exercises.filter {
                         $0.id != exercise.id &&
                         ($0.isSupersettedWith == nil || $0.isSupersettedWith == exercise.id.uuidString)
-                    },
-                    id: \.id
+                    }, id: \.id
                 ) { ex in
                     Text(ex.name).tag(ex.id.uuidString)
                 }
@@ -213,7 +208,6 @@ struct ExerciseSetDetail: View {
                     ExerciseDetailOptions(
                         template: $template,
                         exercise: $exercise,
-                        rest: rest,
                         onReplaceExercise: { showReplaceAlert = true },
                         onRemoveExercise: { perform(.removeExercise) },
                         onClose: { isShowingOptions = false },

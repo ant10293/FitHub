@@ -51,14 +51,14 @@ struct NewEquipment: View {
                         alternativeSection
                         categoryPicker
                         
-                        if isPlated {
+                        if EquipmentCategory.platedCats.contains(draft.equCategory) {
                             pegCountPicker
                             implementationPicker
                         }
                         
                         AdjustmentPicker(adjustments: $draft.adjustments)
                         
-                        if EquipmentCategory.baseWeightCats.contains(draft.equCategory) {
+                        if EquipmentCategory.platedCats.contains(draft.equCategory) {
                             baseWeightField
                         }
                         
@@ -136,12 +136,9 @@ struct NewEquipment: View {
         return false
     }
     
+    // convert from initEquipment
     private var equipment: GymEquipment { GymEquipment(from: draft) }
-    
-    private var isPlated: Bool {
-        draft.equCategory == .platedMachines || draft.equCategory == .barsPlates || draft.equCategory == .smallWeights
-    }
-    
+        
     // ────────── Sub-views ------------------------------------------------
     private var alternativeSection: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -249,7 +246,6 @@ struct NewEquipment: View {
             Text(implementation.wrappedValue.helpText)
                 .font(.footnote)
                 .foregroundStyle(.secondary)
-            
         }
     }
     

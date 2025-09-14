@@ -49,13 +49,16 @@ enum SplitCategory: String, CaseIterable, Identifiable, Codable {
         .glutes: [.gluteus],
         .calves: [.calves]
     ]
-    
+     
     static let groups: [SplitCategory: [Muscle]] = [
-        .back: [.trapezius, .latissimusDorsi, .erectorSpinae, .scapularRetractors, .serratus],
-        .legs: [.quadriceps, .hamstrings, .gluteus, .calves, .hipComplex, .deepHipRotators, .tibialis, .peroneals],
-        .arms: [.biceps, .triceps, .forearms]
+         //.back: [.trapezius, .latissimusDorsi, .erectorSpinae, .scapularRetractors, .serratus], // should only include important
+        .back: [.trapezius, .latissimusDorsi, .erectorSpinae],
+        .legs: [.quadriceps, .hamstrings, .gluteus],
+         //.legs: [.quadriceps, .hamstrings, .gluteus, .calves, .hipComplex, .deepHipRotators, .tibialis, .peroneals],
+        .arms: [.biceps, .triceps]
+        //.arms: [.biceps, .triceps, .forearms]
     ]
-    
+
     static let hasFrontImages: Set<SplitCategory> = [
         .all, .legs, .arms, .abs, .chest, .shoulders, .biceps, .triceps, .forearms, .quads, .calves
     ]
@@ -136,6 +139,7 @@ extension SplitCategory: CustomStringConvertible {
     }
 }
 
+/*
 enum SplitType: String, CaseIterable, Identifiable, Codable {
     case fullBody = "Full-Body"
     case broSplit = "Bro Split"
@@ -186,4 +190,4 @@ enum SplitType: String, CaseIterable, Identifiable, Codable {
         }
     }
 }
-
+*/

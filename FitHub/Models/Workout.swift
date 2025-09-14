@@ -9,11 +9,22 @@ import Foundation
 
 
 struct SelectedTemplate: Identifiable, Equatable {
-    var id: UUID
-    var name: String
-    var index: Int
-    var isUserTemplate: Bool
+    var id: UUID = UUID() // not template id. changes on every selection to ensure onChange(of) is recognized
+    var template: WorkoutTemplate
+    var location: TemplateLocation
     var mode: NavigationMode
+}
+
+enum TemplateLocation: String, CaseIterable {
+    case user, trainer, archived
+    
+    var label: String {
+        switch self {
+        case .user: return "Your Templates"
+        case .trainer: return "Trainer Templates"
+        case .archived: return "Archived Templates"
+        }
+    }
 }
 
 struct WorkoutTemplate: Identifiable, Hashable, Codable, Equatable {

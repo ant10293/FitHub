@@ -10,17 +10,12 @@ import SwiftUI
 
 struct RestTimeEditor: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var ctx: AppContext
     @Binding var exercise: Exercise
     @State private var setType: RestTimerSetType = .working
-
-    // Inject the resolved RestPeriods to fall back on when per-set is nil.
-    let rest: RestPeriods
-
-    // State for the inline picker
     @State private var showingRestPicker: Bool = false
     @State private var currentRestSetIndex: Int? = nil
     @State private var pickerTime: TimeSpan = .init(seconds: 0)
-
     var onSave: () -> Void
 
     var body: some View {
@@ -49,37 +44,26 @@ struct RestTimeEditor: View {
                                 Spacer()
 
                                 Button(action: { initializePicker(for: index) }) {
-                                    if showingRestPicker && currentRestSetIndex == index {
-                                        Text(Format.timeString(from: pickerTime.inSeconds))
-                                            .frame(width: 80, height: 30)
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 5)
-                                                    .fill(Color(UIColor.secondarySystemBackground))
-                                                    .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.secondary, lineWidth: 1))
-                                            )
-                                    } else {
-                                        let effectiveSeconds = effectiveRestSeconds(for: index)
-                                        Text(Format.timeString(from: effectiveSeconds))
-                                            .frame(width: 80, height: 30)
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 5)
-                                                    .fill(Color(UIColor.secondarySystemBackground))
-                                                    .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.secondary, lineWidth: 1))
-                                            )
-                                    }
+                                    let seconds = isActive(idx: index) ? pickerTime.inSeconds : effectiveRestSeconds(for: index)
+                                    Text(Format.timeString(from: seconds))
+                                        .frame(width: 80, height: 30)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 5)
+                                                .fill(Color(UIColor.secondarySystemBackground))
+                                                .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.secondary, lineWidth: 1))
+                                        )
                                 }
                             }
                             .padding()
-                            .listRowSeparator(showingRestPicker && currentRestSetIndex == index ? .hidden : .visible)
+                            .listRowSeparator(isActive(idx: index) ? .hidden : .visible)
 
-                            if showingRestPicker && currentRestSetIndex == index {
+                            if isActive(idx: index) {
                                 VStack {
                                     Text("Adjust Rest Period for Set \(index + 1)")
                                         .font(.headline)
 
                                     HStack {
                                         MinSecPicker(time: $pickerTime)
-                                            .padding(.trailing)
 
                                         Button(action: {
                                             guard let idx = currentRestSetIndex else { return }
@@ -109,6 +93,10 @@ struct RestTimeEditor: View {
             }
         }
     }
+    
+    private func isActive(idx: Int) -> Bool {
+        return showingRestPicker && currentRestSetIndex == idx
+    }
 
     private func resetPicker() {
         showingRestPicker = false
@@ -129,12 +117,13 @@ struct RestTimeEditor: View {
 
     /// Read the per-set override if present; otherwise use your resolver.
     private func effectiveRestSeconds(for index: Int) -> Int {
-        if let override = selectedSets[index].restPeriod {
-            return override
-        }
+        if let override = selectedSets[index].restPeriod { return override }
         // Fallback: ask the exercise itself
         let isWarm = (setType == .warmUp)
-        return exercise.getRestPeriod(isWarm: isWarm, rest: rest)
+        return exercise.getRestPeriod(
+            isWarm: isWarm,
+            rest: ctx.userData.workoutPrefs.customRestPeriods ?? ctx.userData.physical.goal.defaultRest
+        )
     }
 
     /// Updates the rest period for the set at the specified index.

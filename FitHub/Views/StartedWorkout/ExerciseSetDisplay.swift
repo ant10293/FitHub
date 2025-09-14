@@ -330,8 +330,7 @@ struct ExerciseSetDisplay: View {
             completedMetric = .reps(setDetail.completed?.repsValue ?? plannedReps)
 
         case .hold(let plannedTime):
-            let plannedSec = plannedTime.inSeconds
-            completedMetric = .hold(TimeSpan(seconds: setDetail.completed?.holdTime?.inSeconds ?? plannedSec))
+            completedMetric = .hold(TimeSpan(seconds: setDetail.completed?.holdTime?.inSeconds ?? plannedTime.inSeconds))
         }
     }
 

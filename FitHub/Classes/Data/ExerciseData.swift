@@ -203,7 +203,7 @@ extension ExerciseData {
                     equipmentData: equipmentData,
                     equipmentSelected: userData.evaluation.equipmentSelected
                 ) { continue }
-            if hideDifficult && ex.difficulty.strengthValue > maxStrength { continue }
+            if hideDifficult && !ex.difficultyOK(maxStrength) { continue }
             
             // c) Category gate
             guard matchesCategory(ex) else { continue }

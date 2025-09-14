@@ -19,9 +19,7 @@ struct MuscleEngagement: Hashable, Codable {
     var engagementPercentage: Double
     var mover: MoverType
     var submusclesWorked: [SubMuscleEngagement]?
-}
-extension MuscleEngagement {
-    /// Returns a list of SubMuscles for the muscle engagement, or an empty array if `submusclesWorked` is nil.
+    
     var allSubMuscles: [SubMuscles] { submusclesWorked?.map { $0.submuscleWorked } ?? [] }
 }
 
@@ -95,7 +93,7 @@ enum Muscle: String, CaseIterable, Identifiable, Codable {
     
     var id: String { self.rawValue }
     
-    var shortName: String {
+    private var shortName: String {
         switch self {
         case .abdominals: return "Abs"
         case .pectorals: return "Pecs"
@@ -121,8 +119,7 @@ enum Muscle: String, CaseIterable, Identifiable, Codable {
         case .deltoids: return "Shoulders"
         case .erectorSpinae: return "Lower Back"
         case .cervicalSpine: return "Neck"
-        default :
-            return self.shortName
+        default: return self.shortName
         }
     }
     
@@ -164,7 +161,10 @@ enum Muscle: String, CaseIterable, Identifiable, Codable {
     static func getSubMuscles(for category: Muscle) -> [SubMuscles] {
         return SubMuscles[category] ?? []
     }
-    
+}
+
+extension Muscle {
+    /*
     static let hasFrontImages: Set<Muscle> = [
         .all, .abdominals, .pectorals, .trapezius, .deltoids, .biceps, .triceps, .quadriceps, .calves, .forearms, .cervicalSpine, .hipComplex
     ]
@@ -174,23 +174,18 @@ enum Muscle: String, CaseIterable, Identifiable, Codable {
     ]
     
     static let hasBothImages: Set<Muscle> = hasFrontImages.intersection(hasRearImages)
-}
-
-extension Muscle {
+    
     static func getButtonForCategory(_ category: Muscle, gender: Gender) -> Image {
         let startPath = "Button/\(gender == .male ? "Male" : "Female")/"
         let imageName = category.rawValue.replacingOccurrences(of: " ", with: "-")
         let fullPath = startPath + imageName
         return Image(fullPath)
     }
+    */
     
-    var splitCategory: SplitCategory? {
-        SplitCategory.muscles.first { _, muscles in muscles.contains(self) }?.key
-    }
+    var splitCategory: SplitCategory? { SplitCategory.muscles.first { _, muscles in muscles.contains(self) }?.key }
     
-    var groupCategory: SplitCategory? {
-        SplitCategory.groups.first { _, muscles in muscles.contains(self) }?.key
-    }
+    var groupCategory: SplitCategory? { SplitCategory.groups.first { _, muscles in muscles.contains(self) }?.key }
 }
 
 
@@ -342,7 +337,9 @@ enum SubMuscles: String, CaseIterable, Identifiable, Codable {
         default : return self.rawValue
         }
     }
-    
+}
+/*
+extension SubMuscles {
     var note: String? {
         switch self {
         case .infrahyoid:
@@ -357,7 +354,23 @@ enum SubMuscles: String, CaseIterable, Identifiable, Codable {
             return nil
         }
     }
-    
+ 
+    static let hasFrontImages: Set<SubMuscles> = [
+        .clavicularHead, .sternocostalHead, .costalHead, .upperTraps, .frontDelt, .sideDelt, .bicepsLongHead, .bicepsShortHead, .tricepsLateralHead, .upperAbs, .lowerAbs, .externalObliques, .obliques, .brachioradialis,
+        .forearmFlexors, .forearmExtensors, .rectusFemoris, .vastusMedialis, .vastusLateralis, .adductors, .calvesSoleus, .calvesGastrocnemius, .infrahyoid
+    ]
+     
+    static let hasRearImages: Set<SubMuscles> = [
+        .rearDelt, .tricepsLongHead, .tricepsMedialHead, .tricepsLateralHead, .upperTraps, .lowerTraps, .upperLats, .lowerLats, .teresMajor, .brachioradialis, .forearmExtensors, .iliocostalis, .longissimus,
+        .semitendinosus, .semimembranosus, .bicepsFemoris, .calvesSoleus, .calvesGastrocnemius, .abductors, .gluteusMaximus, .gluteusMedius
+    ]
+     
+    static let hasBothImages: Set<SubMuscles> = hasFrontImages.intersection(hasRearImages)
+     
+    static let hasNoImages: Set<SubMuscles> = [
+        .bicepsBrachialis, .spinalis, .gluteusMinimus, .teresMinor, .infraspinatus, .rhomboids, .levatorScapulae, .sternocleidomastoid, .scalenes, .longusFlexors
+    ]
+ 
     static let colorRed: Set<SubMuscles> = [
         .clavicularHead, .frontDelt, .bicepsLongHead, .tricepsLongHead, .upperAbs, .upperTraps, .upperLats, .iliocostalis, .infrahyoid, .brachioradialis, .rectusFemoris, .adductors, .bicepsFemoris, .calvesGastrocnemius, .gluteusMaximus
     ]
@@ -373,20 +386,5 @@ enum SubMuscles: String, CaseIterable, Identifiable, Codable {
     static let colorYellow: Set<SubMuscles> = [
         .externalObliques, .rhomboids, .longusFlexors
     ]
-    
-    static let hasFrontImages: Set<SubMuscles> = [
-        .clavicularHead, .sternocostalHead, .costalHead, .upperTraps, .frontDelt, .sideDelt, .bicepsLongHead, .bicepsShortHead, .tricepsLateralHead, .upperAbs, .lowerAbs, .externalObliques, .obliques, .brachioradialis, .forearmFlexors, .forearmExtensors, .rectusFemoris, .vastusMedialis, .vastusLateralis, .adductors, .calvesSoleus, .calvesGastrocnemius, .infrahyoid
-    ]
-    
-    static let hasRearImages: Set<SubMuscles> = [
-        .rearDelt, .tricepsLongHead, .tricepsMedialHead, .tricepsLateralHead, .upperTraps, .lowerTraps, .upperLats, .lowerLats, .teresMajor, .brachioradialis, .forearmExtensors, .iliocostalis, .longissimus, .semitendinosus, .semimembranosus, .bicepsFemoris, .calvesSoleus, .calvesGastrocnemius, .abductors, .gluteusMaximus, .gluteusMedius
-    ]
-    
-    static let hasBothImages: Set<SubMuscles> = hasFrontImages.intersection(hasRearImages)
-    
-    static let hasNoImages: Set<SubMuscles> = [
-        .bicepsBrachialis, .spinalis, .gluteusMinimus,
-        .teresMinor, .infraspinatus, .rhomboids, .levatorScapulae,
-        .sternocleidomastoid, .scalenes, .longusFlexors
-    ]
 }
+*/

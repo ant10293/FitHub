@@ -18,7 +18,6 @@ struct MenuView: View {
                 }) {
                     Label("Measurements", systemImage: "ruler")
                 }
-
                 NavigationLink(destination: LazyDestination {
                     TemplateArchives(userData: ctx.userData)
                 }) {

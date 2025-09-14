@@ -13,23 +13,25 @@ final class WorkoutVM: ObservableObject {
     var template: WorkoutTemplate
     let activeWorkout: WorkoutInProgress?
     let startDate: Date
+    let workoutsStartDate: Date? // for week of templates
     var currentExerciseState: CurrentExerciseState?
     var updates: PerformanceUpdates
     var workoutCompleted: Bool = false
     var isOverlayVisible: Bool = true
     var showWorkoutSummary: Bool = false
-    var templateCompletedBefore: Bool = false
 
     init(
         template: WorkoutTemplate,
         activeWorkout: WorkoutInProgress? = nil,
         startDate: Date = Date(),
+        workoutsStartDate: Date?,
         currentExerciseState: CurrentExerciseState? = nil,
         updatedMax: [PerformanceUpdate]? = nil
     ) {
         self.template = template
         self.activeWorkout = activeWorkout
         self.updates = PerformanceUpdates()
+        self.workoutsStartDate = workoutsStartDate
 
         if let aw = activeWorkout {
             // ---- resume a paused session ----
@@ -55,17 +57,6 @@ final class WorkoutVM: ObservableObject {
 
         // 3) persist in UserData
         _ = userData.updateTemplate(template: template)
-    }
-    
-    func setTemplateCompletionStatus(completedWorkouts: [CompletedWorkout]) {
-        templateCompletedBefore = completedWorkouts.contains(where: { $0.template.id == template.id })
-        print("Template Completed Before: \(templateCompletedBefore)")
-    }
-    
-    func performSetup(userData: UserData, timer: TimerManager) -> Int {
-        if !userData.isWorkingOut { userData.isWorkingOut = true }
-        setTemplateCompletionStatus(completedWorkouts: userData.workoutPlans.completedWorkouts)
-        return getExerciseIndex(timer: timer)
     }
 
     func goToNextSetOrExercise(for exerciseIndex: Int, selectedExerciseIndex: inout Int?, timer: TimerManager) {
@@ -140,14 +131,14 @@ final class WorkoutVM: ObservableObject {
     }
 
     private func setAvgRPE(selectedIndex: Int?) {
-        guard let selectedIndex = selectedIndex, !templateCompletedBefore else { return }
+        guard let selectedIndex = selectedIndex else { return }
         
-        var exercise = template.exercises[selectedIndex]
-        if exercise.isCompleted {
+        if var exercise = template.exercises[safe: selectedIndex], let startDate = workoutsStartDate, exercise.isCompleted {
             print("Last set completed of \(exercise.name)")
             
             let hadNewPR = updates.prExerciseIDs.contains(exercise.id)
-            exercise.setRPE(hadNewPR: hadNewPR)
+            
+            exercise.setRPE(hadNewPR: hadNewPR, startDate: startDate)
             template.exercises[selectedIndex] = exercise
         }
     }
@@ -203,21 +194,20 @@ final class WorkoutVM: ObservableObject {
         )
     }
     
-    func getExerciseIndex(timer: TimerManager) -> Int {
-        // 1) If we’re just starting (timer not running), attempt to resume
-        if !timer.isActive {
-            // resume from saved time if present
-            timer.startTimer(startDate: startDate)
-            // unwrap the saved state
-            if let state = currentExerciseState {
-                let resumeIdx = state.index
-                // only resume if still valid and not completed
-                guard template.exercises.indices.contains(resumeIdx) else { return 0 }
-                if !template.exercises[resumeIdx].isCompleted {
-                    return resumeIdx
-                }
-            }
+    func performSetup(timer: TimerManager, userData: UserData) -> Int {
+        if !userData.isWorkingOut { userData.isWorkingOut = true }
+        if !timer.isActive { timer.startTimer(startDate: startDate) }
+        return getExerciseIndex()
+    }
+    
+    private func getExerciseIndex() -> Int {
+        if let state = currentExerciseState {
+            let resumeIdx = state.index
+            // only resume if still valid and not completed
+            guard template.exercises.indices.contains(resumeIdx) else { return 0 }
+            if !template.exercises[resumeIdx].isCompleted { return resumeIdx }
         }
+        
         // 2) Otherwise Find the first unfinished exercise (or 0 if none)
         return template.exercises.firstIndex(where: { !$0.isCompleted }) ?? 0
     }
@@ -228,7 +218,7 @@ final class WorkoutVM: ObservableObject {
     func saveWorkoutInProgress(userData: UserData, timer: TimerManager) {
         // Create a WorkoutInProgress object to store the current state
         let workoutInProgress = WorkoutInProgress(
-            template: template,
+            template: template, // this doesnt save the updated template.still works because we only use it to find the actual template in trainer or user list
             currentExerciseState: currentExerciseState,
             dateStarted: startDate,
             updatedMax: updates.updatedMax
@@ -274,8 +264,6 @@ final class WorkoutVM: ObservableObject {
         ctx.exercises.applyPerformanceUpdates(updates: updates.updatedMax, csvEstimate: false)
         
         // Reset timer
-        //timer.resetTimer()
-        //timer.stopRest()
         timer.stopAll()
         
         // CRITICAL: Reset all workout state atomically

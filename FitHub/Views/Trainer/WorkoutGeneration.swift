@@ -113,13 +113,7 @@ struct WorkoutGeneration: View {
             .contentShape(Rectangle())
             .onTapGesture { 
                 if let template = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] {
-                    selectedTemplate = SelectedTemplate(
-                        id: template.id, 
-                        name: template.name, 
-                        index: currentTemplateIndex, 
-                        isUserTemplate: false,
-                        mode: .directToDetail
-                    )
+                    selectedTemplate = .init(template: template, location: .trainer, mode: .directToDetail)
                 }
             }
             .frame(alignment: .center)

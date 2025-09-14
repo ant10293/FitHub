@@ -1,0 +1,19 @@
+    private func handleTemplateSelection(_ template: SelectedTemplate?) {
+        if template == nil {
+            // Reset navigation state when selectedTemplate becomes nil
+            navigateToTemplateDetail = false
+            currentTemplate = nil
+            workoutRoute = nil
+            return
+        }
+        
+        // Store the current template for navigation
+        currentTemplate = template
+        
+        switch template.mode {
+        case .popupOverlay: break
+        case .directToDetail: navigateToTemplateDetail = true
+        case .directToWorkout:
+            workoutRoute = WorkoutRoute(id: UUID(), sel: template)
+        }
+    }
