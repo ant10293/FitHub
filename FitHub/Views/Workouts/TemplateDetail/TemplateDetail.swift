@@ -81,7 +81,7 @@ struct TemplateDetail: View {
                 )
             case .delete:
                 return Alert(
-                    title: Text("Are you sure you want to remove \(exercisePendingDeletion != nil ? "'\(exercisePendingDeletion!.name)'" : "this exercise")?"),
+                    title: Text("Are you sure you want to remove '\(exercisePendingDeletion?.name ?? "this exercise")'?"),
                     message: Text("The exercise and its sets can be restored via: Edit → Undo"),
                     primaryButton: .destructive(Text("Remove"), action: {
                         if let exercise = exercisePendingDeletion {

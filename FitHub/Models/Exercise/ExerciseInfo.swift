@@ -110,10 +110,8 @@ enum ResistanceType: String, CaseIterable, Identifiable, Codable {
     
     var usesWeight: Bool {
         switch self {
-        case .bodyweight, .other, .banded:
-            return false
-        case .weighted, .freeWeight, .machine:
-            return true
+        case .bodyweight, .other, .banded: return false
+        case .weighted, .freeWeight, .machine: return true
         default: return false
         }
     }
@@ -128,8 +126,8 @@ enum RepsInstruction: String, Codable, CaseIterable {
 enum WeightInstruction: String, Codable, CaseIterable {
     case perDumbbell = "Per Dumbbell"
     case perStack = "Per Stack"
-   // case perPeg = "Per Peg"
-   // case perSleeve = "Per Sleeve"
+    // case perPeg = "Per Peg"
+    // case perSleeve = "Per Sleeve"
 }
 
 enum LimbMovementType: String, Codable, CaseIterable {

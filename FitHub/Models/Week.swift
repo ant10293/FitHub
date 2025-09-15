@@ -70,18 +70,7 @@ struct WorkoutWeek: Identifiable, Codable, Equatable {
         customSplit ?? WorkoutWeek.createSplit(forDays: daysPerWeek)
     }
 }
-// Pretty printer for WorkoutWeek
-extension WorkoutWeek: CustomStringConvertible {
-    public var description: String {
-        let dayLines = categories.enumerated().map { idx, cats -> String in
-            let joined = cats.map(\.description).joined(separator: ", ")
-            return "\tDay \(idx + 1): \(joined)"
-        }
-        return """
-        \(dayLines.joined(separator: "\n"))
-        """
-    }
-}
+
 
 enum DaysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
     case monday = "Monday"

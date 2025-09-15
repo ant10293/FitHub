@@ -41,6 +41,7 @@ struct WorkoutGeneration: View {
                         
                     Spacer()
                 }
+                .disabled(showingExerciseOptions)
                 .padding(.horizontal)
             }
             .navigationBarTitle("Workout Generation", displayMode: .inline)
@@ -88,7 +89,6 @@ struct WorkoutGeneration: View {
             Button(action: previousTemplate) {
                 Image(systemName: "arrow.left").bold()
                     .contentShape(Rectangle())
-                    .disabled(showingExerciseOptions)
             }
             
             HStack {
@@ -122,7 +122,6 @@ struct WorkoutGeneration: View {
             Button(action: nextTemplate) {
                 Image(systemName: "arrow.right").bold()
                     .contentShape(Rectangle())
-                    .disabled(showingExerciseOptions)
             }
             Spacer()
         }

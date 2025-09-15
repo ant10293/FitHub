@@ -13,7 +13,6 @@ struct ExerciseSetOverlay: View {
     @State private var isPressed: Bool = false
     @State private var showAdjustmentsView: Bool = false
     @State private var shouldDisableNext: Bool = false
-    @State private var showOverlay: Bool = false
     @State private var showPlateVisualizer: Bool = false
     @State private var showPicker: Bool = false
     var progress: TemplateProgress
@@ -33,7 +32,7 @@ struct ExerciseSetOverlay: View {
                     // Equipment Adjustments + Info button
                     adjustmentsSection
                 }
-                
+                                
                 // Display the set editor
                 ExerciseSetDisplay(
                     timerManager: timerManager,
@@ -46,7 +45,7 @@ struct ExerciseSetOverlay: View {
                     }
                 )
                 
-                if !exercise.isCompleted && !showPicker {
+                if !showPicker {
                     NextButton(
                         timerManager: timerManager,
                         isPressed: $isPressed,
@@ -105,10 +104,11 @@ struct ExerciseSetOverlay: View {
                 Image(systemName: "xmark.circle.fill")
                     .imageScale(.large)
                     .foregroundStyle(.gray)
-                    .padding()
+                    .padding(.vertical)
             }
             .contentShape(Rectangle())
         }
+        .padding(.bottom)
     }
     
     private var adjustmentsSection: some View {

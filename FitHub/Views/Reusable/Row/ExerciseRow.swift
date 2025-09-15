@@ -6,7 +6,7 @@
 //
 
 // needs to replace
-// StartedWorkoutView - ExerciseRowView
+// StartedWorkoutView - neView
 // SimilarExercisesView - SimilarExerciseRowView
 // Workout Generation - generationRowContent
 // TemplatePopup - popUpRowContent

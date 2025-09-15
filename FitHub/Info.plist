@@ -6,5 +6,9 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>NSHealthShareUsageDescription</key>
+	<string>FitHub uses HealthKit to track your workout data and health metrics.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>FitHub allows you to add photos to your workout logs.</string>
 </dict>
 </plist>

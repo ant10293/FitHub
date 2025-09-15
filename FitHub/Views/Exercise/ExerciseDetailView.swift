@@ -106,9 +106,6 @@ struct ExerciseDetailView: View {
             VStack(alignment: .leading, spacing: 10) {
                 ExEquipImage(image: exercise.fullImage, button: .expand)
                     .centerHorizontally()
-                
-                //Text(exercise.description)
-                 //   .multilineTextAlignment(.leading)
 
                 //Text("Description: ").bold() + Text(exercise.description)
                 Text("How to perform: ").bold() // Placeholder text

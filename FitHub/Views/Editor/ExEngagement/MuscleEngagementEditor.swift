@@ -124,8 +124,7 @@ struct MuscleEngagementEditor: View {
                 .disabled(selectedMuscle == nil)
                 .padding()
             }
-            .navigationTitle("Muscle Engagement")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitle("Muscle Engagement", displayMode: .inline)
             .toolbar { ToolbarItem(placement: .topBarTrailing) {
                 Button("Close") { dismiss() }
                     .foregroundStyle(.red)
@@ -148,7 +147,8 @@ struct MuscleEngagementEditor: View {
             }
         )
         return Muscle.allCases
-            .filter(\.isVisible)
+            /*.filter(\.isVisible) */
+            .filter { $0 != .all }
             .filter { !taken.contains($0) }
     }
 

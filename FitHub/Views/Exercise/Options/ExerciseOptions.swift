@@ -101,7 +101,7 @@ struct ExerciseOptions: View {
             .padding(.horizontal)
         }
         .padding()
-        .frame(width: 300)
+        .frame(width: UIScreen.main.bounds.width * 0.8)
         .background(Color(UIColor.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(radius: 10)

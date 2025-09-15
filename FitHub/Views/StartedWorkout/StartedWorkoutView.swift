@@ -16,21 +16,27 @@ struct StartedWorkoutView: View {
     var onExit: () -> Void = {}
     
     var body: some View {
-        VStack(spacing: 0) {
-            Text(Format.timeString(from: timer.secondsElapsed))
-                .font(.largeTitle)
-                .monospacedDigit()
-                .padding()
-            
-            Divider()
-            
-            exerciseList
+        ZStack {
+            // Main content
+            VStack(spacing: 0) {
+               Text(Format.timeString(from: timer.secondsElapsed))
+                   .font(.largeTitle)
+                   .monospacedDigit()
+                   .padding()
+               
+               Divider()
+               
+               exerciseList
+            }
+            // Overlay content
+            if viewModel.isOverlayVisible { exerciseSetOverlay }
+            if viewModel.showWorkoutSummary { workoutSummaryOverlay }
         }
         .navigationBarTitle("\(viewModel.template.name)", displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: backButton)
-        .overlay(viewModel.showWorkoutSummary ? workoutSummaryOverlay : nil).zIndex(1)
-        .overlay(viewModel.isOverlayVisible ? exerciseSetOverlay : nil)
+        .onAppear(perform: performSetup)
+        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .sheet(isPresented: $showingDetailView, onDismiss: { showingDetailView = false }) {
             if let index = selectedExerciseIndex {
                 ExerciseDetailView(viewingDuringWorkout: true, exercise: viewModel.template.exercises[index])
@@ -92,47 +98,44 @@ struct StartedWorkoutView: View {
         )
     }
     
-    @ViewBuilder
-    private var exerciseSetOverlay: some View {
+    @ViewBuilder private var exerciseSetOverlay: some View {
         if let selectedExerciseIdx = selectedExerciseIndex {
-            ZStack {
-                ExerciseSetOverlay(
-                    timerManager: timer,
-                    exercise: $viewModel.template.exercises[selectedExerciseIdx],
-                    progress: TemplateProgress(
-                        exerciseIdx: selectedExerciseIdx,
-                        numExercises: viewModel.template.numExercises,
-                        isLastExercise: viewModel.isLastExerciseForIndex(selectedExerciseIdx),
-                        restTimerEnabled: ctx.userData.settings.restTimerEnabled,
-                        restPeriods: RestPeriods.determineRestPeriods(
-                            customRest: ctx.userData.workoutPrefs.customRestPeriods,
-                            goal: ctx.userData.physical.goal
-                        )
-                    ),
-                    goToNextSetOrExercise: {
-                        viewModel.goToNextSetOrExercise(for: selectedExerciseIdx, selectedExerciseIndex: &selectedExerciseIndex, timer: timer)
-                    },
-                    onClose: {
-                        viewModel.isOverlayVisible = false
-                        selectedExerciseIndex = nil
-                    },
-                    viewDetail: {
-                        showingDetailView = true
-                    },
-                    getPriorMax: { id in
-                        return ctx.exercises.peakMetric(for: id)
-                    },
-                    onPerformanceUpdate: { update in
-                        viewModel.updatePerformance(update)
-                    },
-                    saveTemplate: { detailBinding, exerciseBinding in
-                        viewModel.saveTemplate(userData: ctx.userData, detailBinding: detailBinding, exerciseBinding: exerciseBinding)
-                    }
-                )
-                .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .shadow(radius: 5)
-            }
+            ExerciseSetOverlay(
+                timerManager: timer,
+                exercise: $viewModel.template.exercises[selectedExerciseIdx],
+                progress: TemplateProgress(
+                    exerciseIdx: selectedExerciseIdx,
+                    numExercises: viewModel.template.numExercises,
+                    isLastExercise: viewModel.isLastExerciseForIndex(selectedExerciseIdx),
+                    restTimerEnabled: ctx.userData.settings.restTimerEnabled,
+                    restPeriods: RestPeriods.determineRestPeriods(
+                        customRest: ctx.userData.workoutPrefs.customRestPeriods,
+                        goal: ctx.userData.physical.goal
+                    )
+                ),
+                goToNextSetOrExercise: {
+                    viewModel.goToNextSetOrExercise(for: selectedExerciseIdx, selectedExerciseIndex: &selectedExerciseIndex, timer: timer)
+                },
+                onClose: {
+                    viewModel.isOverlayVisible = false
+                    selectedExerciseIndex = nil
+                },
+                viewDetail: {
+                    showingDetailView = true
+                },
+                getPriorMax: { id in
+                    return ctx.exercises.peakMetric(for: id)
+                },
+                onPerformanceUpdate: { update in
+                    viewModel.updatePerformance(update)
+                },
+                saveTemplate: { detailBinding, exerciseBinding in
+                    viewModel.saveTemplate(userData: ctx.userData, detailBinding: detailBinding, exerciseBinding: exerciseBinding)
+                }
+            )
+            .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .shadow(radius: 5)
             .padding(.horizontal, 5)
         }
     }

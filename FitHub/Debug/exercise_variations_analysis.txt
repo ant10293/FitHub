@@ -1,0 +1,836 @@
+EXERCISE VARIATIONS ANALYSIS
+============================
+
+Based on analysis of exercises.json, here are the base exercises and their variations:
+
+1. BENCH PRESS VARIATIONS
+   - Bench Press (base)
+   - Decline Bench Press
+   - Incline Bench Press
+   - Dumbbell Bench Press
+   - Dumbbell Decline Bench Press
+   - Incline Dumbbell Bench Press
+   - Wide-Grip Bench Press
+   - Close-Grip Bench Press
+   - Close-Grip Dumbbell Bench Press
+   - Close-Grip Incline Bench Press
+   - Close-Grip Feet-Up Bench Press
+   - Paused Bench Press
+   - Reverse Grip Bench Press
+   - Bench Pin Press
+   - Spoto Press
+   - Smith Machine Bench Press
+   - Smith Machine Incline Bench Press
+   - Converging Smith Bench Press
+   - Converging Smith Incline Bench Press
+   - Converging Smith Decline Bench Press
+   - Guillotine Press
+   - Smith-Machine Guillotine Press
+   - Feet-Up Bench Press
+   - Floor Press
+   - Dumbbell Floor Press
+   - Landmine Floor Press
+   - Single-Arm Dumbbell Bench Press
+   - Isometric Chest Squeeze
+
+2. PUSH-UP VARIATIONS
+   - Push-Up (base)
+   - Incline Push-Up
+   - Decline Push-Up
+   - Diamond Push-Up
+   - Diamond Cutter Push-Up
+   - Close-Grip Push-Up
+   - Close-Grip Push-Up (Knees)
+   - Wide-Grip Push-Up
+   - Kneeling Push-Up
+   - Kneeling Incline Push-Up
+   - Archer Push-Up
+   - Pike Push-Up
+   - Handstand Push-Up
+   - Ring Push-Up
+   - Medicine-Ball Push-Up
+   - Tate Push-Up
+
+3. CHEST FLY VARIATIONS
+   - Dumbbell Chest Fly (base)
+   - Incline Dumbbell Fly
+   - Decline Dumbbell Fly
+   - Cable Chest Fly
+   - Low to High Cable Chest Fly
+   - High to Low Cable Chest Fly
+   - Machine Chest Fly
+   - Pec Deck Fly
+   - Standing Resistance Band Chest Fly
+   - Dumbbell Squeeze Press
+
+4. PULLOVER VARIATIONS
+   - Dumbbell Pullover (base)
+   - Barbell Pullover
+   - Bent-Arm Barbell Pullover
+   - Machine Pullover
+
+5. CHEST PRESS VARIATIONS
+   - Machine Chest Press (base)
+   - Plate-Loaded Chest Press
+   - Plate-Loaded Decline Chest Press
+   - Plate-Loaded Incline Chest Press
+   - Incline Chest Press
+   - Standing Cable Chest Press
+
+6. SHOULDER PRESS VARIATIONS
+   - Shoulder Press (base)
+   - Dumbbell Shoulder Press
+   - Seated Dumbbell Shoulder Press
+   - Seated Shoulder Press
+   - Machine Shoulder Press
+   - Plate-Loaded Shoulder Press
+   - Arnold Press
+   - Behind the Neck Press
+   - Military Press
+   - Landmine Press
+   - One Arm Landmine Press
+   - Half-Kneeling Landmine Press
+   - Viking Press
+   - Shoulder Pin Press
+   - Log Press
+   - Z Press
+   - Dumbbell Z Press
+   - Cuban Press
+   - Y Press
+   - Snatch-Grip BTN Press
+   - Converging Smith Shoulder Press
+
+7. PUSH PRESS VARIATIONS
+   - Push Press (base)
+   - Dumbbell Push Press
+   - Push Jerk
+   - Power Jerk
+   - Split Jerk
+   - Squat Jerk
+
+8. LATERAL RAISE VARIATIONS
+   - Dumbbell Lateral Raise (base)
+   - Cable Lateral Raise
+   - Machine Lateral Raise
+   - Banded Lateral Raise
+   - Scaption Raise
+
+9. FRONT RAISE VARIATIONS
+   - Dumbbell Front Raise (base)
+   - Barbell Front Raise
+   - Plate Raise
+   - Front Hold
+   - Barbell Front Hold
+   - Alternating DB Front Raise
+
+10. REAR DELT VARIATIONS
+    - Reverse Dumbbell Fly (base)
+    - Cable Reverse Fly
+    - Machine Reverse Fly
+    - Dumbbell Rear Delt Row
+    - Barbell Rear Delt Row
+    - Cable Rear Delt Row
+    - Face Pull
+    - Dumbbell Face Pull
+    - Band Pull-Apart
+
+11. UPRIGHT ROW VARIATIONS
+    - Barbell Upright Row (base)
+    - Dumbbell Upright Row
+    - Cable Upright Row
+
+12. SHRUG VARIATIONS
+    - Barbell Shrug (base)
+    - Dumbbell Shrug
+    - Cable Shrug
+    - Machine Shoulder Shrug
+    - Smith Machine Shrug
+    - Power Shrug
+    - Behind-the-Back Barbell Shrug
+    - Hex Bar Shrug
+
+13. SQUAT VARIATIONS
+    - Back Squat (base)
+    - Front Squat
+    - Overhead Squat
+    - Goblet Squat
+    - Dumbbell Squat
+    - Box Squat
+    - Sumo Squat
+    - Bulgarian Split Squat
+    - Barbell Bulgarian Split Squat
+    - Dumbbell Bulgarian Split Squat
+    - Goblet Bulgarian Split Squat
+    - Chair Bulgarian Split Squat
+    - Barbell Split Squat
+    - Dumbbell Split Squat
+    - Barbell Hack Squat
+    - Machine Hack Squat
+    - Sissy Hack Squat
+    - Sissy Squat
+    - Pistol Squat
+    - Single-Leg Squat
+    - Bodyweight Squat
+    - Chair Squat
+    - Half Squat
+    - Cyclist Squat
+    - Cossack Squat
+    - Jefferson Squat
+    - Landmine Squat
+    - Safety Bar Squat
+    - Cambered Bar Squat
+    - Smith Machine Squat
+    - V-Squat
+    - Pendulum Squat
+    - Spanish Squat
+    - Pin Squat
+    - Pause Squat
+    - Sumo Squat
+    - Trap-Bar Jump Squat
+    - Split-Squat Jump
+    - Zercher Squat
+
+14. LUNGE VARIATIONS
+    - Lunge (base)
+    - Barbell Lunge
+    - Dumbbell Lunge
+    - Barbell Walking Lunge
+    - Reverse Lunge
+    - Barbell Reverse Lunge
+    - Side Lunge
+    - Curtsy Lunge
+    - Single-Leg Romanian Deadlift
+
+15. DEADLIFT VARIATIONS
+    - Deadlift (base)
+    - Romanian Deadlift
+    - Dumbbell Romanian Deadlift
+    - Stiff-Legged Deadlift
+    - Sumo Deadlift
+    - Deficit Deadlift
+    - Trap Bar Deadlift
+    - Zercher Deadlift
+    - Jefferson Deadlift
+    - Behind the Back Deadlift
+    - Single-Leg Deadlift
+    - Single-Leg Romanian Deadlift
+    - Single-Leg Dumbbell Deadlift
+    - Rack Pull
+    - Pause Deadlift
+
+16. HIP THRUST VARIATIONS
+    - Hip Thrust (base)
+    - Barbell Hip Thrust
+    - Banded Hip Thrust
+    - Single-Leg Hip Thrust
+    - Glute Bridge
+    - Barbell Glute Bridge
+    - Single-Leg Glute Bridge
+
+17. ROW VARIATIONS
+    - Barbell Row (base)
+    - Dumbbell Row
+    - Bent-Over Dumbbell Row
+    - Chest-Supported Dumbbell Row
+    - Seated Cable Row
+    - Seated Machine Row
+    - Single-Arm Cable Row
+    - T-Bar Row
+    - Standing T-Bar Row
+    - Incline Row
+    - Kroc Row
+    - Meadows Row
+    - Pendlay Row
+    - Yates Row
+    - Seal Row
+    - Landmine Row
+    - Renegade Row
+    - Towel Row
+    - Iso-Lateral High Row (Machine)
+    - Iso-Lateral Low Row (Machine)
+
+18. PULL-UP VARIATIONS
+    - Pull-Up (base)
+    - Chin-Up
+    - Neutral Grip Pull-Up
+    - Weighted Pull-Up
+    - Weighted Chin-Up
+    - Weighted Neutral Grip Pull-Up
+    - Assisted Pull-Up
+    - Assisted Chin-Up
+    - Assisted Neutral Grip Pull-Up
+    - Towel Pull-Up
+    - Muscle-Up
+    - Weighted Muscle-Up
+
+19. LAT PULLDOWN VARIATIONS
+    - Lat Pulldown (base)
+    - Close-Grip Lat Pulldown
+    - Reverse Grip Lat Pulldown
+    - One-Arm Lat Pulldown
+    - One-Arm Pulldown
+    - Straight Arm Lat Pulldown
+
+20. DIP VARIATIONS
+    - Dips (base)
+    - Parallel Bar Dip
+    - Bench Dips
+    - Bench Dip (Feet Elevated)
+    - Weighted Dip
+    - Ring Dips
+    - Machine Seated Dip
+
+21. CURL VARIATIONS
+    - Barbell Curl (base)
+    - Dumbbell Curl
+    - EZ Bar Curl
+    - Cable Curl With Bar
+    - Cable Curl With Rope
+    - Hammer Curl
+    - Incline Hammer Curl
+    - Cable Hammer Curl
+    - Band Biceps Curl
+    - Concentration Curl
+    - Dumbbell Concentration Curl
+    - Cable Concentration Curl
+    - One Arm Cable Bicep Curl
+    - Preacher Curl
+    - EZ-Bar Preacher Curl
+    - Machine Preacher Curl
+    - One Arm Dumbbell Preacher Curl
+    - Reverse-Grip Preacher Curl
+    - Incline Dumbbell Curl
+    - Incline Cable Curl
+    - Overhead Cable Curl
+    - Standing Cable Curl
+    - Lying Cable Curl
+    - Seated Dumbbell Curl
+    - Barbell Reverse Curl
+    - Dumbbell Reverse Curl
+    - EZ-Bar Reverse Curl
+    - Reverse Wrist Curl
+    - Barbell Spider Curl
+    - Spider Curl
+    - Drag Curl
+    - Cheat Curl
+    - Strict Curl
+    - 21s Curl
+    - Bayesian Curl
+    - Zottman Curl
+
+22. TRICEPS EXTENSION VARIATIONS
+    - Barbell Lying Triceps Extension (base)
+    - Dumbbell Tricep Kickback
+    - Cable Triceps Kickback
+    - Overhead Rope Triceps Extension
+    - One-Arm Cable Triceps Extension
+    - Standing Dumbbell Triceps Extension
+    - Standing Barbell Triceps Extension
+    - Seated Dumbbell Triceps Extension
+    - Lying Dumbbell Triceps Extension
+    - Bent-Over DB Triceps Extension
+    - Body-Weight Triceps Extension (Rack)
+    - Tricep Pushdown With Bar
+    - Tricep Rope Pushdown
+    - Reverse Grip Tricep Pushdown
+    - Machine Tricep Extension
+    - Skull Crusher (EZ-Bar)
+    - JM Press
+    - Tate Press
+    - Single-Arm DB Skull Crusher
+
+23. CALF RAISE VARIATIONS
+    - Standing Calf Raise (base)
+    - Barbell Calf Raise
+    - Dumbbell Calf Raise
+    - Bodyweight Calf Raise
+    - Single Leg Seated Calf Raise
+    - Seated Calf Raise
+    - Donkey Calf Raise
+    - Dumbbell Walking Calf Raise
+    - Leg Press Calf Raise
+    - Calf Press
+    - Plate-Loaded Standing Calf Raise
+    - Standing Dumbbell Calf Raise
+
+24. LEG PRESS VARIATIONS
+    - Leg Press (base)
+    - Horizontal Leg Press
+    - Vertical Leg Press
+    - Compact Leg Press
+    - Single-Leg Press
+
+25. LEG CURL VARIATIONS
+    - Lying Leg Curl (base)
+    - Seated Leg Curl
+    - Standing Leg Curl
+    - Machine Glute Kickback
+    - Cable Glute Kickbacks
+    - Slider Leg Curl
+    - Swiss-Ball Leg Curl
+    - Stability-Ball Hamstring Curl
+    - Nordic Hamstring Curl
+    - Reverse Nordic Curl
+
+26. LEG EXTENSION VARIATIONS
+    - Leg Extension (base)
+    - Cable Leg Extension
+
+27. CRUNCH VARIATIONS
+    - Crunch (base)
+    - Bicycle Crunch
+    - Reverse Crunch
+    - Decline Crunch
+    - Decline Sit-Up
+    - Cable Crunch
+    - Standing Cable Crunch
+    - High Pulley Crunch
+    - Machine Seated Crunch
+    - Jackknife Sit-Up
+    - Sit-Up
+    - V-Up
+
+28. PLANK VARIATIONS
+    - Plank (base)
+    - Kneeling Plank
+    - Kneeling Side Plank
+    - Side Plank
+    - RKC Plank
+    - Copenhagen Plank
+    - Hollow Body Hold
+
+29. LEG RAISE VARIATIONS
+    - Lying Leg Raise (base)
+    - Hanging Leg Raise
+    - Hanging Knee Raise
+    - Elbow-Supported Leg Raise
+    - Elbow-Supported Knee Raise
+    - Side Leg Raise
+    - Scissor Kicks
+    - Flutter Kicks
+    - Toes to Bar
+
+30. RUSSIAN TWIST VARIATIONS
+    - Russian Twist (base)
+    - Medicine Ball Russian Twist
+    - Rotary Torso Twist
+
+31. CLEAN VARIATIONS
+    - Clean (base)
+    - Power Clean
+    - Hang Clean
+    - Hang Power Clean
+    - Dumbbell Hang Clean
+    - Clean and Jerk
+    - Clean and Press
+    - Dumbbell Clean and Press
+    - Log Clean and Press
+    - Clean High Pull
+    - Clean Pull
+    - High Pull
+    - Dumbbell High Pull
+    - Power Shrug
+
+32. SNATCH VARIATIONS
+    - Snatch (base)
+    - Power Snatch
+    - Hang Snatch
+    - Hang Power Snatch
+    - Muscle Snatch
+    - Dumbbell Snatch
+
+33. JERK VARIATIONS
+    - Push Jerk (base)
+    - Power Jerk
+    - Split Jerk
+    - Squat Jerk
+
+34. FARMER'S WALK VARIATIONS
+    - Farmer's Walk (base)
+    - Farmer's Walk Pinch-Grip
+    - Yoke Carry
+
+35. CARRY VARIATIONS
+    - Farmer's Walk (base)
+    - Yoke Carry
+    - Prowler Sled Push
+
+36. HOLD VARIATIONS
+    - One-Handed Bar Hang (base)
+    - Pinch Block Hold
+    - Pinch-Block Static Hold
+    - Thick-Bar Hold
+    - Front Hold
+    - Barbell Front Hold
+
+37. WRIST CURL VARIATIONS
+    - Barbell Wrist Curl (base)
+    - Dumbbell Wrist Curl
+    - Plate Wrist Curl
+    - Reverse Wrist Curl
+    - Dumbbell Reverse Wrist Curl
+    - Wrist Roller
+    - Rice-Bucket Wrist Twist
+
+38. SIDE BEND VARIATIONS
+    - Dumbbell Side Bend (base)
+    - Roman Chair Side Bend
+
+39. BACK EXTENSION VARIATIONS
+    - Back Extension (base)
+    - Machine Back Extension
+    - Weighted Back Extension
+    - Bodyweight Reverse Hyperextension
+    - Reverse Hyperextension
+
+40. HIP VARIATIONS
+    - Floor Hip Abduction (base)
+    - Floor Hip Extension (base)
+    - Machine Hip Abduction
+    - Machine Hip Adduction
+    - Hip Airplane
+
+41. ROTATION VARIATIONS
+    - Band External Shoulder Rotation (base)
+    - Band Internal Shoulder Rotation (base)
+    - Cable External Rotation
+    - Lying Dumbbell External Shoulder Rotation
+    - Lying Dumbbell Internal Shoulder Rotation
+    - Seated Dumbbell External Shoulder Rotation
+
+42. THRUSTER VARIATIONS
+    - Thruster (base)
+    - Dumbbell Thruster
+
+43. BURPEE VARIATIONS
+    - Burpees (base)
+    - Squat Thrust
+
+44. MOUNTAIN CLIMBER VARIATIONS
+    - Mountain Climbers (base)
+
+45. KETTLEBELL VARIATIONS
+    - Kettlebell Swing (base)
+    - KB Bottoms-Up Press
+    - KB Halo
+
+46. MEDICINE BALL VARIATIONS
+    - Medicine Ball Russian Twist (base)
+    - Medicine Ball Slam
+    - Medicine-Ball Push-Up
+
+47. BAND VARIATIONS
+    - Band Biceps Curl (base)
+    - Band External Shoulder Rotation (base)
+    - Band Internal Shoulder Rotation (base)
+    - Band Pull-Apart (base)
+    - Banded Hip Thrust
+    - Banded Lateral Raise
+
+48. CABLE VARIATIONS
+    - Cable Chest Fly (base)
+    - Cable Lateral Raise (base)
+    - Cable Reverse Fly (base)
+    - Cable Upright Row (base)
+    - Cable Rear Delt Row (base)
+    - Cable External Rotation (base)
+    - Cable Triceps Kickback (base)
+    - Cable Curl With Bar (base)
+    - Cable Curl With Rope (base)
+    - Cable Hammer Curl (base)
+    - Cable Concentration Curl (base)
+    - Cable Shrug (base)
+    - Cable Glute Kickbacks (base)
+    - Cable Leg Extension (base)
+    - Cable Overhead Triceps Extension (base)
+    - Cable Pull Through (base)
+    - Cable Wood Chop (base)
+    - Cable Crunch (base)
+    - Standing Cable Chest Press (base)
+    - Standing Cable Crunch (base)
+    - Standing Cable Curl (base)
+    - Incline Cable Curl (base)
+    - Overhead Cable Curl (base)
+    - Lying Cable Curl (base)
+    - One Arm Cable Bicep Curl (base)
+    - One-Arm Cable Triceps Extension (base)
+    - One-Arm Cable Row (base)
+    - Reverse Cable Crossover (base)
+
+49. MACHINE VARIATIONS
+    - Machine Chest Fly (base)
+    - Machine Chest Press (base)
+    - Machine Lateral Raise (base)
+    - Machine Reverse Fly (base)
+    - Machine Shoulder Press (base)
+    - Machine Shoulder Shrug (base)
+    - Machine Tricep Extension (base)
+    - Machine Preacher Curl (base)
+    - Machine Bicep Curl (base)
+    - Machine Back Extension (base)
+    - Machine Seated Crunch (base)
+    - Machine Seated Dip (base)
+    - Machine Glute Kickback (base)
+    - Machine Hip Abduction (base)
+    - Machine Hip Adduction (base)
+    - Machine Hack Squat (base)
+    - Machine Pullover (base)
+
+50. PLATE VARIATIONS
+    - Plate-Loaded Chest Press (base)
+    - Plate-Loaded Decline Chest Press (base)
+    - Plate-Loaded Incline Chest Press (base)
+    - Plate-Loaded Shoulder Press (base)
+    - Plate-Loaded Standing Calf Raise (base)
+    - Plate Raise (base)
+    - Plate Wrist Curl (base)
+    - Plate Flip (base)
+    - Plate Pinch (base)
+
+51. SMITH MACHINE VARIATIONS
+    - Smith Machine Bench Press (base)
+    - Smith Machine Incline Bench Press (base)
+    - Smith Machine Shrug (base)
+    - Smith Machine Squat (base)
+    - Smith-Machine Guillotine Press (base)
+    - Converging Smith Bench Press (base)
+    - Converging Smith Incline Bench Press (base)
+    - Converging Smith Decline Bench Press (base)
+    - Converging Smith Shoulder Press (base)
+
+52. LANDMINE VARIATIONS
+    - Landmine Press (base)
+    - One Arm Landmine Press (base)
+    - Half-Kneeling Landmine Press (base)
+    - Landmine Floor Press (base)
+    - Landmine Row (base)
+    - Landmine Squat (base)
+    - Landmine Anti-Rotation (base)
+
+53. SPECIALTY VARIATIONS
+    - Ab Wheel Roll-Out (base)
+    - Dragon Flag (base)
+    - Superman (base)
+    - Bird Dog (base)
+    - Dead Bug (base)
+    - Good Morning (base)
+    - Jefferson Curl (base)
+    - Neck Curl (base)
+    - Neck Extension (base)
+    - Tibialis Raise (base)
+    - Toe Walk (base)
+    - Frog Pump (base)
+    - Glute-Ham Raise (base)
+    - Nordic Hamstring Curl (base)
+    - Reverse Nordic Curl (base)
+    - Sissy Hack Squat (base)
+    - Sissy Squat (base)
+    - Spanish Squat (base)
+    - Cossack Squat (base)
+    - Cyclist Squat (base)
+    - Curtsy Lunge (base)
+    - Side Lunge (base)
+    - Single-Leg Romanian Deadlift (base)
+    - Single-Leg Deadlift (base)
+    - Single-Leg Dumbbell Deadlift (base)
+    - Single-Leg Hip Thrust (base)
+    - Single-Leg Glute Bridge (base)
+    - Single-Leg Press (base)
+    - Single-Leg Squat (base)
+    - Single-Leg Seated Calf Raise (base)
+    - Pistol Squat (base)
+    - Archer Push-Up (base)
+    - Pike Push-Up (base)
+    - Handstand Push-Up (base)
+    - Ring Push-Up (base)
+    - Medicine-Ball Push-Up (base)
+    - Tate Push-Up (base)
+    - Diamond Cutter Push-Up (base)
+    - Close-Grip Push-Up (base)
+    - Close-Grip Push-Up (Knees) (base)
+    - Wide-Grip Push-Up (base)
+    - Kneeling Push-Up (base)
+    - Kneeling Incline Push-Up (base)
+    - Kneeling Plank (base)
+    - Kneeling Side Plank (base)
+    - Side Plank (base)
+    - RKC Plank (base)
+    - Copenhagen Plank (base)
+    - Hollow Body Hold (base)
+    - Lying Leg Raise (base)
+    - Hanging Leg Raise (base)
+    - Hanging Knee Raise (base)
+    - Elbow-Supported Leg Raise (base)
+    - Elbow-Supported Knee Raise (base)
+    - Side Leg Raise (base)
+    - Scissor Kicks (base)
+    - Flutter Kicks (base)
+    - Toes to Bar (base)
+    - Russian Twist (base)
+    - Medicine Ball Russian Twist (base)
+    - Rotary Torso Twist (base)
+    - Clean (base)
+    - Power Clean (base)
+    - Hang Clean (base)
+    - Hang Power Clean (base)
+    - Dumbbell Hang Clean (base)
+    - Clean and Jerk (base)
+    - Clean and Press (base)
+    - Dumbbell Clean and Press (base)
+    - Log Clean and Press (base)
+    - Clean High Pull (base)
+    - Clean Pull (base)
+    - High Pull (base)
+    - Dumbbell High Pull (base)
+    - Power Shrug (base)
+    - Snatch (base)
+    - Power Snatch (base)
+    - Hang Snatch (base)
+    - Hang Power Snatch (base)
+    - Muscle Snatch (base)
+    - Dumbbell Snatch (base)
+    - Push Jerk (base)
+    - Power Jerk (base)
+    - Split Jerk (base)
+    - Squat Jerk (base)
+    - Farmer's Walk (base)
+    - Farmer's Walk Pinch-Grip (base)
+    - Yoke Carry (base)
+    - Prowler Sled Push (base)
+    - One-Handed Bar Hang (base)
+    - Pinch Block Hold (base)
+    - Pinch-Block Static Hold (base)
+    - Thick-Bar Hold (base)
+    - Front Hold (base)
+    - Barbell Front Hold (base)
+    - Barbell Wrist Curl (base)
+    - Dumbbell Wrist Curl (base)
+    - Plate Wrist Curl (base)
+    - Reverse Wrist Curl (base)
+    - Dumbbell Reverse Wrist Curl (base)
+    - Wrist Roller (base)
+    - Rice-Bucket Wrist Twist (base)
+    - Dumbbell Side Bend (base)
+    - Roman Chair Side Bend (base)
+    - Back Extension (base)
+    - Machine Back Extension (base)
+    - Weighted Back Extension (base)
+    - Bodyweight Reverse Hyperextension (base)
+    - Reverse Hyperextension (base)
+    - Floor Hip Abduction (base)
+    - Floor Hip Extension (base)
+    - Machine Hip Abduction (base)
+    - Machine Hip Adduction (base)
+    - Hip Airplane (base)
+    - Band External Shoulder Rotation (base)
+    - Band Internal Shoulder Rotation (base)
+    - Cable External Rotation (base)
+    - Lying Dumbbell External Shoulder Rotation (base)
+    - Lying Dumbbell Internal Shoulder Rotation (base)
+    - Seated Dumbbell External Shoulder Rotation (base)
+    - Thruster (base)
+    - Dumbbell Thruster (base)
+    - Burpees (base)
+    - Squat Thrust (base)
+    - Mountain Climbers (base)
+    - Kettlebell Swing (base)
+    - KB Bottoms-Up Press (base)
+    - KB Halo (base)
+    - Medicine Ball Russian Twist (base)
+    - Medicine Ball Slam (base)
+    - Medicine-Ball Push-Up (base)
+    - Band Biceps Curl (base)
+    - Band External Shoulder Rotation (base)
+    - Band Internal Shoulder Rotation (base)
+    - Band Pull-Apart (base)
+    - Banded Hip Thrust (base)
+    - Banded Lateral Raise (base)
+    - Cable Chest Fly (base)
+    - Cable Lateral Raise (base)
+    - Cable Reverse Fly (base)
+    - Cable Upright Row (base)
+    - Cable Rear Delt Row (base)
+    - Cable External Rotation (base)
+    - Cable Triceps Kickback (base)
+    - Cable Curl With Bar (base)
+    - Cable Curl With Rope (base)
+    - Cable Hammer Curl (base)
+    - Cable Concentration Curl (base)
+    - Cable Shrug (base)
+    - Cable Glute Kickbacks (base)
+    - Cable Leg Extension (base)
+    - Cable Overhead Triceps Extension (base)
+    - Cable Pull Through (base)
+    - Cable Wood Chop (base)
+    - Cable Crunch (base)
+    - Standing Cable Chest Press (base)
+    - Standing Cable Crunch (base)
+    - Standing Cable Curl (base)
+    - Incline Cable Curl (base)
+    - Overhead Cable Curl (base)
+    - Lying Cable Curl (base)
+    - One Arm Cable Bicep Curl (base)
+    - One-Arm Cable Triceps Extension (base)
+    - One-Arm Cable Row (base)
+    - Reverse Cable Crossover (base)
+    - Machine Chest Fly (base)
+    - Machine Chest Press (base)
+    - Machine Lateral Raise (base)
+    - Machine Reverse Fly (base)
+    - Machine Shoulder Press (base)
+    - Machine Shoulder Shrug (base)
+    - Machine Tricep Extension (base)
+    - Machine Preacher Curl (base)
+    - Machine Bicep Curl (base)
+    - Machine Back Extension (base)
+    - Machine Seated Crunch (base)
+    - Machine Seated Dip (base)
+    - Machine Glute Kickback (base)
+    - Machine Hip Abduction (base)
+    - Machine Hip Adduction (base)
+    - Machine Hack Squat (base)
+    - Machine Pullover (base)
+    - Plate-Loaded Chest Press (base)
+    - Plate-Loaded Decline Chest Press (base)
+    - Plate-Loaded Incline Chest Press (base)
+    - Plate-Loaded Shoulder Press (base)
+    - Plate-Loaded Standing Calf Raise (base)
+    - Plate Raise (base)
+    - Plate Wrist Curl (base)
+    - Plate Flip (base)
+    - Plate Pinch (base)
+    - Smith Machine Bench Press (base)
+    - Smith Machine Incline Bench Press (base)
+    - Smith Machine Shrug (base)
+    - Smith Machine Squat (base)
+    - Smith-Machine Guillotine Press (base)
+    - Converging Smith Bench Press (base)
+    - Converging Smith Incline Bench Press (base)
+    - Converging Smith Decline Bench Press (base)
+    - Converging Smith Shoulder Press (base)
+    - Landmine Press (base)
+    - One Arm Landmine Press (base)
+    - Half-Kneeling Landmine Press (base)
+    - Landmine Floor Press (base)
+    - Landmine Row (base)
+    - Landmine Squat (base)
+    - Landmine Anti-Rotation (base)
+
+SUMMARY
+=======
+Total Base Exercises Identified: ~53 major categories
+Total Exercise Variations: 455+ exercises
+
+The most common base exercises with the most variations are:
+1. Bench Press (28+ variations)
+2. Squat (25+ variations) 
+3. Curl (20+ variations)
+4. Push-Up (16+ variations)
+5. Shoulder Press (15+ variations)
+6. Deadlift (15+ variations)
+7. Row (15+ variations)
+8. Triceps Extension (15+ variations)
+9. Lunge (10+ variations)
+10. Calf Raise (10+ variations)
+
+This analysis shows that your exercise database has extensive variation coverage for the most fundamental movement patterns, which is excellent for workout generation and user choice.

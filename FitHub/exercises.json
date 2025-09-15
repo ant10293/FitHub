@@ -34,10 +34,7 @@
 		"description" : "Lying face-down on a flat bench and pulling a barbell up toward the torso, targeting the latissimus dorsi and upper back.",
 		"equipmentRequired" : ["Barbell", "Flat Bench"],
 		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Trapezius", "submusclesWorked" : [
 				{ "engagementPercentage" : 100, "submuscleWorked" : "Middle Traps" }
 			] },
@@ -59,10 +56,7 @@
 		"description" : "Lying face-down on a bench and rowing dumbbells toward the torso, targeting the lats and upper back with unilateral control.",
 		"equipmentRequired" : ["Dumbbells", "Flat Bench"],
 		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Trapezius", "submusclesWorked" : [
 				{ "engagementPercentage" : 100, "submuscleWorked" : "Middle Traps" }
 			] },
@@ -281,13 +275,9 @@
 		"muscles" : [
 			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
 				{ "engagementPercentage" : 50, "submuscleWorked" : "Clavicular Head" },
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Sternocostal Head" },
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Serratus Anterior" }
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Sternocostal Head" }
 			] },
-			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
 				{ "engagementPercentage" : 100, "submuscleWorked" : "Rear Delt" }
 			] }
@@ -308,13 +298,9 @@
 		"muscles" : [
 			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
 				{ "engagementPercentage" : 50, "submuscleWorked" : "Clavicular Head" },
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Sternocostal Head" },
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Serratus Anterior" }
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Sternocostal Head" }
 			] },
-			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
 				{ "engagementPercentage" : 100, "submuscleWorked" : "Rear Delt" }
 			] }
@@ -335,13 +321,9 @@
 		"muscles" : [
 			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
 				{ "engagementPercentage" : 50, "submuscleWorked" : "Clavicular Head" },
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Sternocostal Head" },
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Serratus Anterior" }
+				{ "engagementPercentage" : 50, "submuscleWorked" : "Sternocostal Head" }
 			] },
-			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
 				{ "engagementPercentage" : 100, "submuscleWorked" : "Rear Delt" }
 			] }
@@ -4963,9 +4945,7 @@
 		"description" : "Targets the inner thigh muscles by bringing the legs together against resistance.",
 		"equipmentRequired" : ["Hip Adduction Machine"],
 		"muscles" : [
-			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Quadriceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Adductors" }
-			] }
+			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Adductors", "submusclesWorked" : [] }
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
@@ -5005,9 +4985,7 @@
 		"description" : "Lying on one side, lift the bottom leg inward across the midline to isolate the inner thigh.",
 		"equipmentRequired" : [],
 		"muscles" : [
-			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Hip Complex", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Adductors" }
-			] }
+			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Adductors", "submusclesWorked" : [] }
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
@@ -5292,7 +5270,7 @@
 				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
 			] },
 			{ "engagementPercentage" : 20, "mover" : "secondary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Calves Gastrocnemius" }
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Gastrocnemius" }
 			] }
 		],
 		"difficulty" : "Adv.",
@@ -5674,7 +5652,7 @@
 		"equipmentRequired" : ["Seated Calf Raise"],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Calves Soleus" }
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Soleus" }
 			] }
 		],
 		"difficulty" : "Beg.",
@@ -5692,8 +5670,8 @@
 		"equipmentRequired" : ["Standing Calf Raise"],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 70, "submuscleWorked" : "Calves Gastrocnemius" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Calves Soleus" }
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gastrocnemius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Soleus" }
 			] }
 		],
 		"difficulty" : "Beg.",
@@ -5711,8 +5689,8 @@
 		"equipmentRequired" : ["Barbell"],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 70, "submuscleWorked" : "Calves Gastrocnemius" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Calves Soleus" }
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gastrocnemius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Soleus" }
 			] }
 		],
 		"difficulty" : "Nov.",
@@ -5730,8 +5708,8 @@
 		"equipmentRequired" : ["Dumbbells"],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 70, "submuscleWorked" : "Calves Gastrocnemius" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Calves Soleus" }
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gastrocnemius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Soleus" }
 			] }
 		],
 		"difficulty" : "Nov.",
@@ -5749,8 +5727,8 @@
 		"equipmentRequired" : ["Dumbbells"],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 70, "submuscleWorked" : "Calves Gastrocnemius" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Calves Soleus" }
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gastrocnemius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Soleus" }
 			] }
 		],
 		"difficulty" : "Nov.",
@@ -5770,8 +5748,8 @@
 		"equipmentRequired" : [],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 70, "submuscleWorked" : "Calves Gastrocnemius" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Calves Soleus" }
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gastrocnemius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Soleus" }
 			] }
 		],
 		"difficulty" : "Beg.",
@@ -5789,8 +5767,8 @@
 		"equipmentRequired" : ["Leg Press"],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 70, "submuscleWorked" : "Calves Gastrocnemius" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Calves Soleus" }
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gastrocnemius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Soleus" }
 			] }
 		],
 		"difficulty" : "Nov.",
@@ -5808,7 +5786,7 @@
 		"equipmentRequired" : ["Seated Calf Raise"],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Calves Soleus" }
+				{ "engagementPercentage" : 100, "submuscleWorked" : "Soleus" }
 			] }
 		],
 		"difficulty" : "Beg.",
@@ -5826,8 +5804,8 @@
 		"equipmentRequired" : ["Donkey Calf Raise"],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 70, "submuscleWorked" : "Calves Gastrocnemius" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Calves Soleus" }
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gastrocnemius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Soleus" }
 			] }
 		],
 		"difficulty" : "Nov.",
@@ -5844,8 +5822,8 @@
 		"equipmentRequired" : ["Leg Press"],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 70, "submuscleWorked" : "Calves Gastrocnemius" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Calves Soleus" }
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gastrocnemius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Soleus" }
 			] }
 		],
 		"difficulty" : "Beg.",
@@ -5855,15 +5833,15 @@
 	},
 	{
 		"name" : "Standing Dumbbell Calf Raise",
-		"id" : "B4C7C24E-4A60-4599-A4B7-3CE78958B945",
+        "id" : "B4C7C24E-4A60-4599-A4B7-3CE78958B945",
 		"image" : "standing_dumbbell_calf_raise",
 		"aliases" : ["DB Standing Calf Raise"],
 		"description" : "Hold dumbbells at the sides and elevate the heels to strengthen the calves with added resistance.",
 		"equipmentRequired" : ["Dumbbells"],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 70, "submuscleWorked" : "Calves Gastrocnemius" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Calves Soleus" }
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gastrocnemius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Soleus" }
 			] }
 		],
 		"difficulty" : "Nov.",
@@ -5898,8 +5876,8 @@
 		"equipmentRequired" : [],
 		"muscles" : [
 			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 70, "submuscleWorked" : "Calves Gastrocnemius" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Calves Soleus" }
+				{ "engagementPercentage" : 70, "submuscleWorked" : "Gastrocnemius" },
+				{ "engagementPercentage" : 30, "submuscleWorked" : "Soleus" }
 			] }
 		],
 		"difficulty" : "Beg.",
@@ -6049,10 +6027,7 @@
 		"description" : "Isolates the outer glutes by pushing out against the resistance of a machine.",
 		"equipmentRequired" : ["Hip Abduction Machine"],
 		"muscles" : [
-			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Gluteus", "submusclesWorked" : [
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Adductors" },
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Gluteus Medius" }
-			] }
+			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Abductors", "submusclesWorked" : [] }
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
@@ -6290,9 +6265,7 @@
 			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Gluteus", "submusclesWorked" : [
 				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Medius" }
 			] },
-			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Quadriceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Adductors" }
-			] }
+			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Adductors", "submusclesWorked" : [] }
 		],
 		"difficulty" : "Int.",
 		"effort" : "Isometric",
@@ -6611,9 +6584,7 @@
 				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
 				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
 			] },
-			{ "engagementPercentage" : 20, "mover" : "secondary", "muscleWorked" : "Hip Complex", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Adductors" }
-			] }
+			{ "engagementPercentage" : 20, "mover" : "secondary", "muscleWorked" : "Adductors", "submusclesWorked" : [] }
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
@@ -7078,10 +7049,7 @@
 		"description" : "Under-hand pull to bring the chin above the bar, emphasising biceps while still hitting the lats hard.",
 		"equipmentRequired" : ["Pull-Up Bar"],
 		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
@@ -7100,10 +7068,7 @@
 		"description" : "Uses a counter-weight or band to let beginners practise full-range chin-ups with manageable load.",
 		"equipmentRequired" : ["Assisted Machine"],
 		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
@@ -7122,10 +7087,7 @@
 		"description" : "Performs a chin-up while wearing a dip belt or loading pin to progress strength beyond body-weight.",
 		"equipmentRequired" : ["Pull-Up Bar", "Dip Belt"],
 		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
@@ -7145,10 +7107,7 @@
 		"description" : "Classic over-hand pull to the bar, heavily recruiting the lats while the biceps assist.",
 		"equipmentRequired" : ["Pull-Up Bar"],
 		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 40, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
@@ -7167,10 +7126,7 @@
 		"description" : "Machine or band support offsets a percentage of body-weight, letting lifters focus on form and full range.",
 		"equipmentRequired" : ["Assisted Machine"],
 		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 40, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
@@ -7189,10 +7145,7 @@
 		"description" : "An advanced progression adding external load via dip belt, vest or plates for greater strength stimulus.",
 		"equipmentRequired" : ["Pull-Up Bar", "Dip Belt"],
 		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 40, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
@@ -7212,10 +7165,7 @@
 		"description" : "Palms-facing grip reduces shoulder stress and balances lat\u2013biceps contribution.",
 		"equipmentRequired" : ["Pull-Up Bar"],
 		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
@@ -7234,10 +7184,7 @@
 		"description" : "Neutral-grip version performed on an assisted machine or with bands, ideal for beginners or rehab.",
 		"equipmentRequired" : ["Assisted Machine"],
 		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
@@ -7256,10 +7203,7 @@
 		"description" : "Adds external resistance to the joint-friendly neutral pull-up for continued strength gains.",
 		"equipmentRequired" : ["Pull-Up Bar", "Dip Belt"],
 		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
@@ -7279,10 +7223,7 @@
 		"description" : "Explosive pull-up transitioning into a dip above the bar, demanding powerful upper-body coordination.",
 		"equipmentRequired" : ["Pull-Up Bar"],
 		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 40, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
@@ -7301,10 +7242,7 @@
 		"description" : "Muscle-up executed with added load from a dip belt\u2014reserved for athletes with elite pulling & pressing strength.",
 		"equipmentRequired" : ["Pull-Up Bar", "Dip Belt"],
 		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Lats" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Lats" }
-			] },
+			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 40, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
