@@ -422,7 +422,7 @@
         "aliases" : ["low row", "seated low row", "plate row"],
         "description" : "Lever machine with neutral handles at mid‑torso height for powerful horizontal rows emphasising mid‑back thickness.",
         "equCategory" : "Plated Machines",
-        "baseWeight" : { "lb": 45, "kg": 20 },
+        "baseWeight" : { "lb": 20, "kg": 10 },
         "pegCount" : 2,
         "implementation" : "Divided"
     },

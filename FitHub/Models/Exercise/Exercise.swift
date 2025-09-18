@@ -15,12 +15,12 @@ struct Exercise: Identifiable, Hashable, Codable {
     let aliases: [String]?
     let image: String
     let muscles: [MuscleEngagement]
-    let description: String
+    let description: String // TODO: remove or change to 'note: String?'
    // let instructions: ExerciseInstructions
     let equipmentRequired: [String]
     let effort: EffortType
+    let resistance: ResistanceType
     let url: String?
-    let type: ResistanceType
     let difficulty: StrengthLevel
     let equipmentAdjustments: ExerciseEquipmentAdjustments?
     let limbMovementType: LimbMovementType? // no longer optional
@@ -59,8 +59,8 @@ extension Exercise {
         //self.instructions         = initEx.instructions
         self.equipmentRequired    = initEx.equipmentRequired
         self.effort               = initEx.effort
+        self.resistance           = initEx.resistance
         self.url                  = initEx.url
-        self.type                 = initEx.type
         self.equipmentAdjustments = initEx.equipmentAdjustments
         self.difficulty           = initEx.difficulty
         self.limbMovementType     = initEx.limbMovementType
@@ -91,11 +91,11 @@ extension Exercise {
             })
     }
     
-    var performanceTitle: String { type.usesWeight ? "One Rep Max" : (effort.usesReps ? "Max Reps" : "Max Hold") }
+    var performanceTitle: String { resistance.usesWeight ? "One Rep Max" : (effort.usesReps ? "Max Reps" : "Max Hold") }
     
-    var peformanceUnit: String { type.usesWeight ? UnitSystem.current.weightUnit : (effort.usesReps ? "reps" : "sec") }
+    var peformanceUnit: String { resistance.usesWeight ? UnitSystem.current.weightUnit : (effort.usesReps ? "reps" : "sec") }
     
-    var fieldLabel: String { type.usesWeight ? "weight" : (effort.usesReps ? "reps" : "time") }
+    var fieldLabel: String { resistance.usesWeight ? "weight" : (effort.usesReps ? "reps" : "time") }
     
     var setsSubtitle: Text {
         let (label, range) = setMetricRangeLabeled
@@ -123,7 +123,7 @@ extension Exercise {
     }
 
     func metricDouble(from value: Double) -> Double {
-        if type.usesWeight {
+        if resistance.usesWeight {
             return UnitSystem.current == .imperial ? UnitSystem.LBtoKG(value) : value
         } else {
             return Double(value)
@@ -131,7 +131,7 @@ extension Exercise {
     }
     
     func getPeakMetric(metricValue: Double) -> PeakMetric {
-        if type.usesWeight {
+        if resistance.usesWeight {
             .oneRepMax(Mass(kg: metricValue))
         } else {
             if effort.usesReps {
@@ -153,7 +153,7 @@ extension Exercise {
     func calculateCSVMax(userData: UserData) -> PeakMetric? {
         guard let url = self.url else { return nil }
         
-        if type.usesWeight {
+        if resistance.usesWeight {
             return CSVLoader.calculateFinal1RM(userData: userData, exercise: url)
         } else if effort.usesReps {
             return CSVLoader.calculateFinalReps(userData: userData, exercise: url)
@@ -209,12 +209,12 @@ extension Exercise {
     func resistanceOK(_ selectedType: ResistanceType) -> Bool {
         switch selectedType {
         case .any:        return true
-        case .bodyweight: return !type.usesWeight
-        case .weighted:   return type.usesWeight
-        case .freeWeight: return type == .freeWeight
-        case .machine:    return type == .machine
-        case .banded:     return type == .banded
-        case .other:      return type == .other
+        case .bodyweight: return !resistance.usesWeight
+        case .weighted:   return resistance.usesWeight
+        case .freeWeight: return resistance == .freeWeight
+        case .machine:    return resistance == .machine
+        case .banded:     return resistance == .banded
+        case .other:      return resistance == .other
         }
     }
     
@@ -354,7 +354,7 @@ extension Exercise {
         setDetails = setDetails.map { setDetail in
             var updated = setDetail
             
-            if !type.usesWeight {
+            if !resistance.usesWeight {
                 // Bodyweight: bump planned target only
                 updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
             } else {
@@ -395,7 +395,7 @@ extension Exercise {
         setDetails = setDetails.map { setDetail in
             var updated = setDetail
             
-            if type.usesWeight {
+            if resistance.usesWeight {
                 // Weighted: scale load
                 let scaledKg = setDetail.weight.inKg * deloadFactor
                 updated.weight = equipmentData.roundWeight(Mass(kg: scaledKg), for: equipmentRequired, rounding: rounding)
@@ -409,7 +409,6 @@ extension Exercise {
     }
     
     mutating func createSetDetails(repsAndSets: RepsAndSets, userData: UserData, equipmentData: EquipmentData) {
-        print("Creating setDetails for: \(name)")
         guard let peak = self.draftMax else { return }
         
         var details: [SetDetail] = []
@@ -513,7 +512,7 @@ extension Exercise {
             case .reps:
                 let reps = repSteps[i]
                 
-                if type.usesWeight {
+                if resistance.usesWeight {
                     // percent of working weight, modest reps
                     let baseKg   = baseline.weight.inKg
                     let targetKg = baseKg * reductionSteps[i]
@@ -541,7 +540,7 @@ extension Exercise {
 
                 details.append(SetDetail(
                     setNumber: idx,
-                    weight: type.usesWeight ? baseline.weight : Mass(kg: 0),
+                    weight: resistance.usesWeight ? baseline.weight : Mass(kg: 0),
                     planned: .hold(.fromSeconds(target))
                 ))
             }

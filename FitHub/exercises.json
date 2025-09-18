@@ -23,7 +23,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Bench Pull",
@@ -45,7 +45,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Bench Pull",
@@ -67,7 +67,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -93,7 +93,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Chest Fly",
@@ -114,7 +114,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -136,7 +136,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -162,7 +162,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -187,7 +187,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Close-Grip Dumbbell Bench Press",
@@ -212,7 +212,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -238,7 +238,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -261,7 +261,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -285,7 +285,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Barbell Pullover",
@@ -308,7 +308,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Bent-Arm Barbell Pullover",
@@ -331,7 +331,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Floor Press",
@@ -353,7 +353,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Incline Bench Press",
@@ -378,7 +378,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Close-Grip Incline Bench Press",
@@ -403,7 +403,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Incline Dumbbell Bench Press",
@@ -428,7 +428,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -454,7 +454,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Pec Deck Fly",
@@ -469,7 +469,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Machine Chest Fly",
@@ -487,7 +487,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Machine Chest Press",
@@ -512,7 +512,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Plate-Loaded Chest Press",
@@ -529,7 +529,8 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Machine"
+		"resistance" : "Machine",
+        "weightInstruction" : "Per Peg"
  	},
 	{
 		"name" : "Plate-Loaded Decline Chest Press",
@@ -546,7 +547,8 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Machine"
+		"resistance" : "Machine",
+        "weightInstruction" : "Per Peg"
 	},
 	{
 		"name" : "Plate-Loaded Incline Chest Press",
@@ -563,7 +565,8 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Machine"
+		"resistance" : "Machine",
+        "weightInstruction" : "Per Peg"
 	},
 	{
 		"name" : "Incline Chest Press",
@@ -580,7 +583,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Push-Up",
@@ -605,7 +608,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Smith Machine Bench Press",
@@ -630,7 +633,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Cable Chest Fly",
@@ -648,7 +651,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"weightInstruction" : "Per Stack"
 	},
 	{
@@ -674,7 +677,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Reverse Grip Bench Press",
@@ -699,7 +702,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Bench Pin Press",
@@ -724,7 +727,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Decline Push-Up",
@@ -749,7 +752,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Diamond Push-Up",
@@ -774,7 +777,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Low to High Cable Chest Fly",
@@ -791,7 +794,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "High to Low Cable Chest Fly",
@@ -808,7 +811,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Standing Resistance Band Chest Fly",
@@ -823,7 +826,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Banded"
+		"resistance" : "Banded"
 	},
 	{
 		"name" : "Kneeling Incline Push-Up",
@@ -843,7 +846,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Kneeling Push-Up",
@@ -862,7 +865,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Close-Grip Feet-Up Bench Press",
@@ -878,7 +881,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Feet-Up Bench Press",
@@ -897,7 +900,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Smith Machine Incline Bench Press",
@@ -918,7 +921,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Guillotine Press",
@@ -941,7 +944,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Decline Dumbbell Fly",
@@ -959,7 +962,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -983,7 +986,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Ring Push-Up",
@@ -1006,7 +1009,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Dumbbell Squeeze Press",
@@ -1029,7 +1032,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -1053,7 +1056,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"weightInstruction" : "Per Stack"
 	},
 	{
@@ -1077,7 +1080,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Arm"
 	},
@@ -1096,7 +1099,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Landmine Floor Press",
@@ -1115,7 +1118,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -1139,7 +1142,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Reverse-Grip Dumbbell Press",
@@ -1162,7 +1165,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -1186,7 +1189,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Medicine-Ball Push-Up",
@@ -1209,7 +1212,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Converging Smith Bench Press",
@@ -1233,7 +1236,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Converging Smith Incline Bench Press",
@@ -1257,7 +1260,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Converging Smith Decline Bench Press",
@@ -1281,7 +1284,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Arnold Press",
@@ -1304,7 +1307,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -1323,7 +1326,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Barbell Upright Row",
@@ -1345,7 +1348,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Cable Upright Row",
@@ -1367,7 +1370,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Dumbbell Upright Row",
@@ -1389,7 +1392,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -1409,7 +1412,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Cable Lateral Raise",
@@ -1427,7 +1430,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -1446,7 +1449,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -1465,7 +1468,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -1489,7 +1492,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -1512,7 +1515,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Dumbbell Face Pull",
@@ -1534,7 +1537,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Machine Lateral Raise",
@@ -1552,7 +1555,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Machine Shoulder Press",
@@ -1575,7 +1578,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Shoulder Press",
@@ -1598,7 +1601,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Push Jerk",
@@ -1627,7 +1630,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Push Press",
@@ -1650,7 +1653,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Push Press",
@@ -1673,7 +1676,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -1696,7 +1699,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"weightInstruction" : "Per Stack"
 	},
 	{
@@ -1719,7 +1722,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -1742,7 +1745,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Seated Dumbbell Shoulder Press",
@@ -1765,7 +1768,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -1789,7 +1792,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Landmine Press",
@@ -1812,7 +1815,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "One Arm Landmine Press",
@@ -1835,7 +1838,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -1859,7 +1862,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Shoulder Pin Press",
@@ -1882,7 +1885,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Handstand Push-Up",
@@ -1905,7 +1908,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Front Hold",
@@ -1922,7 +1925,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Log Press",
@@ -1942,7 +1945,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Rear Delt Row",
@@ -1962,7 +1965,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Barbell Rear Delt Row",
@@ -1982,7 +1985,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Band Pull-Apart",
@@ -2002,7 +2005,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Cable Rear Delt Row",
@@ -2022,7 +2025,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Band External Shoulder Rotation",
@@ -2039,7 +2042,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Cable External Rotation",
@@ -2057,7 +2060,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Band Internal Shoulder Rotation",
@@ -2074,7 +2077,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Barbell Front Hold",
@@ -2091,7 +2094,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Lying Dumbbell External Shoulder Rotation",
@@ -2108,7 +2111,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Seated Dumbbell External Shoulder Rotation",
@@ -2126,7 +2129,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Lying Dumbbell Internal Shoulder Rotation",
@@ -2143,7 +2146,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Cuban Press",
@@ -2164,7 +2167,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -2186,7 +2189,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -2204,7 +2207,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Scaption Raise",
@@ -2222,7 +2225,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -2244,7 +2247,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Pike Push-Up",
@@ -2264,7 +2267,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Archer Push-Up",
@@ -2288,7 +2291,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Side"
 	},
 	{
@@ -2310,7 +2313,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -2332,7 +2335,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "High Pull",
@@ -2352,7 +2355,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell High Pull",
@@ -2373,7 +2376,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Bradford Press",
@@ -2393,7 +2396,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Overhead Squat",
@@ -2417,7 +2420,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Banded Lateral Raise",
@@ -2434,7 +2437,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Banded"
+		"resistance" : "Banded"
 	},
 	{
 		"name" : "Military Press",
@@ -2456,7 +2459,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Z Press",
@@ -2476,7 +2479,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Z Press",
@@ -2498,7 +2501,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -2519,7 +2522,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -2537,7 +2540,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Arm"
 	},
@@ -2560,7 +2563,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"weightInstruction" : "Per Stack"
 	},
 	{
@@ -2583,7 +2586,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Plate-Loaded Shoulder Press",
@@ -2599,7 +2602,8 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Machine"
+		"resistance" : "Machine",
+        "weightInstruction" : "Per Peg"
 	},
 	{
 		"name" : "Log Clean and Press",
@@ -2616,7 +2620,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Barbell Curl",
@@ -2638,7 +2642,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Preacher Curl",
@@ -2657,7 +2661,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Cable Curl With Bar",
@@ -2679,7 +2683,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Dumbbell Concentration Curl",
@@ -2698,7 +2702,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -2721,7 +2725,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Arm"
 	},
@@ -2745,7 +2749,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Hammer Curl",
@@ -2766,7 +2770,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Arm"
 	},
@@ -2787,7 +2791,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -2807,7 +2811,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Spider Curl",
@@ -2826,7 +2830,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Strict Curl",
@@ -2845,7 +2849,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "One Arm Cable Bicep Curl",
@@ -2864,7 +2868,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -2884,7 +2888,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -2907,7 +2911,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -2929,7 +2933,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -2949,7 +2953,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -2969,7 +2973,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Cable Hammer Curl",
@@ -2990,7 +2994,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Overhead Cable Curl",
@@ -3012,7 +3016,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Incline Cable Curl",
@@ -3034,7 +3038,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Lying Cable Curl",
@@ -3056,7 +3060,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Cable Curl With Rope",
@@ -3077,7 +3081,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Concentration Curl",
@@ -3095,7 +3099,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Drag Curl",
@@ -3116,7 +3120,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "EZ-Bar Reverse Curl",
@@ -3137,7 +3141,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "EZ-Bar Preacher Curl",
@@ -3155,7 +3159,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "21s Curl",
@@ -3176,7 +3180,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Band Biceps Curl",
@@ -3197,7 +3201,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Banded"
+		"resistance" : "Banded"
 	},
 	{
 		"name" : "Reverse-Grip Preacher Curl",
@@ -3218,7 +3222,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Bayesian Curl",
@@ -3236,7 +3240,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -3255,7 +3259,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -3277,7 +3281,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Barbell Spider Curl",
@@ -3295,7 +3299,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Close-Grip Bench Press",
@@ -3317,7 +3321,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dips",
@@ -3338,7 +3342,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Barbell Lying Triceps Extension",
@@ -3356,7 +3360,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Bench Dips",
@@ -3374,7 +3378,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Close-Grip Push-Up",
@@ -3395,7 +3399,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Lying Dumbbell Triceps Extension",
@@ -3413,7 +3417,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Standing Dumbbell Triceps Extension",
@@ -3431,7 +3435,8 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight",
+        "repsInstruction" : "Per Arm"
 	},
 	{
 		"name" : "Cable Overhead Triceps Extension",
@@ -3449,7 +3454,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Dumbbell Tricep Kickback",
@@ -3467,7 +3472,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -3486,7 +3491,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Machine Seated Dip",
@@ -3512,7 +3517,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Machine Tricep Extension",
@@ -3532,7 +3537,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Seated Dumbbell Triceps Extension",
@@ -3550,7 +3555,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Tricep Pushdown With Bar",
@@ -3569,7 +3574,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Reverse Grip Tricep Pushdown",
@@ -3587,7 +3592,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Tricep Rope Pushdown",
@@ -3606,7 +3611,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "JM Press",
@@ -3624,7 +3629,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Tate Press",
@@ -3643,7 +3648,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -3664,7 +3669,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Skull Crusher (EZ-Bar)",
@@ -3682,7 +3687,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Overhead Rope Triceps Extension",
@@ -3699,7 +3704,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "One-Arm Cable Triceps Extension",
@@ -3717,7 +3722,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -3736,7 +3741,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Arm"
 	},
@@ -3755,7 +3760,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -3773,7 +3778,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Arm"
 	},
@@ -3799,7 +3804,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Diamond Cutter Push-Up",
@@ -3823,7 +3828,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Body-Weight Triceps Extension (Rack)",
@@ -3841,7 +3846,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Tate Push-Up",
@@ -3865,7 +3870,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Bench Dip (Feet Elevated)",
@@ -3890,7 +3895,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Weighted Dip",
@@ -3915,7 +3920,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Bodyweight Squat",
@@ -3943,7 +3948,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Barbell Hack Squat",
@@ -3968,7 +3973,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Machine Hack Squat",
@@ -3996,7 +4001,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Pause Squat",
@@ -4024,7 +4029,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Half Squat",
@@ -4052,7 +4057,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Smith Machine Squat",
@@ -4080,7 +4085,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Back Squat",
@@ -4108,7 +4113,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Pin Squat",
@@ -4132,7 +4137,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Zercher Deadlift",
@@ -4158,7 +4163,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Zercher Squat",
@@ -4186,7 +4191,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Vertical Leg Press",
@@ -4214,7 +4219,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Horizontal Leg Press",
@@ -4242,7 +4247,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Single-Leg Squat",
@@ -4266,7 +4271,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4296,7 +4301,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4320,7 +4325,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Squat",
@@ -4343,7 +4348,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Single-Leg Press",
@@ -4367,7 +4372,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4388,7 +4393,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Reverse Lunge",
@@ -4411,7 +4416,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4435,7 +4440,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4459,7 +4464,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4483,7 +4488,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4512,7 +4517,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4536,7 +4541,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4560,7 +4565,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Leg"
 	},
@@ -4585,7 +4590,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Step Up",
@@ -4604,7 +4609,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4633,7 +4638,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Safety Bar Squat",
@@ -4661,7 +4666,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Front Squat",
@@ -4689,7 +4694,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Front Squat",
@@ -4717,7 +4722,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -4746,7 +4751,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Landmine Squat",
@@ -4774,7 +4779,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Barbell Split Squat",
@@ -4802,7 +4807,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4832,7 +4837,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4862,7 +4867,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Leg"
 	},
@@ -4892,7 +4897,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Leg"
 	},
@@ -4913,7 +4918,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Cable Leg Extension",
@@ -4933,7 +4938,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4950,7 +4955,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Hip Extension",
@@ -4973,7 +4978,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -4990,7 +4995,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -5016,7 +5021,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Pendulum Squat",
@@ -5033,7 +5038,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Sissy Squat",
@@ -5056,7 +5061,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Cossack Squat",
@@ -5079,7 +5084,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -5103,7 +5108,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -5126,7 +5131,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Jefferson Deadlift",
@@ -5150,7 +5155,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Jefferson Squat",
@@ -5178,7 +5183,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Sissy Hack Squat",
@@ -5200,7 +5205,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Goblet Bulgarian Split Squat",
@@ -5228,7 +5233,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -5251,7 +5256,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Trap-Bar Jump Squat",
@@ -5276,7 +5281,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Split-Squat Jump",
@@ -5298,7 +5303,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -5316,7 +5321,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Jefferson Squat",
@@ -5344,7 +5349,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Standing Leg Curl",
@@ -5364,7 +5369,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -5385,7 +5390,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Romanian Deadlift",
@@ -5409,7 +5414,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Lying Leg Curl",
@@ -5429,7 +5434,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Good Morning",
@@ -5450,7 +5455,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Nordic Hamstring Curl",
@@ -5470,7 +5475,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Glute-Ham Raise",
@@ -5493,7 +5498,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Reverse Hyperextension",
@@ -5516,7 +5521,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Bodyweight Reverse Hyperextension",
@@ -5538,7 +5543,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Slider Leg Curl",
@@ -5557,7 +5562,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Swiss-Ball Leg Curl",
@@ -5576,7 +5581,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Stability-Ball Hamstring Curl",
@@ -5595,7 +5600,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Reverse Nordic Curl",
@@ -5617,7 +5622,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Single-Leg Hip Thrust",
@@ -5639,7 +5644,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -5658,7 +5663,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Standing Calf Raise",
@@ -5677,7 +5682,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Barbell Calf Raise",
@@ -5696,7 +5701,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Calf Raise",
@@ -5715,7 +5720,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Walking Calf Raise",
@@ -5734,7 +5739,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Leg"
 	},
@@ -5755,7 +5760,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Leg Press Calf Raise",
@@ -5774,7 +5779,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Single Leg Seated Calf Raise",
@@ -5792,7 +5797,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -5811,7 +5816,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Calf Press",
@@ -5829,7 +5834,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Standing Dumbbell Calf Raise",
@@ -5847,7 +5852,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -5865,7 +5870,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Toe Walk",
@@ -5883,7 +5888,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Plate-Loaded Standing Calf Raise",
@@ -5898,7 +5903,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Cable Pull Through",
@@ -5921,7 +5926,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Dumbbell Romanian Deadlift",
@@ -5944,7 +5949,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -5969,7 +5974,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -5993,7 +5998,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Barbell Glute Bridge",
@@ -6016,7 +6021,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Machine Hip Abduction",
@@ -6032,7 +6037,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Floor Hip Abduction",
@@ -6051,7 +6056,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -6071,7 +6076,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -6088,7 +6093,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Hip Thrust",
@@ -6114,7 +6119,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Cable Glute Kickbacks",
@@ -6132,7 +6137,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -6155,7 +6160,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Single-Leg Glute Bridge",
@@ -6177,7 +6182,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -6203,7 +6208,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Banded Hip Thrust",
@@ -6228,7 +6233,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Banded"
+		"resistance" : "Banded"
 	},
 	{
 		"name" : "Hip Airplane",
@@ -6251,7 +6256,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Leg"
 	},
 	{
@@ -6270,7 +6275,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isometric",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Side"
 	},
 	{
@@ -6286,7 +6291,7 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Back Extension",
@@ -6301,7 +6306,7 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Machine Back Extension",
@@ -6316,7 +6321,7 @@
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Single-Leg Deadlift",
@@ -6340,7 +6345,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Leg"
 	},
@@ -6368,7 +6373,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Behind the Back Deadlift",
@@ -6394,7 +6399,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Deficit Deadlift",
@@ -6420,7 +6425,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Deadlift",
@@ -6446,7 +6451,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -6471,7 +6476,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Leg"
 	},
@@ -6499,7 +6504,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Rack Pull",
@@ -6523,7 +6528,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Snatch Pull",
@@ -6544,7 +6549,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Stiff-Legged Deadlift",
@@ -6565,7 +6570,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Sumo Squat",
@@ -6589,7 +6594,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Sumo Deadlift",
@@ -6613,7 +6618,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Snatch Grip Deadlift",
@@ -6637,7 +6642,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Jefferson Curl",
@@ -6656,7 +6661,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Kettlebell Swing",
@@ -6679,7 +6684,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Meadows Row",
@@ -6703,7 +6708,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -6727,7 +6732,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Chest-Supported Dumbbell Row",
@@ -6750,7 +6755,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -6773,12 +6778,12 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Arm"
 	},
 	{
-		"name" : "Iso-Lateral High Row (Machine)",
+		"name" : "Plate-Loaded High Row",
 		"id" : "745E7252-FC4A-4628-BA4F-9092881BCEEA",
 		"image" : "iso_lateral_high_row",
 		"aliases" : ["Hammer Strength High Row"],
@@ -6796,11 +6801,12 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"limbMovementType" : "Bilateral Independent",
+		"resistance" : "Machine",
+        "weightInstruction" : "Per Peg"
 	},
 	{
-		"name" : "Iso-Lateral Low Row (Machine)",
+		"name" : "Plate-Loaded Low Row",
 		"id" : "9FE29476-3382-4329-A5FF-03793154C9BE",
 		"image" : "iso_lateral_low_row",
 		"aliases" : ["Hammer Strength Low Row"],
@@ -6818,8 +6824,9 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"limbMovementType" : "Bilateral Independent",
+		"resistance" : "Machine",
+        "weightInstruction" : "Per Peg"
 	},
 	{
 		"name" : "Landmine Row",
@@ -6842,7 +6849,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "I-Y-T Raise (on Bench)",
@@ -6863,7 +6870,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -6885,7 +6892,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -6904,7 +6911,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Superman",
@@ -6923,7 +6930,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Standing T-Bar Row",
@@ -6946,7 +6953,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Renegade Row",
@@ -6972,7 +6979,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Arm"
 	},
@@ -6997,7 +7004,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -7014,7 +7021,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Barbell Row",
@@ -7038,7 +7045,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Chin-Up",
@@ -7058,7 +7065,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Assisted Chin-Up",
@@ -7077,7 +7084,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Weighted Chin-Up",
@@ -7096,7 +7103,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Pull-Up",
@@ -7116,7 +7123,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Assisted Pull-Up",
@@ -7135,7 +7142,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Weighted Pull-Up",
@@ -7154,7 +7161,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Neutral Grip Pull-Up",
@@ -7174,7 +7181,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Assisted Neutral Grip Pull-Up",
@@ -7193,7 +7200,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Weighted Neutral Grip Pull-Up",
@@ -7212,7 +7219,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Muscle-Up",
@@ -7232,7 +7239,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Weighted Muscle-Up",
@@ -7251,7 +7258,7 @@
 		"difficulty" : "Elite",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Dumbbell Thruster",
@@ -7281,7 +7288,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -7309,7 +7316,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Seated Machine Row",
@@ -7336,7 +7343,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Dumbbell Row",
@@ -7360,7 +7367,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -7385,7 +7392,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -7410,7 +7417,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "T-Bar Row",
@@ -7434,7 +7441,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Pendlay Row",
@@ -7457,7 +7464,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Lat Pulldown",
@@ -7484,7 +7491,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "One-Arm Pulldown",
@@ -7511,7 +7518,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -7539,7 +7546,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Reverse Grip Lat Pulldown",
@@ -7563,7 +7570,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "One-Arm Lat Pulldown",
@@ -7586,7 +7593,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -7606,7 +7613,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Wrist Roller",
@@ -7624,7 +7631,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Plate Flip",
@@ -7642,7 +7649,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Rice-Bucket Wrist Twist",
@@ -7660,7 +7667,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Farmer's Walk Pinch-Grip",
@@ -7678,7 +7685,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Thick-Bar Hold",
@@ -7696,7 +7703,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Smith Machine Shrug",
@@ -7714,7 +7721,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Dumbbell Shrug",
@@ -7732,7 +7739,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -7751,7 +7758,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Behind-the-Back Barbell Shrug",
@@ -7769,7 +7776,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Cable Shrug",
@@ -7787,7 +7794,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Hex Bar Shrug",
@@ -7805,7 +7812,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Machine Shoulder Shrug",
@@ -7821,7 +7828,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Ab Wheel Roll-Out",
@@ -7839,7 +7846,7 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Crunch",
@@ -7857,7 +7864,7 @@
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Hanging Leg Raise",
@@ -7874,7 +7881,7 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Elbow-Supported Leg Raise",
@@ -7890,7 +7897,7 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Hanging Knee Raise",
@@ -7907,7 +7914,7 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Elbow-Supported Knee Raise",
@@ -7923,7 +7930,7 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Cable Wood Chop",
@@ -7941,7 +7948,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Side"
 	},
 	{
@@ -7959,7 +7966,7 @@
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Machine Seated Crunch",
@@ -7977,7 +7984,7 @@
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Mountain Climbers",
@@ -7992,7 +7999,7 @@
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Russian Twist",
@@ -8009,7 +8016,7 @@
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Scissor Kicks",
@@ -8026,7 +8033,7 @@
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Sit-Up",
@@ -8044,7 +8051,7 @@
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Standing Cable Crunch",
@@ -8061,7 +8068,7 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "High Pulley Crunch",
@@ -8078,7 +8085,7 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Decline Crunch",
@@ -8096,7 +8103,7 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Toes to Bar",
@@ -8113,7 +8120,7 @@
 		],
 		"difficulty" : "Int.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Flutter Kicks",
@@ -8130,7 +8137,7 @@
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Decline Sit-Up",
@@ -8148,7 +8155,7 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Cable Crunch",
@@ -8166,7 +8173,7 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Side Crunch",
@@ -8183,7 +8190,7 @@
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Side Plank",
@@ -8199,7 +8206,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isometric",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Side"
 	},
 	{
@@ -8218,7 +8225,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Kneeling Side Plank",
@@ -8234,7 +8241,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isometric",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Side"
 	},
 	{
@@ -8253,7 +8260,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "V-Up",
@@ -8271,7 +8278,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Dragon Flag",
@@ -8289,7 +8296,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Reverse Crunch",
@@ -8307,7 +8314,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Bicycle Crunch",
@@ -8327,7 +8334,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Side"
 	},
 	{
@@ -8347,7 +8354,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "RKC Plank",
@@ -8366,7 +8373,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "TRX Pike",
@@ -8384,7 +8391,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "TRX Body Saw",
@@ -8403,7 +8410,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Stability Ball Rollout",
@@ -8421,7 +8428,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Stability Ball Pike",
@@ -8439,7 +8446,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Jackknife Sit-Up",
@@ -8457,7 +8464,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Medicine Ball Slam",
@@ -8479,7 +8486,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Medicine Ball Russian Twist",
@@ -8496,7 +8503,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Side"
 	},
 	{
@@ -8515,7 +8522,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Bird Dog",
@@ -8535,7 +8542,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight",
+		"resistance" : "Bodyweight",
 		"repsInstruction" : "Per Side"
 	},
 	{
@@ -8553,7 +8560,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Landmine Anti-Rotation",
@@ -8573,7 +8580,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Barbell Wrist Curl",
@@ -8591,7 +8598,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Wrist Curl",
@@ -8609,7 +8616,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -8628,7 +8635,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Barbell Reverse Curl",
@@ -8648,7 +8655,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Roman Chair Side Bend",
@@ -8667,7 +8674,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine",
+		"resistance" : "Machine",
 		"repsInstruction" : "Per Side"
 	},
 	{
@@ -8686,7 +8693,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -8706,7 +8713,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -8725,7 +8732,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight",
+		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
@@ -8741,7 +8748,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Farmer's Walk",
@@ -8756,7 +8763,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "One-Handed Bar Hang",
@@ -8771,7 +8778,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Plate Pinch",
@@ -8785,7 +8792,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Plate Wrist Curl",
@@ -8799,7 +8806,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Towel Pull-Up",
@@ -8816,7 +8823,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Burpees",
@@ -8835,7 +8842,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Split Jerk",
@@ -8856,7 +8863,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Power Clean",
@@ -8881,7 +8888,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Power Shrug",
@@ -8909,7 +8916,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Power Snatch",
@@ -8934,7 +8941,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Muscle Snatch",
@@ -8958,7 +8965,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Snatch",
@@ -8983,7 +8990,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Snatch",
@@ -9008,7 +9015,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Clean",
@@ -9031,9 +9038,9 @@
 			{ "engagementPercentage" : 15, "mover" : "secondary", "muscleWorked" : "Hamstrings", "submusclesWorked" : [] }
 		],
 		"difficulty" : "Adv.",
-		"effort" : "Compound",
+		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Clean High Pull",
@@ -9058,7 +9065,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Clean Pull",
@@ -9083,7 +9090,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Clean and Jerk",
@@ -9112,7 +9119,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Clean and Press",
@@ -9141,7 +9148,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Clean and Press",
@@ -9170,7 +9177,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Hang Clean",
@@ -9194,7 +9201,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Hang Clean",
@@ -9219,7 +9226,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Hang Power Clean",
@@ -9244,7 +9251,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Hang Power Snatch",
@@ -9268,7 +9275,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Hang Snatch",
@@ -9292,7 +9299,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Power Jerk",
@@ -9311,7 +9318,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Squat Jerk",
@@ -9330,7 +9337,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Cambered Bar Squat",
@@ -9347,7 +9354,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Chair Bulgarian Split Squat",
@@ -9363,7 +9370,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Unilateral",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Compact Leg Press",
@@ -9380,7 +9387,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Incline Row",
@@ -9397,7 +9404,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Pendulum Squat",
@@ -9414,7 +9421,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Pinch Block Hold",
@@ -9429,7 +9436,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Independent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Machine Preacher Curl",
@@ -9445,7 +9452,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Prowler Sled Push",
@@ -9462,7 +9469,7 @@
 		"difficulty" : "Adv.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Rotary Torso Twist",
@@ -9478,7 +9485,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Machine"
+		"resistance" : "Machine"
 	},
 	{
 		"name" : "Parallel Bar Dip",
@@ -9495,7 +9502,7 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Yoke Carry",
@@ -9511,7 +9518,7 @@
 		],
 		"difficulty" : "Elite",
 		"effort" : "Compound",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Towel Row",
@@ -9528,7 +9535,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Neck Extension",
@@ -9544,7 +9551,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Neck Curl",
@@ -9560,7 +9567,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Spoto Press",
@@ -9585,7 +9592,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Squat Thrust",
@@ -9603,7 +9610,7 @@
 		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Bodyweight"
+		"resistance" : "Bodyweight"
 	},
 	{
 		"name" : "Thruster",
@@ -9630,7 +9637,7 @@
 		"difficulty" : "Int.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Yates Row",
@@ -9652,6 +9659,6 @@
 		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
-		"type" : "Free Weight"
+		"resistance" : "Free Weight"
 	}
 ]

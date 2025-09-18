@@ -136,8 +136,7 @@ struct NewEquipment: View {
         return false
     }
     
-    // convert from initEquipment
-    private var equipment: GymEquipment { GymEquipment(from: draft) }
+    private var equipment: GymEquipment { GymEquipment(from: draft) }  // convert from initEquipment
         
     // ────────── Sub-views ------------------------------------------------
     private var alternativeSection: some View {

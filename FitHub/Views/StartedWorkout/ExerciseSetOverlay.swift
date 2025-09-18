@@ -78,35 +78,42 @@ struct ExerciseSetOverlay: View {
         }
     }
 
+    // TODO: use this layout to make a generic toolbar header that we can use instead of a real toolbar
     private var exerciseToolbar: some View {
         HStack {
+            let width: CGFloat = UIScreen.main.bounds.width
+            
             Text("Exercise \n\(progress.exerciseIdx + 1) of \(progress.numExercises)")
-                .frame(maxWidth: UIScreen.main.bounds.width * 0.15)
+                .frame(maxWidth: width * 0.15)
                 .foregroundStyle(.gray)
                 .font(.caption)
                 .multilineTextAlignment(.center)
-                .padding(.bottom)
             
             VStack(alignment: .center) {
                 Text("\(exercise.name)")
                     .font(.headline)
                     .multilineTextAlignment(.center)
-                    .frame(maxWidth: UIScreen.main.bounds.width * 0.5)  // ≈ 1/2 screen
-                
+                    .frame(maxWidth: width * 0.7)
+     
                 Text("Sets: \(exercise.workingSets)")
                     .font(.subheadline)
                     .foregroundStyle(.gray)
             }
             .padding(.horizontal)
-            .zIndex(1)
             
             Button(action: onClose) {
-                Image(systemName: "xmark.circle.fill")
-                    .imageScale(.large)
-                    .foregroundStyle(.gray)
-                    .padding(.vertical)
+                HStack {
+                    Spacer()
+                    Image(systemName: "xmark.circle.fill")
+                        .imageScale(.large)
+                        .foregroundStyle(.gray)
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
             }
-            .contentShape(Rectangle())
+            .buttonStyle(.plain)
+            .frame(width: width * 0.15)
         }
         .padding(.bottom)
     }

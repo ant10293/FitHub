@@ -236,33 +236,22 @@ extension EquipmentData {
                 .map(normalize)
         )
     }
-
+     
     func hasEquipmentAdjustments(for exercise: Exercise) -> Bool {
-        exercise.equipmentRequired.contains { req in
-            allEquipment.first(where: { normalize($0.name) == normalize(req) })?
-                .adjustments?
-                .isEmpty == false
-        }
+        getEquipment(from: exercise.equipmentRequired)
+            .contains { $0.adjustments?.isEmpty == false }
     }
     
     func incrementForEquipment(names: [String], rounding p: RoundingPreference) -> Mass {
-        let names = names.map(normalize)
         let pref = (UnitSystem.current == .imperial) ? p.lb : p.kg
-        
-        let inc: Mass =
-              names.contains { n in
-                  allEquipment.contains { normalize($0.name) == n &&
-                      ($0.equCategory == .weightMachines || $0.equCategory == .cableMachines) }
-              } ? pref.pinLoaded
-            : names.contains { n in
-                  allEquipment.contains { normalize($0.name) == n && $0.equCategory == .smallWeights }
-            } ? pref.smallWeights
-            : names.contains { n in
-                allEquipment.contains { normalize($0.name) == n && ($0.pegCount == .single) }
-            } ? pref.platedSinglePeg
-        : pref.plated
-            
-        return inc
+
+        // Find the one equipment that has a rounding category
+        let cat = getEquipment(from: names)
+            .lazy
+            .compactMap(\.roundingCategory)
+            .first
+
+        return pref[cat ?? .plated] ?? Mass(kg: 0)
     }
     
     // MARK: Weight rounding with string names
@@ -270,6 +259,7 @@ extension EquipmentData {
         let increment = incrementForEquipment(names: equipmentNames, rounding: p)
 
         // Round in the chosen unit, then convert back to canonical kg
+        // FIXME: sometimes causes a week to pass without incrementing caused by rounding issues
         switch UnitSystem.current {
         case .imperial:
             let roundedLb = (weight.inLb / increment.inLb).rounded() * increment.inLb

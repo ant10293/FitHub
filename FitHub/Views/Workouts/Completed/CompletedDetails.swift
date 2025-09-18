@@ -91,7 +91,7 @@ private extension CompletedDetails {
            let prRepsWeight = prUpdate.repsXweight {
             HStack {
                 Image(systemName: "trophy.fill")
-                if exercise.type.usesWeight {
+                if exercise.resistance.usesWeight {
                     if prRepsWeight.reps > 1 {
                         prRepsWeight.formattedText +
                         Text(" = ") +
@@ -124,7 +124,7 @@ private extension CompletedDetails {
                     .fontWeight(.bold)
                 
                 // Planned (weight if relevant) + target (reps or time)
-                plannedText(set: set, usesWeight: exercise.type.usesWeight)
+                plannedText(set: set, usesWeight: exercise.resistance.usesWeight)
                     .fontWeight(.regular)
 
                 // Completed + RPE inline on the same row

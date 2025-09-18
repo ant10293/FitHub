@@ -16,7 +16,7 @@ struct StrengthPercentileView: View {
                 .font(.title2)
                 .padding(.bottom, 10)
             
-            maxView(usesWeight: exercise.type.usesWeight)
+            maxView(usesWeight: exercise.resistance.usesWeight)
 
             Text("\(exercise.performanceTitle) values for \(exercise.name) \(exercise.weightInstruction?.rawValue ?? ""):")
                 .font(.headline)

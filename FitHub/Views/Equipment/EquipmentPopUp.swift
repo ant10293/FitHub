@@ -49,6 +49,8 @@ struct EquipmentPopupView: View {
                 }
             }
             if !showingCategories {
+                RectangularButton(title: "Save and Continue", action: onContinue)
+                /*
                 Button("Save and Continue") {
                     onContinue()
                 }
@@ -56,6 +58,7 @@ struct EquipmentPopupView: View {
                 .padding()
                 .background(Color.blue)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
+                */
             }
         }
     }

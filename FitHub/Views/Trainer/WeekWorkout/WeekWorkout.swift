@@ -43,7 +43,7 @@ struct WeekWorkout: View {
 
     var body: some View {
         ScrollViewReader { proxy in
-            ScrollView(.horizontal, showsIndicators: true) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(vm.dayInfos) { info in
                         DayWorkout(info: info, onSelect: { template in

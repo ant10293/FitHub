@@ -87,9 +87,11 @@ struct ExerciseSetDisplay: View {
     }
 
     @ViewBuilder private var weightSection: some View {
-        if exercise.type.usesWeight {
+        if exercise.resistance.usesWeight {
             ZStack {
-                //let weightText = $setDetail.weight.asText()
+                let width = calculateTextWidth(text: weightInput, minWidth: 60, maxWidth: 90)
+                let isZero = weightInput == "0"
+                
                 let weightText: Binding<String> = Binding(
                     get: { weightInput },
                     set: { newText in
@@ -98,9 +100,6 @@ struct ExerciseSetDisplay: View {
                         setDetail.weight.set(val)   // commits in user’s selected unit
                     }
                 )
-                
-                let width = calculateTextWidth(text: weightText.wrappedValue, minWidth: 60, maxWidth: 90)
-                let isZero = (weightText.wrappedValue == "0")
 
                 RoundedRectangle(cornerRadius: 8)
                     .fill(colorScheme == .dark
@@ -125,6 +124,70 @@ struct ExerciseSetDisplay: View {
                 }
             }
             .padding(.trailing, 2.5)
+        }
+    }
+
+    private var repsInputField: some View {
+        ZStack {
+            let width  = calculateTextWidth(text: plannedInput, minWidth: 45, maxWidth: 70)
+            let isZero = plannedInput == "0"
+            
+            let repText: Binding<String> = Binding(
+                get: { plannedInput },
+                set: { newValue in
+                    let filtered = InputLimiter.filteredReps(newValue)
+                    let r = Int(filtered) ?? 0
+                    let reps: SetMetric = .reps(r)
+                    plannedInput = filtered
+                    setDetail.planned = reps
+                    completedMetric = reps
+                    validateSetMetric(actual: r)
+                }
+            )
+
+            RoundedRectangle(cornerRadius: 8)
+                .fill(colorScheme == .dark
+                      ? Color(UIColor.systemGray4)
+                      : Color(UIColor.secondarySystemBackground))
+                .frame(width: width, height: 35)
+
+            TextField("reps", text: repText)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.center)
+                .foregroundStyle(isZero ? .red : .primary)
+                .frame(width: width, alignment: .center)
+        }
+    }
+
+    // this actually needs to be a string to be formatted properly
+    @ViewBuilder private var holdInputField: some View {
+        ZStack {
+            let width  = calculateTextWidth(text: plannedInput, minWidth: 60, maxWidth: 90)
+            let isZero = TimeSpan.seconds(from: plannedInput) == 0
+            
+            // Planned hold using your fixed-mask field (m:ss)
+            let timeText: Binding<String> = Binding(
+                get: { plannedInput },
+                set: { newValue in
+                    let s = TimeSpan.seconds(from: newValue)
+                    let ts = TimeSpan.init(seconds: s)
+                    let hold: SetMetric = .hold(ts)
+                    plannedInput = ts.displayStringCompact
+                    setDetail.planned = hold
+                    completedMetric = hold
+                    validateSetMetric(actual: s)
+                }
+            )
+
+            RoundedRectangle(cornerRadius: 8)
+                .fill(colorScheme == .dark
+                      ? Color(UIColor.systemGray4)
+                      : Color(UIColor.secondarySystemBackground))
+                .frame(width: width, height: 35)
+
+            TimeEntryField(text: timeText, style: .plain)
+                .foregroundStyle(isZero ? .red : .primary)
+                .frame(width: width, alignment: .center)
         }
     }
     
@@ -250,69 +313,7 @@ struct ExerciseSetDisplay: View {
             }
         }
     }
-
-    // MARK: - Subviews (visuals match original)
-
-    private var repsInputField: some View {
-        ZStack {
-            let width  = calculateTextWidth(text: plannedInput, minWidth: 45, maxWidth: 70)
-            let isZero = plannedInput == "0"
-
-            RoundedRectangle(cornerRadius: 8)
-                .fill(colorScheme == .dark
-                      ? Color(UIColor.systemGray4)
-                      : Color(UIColor.secondarySystemBackground))
-                .frame(width: width, height: 35)
-
-            TextField("reps", text: Binding<String>(
-                get: { plannedInput },
-                set: { newValue in
-                    let filtered = InputLimiter.filteredReps(newValue)
-                    let r = Int(filtered) ?? 0
-                    let reps: SetMetric = .reps(r)
-                    plannedInput = filtered
-                    setDetail.planned = reps
-                    completedMetric = reps
-                    validateSetMetric(actual: r)
-                })
-            )
-            .keyboardType(.numberPad)
-            .multilineTextAlignment(.center)
-            .foregroundStyle(isZero ? .red : .primary)
-            .frame(width: width, alignment: .center)
-        }
-    }
-
-    // this actually needs to be a string to be formatted properly
-    @ViewBuilder private var holdInputField: some View {
-        ZStack {
-            let width  = calculateTextWidth(text: plannedInput, minWidth: 60, maxWidth: 90)
-            let isZero = TimeSpan.seconds(from: plannedInput) == 0
-
-            RoundedRectangle(cornerRadius: 8)
-                .fill(colorScheme == .dark
-                      ? Color(UIColor.systemGray4)
-                      : Color(UIColor.secondarySystemBackground))
-                .frame(width: width, height: 35)
-
-            // Planned hold using your fixed-mask field (m:ss)
-            TimeEntryField(text: Binding(
-                get: { plannedInput },
-                set: { newValue in
-                    let s = TimeSpan.seconds(from: newValue)
-                    let ts = TimeSpan.init(seconds: s)
-                    let hold: SetMetric = .hold(ts)
-                    plannedInput = ts.displayStringCompact
-                    setDetail.planned = hold
-                    completedMetric = hold
-                    validateSetMetric(actual: s)
-                }),
-                style: .plain
-            )
-            .foregroundStyle(isZero ? .red : .primary)
-            .frame(width: width, alignment: .center)
-        }
-    }
+    
     // MARK: - Helpers
 
     private func resetInputs() {
@@ -342,6 +343,6 @@ struct ExerciseSetDisplay: View {
     }
     
     private func validateSetMetric(actual: Int) {
-        shouldDisableNext = actual <= 0 || (exercise.type.usesWeight && setDetail.weight.inKg <= 0)
+        shouldDisableNext = actual <= 0 || (exercise.resistance.usesWeight && setDetail.weight.inKg <= 0)
     }
 }

@@ -13,11 +13,11 @@ struct ExerciseOptions: View {
     @Binding var alertMessage: String
     @Binding var replacedExercises: [String] // Binding to the array in the parent view
     @Binding var template: WorkoutTemplate
+    @Binding var isReplacing: Bool
     @State private var showSimilarExercises = false
     var exercise: Exercise
     var onClose: () -> Void
     private let modifier = ExerciseModifier()
-
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -113,12 +113,26 @@ struct ExerciseOptions: View {
     }
     
     private func replaceExercise() {
-        if let newEx = modifier.replace(target: exercise, in: &template, ctx: ctx, replaced: &replacedExercises) {
-            alertMessage = "Replaced '\(exercise.name)' with '\(newEx.name)' in \(template.name)."
-        } else {
-            alertMessage = "No similar exercise found to replace '\(exercise.name)'."
-        }
-        showAlert = true
+        isReplacing = true
+        modifier.replaceInBackground(
+            target: exercise,
+            template: template,
+            exerciseData: ctx.exercises,
+            equipmentData: ctx.equipment,
+            userData: ctx.userData,
+            replaced: replacedExercises,
+            onComplete: { result in
+                if let newExercise = result.newExercise {
+                    template = result.updatedTemplate
+                    replacedExercises = result.updatedReplaced
+                    alertMessage = "Replaced '\(exercise.name)' with '\(newExercise.name)' in \(template.name)."
+                } else {
+                    alertMessage = "No similar exercise found to replace '\(exercise.name)'."
+                }
+                isReplacing = false
+                showAlert = true
+            }
+        )
         onClose()
     }
     

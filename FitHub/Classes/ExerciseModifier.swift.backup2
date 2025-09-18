@@ -11,32 +11,32 @@ import SwiftUI
 /// Instance-based helper.  Hold a single copy wherever you need it
 /// (`let modifier = ExerciseModifier()`).
 struct ExerciseModifier {
+    
+    
     // MARK: Result struct for background replace operation
     struct ReplaceResult {
+        let success: Bool
         let newExercise: Exercise?
         let updatedTemplate: WorkoutTemplate
         let updatedReplaced: [String]
     }
     
+    // MARK: Background replace function
     func replaceInBackground(
         target: Exercise,
         template: WorkoutTemplate,
-        exerciseData: ExerciseData,
-        equipmentData: EquipmentData,
-        userData: UserData,
+        ctx: AppContext,
         replaced: [String],
         onComplete: @escaping (ReplaceResult) -> Void
     ) {
-        // Capture all necessary data before going to background thread
-        let availableEquipmentIDs = userData.evaluation.equipmentSelected
-
         DispatchQueue.global(qos: .userInitiated).async {
             var workingTemplate = template
             var workingReplaced = replaced
-
+            
             guard let idx = workingTemplate.exercises.firstIndex(where: { $0.id == target.id }) else {
                 DispatchQueue.main.async {
                     onComplete(ReplaceResult(
+                        success: false,
                         newExercise: nil,
                         updatedTemplate: workingTemplate,
                         updatedReplaced: workingReplaced
@@ -45,11 +45,11 @@ struct ExerciseModifier {
                 return
             }
 
-            // Build candidate pool using captured data
-            let candidates = exerciseData.similarExercises(
+            // Build candidate pool
+            let candidates = ctx.exercises.similarExercises(
                 to: target,
-                equipmentData: equipmentData,
-                availableEquipmentIDs: availableEquipmentIDs,
+                equipmentData: ctx.equipment,
+                availableEquipmentIDs: ctx.userData.evaluation.equipmentSelected,
                 existing: workingTemplate.exercises,
                 replaced: Set(workingReplaced)
             )
@@ -57,6 +57,7 @@ struct ExerciseModifier {
             guard let newEx = candidates.first else {
                 DispatchQueue.main.async {
                     onComplete(ReplaceResult(
+                        success: false,
                         newExercise: nil,
                         updatedTemplate: workingTemplate,
                         updatedReplaced: workingReplaced
@@ -65,22 +66,51 @@ struct ExerciseModifier {
                 return
             }
 
+            let detailed = Self.detailed(exercise: newEx, ctx: ctx)
+            workingTemplate.exercises[idx] = detailed
+            workingReplaced.append(target.name)
+            
             DispatchQueue.main.async {
-                // Create detailed exercise using captured data
-                let detailed = Self.detailed(exercise: newEx, exerciseData: exerciseData, equipmentData: equipmentData, userData: userData)
-                workingTemplate.exercises[idx] = detailed
-                workingReplaced.append(target.name)
-
                 // Update the template in userData on main thread
-                _ = userData.updateTemplate(template: workingTemplate)
-
+                _ = ctx.userData.updateTemplate(template: workingTemplate)
+                
                 onComplete(ReplaceResult(
+                    success: true,
                     newExercise: detailed,
                     updatedTemplate: workingTemplate,
                     updatedReplaced: workingReplaced
                 ))
             }
         }
+    }
+
+    // MARK: Public façade
+    // ─────────────────────────────────────────────────────────────
+    /// Replace `target` inside `template` with *the first* similar exercise.
+    /// Returns `true` if something was replaced.
+    @MainActor @discardableResult
+    func replace(target: Exercise, in template: inout WorkoutTemplate, ctx: AppContext, replaced: inout [String]) -> Exercise? {
+        guard let idx = template.exercises.firstIndex(where: { $0.id == target.id }) else { return nil }
+
+        // Build candidate pool
+        let candidates = ctx.exercises.similarExercises(
+            to: target,
+            equipmentData: ctx.equipment,
+            availableEquipmentIDs: ctx.userData.evaluation.equipmentSelected,
+            existing: template.exercises,
+            replaced: Set(replaced)
+        )
+
+        guard let newEx = candidates.first else { return nil }
+
+        let detailed = Self.detailed(exercise: newEx, ctx: ctx)
+
+        template.exercises[idx] = detailed
+        replaced.append(target.name)
+        
+        _ = ctx.userData.updateTemplate(template: template)
+        
+        return detailed
     }
 
     /// Replace *a specific* exercise by name.
@@ -91,20 +121,6 @@ struct ExerciseModifier {
 
         template.exercises[idx] = detailed
         _ = ctx.userData.updateTemplate(template: template)
-    }
-    
-    @MainActor static func detailed(
-        exercise: Exercise,
-        exerciseData: ExerciseData,
-        equipmentData: EquipmentData,
-        userData: UserData
-    ) -> Exercise {
-        return userData.calculateDetailedExercise(
-            exerciseData: exerciseData,
-            equipmentData: equipmentData,
-            exercise: exercise,
-            nextWeek: false
-        )
     }
     
     @MainActor static func detailed(exercise: Exercise, ctx: AppContext) -> Exercise {

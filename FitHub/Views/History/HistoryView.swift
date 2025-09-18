@@ -35,7 +35,6 @@ struct HistoryView: View {
                 
                 Spacer()
             }
-           // .navigationBarTitle("History", displayMode: .inline)
             .background(Color(UIColor.systemGroupedBackground))
             .onAppear(perform: onAppearAction)
             .customToolbar(
@@ -73,7 +72,6 @@ struct HistoryView: View {
                 image: showCalendar ? "chart.bar" : "calendar",
                 foreground: .blue,
                 background: colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : .white,
-                size: 15,
                 action: { showCalendar.toggle() }
             )
             .padding(.trailing)
@@ -150,6 +148,7 @@ struct HistoryView: View {
     }
 }
 
+// uses the standard calender, not modified with different week start day
 extension Calendar {
     func generateDates(inside interval: DateInterval, matching components: DateComponents) -> [Date] {
         var dates: [Date] = []

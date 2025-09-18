@@ -16,11 +16,8 @@ struct ExerciseSetDetail: View {
     @Binding var exercise: Exercise
     @Binding var isCollapsed: Bool
     @Binding var isShowingOptions: Bool
-    @Binding var replacedExercises: [String]
 
-    @State private var showSupersetOptions = false
-    @State private var showReplaceAlert = false
-
+    @State private var showSupersetOptions: Bool = false
     @State private var weightTexts: [String]
     @State private var metricTexts: [String]   // holds reps OR time "mm:ss"/"ss"
     
@@ -34,7 +31,6 @@ struct ExerciseSetDetail: View {
         exercise: Binding<Exercise>,
         isCollapsed: Binding<Bool>,
         isShowingOptions: Binding<Bool>,
-        replacedExercises: Binding<[String]>,
         hasEquipmentAdjustments: Bool,
         perform: @escaping (CallBackAction) -> Void,
         onSuperSet: @escaping (String) -> Void
@@ -43,8 +39,6 @@ struct ExerciseSetDetail: View {
         _exercise          = exercise
         _isCollapsed       = isCollapsed
         _isShowingOptions  = isShowingOptions
-        _replacedExercises = replacedExercises
-
         _showSupersetOptions = State(initialValue: exercise.wrappedValue.isSupersettedWith != nil)
 
         // Seed buffers from current model
@@ -78,14 +72,6 @@ struct ExerciseSetDetail: View {
         .padding(.horizontal, 2.5)
         .onChange(of: exercise.setDetails) { resyncBuffersFromModel() }
         .onChange(of: exercise.isSupersettedWith) { showSupersetOptions = (exercise.isSupersettedWith != nil) }
-        .alert(isPresented: $showReplaceAlert) {
-            Alert(
-                title: Text("Are you sure you want to replace this exercise?"),
-                message: Text("This action can be undone via:\nEdit → Undo"),
-                primaryButton: .destructive(Text("Replace"), action: { perform(.replaceExercise) }),
-                secondaryButton: .cancel()
-            )
-        }
     }
 
     // MARK: - Set rows
@@ -208,7 +194,7 @@ struct ExerciseSetDetail: View {
                     ExerciseDetailOptions(
                         template: $template,
                         exercise: $exercise,
-                        onReplaceExercise: { showReplaceAlert = true },
+                        onReplaceExercise: { perform(.replaceExercise) },
                         onRemoveExercise: { perform(.removeExercise) },
                         onClose: { isShowingOptions = false },
                         onSave: { perform(.saveTemplate) }
@@ -242,8 +228,7 @@ struct ExerciseSetDetail: View {
     // MARK: - Mutations
     private func addSet() {
         perform(.addSet)
-        // Extend buffers so indices stay aligned
-        weightTexts.append("")
+        weightTexts.append("") // Extend buffers so indices stay aligned
         metricTexts.append("")
     }
 

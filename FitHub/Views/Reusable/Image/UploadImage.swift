@@ -1,5 +1,5 @@
 //
-//  PhotoPicker.swift
+//  UploadImage.swift
 //  FitHub
 //
 //  Created by Anthony Cantu on 7/9/25.
@@ -8,43 +8,8 @@
 import SwiftUI
 import PhotosUI   // PHPicker
 
-struct PhotoPicker: UIViewControllerRepresentable {
-    @Binding var image: UIImage?               // selected image
-    
-    func makeUIViewController(context: Context) -> PHPickerViewController {
-        var config = PHPickerConfiguration(photoLibrary: .shared())
-        config.filter = .images
-        config.selectionLimit = 1              // single image
-        let picker = PHPickerViewController(configuration: config)
-        picker.delegate = context.coordinator
-        return picker
-    }
-    
-    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) { }
-    
-    func makeCoordinator() -> Coordinator { Coordinator(self) }
-    
-    final class Coordinator: NSObject, PHPickerViewControllerDelegate {
-        private let parent: PhotoPicker
-        init(_ parent: PhotoPicker) { self.parent = parent }
-        
-        func picker(_ picker: PHPickerViewController,
-                    didFinishPicking results: [PHPickerResult]) {
-            picker.dismiss(animated: true)
-            guard let provider = results.first?.itemProvider,
-                  provider.canLoadObject(ofClass: UIImage.self) else { return }
-            
-            provider.loadObject(ofClass: UIImage.self) { image, _ in
-                DispatchQueue.main.async {
-                    self.parent.image = image as? UIImage
-                }
-            }
-        }
-    }
-}
 
-
-struct UploadImageDemo: View {
+struct UploadImage: View {
     // ────────── Input
     /// Pass a previously-saved filename (e.g. `"pickedPhoto-XYZ.jpg"`).
     /// Leave `nil` to start with “No image selected”.
@@ -69,10 +34,10 @@ struct UploadImageDemo: View {
             } else {
                 Text("No image selected")
                     .foregroundStyle(Color.secondary)
+                
+                Button("Choose Photo") { showingPicker = true }
+                    .buttonStyle(.borderedProminent)
             }
-            
-            Button("Choose Photo") { showingPicker = true }
-                .buttonStyle(.borderedProminent)
             
             if selectedImage != nil {
                 Button(role: .destructive) { removeCurrentPhoto() } label: {
@@ -122,5 +87,40 @@ struct UploadImageDemo: View {
         selectedImage  = nil
         savedFilename  = nil
         onImagePicked("") // notify removal
+    }
+}
+
+private struct PhotoPicker: UIViewControllerRepresentable {
+    @Binding var image: UIImage?               // selected image
+    
+    func makeUIViewController(context: Context) -> PHPickerViewController {
+        var config = PHPickerConfiguration(photoLibrary: .shared())
+        config.filter = .images
+        config.selectionLimit = 1              // single image
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = context.coordinator
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) { }
+    
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
+    
+    final class Coordinator: NSObject, PHPickerViewControllerDelegate {
+        private let parent: PhotoPicker
+        init(_ parent: PhotoPicker) { self.parent = parent }
+        
+        func picker(_ picker: PHPickerViewController,
+                    didFinishPicking results: [PHPickerResult]) {
+            picker.dismiss(animated: true)
+            guard let provider = results.first?.itemProvider,
+                  provider.canLoadObject(ofClass: UIImage.self) else { return }
+            
+            provider.loadObject(ofClass: UIImage.self) { image, _ in
+                DispatchQueue.main.async {
+                    self.parent.image = image as? UIImage
+                }
+            }
+        }
     }
 }

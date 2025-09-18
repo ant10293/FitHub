@@ -8,6 +8,7 @@
 import SwiftUI
 
 
+// TODO: certain vars must be reactive to other
 // must modify to: determine if alias is the same name as an exercise or its alias then we should alert the user
 // also, must create interface for adding muscle and submuscle engagement
 // group category should be: arms, back, legs
@@ -43,8 +44,8 @@ struct NewExercise: View {
                 description: "",
                 equipmentRequired: [],
                 effort: .compound,
+                resistance: .freeWeight,
                 url: "",
-                type: .any,
                 difficulty: .beginner
             ))
         }
@@ -118,7 +119,7 @@ struct NewExercise: View {
         }
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .onDisappear(perform: disappearAction)
-        .sheet(isPresented: $selectingEquipment, onDismiss: { draft.type = determineType() }) {
+        .sheet(isPresented: $selectingEquipment, onDismiss: { draft.resistance = determineType() }) {
             EquipmentSelection(selection: equipmentRequired, onDone: { selection in
                 setEquipment(selection: selection)
             })
@@ -271,97 +272,47 @@ struct NewExercise: View {
                 .font(.headline)
             
             VStack(spacing: 0) {
-                //--------------------------- Equipment Type
-                 HStack {
-                     Text("Resistance Type")
-                     Spacer(minLength: 12)
+                // Resistance Type (exclude .weighted)
+                MenuPickerRow(title: "Resistance Type", selection: $draft.resistance) {
+                    ForEach(ResistanceType.forExercises, id: \.self) {
+                        Text($0.rawValue).tag($0)
+                    }
+                }
 
-                     Picker("", selection: $draft.type) {
-                         ForEach(
-                             ResistanceType.allCases.filter { $0 != .weighted },
-                             id: \.self
-                         ) { Text($0.rawValue).tag($0) }
-                     }
-                     .labelsHidden()
-                     .pickerStyle(.menu)
-                 }
-                 .padding(.horizontal, 16)
-                 .padding(.vertical, 6)
+                // Effort Type
+                MenuPickerRow(title: "Effort Type", selection: $draft.effort) {
+                    ForEach(EffortType.allCases, id: \.self) {
+                        Text($0.rawValue).tag($0)
+                    }
+                }
 
-                 Divider()
+                // Limb Movement (Optional)
+                MenuPickerRow(title: "Limb Movement", selection: $draft.limbMovementType) {
+                    Text("None").tag(nil as LimbMovementType?)
+                    ForEach(LimbMovementType.allCases, id: \.self) {
+                        Text($0.rawValue).tag(Optional($0))
+                    }
+                }
 
-                 //--------------------------- Distinction
-                 HStack {
-                     Text("Effort Type")
-                     Spacer(minLength: 12)
+                // Reps Instruction (Optional, conditional)
+                if exercise.effort.usesReps {
+                    MenuPickerRow(title: "Reps Instruction", selection: $draft.repsInstruction) {
+                        Text("None").tag(nil as RepsInstruction?)
+                        ForEach(RepsInstruction.allCases, id: \.self) {
+                            Text($0.rawValue).tag(Optional($0))
+                        }
+                    }
+                }
 
-                     Picker("", selection: $draft.effort) {
-                         ForEach(EffortType.allCases, id: \.self) {
-                             Text($0.rawValue).tag($0)
-                         }
-                     }
-                     .labelsHidden()
-                     .pickerStyle(.menu)
-                 }
-                 .padding(.horizontal, 16)
-                 .padding(.vertical, 6)
-
-                 Divider()
-
-                 //--------------------------- Limb Movement
-                 HStack {
-                     Text("Limb Movement")
-                     Spacer(minLength: 12)
-
-                     Picker("", selection: $draft.limbMovementType) {
-                         Text("None").tag(nil as LimbMovementType?)
-                         ForEach(LimbMovementType.allCases, id: \.self) {
-                             Text($0.rawValue).tag(Optional($0))
-                         }
-                     }
-                     .labelsHidden()
-                     .pickerStyle(.menu)
-                 }
-                 .padding(.horizontal, 16)
-                 .padding(.vertical, 6)
-
-                 Divider()
-
-                 //--------------------------- Reps Instruction
-                 HStack {
-                     Text("Reps Instruction")
-                     Spacer(minLength: 12)
-
-                     Picker("", selection: $draft.repsInstruction) {
-                         Text("None").tag(nil as RepsInstruction?)
-                         ForEach(RepsInstruction.allCases, id: \.self) {
-                             Text($0.rawValue).tag(Optional($0))
-                         }
-                     }
-                     .labelsHidden()
-                     .pickerStyle(.menu)
-                 }
-                 .padding(.horizontal, 16)
-                 .padding(.vertical, 6)
-
-                 Divider()
-
-                 //--------------------------- Weight Instruction
-                 HStack {
-                     Text("Weight Instruction")
-                     Spacer(minLength: 12)
-
-                     Picker("", selection: $draft.weightInstruction) {
-                         Text("None").tag(nil as WeightInstruction?)
-                         ForEach(WeightInstruction.allCases, id: \.self) {
-                             Text($0.rawValue).tag(Optional($0))
-                         }
-                     }
-                     .labelsHidden()
-                     .pickerStyle(.menu)
-                 }
-                 .padding(.horizontal, 16)
-                 .padding(.vertical, 6)
+                // Weight Instruction (Optional, conditional)
+                if exercise.resistance.usesWeight {
+                    MenuPickerRow(title: "Weight Instruction", selection: $draft.weightInstruction, showDivider: false) {
+                        Text("None").tag(nil as WeightInstruction?)
+                        ForEach(WeightInstruction.allCases, id: \.self) {
+                            Text($0.rawValue).tag(Optional($0))
+                        }
+                    }
+                }
             }
             .roundedBackground(cornerRadius: 12, color: Color(UIColor.secondarySystemGroupedBackground), style: .continuous)
             .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(Color.secondary.opacity(0.15)))
@@ -389,6 +340,33 @@ struct NewExercise: View {
         ctx.exercises.allExercises.contains {
             $0.id != original?.id &&                       // ← ignore self
             $0.name.caseInsensitiveCompare(draft.name) == .orderedSame
+        }
+    }
+}
+
+struct MenuPickerRow<Selection: Hashable, Options: View>: View {
+    let title: String
+    @Binding var selection: Selection
+    var showDivider: Bool = true
+    var minSpacer: CGFloat = 12
+    var insets: EdgeInsets = .init(top: 6, leading: 16, bottom: 6, trailing: 16)
+    @ViewBuilder var options: () -> Options
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text(title)
+                Spacer(minLength: minSpacer)
+                Picker("", selection: $selection) {
+                    options()
+                }
+                .labelsHidden()
+                .pickerStyle(.menu)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(insets)
+
+            if showDivider { Divider() }
         }
     }
 }

@@ -22,12 +22,10 @@ final class ExerciseData: ObservableObject {
         
     var exercisesWithData: [Exercise] {
         allExercises.filter { ex in
-            if let peak = peakMetric(for: ex.id), peak.actualValue > 0 { return true }
-            if let est = estimatedPeakMetric(for: ex.id), est.actualValue > 0 { return true }
-            return ex.url != nil
+            return hasPerformanceData(exercise: ex)
         }
     }
-    
+
     init() {
         bundledExercises = ExerciseData.loadBundledExercises()
         userExercises = ExerciseData.loadUserExercises(from: ExerciseData.userExercisesFileName)
@@ -101,6 +99,12 @@ extension ExerciseData {
 }
 
 extension ExerciseData {
+    private func hasPerformanceData(exercise: Exercise) -> Bool {
+        if let peak = peakMetric(for: exercise.id), peak.actualValue > 0 { return true }
+        if let est = estimatedPeakMetric(for: exercise.id), est.actualValue > 0 { return true }
+        return exercise.url != nil
+    }
+    
     func filteredExercises(
         searchText: String,
         selectedCategory: CategorySelections,
@@ -247,37 +251,52 @@ extension ExerciseData {
         existing: [Exercise],
         replaced: Set<String>
     ) -> [Exercise] {
-        let pool           = allExercises
-        let targetPrimSet  = Set(exercise.primaryMuscles)
-        let existingNames  = Set(existing.map(\.name))
-        let targetEffort   = exercise.effort
+        let pool             = allExercises
+        let targetPrimSet    = Set(exercise.primaryMuscles)
+        let existingNames    = Set(existing.map(\.name))
+        let targetEffort     = exercise.effort
+        let targetUsesWeight = exercise.resistance.usesWeight
 
-        var strict:  [Exercise] = []
-        var relaxed: [Exercise] = []
-        strict.reserveCapacity(8)
-        relaxed.reserveCapacity(8)
+        var strict:    [Exercise] = []; strict.reserveCapacity(8)
+        var relaxed:   [Exercise] = []; relaxed.reserveCapacity(8)
+        var strictFB:  [Exercise] = []; strictFB.reserveCapacity(8)   // allow replaced only if needed
+        var relaxedFB: [Exercise] = []; relaxedFB.reserveCapacity(8)
 
         for cand in pool {
             // quick rejects
-            if cand.id == exercise.id || cand.name == exercise.name { continue }        // keep old-name behavior too
-            if existingNames.contains(cand.name) || replaced.contains(cand.name) { continue }
-            if !cand.canPerform(
+            if cand.id == exercise.id || cand.name == exercise.name { continue }
+            if existingNames.contains(cand.name) { continue }
+            if !hasPerformanceData(exercise: cand) { continue }
+
+            // muscle/effort logic
+            let candSet = Set(cand.primaryMuscles)
+            let isStrictMuscle  = (candSet == targetPrimSet) && (cand.effort == targetEffort)
+            let isRelaxedMuscle = !isStrictMuscle && !candSet.isDisjoint(with: targetPrimSet)
+            if !(isStrictMuscle || isRelaxedMuscle) { continue }
+
+            // weighted ↔︎ bodyweight mismatch → relaxed
+            let goesToRelaxed = isRelaxedMuscle || (cand.resistance.usesWeight != targetUsesWeight)
+
+            // expensive check last
+            guard cand.canPerform(
                 equipmentData: equipmentData,
                 equipmentSelected: availableEquipmentIDs
-            ) { continue } // ✅ check candidate
+            ) else { continue }
 
-            // primary-muscle logic (match original set semantics)
-            let candSet = Set(cand.primaryMuscles)
-            if candSet == targetPrimSet, cand.effort == targetEffort {
-                // strict: exact primary muscles AND same effort
-                strict.append(cand)
-            } else if !candSet.isDisjoint(with: targetPrimSet) {
-                // relaxed: any shared primary muscle (no effort requirement)
-                relaxed.append(cand)
+            let wasReplaced = replaced.contains(cand.name)
+
+            switch (goesToRelaxed, wasReplaced) {
+            case (true,  true):  relaxedFB.append(cand)
+            case (true,  false): relaxed.append(cand)
+            case (false, true):  strictFB.append(cand)
+            case (false, false): strict.append(cand)
             }
         }
 
-        return strict.isEmpty ? relaxed : strict
+        if !strict.isEmpty   { return strict }
+        if !relaxed.isEmpty  { return relaxed }
+        if !strictFB.isEmpty { return strictFB }
+        return relaxedFB
     }
     
     func updateExercisePerformance(

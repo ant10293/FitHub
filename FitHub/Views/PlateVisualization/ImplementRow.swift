@@ -7,6 +7,16 @@
 
 import SwiftUI
 
+/*
+ TODO: we need to accomodate bilateral independent exercises that use divided equipment.
+ needs to look like old setup, except the base weight chip needs to be on each side
+ ex:
+ Left
+ [Weight]
+ Plates
+ Base weight chip
+ total weight (lighter color)
+*/
 // MARK: - Implement Row Component
 struct ImplementRow: View {
     let title: String

@@ -41,7 +41,6 @@ struct UserProfileView: View {
                         Section {
                             TextField("Enter username", text: $draftUserName)
                                 .focused($focusedField, equals: .userName)
-                                .submitLabel(.done)
                                 .onSubmit(commitUserName)
                                 .onChange(of: focusedField) { oldFocus, newFocus in
                                     if newFocus != .userName {
@@ -56,7 +55,6 @@ struct UserProfileView: View {
                         Section {
                             TextField("First Name", text: $draftFirstName)
                                 .focused($focusedField, equals: .firstName)
-                                .submitLabel(.done)
                                 .onSubmit(commitFirstName)
                                 .onChange(of: focusedField) { oldFocus, newFocus in
                                     if newFocus != .firstName {
@@ -66,7 +64,6 @@ struct UserProfileView: View {
                             
                             TextField("Last Name", text: $draftLastName)
                                 .focused($focusedField, equals: .lastName)
-                                .submitLabel(.done)
                                 .onSubmit(commitLastName)
                                 .onChange(of: focusedField) { oldFocus, newFocus in
                                     if newFocus != .lastName {
@@ -128,11 +125,11 @@ struct UserProfileView: View {
                                 switch res {
                                 case .success:
                                     // After successful sign-in, Auth listener will fire
-                                    alertMessage = "Sign in successful!"
+                                    alertMessage = "Sign in successful"
                                     ctx.toast.showSaveConfirmation(duration: 2.0)
                                     break
                                 case .failure(let err):
-                                    alertMessage = "Sign in failed! \(err)"
+                                    alertMessage = "Sign in failed: \(err)"
                                     ctx.toast.showSaveConfirmation(duration: 2.0)
                                 }
                             }
@@ -171,7 +168,7 @@ struct UserProfileView: View {
         authService.updateDisplayName(to: trimmed) { result in
             switch result {
             case .success:
-                alertMessage = "Username updated successfully."
+                alertMessage = "Username updated successfully"
             case .failure(let error):
                 alertMessage = "Failed to update username: \(error.localizedDescription)"
             }
@@ -187,7 +184,7 @@ struct UserProfileView: View {
         ctx.userData.profile.firstName = trimmed
         ctx.userData.saveSingleStructToFile(\.profile, for: .profile)
         
-        alertMessage = "First name updated."
+        alertMessage = "First name updated"
         ctx.toast.showSaveConfirmation(duration: 2.0)
     }
     
@@ -199,7 +196,7 @@ struct UserProfileView: View {
         ctx.userData.profile.lastName = trimmed
         ctx.userData.saveSingleStructToFile(\.profile, for: .profile)
         
-        alertMessage = "Last name updated."
+        alertMessage = "Last name updated"
         ctx.toast.showSaveConfirmation(duration: 2.0)
     }
     
@@ -209,7 +206,7 @@ struct UserProfileView: View {
         AuthService.shared.signOut(userData: ctx.userData) { result in
             switch result {
             case .success:
-                alertMessage = "Logged out successfully."
+                alertMessage = "Logged out successfully"
             case .failure(let error):
                 alertMessage = "Failed to log out: \(error.localizedDescription)"
             }

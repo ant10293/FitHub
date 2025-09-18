@@ -138,12 +138,12 @@ struct ExercisePerformanceGraph: View {
     }
     
     private var minValue: Double {
-        if exercise.type.usesWeight { return sortedRecords.map { $0.value.displayValue }.min() ?? 100 }
+        if exercise.resistance.usesWeight { return sortedRecords.map { $0.value.displayValue }.min() ?? 100 }
         return sortedRecords.map { $0.value.displayValue }.min() ?? 0
     }
     
     private var maxValue: Double {
-        if exercise.type.usesWeight { return sortedRecords.map { $0.value.displayValue }.max() ?? 300 }
+        if exercise.resistance.usesWeight { return sortedRecords.map { $0.value.displayValue }.max() ?? 300 }
         return sortedRecords.map { $0.value.displayValue }.max() ?? 50
     }
     

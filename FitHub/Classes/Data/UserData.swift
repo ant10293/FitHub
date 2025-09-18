@@ -288,7 +288,7 @@ extension UserData {
         )
          // The generator only needs `user` (self) plus the same arguments
         return WorkoutGenerator().calculateDetailedExercise(
-            input: WorkoutGenerator.Input(user: self, exerciseData: exerciseData, equipmentData: equipmentData, savedExercises: [], keepCurrentExercises: false, nextWeek: nextWeek),
+            input: WorkoutGenerator.Input(user: self, exerciseData: exerciseData, equipmentData: equipmentData, saved: [], keepCurrentExercises: false, nextWeek: nextWeek),
             exercise: exercise,
             repsAndSets: rs,
             overloadFactor: overloadFactor,
@@ -299,12 +299,25 @@ extension UserData {
     }
     
     // House-keep old trainerTemplates – returns exercises we might want to keep
+    /*
     private func manageOldTemplates() -> [[Exercise]] {
         let saved = workoutPlans.trainerTemplates.map(\.exercises)
         for tpl in workoutPlans.trainerTemplates { NotificationManager.remove(ids: tpl.notificationIDs) }
         return saved
     }
+    */
     
+    private func manageOldTemplates() -> [OldTemplate] {
+        // Snapshot current templates into OldTemplate
+        let saved: [OldTemplate] = workoutPlans.trainerTemplates.map { OldTemplate(template: $0) }
+
+        // Remove all related notifications in one go
+        let ids = workoutPlans.trainerTemplates.flatMap(\.notificationIDs)
+        NotificationManager.remove(ids: ids)
+
+        return saved
+    }
+
     // Add this method to UserData:
     func showChangelog(_ changelog: WorkoutChangelog) {
         currentChangelog = changelog
@@ -322,13 +335,13 @@ extension UserData {
         isGeneratingWorkout = true
         resetWorkoutSession()
         
-        let savedExercises = manageOldTemplates()
+        let saved = manageOldTemplates()
         let generator = WorkoutGenerator()
         let input = WorkoutGenerator.Input(
             user: self,
             exerciseData: exerciseData,
             equipmentData: equipmentData,
-            savedExercises: savedExercises,
+            saved: saved,
             keepCurrentExercises: keepCurrentExercises,
             nextWeek: nextWeek
         )
@@ -367,5 +380,15 @@ extension UserData {
                 onDone()
             }
         }
+    }
+}
+
+struct OldTemplate: Identifiable {
+    let id: UUID
+    let exercises: [Exercise]
+    
+    init(template: WorkoutTemplate) {
+        self.id = template.id
+        self.exercises = template.exercises
     }
 }

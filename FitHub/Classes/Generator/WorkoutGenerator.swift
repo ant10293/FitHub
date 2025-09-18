@@ -22,7 +22,8 @@ final class WorkoutGenerator {
         let user: UserData                       // read-only snapshot
         let exerciseData: ExerciseData
         let equipmentData: EquipmentData
-        let savedExercises: [[Exercise]] 
+        //let savedExercises: [[Exercise]]
+        let saved: [OldTemplate]
         let keepCurrentExercises: Bool
         let nextWeek: Bool
     }
@@ -255,7 +256,9 @@ extension WorkoutGenerator {
         let dayName = day.rawValue
         let categoriesForDay = params.categoriesPerDay[dayIndex]
         var workoutDate: Date = params.dates[dayIndex]
-        let savedExercises = input.savedExercises 
+        
+        //let savedExercises = input.savedExercises
+        let savedExercises = input.saved
         
         if !input.user.settings.useDateOnly {
             // Prefer per-day custom time → then user default → then 11:00
@@ -270,15 +273,17 @@ extension WorkoutGenerator {
         }
 
         // Selection
+        var wasCompleted: Bool = false
         let selectTok = Logger.shared.start("[\(dayName)] select exercises", indentTabs: 2)
         let exercises: [Exercise] = {
+            // TODO: this must also add exercises if desired duration changed
             if input.keepCurrentExercises, dayIndex < savedExercises.count {
                 Logger.shared.add("\(dayName) Workout: Reusing saved exercises.", lineBreak: .before, numLines: 3)
-                let result = savedExercises[dayIndex]
-                return result
+                let daySaved = savedExercises[dayIndex]
+                wasCompleted = input.user.workoutPlans.completedWorkouts.contains(where: { $0.template.id == daySaved.id })
+                
+                return daySaved.exercises
             }
-
-            //let usedNames: Set<String> = dayIndex < savedExercises.count ? Set(savedExercises[dayIndex].map(\.name)) : []
 
             Logger.shared.add("\(dayName) Workout: Selecting new exercises.", lineBreak: .before, numLines: 3)
             print("[\(dayName)] \(categoriesForDay)")
@@ -301,7 +306,14 @@ extension WorkoutGenerator {
             return nil
         }
         
-        // [1] Detail each exercise (aggregate timing, plus per-ex timing with threshold)
+        // [1] Similarity debug (only when *not* keeping current)
+        if !input.keepCurrentExercises, dayIndex < savedExercises.count {
+            let simTok = Logger.shared.start("[\(dayName)] similarity", indentTabs: 2)
+            compareSimilarity(savedExercises: savedExercises[dayIndex].exercises, chosenExercises: exercises, dayIndex: dayIndex)
+            Logger.shared.end(simTok)
+        }
+                
+        // [2] Detail each exercise (aggregate timing, plus per-ex timing with threshold)
         let detailTok = Logger.shared.start("[\(dayName)] detail exercises", indentTabs: 2)
         let detailedExercises: [Exercise] = exercises.map { ex in
             Logger.shared.time("[\(dayName)] \(ex.name) details", indentTabs: 3, minMs: 1.0) {
@@ -310,6 +322,7 @@ extension WorkoutGenerator {
                     exercise: ex,
                     repsAndSets: params.repsAndSets,
                     overloadFactor: params.overloadFactor,
+                    templateCompleted: wasCompleted,
                     maxUpdated: { update in
                         maxUpdated(update)
                     }
@@ -317,20 +330,6 @@ extension WorkoutGenerator {
             }
         }
         Logger.shared.end(detailTok, suffix: "x\(exercises.count)")
-
-        // [2] Similarity debug (only when *not* keeping current)
-        if !input.keepCurrentExercises, dayIndex < savedExercises.count {
-            let simTok = Logger.shared.start("[\(dayName)] similarity", indentTabs: 2)
-            let savedNames    = Set(savedExercises[dayIndex].map(\.name))
-            let selectedNames = Set(exercises.map(\.name))
-            let overlap       = Double(savedNames.intersection(selectedNames).count)
-            let maxCount      = Double(max(savedNames.count, selectedNames.count))
-            if maxCount > 0 {
-                let sim = overlap / maxCount * 100
-                Logger.shared.add("Similarity with previous week: \(String(format: "%.0f%%", sim))")
-            }
-            Logger.shared.end(simTok)
-        }
         
         // [3] Build the template
         var tpl = WorkoutTemplate(
@@ -349,7 +348,25 @@ extension WorkoutGenerator {
         return tpl
     }
     
-    func calculateDetailedExercise(input: Input, exercise: Exercise, repsAndSets: RepsAndSets, overloadFactor: Double, maxUpdated: @escaping (PerformanceUpdate) -> Void) -> Exercise {
+    private func compareSimilarity(savedExercises: [Exercise], chosenExercises: [Exercise], dayIndex: Int) {
+        let savedNames    = Set(savedExercises.map(\.name))
+        let selectedNames = Set(chosenExercises.map(\.name))
+        let overlap       = Double(savedNames.intersection(selectedNames).count)
+        let maxCount      = Double(max(savedNames.count, selectedNames.count))
+        if maxCount > 0 {
+            let sim = overlap / maxCount * 100
+            Logger.shared.add("Similarity with previous week: \(String(format: "%.0f%%", sim))")
+        }
+    }
+    
+    func calculateDetailedExercise(
+        input: Input,
+        exercise: Exercise,
+        repsAndSets: RepsAndSets,
+        overloadFactor: Double,
+        templateCompleted: Bool = false,
+        maxUpdated: @escaping (PerformanceUpdate) -> Void
+    ) -> Exercise {
         var ex  = exercise
         
         if let max = input.exerciseData.peakMetric(for: ex.id), max.actualValue > 0 {
@@ -371,11 +388,11 @@ extension WorkoutGenerator {
 
         // —— Overload/deload progression ——————————————
         return Logger.shared.time("handleExerciseProgression \(ex.name)", indentTabs: 4, minMs: 0.5) {
-            handleExerciseProgression(input: input, exercise: ex, overloadFactor: overloadFactor)
+            handleExerciseProgression(input: input, exercise: ex, overloadFactor: overloadFactor, templateCompleted: templateCompleted)
         }
     }
     
-    func handleExerciseProgression(input: Input, exercise: Exercise, overloadFactor: Double) -> Exercise {
+    func handleExerciseProgression(input: Input, exercise: Exercise, overloadFactor: Double, templateCompleted: Bool) -> Exercise {
         var ex = exercise
         var prog = ex.overloadProgress
 
@@ -395,6 +412,11 @@ extension WorkoutGenerator {
                 Logger.shared.add("◦ New 1RM since plan creation → reset stagnation.", indentTabs: 1)
                 maxUpdates.insert(ex.id)
                 resetProgression()
+            }
+            
+            if !templateCompleted {
+                Logger.shared.add("Template was not completed last week. Skipping exercise progression.", indentTabs: 1)
+                return ex
             }
             // 1️⃣ PROGRESSIVE OVERLOAD
             else if ex.weeksStagnated >= input.user.settings.stagnationPeriod,

@@ -16,8 +16,15 @@ struct PlateVisualizer: View {
     @State private var showBaseWeightEditor: Bool = false
 
     var body: some View {
-        let (base, equip, baseCount, implementsCount, pegCount) = baseSpecForExercise()
-        let spec = computePlateSpec(for: exercise, input: weight, base: base, baseCount: baseCount, implementsCount: implementsCount, pegCount: pegCount)
+        let (base, input, equip, baseCount, implementsCount, pegCount) = baseSpecForExercise()
+        let spec = computePlateSpec(
+            for: exercise,
+            input: input,
+            base: base,
+            baseCount: baseCount,
+            implementsCount: implementsCount,
+            pegCount: pegCount
+        )
         let plan = computePlan(
             perSideTarget: spec.perSideTarget,
             base: base,
@@ -34,9 +41,8 @@ struct PlateVisualizer: View {
             
             //Text("Exercise: \(exercise.name)")
 
-            if let name = equip?.name {
-                Text("Equipment: \(name)")
-            }
+            Text("Equipment: \(equip.name)")
+            
                         
             Spacer()
 
@@ -81,14 +87,14 @@ struct PlateVisualizer: View {
         }
         .padding()
         .overlay(alignment: .center) {
-            if showBaseWeightEditor, let equipment = equip {
+            if showBaseWeightEditor {
                 BaseWeightEditor(
                     exercise: exercise,
-                    gymEquip: equipment,
+                    gymEquip: equip,
                     onSave: { newValue in
                         var base = BaseWeight(lb: 0, kg: 0)
                         base.setWeight(newValue)
-                        ctx.equipment.updateBaseWeight(equipment: equipment, new: base)
+                        ctx.equipment.updateBaseWeight(equipment: equip, new: base)
                         showBaseWeightEditor = false
                     },
                     onExit: {
@@ -100,43 +106,48 @@ struct PlateVisualizer: View {
     }
 
     // MARK: - Base mass + count + kind from equipment
-    private func baseSpecForExercise() -> (base: Mass, equip: GymEquipment?, baseCount: Int, implementsCount: Int, pegCount: PegCountOption?) {
+    private func baseSpecForExercise() -> (base: Mass, input: Mass, equip: GymEquipment, baseCount: Int, implementsCount: Int, pegCount: PegCountOption?) {
         let movement = exercise.limbMovementType ?? .bilateralDependent
         let gear = ctx.equipment.equipmentForExercise(exercise, includeAlternatives: true)
 
         var bestBase = Mass(kg: 0)
-        var bestEquip: GymEquipment?
+        var bestEquip: GymEquipment = GymEquipment.defaultEquipment
         var bestCount = 0
         var bestImplementsCount = 1
         var bestPegCount: PegCountOption? = nil
+        var bestWeight = weight
 
         for g in gear {
             guard let bw = g.baseWeight else { continue }
             let mass = bw.resolvedMass
             
             guard let implement = g.implementation else { continue }
-            let movementCount = implement.movementCount(for: movement)
+            let movementCount = implement.getMovementCount(for: movement)
+            let weightMultiplier = movementCount.baseWeightMultiplier
             
-            let totalBaseWeight = mass.inKg * Double(movementCount.baseWeightMultiplier)
+            let totalBaseWeight = mass.inKg * Double(weightMultiplier)
+            let pegCount = Double(g.pegCount?.count ?? 0) * movementCount.pegMultiplier.count
+            
+            let totalWeight: Mass = .init(kg: weight.inKg * Double(weightMultiplier))
             
             if totalBaseWeight > bestBase.inKg {
                 bestBase = mass
                 bestEquip = g
-                bestCount = movementCount.baseWeightMultiplier
+                bestCount = weightMultiplier
                 bestImplementsCount = movementCount.implementsUsed
-                bestPegCount = g.pegCount
+                bestPegCount = PegCountOption.getOption(for: Int(pegCount))
+                bestWeight = totalWeight
             }
         }
-        return (bestBase, bestEquip, bestCount, bestImplementsCount, bestPegCount)
+        return (bestBase, bestWeight, bestEquip, bestCount, bestImplementsCount, bestPegCount)
     }
     
     private func computePlateSpec(for exercise: Exercise, input: Mass, base: Mass, baseCount: Int, implementsCount: Int, pegCount: PegCountOption?) -> PlateSpec {
         let needsMultipleImplements = implementsCount > 1
         let replicates = needsMultipleImplements ? implementsCount : 1
-        let totalTargetKg: Double = needsMultipleImplements ? (input.inKg * Double(implementsCount)) : input.inKg
-
+        let totalTargetKg: Double = input.inKg
         let totalPlatesNeededKg = max(0, totalTargetKg - (base.inKg * Double(baseCount)))
-
+   
         let perSideTargetKg: Double
         if let pegCount = pegCount {
             switch pegCount {
@@ -150,19 +161,19 @@ struct PlateVisualizer: View {
         } else {
             perSideTargetKg = totalPlatesNeededKg / Double(2 * replicates)
         }
-
-        return PlateSpec(
+        
+        let spec = PlateSpec(
             displayTotal: Mass(kg: totalTargetKg),
             perSideTarget: Mass(kg: perSideTargetKg),
             replicates: replicates
         )
-    }
 
+        return spec
+    }
+        
     private func computePlan(perSideTarget: Mass, base: Mass, baseCount: Int, denominations: [Mass], replicates: Int, pegCount: PegCountOption?) -> Plan {
         let sideTargetKg = perSideTarget.inKg
-        let denoms = denominations
-            .map { Mass(kg: $0.inKg) }
-            .sorted { $0.inKg > $1.inKg }
+        let denoms = WeightPlates.sortedPlates(denominations, ascending: false)
 
         // Greedy fill for one side
         var remaining = sideTargetKg
@@ -199,8 +210,7 @@ struct PlateVisualizer: View {
         }
 
         let exact = abs(achievedTotalKg - displayTotalKg) <= 1e-6
-
-        return Plan(
+        let plan = Plan(
             displayTotal: Mass(kg: displayTotalKg),
             base: base,
             perSideTarget: perSideTarget,
@@ -212,6 +222,8 @@ struct PlateVisualizer: View {
             replicates: replicates,
             baseCount: baseCount
         )
+
+        return plan
     }
 }
 

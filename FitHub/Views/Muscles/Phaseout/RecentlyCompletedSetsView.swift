@@ -85,7 +85,7 @@ struct RecentlyCompletedSetsView: View {
                         : ExerciseWithSetDetails(
                             exerciseName: exercise.name,
                             sets: sets,
-                            usesWeight: exercise.type.usesWeight,
+                            usesWeight: exercise.resistance.usesWeight,
                             completionDate: workout.date
                         )
                 }

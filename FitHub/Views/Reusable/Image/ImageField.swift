@@ -19,7 +19,7 @@ struct ImageField: View {
             
             Group {
                 // Picker
-                UploadImageDemo(initialFilename: initialFilename) { name in
+                UploadImage(initialFilename: initialFilename) { name in
                     onImageUpdate(name)
                 }
             }

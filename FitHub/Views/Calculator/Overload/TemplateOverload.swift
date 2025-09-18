@@ -71,7 +71,7 @@ struct TemplateOverload: View {
                                             Text("\(set.setNumber)")
 
                                             // 2) Weight (unchanged visuals; smarter compare)
-                                            if exercise.type.usesWeight,
+                                            if exercise.resistance.usesWeight,
                                                let prevW = prevSet?.weight.displayValue,
                                                prevW != set.weight.displayValue {
                                                 HStack(spacing: 2) {
@@ -81,7 +81,7 @@ struct TemplateOverload: View {
                                                         .foregroundStyle(set.weight.displayValue > prevW ? .green : .red)
                                                 }
                                             } else {
-                                                weightText(set.weight, exercise.type.usesWeight)
+                                                weightText(set.weight, exercise.resistance.usesWeight)
                                             }
 
                                         // 3) Metric (reps OR hold), compare only if same kind

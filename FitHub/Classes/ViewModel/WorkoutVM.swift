@@ -158,38 +158,53 @@ final class WorkoutVM: ObservableObject {
     }
 
     func calculateWorkoutSummary(secondsElapsed: Int) -> WorkoutSummaryData {
-        // Sum volume (weight × reps), total weight, and total reps.
-        // Isometric holds contribute to neither reps nor volume here.
         var totalVolume: Double = 0
         var totalReps:   Int    = 0
         var weightByExercise: [UUID: Double] = [:]
 
         for exercise in template.exercises {
-            for set in exercise.setDetails {
-                let w = set.weight.inKg
+            let mv = exercise.limbMovementType
 
-                // Prefer completed; fall back to planned.
+            // unilateral → reps × 2; bilateralIndependent → weight × 2
+            let repsMul: Int = {
+                switch mv {
+                case .unilateral: return 2
+                default:          return 1
+                }
+            }()
+
+            let wtMul: Double = {
+                switch mv {
+                case .bilateralIndependent: return 2
+                default:                    return 1
+                }
+            }()
+
+            for set in exercise.setDetails {
+                let adjustedWeight = set.weight.inKg * wtMul
                 let metric = set.completed ?? set.planned
+
                 switch metric {
                 case .reps(let r):
-                    let setVolume: Double = w * Double(r)
-                    totalReps   += r
+                    let adjustedReps = r * repsMul
+                    let setVolume = adjustedWeight * Double(adjustedReps)
+
+                    totalReps += adjustedReps
                     totalVolume += setVolume
                     weightByExercise[exercise.id, default: 0] += setVolume
+
                 case .hold:
-                    // no-op for reps/volume; holds are time-based
+                    // holds are time-based → no reps/volume contribution
                     break
                 }
             }
         }
-        let totalTime = TimeSpan.init(seconds: secondsElapsed)
-        let exercisePRs = updates.prExerciseIDs
 
         return WorkoutSummaryData(
             totalVolume: Mass(kg: totalVolume),
-            totalReps:   totalReps,
-            totalTime:   totalTime,
-            exercisePRs: exercisePRs,
+            totalReps: totalReps,
+            totalTime: TimeSpan(seconds: secondsElapsed),
+            exercisePRs: updates.prExerciseIDs,
             weightByExercise: weightByExercise
         )
     }

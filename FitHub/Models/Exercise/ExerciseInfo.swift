@@ -115,6 +115,8 @@ enum ResistanceType: String, CaseIterable, Identifiable, Codable {
         default: return false
         }
     }
+    
+    static let forExercises: [ResistanceType] = [.freeWeight, .bodyweight, .machine, .banded, .other]
 }
 
 enum RepsInstruction: String, Codable, CaseIterable {
@@ -126,7 +128,7 @@ enum RepsInstruction: String, Codable, CaseIterable {
 enum WeightInstruction: String, Codable, CaseIterable {
     case perDumbbell = "Per Dumbbell"
     case perStack = "Per Stack"
-    // case perPeg = "Per Peg"
+    case perPeg = "Per Peg"
     // case perSleeve = "Per Sleeve"
 }
 

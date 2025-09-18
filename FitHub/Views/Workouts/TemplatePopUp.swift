@@ -22,7 +22,7 @@ struct TemplatePopup: View {
             headerToolbar
             
             if let completionTime = template.estimatedCompletionTime, !template.exercises.isEmpty {
-                Text("Est. Completion Time: \(Format.formatDuration(completionTime.inSeconds, roundSeconds: true))")
+                Text("Est. Duration: \(Format.formatDuration(completionTime.inSeconds, roundSeconds: true))")
                     .font(.caption)
                     .foregroundStyle(.gray)
             }

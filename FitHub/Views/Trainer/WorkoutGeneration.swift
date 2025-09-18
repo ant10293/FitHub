@@ -21,7 +21,8 @@ struct WorkoutGeneration: View {
     @State private var selectedTemplate: SelectedTemplate?
     @State private var alertMessage: String = ""
     @State private var replacedExercises: [String] = [] // Define replacedExercises here
-    
+    @State private var isReplacing: Bool = false
+
     var body: some View {
         TemplateNavigator(
             userData: ctx.userData,
@@ -44,6 +45,7 @@ struct WorkoutGeneration: View {
                 .disabled(showingExerciseOptions)
                 .padding(.horizontal)
             }
+            .generatingOverlay(isReplacing, message: "Replacing Exercise...")
             .navigationBarTitle("Workout Generation", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -63,7 +65,7 @@ struct WorkoutGeneration: View {
                 }
             }
             .navigationDestination(isPresented: $showingCustomizationForm) { WorkoutCustomization() }
-            .alert(isPresented: $showAlert) { Alert(title: Text("Template updated"), message: Text(alertMessage), dismissButton: .default(Text("OK"))) }
+            .alert(isPresented: $showAlert) { Alert(title: Text("Template Update"), message: Text(alertMessage), dismissButton: .default(Text("OK"))) }
             .overlay(showingExerciseOptions ? exerciseOptions : nil)
         }
     }
@@ -75,6 +77,7 @@ struct WorkoutGeneration: View {
                 alertMessage: $alertMessage,
                 replacedExercises: $replacedExercises,
                 template: $ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] ?? .constant(WorkoutTemplate(name: "Default", exercises: [], categories: [])),
+                isReplacing: $isReplacing,
                 exercise: exercise,
                 onClose: {
                     showingExerciseOptions = false

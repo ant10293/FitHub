@@ -35,7 +35,7 @@ struct NextButton: View {
                 }
             } else {
                 if isDisabled {
-                    Text(exercise.type.usesWeight ? "Invalid weight or reps field." : (exercise.effort.usesReps ? "Invalid reps field." : "Invalid time field."))
+                    Text(exercise.resistance.usesWeight ? "Invalid weight or reps field." : (exercise.effort.usesReps ? "Invalid reps field." : "Invalid time field."))
                         .font(.subheadline)
                         .foregroundStyle(.red)
                 }
@@ -46,7 +46,7 @@ struct NextButton: View {
                         Image(systemName: button.Image)
                     }
                     .padding()
-                    .roundedBackground(cornerRadius: 10, color: isDisabled ? .gray : button.Color)
+                    .roundedBackground(cornerRadius: 10, color: isDisabled ? .gray : .blue)
                     .foregroundStyle(.white)
                 }
                 .disabled(isDisabled)
@@ -54,13 +54,13 @@ struct NextButton: View {
         }
     }
     
-    private var buttonInfo: (Label: String, Image: String, Color: Color) {
+    private var buttonInfo: (Label: String, Image: String) {
         if exercise.currentSetIndex < exercise.totalSets - 1 {
-            return ("Next Set", "arrow.right.circle.fill", .blue)
+            return ("Next Set", "arrow.right.circle.fill")
         } else if isLastExercise {
-            return ("Finish Workout", "flag.checkered.circle.fill", .green)
+            return ("Finish Workout", "flag.checkered.circle.fill")
         } else {
-            return ("Next Exercise", "arrowshape.forward.circle.fill", .blue)
+            return ("Next Exercise", "arrowshape.forward.circle.fill")
         }
     }
     

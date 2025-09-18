@@ -12,7 +12,7 @@ struct WeightIncrementation: View {
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
     @State private var platedRounding: Double = 5
-    @State private var singlePegPlatedRounding: Double = 2.5
+    @State private var independentPlatedRounding: Double = 2.5
     @State private var pinLoadedRounding: Double = 2.5
     @State private var smallWeightsRounding: Double = 5
     @State private var equipSheet: EquipSheet? // nil ⇒ no sheet
@@ -46,17 +46,17 @@ struct WeightIncrementation: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        Text("Single Peg Plated Equipment")
+                        Text("Independent Peg Plated Equipment")
                             .font(.headline)
                             .padding(.leading)
                         Image(systemName: "info.circle")
                         
                     }
                     .onTapGesture {
-                        equipSheet = EquipSheet(category: .platedSinglePeg, categories: [.barsPlates, .platedMachines])
+                        equipSheet = EquipSheet(category: .platedIndependentPeg, categories: [.barsPlates, .platedMachines])
                     }
                     
-                    TextField("Rounding Increment", value: $singlePegPlatedRounding, formatter: decimalFormatter)
+                    TextField("Rounding Increment", value: $independentPlatedRounding, formatter: decimalFormatter)
                         .keyboardType(.decimalPad)
                         .padding()
                         .background(Color(UIColor.secondarySystemBackground))
@@ -162,35 +162,28 @@ struct WeightIncrementation: View {
     
     private var isDefault: Bool {
         if isImperial {
-            platedRounding == 5 && singlePegPlatedRounding == 2.5 && smallWeightsRounding == 5 && pinLoadedRounding == 2.5
+            platedRounding == 5 && independentPlatedRounding == 2.5 && smallWeightsRounding == 5 && pinLoadedRounding == 2.5
         } else {
-            platedRounding == 2.5 && singlePegPlatedRounding == 1.25 && smallWeightsRounding == 2.5 && pinLoadedRounding == 1.25
+            platedRounding == 2.5 && independentPlatedRounding == 1.25 && smallWeightsRounding == 2.5 && pinLoadedRounding == 1.25
         }
     }
     
     private func initializeVariables() {
-        if isImperial {
-            platedRounding = ctx.userData.settings.roundingPreference.lb.plated.inLb
-            singlePegPlatedRounding = ctx.userData.settings.roundingPreference.lb.platedSinglePeg.inLb
-            pinLoadedRounding = ctx.userData.settings.roundingPreference.lb.pinLoaded.inLb
-            smallWeightsRounding = ctx.userData.settings.roundingPreference.lb.smallWeights.inLb
-        } else {
-            platedRounding = ctx.userData.settings.roundingPreference.kg.plated.inKg
-            singlePegPlatedRounding = ctx.userData.settings.roundingPreference.kg.platedSinglePeg.inKg
-            pinLoadedRounding = ctx.userData.settings.roundingPreference.kg.pinLoaded.inKg
-            smallWeightsRounding = ctx.userData.settings.roundingPreference.kg.smallWeights.inKg
-        }
+        platedRounding = ctx.userData.settings.roundingPreference.getRounding(for: .plated)
+        independentPlatedRounding = ctx.userData.settings.roundingPreference.getRounding(for: .platedIndependentPeg)
+        pinLoadedRounding = ctx.userData.settings.roundingPreference.getRounding(for: .pinLoaded)
+        smallWeightsRounding = ctx.userData.settings.roundingPreference.getRounding(for: .smallWeights)
     }
     
     private func reset() {
         if isImperial {
             platedRounding = 5
-            singlePegPlatedRounding = 2.5
+            independentPlatedRounding = 2.5
             pinLoadedRounding = 2.5
             smallWeightsRounding = 5
         } else {
             platedRounding = 2.5
-            singlePegPlatedRounding = 1.25
+            independentPlatedRounding = 1.25
             pinLoadedRounding = 1.25
             smallWeightsRounding = 2.5
         }
@@ -198,17 +191,10 @@ struct WeightIncrementation: View {
     }
     
     private func saveChanges() {
-        if isImperial {
-            ctx.userData.settings.roundingPreference.lb.plated = Mass(lb: platedRounding)
-            ctx.userData.settings.roundingPreference.lb.platedSinglePeg = Mass(lb: singlePegPlatedRounding)
-            ctx.userData.settings.roundingPreference.lb.pinLoaded = Mass(lb: pinLoadedRounding)
-            ctx.userData.settings.roundingPreference.lb.smallWeights = Mass(lb: smallWeightsRounding)
-        } else {
-            ctx.userData.settings.roundingPreference.kg.plated = Mass(kg: platedRounding)
-            ctx.userData.settings.roundingPreference.kg.platedSinglePeg = Mass(kg: singlePegPlatedRounding)
-            ctx.userData.settings.roundingPreference.kg.pinLoaded = Mass(kg: pinLoadedRounding)
-            ctx.userData.settings.roundingPreference.kg.smallWeights = Mass(kg: smallWeightsRounding)
-        }
+        ctx.userData.settings.roundingPreference.setRounding(weight: platedRounding, for: .plated)
+        ctx.userData.settings.roundingPreference.setRounding(weight: independentPlatedRounding, for: .platedIndependentPeg)
+        ctx.userData.settings.roundingPreference.setRounding(weight: pinLoadedRounding, for: .pinLoaded)
+        ctx.userData.settings.roundingPreference.setRounding(weight: smallWeightsRounding, for: .smallWeights)
         
         ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
         ctx.toast.showSaveConfirmation()  // Trigger the notification

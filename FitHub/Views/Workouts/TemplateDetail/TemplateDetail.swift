@@ -22,11 +22,13 @@ struct TemplateDetail: View {
     @State private var originalTemplate: WorkoutTemplate?
     @State private var undoStack: [WorkoutTemplate] = []
     @State private var redoStack: [WorkoutTemplate] = []
-    @State private var replacedExercises: [Exercise.ID: [String]] = [:]
+    @State private var replacedExercises: [String] = []
     @State private var exercisePendingDeletion: Exercise? = nil
     @State private var activeAlert: ActiveAlert? = nil
     @State private var selectedExercise: Exercise? // State to manage selected exercise for detail view
     @State private var activeDetailID: UUID? = nil   // nil = no menu open
+    @State private var isReplacing: Bool = false
+    @State private var replaceMessage: String = ""
     private let modifier = ExerciseModifier()
     var isArchived: Bool = false
     var onDone: () -> Void
@@ -58,9 +60,16 @@ struct TemplateDetail: View {
                 }
             }
         }
+        .generatingOverlay(isReplacing, message: "Replacing Exercise...")
         .overlay(alignment: .center, content: { template.exercises.isEmpty ? emptyView() : nil })
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-        .overlay(!kbd.isVisible ? FloatingButton(image: "plus", disabled: isArchived, action: { showingExerciseSelection = true }) : nil, alignment: .bottomTrailing)
+        .overlay(!kbd.isVisible ?
+             FloatingButton(
+                image: "plus",
+                disabled: isArchived,
+                action: { showingExerciseSelection = true }
+             ) : nil, alignment: .bottomTrailing
+        )
         .navigationBarItems(trailing: Button(isEditing ? "Close" : "Edit") { isEditing.toggle() }.disabled(isArchived))
         .sheet(isPresented: $showingExerciseSelection) { exerciseSelectionSheet }
         .sheet(item: $selectedExercise, onDismiss: { handleSheetDismiss() }) { exercise in
@@ -91,6 +100,8 @@ struct TemplateDetail: View {
                     }),
                     secondaryButton: .cancel({ exercisePendingDeletion = nil })
                 )
+            case .replace:
+                return Alert(title: Text("Template Update"), message: Text(replaceMessage), dismissButton: .default(Text("OK")))
             }
         }
         .navigationBarTitle(template.name, displayMode: .inline)
@@ -107,10 +118,6 @@ struct TemplateDetail: View {
                     isShowingOptions: Binding(
                         get: { activeDetailID == exercise.id },
                         set: { newVal in activeDetailID = newVal ? exercise.id : nil }
-                    ),
-                    replacedExercises: Binding(
-                        get: { replacedExercises[exercise.id] ?? [] },
-                        set: { replacedExercises[exercise.id] = $0 }
                     ),
                     hasEquipmentAdjustments: ctx.equipment.hasEquipmentAdjustments(for: exercise),
                     perform: { action in
@@ -131,7 +138,7 @@ struct TemplateDetail: View {
             
             // Spacer row at the end
             Color.clear
-                .frame(height: 100)
+                .frame(height: 50)
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
         }
@@ -229,7 +236,7 @@ struct TemplateDetail: View {
         .animation(Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: pulsate)
     }
     
-    private enum ActiveAlert: Identifiable { case fill, delete; var id: Int { hashValue } }
+    private enum ActiveAlert: Identifiable { case fill, delete, replace; var id: Int { hashValue } }
     private func triggerFillAlert() { activeAlert = .fill }
     
     private func performCallBackAction(action: CallBackAction, exercise: Binding<Exercise>) {
@@ -237,11 +244,7 @@ struct TemplateDetail: View {
         case .addSet: captureSnapshot(); modifier.addNewSet(exercise.wrappedValue, from: &template, user: ctx.userData)
         case .deleteSet: captureSnapshot(); modifier.deleteSet(exercise.wrappedValue, from: &template, user: ctx.userData)
         case .removeExercise: confirmDeleteExercise(exercise.wrappedValue)
-        case .replaceExercise:
-            captureSnapshot()
-            var local = replacedExercises[exercise.id] ?? []
-            _ = modifier.replace(target: exercise.wrappedValue, in: &template, ctx: ctx, replaced: &local)
-            replacedExercises[exercise.id] = local
+        case .replaceExercise: replaceExercise(exercise.wrappedValue)
         case .viewAdjustments: showingAdjustmentsView = true; selectedExercise = exercise.wrappedValue
         case .viewDetail: showingDetailView = true; selectedExercise = exercise.wrappedValue
         case .saveTemplate: saveTemplate()
@@ -282,6 +285,32 @@ struct TemplateDetail: View {
         template.exercises.move(fromOffsets: source, toOffset: destination)
         saveTemplate()
         isCollapsed = false
+    }
+    
+    private func replaceExercise(_ exercise: Exercise) {
+        captureSnapshot() // only capture if changes will be made
+        isReplacing = true
+        let oldName = exercise.name
+        modifier.replaceInBackground(
+            target: exercise,
+            template: template,
+            exerciseData: ctx.exercises,
+            equipmentData: ctx.equipment,
+            userData: ctx.userData,
+            replaced: replacedExercises,
+            onComplete: { result in
+                if let newExercise = result.newExercise {
+                    // only update when necessary
+                    template = result.updatedTemplate
+                    replacedExercises = result.updatedReplaced
+                    replaceMessage = "Replaced '\(oldName)' with '\(newExercise.name)'.\nThis action can be undone via: Edit → Undo"
+                } else {
+                    replaceMessage = "No similar exercise found to replace '\(oldName)'."
+                }
+                activeAlert = .replace
+                isReplacing = false
+            }
+        )
     }
     
     private func addExercise(_ exercise: Exercise) {

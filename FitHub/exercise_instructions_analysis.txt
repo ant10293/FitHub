@@ -1,0 +1,476 @@
+Exercises with weightInstruction, repsInstruction, or both:
+============================================================
+
+Exercise: Alternating DB Front Raise
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Arm
+
+Exercise: Archer Push-Up
+Limb Movement Type: Unilateral
+Reps Instruction: Per Side
+
+Exercise: Arnold Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Barbell Bulgarian Split Squat
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Barbell Lunge
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Barbell Reverse Lunge
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Barbell Split Squat
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Barbell Walking Lunge
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Bayesian Curl
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Bent-Over DB Triceps Extension
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Arm
+
+Exercise: Bent-Over Dumbbell Row
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Bicycle Crunch
+Limb Movement Type: Bilateral Dependent
+Reps Instruction: Per Side
+
+Exercise: Bird Dog
+Limb Movement Type: Unilateral
+Reps Instruction: Per Side
+
+Exercise: Cable Chest Fly
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Stack
+
+Exercise: Cable Concentration Curl
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Cable Glute Kickbacks
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Cable Lateral Raise
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Cable Leg Extension
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Cable Reverse Fly
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Stack
+
+Exercise: Cable Triceps Kickback
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Cable Wood Chop
+Limb Movement Type: Unilateral
+Reps Instruction: Per Side
+
+Exercise: Chest-Supported Dumbbell Row
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Close-Grip Dumbbell Bench Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Copenhagen Plank
+Limb Movement Type: Unilateral
+Reps Instruction: Per Side
+
+Exercise: Cossack Squat
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Cuban Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Curtsy Lunge
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Decline Dumbbell Fly
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Bench Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Bench Pull
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Dumbbell Bulgarian Split Squat
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Leg
+
+Exercise: Dumbbell Chest Fly
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Concentration Curl
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Dumbbell Curl
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Arm
+
+Exercise: Dumbbell Deadlift
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Decline Bench Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Floor Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Front Raise
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Front Squat
+Limb Movement Type: Bilateral Dependent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Lateral Raise
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Lunge
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Leg
+
+Exercise: Dumbbell Push Press
+Limb Movement Type: Bilateral Dependent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Reverse Curl
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Reverse Wrist Curl
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Romanian Deadlift
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Row
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Dumbbell Shoulder Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Shrug
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Side Bend
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Split Squat
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Leg
+
+Exercise: Dumbbell Squeeze Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Thruster
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Tricep Kickback
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Dumbbell Upright Row
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Walking Calf Raise
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Leg
+
+Exercise: Dumbbell Wrist Curl
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Dumbbell Z Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Floor Hip Abduction
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Floor Hip Extension
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Goblet Bulgarian Split Squat
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Half-Kneeling Landmine Press
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Hammer Curl
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Arm
+
+Exercise: Hip Airplane
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Hip Extension
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: I-Y-T Raise (on Bench)
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Incline Dumbbell Bench Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Incline Dumbbell Curl
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Incline Dumbbell Fly
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Incline Hammer Curl
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Incline Y Raise
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: KB Bottoms-Up Press
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Kneeling Side Plank
+Limb Movement Type: Unilateral
+Reps Instruction: Per Side
+
+Exercise: Kroc Row
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Arm
+
+Exercise: Landmine Floor Press
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Lunge
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Meadows Row
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Medicine Ball Russian Twist
+Limb Movement Type: Bilateral Dependent
+Reps Instruction: Per Side
+
+Exercise: One Arm Cable Bicep Curl
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: One Arm Dumbbell Preacher Curl
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: One Arm Landmine Press
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: One-Arm Cable Triceps Extension
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: One-Arm Lat Pulldown
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: One-Arm Pulldown
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Pistol Squat
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Renegade Row
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Arm
+
+Exercise: Reverse Cable Crossover
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Stack
+
+Exercise: Reverse Dumbbell Fly
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Reverse Lunge
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Reverse-Grip Dumbbell Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Roman Chair Side Bend
+Limb Movement Type: Bilateral Dependent
+Reps Instruction: Per Side
+
+Exercise: Scaption Raise
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Seated Dumbbell Curl
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Seated Dumbbell Shoulder Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Side Leg Raise
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Side Lunge
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Side Plank
+Limb Movement Type: Unilateral
+Reps Instruction: Per Side
+
+Exercise: Single Leg Romanian Deadlift
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Single Leg Seated Calf Raise
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Single-Arm Cable Row
+Limb Movement Type: Unilateral
+Reps Instruction: Per Arm
+
+Exercise: Single-Arm DB Skull Crusher
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Arm
+
+Exercise: Single-Arm Dumbbell Bench Press
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Arm
+
+Exercise: Single-Leg Deadlift
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Leg
+
+Exercise: Single-Leg Glute Bridge
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Single-Leg Hip Thrust
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Single-Leg Press
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Single-Leg Squat
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Single‑Leg Dumbbell Deadlift
+Limb Movement Type: Unilateral
+Weight Instruction: Per Dumbbell
+Reps Instruction: Per Leg
+
+Exercise: Split-Squat Jump
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Standing Cable Chest Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Stack
+
+Exercise: Standing Dumbbell Calf Raise
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Standing Leg Curl
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Step Up
+Limb Movement Type: Unilateral
+Reps Instruction: Per Leg
+
+Exercise: Tate Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Y Press
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell
+
+Exercise: Zottman Curl
+Limb Movement Type: Bilateral Independent
+Weight Instruction: Per Dumbbell

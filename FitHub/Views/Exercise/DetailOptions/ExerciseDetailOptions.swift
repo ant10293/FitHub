@@ -23,7 +23,7 @@ struct ExerciseDetailOptions: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            if exercise.type.usesWeight {
+            if exercise.resistance.usesWeight {
                 TextButton(
                     title: "Warm-up Sets",
                     systemImage: "flame.fill",

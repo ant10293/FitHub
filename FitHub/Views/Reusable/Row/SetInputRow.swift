@@ -26,7 +26,7 @@ struct SetInputRow: View {
                         .font(.headline)
                         .frame(width: setsColWidth)
                     
-                    if exercise.type.usesWeight {
+                    if exercise.resistance.usesWeight {
                          weightHeader
                     } else {
                          Color.clear.frame(width: fieldColWidth) // ← holds column space
@@ -41,7 +41,7 @@ struct SetInputRow: View {
                     .fontWeight(.bold)
                     .frame(width: setsColWidth)
                 
-                if exercise.type.usesWeight {
+                if exercise.resistance.usesWeight {
                      weightField
                 } else {
                      Color.clear.frame(width: fieldColWidth) // ← holds column space

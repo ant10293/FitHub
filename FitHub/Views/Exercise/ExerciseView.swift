@@ -97,7 +97,7 @@ struct ExerciseView: View {
                                                 .scaledToFit()
                                                 .frame(width: 8.5, height: 8.5)
                                             
-                                            Text(exercise.type.usesWeight ? "1rm: " : (exercise.effort.usesReps ? "Max: " : "Time: "))
+                                            Text(exercise.resistance.usesWeight ? "1rm: " : (exercise.effort.usesReps ? "Max: " : "Time: "))
                                                 .bold()
                                                 .font(.caption2)
                                             +
