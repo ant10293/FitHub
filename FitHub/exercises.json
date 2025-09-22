@@ -25,6 +25,390 @@
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Free Weight"
 	},
+    {
+        "name" : "Decline Bench Press",
+        "id" : "9B3DFF7F-74EA-4818-B8F0-1085AEE17AF8",
+        "image" : "decline_bench_press",
+        "url" : "decline-bench-press",
+        "aliases" : ["Decline Barbell Press", "Decline Chest Press"],
+        "description" : "Targets the lower chest and triceps more intensely due to the decline angle.",
+        "equipmentRequired" : ["Decline Bench Rack", "Barbell"],
+        "muscles" : [
+            { "engagementPercentage" : 65, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Costal Head" }
+            ] },
+            { "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] }
+        ],
+        "difficulty" : "Nov.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Free Weight"
+    },
+    {
+        "name" : "Incline Bench Press",
+        "id" : "3F3CE86A-A24B-47DB-849D-4A6B0D5C7B0A",
+        "image" : "incline_bench_press",
+        "url" : "incline-bench-press",
+        "aliases" : ["Incline Barbell Press", "Incline Chest Press"],
+        "description" : "Targets the upper chest, shoulders, and triceps, performed on an incline bench.",
+        "equipmentRequired" : ["Barbell", "Incline Bench Rack"],
+        "muscles" : [
+            { "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
+            ] },
+            { "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] }
+        ],
+        "difficulty" : "Nov.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Free Weight"
+    },
+    {
+        "name" : "Close-Grip Incline Bench Press",
+        "id" : "A9D4C7E2-3B5F-4A1C-8E9D-0B2F3C4D5E6A",
+        "image" : "close_grip_incline_bench_press",
+        "url" : "close-grip-incline-bench-press",
+        "aliases" : ["Close-Grip Incline Press"],
+        "description" : "Performs an incline bench press with a narrow grip to target the upper chest and triceps with greater emphasis on elbow extension.",
+        "equipmentRequired" : ["Barbell", "Incline Bench Rack"],
+        "muscles" : [
+            { "engagementPercentage" : 55, "mover" : "primary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage" : 40, "mover" : "secondary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
+            ] },
+            { "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] }
+        ],
+        "difficulty" : "Int.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Free Weight"
+    },
+    {
+        "name" : "Close-Grip Bench Press",
+        "id" : "17FC28BC-74C1-4342-BB82-FA37831C13E9",
+        "image" : "close_grip_bench_press",
+        "url" : "close-grip-bench-press",
+        "aliases" : ["Narrow-Grip Bench Press"],
+        "description" : "Focuses on triceps strength with secondary chest engagement.",
+        "equipmentRequired" : ["Flat Bench", "Barbell"],
+        "muscles" : [
+            { "engagementPercentage" : 70, "mover" : "primary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
+            ] }
+        ],
+        "difficulty" : "Nov.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Free Weight"
+    },
+    {
+        "name" : "Wide-Grip Bench Press",
+        "id" : "4E5F6A7B-8C9D-0A1B-2C3D-4E5F6A7B8C9D",
+        "image" : "wide_grip_bench_press",
+        "url" : "wide-grip-bench-press",
+        "aliases" : ["Wide Bench Press"],
+        "description" : "Performs a bench press with a wider-than-shoulder grip to emphasize the outer chest and shoulders.",
+        "equipmentRequired" : ["Barbell", "Flat Bench Rack"],
+        "muscles" : [
+            { "engagementPercentage" : 65, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
+            ] },
+            { "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] },
+            { "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Triceps Lateral Head" }
+            ] }
+        ],
+        "difficulty" : "Int.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Free Weight"
+    },
+    {
+        "name" : "Floor Press",
+        "id" : "159E4A5E-52D2-4900-94C8-374F1D43E709",
+        "image" : "floor_press",
+        "url" : "floor-press",
+        "aliases" : ["Barbell Floor Press"],
+        "description" : "Emphasizes the lockout phase of the bench press, reducing shoulder engagement.",
+        "equipmentRequired" : ["Barbell"],
+        "muscles" : [
+            { "engagementPercentage" : 70, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
+            ] },
+            { "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] }
+        ],
+        "difficulty" : "Nov.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Free Weight"
+    },
+    {
+        "name" : "Paused Bench Press",
+        "id" : "85CAFEFC-F3C9-4C80-A70E-940E25888A0D",
+        "image" : "paused_bench_press",
+        "url" : "paused-bench-press",
+        "aliases" : ["Pause Press", "Isometric Bench Press"],
+        "description" : "Enhances chest muscle activation by incorporating a pause at the bottom of the lift.",
+        "equipmentRequired" : ["Flat Bench", "Barbell"],
+        "muscles" : [
+            { "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
+            ] },
+            { "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] }
+        ],
+        "difficulty" : "Nov.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Free Weight"
+    },
+    {
+        "name" : "Reverse Grip Bench Press",
+        "id" : "F5DD7891-9C47-4207-9242-25E9B429E2AC",
+        "image" : "reverse_grip_bench_press",
+        "url" : "reverse-grip-bench-press",
+        "aliases" : ["Underhand Bench Press", "Reverse Chest Press"],
+        "description" : "Switches the traditional grip to target the upper chest and shoulders more intensely, while still engaging triceps and front deltoids.",
+        "equipmentRequired" : ["Flat Bench", "Barbell"],
+        "muscles" : [
+            { "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
+            ] },
+            { "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] }
+        ],
+        "difficulty" : "Int.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Free Weight"
+    },
+    {
+        "name" : "Bench Pin Press",
+        "id" : "C52E6249-F5FD-4E6E-A455-E3D38861C444",
+        "image" : "bench_pin_press",
+        "url" : "bench-pin-press",
+        "aliases" : ["Pin Press", "Rack Bench Press"],
+        "description" : "Focuses on the top half of the bench press motion, enhancing lockout strength.",
+        "equipmentRequired" : ["Flat Bench", "Barbell"],
+        "muscles" : [
+            { "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
+            ] },
+            { "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] }
+        ],
+        "difficulty" : "Nov.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Free Weight"
+    },
+    {
+        "name" : "Smith Machine Incline Bench Press",
+        "id" : "BE4E5EAE-92C4-47FD-B4D3-B946E033718D",
+        "image" : "smith_machine_incline_bench_press",
+        "aliases" : ["Smith Incline Bench"],
+        "description" : "Targets the upper chest with extra stability from the Smith machine, reducing balance requirements.",
+        "equipmentRequired" : ["Smith Machine", "Adjustable Bench"],
+        "muscles" : [
+            { "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
+            ] },
+            { "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [] },
+            { "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] }
+        ],
+        "difficulty" : "Beg.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Machine"
+    },
+    {
+        "name" : "Smith Machine Bench Press",
+        "id" : "3E423D30-965F-4BCA-97FD-A73EC76E715C",
+        "image" : "smith_machine_bench_press",
+        "url" : "smith-machine-bench-press",
+        "aliases" : ["Smith Machine Chest Press"],
+        "description" : "Provides a guided path for the bench press, focusing on the chest with less stability demand.",
+        "equipmentRequired" : ["Smith Machine"],
+        "muscles" : [
+            { "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
+            ] },
+            { "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] }
+        ],
+        "difficulty" : "Nov.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Machine"
+    },
+    {
+        "name" : "Converging Smith Bench Press",
+        "id" : "4B24F2DF-4973-4E13-A8DC-304F9B73BCD3",
+        "image" : "converging_smith_bench_press",
+        "aliases" : ["Converging Chest Press"],
+        "description" : "Smith-machine press with converging bar path that matches natural arm arc, emphasizing mid-chest while reducing shoulder stress.",
+        "equipmentRequired" : ["Converging Smith Press"],
+        "muscles" : [
+            { "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
+            ] },
+            { "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] }
+        ],
+        "difficulty" : "Nov.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Machine"
+    },
+    {
+        "name" : "Converging Smith Incline Bench Press",
+        "id" : "A2ED4F71-CD5C-42D2-A8E7-B56572305CBF",
+        "image" : "converging_smith_incline_press",
+        "aliases" : ["Converging Incline Chest Press"],
+        "description" : "Incline variation targets upper-chest fibers with converging path for a stronger contraction and guided stability.",
+        "equipmentRequired" : ["Converging Smith Press"],
+        "muscles" : [
+            { "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
+            ] },
+            { "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] }
+        ],
+        "difficulty" : "Nov.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Machine"
+    },
+    {
+        "name" : "Converging Smith Decline Bench Press",
+        "id" : "9A3D7211-FDDE-4C94-A51E-A2F9E642B3C9",
+        "image" : "converging_smith_decline_press",
+        "aliases" : ["Converging Decline Chest Press"],
+        "description" : "Decline-angle converging Smith press that emphasizes the lower chest while providing guided bar path and added stability.",
+        "equipmentRequired" : ["Converging Smith Press"],
+        "muscles" : [
+            { "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Costal Head" }
+            ] },
+            { "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] }
+        ],
+        "difficulty" : "Nov.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Machine"
+    },
+    {
+        "name" : "Guillotine Press",
+        "id" : "1314D793-7CF6-4C42-B6C1-44671D773CA9",
+        "image" : "guillotine_press",
+        "aliases" : ["Neck Press", "Barbell Guillotine Bench"],
+        "description" : "Lower the bar to the upper chest/neck to emphasise the clavicular fibres of the pecs.",
+        "equipmentRequired" : ["Flat Bench Rack", "Barbell"],
+        "muscles" : [
+            { "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
+            ] },
+            { "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] },
+            { "engagementPercentage" : 15, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Triceps Medial Head" }
+            ] }
+        ],
+        "difficulty" : "Int.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Free Weight"
+    },
+    {
+        "name" : "Spoto Press",
+        "id" : "5C8D3E1B-7A2F-4A6C-9B0E-1D2F3A4B5C6D",
+        "image" : "spoto_press",
+        "url" : "spoto-press",
+        "aliases" : ["Paused Hover Bench"],
+        "description" : "Pause the bar just above the chest in a bench press to improve mid-range strength and control.",
+        "equipmentRequired" : ["Barbell", "Flat Bench Rack"],
+        "muscles" : [
+            { "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
+            ] },
+            { "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
+                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
+            ] }
+        ],
+        "difficulty" : "Int.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Free Weight"
+    },
 	{
 		"name" : "Bench Pull",
 		"id" : "7E2A1B4C-9D3F-4A58-AB12-EF3C6D9B0A47",
@@ -69,31 +453,6 @@
 		"limbMovementType" : "Unilateral",
 		"resistance" : "Free Weight",
 		"repsInstruction" : "Per Arm"
-	},
-	{
-		"name" : "Decline Bench Press",
-		"id" : "9B3DFF7F-74EA-4818-B8F0-1085AEE17AF8",
-		"image" : "decline_bench_press",
-		"url" : "decline-bench-press",
-		"aliases" : ["Decline Barbell Press", "Decline Chest Press"],
-		"description" : "Targets the lower chest and triceps more intensely due to the decline angle.",
-		"equipmentRequired" : ["Decline Bench Rack", "Barbell"],
-		"muscles" : [
-			{ "engagementPercentage" : 65, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Costal Head" }
-			] },
-			{ "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Chest Fly",
@@ -164,30 +523,6 @@
 		"limbMovementType" : "Bilateral Independent",
 		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
-	},
-	{
-		"name" : "Wide-Grip Bench Press",
-		"id" : "4E5F6A7B-8C9D-0A1B-2C3D-4E5F6A7B8C9D",
-		"image" : "wide_grip_bench_press",
-		"url" : "wide-grip-bench-press",
-		"aliases" : ["Wide Bench Press"],
-		"description" : "Performs a bench press with a wider-than-shoulder grip to emphasize the outer chest and shoulders.",
-		"equipmentRequired" : ["Barbell", "Flat Bench Rack"],
-		"muscles" : [
-			{ "engagementPercentage" : 65, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
-			] },
-			{ "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] },
-			{ "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Triceps Lateral Head" }
-			] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Close-Grip Dumbbell Bench Press",
@@ -326,78 +661,6 @@
 			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
 				{ "engagementPercentage" : 100, "submuscleWorked" : "Rear Delt" }
-			] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
-	},
-	{
-		"name" : "Floor Press",
-		"id" : "159E4A5E-52D2-4900-94C8-374F1D43E709",
-		"image" : "floor_press",
-		"url" : "floor-press",
-		"aliases" : ["Barbell Floor Press"],
-		"description" : "Emphasizes the lockout phase of the bench press, reducing shoulder engagement.",
-		"equipmentRequired" : ["Barbell"],
-		"muscles" : [
-			{ "engagementPercentage" : 70, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
-			] },
-			{ "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
-	},
-	{
-		"name" : "Incline Bench Press",
-		"id" : "3F3CE86A-A24B-47DB-849D-4A6B0D5C7B0A",
-		"image" : "incline_bench_press",
-		"url" : "incline-bench-press",
-		"aliases" : ["Incline Barbell Press", "Incline Chest Press"],
-		"description" : "Targets the upper chest, shoulders, and triceps, performed on an incline bench.",
-		"equipmentRequired" : ["Barbell", "Incline Bench Rack"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
-			] },
-			{ "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
-	},
-	{
-		"name" : "Close-Grip Incline Bench Press",
-		"id" : "A9D4C7E2-3B5F-4A1C-8E9D-0B2F3C4D5E6A",
-		"image" : "close_grip_incline_bench_press",
-		"url" : "close-grip-incline-bench-press",
-		"aliases" : ["Close-Grip Incline Press"],
-		"description" : "Performs an incline bench press with a narrow grip to target the upper chest and triceps with greater emphasis on elbow extension.",
-		"equipmentRequired" : ["Barbell", "Incline Bench Rack"],
-		"muscles" : [
-			{ "engagementPercentage" : 55, "mover" : "primary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 40, "mover" : "secondary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
-			] },
-			{ "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
 			] }
 		],
 		"difficulty" : "Int.",
@@ -611,31 +874,6 @@
 		"resistance" : "Bodyweight"
 	},
 	{
-		"name" : "Smith Machine Bench Press",
-		"id" : "3E423D30-965F-4BCA-97FD-A73EC76E715C",
-		"image" : "smith_machine_bench_press",
-		"url" : "smith-machine-bench-press",
-		"aliases" : ["Smith Machine Chest Press"],
-		"description" : "Provides a guided path for the bench press, focusing on the chest with less stability demand.",
-		"equipmentRequired" : ["Smith Machine"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
-			] },
-			{ "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Machine"
-	},
-	{
 		"name" : "Cable Chest Fly",
 		"id" : "8717D2A8-022C-4B4A-B710-B92B6B58AF6A",
 		"image" : "cable_chest_fly",
@@ -653,81 +891,6 @@
 		"limbMovementType" : "Bilateral Independent",
 		"resistance" : "Machine",
 		"weightInstruction" : "Per Stack"
-	},
-	{
-		"name" : "Paused Bench Press",
-		"id" : "85CAFEFC-F3C9-4C80-A70E-940E25888A0D",
-		"image" : "paused_bench_press",
-		"url" : "paused-bench-press",
-		"aliases" : ["Pause Press", "Isometric Bench Press"],
-		"description" : "Enhances chest muscle activation by incorporating a pause at the bottom of the lift.",
-		"equipmentRequired" : ["Flat Bench", "Barbell"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
-			] },
-			{ "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
-	},
-	{
-		"name" : "Reverse Grip Bench Press",
-		"id" : "F5DD7891-9C47-4207-9242-25E9B429E2AC",
-		"image" : "reverse_grip_bench_press",
-		"url" : "reverse-grip-bench-press",
-		"aliases" : ["Underhand Bench Press", "Reverse Chest Press"],
-		"description" : "Switches the traditional grip to target the upper chest and shoulders more intensely, while still engaging triceps and front deltoids.",
-		"equipmentRequired" : ["Flat Bench", "Barbell"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
-			] },
-			{ "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
-	},
-	{
-		"name" : "Bench Pin Press",
-		"id" : "C52E6249-F5FD-4E6E-A455-E3D38861C444",
-		"image" : "bench_pin_press",
-		"url" : "bench-pin-press",
-		"aliases" : ["Pin Press", "Rack Bench Press"],
-		"description" : "Focuses on the top half of the bench press motion, enhancing lockout strength.",
-		"equipmentRequired" : ["Flat Bench", "Barbell"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
-			] },
-			{ "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Decline Push-Up",
@@ -866,85 +1029,6 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Bodyweight"
-	},
-	{
-		"name" : "Close-Grip Feet-Up Bench Press",
-		"id" : "7ACFDF6B-1416-433D-B223-63EA77C66021",
-		"image" : "close_grip_feet_up_bench_press",
-		"aliases" : ["Feet-Up Close-Grip Bench"],
-		"description" : "Emphasises triceps by eliminating leg drive; chest serves as a secondary mover.",
-		"equipmentRequired" : ["Flat Bench", "Barbell"],
-		"muscles" : [
-			{ "engagementPercentage" : 70, "mover" : "primary", "muscleWorked" : "Triceps", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Pectorals", "submusclesWorked" : [] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
-	},
-	{
-		"name" : "Feet-Up Bench Press",
-		"id" : "682FB1D3-FF4E-4E71-860B-53498681B54C",
-		"image" : "feet_up_bench_press",
-		"aliases" : ["Bench Press (Feet-Up)"],
-		"description" : "Lifting the feet increases core demand while keeping focus on chest and arms.",
-		"equipmentRequired" : ["Barbell", "Flat Bench"],
-		"muscles" : [
-			{ "engagementPercentage" : 70, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 20, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
-	},
-	{
-		"name" : "Smith Machine Incline Bench Press",
-		"id" : "BE4E5EAE-92C4-47FD-B4D3-B946E033718D",
-		"image" : "smith_machine_incline_bench_press",
-		"aliases" : ["Smith Incline Bench"],
-		"description" : "Targets the upper chest with extra stability from the Smith machine, reducing balance requirements.",
-		"equipmentRequired" : ["Smith Machine", "Adjustable Bench"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
-			] },
-			{ "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Beg.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Machine"
-	},
-	{
-		"name" : "Guillotine Press",
-		"id" : "1314D793-7CF6-4C42-B6C1-44671D773CA9",
-		"image" : "guillotine_press",
-		"aliases" : ["Neck Press", "Barbell Guillotine Bench"],
-		"description" : "Lower the bar to the upper chest/neck to emphasise the clavicular fibres of the pecs.",
-		"equipmentRequired" : ["Flat Bench Rack", "Barbell"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
-			] },
-			{ "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] },
-			{ "engagementPercentage" : 15, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Triceps Medial Head" }
-			] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Decline Dumbbell Fly",
@@ -1213,78 +1297,6 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Bodyweight"
-	},
-	{
-		"name" : "Converging Smith Bench Press",
-		"id" : "4B24F2DF-4973-4E13-A8DC-304F9B73BCD3",
-		"image" : "converging_smith_bench_press",
-		"aliases" : ["Converging Chest Press"],
-		"description" : "Smith-machine press with converging bar path that matches natural arm arc, emphasizing mid-chest while reducing shoulder stress.",
-		"equipmentRequired" : ["Converging Smith Press"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
-			] },
-			{ "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Machine"
-	},
-	{
-		"name" : "Converging Smith Incline Bench Press",
-		"id" : "A2ED4F71-CD5C-42D2-A8E7-B56572305CBF",
-		"image" : "converging_smith_incline_press",
-		"aliases" : ["Converging Incline Chest Press"],
-		"description" : "Incline variation targets upper-chest fibers with converging path for a stronger contraction and guided stability.",
-		"equipmentRequired" : ["Converging Smith Press"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Clavicular Head" }
-			] },
-			{ "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Machine"
-	},
-	{
-		"name" : "Converging Smith Decline Bench Press",
-		"id" : "9A3D7211-FDDE-4C94-A51E-A2F9E642B3C9",
-		"image" : "converging_smith_decline_press",
-		"aliases" : ["Converging Decline Chest Press"],
-		"description" : "Decline-angle converging Smith press that emphasizes the lower chest while providing guided bar path and added stability.",
-		"equipmentRequired" : ["Converging Smith Press"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Costal Head" }
-			] },
-			{ "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Machine"
 	},
 	{
 		"name" : "Arnold Press",
@@ -1909,43 +1921,6 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Bodyweight"
-	},
-	{
-		"name" : "Front Hold",
-		"id" : "B016D7A5-8E58-468E-8430-19A2261AAA0F",
-		"image" : "front_hold",
-		"aliases" : ["Static Front Raise", "Dumbbell Front Hold"],
-		"description" : "Challenges the anterior deltoids by statically holding weights at shoulder height in front of the body.",
-		"equipmentRequired" : ["Dumbbells"],
-		"muscles" : [
-			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Beg.",
-		"effort" : "Isolation",
-		"limbMovementType" : "Bilateral Independent",
-		"resistance" : "Free Weight"
-	},
-	{
-		"name" : "Log Press",
-		"id" : "92DFE50A-1DB6-4418-B1D1-9EACA1DB01EA",
-		"image" : "log_press",
-		"url" : "log-press",
-		"aliases" : ["Strongman Log Press"],
-		"description" : "A strongman staple that drives a log from shoulders to overhead, recruiting front/side delts and triceps.",
-		"equipmentRequired" : [],
-		"muscles" : [
-			{ "engagementPercentage" : 70, "mover" : "primary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Front Delt" },
-				{ "engagementPercentage" : 50, "submuscleWorked" : "Side Delt" }
-			] },
-			{ "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Dumbbell Rear Delt Row",
@@ -2604,23 +2579,6 @@
 		"limbMovementType" : "Bilateral Independent",
 		"resistance" : "Machine",
         "weightInstruction" : "Per Peg"
-	},
-	{
-		"name" : "Log Clean and Press",
-		"id" : "75360DA6-B790-4E27-B27A-A469A2559F4A",
-		"image" : "strongman_log_press",
-		"aliases" : ["Strongman Log Press"],
-		"description" : "Clean a strongman log to shoulders then press overhead for total-body power.",
-		"equipmentRequired" : ["Strongman Log"],
-		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Deltoids", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Trapezius", "submusclesWorked" : [] }
-		],
-		"difficulty" : "Adv.",
-		"effort" : "Plyometric",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Barbell Curl",
@@ -3298,28 +3256,6 @@
 		],
 		"difficulty" : "Nov.",
 		"effort" : "Isolation",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
-	},
-	{
-		"name" : "Close-Grip Bench Press",
-		"id" : "17FC28BC-74C1-4342-BB82-FA37831C13E9",
-		"image" : "close_grip_bench_press",
-		"url" : "close-grip-bench-press",
-		"aliases" : ["Narrow-Grip Bench Press"],
-		"description" : "Focuses on triceps strength with secondary chest engagement.",
-		"equipmentRequired" : ["Flat Bench", "Barbell"],
-		"muscles" : [
-			{ "engagementPercentage" : 70, "mover" : "primary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Free Weight"
 	},
@@ -5035,7 +4971,7 @@
 			{ "engagementPercentage" : 20, "mover" : "secondary", "muscleWorked" : "Gluteus", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Hamstrings", "submusclesWorked" : [] }
 		],
-		"difficulty" : "Int.",
+		"difficulty" : "Nov.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Machine"
@@ -5322,34 +5258,6 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Machine"
-	},
-	{
-		"name" : "Jefferson Squat",
-		"id" : "9F358BE7-D6ED-424C-8219-C3AD03C62DD3",
-		"image" : "jefferson_squat",
-		"url" : "jefferson-squat",
-		"aliases" : ["Straddle Squat"],
-		"description" : "Straddle a barbell between the legs, grip with mixed hands, and squat while maintaining a neutral spine to train lower-body strength with rotational demand.",
-		"equipmentRequired" : ["Barbell"],
-		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Quadriceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
-			] },
-			{ "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Gluteus", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage" : 20, "mover" : "secondary", "muscleWorked" : "Hamstrings", "submusclesWorked" : [
-				{ "engagementPercentage" : 8, "submuscleWorked" : "Semitendinosus" },
-				{ "engagementPercentage" : 4, "submuscleWorked" : "Semimembranosus" },
-				{ "engagementPercentage" : 8, "submuscleWorked" : "Biceps Femoris" }
-			] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Standing Leg Curl",
@@ -5869,24 +5777,6 @@
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Bodyweight"
-	},
-	{
-		"name" : "Toe Walk",
-		"id" : "A64FF2AB-ADCF-4E6F-B2C8-A7B65CD7F277",
-		"image" : "toe_walk",
-		"aliases" : ["Tiptoe Walk"],
-		"description" : "Walk forward on the balls of the feet to build endurance in both heads of the calf muscles.",
-		"equipmentRequired" : [],
-		"muscles" : [
-			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Calves", "submusclesWorked" : [
-				{ "engagementPercentage" : 70, "submuscleWorked" : "Gastrocnemius" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Soleus" }
-			] }
-		],
-		"difficulty" : "Beg.",
-		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Bodyweight"
 	},
@@ -6759,30 +6649,6 @@
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
-		"name" : "Kroc Row",
-		"id" : "6E2192DF-237D-4376-AC9A-124973AA25E9",
-		"image" : "kroc_row",
-		"aliases" : ["Heavy Dumbbell Row"],
-		"description" : "High-rep, heavy single-arm dumbbell rows that build back thickness and grip strength.",
-		"equipmentRequired" : ["Dumbbells", "Flat Bench"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 15, "mover" : "secondary", "muscleWorked" : "Trapezius", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Upper Traps" }
-			] },
-			{ "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
-			] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Unilateral",
-		"resistance" : "Free Weight",
-		"weightInstruction" : "Per Dumbbell",
-		"repsInstruction" : "Per Arm"
-	},
-	{
 		"name" : "Plate-Loaded High Row",
 		"id" : "745E7252-FC4A-4628-BA4F-9092881BCEEA",
 		"image" : "iso_lateral_high_row",
@@ -6932,25 +6798,49 @@
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Bodyweight"
 	},
+    {
+        "name" : "T-Bar Row",
+        "id" : "9436C119-FE8E-48B3-81DD-8EE12B0AB582",
+        "image" : "t_bar_row",
+        "url" : "t-bar-row",
+        "aliases" : ["Landmine Row"],
+        "description" : "Targets the back muscles by rowing a T-bar loaded with weights towards the torso.",
+        "equipmentRequired" : ["T-Bar Row"],
+        "muscles" : [
+            { "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
+            { "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Trapezius", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Upper Traps" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Lower Traps" }
+            ] },
+            { "engagementPercentage" : 20, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
+                { "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
+                { "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty" : "Nov.",
+        "effort" : "Compound",
+        "limbMovementType" : "Bilateral Dependent",
+        "resistance" : "Machine"
+    },
 	{
-		"name" : "Standing T-Bar Row",
+		"name" : "Chest-Supported T-Bar Row",
 		"id" : "B68C68AA-D33D-4D09-BE31-4C1D08F0B0ED",
-		"image" : "standing_t_bar_row",
-		"aliases" : ["Plate-Loaded T-Bar Row"],
-		"description" : "Rows a plate-loaded T-bar while standing over the platform to build overall back thickness.",
-		"equipmentRequired" : ["T-Bar Row"],
+		"image" : "chest_supported_t_bar_row",
+		"aliases" : ["Supported T-Bar Row", "Chest Pad T-Bar Row"],
+        "description": "Performs a T-bar row with chest support, allowing for greater focus on the latissimus dorsi and reduced core involvement.",
+		"equipmentRequired" : ["Chest-Supported T-Bar Row"],
 		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
+			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
 			{ "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Trapezius", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Traps" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Traps" }
 			] },
-			{ "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
+			{ "engagementPercentage" : 15, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
 				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
 				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
 			] }
 		],
-		"difficulty" : "Nov.",
+		"difficulty" : "Beg.",
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Machine"
@@ -7371,31 +7261,6 @@
 		"repsInstruction" : "Per Arm"
 	},
 	{
-		"name" : "Bent-Over Dumbbell Row",
-		"id" : "B7F5C3D2-1A9E-4B6C-8D7F-2E1A3B4C5D6E",
-		"image" : "bent_over_dumbbell_row",
-		"url" : "bent-over-dumbbell-row",
-		"aliases" : ["Single-Arm Dumbbell Row"],
-		"description" : "Hinge at the hips and pull a dumbbell toward your torso, targeting the lats and upper back with unilateral focus.",
-		"equipmentRequired" : ["Dumbbells"],
-		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Trapezius", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Traps" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Traps" }
-			] },
-			{ "engagementPercentage" : 20, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Unilateral",
-		"resistance" : "Free Weight",
-		"repsInstruction" : "Per Arm"
-	},
-	{
 		"name" : "Inverted Row",
 		"id" : "667F0B93-BC75-418C-B9C8-FE3D3A91950B",
 		"image" : "inverted_row",
@@ -7418,30 +7283,6 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Bodyweight"
-	},
-	{
-		"name" : "T-Bar Row",
-		"id" : "9436C119-FE8E-48B3-81DD-8EE12B0AB582",
-		"image" : "t_bar_row",
-		"url" : "t-bar-row",
-		"aliases" : ["Landmine Row"],
-		"description" : "Targets the back muscles by rowing a T-bar loaded with weights towards the torso.",
-		"equipmentRequired" : ["T-Bar Row"],
-		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Latissimus Dorsi", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Trapezius", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Upper Traps" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Lower Traps" }
-			] },
-			{ "engagementPercentage" : 20, "mover" : "secondary", "muscleWorked" : "Biceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Biceps Long Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Short Head" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Machine"
 	},
 	{
 		"name" : "Pendlay Row",
@@ -8963,7 +8804,7 @@
 			{ "engagementPercentage" : 15, "mover" : "secondary", "muscleWorked" : "Erector Spinae", "submusclesWorked" : [] }
 		],
 		"difficulty" : "Adv.",
-		"effort" : "Compound",
+		"effort" : "Plyometric",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Free Weight"
 	},
@@ -9407,23 +9248,6 @@
 		"resistance" : "Machine"
 	},
 	{
-		"name" : "Pendulum Squat",
-		"id" : "C4092AA1-BEAB-4E67-A6F5-1DF3B7C36C9D",
-		"image" : "placeholder_ex_img",
-		"aliases" : [],
-		"description" : "Lever-based pendulum squat providing quad dominance with reduced spinal load.",
-		"equipmentRequired" : ["Pendulum Squat"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Quadriceps", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Gluteus", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 15, "mover" : "secondary", "muscleWorked" : "Hamstrings", "submusclesWorked" : [] }
-		],
-		"difficulty" : "Adv.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Machine"
-	},
-	{
 		"name" : "Pinch Block Hold",
 		"id" : "0A6971AE-7DEF-43DC-94A2-337C135C8577",
 		"image" : "placeholder_ex_img",
@@ -9453,23 +9277,6 @@
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Machine"
-	},
-	{
-		"name" : "Prowler Sled Push",
-		"id" : "5BE0A3BA-3328-4DA6-B550-27F598F2C8BD",
-		"image" : "placeholder_ex_img",
-		"aliases" : [],
-		"description" : "Drive a loaded sled over turf for full-body power and conditioning.",
-		"equipmentRequired" : ["Prowler Sled"],
-		"muscles" : [
-			{ "engagementPercentage" : 40, "mover" : "primary", "muscleWorked" : "Quadriceps", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Gluteus", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Hamstrings", "submusclesWorked" : [] }
-		],
-		"difficulty" : "Adv.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Rotary Torso Twist",
@@ -9503,22 +9310,6 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Bodyweight"
-	},
-	{
-		"name" : "Yoke Carry",
-		"id" : "C1B7D38B-04C5-43F6-88B9-28EE0F6E6DEF",
-		"image" : "placeholder_ex_img",
-		"aliases" : [],
-		"description" : "Carry a loaded yoke frame for distance to build full-body strength and stability.",
-		"equipmentRequired" : ["Yoke"],
-		"muscles" : [
-			{ "engagementPercentage" : 40, "mover" : "primary", "muscleWorked" : "Trapezius", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Forearms", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Quadriceps", "submusclesWorked" : [] }
-		],
-		"difficulty" : "Elite",
-		"effort" : "Compound",
-		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Towel Row",
@@ -9568,31 +9359,6 @@
 		"effort" : "Isolation",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Bodyweight"
-	},
-	{
-		"name" : "Spoto Press",
-		"id" : "5C8D3E1B-7A2F-4A6C-9B0E-1D2F3A4B5C6D",
-		"image" : "spoto_press",
-		"url" : "spoto-press",
-		"aliases" : ["Paused Hover Bench"],
-		"description" : "Pause the bar just above the chest in a bench press to improve mid-range strength and control.",
-		"equipmentRequired" : ["Barbell", "Flat Bench Rack"],
-		"muscles" : [
-			{ "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
-			] },
-			{ "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage" : 10, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-			] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Squat Thrust",

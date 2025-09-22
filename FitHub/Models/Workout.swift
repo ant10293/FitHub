@@ -9,13 +9,20 @@ import Foundation
 
 
 struct SelectedTemplate: Identifiable, Equatable {
-    var id: UUID = UUID() // not template id. changes on every selection to ensure onChange(of) is recognized
+    let id: UUID // not template id. changes on every selection to ensure onChange(of) is recognized
     var template: WorkoutTemplate
     var location: TemplateLocation
     var mode: NavigationMode
+    
+    init(template: WorkoutTemplate, location: TemplateLocation, mode: NavigationMode) {
+        self.id = UUID()
+        self.template = template
+        self.location = location
+        self.mode = mode
+    }
 }
 
-enum TemplateLocation: String, CaseIterable {
+enum TemplateLocation: String, Codable, CaseIterable {
     case user, trainer, archived
     
     var label: String {
@@ -28,7 +35,7 @@ enum TemplateLocation: String, CaseIterable {
 }
 
 struct WorkoutTemplate: Identifiable, Hashable, Codable, Equatable {
-    var id: UUID = UUID()
+    let id: UUID
     var name: String
     var exercises: [Exercise] // Define Exercise as per your app's needs
     var categories: [SplitCategory]
@@ -36,6 +43,25 @@ struct WorkoutTemplate: Identifiable, Hashable, Codable, Equatable {
     var date: Date?
     var notificationIDs: [String] = [] // Store notification identifiers for removal
     var estimatedCompletionTime: TimeSpan?
+        
+    init(
+        name: String,
+        exercises: [Exercise],
+        categories: [SplitCategory] = [],
+        dayIndex: Int? = nil,
+        date: Date? = nil,
+        notificationIDs: [String] = [],
+        estimatedCompletionTime: TimeSpan? = nil
+    ) {
+        self.id = UUID()
+        self.name = name
+        self.exercises = exercises
+        self.categories = categories
+        self.dayIndex = dayIndex
+        self.date = date
+        self.notificationIDs = notificationIDs
+        self.estimatedCompletionTime = estimatedCompletionTime
+    }
 }
 
 extension WorkoutTemplate {
@@ -121,12 +147,29 @@ extension WorkoutTemplate {
 }
 
 struct CompletedWorkout: Identifiable, Hashable, Codable {
-    var id: UUID = UUID()
+    let id: UUID
     var name: String
     var template: WorkoutTemplate
     var updatedMax: [PerformanceUpdate]
     var duration: Int
     var date: Date
+    
+    let byID: [UUID: Exercise]
+    
+    init(
+        template: WorkoutTemplate = .init(name: "", exercises: []),
+        updatedMax: [PerformanceUpdate] = [],
+        duration: Int = 0,
+        date: Date = Date()
+    ) {
+        self.id = UUID()
+        self.name = template.name
+        self.template = template
+        self.updatedMax = updatedMax
+        self.duration = duration
+        self.date = date
+        self.byID = Dictionary(uniqueKeysWithValues: template.exercises.map { ($0.id, $0) })
+    }
 }
 
 struct WorkoutInProgress: Codable, Equatable {
@@ -150,4 +193,20 @@ struct WorkoutSummaryData {
     let totalTime: TimeSpan
     let exercisePRs: [UUID]
     let weightByExercise: [UUID: Double]
+}
+
+struct OldTemplate: Identifiable {
+    let id: UUID
+    let exercises: [Exercise]
+
+    init(template: WorkoutTemplate) {
+        self.id = template.id
+        self.exercises = template.exercises
+    }
+        
+    /// Generic initializer + empty singleton
+    init(id: UUID = UUID(), exercises: [Exercise] = []) {
+        self.id = id
+        self.exercises = exercises
+    }
 }

@@ -54,7 +54,7 @@ final class WorkoutVM: ObservableObject {
         if let exIdx = template.exercises.firstIndex(where: { $0.id == exerciseBinding.wrappedValue.id }) {
             template.exercises[exIdx].setDetails = exerciseBinding.wrappedValue.setDetails
         }
-
+        
         // 3) persist in UserData
         _ = userData.updateTemplate(template: template)
     }
@@ -267,7 +267,7 @@ final class WorkoutVM: ObservableObject {
             ctx.userData.incrementWorkoutStreak(shouldSave: false)
         }
         // save precise date for determing freshness of muscle groups
-        let completedWorkout = CompletedWorkout(name: template.name, template: template, updatedMax: updates.updatedMax, duration: timer.secondsElapsed, date: now)
+        let completedWorkout: CompletedWorkout = .init(template: template, updatedMax: updates.updatedMax, duration: timer.secondsElapsed, date: now)
         ctx.userData.workoutPlans.completedWorkouts.append(completedWorkout)         // Append to completedWorkouts and save
         
         endWorkoutAndDismiss(ctx: ctx, timer: timer, shouldRemoveDate: shouldRemoveDate, completion: completion)

@@ -171,7 +171,7 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
             return false
         }
     }
-    /*
+    
     // TODO: order in which the exercise with type should occur in the generated workout
     var order: Int {
         switch self {
@@ -185,7 +185,6 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
             return 4
         }
     }
-    */
 }
 
 struct CurrentExerciseState: Codable, Equatable {

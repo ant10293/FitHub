@@ -67,7 +67,7 @@ struct UnitSelection: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(unit.displayName)
                     .font(.headline)
-                Text("\(unit.weightUnit) / \(unit.sizeUnit) • \(unit.distanceUnit)")
+                Text("\(unit.weightUnit) / \(unit.sizeUnit) • \(unit.lengthUnit)")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 Text(unit.desc)

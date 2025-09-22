@@ -76,7 +76,6 @@ struct LoadedCarry: Codable, Equatable {
     var distance: Distance
 }
 
-
 struct EndurancePR: Codable, Equatable {
     var distance: Distance
     var time: TimeSpan

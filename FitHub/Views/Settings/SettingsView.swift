@@ -18,12 +18,12 @@ struct SettingsView: View {
     
     private func generalSettingsSection() -> some View {
         Section {
-            navigationLink("timer", "Rest Timer", RestTimerSettings(userData: ctx.userData))
-            navigationLink("arrow.up.arrow.down", "Exercise Sorting", SortSettings(userData: ctx.userData))
-           // navigationLink("calendar", "Start Week On", StartWeekOn())
-            navigationLink("globe", "Change Language", ChangeLanguage(userData: ctx.userData))
-            navigationLink("ruler", "Imperial / Metric", UnitSelection(userData: ctx.userData))
-            navigationLink("paintbrush", "Change Theme", ChangeTheme(userData: ctx.userData))
+            navigationLink("timer", "Rest Timer") { RestTimerSettings(userData: ctx.userData) }
+            navigationLink("arrow.up.arrow.down", "Exercise Sorting") { SortSettings(userData: ctx.userData) }
+            // navigationLink("calendar", "Start Week On") { StartWeekOn() }
+            navigationLink("globe", "Change Language") { ChangeLanguage(userData: ctx.userData) }
+            navigationLink("ruler", "Imperial / Metric") { UnitSelection(userData: ctx.userData) }
+            navigationLink("paintbrush", "Change Theme") { ChangeTheme(userData: ctx.userData) }
             
             DisclosureGroup(isExpanded: $isNotificationsExpanded) {
                 Toggle("Enable Notifications", isOn: notifications.toggleBinding)
@@ -71,15 +71,16 @@ struct SettingsView: View {
         }
     }
     
+ 
     private func advancedWorkoutSection() -> some View {
         Section {
-            navigationLink("gearshape.2", "Workout Generation", WorkoutCustomization())
-            navigationLink("plusminus.circle", "Weight Rounding", WeightIncrementation())
-            navigationLink("scalemass", "Available Weight Plates", PlateSelection(userData: ctx.userData))
-            navigationLink("chart.bar", "Progressive Overload", OverloadSettings(userData: ctx.userData))
-            navigationLink("slider.horizontal.3", "Volume Deloading", DeloadSettings(userData: ctx.userData))
-            navigationLink("figure.walk", "Muscle Rest Duration", MuscleRest(userData: ctx.userData))
-            navigationLink("clock", "Planned Workout Time", PlannedWorkoutTime(userData: ctx.userData))
+            navigationLink("gearshape.2", "Workout Generation") { WorkoutCustomization() }
+            navigationLink("plusminus.circle", "Weight Rounding") { WeightIncrementation() }
+            navigationLink("scalemass", "Available Weight Plates") { PlateSelection(userData: ctx.userData) }
+            navigationLink("chart.bar", "Progressive Overload") { OverloadSettings(userData: ctx.userData) }
+            navigationLink("slider.horizontal.3", "Volume Deloading") { DeloadSettings(userData: ctx.userData) }
+            navigationLink("figure.walk", "Muscle Rest Duration") { MuscleRest(userData: ctx.userData) }
+            navigationLink("clock", "Planned Workout Time") { PlannedWorkoutTime(userData: ctx.userData) }
         } header: {
             Text("Workout")
         }
@@ -96,19 +97,23 @@ struct SettingsView: View {
     */
     
     private func legalSection() -> some View {
-        Section {
-            navigationLink("shield", "Privacy Policy", PrivacyPolicy())
-            navigationLink("doc.text", "Terms of Service", TermsOfService())
-        } header: {
-            Text("Legal")
-        }
-    }
+         Section {
+             navigationLink("shield", "Privacy Policy") { PrivacyPolicy() }
+             navigationLink("doc.text", "Terms of Service") { TermsOfService() }
+         } header: {
+             Text("Legal")
+         }
+     }
     
     // need to use LazyDestination
-    private func navigationLink<Destination: View>(_ imageName: String, _ label: String, _ destination: Destination) -> some View {
+    private func navigationLink<Destination: View>(
+        _ imageName: String,
+        _ label: String,
+        @ViewBuilder destination: @escaping () -> Destination
+    ) -> some View {
         NavigationLink {
-            destination
-                .navigationBarTitleDisplayMode(.inline)   // ← here
+            LazyDestination { destination() }
+                .navigationBarTitleDisplayMode(.inline)
         } label: {
             HStack {
                 Image(systemName: imageName)

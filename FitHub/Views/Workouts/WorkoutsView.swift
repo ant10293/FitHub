@@ -39,11 +39,12 @@ struct WorkoutsView: View {
             },
             resume: {
                 // Navigate to the workout in progress
-                // FIXME: use the actual template from activeWorkout
-                if let workoutInProgress = activeWorkout, let selected = ctx.userData.getTemplate(for: workoutInProgress.template) {
+                // FIXME: use the actual template from activeWorkout                
+                if let active = activeWorkout, let selected = ctx.userData.getTemplate(for: active.template) {
                     selectedTemplate = selected
                 }
                 showResumeWorkoutOverlay = false
+                    
             }
         )
     }

@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		65039B6B2E7E2F1D007A31E1 /* SortOptionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B6A2E7E2F1D007A31E1 /* SortOptionSheet.swift */; };
+		65039B6E2E81D936007A31E1 /* Mass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B6D2E81D936007A31E1 /* Mass.swift */; };
+		65039B702E81D940007A31E1 /* Length.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B6F2E81D940007A31E1 /* Length.swift */; };
+		65039B722E81D94C007A31E1 /* TimeSpan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B712E81D94C007A31E1 /* TimeSpan.swift */; };
+		65039B742E81D983007A31E1 /* Speed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B732E81D983007A31E1 /* Speed.swift */; };
+		65039B762E81D98B007A31E1 /* Distance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B752E81D98B007A31E1 /* Distance.swift */; };
 		6510A2D22E28843C0051D002 /* SetInputRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510A2D12E28843C0051D002 /* SetInputRow.swift */; };
 		6510A2D42E2DB5440051D002 /* HeightSelectorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510A2D32E2DB5440051D002 /* HeightSelectorRow.swift */; };
 		6510A2D62E2DB5500051D002 /* WeightSelectorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510A2D52E2DB5500051D002 /* WeightSelectorRow.swift */; };
@@ -233,6 +239,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		65039B6A2E7E2F1D007A31E1 /* SortOptionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOptionSheet.swift; sourceTree = "<group>"; };
+		65039B6D2E81D936007A31E1 /* Mass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mass.swift; sourceTree = "<group>"; };
+		65039B6F2E81D940007A31E1 /* Length.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Length.swift; sourceTree = "<group>"; };
+		65039B712E81D94C007A31E1 /* TimeSpan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSpan.swift; sourceTree = "<group>"; };
+		65039B732E81D983007A31E1 /* Speed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Speed.swift; sourceTree = "<group>"; };
+		65039B752E81D98B007A31E1 /* Distance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Distance.swift; sourceTree = "<group>"; };
 		6510A2D12E28843C0051D002 /* SetInputRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetInputRow.swift; sourceTree = "<group>"; };
 		6510A2D32E2DB5440051D002 /* HeightSelectorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightSelectorRow.swift; sourceTree = "<group>"; };
 		6510A2D52E2DB5500051D002 /* WeightSelectorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightSelectorRow.swift; sourceTree = "<group>"; };
@@ -473,6 +485,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		65039B682E7E2EF1007A31E1 /* ExerciseSorting */ = {
+			isa = PBXGroup;
+			children = (
+				65CD3BE52DD3C84F00C2B671 /* SplitCategoryPicker.swift */,
+				65039B6A2E7E2F1D007A31E1 /* SortOptionSheet.swift */,
+			);
+			path = ExerciseSorting;
+			sourceTree = "<group>";
+		};
+		65039B6C2E81D91B007A31E1 /* Unit */ = {
+			isa = PBXGroup;
+			children = (
+				65A0D1CD2E304FCF008466D8 /* Unit.swift */,
+				65039B6D2E81D936007A31E1 /* Mass.swift */,
+				65039B6F2E81D940007A31E1 /* Length.swift */,
+				65039B712E81D94C007A31E1 /* TimeSpan.swift */,
+				65039B732E81D983007A31E1 /* Speed.swift */,
+				65039B752E81D98B007A31E1 /* Distance.swift */,
+			);
+			path = Unit;
+			sourceTree = "<group>";
+		};
 		653136192E53EF9900EECCA5 /* ChangeLog */ = {
 			isa = PBXGroup;
 			children = (
@@ -491,6 +525,7 @@
 				653136282E53F92900EECCA5 /* ExerciseInfo.swift */,
 				653136262E53F89400EECCA5 /* Performance.swift */,
 				6531362D2E542E1700EECCA5 /* InitExercise.swift */,
+				65C5DC642DEFBAEC00B09AD2 /* SetDetail.swift */,
 			);
 			path = Exercise;
 			sourceTree = "<group>";
@@ -782,6 +817,7 @@
 		65C5DC472DEFB00600B09AD2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				65039B6C2E81D91B007A31E1 /* Unit */,
 				6550ADD82E775A98002072C1 /* Categorization */,
 				6531362A2E53FA9100EECCA5 /* Exercise */,
 				65E05D0D2E7B81A800E39CC2 /* Equipment */,
@@ -791,14 +827,12 @@
 				65C5DC5E2DEFB70800B09AD2 /* Settings.swift */,
 				65C5DC602DEFB7A400B09AD2 /* Sorting.swift */,
 				65C5DC622DEFBA4F00B09AD2 /* Adjustments.swift */,
-				65C5DC642DEFBAEC00B09AD2 /* SetDetail.swift */,
 				65C5DC662DEFBB5500B09AD2 /* Measurement.swift */,
 				65C5DC682DEFBBA300B09AD2 /* Week.swift */,
 				65C5DC6A2DEFBC8200B09AD2 /* Workout.swift */,
 				65C5DC6C2DEFBD0A00B09AD2 /* Asset.swift */,
 				65C5DC6E2DEFBF0C00B09AD2 /* Formatter.swift */,
 				65D48DEB2DF97BEE0032F815 /* User.swift */,
-				65A0D1CD2E304FCF008466D8 /* Unit.swift */,
 				653136152E519AC300EECCA5 /* ChangeLogs.swift */,
 				6531362F2E550E2900EECCA5 /* WorkoutParams.swift */,
 				653136362E552FCA00EECCA5 /* Distribution.swift */,
@@ -928,11 +962,11 @@
 		65CD3BE72DD3C84F00C2B671 /* Reusable */ = {
 			isa = PBXGroup;
 			children = (
+				65039B682E7E2EF1007A31E1 /* ExerciseSorting */,
 				6550ADAA2E6A2B60002072C1 /* Row */,
 				6550ADA92E6A2B2B002072C1 /* Button */,
 				6531363A2E5902A800EECCA5 /* Picker */,
 				65CFBFB62E21E1D600CD521E /* Image */,
-				65CD3BE52DD3C84F00C2B671 /* SplitCategoryPicker.swift */,
 				6548AB882DDAB68A00BD9DAD /* InfoBanner.swift */,
 				65C5DC722DF378B500B09AD2 /* RingView.swift */,
 				65ECFF172E2609190091032A /* SearchBar.swift */,
@@ -1189,6 +1223,7 @@
 				65CD3C2A2DD3C84F00C2B671 /* AdjustmentsData.swift in Sources */,
 				65CD3C2B2DD3C84F00C2B671 /* AuthService.swift in Sources */,
 				65CFBFB32E1F9B4500CD521E /* AliasesField.swift in Sources */,
+				65039B762E81D98B007A31E1 /* Distance.swift in Sources */,
 				65E05D0F2E7B81F900E39CC2 /* Rounding.swift in Sources */,
 				6550ADC72E70C43E002072C1 /* SubMuscleEditor.swift in Sources */,
 				653BF8B12E6618E2005A07EA /* GenericEditor.swift in Sources */,
@@ -1204,6 +1239,7 @@
 				65CD3C312DD3C84F00C2B671 /* ToastManager.swift in Sources */,
 				65CFBF9F2E1DC6B800CD521E /* MuscleEngagementEditor.swift in Sources */,
 				65CD3C332DD3C84F00C2B671 /* WorkoutVM.swift in Sources */,
+				65039B6E2E81D936007A31E1 /* Mass.swift in Sources */,
 				65CD3C342DD3C84F00C2B671 /* AddCategoryPicker.swift in Sources */,
 				65CD3C352DD3C84F00C2B671 /* AdjustmentsView.swift in Sources */,
 				65CD3C362DD3C84F00C2B671 /* BFCalculator.swift in Sources */,
@@ -1229,6 +1265,7 @@
 				65CD3C422DD3C84F00C2B671 /* ExerciseSelection.swift in Sources */,
 				652131722E3D9C3900FDFB9C /* DurationPicker.swift in Sources */,
 				65CD3C432DD3C84F00C2B671 /* ExerciseView.swift in Sources */,
+				65039B6B2E7E2F1D007A31E1 /* SortOptionSheet.swift in Sources */,
 				6548AB8D2DE8EC3B00BD9DAD /* ExerciseOptions.swift in Sources */,
 				65CD3C442DD3C84F00C2B671 /* FavoriteExercisesView.swift in Sources */,
 				65A0D1D02E318D21008466D8 /* RectangularBG.swift in Sources */,
@@ -1250,6 +1287,7 @@
 				653136302E550E2900EECCA5 /* WorkoutParams.swift in Sources */,
 				65CD3C4D2DD3C84F00C2B671 /* MeasurementsView.swift in Sources */,
 				65CD3C4E2DD3C84F00C2B671 /* CategorySelection.swift in Sources */,
+				65039B742E81D983007A31E1 /* Speed.swift in Sources */,
 				65CFBFA92E1F5B2B00CD521E /* AdjustmentPicker.swift in Sources */,
 				65CD3C4F2DD3C84F00C2B671 /* DetailedMuscleGroupsView.swift in Sources */,
 				6550ADC22E6E7D9A002072C1 /* EquipmentScrollRow.swift in Sources */,
@@ -1313,6 +1351,7 @@
 				65C5DC5B2DEFB5FF00B09AD2 /* Equipment.swift in Sources */,
 				6548AB872DDAB5DE00BD9DAD /* RectangularButton.swift in Sources */,
 				65CD3C6D2DD3C84F00C2B671 /* ExerciseSetOverlay.swift in Sources */,
+				65039B722E81D94C007A31E1 /* TimeSpan.swift in Sources */,
 				65CD3C6E2DD3C84F00C2B671 /* NextButton.swift in Sources */,
 				6550ADB22E6B66DC002072C1 /* WeekView.swift in Sources */,
 				65CD3C6F2DD3C84F00C2B671 /* StartedWorkoutView.swift in Sources */,
@@ -1370,6 +1409,7 @@
 				6548AB892DDAB68A00BD9DAD /* InfoBanner.swift in Sources */,
 				65C5DC652DEFBAEC00B09AD2 /* SetDetail.swift in Sources */,
 				65CFBFA12E1DEED900CD521E /* AdjustmentsSection.swift in Sources */,
+				65039B702E81D940007A31E1 /* Length.swift in Sources */,
 				65CD3C852DD3C84F00C2B671 /* WorkoutsView.swift in Sources */,
 				653BF8A72E5A5CD2005A07EA /* SimilarExercisesRow.swift in Sources */,
 				65CD3C862DD3C84F00C2B671 /* ContentView.swift in Sources */,

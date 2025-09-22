@@ -8,6 +8,31 @@
 import Foundation
 import SwiftUI
 
+// TODO: should be init() from PeakMetric, PeakMetric should also be init() from these
+// each exercise var can have a var that determines which to use
+/*
+struct WeightReps: Codable, Equatable, Hashable {
+    var weight: Mass
+    var reps: Int
+}
+
+struct Reps: Codable, Equatable, Hashable {
+    var reps: Int
+}
+
+struct Hold: Codable, Equatable, Hashable {
+    var weight: Mass?
+    var time: TimeSpan
+}
+
+struct Cardio: Codable, Equatable, Hashable {
+    var distance: Distance?
+    var time: TimeSpan
+    //var incline: Double? // 0...40
+    //var speed: Speed?
+}
+*/
+
 enum SetMetric: Codable, Equatable, Hashable {
     case reps(Int)
     case hold(TimeSpan)   // isometric: time under tension

@@ -85,17 +85,6 @@
         "implementation" : "Unified"
     },
     {
-        "name" : "Strongman Log",
-        "id" : "5EB925A4-88D7-4062-A2A2-E96FF35E8D4C",
-        "image" : "strongman_log",
-        "aliases" : ["log bar", "log press"],
-        "description" : "Thick cylindrical bar with neutral handles used for clean-and-press variations that hammer shoulders, triceps, and core.",
-        "equCategory" : "Bars & Plates",
-        "baseWeight" : { "lb": 75, "kg": 35 },
-        "pegCount" : 2,
-        "implementation" : "Unified"
-    },
-    {
         "name" : "Landmine",
         "id" : "3170E04A-38B2-4C14-ABDB-8B1F772B68C9",
         "image" : "landmine_attachment",
@@ -386,6 +375,17 @@
         "image" : "t-bar_row",
         "aliases" : ["T‑bar row", "plate row machine", "landmine row"],
         "description" : "Chest‑supported arm that rows a plate‑loaded lever to target mid‑back and rear delts with reduced lower‑back strain.",
+        "equCategory" : "Plated Machines",
+        "baseWeight" : { "lb": 45, "kg": 20 },
+        "pegCount" : 1,
+        "implementation" : "Unified"
+    },
+    {
+        "name" : "Chest-Supported T-Bar Row",
+        "id" : "C1D2E3F4-A5B6-7890-CDEF-123456789ABC",
+        "image" : "chest_supported_t-bar_row",
+        "aliases" : ["Supported T-Bar Row", "Chest Pad T-Bar Row", "Supported Plate Row"],
+        "description" : "Chest-supported arm that rows a plate-loaded lever to target mid-back and rear delts with reduced lower-back strain and enhanced lat isolation.",
         "equCategory" : "Plated Machines",
         "baseWeight" : { "lb": 45, "kg": 20 },
         "adjustments" : ["Pad Height"],
@@ -896,28 +896,6 @@
         "aliases" : ["pinch grip blocks"],
         "description" : "Rectangular blocks held by the fingers and thumb for static or dynamic pinch‑grip training.",
         "equCategory" : "Other"
-    },
-    {
-        "name" : "Prowler Sled",
-        "id" : "0E6CB45D-60CE-4BF0-9EBE-37DB2FFF7853",
-        "image" : "prowler_sled",
-        "aliases" : ["sled push", "prowler"],
-        "description" : "A weighted sled for push/pull conditioning drills—builds lower-body power, acceleration, and conditioning.",
-        "equCategory" : "Other",
-        "baseWeight" : { "lb": 65, "kg": 30 },
-        "pegCount" : 1,
-        "implementation" : "Unified"
-    },
-    {
-        "name" : "Yoke",
-        "id" : "26101B28-514D-4362-9F87-BDDFF434AEE6",
-        "image" : "yoke",
-        "aliases" : ["strongman yoke", "yoke frame"],
-        "description" : "Adjustable steel frame carried across the back for heavy walks, presses, and drags—develops full-body strength and stability.",
-        "equCategory" : "Other",
-        "baseWeight" : { "lb": 150, "kg": 70 },
-        "pegCount" : 2,
-        "implementation" : "Unified"
     },
     {
         "name" : "Rice Bucket",

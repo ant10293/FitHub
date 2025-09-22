@@ -260,11 +260,9 @@ extension UserData {
     // TODO: replace
     func getTemplate(for template: WorkoutTemplate, mode: NavigationMode = .directToWorkout) -> SelectedTemplate? {
         if let index = workoutPlans.userTemplates.firstIndex(where: { $0.id == template.id }) {
-            let template = workoutPlans.userTemplates[index]
-            return SelectedTemplate.init(template: template, location: .user, mode: mode)
+            return SelectedTemplate.init(template: workoutPlans.userTemplates[index], location: .user, mode: mode)
         } else if let trainerIndex = workoutPlans.trainerTemplates.firstIndex(where: { $0.id == template.id }) {
-            let template = workoutPlans.trainerTemplates[trainerIndex]
-            return SelectedTemplate.init(template: template, location: .trainer, mode: mode)
+            return SelectedTemplate.init(template: workoutPlans.trainerTemplates[trainerIndex], location: .trainer, mode: mode)
         }
         return nil
     }
@@ -279,19 +277,12 @@ extension UserData {
             customSets: workoutPrefs.customSets,
             customDistribution: workoutPrefs.customDistribution
         )
-        let overloadFactor = WorkoutParams.determineOverloadFactor(
-            age: profile.age,
-            frequency: workoutPrefs.workoutDaysPerWeek,
-            strengthLevel: evaluation.strengthLevel,
-            goal: physical.goal,
-            customFactor: settings.customOverloadFactor
-        )
          // The generator only needs `user` (self) plus the same arguments
         return WorkoutGenerator().calculateDetailedExercise(
             input: WorkoutGenerator.Input(user: self, exerciseData: exerciseData, equipmentData: equipmentData, saved: [], keepCurrentExercises: false, nextWeek: nextWeek),
             exercise: exercise,
             repsAndSets: rs,
-            overloadFactor: overloadFactor,
+            overloadFactor: settings.customOverloadFactor ?? 1.0,
             maxUpdated: { update in
                 exerciseData.applyPerformanceUpdate(update: update, csvEstimate: true, shouldSave: true)
             }
@@ -299,14 +290,6 @@ extension UserData {
     }
     
     // House-keep old trainerTemplates – returns exercises we might want to keep
-    /*
-    private func manageOldTemplates() -> [[Exercise]] {
-        let saved = workoutPlans.trainerTemplates.map(\.exercises)
-        for tpl in workoutPlans.trainerTemplates { NotificationManager.remove(ids: tpl.notificationIDs) }
-        return saved
-    }
-    */
-    
     private func manageOldTemplates() -> [OldTemplate] {
         // Snapshot current templates into OldTemplate
         let saved: [OldTemplate] = workoutPlans.trainerTemplates.map { OldTemplate(template: $0) }
@@ -380,15 +363,5 @@ extension UserData {
                 onDone()
             }
         }
-    }
-}
-
-struct OldTemplate: Identifiable {
-    let id: UUID
-    let exercises: [Exercise]
-    
-    init(template: WorkoutTemplate) {
-        self.id = template.id
-        self.exercises = template.exercises
     }
 }

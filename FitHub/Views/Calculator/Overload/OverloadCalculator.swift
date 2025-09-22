@@ -92,18 +92,12 @@ struct OverloadCalculator: View {
                     //print("Debug: Updated overloadProgress for exercise \(exercise.name) to \(week)")
                     
                     // Apply progressive overload to set details
-                    newExercise.applyProgressiveOverload(
+                    _ = newExercise.applyProgressiveOverload(
                         equipmentData: ctx.equipment,
                         period:   ctx.userData.settings.progressiveOverloadPeriod,
                         style:    ctx.userData.settings.progressiveOverloadStyle,
                         rounding: ctx.userData.settings.roundingPreference,
-                        overloadFactor: WorkoutParams.determineOverloadFactor(
-                            age: ctx.userData.profile.age,
-                            frequency: ctx.userData.workoutPrefs.workoutDaysPerWeek,
-                            strengthLevel: ctx.userData.evaluation.strengthLevel,
-                            goal: ctx.userData.physical.goal,
-                            customFactor: ctx.userData.settings.customOverloadFactor
-                        )
+                        overloadFactor: ctx.userData.settings.customOverloadFactor ?? 1.0
                     )
                     //print("Debug: Applied progressive overload to \(exercise.name), new set details: \(newExercise.setDetails)")
                     

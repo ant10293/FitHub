@@ -101,16 +101,6 @@ struct OverloadSettings: View {
         }
     }
     
-    private var defaultFactor: Double {
-        WorkoutParams.determineOverloadFactor(
-            age: userData.profile.age,
-            frequency: userData.workoutPrefs.workoutDaysPerWeek,
-            strengthLevel: userData.evaluation.strengthLevel,
-            goal: userData.physical.goal,
-            customFactor: userData.settings.customOverloadFactor
-        )
-    }
-    
     private var intensityPercent: String {
         let raw = userData.settings.customOverloadFactor ?? 1.0
         let pct = Int((raw * 100).rounded())

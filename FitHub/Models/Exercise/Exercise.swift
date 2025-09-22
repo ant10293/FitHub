@@ -104,24 +104,24 @@ extension Exercise {
     }
     
     private var setMetricRangeLabeled: (label: String, range: String) {
-        // If any hold exists, prefer time-mode
-        let hasHold = setDetails.contains { if case .hold = $0.planned { return true } else { return false } }
-
-        if hasHold {
+        guard let first = setDetails.first else { return (getPlannedMetric(value: 0).label, "0") }
+        
+        switch first.planned {
+        case .reps:
+            // Reps range (e.g., "8-12")
+            let reps = setDetails.compactMap { $0.planned.repsValue }
+            guard let lo = reps.min(), let hi = reps.max() else { return ("Reps", "0") }
+            return ("Reps", lo == hi ? "\(lo)" : "\(lo)-\(hi)")
+        case .hold:
             // Time range (e.g., "0:30–1:00")
             let secs = setDetails.compactMap { $0.planned.holdTime?.inSeconds }
             guard let lo = secs.min(), let hi = secs.max() else { return ("Hold", "0:00") }
             let loStr = TimeSpan(seconds: lo).displayStringCompact
             let hiStr = TimeSpan(seconds: hi).displayStringCompact
             return ("Hold", lo == hi ? loStr : "\(loStr)-\(hiStr)")
-        } else {
-            // Reps range (e.g., "8-12")
-            let reps = setDetails.compactMap { $0.planned.repsValue }
-            guard let lo = reps.min(), let hi = reps.max() else { return ("Reps", "0") }
-            return ("Reps", lo == hi ? "\(lo)" : "\(lo)-\(hi)")
         }
     }
-
+        
     func metricDouble(from value: Double) -> Double {
         if resistance.usesWeight {
             return UnitSystem.current == .imperial ? UnitSystem.LBtoKG(value) : value
@@ -153,11 +153,15 @@ extension Exercise {
     func calculateCSVMax(userData: UserData) -> PeakMetric? {
         guard let url = self.url else { return nil }
         
-        if resistance.usesWeight {
+        let peakMetric = getPeakMetric(metricValue: 0)
+        switch peakMetric {
+        case .oneRepMax:
             return CSVLoader.calculateFinal1RM(userData: userData, exercise: url)
-        } else if effort.usesReps {
+        case .maxReps:
             return CSVLoader.calculateFinalReps(userData: userData, exercise: url)
-        } else { return nil }
+        default:
+            return nil
+        }
     }
     
     func getRestPeriod(isWarm: Bool, rest: RestPeriods) -> Int {
@@ -310,7 +314,6 @@ extension Exercise {
     
     private var avgPeakAndRPE: (peak: PeakMetric, rpe: Double?) {
         let zero = getPeakMetric(metricValue: 0)
-
         let acc = setDetails.reduce(into: (pSum: 0.0, pCnt: 0, rSum: 0.0, rCnt: 0)) { a, s in
             if let pm = s.completedPeakMetric(peak: zero) {
                 a.pSum += pm.actualValue          // adjust if your value prop differs
@@ -340,18 +343,52 @@ extension Exercise {
 
 
 extension Exercise {
+    /*
+     TODO: utilize oldExercise to ensure that overloading remains smooth and does not progress too slowly or quickly
+     also ensure that overloadFactor is implemented
+    */
     mutating func applyProgressiveOverload(
         equipmentData: EquipmentData,
         period: Int,
         style: ProgressiveOverloadStyle,
         rounding: RoundingPreference,
         overloadFactor: Double,
-    ) {
+        oldExercise: Exercise? = nil
+    ) -> Bool {
+        // map old sets by setNumber for O(1) lookup
+        let oldBySet: [Int: SetDetail] = Dictionary(
+            uniqueKeysWithValues: (oldExercise?.setDetails ?? []).map { ($0.setNumber, $0) }
+        )
+
+        // strict equality: planned must equal or exceed completed
+        func metPlan(_ prev: SetDetail) -> Bool {
+            guard let completed = prev.completed else { return false }
+            switch (prev.planned, completed) {
+            case (.reps(let p), .reps(let c)): return c >= p
+            case (.hold(let p), .hold(let c)): return c.inSeconds >= p.inSeconds
+            default: return false
+            }
+        }
+        
         let kg = equipmentData.incrementForEquipment(names: equipmentRequired, rounding: rounding).inKg
         let kgPerStep = kg * overloadFactor
         let secPerStep = SetDetail.secPerStep
+        let halfway = max(1, period / 2)
         
+        var overloadApplied: Bool = false
         setDetails = setDetails.map { setDetail in
+            // decide eligibility: no old set => true, else require metPlan
+            let eligible: Bool = {
+                if let prev = oldBySet[setDetail.setNumber] {
+                    let met = metPlan(prev)
+                    if met { overloadApplied = true }
+                    return met
+                }
+                return true // no old set -> always apply
+            }()
+
+            guard eligible else { return setDetail } // leave as-is if not eligible
+            
             var updated = setDetail
             
             if !resistance.usesWeight {
@@ -362,6 +399,7 @@ extension Exercise {
                 case .increaseWeight:
                     let newKg = setDetail.weight.inKg + Double(overloadProgress) * kgPerStep
                     updated.weight = equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding)
+                    
                 case .increaseReps:
                     updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
                     
@@ -372,7 +410,6 @@ extension Exercise {
                     updated.weight = equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding)
                     
                 case .dynamic:
-                    let halfway = max(1, period / 2)
                     if overloadProgress <= halfway {
                         updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
                     } else {
@@ -387,6 +424,8 @@ extension Exercise {
             
             return updated
         }
+        
+        return overloadApplied
     }
     
     mutating func applyDeload(equipmentData: EquipmentData, deloadPct: Int, rounding: RoundingPreference) {

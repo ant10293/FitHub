@@ -16,49 +16,29 @@ struct EquipmentPopupView: View {
     var onEdit: () -> Void = {}
     
     var body: some View {
-        VStack {
-            HStack {
-                // ───── leading  ─────
-                Button(action: onClose) {
-                    Image(systemName: "xmark")
-                        .padding()
+        NavigationStack {
+            VStack {
+                // Filter and list only selected equipment
+                VStack(spacing: 0) {
+                    EquipmentList
+                    if !showingCategories {
+                        Divider()
+                    }
                 }
-
-                Spacer()
-
-                // ───── trailing ─────
                 if !showingCategories {
-                    Button("Edit", action: onEdit)
-                        .padding()
+                    RectangularButton(title: "Save and Continue", action: onContinue)
                 }
             }
-            .overlay(                                       // centered *over* the HStack
-                Text(title)
-                    .bold()
-                    .lineLimit(1)
-                    .frame(maxWidth: .infinity)             // keep it truly centred
-            )
-            .padding()
-
-            
-            // Filter and list only selected equipment
-            VStack(spacing: 0) {
-                EquipmentList
-                if !showingCategories {
-                    Divider()
+            .navigationBarTitle(title, displayMode: .inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: onClose) {
+                        Image(systemName: "xmark")
+                    }
                 }
-            }
-            if !showingCategories {
-                RectangularButton(title: "Save and Continue", action: onContinue)
-                /*
-                Button("Save and Continue") {
-                    onContinue()
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Edit") { onEdit() }
                 }
-                .foregroundStyle(.white)
-                .padding()
-                .background(Color.blue)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                */
             }
         }
     }

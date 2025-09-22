@@ -21,6 +21,9 @@ struct SplitCategoryPicker: View {
     private let templateSortingEnabled: Bool
     var templateCategories: [SplitCategory]?
     var onChange: (ExerciseSortOption) -> Void
+    
+    @State private var showSortSheet = false
+
 
     init(
         userData: UserData,
@@ -52,43 +55,40 @@ struct SplitCategoryPicker: View {
     var body: some View {
         HStack(spacing: 7.5) {
             if enableSortPicker {
-                SortMenu // Filter button to open full category menu
+                SortButton // Filter button to open full category menu
             }
             
             CategoryScroller
         }
         .padding(.horizontal)
         .padding(.bottom)
+        .sheet(isPresented: $showSortSheet) {
+            SortOptionSheet(
+                current: sortOption,
+                options: ExerciseSortOption.allCases.filter { $0 != .templateCategories || templateSortingEnabled }
+            ) { picked in
+                sortOption = picked
+
+                if saveSelectedSort && userData.sessionTracking.exerciseSortOption != picked {
+                    userData.sessionTracking.exerciseSortOption = picked
+                    userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
+                }
+
+                // keep your existing default selection behavior
+                selectedCategory = picked.getDefaultSelection(templateCategories: templateCategories)
+
+                onChange(picked)
+                showSortSheet = false
+            }
+            .presentationDetents([.fraction(0.9)])
+            .presentationDragIndicator(.visible)
+        }
+
     }
     
-    private var SortMenu: some View {
-        Menu {
-            Text("-- Sort Category Options --")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Color.secondary)   // greyed-out look
-                .disabled(true)                // makes it non-interactive
-            
-            // Direct list of categories, no nested Picker
-            ForEach(ExerciseSortOption.allCases.filter { $0 != .templateCategories || templateSortingEnabled }, id: \.self) { category in
-                Button(action: {
-                    // update selected category to the first option
-                    sortOption = category
-                    
-                    if userData.sessionTracking.exerciseSortOption != sortOption, saveSelectedSort {
-                        userData.sessionTracking.exerciseSortOption = sortOption
-                        userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
-                    }
-                    onChange(sortOption)
-                }) {
-                    HStack {
-                        Text(category.rawValue)
-                        Spacer()
-                        if sortOption == category {
-                            Image(systemName: "checkmark")
-                        }
-                    }
-                }
-            }
+    private var SortButton: some View {
+        Button {
+            showSortSheet = true
         } label: {
             Image(systemName: "line.horizontal.3.decrease")
                 .imageScale(.large)
@@ -96,8 +96,9 @@ struct SplitCategoryPicker: View {
                 .background(Color(UIColor.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         }
+        .buttonStyle(.plain)
     }
-    
+
     private var CategoryScroller: some View {
         ScrollView(.horizontal, showsIndicators: true) {
             HStack(spacing: 7.5) {

@@ -113,6 +113,20 @@ struct ExerciseDistribution: Codable, Hashable {
         }
         return filtered.mapValues { $0 / sum }
     }
+    
+    func allocateCountsPerEffort(targetCount: Int) -> [EffortType: Int] {
+        guard targetCount > 0, !distribution.isEmpty else { return [:] }
+        let raws = distribution.map { ($0.key, Double(targetCount) * $0.value) }
+        var out  = Dictionary(uniqueKeysWithValues: raws.map { ($0.0, Int(floor($0.1))) })
+        var left = targetCount - out.values.reduce(0, +)
+        if left > 0 {
+            for (t, _) in raws.sorted(by: { ($0.1 - floor($0.1)) > ($1.1 - floor($1.1)) }) where left > 0 {
+                out[t, default: 0] += 1; left -= 1
+            }
+        }
+        return out
+    }
+
 }
 
 struct RestPeriods: Codable, Hashable {

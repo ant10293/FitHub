@@ -18,7 +18,7 @@
 import SwiftUI
 
 // MARK: - Core type (no defaults)
-
+// TODO: put this in a wrapper that handles ExerciseDetailView sheet. Ensure no conflict with ExEquipImage
 struct ExerciseRow<Accessory: View, Detail: View>: View {
     // ------------------------------------------------------------------
     // Stored vars

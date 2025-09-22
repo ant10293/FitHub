@@ -164,6 +164,7 @@ extension EquipmentData {
         }
     }
 
+    // FIXME: entering "T-Bar" or anything with symbols yields no results, even if it matches the equipment name exactly
     func filteredEquipment(searchText: String, category: EquipmentCategory? = nil) -> [GymEquipment] {
         let searchKey = normalize(searchText.removingCharacters(in: .whitespacesAndNewlines.union(.punctuationCharacters))) // make this a reusable func in Formatter
 
