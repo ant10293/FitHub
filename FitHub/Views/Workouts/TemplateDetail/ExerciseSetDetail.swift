@@ -78,12 +78,34 @@ struct ExerciseSetDetail: View {
     @ViewBuilder private var setDetails: some View {
         ForEach(exercise.setDetails.indices, id: \.self) { index in
             // Weight text binding with buffer + commit to Mass when numeric
+            /*
             let weightText: Binding<String> = Binding(
                 get: { weightTexts[safe: index] ?? "" },
                 set: { newText in
                     weightTexts[safeEdit: index] = newText
                     let val = Double(newText) ?? 0
                     exercise.setDetails[index].weight.set(val)   // commits in user’s selected unit
+                }
+            )
+            */
+            
+            let weightText: Binding<String> = Binding(
+                get: { weightTexts[safe: index] ?? "" },
+                set: { newText in
+                    let val = Double(newText) ?? 0
+
+                    switch exercise.setDetails[index].load {
+                    case .weight:
+                        var weight = Mass(kg: 0)
+                        weight.set(val)
+                        exercise.setDetails[index].load = .weight(weight)
+                    case .distance:
+                        var distance = Distance(km: 0)
+                        distance.set(val)
+                        exercise.setDetails[index].load = .distance(distance)
+                    case .none:
+                        break
+                    }
                 }
             )
 

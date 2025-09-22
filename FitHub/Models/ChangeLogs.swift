@@ -103,12 +103,22 @@ struct SetChange: Codable, Identifiable {
     let setNumber: Int
     let previousSet: SetDetail?
     let newSet: SetDetail
-    let weightChange: WeightChange?
+    //let weightChange: WeightChange?
+    let loadChange: LoadChange?
     let metricChange: MetricChange?
     
+    /*
     struct WeightChange: Codable {
         let previous: Mass
         let new: Mass
+        let percentageChange: Double
+        let isIncrease: Bool
+    }
+    */
+    
+    struct LoadChange: Codable {
+        let previous: SetLoad
+        let new: SetLoad
         let percentageChange: Double
         let isIncrease: Bool
     }

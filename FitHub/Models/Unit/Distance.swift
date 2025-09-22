@@ -25,6 +25,10 @@ struct Distance: Codable, Equatable, Hashable {
         UnitSystem.current == .imperial ? inMi : inKm
     }
     
+    var displayString: String {
+        Format.smartFormat(displayValue)
+    }
+    
     /// Replace the mass with a new *kg* value.
     mutating func setKm(_ km: Double) {
         self.km = km
@@ -40,8 +44,8 @@ struct Distance: Codable, Equatable, Hashable {
         self.km = UnitSystem.current == .imperial ? UnitSystem.MItoKM(value) : value
     }
         
-    var distanceFormatted: Text {
-        Text("\(displayValue)")
+    var formattedText: Text {
+        Text(displayString)
         + Text(UnitSystem.imperial.distanceUnit).fontWeight(.light)
     }
 }

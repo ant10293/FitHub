@@ -31,7 +31,7 @@ enum UnitSystem: String, Codable, CaseIterable {
         }
     }
         
-    var desc: String { "\(displayName) • \(weightUnit) / \(sizeUnit) • \(lengthUnit) • \(distanceUnit)" }
+    var desc: String { "\(displayName) • \(weightUnit) / \(sizeUnit) • \(lengthUnit) / \(distanceUnit)" }
     
     @inline(__always)
     static func preferredUnitSystem(locale: Locale = .current) -> UnitSystem {
@@ -46,22 +46,26 @@ enum UnitSystem: String, Codable, CaseIterable {
     }
     
     // MARK: - Conversion Constants
-    private static let cmPerInch: Double = 2.54
+    private static let cmPerIn: Double = 2.54
+    private static let inPerCm: Double = 1 / cmPerIn // ≈ 0.3937007874
+    
     private static let kgPerLb: Double = 0.45359237
-    private static let lbPerKg: Double = 1 / kgPerLb  // ≈ 2.20462262185
+    private static let lbPerKg: Double = 1 / kgPerLb // ≈ 2.20462262185
+    
     private static let kmPerMi: Double = 1.609344
+    private static let miPerKm: Double = 1 / kmPerMi // ≈ 0.62137119223
 
     // MARK: - Weight Conversions
     static func LBtoKG(_ pounds: Double) -> Double { pounds * kgPerLb }
     static func KGtoLB(_ kilograms: Double) -> Double { kilograms * lbPerKg }
 
     // MARK: - Length Conversions
-    static func CMtoIN(_ centimeters: Double) -> Double { centimeters / cmPerInch }
-    static func INtoCM(_ inches: Double) -> Double { inches * cmPerInch }
+    static func CMtoIN(_ centimeters: Double) -> Double { centimeters * inPerCm }
+    static func INtoCM(_ inches: Double) -> Double { inches * cmPerIn }
     
     // MARK: - Distance Conversions
     static func MItoKM(_ miles: Double) -> Double { miles * kmPerMi }
-    static func KMtoMI(_ kilometers: Double) -> Double { kilometers / kmPerMi }
+    static func KMtoMI(_ kilometers: Double) -> Double { kilometers * miPerKm }
 }
 
 struct Incline: Codable, Error, Equatable, Hashable {

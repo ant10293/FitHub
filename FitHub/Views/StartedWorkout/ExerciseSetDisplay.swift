@@ -92,6 +92,7 @@ struct ExerciseSetDisplay: View {
                 let width = calculateTextWidth(text: weightInput, minWidth: 60, maxWidth: 90)
                 let isZero = weightInput == "0"
                 
+                /*
                 let weightText: Binding<String> = Binding(
                     get: { weightInput },
                     set: { newText in
@@ -100,7 +101,24 @@ struct ExerciseSetDisplay: View {
                         setDetail.weight.set(val)   // commits in user’s selected unit
                     }
                 )
+                */
+                
+                let weightText: Binding<String> = Binding(
+                    get: { weightInput },
+                    set: { newText in
+                        let val = Double(newText) ?? 0
 
+                        switch setDetail.load {
+                        case .weight:
+                            setDetail.load = .weight(Mass(kg: val))
+                        case .distance:
+                            setDetail.load = .distance(Distance(km: val))
+                        case .none:
+                            break
+                        }
+                    }
+                )
+                
                 RoundedRectangle(cornerRadius: 8)
                     .fill(colorScheme == .dark
                           ? Color(UIColor.systemGray4)
@@ -343,6 +361,9 @@ struct ExerciseSetDisplay: View {
     }
     
     private func validateSetMetric(actual: Int) {
-        shouldDisableNext = actual <= 0 || (exercise.resistance.usesWeight && setDetail.weight.inKg <= 0)
+        //shouldDisableNext = actual <= 0 || (exercise.resistance.usesWeight && setDetail.weight.inKg <= 0)
+        shouldDisableNext = actual <= 0 || (
+            setDetail.load != .none && setDetail.load.actualValue <= 0
+        )
     }
 }

@@ -149,7 +149,8 @@ extension WorkoutGenerator {
                     setNumber: set.setNumber,
                     previousSet: nil,
                     newSet: set,
-                    weightChange: nil,
+                   // weightChange: nil,
+                    loadChange: nil,
                     metricChange: nil
                 )
             }
@@ -158,14 +159,16 @@ extension WorkoutGenerator {
         return new.setDetails.map { newSet in
             let previousSet = previous.setDetails.first { $0.setNumber == newSet.setNumber }
             
-            let weightChange = createWeightChange(new: newSet, previous: previousSet)
+            //let weightChange = createWeightChange(new: newSet, previous: previousSet)
+            let loadChange = createLoadChange(new: newSet, previous: previousSet)
             let metricChange = createMetricChange(new: newSet, previous: previousSet)
             
             return SetChange(
                 setNumber: newSet.setNumber,
                 previousSet: previousSet,
                 newSet: newSet,
-                weightChange: weightChange,
+                //weightChange: weightChange,
+                loadChange: loadChange,
                 metricChange: metricChange
             )
         }
@@ -173,6 +176,7 @@ extension WorkoutGenerator {
 
     // Better approach - make the method safer:
     // Fix the createWeightChange method:
+    /*
     private func createWeightChange(new: SetDetail, previous: SetDetail?) -> SetChange.WeightChange? {
         guard let previous = previous else { return nil }
         
@@ -190,6 +194,29 @@ extension WorkoutGenerator {
             new: previous.weight,      // Direct access, no unwrapping needed
             percentageChange: abs(percentageChange),
             isIncrease: newWeight > prevWeight
+        )
+    }
+    */
+    
+    private func createLoadChange(new: SetDetail, previous: SetDetail?) -> SetChange.LoadChange? {
+        guard let previous = previous else { return nil }
+        
+        // Check if loads are different
+        guard new.load != previous.load else { return nil }
+        
+        let newValue = new.load.actualValue
+        let prevValue = previous.load.actualValue
+        
+        // Check if values are different
+        guard newValue != prevValue else { return nil }
+        
+        let percentageChange = ((newValue - prevValue) / prevValue) * 100
+        
+        return SetChange.LoadChange(
+            previous: previous.load,
+            new: new.load,
+            percentageChange: abs(percentageChange),
+            isIncrease: newValue > prevValue
         )
     }
     
@@ -258,7 +285,7 @@ extension WorkoutGenerator {
         guard let previous = previousTemplate else { return nil }
         return previous.exercises.first { $0.id == newExercise.id }
     }
-    
+    /*
     // Check if exercise has significant changes
     private func hasSignificantChanges(new: Exercise, previous: Exercise) -> Bool {
         // Compare set details
@@ -277,6 +304,29 @@ extension WorkoutGenerator {
         template.exercises.reduce(0.0) { total, exercise in
             total + exercise.setDetails.reduce(0.0) { setTotal, set in
                 setTotal + (set.weight.inKg) * set.planned.actualValue
+            }
+        }
+    }
+    */
+    
+    // Check if exercise has significant changes
+    private func hasSignificantChanges(new: Exercise, previous: Exercise) -> Bool {
+        // Compare set details
+        if new.setDetails.count != previous.setDetails.count { return true }
+        
+        for (newSet, prevSet) in zip(new.setDetails, previous.setDetails) {
+            if newSet.load != prevSet.load { return true }
+            if newSet.planned.actualValue != prevSet.planned.actualValue { return true }
+        }
+        
+        return false
+    }
+
+    // Calculate total volume for template
+    private func calculateTotalVolume(_ template: WorkoutTemplate) -> Double {
+        template.exercises.reduce(0.0) { total, exercise in
+            total + exercise.setDetails.reduce(0.0) { setTotal, set in
+                setTotal + set.load.actualValue * set.planned.actualValue
             }
         }
     }

@@ -20,7 +20,7 @@ struct Reps: Codable, Equatable, Hashable {
     var reps: Int
 }
 
-struct Hold: Codable, Equatable, Hashable {
+struct Timed: Codable, Equatable, Hashable {
     var weight: Mass?
     var time: TimeSpan
 }
@@ -33,16 +33,57 @@ struct Cardio: Codable, Equatable, Hashable {
 }
 */
 
+enum SetLoad: Codable, Equatable, Hashable {
+    case weight(Mass)
+    case distance(Distance)
+    case none
+    
+    var weight: Mass? {
+        if case .weight(let w) = self { return w }
+        return nil
+    }
+    
+    var distance: Distance? {
+        if case .distance(let d) = self { return d }
+        return nil
+    }
+    
+    var iconName: String {
+        switch self {
+        case .weight: return "scalemass"
+        case .distance: return "figure.walk"
+        case .none: return ""
+        }
+    }
+    
+    var actualValue: Double {
+        switch self {
+        case .weight(let w): return w.displayValue
+        case .distance(let d): return d.displayValue
+        case .none: return 0
+        }
+    }
+    
+    var displayString: String {
+        switch self {
+        case .weight(let w): return w.displayString
+        case .distance(let d): return d.displayString
+        case .none: return ""
+        }
+    }
+    
+    var formattedText: Text {
+        switch self {
+        case .weight(let w): return w.formattedText()
+        case .distance(let d): return d.formattedText
+        case .none: return Text("Body-weight")
+        }
+    }
+}
+
 enum SetMetric: Codable, Equatable, Hashable {
     case reps(Int)
     case hold(TimeSpan)   // isometric: time under tension
-    
-    func adding(_ delta: Int) -> SetMetric {
-        switch self {
-        case .reps(let r): return .reps(max(1, r + delta))
-        case .hold(let span): return .hold(.fromSeconds(max(1, span.inSeconds + delta)))
-        }
-    }
     
     func scaling(by factor: Double) -> SetMetric {
         switch self {
@@ -81,12 +122,20 @@ enum SetMetric: Codable, Equatable, Hashable {
         case .hold: return "Hold"
         }
     }
+    
+    var iconName: String {
+        switch self {
+        case .reps: return "number"
+        case .hold: return "clock"
+        }
+    }
 }
 
 struct SetDetail: Identifiable, Hashable, Codable {
     var id: UUID = UUID()
     let setNumber: Int
-    var weight: Mass
+    //var weight: Mass
+    var load: SetLoad
     var planned: SetMetric
     var completed: SetMetric?
     var rpe: Double?
@@ -99,7 +148,7 @@ struct SetDetail: Identifiable, Hashable, Codable {
         case .maxReps: if let reps = metric.repsValue { return .maxReps(reps) }
         case .maxHold: if let held = metric.holdTime { return .maxHold(held) }
         case .oneRepMax:
-            if let reps = metric.repsValue {
+            if let reps = metric.repsValue, let weight = load.weight {
                 let oneRM = OneRMFormula.calculateOneRepMax(weight: weight, reps: reps, formula: .brzycki)
                 return .oneRepMax(oneRM)
             }
@@ -115,27 +164,26 @@ struct SetDetail: Identifiable, Hashable, Codable {
 
         switch currentBest {
         case .maxReps(let bestReps):
-            guard case .reps(let reps) = metric, reps > bestReps else { return (nil, nil) }
+            guard let reps = metric.repsValue, reps > bestReps else { return (nil, nil) }
             return (.maxReps(reps), nil)
 
         case .maxHold(let bestTS):
-            guard case .hold(let held) = metric, held.inSeconds > bestTS.inSeconds else { return (nil, nil) }
+            guard let held = metric.holdTime, held.inSeconds > bestTS.inSeconds else { return (nil, nil) }
             return (.maxHold(held), nil)
 
         case .oneRepMax(let best1RM):
             // Need reps to estimate a 1RM from the set weight (+ RPE)
-            guard case .reps(let reps) = metric, reps > 0 else { return (nil, nil) }
-            guard let candidate = recalculate1RM(oneRm: best1RM), candidate.inKg > best1RM.inKg else { return (nil, nil) }
-            return (.oneRepMax(candidate), RepsXWeight(reps: reps, weight: weight))
+            guard let reps = metric.repsValue, reps > 0, let weight = load.weight else { return (nil, nil) }
+            let rxw: RepsXWeight = .init(reps: reps, weight: weight)
+            guard let candidate = recalculate1RM(oneRm: best1RM, completed: rxw), candidate.inKg > best1RM.inKg else { return (nil, nil) }
+            return (.oneRepMax(candidate), rxw)
         }
     }
 
-    private mutating func recalculate1RM(oneRm: Mass) -> Mass? {
-        guard case .reps(let repsCompleted)? = completed, repsCompleted > 0 else { return nil }
-        
+    private mutating func recalculate1RM(oneRm: Mass, completed: RepsXWeight) -> Mass? {
         let base = OneRMFormula.calculateOneRepMax(
-            weight: weight,
-            reps: repsCompleted,
+            weight: completed.weight,
+            reps: completed.reps,
             formula: .brzycki
         )
 
@@ -197,45 +245,48 @@ struct SetDetail: Identifiable, Hashable, Codable {
 }
 extension SetDetail {
     var metricFieldString: String { planned.fieldString }
-    var weightFieldString: String { weight.displayValue > 0 ? weight.displayString : "" }
+    var weightFieldString: String {
+        guard let weight = load.weight, weight.displayValue > 0 else { return "" }
+        return weight.displayString
+    }
 
     func formattedCompletedText(usesWeight: Bool) -> Text {
-            let head = Text("Set \(setNumber): ").bold()
-            guard let completed = completed else { return head + Text("—") }
-            
-            switch (usesWeight, completed) {
-            case (false, .reps(let repsDone)):
-                return head + Text("\(repsDone) reps completed")
-            case (true, .reps(let repsDone)):
-                return head
-                    + weight.formattedText()
-                    + Text(" × ").foregroundStyle(.gray)
-                    + Text("\(repsDone)")
-                    + Text(" reps").fontWeight(.light)
-            case (false, .hold(let t)):
-                return head + Text(t.displayStringCompact) + Text(" hold").fontWeight(.light)
-            case (true, .hold(let t)):
-                return head
-                    + weight.formattedText()
-                    + Text(" × ").foregroundStyle(.gray)
-                    + Text(t.displayStringCompact)
-                    + Text(" hold").fontWeight(.light)
-            }
+        let head = Text("Set \(setNumber): ").bold()
+        guard let completed = completed else { return head + Text("—") }
+        
+        switch (usesWeight, completed) {
+        case (false, .reps(let repsDone)):
+            return head + Text("\(repsDone) reps completed")
+        case (true, .reps(let repsDone)):
+            return head
+                + (load.weight?.formattedText() ?? Text(""))
+                + Text(" × ").foregroundStyle(.gray)
+                + Text("\(repsDone)")
+                + Text(" reps").fontWeight(.light)
+        case (false, .hold(let t)):
+            return head + Text(t.displayStringCompact) + Text(" hold").fontWeight(.light)
+        case (true, .hold(let t)):
+            return head
+                + (load.weight?.formattedText() ?? Text(""))
+                + Text(" × ").foregroundStyle(.gray)
+                + Text(t.displayStringCompact)
+                + Text(" hold").fontWeight(.light)
         }
+    }
         
     func formattedPlannedText(usesWeight: Bool) -> Text {
         switch (usesWeight, planned) {
         case (false, .reps(let r)):
             return Text("\(r)") + Text(" reps planned").fontWeight(.light)
         case (true, .reps(let r)):
-            return weight.formattedText()
+            return (load.weight?.formattedText() ?? Text(""))
                 + Text(" × ").foregroundStyle(.gray)
                 + Text("\(r)")
                 + Text(" reps").fontWeight(.light)
         case (false, .hold(let t)):
             return Text(t.displayStringCompact) + Text(" hold planned").fontWeight(.light)
         case (true, .hold(let t)):
-            return weight.formattedText()
+            return (load.weight?.formattedText() ?? Text(""))
                 + Text(" × ").foregroundStyle(.gray)
                 + Text(t.displayStringCompact)
                 + Text(" hold").fontWeight(.light)

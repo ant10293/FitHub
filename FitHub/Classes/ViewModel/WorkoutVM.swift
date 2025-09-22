@@ -181,7 +181,8 @@ final class WorkoutVM: ObservableObject {
             }()
 
             for set in exercise.setDetails {
-                let adjustedWeight = set.weight.inKg * wtMul
+                let setWeight = set.load.weight?.inKg ?? 0
+                let adjustedWeight = setWeight * wtMul
                 let metric = set.completed ?? set.planned
 
                 switch metric {

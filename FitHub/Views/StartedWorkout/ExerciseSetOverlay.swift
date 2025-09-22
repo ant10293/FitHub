@@ -67,9 +67,9 @@ struct ExerciseSetOverlay: View {
         .disabled(exercise.isCompleted)
         .sheet(isPresented: $showAdjustmentsView) { AdjustmentsView(exercise: exercise) }
         .sheet(isPresented: $showPlateVisualizer) {
-            if let detail = currentSetBinding {
+            if let detail = currentSetBinding, let weight = detail.wrappedValue.load.weight {
                 PlateVisualizer(
-                    weight: detail.weight.wrappedValue,
+                    weight: weight,
                     exercise: exercise
                 )
                 .presentationDetents([.fraction(0.75)])

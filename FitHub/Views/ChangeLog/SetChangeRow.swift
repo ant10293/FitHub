@@ -19,7 +19,8 @@ struct SetChangeRow: View {
                 
                 Spacer()
                 
-                if setChange.weightChange != nil || setChange.metricChange != nil {
+                if setChange.loadChange != nil //setChange.weightChange != nil
+                    || setChange.metricChange != nil {
                     HStack(spacing: 4) {
                         Image(systemName: "arrow.triangle.2.circlepath")
                             .foregroundStyle(.blue)
@@ -36,6 +37,7 @@ struct SetChangeRow: View {
             }
             
             HStack(spacing: 16) {
+                /*
                 // Previous values
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Previous")
@@ -70,6 +72,13 @@ struct SetChangeRow: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                */
+                // Previous values
+                             setInfoView(
+                                 title: "Previous",
+                                 set: setChange.previousSet,
+                                 isPrevious: true
+                             )
                 
                 // Arrow
                 VStack {
@@ -80,7 +89,7 @@ struct SetChangeRow: View {
                         .font(.caption2)
                         .foregroundStyle(.blue)
                 }
-                
+                /*
                 // New values
                 VStack(alignment: .leading, spacing: 6) {
                     Text("New")
@@ -121,6 +130,17 @@ struct SetChangeRow: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                */
+                // New values
+                                setInfoView(
+                                    title: "New",
+                                    set: setChange.newSet,
+                                    isPrevious: false,
+                                    //weightChange: setChange.weightChange,
+                                    loadChange: setChange.loadChange,
+                                    metricChange: setChange.metricChange
+                                )
+                
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
@@ -129,4 +149,68 @@ struct SetChangeRow: View {
         }
         .padding(.vertical, 4)
     }
+    
+    @ViewBuilder
+        private func setInfoView(
+            title: String,
+            set: SetDetail?,
+            isPrevious: Bool,
+            //weightChange: SetChange.WeightChange? = nil,
+            loadChange: SetChange.LoadChange? = nil,
+            metricChange: SetChange.MetricChange? = nil
+        ) -> some View {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(title)
+                    .font(.caption2)
+                    .fontWeight(.medium)
+                    .foregroundStyle(isPrevious ? .secondary : .primary)
+                
+                if let set = set {
+                    let load = set.load
+                    // Load info
+                    if load != .none {
+                        HStack {
+                            Image(systemName: load.iconName)
+                                .foregroundStyle(isPrevious ? .secondary : .primary)
+                                .font(.caption2)
+                            Text(load.displayString)
+                                .font(.caption)
+                                .fontWeight(isPrevious ? .regular : .medium)
+                                .foregroundStyle(isPrevious ? .secondary : .primary)
+                        }
+                    }
+                    
+                    // Metric info
+                    HStack {
+                        Image(systemName: set.planned.iconName)
+                            .foregroundStyle(isPrevious ? .secondary : .primary)
+                            .font(.caption2)
+                        Text(set.planned.fieldString)
+                            .font(.caption)
+                            .fontWeight(isPrevious ? .regular : .medium)
+                            .foregroundStyle(isPrevious ? .secondary : .primary)
+                        
+                        // Change indicator for new values only
+                        if !isPrevious {
+                            //if let weightChange = weightChange {
+                            if let loadChange = loadChange {
+                                Image(systemName: loadChange.isIncrease ? "arrow.up" : "arrow.down")
+                                    .foregroundStyle(loadChange.isIncrease ? .green : .red)
+                                    .font(.caption2)
+                            } else if let metricChange = metricChange {
+                                Image(systemName: metricChange.newValue > metricChange.previousValue ? "arrow.up" : "arrow.down")
+                                    .foregroundStyle(metricChange.newValue > metricChange.previousValue ? .green : .red)
+                                    .font(.caption2)
+                            }
+                        }
+                    }
+                } else {
+                    Text("New exercise")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
 }
+

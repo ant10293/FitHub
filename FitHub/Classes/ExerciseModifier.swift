@@ -280,7 +280,8 @@ struct ExerciseModifier {
         if let index = template.exercises.firstIndex(where: { $0.id == exercise.id }) {
             let newSetNumber = template.exercises[index].workingSets + 1
             let planned = exercise.getPlannedMetric(value: 0)
-            let newSet = SetDetail(setNumber: newSetNumber, weight: Mass(kg: 0), planned: planned)
+            let load = exercise.getLoadMetric(metricValue: 0)
+            let newSet = SetDetail(setNumber: newSetNumber, load: load, planned: planned)
             template.exercises[index].setDetails.append(newSet)
             _ = user.updateTemplate(template: template)
         }

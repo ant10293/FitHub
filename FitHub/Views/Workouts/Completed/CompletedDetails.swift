@@ -141,6 +141,8 @@ private extension CompletedDetails {
         
         // Build planned text (weight if relevant + reps/time)
         private func plannedText(set: SetDetail, usesWeight: Bool) -> Text {
+            set.formattedPlannedText(usesWeight: usesWeight)
+            /*
             let planStr = displayString(for: set.planned)
             if usesWeight {
                 return set.weight.formattedText()
@@ -149,9 +151,11 @@ private extension CompletedDetails {
             } else {
                 return Text(planStr).fontWeight(.light)
             }
+            */
         }
         
         // Convert SetMetric → user-facing string
+        /*
         private func displayString(for metric: SetMetric) -> String {
             switch metric {
             case .reps(let r):
@@ -160,6 +164,7 @@ private extension CompletedDetails {
                 return span.displayStringCompact // e.g. "0:45" or "12:03"
             }
         }
+        */
     }
 }
 

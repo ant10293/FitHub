@@ -316,7 +316,13 @@ struct TemplateDetail: View {
     private func addExercise(_ exercise: Exercise) {
         captureSnapshot() // Capture the state before adding
         var exercise = exercise
-        exercise.setDetails.append(SetDetail(setNumber: 1, weight: Mass(kg: 0), planned: exercise.getPlannedMetric(value: 0)))
+        exercise.setDetails.append(
+            SetDetail(
+                setNumber: 1,
+                load: exercise.getLoadMetric(metricValue: 0),
+                planned: exercise.getPlannedMetric(value: 0)
+            )
+        )
         template.exercises.append(exercise)
     }
     

@@ -26,7 +26,7 @@ struct EquipmentPopupView: View {
                     }
                 }
                 if !showingCategories {
-                    RectangularButton(title: "Save and Continue", action: onContinue)
+                    RectangularButton(title: "Save and Continue", width: .fit, action: onContinue)
                 }
             }
             .navigationBarTitle(title, displayMode: .inline)

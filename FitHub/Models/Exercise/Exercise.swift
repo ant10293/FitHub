@@ -142,6 +142,15 @@ extension Exercise {
         }
     }
     
+    func getLoadMetric(metricValue: Double) -> SetLoad {
+        let peak = getPeakMetric(metricValue: metricValue)
+        switch peak {
+        case .oneRepMax(let m): return .weight(m)
+        case .maxReps, .maxHold: return .none
+        // TODO: add for cardio
+        }
+    }
+    
     func getPlannedMetric(value: Int) -> SetMetric {
         if effort.usesReps {
             .reps(value)
@@ -153,8 +162,8 @@ extension Exercise {
     func calculateCSVMax(userData: UserData) -> PeakMetric? {
         guard let url = self.url else { return nil }
         
-        let peakMetric = getPeakMetric(metricValue: 0)
-        switch peakMetric {
+        let peak = getPeakMetric(metricValue: 0)
+        switch peak {
         case .oneRepMax:
             return CSVLoader.calculateFinal1RM(userData: userData, exercise: url)
         case .maxReps:
@@ -391,6 +400,7 @@ extension Exercise {
             
             var updated = setDetail
             
+            /*
             if !resistance.usesWeight {
                 // Bodyweight: bump planned target only
                 updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
@@ -421,6 +431,42 @@ extension Exercise {
                     }
                 }
             }
+            */
+            
+            switch setDetail.load {
+            case .weight(let weight):
+                switch style {
+                case .increaseWeight:
+                    let newKg = weight.inKg + Double(overloadProgress) * kgPerStep
+                    updated.load = .weight(equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding))
+                    
+                case .increaseReps:
+                    updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
+                    
+                case .decreaseReps:
+                    // Fewer reps/seconds but +weight
+                    updated.bumpPlanned(by: -overloadProgress, secondsPerStep: secPerStep)
+                    let newKg = weight.inKg + Double(overloadProgress) * kgPerStep
+                    updated.load = .weight(equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding))
+
+                case .dynamic:
+                    if overloadProgress <= halfway {
+                        updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
+                    } else {
+                        // Reset planned target to baseline, then increase weight
+                        updated.planned = setDetail.planned
+                        let adj = overloadProgress - halfway
+                        let newKg = weight.inKg + Double(adj) * kgPerStep
+                        updated.load = .weight(equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding))
+                    }
+                }
+            case .distance(let distance):
+                // TODO: implement for distance
+                break
+            case .none:
+                break
+                
+            }
             
             return updated
         }
@@ -434,6 +480,7 @@ extension Exercise {
         setDetails = setDetails.map { setDetail in
             var updated = setDetail
             
+            /*
             if resistance.usesWeight {
                 // Weighted: scale load
                 let scaledKg = setDetail.weight.inKg * deloadFactor
@@ -441,6 +488,18 @@ extension Exercise {
             } else {
                 // Bodyweight: scale planned target
                 updated.planned = setDetail.planned.scaling(by: deloadFactor)
+            }
+            */
+            
+            switch setDetail.load {
+            case .weight(let weight):
+                let scaledKg = weight.inKg * deloadFactor
+                updated.load = .weight(equipmentData.roundWeight(Mass(kg: scaledKg), for: equipmentRequired, rounding: rounding))
+            case .distance(let distance):
+                // TODO: implement for distance
+                break
+            case .none:
+                break
             }
             
             return updated
@@ -457,7 +516,8 @@ extension Exercise {
         let rounding     = userData.settings.roundingPreference
         
         for n in 1...numSets {
-            var weight = Mass(kg: 0)
+            //var weight = Mass(kg: 0)
+            let load: SetLoad
             let planned: SetMetric
 
             switch peak {
@@ -478,6 +538,7 @@ extension Exercise {
                 case .fixed:
                     sec = min(maxSec, max(1, Int(Double(maxSec) * 0.95))) // ~95% of max, constant
                 }
+                load = .none // should change if we add weighted isometric
                 planned = .hold(.fromSeconds(sec))
 
             // ───────── bodyweight reps: drive off saved max reps ─────────
@@ -498,6 +559,7 @@ extension Exercise {
                 case .fixed:
                     reps = max(1, Int(Double(maxReps) * 0.95)) // ~95% of max, constant
                 }
+                load = .none
                 planned = .reps(reps)
 
             // ───────── weighted reps: compute target from 1RM ─────────
@@ -512,11 +574,11 @@ extension Exercise {
                     reps = (range.lowerBound + range.upperBound) / 2
                 }
                 let target = SetDetail.calculateSetWeight(oneRm: oneRM, reps: reps)
-                weight = equipmentData.roundWeight(target, for: equipmentRequired, rounding: rounding)
+                load = .weight(equipmentData.roundWeight(target, for: equipmentRequired, rounding: rounding))
                 planned = .reps(max(1, reps))
             }
             
-            details.append(SetDetail(setNumber: n, weight: weight, planned: planned))
+            details.append(SetDetail(setNumber: n, load: load, planned: planned))
         }
 
         setDetails = details
@@ -547,10 +609,10 @@ extension Exercise {
         for i in 0..<totalWarmUpSets {
             let idx = i + 1
             
+            /*
             switch baseline.planned {
             case .reps:
                 let reps = repSteps[i]
-                
                 if resistance.usesWeight {
                     // percent of working weight, modest reps
                     let baseKg   = baseline.weight.inKg
@@ -570,7 +632,6 @@ extension Exercise {
                         planned: .reps(reps)
                     ))
                 }
-
             case .hold:
                 // isometric warmups: shorter holds (seconds), weight stays as baseline (usually 0)
                 let baseSec = baseline.planned.holdTime?.inSeconds ?? 30
@@ -582,6 +643,47 @@ extension Exercise {
                     weight: resistance.usesWeight ? baseline.weight : Mass(kg: 0),
                     planned: .hold(.fromSeconds(target))
                 ))
+            }
+            */
+            
+            switch (baseline.load, baseline.planned) {
+            case (.weight(let weight), .reps):
+                let reps = repSteps[i]
+                let baseKg = weight.inKg
+                let targetKg = baseKg * reductionSteps[i]
+                var warmW = Mass(kg: targetKg)
+                warmW = equipmentData.roundWeight(warmW, for: equipmentRequired, rounding: rounding)
+                details.append(SetDetail(
+                    setNumber: idx,
+                    load: .weight(warmW),
+                    planned: .reps(reps)
+                ))
+                
+            case (.none, .reps):
+                let reps = repSteps[i]
+                details.append(SetDetail(
+                    setNumber: idx,
+                    load: .none,
+                    planned: .reps(reps)
+                ))
+                
+            case (.none, .hold(let ts)):
+                let baseSec = ts.inSeconds
+                let factor = reductionSteps[i]
+                let target = Int((Double(baseSec) * factor).rounded())
+                details.append(SetDetail(
+                    setNumber: idx,
+                    load: .none,
+                    planned: .hold(.fromSeconds(target))
+                ))
+                
+                
+            case (.distance(let distance), .hold(let ts)):
+                // Handle distance-based loads if needed
+                break
+                
+            default:
+                break
             }
         }
 
