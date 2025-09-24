@@ -6,7 +6,7 @@ struct SetInputRow: View {
     let exercise: Exercise
     
     @Binding var weightText: String
-    @Binding var metricText:   String
+    @Binding var metricText: String
     
     // Column sizes + gaps
     private let setsColWidth:  CGFloat = 54
@@ -14,8 +14,26 @@ struct SetInputRow: View {
     private let hGap:          CGFloat = 20   // horizontal gap between columns
     private let vGap:          CGFloat = 4    // vertical gap between rows
     
-    private var isHeaderRow: Bool { setNumber == 1 }
-    private var usesReps: Bool { exercise.effort.usesReps }
+    let isHeaderRow: Bool
+    let metric: SetMetric
+    let load: SetLoad
+
+    
+    init(
+        setNumber: Int,
+        exercise: Exercise,
+        weightText: Binding<String>,
+        metricText: Binding<String>
+        
+    ) {
+        self.setNumber = setNumber
+        self.exercise = exercise
+        _weightText = weightText
+        _metricText = metricText
+        self.isHeaderRow = setNumber == 1
+        self.load = exercise.getLoadMetric(metricValue: 0)
+        self.metric = exercise.getPlannedMetric(value: 0)
+    }
     
     var body: some View {
         Grid(alignment: .center, horizontalSpacing: hGap, verticalSpacing: vGap) {
@@ -26,8 +44,8 @@ struct SetInputRow: View {
                         .font(.headline)
                         .frame(width: setsColWidth)
                     
-                    if exercise.resistance.usesWeight {
-                         weightHeader
+                    if load != .none {
+                         loadHeader
                     } else {
                          Color.clear.frame(width: fieldColWidth) // ← holds column space
                     }
@@ -41,16 +59,15 @@ struct SetInputRow: View {
                     .fontWeight(.bold)
                     .frame(width: setsColWidth)
                 
-                if exercise.resistance.usesWeight {
-                     weightField
+                if load != .none {
+                     loadField
                 } else {
                      Color.clear.frame(width: fieldColWidth) // ← holds column space
                 }
                 
-                if usesReps {
-                    repsField
-                } else {
-                    timeField
+                switch metric {
+                case .reps: repsField
+                case .hold: timeField
                 }
             }
         }
@@ -59,9 +76,9 @@ struct SetInputRow: View {
 
 // MARK: - Column headers
 private extension SetInputRow {
-    var weightHeader: some View {
+    var loadHeader: some View {
         VStack(spacing: 0) {
-            Text(UnitSystem.current.weightUnit)
+            Text(load.label)
                 .font(exercise.weightInstruction == nil ? .headline : .caption)
                 .fontWeight(.semibold)
             if let txt = exercise.weightInstruction {
@@ -75,7 +92,7 @@ private extension SetInputRow {
     
     var repsHeader: some View {
         VStack(spacing: 0) {
-            Text(usesReps ? "Reps" : "Time")
+            Text(metric.label)
                 .font(exercise.repsInstruction == nil ? .headline : .caption)
                 .fontWeight(.semibold)
             if let txt = exercise.repsInstruction {
@@ -86,11 +103,12 @@ private extension SetInputRow {
         }
         .frame(width: fieldColWidth)
     }
+     
 }
 
 // MARK: - Fields
 private extension SetInputRow {
-    var weightField: some View {
+    var loadField: some View {
         TextField(
             "weight",
             text: Binding(

@@ -40,7 +40,7 @@ struct TemplateChangelog: Codable, Identifiable {
 struct TemplateMetadata: Codable {
     let estimatedDuration: TimeSpan?
     let totalSets: Int
-    let totalVolume: Double
+    let totalVolume: Mass
     let categories: [SplitCategory]
 }
 
@@ -103,18 +103,8 @@ struct SetChange: Codable, Identifiable {
     let setNumber: Int
     let previousSet: SetDetail?
     let newSet: SetDetail
-    //let weightChange: WeightChange?
     let loadChange: LoadChange?
     let metricChange: MetricChange?
-    
-    /*
-    struct WeightChange: Codable {
-        let previous: Mass
-        let new: Mass
-        let percentageChange: Double
-        let isIncrease: Bool
-    }
-    */
     
     struct LoadChange: Codable {
         let previous: SetLoad

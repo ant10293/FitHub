@@ -115,36 +115,43 @@ enum PeakMetric: Codable, Equatable, Hashable {
             return displayValue > 0 ? Format.smartFormat(displayValue) : ""
         }
     }
-
-    var unitLabel: String? {
+    
+    private var fieldLabel: String? {
         switch self {
-        case .oneRepMax: return UnitSystem.current.weightUnit
-        case .maxReps: return "reps"
+        case .oneRepMax, .maxReps: return unitLabel
         case .maxHold: return nil
         }
+    }
+    
+    var labeledText: Text {
+        let base = Text(displayValueString)
+        guard let label = fieldLabel, !label.isEmpty else { return base }
+        return base + Text(" ") + Text(label).fontWeight(.light)
+    }
+    
+    var loggingEntry: String {
+        let base = "\(performanceTitle): \(displayValueString)"
+        guard let label = fieldLabel, !label.isEmpty else { return base }
+        return base + " " + label
     }
     
     var formattedText: Text {
         return Text("\(performanceTitle): ").bold() + labeledText
     }
     
-    var labeledText: Text {
-        let base = Text(displayValueString)
-        guard let label = unitLabel, !label.isEmpty else { return base }
-        return base + Text(" ") + Text(label).fontWeight(.light)
-    }
-    
-    var loggingEntry: String {
-        let base = "\(performanceTitle): \(displayValueString)"
-        guard let label = unitLabel, !label.isEmpty else { return base }
-        return base + " " + label
-    }
-    
-    private var performanceTitle: String {
+    var performanceTitle: String {
         switch self {
         case .oneRepMax: return "One Rep Max"
         case .maxReps: return "Max Reps"
-        case .maxHold: return "Time"
+        case .maxHold: return "Max Hold"
+        }
+    }
+    
+    var unitLabel: String {
+        switch self {
+        case .oneRepMax: return UnitSystem.current.weightUnit
+        case .maxReps: return "reps"
+        case .maxHold: return "time"
         }
     }
     
@@ -161,5 +168,20 @@ enum PeakMetric: Codable, Equatable, Hashable {
         }
         return base + suffix
     }
+    
+    func peakMetricConverted(from value: Double) -> PeakMetric {
+        switch self {
+        case .oneRepMax:
+            let kg = UnitSystem.current == .imperial ? UnitSystem.LBtoKG(value) : value
+            return .oneRepMax(Mass(kg: kg))
+        case .maxReps:
+            return .maxReps(Int(value))
+        case .maxHold:
+            return .maxHold(TimeSpan(seconds: Int(value)))
+        }
+    }
 }
+
+
+
 

@@ -91,47 +91,55 @@ extension Exercise {
             })
     }
     
-    var performanceTitle: String { resistance.usesWeight ? "One Rep Max" : (effort.usesReps ? "Max Reps" : "Max Hold") }
-    
-    var peformanceUnit: String { resistance.usesWeight ? UnitSystem.current.weightUnit : (effort.usesReps ? "reps" : "sec") }
-    
-    var fieldLabel: String { resistance.usesWeight ? "weight" : (effort.usesReps ? "reps" : "time") }
+    var performanceTitle: String { getPeakMetric(metricValue: 0).performanceTitle }
+    var performanceUnit: String { getPeakMetric(metricValue: 0).unitLabel }
     
     var setsSubtitle: Text {
         let (label, range) = setMetricRangeLabeled
         return Text("Sets: ") + Text("\(workingSets), ").fontWeight(.light)
-             + Text("\(label): ") + Text(range).fontWeight(.light)
+        + Text("\(label): ") + Text(range).fontWeight(.light)
     }
     
     private var setMetricRangeLabeled: (label: String, range: String) {
-        guard let first = setDetails.first else { return (getPlannedMetric(value: 0).label, "0") }
-        
+        let label: String = getPlannedMetric(value: 0).label
+        guard let first = setDetails.first else { return (label, "0") }
         switch first.planned {
         case .reps:
             // Reps range (e.g., "8-12")
             let reps = setDetails.compactMap { $0.planned.repsValue }
-            guard let lo = reps.min(), let hi = reps.max() else { return ("Reps", "0") }
-            return ("Reps", lo == hi ? "\(lo)" : "\(lo)-\(hi)")
+            guard let lo = reps.min(), let hi = reps.max() else { return (label, "0") }
+            return (label, lo == hi ? "\(lo)" : "\(lo)-\(hi)")
         case .hold:
             // Time range (e.g., "0:30–1:00")
             let secs = setDetails.compactMap { $0.planned.holdTime?.inSeconds }
-            guard let lo = secs.min(), let hi = secs.max() else { return ("Hold", "0:00") }
+            guard let lo = secs.min(), let hi = secs.max() else { return (label, "0:00") }
             let loStr = TimeSpan(seconds: lo).displayStringCompact
             let hiStr = TimeSpan(seconds: hi).displayStringCompact
-            return ("Hold", lo == hi ? loStr : "\(loStr)-\(hiStr)")
-        }
-    }
-        
-    func metricDouble(from value: Double) -> Double {
-        if resistance.usesWeight {
-            return UnitSystem.current == .imperial ? UnitSystem.LBtoKG(value) : value
-        } else {
-            return Double(value)
+            return (label, lo == hi ? loStr : "\(loStr)-\(hiStr)")
+        /*
+        case .cardio:
+            let secs = setDetails.compactMap { $0.planned.timeSpeed?.time.inSeconds }
+            guard let lo = secs.min(), let hi = secs.max() else { return (label, "0:00") }
+            let loStr = TimeSpan(seconds: lo).displayStringCompact
+            let hiStr = TimeSpan(seconds: hi).displayStringCompact
+            return (label, lo == hi ? loStr : "\(loStr)-\(hiStr)")
+        */
         }
     }
     
+    var usesWeight: Bool {
+        switch resistance {
+        case .machine: return effort != .cardio ? true : false
+        case .freeWeight: return true
+        case .bodyweight: return false
+        case .banded: return false
+        // any other, weighted - Only used for sorting, not an option
+        default: return false
+        }
+    }
+        
     func getPeakMetric(metricValue: Double) -> PeakMetric {
-        if resistance.usesWeight {
+        if usesWeight {
             .oneRepMax(Mass(kg: metricValue))
         } else {
             if effort.usesReps {
@@ -152,10 +160,12 @@ extension Exercise {
     }
     
     func getPlannedMetric(value: Int) -> SetMetric {
-        if effort.usesReps {
-            .reps(value)
-        } else {
-            .hold(TimeSpan.init(seconds: value))
+        let peak = getPeakMetric(metricValue: 0)
+        switch peak {
+        case .oneRepMax, .maxReps:
+            return .reps(value)
+        case .maxHold:
+            return .hold(TimeSpan(seconds: value))
         }
     }
     
@@ -222,8 +232,8 @@ extension Exercise {
     func resistanceOK(_ selectedType: ResistanceType) -> Bool {
         switch selectedType {
         case .any:        return true
-        case .bodyweight: return !resistance.usesWeight
-        case .weighted:   return resistance.usesWeight
+        case .bodyweight: return !usesWeight // or resistance == .bodyweight
+        case .weighted:   return usesWeight
         case .freeWeight: return resistance == .freeWeight
         case .machine:    return resistance == .machine
         case .banded:     return resistance == .banded
@@ -264,7 +274,6 @@ extension Exercise {
         let altForRequired: [String: Set<String>] = neededGear.reduce(into: [:]) { dict, gear in
             dict[normalize(gear.name)] = Set((gear.alternativeEquipment ?? []).map(normalize))
         }
-        
         // 4️⃣  Check every requirement
         for raw in equipmentRequired {          // [String]
             let req = normalize(raw)
@@ -400,39 +409,6 @@ extension Exercise {
             
             var updated = setDetail
             
-            /*
-            if !resistance.usesWeight {
-                // Bodyweight: bump planned target only
-                updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
-            } else {
-                switch style {
-                case .increaseWeight:
-                    let newKg = setDetail.weight.inKg + Double(overloadProgress) * kgPerStep
-                    updated.weight = equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding)
-                    
-                case .increaseReps:
-                    updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
-                    
-                case .decreaseReps:
-                    // Fewer reps/seconds but +weight
-                    updated.bumpPlanned(by: -overloadProgress, secondsPerStep: secPerStep)
-                    let newKg = setDetail.weight.inKg + Double(overloadProgress) * kgPerStep
-                    updated.weight = equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding)
-                    
-                case .dynamic:
-                    if overloadProgress <= halfway {
-                        updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
-                    } else {
-                        // Reset planned target to baseline, then increase weight
-                        updated.planned = setDetail.planned
-                        let adj = overloadProgress - halfway
-                        let newKg = setDetail.weight.inKg + Double(adj) * kgPerStep
-                        updated.weight = equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding)
-                    }
-                }
-            }
-            */
-            
             switch setDetail.load {
             case .weight(let weight):
                 switch style {
@@ -464,8 +440,8 @@ extension Exercise {
                 // TODO: implement for distance
                 break
             case .none:
-                break
-                
+                // Bodyweight: bump planned target only
+                updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
             }
             
             return updated
@@ -480,17 +456,6 @@ extension Exercise {
         setDetails = setDetails.map { setDetail in
             var updated = setDetail
             
-            /*
-            if resistance.usesWeight {
-                // Weighted: scale load
-                let scaledKg = setDetail.weight.inKg * deloadFactor
-                updated.weight = equipmentData.roundWeight(Mass(kg: scaledKg), for: equipmentRequired, rounding: rounding)
-            } else {
-                // Bodyweight: scale planned target
-                updated.planned = setDetail.planned.scaling(by: deloadFactor)
-            }
-            */
-            
             switch setDetail.load {
             case .weight(let weight):
                 let scaledKg = weight.inKg * deloadFactor
@@ -499,7 +464,8 @@ extension Exercise {
                 // TODO: implement for distance
                 break
             case .none:
-                break
+                // Bodyweight: scale planned target
+                updated.planned = setDetail.planned.scaling(by: deloadFactor)
             }
             
             return updated
@@ -522,6 +488,7 @@ extension Exercise {
 
             switch peak {
                 // ───────── holds: drive off saved TimeSpan ─────────
+            // TODO: .maxHold and .maxReps logic is basically identical, use single source of truth
             case .maxHold(let ts):
                 let maxSec = max(1, ts.inSeconds)
                 let sec: Int
@@ -590,11 +557,9 @@ extension Exercise {
         let setStructure = userData.workoutPrefs.setStructure
         let rounding = userData.settings.roundingPreference
         
-        var details: [SetDetail] = []
-        var totalWarmUpSets = 0
-        var reductionSteps: [Double] = []
-        var repSteps: [Int] = [] // reps or seconds, depending on metric
-
+        let totalWarmUpSets: Int
+        let reductionSteps: [Double]
+        let repSteps: [Int] // reps or seconds, depending on metric
         switch setStructure {
         case .pyramid:
             totalWarmUpSets = 2
@@ -605,47 +570,13 @@ extension Exercise {
             reductionSteps = [0.50, 0.65, 0.80]
             repSteps = [10, 8, 6]
         }
+        
+        var details: [SetDetail] = []
 
         for i in 0..<totalWarmUpSets {
             let idx = i + 1
             
-            /*
-            switch baseline.planned {
-            case .reps:
-                let reps = repSteps[i]
-                if resistance.usesWeight {
-                    // percent of working weight, modest reps
-                    let baseKg   = baseline.weight.inKg
-                    let targetKg = baseKg * reductionSteps[i]
-                    var warmW    = Mass(kg: targetKg)
-                    warmW = equipmentData.roundWeight(warmW, for: equipmentRequired, rounding: rounding)
-                    details.append(SetDetail(
-                        setNumber: idx,
-                        weight: warmW,
-                        planned: .reps(reps)
-                    ))
-                } else {
-                    // bodyweight reps warmups: just use the step reps
-                    details.append(SetDetail(
-                        setNumber: idx,
-                        weight: Mass(kg: 0),
-                        planned: .reps(reps)
-                    ))
-                }
-            case .hold:
-                // isometric warmups: shorter holds (seconds), weight stays as baseline (usually 0)
-                let baseSec = baseline.planned.holdTime?.inSeconds ?? 30
-                let factor  = reductionSteps[i]
-                let target  = Int((Double(baseSec) * factor).rounded())
-
-                details.append(SetDetail(
-                    setNumber: idx,
-                    weight: resistance.usesWeight ? baseline.weight : Mass(kg: 0),
-                    planned: .hold(.fromSeconds(target))
-                ))
-            }
-            */
-            
+            // rep, and hold based exercises should not require a warmup.
             switch (baseline.load, baseline.planned) {
             case (.weight(let weight), .reps):
                 let reps = repSteps[i]
@@ -676,7 +607,6 @@ extension Exercise {
                     load: .none,
                     planned: .hold(.fromSeconds(target))
                 ))
-                
                 
             case (.distance(let distance), .hold(let ts)):
                 // Handle distance-based loads if needed

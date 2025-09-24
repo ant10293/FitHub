@@ -63,7 +63,7 @@ struct ExercisePerformanceGraph: View {
                             }
                         }
                         .overlay(alignment: .bottomTrailing, content: {
-                            Text(exercise.peformanceUnit)
+                            Text(exercise.performanceUnit)
                                 .font(.caption)
                                 .foregroundStyle(Color.secondary)
                         })
@@ -138,12 +138,12 @@ struct ExercisePerformanceGraph: View {
     }
     
     private var minValue: Double {
-        if exercise.resistance.usesWeight { return sortedRecords.map { $0.value.displayValue }.min() ?? 100 }
+        if exercise.usesWeight { return sortedRecords.map { $0.value.displayValue }.min() ?? 100 }
         return sortedRecords.map { $0.value.displayValue }.min() ?? 0
     }
     
     private var maxValue: Double {
-        if exercise.resistance.usesWeight { return sortedRecords.map { $0.value.displayValue }.max() ?? 300 }
+        if exercise.usesWeight { return sortedRecords.map { $0.value.displayValue }.max() ?? 300 }
         return sortedRecords.map { $0.value.displayValue }.max() ?? 50
     }
     

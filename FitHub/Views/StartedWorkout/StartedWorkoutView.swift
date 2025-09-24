@@ -14,7 +14,7 @@ struct StartedWorkoutView: View {
     @State private var selectedExerciseIndex: Int?
     @State private var showingDetailView: Bool = false
     var onExit: () -> Void = {}
-    
+
     var body: some View {
         ZStack {
             // Main content
@@ -101,17 +101,20 @@ struct StartedWorkoutView: View {
     @ViewBuilder private var exerciseSetOverlay: some View {
         if let selectedExerciseIdx = selectedExerciseIndex {
             ExerciseSetOverlay(
-                timerManager: timer,
                 exercise: $viewModel.template.exercises[selectedExerciseIdx],
+                timerManager: timer,
                 progress: TemplateProgress(
                     exerciseIdx: selectedExerciseIdx,
                     numExercises: viewModel.template.numExercises,
-                    isLastExercise: viewModel.isLastExerciseForIndex(selectedExerciseIdx),
+                    isLastExercise: viewModel.isLastExerciseForIndex(selectedExerciseIdx)
+                ),
+                params: UserParams(
                     restTimerEnabled: ctx.userData.settings.restTimerEnabled,
                     restPeriods: RestPeriods.determineRestPeriods(
                         customRest: ctx.userData.workoutPrefs.customRestPeriods,
                         goal: ctx.userData.physical.goal
-                    )
+                    ),
+                    disableRPE: ctx.userData.settings.hideRpeSlider
                 ),
                 goToNextSetOrExercise: {
                     viewModel.goToNextSetOrExercise(for: selectedExerciseIdx, selectedExerciseIndex: &selectedExerciseIndex, timer: timer)

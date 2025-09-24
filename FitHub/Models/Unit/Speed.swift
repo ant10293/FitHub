@@ -15,15 +15,19 @@ struct Speed: Codable, Equatable, Hashable {
 
     // MARK: - Inits
     init(kmh: Double) { self.kmh = max(0, kmh) }
-    init(mph: Double) { self.kmh = max(0, mph * Self.kmPerMile) }
+    init(mph: Double) { self.kmh = max(0, UnitSystem.MPHtoKMH(mph)) }
+    init(speed: Double) {
+        self.kmh = 0
+        self.setDisplay(speed)
+    }
 
     // MARK: - Accessors
     var inKmH: Double { kmh }
-    var inMPH: Double { kmh / Self.kmPerMile }
+    var inMPH: Double { UnitSystem.KMHtoMPH(kmh) }
 
     // MARK: - Mutating setters
     mutating func setKmH(_ v: Double) { kmh = max(0, v) }
-    mutating func setMPH(_ v: Double) { kmh = max(0, v * Self.kmPerMile) }
+    mutating func setMPH(_ v: Double) { kmh = max(0, UnitSystem.MPHtoKMH(v)) }
 
     /// Convenience: set using the current unit system (mph for imperial, km/h for metric).
     mutating func setDisplay(_ value: Double) {
@@ -34,9 +38,13 @@ struct Speed: Codable, Equatable, Hashable {
     var displayValue: Double {
         UnitSystem.current == .imperial ? inMPH : inKmH
     }
+    
+    var displayString: String {
+        Format.smartFormat(displayValue)
+    }
 
     var unitLabel: String {
-        UnitSystem.current == .imperial ? "mph" : "km/h"
+        UnitSystem.current == .imperial ? "mph" : "kmh"
     }
 
     var formattedText: Text {
@@ -44,7 +52,31 @@ struct Speed: Codable, Equatable, Hashable {
         Text(" ") +
         Text(unitLabel).fontWeight(.light)
     }
-
-    // MARK: - Constants
-    private static let kmPerMile: Double = 1.609_344
+    
+    // MARK: - Conversion Methods
+    static func speedFromTime(_ time: TimeSpan, distance: Distance) -> Speed {
+        guard time.inSeconds > 0 else { return Speed(kmh: 0) }
+        
+        // Convert distance to km and time to hours
+        let distanceKm = distance.inKm
+        let timeHours = Double(time.inSeconds) / 3600.0
+        
+        // Speed = Distance / Time
+        let speedKmH = distanceKm / timeHours
+        return Speed(kmh: speedKmH)
+    }
+    
+    static func timeFromSpeed(_ speed: Speed, distance: Distance) -> TimeSpan {
+        guard speed.kmh > 0 else { return TimeSpan(seconds: 0) }
+        
+        // Convert distance to km and speed to km/h
+        let distanceKm = distance.inKm
+        let speedKmH = speed.kmh
+        
+        // Time = Distance / Speed (in hours)
+        let timeHours = distanceKm / speedKmH
+        let timeSeconds = Int(timeHours * 3600.0)
+        
+        return TimeSpan(seconds: timeSeconds)
+    }
 }

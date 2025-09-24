@@ -35,7 +35,7 @@ struct NextButton: View {
                 }
             } else {
                 if isDisabled {
-                    Text(exercise.resistance.usesWeight ? "Invalid weight or reps field." : (exercise.effort.usesReps ? "Invalid reps field." : "Invalid time field."))
+                    Text("Set field(s) must exceed zero.")
                         .font(.subheadline)
                         .foregroundStyle(.red)
                 }

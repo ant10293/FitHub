@@ -107,16 +107,8 @@ enum ResistanceType: String, CaseIterable, Identifiable, Codable {
     case other = "Other"
     
     var id: String { self.rawValue }
-    
-    var usesWeight: Bool {
-        switch self {
-        case .bodyweight, .other, .banded: return false
-        case .weighted, .freeWeight, .machine: return true
-        default: return false
-        }
-    }
-    
-    static let forExercises: [ResistanceType] = [.freeWeight, .bodyweight, .machine, .banded, .other]
+  
+    static let forExercises: [ResistanceType] = [.freeWeight, .bodyweight, .machine, .banded]
 }
 
 enum RepsInstruction: String, Codable, CaseIterable {
@@ -159,7 +151,7 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
     case isolation  = "Isolation"   // single-joint, dynamic
     case isometric  = "Isometric"   // joint angle static, time-based load
     case plyometric = "Plyometric"
-    //case cardio     = "Cardio"      // primarily metabolic
+    case cardio     = "Cardio"      // primarily metabolic
     
     var id: String { self.rawValue }
     
@@ -167,7 +159,7 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
         switch self {
         case .compound, .isolation, .plyometric:
             return true
-        case .isometric:
+        case .isometric, .cardio:
             return false
         }
     }
@@ -183,6 +175,8 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
             return 3
         case .isometric:
             return 4
+        case .cardio:
+            return 5
         }
     }
 }

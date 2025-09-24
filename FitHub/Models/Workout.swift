@@ -183,8 +183,12 @@ struct TemplateProgress {
     let exerciseIdx: Int
     let numExercises: Int
     let isLastExercise: Bool
+}
+
+struct UserParams {
     let restTimerEnabled: Bool
     let restPeriods: RestPeriods
+    let disableRPE: Bool
 }
 
 struct WorkoutSummaryData {

@@ -8,133 +8,9 @@
 import Foundation
 import SwiftUI
 
-// TODO: should be init() from PeakMetric, PeakMetric should also be init() from these
-// each exercise var can have a var that determines which to use
-/*
-struct WeightReps: Codable, Equatable, Hashable {
-    var weight: Mass
-    var reps: Int
-}
-
-struct Reps: Codable, Equatable, Hashable {
-    var reps: Int
-}
-
-struct Timed: Codable, Equatable, Hashable {
-    var weight: Mass?
-    var time: TimeSpan
-}
-
-struct Cardio: Codable, Equatable, Hashable {
-    var distance: Distance?
-    var time: TimeSpan
-    //var incline: Double? // 0...40
-    //var speed: Speed?
-}
-*/
-
-enum SetLoad: Codable, Equatable, Hashable {
-    case weight(Mass)
-    case distance(Distance)
-    case none
-    
-    var weight: Mass? {
-        if case .weight(let w) = self { return w }
-        return nil
-    }
-    
-    var distance: Distance? {
-        if case .distance(let d) = self { return d }
-        return nil
-    }
-    
-    var iconName: String {
-        switch self {
-        case .weight: return "scalemass"
-        case .distance: return "figure.walk"
-        case .none: return ""
-        }
-    }
-    
-    var actualValue: Double {
-        switch self {
-        case .weight(let w): return w.displayValue
-        case .distance(let d): return d.displayValue
-        case .none: return 0
-        }
-    }
-    
-    var displayString: String {
-        switch self {
-        case .weight(let w): return w.displayString
-        case .distance(let d): return d.displayString
-        case .none: return ""
-        }
-    }
-    
-    var formattedText: Text {
-        switch self {
-        case .weight(let w): return w.formattedText()
-        case .distance(let d): return d.formattedText
-        case .none: return Text("Body-weight")
-        }
-    }
-}
-
-enum SetMetric: Codable, Equatable, Hashable {
-    case reps(Int)
-    case hold(TimeSpan)   // isometric: time under tension
-    
-    func scaling(by factor: Double) -> SetMetric {
-        switch self {
-        case .reps(let r): return .reps(max(1, Int((Double(r) * factor).rounded(.down))))
-        case .hold(let span): return .hold(.fromSeconds(max(1, Int((Double(span.inSeconds) * factor).rounded(.down)))))
-        }
-    }
-    
-    var repsValue: Int? {
-        if case .reps(let n) = self { return n }
-        return nil
-    }
-    
-    var holdTime: TimeSpan? {
-        if case .hold(let t) = self { return t }
-        return nil
-    }
-    
-    var fieldString: String {
-        switch self {
-        case .reps(let r): return r > 0 ? String(r) : ""
-        case .hold(let span): return span.displayStringCompact
-        }
-    }
-    
-    var actualValue: Double {
-        switch self {
-        case .reps(let r): return Double(r)
-        case .hold(let t): return Double(t.inSeconds)
-        }
-    }
-    
-    var label: String {
-        switch self {
-        case .reps: return "Reps"
-        case .hold: return "Hold"
-        }
-    }
-    
-    var iconName: String {
-        switch self {
-        case .reps: return "number"
-        case .hold: return "clock"
-        }
-    }
-}
-
 struct SetDetail: Identifiable, Hashable, Codable {
     var id: UUID = UUID()
     let setNumber: Int
-    //var weight: Mass
     var load: SetLoad
     var planned: SetMetric
     var completed: SetMetric?
@@ -240,6 +116,7 @@ struct SetDetail: Identifiable, Hashable, Codable {
         case .hold(let s):
             let seconds = max(0, s.inSeconds + steps * secondsPerStep)
             planned = .hold(TimeSpan(seconds: seconds))
+        //case .cardio: break
         }
     }
 }
@@ -249,47 +126,73 @@ extension SetDetail {
         guard let weight = load.weight, weight.displayValue > 0 else { return "" }
         return weight.displayString
     }
-
-    func formattedCompletedText(usesWeight: Bool) -> Text {
+    
+    var formattedCompletedText: Text {
         let head = Text("Set \(setNumber): ").bold()
         guard let completed = completed else { return head + Text("—") }
-        
-        switch (usesWeight, completed) {
-        case (false, .reps(let repsDone)):
-            return head + Text("\(repsDone) reps completed")
-        case (true, .reps(let repsDone)):
+
+        switch (load, completed) {
+        case (.weight(let w), .reps(let r)):
             return head
-                + (load.weight?.formattedText() ?? Text(""))
+                + w.formattedText()
                 + Text(" × ").foregroundStyle(.gray)
-                + Text("\(repsDone)")
-                + Text(" reps").fontWeight(.light)
-        case (false, .hold(let t)):
-            return head + Text(t.displayStringCompact) + Text(" hold").fontWeight(.light)
-        case (true, .hold(let t)):
+                + Text("\(r)") + Text(" reps").fontWeight(.light)
+
+        case (.none, .reps(let r)):
+            return head + Text("\(r) reps completed")
+
+        case (.weight(let w), .hold(let t)):
             return head
-                + (load.weight?.formattedText() ?? Text(""))
+                + w.formattedText()
                 + Text(" × ").foregroundStyle(.gray)
                 + Text(t.displayStringCompact)
                 + Text(" hold").fontWeight(.light)
+
+        case (.none, .hold(let t)):
+            return head + Text(t.displayStringCompact) + Text(" hold completed").fontWeight(.light)
+
+        case (.distance(let d), .hold(let t)):
+            // If you support cardio sets with distance × time
+            return head
+                + d.formattedText
+                + Text(" × ").foregroundStyle(.gray)
+                + Text(t.displayStringCompact)
+                + Text(" hold").fontWeight(.light)
+
+        default:
+            return head + Text("—")
         }
     }
-        
-    func formattedPlannedText(usesWeight: Bool) -> Text {
-        switch (usesWeight, planned) {
-        case (false, .reps(let r)):
-            return Text("\(r)") + Text(" reps planned").fontWeight(.light)
-        case (true, .reps(let r)):
-            return (load.weight?.formattedText() ?? Text(""))
+    
+    // Planned
+    var formattedPlannedText: Text {
+        switch (load, planned) {
+        case (.weight(let w), .reps(let r)):
+            return w.formattedText()
                 + Text(" × ").foregroundStyle(.gray)
-                + Text("\(r)")
-                + Text(" reps").fontWeight(.light)
-        case (false, .hold(let t)):
-            return Text(t.displayStringCompact) + Text(" hold planned").fontWeight(.light)
-        case (true, .hold(let t)):
-            return (load.weight?.formattedText() ?? Text(""))
+                + Text("\(r)") + Text(" reps").fontWeight(.light)
+
+        case (.none, .reps(let r)):
+            return Text("\(r)") + Text(" reps").fontWeight(.light)
+
+        case (.weight(let w), .hold(let t)):
+            return w.formattedText()
                 + Text(" × ").foregroundStyle(.gray)
                 + Text(t.displayStringCompact)
                 + Text(" hold").fontWeight(.light)
+
+        case (.none, .hold(let t)):
+            return Text(t.displayStringCompact) + Text(" hold").fontWeight(.light)
+
+        case (.distance(let d), .hold(let t)):
+            // distance × time planned
+            return d.formattedText
+                + Text(" × ").foregroundStyle(.gray)
+                + Text(t.displayStringCompact)
+                + Text(" hold").fontWeight(.light)
+
+        default:
+            return Text("—")
         }
     }
     

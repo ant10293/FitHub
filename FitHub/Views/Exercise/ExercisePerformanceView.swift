@@ -61,8 +61,8 @@ struct ExercisePerformanceView: View {
                                 
                                 record.value.formattedText
 
-                                if exercise.resistance.usesWeight, let repsW = record.repsXweight {
-                                    repsW.formattedText           // already styled
+                                if let repsW = record.repsXweight {
+                                    repsW.formattedText        
                                 }
                             }
 

@@ -255,7 +255,7 @@ extension ExerciseData {
         let targetPrimSet    = Set(exercise.primaryMuscles)
         let existingNames    = Set(existing.map(\.name))
         let targetEffort     = exercise.effort
-        let targetUsesWeight = exercise.resistance.usesWeight
+        let targetUsesWeight = exercise.usesWeight
 
         var strict:    [Exercise] = []; strict.reserveCapacity(8)
         var relaxed:   [Exercise] = []; relaxed.reserveCapacity(8)
@@ -275,7 +275,7 @@ extension ExerciseData {
             if !(isStrictMuscle || isRelaxedMuscle) { continue }
 
             // weighted ↔︎ bodyweight mismatch → relaxed
-            let goesToRelaxed = isRelaxedMuscle || (cand.resistance.usesWeight != targetUsesWeight)
+            let goesToRelaxed = isRelaxedMuscle || (cand.usesWeight != targetUsesWeight)
 
             // expensive check last
             guard cand.canPerform(

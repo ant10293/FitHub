@@ -305,7 +305,7 @@ struct NewExercise: View {
                 }
 
                 // Weight Instruction (Optional, conditional)
-                if exercise.resistance.usesWeight {
+                if exercise.usesWeight {
                     MenuPickerRow(title: "Weight Instruction", selection: $draft.weightInstruction, showDivider: false) {
                         Text("None").tag(nil as WeightInstruction?)
                         ForEach(WeightInstruction.allCases, id: \.self) {

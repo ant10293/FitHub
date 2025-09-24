@@ -93,11 +93,9 @@ struct ExerciseView: View {
                                     if let max = ctx.exercises.peakMetric(for: exercise.id) {
                                         HStack(spacing: 4) {
                                             Image(systemName: "trophy.fill")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 8.5, height: 8.5)
+                                                .font(.caption2)
                                             
-                                            Text(exercise.resistance.usesWeight ? "1rm: " : (exercise.effort.usesReps ? "Max: " : "Time: "))
+                                            Text("PR: ")
                                                 .bold()
                                                 .font(.caption2)
                                             +

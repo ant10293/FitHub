@@ -15,6 +15,10 @@ struct Distance: Codable, Equatable, Hashable {
     // MARK: – Inits
     init(km: Double) { self.km = km }
     init(mi: Double) { self.km = UnitSystem.MItoKM(mi) }
+    init(distance: Double) {
+        self.km = 0
+        self.set(distance)
+    }
     
     // MARK: – Accessors
     var inKm: Double { km }

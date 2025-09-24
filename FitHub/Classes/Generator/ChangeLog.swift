@@ -174,30 +174,6 @@ extension WorkoutGenerator {
         }
     }
 
-    // Better approach - make the method safer:
-    // Fix the createWeightChange method:
-    /*
-    private func createWeightChange(new: SetDetail, previous: SetDetail?) -> SetChange.WeightChange? {
-        guard let previous = previous else { return nil }
-        
-        // Since weight is not optional, we can access it directly
-        let newWeight = new.weight.inKg
-        let prevWeight = previous.weight.inKg
-        
-        // Check if weights are different
-        guard newWeight != prevWeight else { return nil }
-        
-        let percentageChange = ((newWeight - prevWeight) / prevWeight) * 100
-        
-        return SetChange.WeightChange(
-            previous: new.weight,      // Direct access, no unwrapping needed
-            new: previous.weight,      // Direct access, no unwrapping needed
-            percentageChange: abs(percentageChange),
-            isIncrease: newWeight > prevWeight
-        )
-    }
-    */
-    
     private func createLoadChange(new: SetDetail, previous: SetDetail?) -> SetChange.LoadChange? {
         guard let previous = previous else { return nil }
         
@@ -285,29 +261,6 @@ extension WorkoutGenerator {
         guard let previous = previousTemplate else { return nil }
         return previous.exercises.first { $0.id == newExercise.id }
     }
-    /*
-    // Check if exercise has significant changes
-    private func hasSignificantChanges(new: Exercise, previous: Exercise) -> Bool {
-        // Compare set details
-        if new.setDetails.count != previous.setDetails.count { return true }
-        
-        for (newSet, prevSet) in zip(new.setDetails, previous.setDetails) {
-            if newSet.weight.inKg != prevSet.weight.inKg { return true }
-            if newSet.planned.actualValue != prevSet.planned.actualValue { return true }
-        }
-        
-        return false
-    }
-    
-    // Calculate total volume for template
-    private func calculateTotalVolume(_ template: WorkoutTemplate) -> Double {
-        template.exercises.reduce(0.0) { total, exercise in
-            total + exercise.setDetails.reduce(0.0) { setTotal, set in
-                setTotal + (set.weight.inKg) * set.planned.actualValue
-            }
-        }
-    }
-    */
     
     // Check if exercise has significant changes
     private func hasSignificantChanges(new: Exercise, previous: Exercise) -> Bool {
@@ -323,12 +276,14 @@ extension WorkoutGenerator {
     }
 
     // Calculate total volume for template
-    private func calculateTotalVolume(_ template: WorkoutTemplate) -> Double {
-        template.exercises.reduce(0.0) { total, exercise in
+    private func calculateTotalVolume(_ template: WorkoutTemplate) -> Mass {
+        let kg = template.exercises.reduce(0.0) { total, exercise in
             total + exercise.setDetails.reduce(0.0) { setTotal, set in
-                setTotal + set.load.actualValue * set.planned.actualValue
+                guard let weight = set.load.weight else { return setTotal }
+                return setTotal + weight.inKg * set.planned.actualValue
             }
         }
+        return Mass(kg: kg)
     }
     
     // Create progression details

@@ -23,6 +23,7 @@ enum UnitSystem: String, Codable, CaseIterable {
     var sizeUnit:   String { self == .imperial ? "in" : "cm" }
     var lengthUnit: String { self == .imperial ? "ft" : "m" }
     var distanceUnit: String { self == .imperial ? "mi" : "km" }
+    var speedUnit: String { self == .imperial ? "mph" : "kmh" }
     
     var displayName: String {
         switch self {
@@ -66,6 +67,10 @@ enum UnitSystem: String, Codable, CaseIterable {
     // MARK: - Distance Conversions
     static func MItoKM(_ miles: Double) -> Double { miles * kmPerMi }
     static func KMtoMI(_ kilometers: Double) -> Double { kilometers * miPerKm }
+    
+    // MARK: - Speed Conversions
+    static func MPHtoKMH(_ mph: Double) -> Double { mph * kmPerMi }
+    static func KMHtoMPH(_ kmh: Double) -> Double { kmh * miPerKm }
 }
 
 struct Incline: Codable, Error, Equatable, Hashable {

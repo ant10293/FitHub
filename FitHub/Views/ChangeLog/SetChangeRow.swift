@@ -136,7 +136,6 @@ struct SetChangeRow: View {
                                     title: "New",
                                     set: setChange.newSet,
                                     isPrevious: false,
-                                    //weightChange: setChange.weightChange,
                                     loadChange: setChange.loadChange,
                                     metricChange: setChange.metricChange
                                 )
@@ -155,7 +154,6 @@ struct SetChangeRow: View {
             title: String,
             set: SetDetail?,
             isPrevious: Bool,
-            //weightChange: SetChange.WeightChange? = nil,
             loadChange: SetChange.LoadChange? = nil,
             metricChange: SetChange.MetricChange? = nil
         ) -> some View {
@@ -192,7 +190,6 @@ struct SetChangeRow: View {
                         
                         // Change indicator for new values only
                         if !isPrevious {
-                            //if let weightChange = weightChange {
                             if let loadChange = loadChange {
                                 Image(systemName: loadChange.isIncrease ? "arrow.up" : "arrow.down")
                                     .foregroundStyle(loadChange.isIncrease ? .green : .red)

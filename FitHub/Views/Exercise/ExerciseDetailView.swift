@@ -187,7 +187,8 @@ struct ExerciseDetailView: View {
                                 Text("\(workout.template.name)")
                                 ForEach(workout.template.exercises.filter { $0.id == exerciseId }) { ex in
                                     ForEach(ex.setDetails, id: \.self) { set in
-                                        set.formattedCompletedText(usesWeight: ex.resistance.usesWeight)
+                                        // TODO: this should show if a new pr was set
+                                        set.formattedCompletedText
                                             .font(.caption)
                                     }
                                 }

@@ -15,6 +15,10 @@ struct Mass: Codable, Equatable, Hashable {
     // MARK: – Inits
     init(kg: Double) { self.kg = kg }
     init(lb: Double) { self.kg = UnitSystem.LBtoKG(lb) }
+    init(weight: Double) {
+        self.kg = 0           // now self is fully initialized
+        self.set(weight)      // safe to call mutating method
+    }
     
     // MARK: – Accessors
     var inKg: Double { kg }

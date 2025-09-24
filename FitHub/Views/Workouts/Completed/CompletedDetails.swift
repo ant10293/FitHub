@@ -87,22 +87,16 @@ private extension CompletedDetails {
         // PR line (unchanged logic)
         if let prUpdate = workout.updatedMax.first(where: {
             $0.exerciseId == exercise.id && $0.setId == set.id //$0.setNumber == set.setNumber
-        }),
-           let prRepsWeight = prUpdate.repsXweight {
+        }) {
             HStack {
                 Image(systemName: "trophy.fill")
-                if exercise.resistance.usesWeight {
-                    if prRepsWeight.reps > 1 {
-                        prRepsWeight.formattedText +
-                        Text(" = ") +
-                        prUpdate.value.labeledText
-                    } else {
-                        prUpdate.value.labeledText
-                    }
+                if let prRepsWeight = prUpdate.repsXweight, prRepsWeight.reps > 1 {
+                    prRepsWeight.formattedText +
+                    Text(" ≈ ") +
+                    prUpdate.value.labeledText
                 } else {
                     prUpdate.value.labeledText
                 }
-                Spacer(minLength: 0)
             }
             .font(.caption2)
             .foregroundStyle(Color.gold)
@@ -124,7 +118,7 @@ private extension CompletedDetails {
                     .fontWeight(.bold)
                 
                 // Planned (weight if relevant) + target (reps or time)
-                plannedText(set: set, usesWeight: exercise.resistance.usesWeight)
+                plannedText(set: set)
                     .fontWeight(.regular)
 
                 // Completed + RPE inline on the same row
@@ -140,31 +134,9 @@ private extension CompletedDetails {
         }
         
         // Build planned text (weight if relevant + reps/time)
-        private func plannedText(set: SetDetail, usesWeight: Bool) -> Text {
-            set.formattedPlannedText(usesWeight: usesWeight)
-            /*
-            let planStr = displayString(for: set.planned)
-            if usesWeight {
-                return set.weight.formattedText()
-                + Text(" × ").foregroundStyle(.gray)
-                + Text(planStr).fontWeight(.light)
-            } else {
-                return Text(planStr).fontWeight(.light)
-            }
-            */
+        private func plannedText(set: SetDetail) -> Text {
+            return set.formattedPlannedText
         }
-        
-        // Convert SetMetric → user-facing string
-        /*
-        private func displayString(for metric: SetMetric) -> String {
-            switch metric {
-            case .reps(let r):
-                return "\(max(0, r)) reps"
-            case .hold(let span):
-                return span.displayStringCompact // e.g. "0:45" or "12:03"
-            }
-        }
-        */
     }
 }
 
@@ -217,3 +189,5 @@ private extension CompletedDetails {
         }
     }
 }
+
+

@@ -21,10 +21,11 @@ struct ExerciseSetDetail: View {
     @State private var weightTexts: [String]
     @State private var metricTexts: [String]   // holds reps OR time "mm:ss"/"ss"
     
-    var hasEquipmentAdjustments: Bool
-    var perform: (CallBackAction) -> Void
-    var onSuperset: (String) -> Void
+    let hasEquipmentAdjustments: Bool
+    let perform: (CallBackAction) -> Void
+    let onSuperset: (String) -> Void
 
+    
     // MARK: - Init
     init(
         template: Binding<WorkoutTemplate>,
@@ -92,17 +93,14 @@ struct ExerciseSetDetail: View {
             let weightText: Binding<String> = Binding(
                 get: { weightTexts[safe: index] ?? "" },
                 set: { newText in
+                    weightTexts[safeEdit: index] = newText
                     let val = Double(newText) ?? 0
-
+                    
                     switch exercise.setDetails[index].load {
                     case .weight:
-                        var weight = Mass(kg: 0)
-                        weight.set(val)
-                        exercise.setDetails[index].load = .weight(weight)
+                        exercise.setDetails[index].load = .weight(Mass(weight: val))
                     case .distance:
-                        var distance = Distance(km: 0)
-                        distance.set(val)
-                        exercise.setDetails[index].load = .distance(distance)
+                        exercise.setDetails[index].load = .distance(Distance(distance: val))
                     case .none:
                         break
                     }

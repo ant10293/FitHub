@@ -1,14 +1,14 @@
 import SwiftUI
 
 struct StrengthPercentileView: View {
-    var maxValue: PeakMetric
-    var age: Int
-    var bodyweight: Mass
-    var gender: Gender
-    var exercise: Exercise
-    var maxValuesAge: [String: PeakMetric]
-    var maxValuesBW: [String: PeakMetric]
-    var percentile: Int?
+    let maxValue: PeakMetric
+    let age: Int
+    let bodyweight: Mass
+    let gender: Gender
+    let exercise: Exercise
+    let maxValuesAge: [String: PeakMetric]
+    let maxValuesBW: [String: PeakMetric]
+    let percentile: Int?
     
     var body: some View {
         VStack {
@@ -16,7 +16,8 @@ struct StrengthPercentileView: View {
                 .font(.title2)
                 .padding(.bottom, 10)
             
-            maxView(usesWeight: exercise.resistance.usesWeight)
+            // dont have any strength standards for isometric or cardio exercises
+            maxView(usesWeight: exercise.usesWeight)
 
             Text("\(exercise.performanceTitle) values for \(exercise.name) \(exercise.weightInstruction?.rawValue ?? ""):")
                 .font(.headline)

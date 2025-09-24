@@ -8,20 +8,21 @@
 import SwiftUI
 
 struct ExerciseSetOverlay: View {
-    let timerManager: TimerManager
     @Binding var exercise: Exercise
     @State private var isPressed: Bool = false
     @State private var showAdjustmentsView: Bool = false
     @State private var shouldDisableNext: Bool = false
     @State private var showPlateVisualizer: Bool = false
     @State private var showPicker: Bool = false
-    var progress: TemplateProgress
-    var goToNextSetOrExercise: () -> Void
-    var onClose: () -> Void
-    var viewDetail: () -> Void
+    let timerManager: TimerManager
+    let progress: TemplateProgress
+    let params: UserParams
+    let goToNextSetOrExercise: () -> Void
+    let onClose: () -> Void
+    let viewDetail: () -> Void
     let getPriorMax: (Exercise.ID) -> PeakMetric?
-    var onPerformanceUpdate: (PerformanceUpdate) -> Void
-    var saveTemplate: (Binding<SetDetail>, Binding<Exercise>) -> Void
+    let onPerformanceUpdate: (PerformanceUpdate) -> Void
+    let saveTemplate: (Binding<SetDetail>, Binding<Exercise>) -> Void
 
     var body: some View {
         VStack {
@@ -35,10 +36,11 @@ struct ExerciseSetOverlay: View {
                                 
                 // Display the set editor
                 ExerciseSetDisplay(
-                    timerManager: timerManager,
                     setDetail: detail,
                     shouldDisableNext: $shouldDisableNext,
                     showPicker: $showPicker,
+                    timerManager: timerManager,
+                    hideRPE: params.disableRPE,
                     exercise: exercise,
                     saveTemplate: {
                         saveTemplate(detail, $exercise)
@@ -51,7 +53,7 @@ struct ExerciseSetOverlay: View {
                         isPressed: $isPressed,
                         exercise: exercise,
                         isLastExercise: progress.isLastExercise,
-                        restTimerEnabled: progress.restTimerEnabled,
+                        restTimerEnabled: params.restTimerEnabled,
                         isDisabled: shouldDisableNext,
                         onButtonPress: {
                             return handleButtonPress(setDetail: detail)
@@ -148,7 +150,7 @@ struct ExerciseSetOverlay: View {
     
     private func handleButtonPress(setDetail: Binding<SetDetail>) -> Int {
         let priorMax = getPriorMax(exercise.id)
-        let defaultRest = exercise.getRestPeriod(isWarm: exercise.isWarmUp, rest: progress.restPeriods)
+        let defaultRest = exercise.getRestPeriod(isWarm: exercise.isWarmUp, rest: params.restPeriods)
         let restForSet = setDetail.wrappedValue.restPeriod ?? defaultRest
         
         // ── A) Repetition-driven sets (compound/isolation) ─────────────────────
