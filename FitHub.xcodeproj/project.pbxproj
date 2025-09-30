@@ -21,6 +21,7 @@
 		65039B862E837BB0007A31E1 /* TimeOrSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B852E837BB0007A31E1 /* TimeOrSpeed.swift */; };
 		65039B882E84749F007A31E1 /* SetMetricEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B872E84749F007A31E1 /* SetMetricEditor.swift */; };
 		65039B8A2E8474BC007A31E1 /* SetLoadEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B892E8474BC007A31E1 /* SetLoadEditor.swift */; };
+		65039B8F2E88D807007A31E1 /* SimpleStopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B8E2E88D807007A31E1 /* SimpleStopwatch.swift */; };
 		6510A2D22E28843C0051D002 /* SetInputRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510A2D12E28843C0051D002 /* SetInputRow.swift */; };
 		6510A2D42E2DB5440051D002 /* HeightSelectorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510A2D32E2DB5440051D002 /* HeightSelectorRow.swift */; };
 		6510A2D62E2DB5500051D002 /* WeightSelectorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510A2D52E2DB5500051D002 /* WeightSelectorRow.swift */; };
@@ -257,6 +258,7 @@
 		65039B852E837BB0007A31E1 /* TimeOrSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeOrSpeed.swift; sourceTree = "<group>"; };
 		65039B872E84749F007A31E1 /* SetMetricEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMetricEditor.swift; sourceTree = "<group>"; };
 		65039B892E8474BC007A31E1 /* SetLoadEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetLoadEditor.swift; sourceTree = "<group>"; };
+		65039B8E2E88D807007A31E1 /* SimpleStopwatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleStopwatch.swift; sourceTree = "<group>"; };
 		6510A2D12E28843C0051D002 /* SetInputRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetInputRow.swift; sourceTree = "<group>"; };
 		6510A2D32E2DB5440051D002 /* HeightSelectorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightSelectorRow.swift; sourceTree = "<group>"; };
 		6510A2D52E2DB5500051D002 /* WeightSelectorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightSelectorRow.swift; sourceTree = "<group>"; };
@@ -536,6 +538,15 @@
 			path = SetDetail;
 			sourceTree = "<group>";
 		};
+		65039B8B2E888B4D007A31E1 /* ForUnit */ = {
+			isa = PBXGroup;
+			children = (
+				657067A12E4434FE0063090C /* TimeEntryField.swift */,
+				65039B772E8361A1007A31E1 /* TimeSpeedField.swift */,
+			);
+			path = ForUnit;
+			sourceTree = "<group>";
+		};
 		653136192E53EF9900EECCA5 /* ChangeLog */ = {
 			isa = PBXGroup;
 			children = (
@@ -569,14 +580,13 @@
 		6531362C2E53FB7600EECCA5 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
+				65039B8B2E888B4D007A31E1 /* ForUnit */,
 				65039B872E84749F007A31E1 /* SetMetricEditor.swift */,
 				65039B892E8474BC007A31E1 /* SetLoadEditor.swift */,
 				65CFBFAE2E1F979300CD521E /* DescriptionField.swift */,
 				65CFBFB22E1F9B4500CD521E /* AliasesField.swift */,
 				65CFBFB42E1FA03800CD521E /* NameField.swift */,
 				65ECFF112E25A4D60091032A /* InputField.swift */,
-				657067A12E4434FE0063090C /* TimeEntryField.swift */,
-				65039B772E8361A1007A31E1 /* TimeSpeedField.swift */,
 				657067A32E49729A0063090C /* TemplateEditor.swift */,
 				6531363D2E59141800EECCA5 /* WorkoutParams */,
 				6550ADC52E70C3FD002072C1 /* ExEngagement */,
@@ -650,6 +660,7 @@
 			children = (
 				65CD3C132DD3C84F00C2B671 /* TemplateDetail.swift */,
 				65CD3C0F2DD3C84F00C2B671 /* ExerciseSetDetail.swift */,
+				65CD3C152DD3C84F00C2B671 /* ExerciseWarmUpDetail.swift */,
 				6550ADA72E6A26AD002072C1 /* AddDeleteButtons.swift */,
 			);
 			path = TemplateDetail;
@@ -792,7 +803,6 @@
 			children = (
 				65CD3C0E2DD3C84F00C2B671 /* ExerciseDetailOptions.swift */,
 				65CD3C122DD3C84F00C2B671 /* RestTimeEditor.swift */,
-				65CD3C152DD3C84F00C2B671 /* ExerciseWarmUpDetail.swift */,
 			);
 			path = DetailOptions;
 			sourceTree = "<group>";
@@ -1046,6 +1056,7 @@
 				65CD3BFC2DD3C84F00C2B671 /* ExerciseSetOverlay.swift */,
 				65CD3BFD2DD3C84F00C2B671 /* NextButton.swift */,
 				65CD3BFF2DD3C84F00C2B671 /* WorkoutSummary.swift */,
+				65039B8E2E88D807007A31E1 /* SimpleStopwatch.swift */,
 			);
 			path = StartedWorkout;
 			sourceTree = "<group>";
@@ -1308,6 +1319,7 @@
 				65039B822E837B00007A31E1 /* SetMetric.swift in Sources */,
 				653136302E550E2900EECCA5 /* WorkoutParams.swift in Sources */,
 				65CD3C4D2DD3C84F00C2B671 /* MeasurementsView.swift in Sources */,
+				65039B8F2E88D807007A31E1 /* SimpleStopwatch.swift in Sources */,
 				65CD3C4E2DD3C84F00C2B671 /* CategorySelection.swift in Sources */,
 				65039B742E81D983007A31E1 /* Speed.swift in Sources */,
 				65CFBFA92E1F5B2B00CD521E /* AdjustmentPicker.swift in Sources */,

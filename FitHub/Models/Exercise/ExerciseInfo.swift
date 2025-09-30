@@ -8,6 +8,25 @@
 import Foundation
 import SwiftUI
 
+enum ExerciseUnit: String {
+    case weightXreps, repsOnly, timeOnly, weightXtime, distanceXtimeOrSpeed
+    
+    func getPeakMetric(metricValue: Double) -> PeakMetric {
+        switch self {
+        case .weightXreps:
+            return .oneRepMax(Mass(weight: metricValue))
+        case .repsOnly:
+            return .maxReps(Int(metricValue))
+        case .timeOnly:
+            return .maxHold(TimeSpan(seconds: Int(metricValue)))
+        // FIXME: temporary - must add PeakMetric cases
+        case .weightXtime:
+            return .oneRepMax(Mass(weight: metricValue))
+        case .distanceXtimeOrSpeed:
+            return .oneRepMax(Mass(weight: metricValue))
+        }
+    }
+}
 
 enum CategorySelections: Hashable {
     case split(SplitCategory)

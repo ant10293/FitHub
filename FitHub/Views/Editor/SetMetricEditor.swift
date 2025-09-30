@@ -4,19 +4,116 @@
 //
 //  Created by Anthony Cantu on 9/24/25.
 //
-
 import SwiftUI
 
 struct SetMetricEditor: View {
     @Binding var planned: SetMetric
     @Binding var completed: SetMetric
     let load: SetLoad
+    var style: TextFieldVisualStyle = .rounded
+
+    var onChange: ((SetMetric, SetMetric) -> Void)? = nil
+    var onValidityChange: ((Bool) -> Void)? = nil
     
+    @State private var cardioShowing: TimeOrSpeed.InputKey = .time
+
+
+    private func validate(planned: SetMetric, load: SetLoad) -> Bool {
+        let plannedOk: Bool = {
+            switch planned {
+            case .reps(let r):     return r > 0
+            case .hold(let t):     return t.inSeconds > 0
+            case .cardio(let tos): return tos.actualValue > 0
+            }
+        }()
+
+        let loadOk: Bool = {
+            switch load {
+            case .none:            return true
+            case .weight(let w):   return w.inKg > 0
+            case .distance(let d): return d.inKm > 0
+            }
+        }()
+
+        return plannedOk && loadOk
+    }
+
+    private var repsBinding: Binding<String> {
+        Binding<String>(
+            get: {
+                if case let .reps(r) = planned { return r > 0 ? String(r) : "" }
+                return ""
+            },
+            set: { newValue in
+                let filtered = InputLimiter.filteredReps(newValue)
+                let r = Int(filtered) ?? 0
+                let newPlanned: SetMetric = .reps(r)
+                planned = newPlanned
+                completed = newPlanned
+                onChange?(planned, completed)
+                onValidityChange?(validate(planned: planned, load: load))
+            }
+        )
+    }
+
+    private var holdBinding: Binding<String> {
+        Binding<String>(
+            get: {
+                if case let .hold(ts) = planned {
+                    return ts.inSeconds > 0 ? ts.displayStringCompact : ""
+                }
+                return ""
+            },
+            set: { newValue in
+                let secs = TimeSpan.seconds(from: newValue)
+                let ts = TimeSpan(seconds: secs)
+                let newPlanned: SetMetric = .hold(ts)
+                planned = newPlanned
+                completed = newPlanned
+                onChange?(planned, completed)
+                onValidityChange?(validate(planned: planned, load: load))
+            }
+        )
+    }
+    // TODO: use text or else 0:00 will always be present
+    // Cardio binding uses your TimeSpeedField component
+    private var cardioBinding: Binding<TimeOrSpeed> {
+        Binding<TimeOrSpeed>(
+            get: {
+                if case let .cardio(tos) = planned { return tos }
+                // Fallback default if planned isn’t cardio yet
+                let defaultTOS = TimeOrSpeed(time: TimeSpan(seconds: 0), distance: .init(distance: 0))
+                return defaultTOS
+            },
+            set: { newValue in
+                let newPlanned: SetMetric = .cardio(newValue)
+                planned = newPlanned
+                completed = newPlanned
+                onChange?(planned, completed)
+                onValidityChange?(validate(planned: planned, load: load))
+            }
+        )
+    }
+
+    private var cardioDistance: Distance {
+        switch load {
+        case .distance(let d): return d
+        default: return Distance(distance: 0)
+        }
+    }
+
     var body: some View {
         switch planned {
         case .reps:
+            TextField("reps", text: repsBinding)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.center)
+
         case .hold:
+            TimeEntryField(text: holdBinding, style: style)
+
+        case .cardio:
+            TimeSpeedField(cardio: cardioBinding, distance: cardioDistance, style: style)
         }
     }
 }
-

@@ -39,6 +39,14 @@ enum SetLoad: Codable, Equatable, Hashable {
         }
     }
     
+    var fieldString: String {
+        switch self {
+        case .weight(let w): return w.inKg > 0 ? w.displayString : ""
+        case .distance(let d): return d.inKm > 0 ? d.displayString : ""
+        case .none: return ""
+        }
+    }
+    
     var displayString: String {
         switch self {
         case .weight(let w): return w.displayString
@@ -58,7 +66,7 @@ enum SetLoad: Codable, Equatable, Hashable {
     var label: String {
         switch self {
         case .weight: return UnitSystem.current.weightUnit
-        case .distance: return "Distance"
+        case .distance: return UnitSystem.current.distanceUnit
         case .none: return ""
         }
     }

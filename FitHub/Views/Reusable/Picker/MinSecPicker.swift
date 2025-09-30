@@ -6,11 +6,9 @@
 //
 
 import SwiftUI
-import SwiftUI
 
 struct MinSecPicker: View {
     @Binding var time: TimeSpan
-
     var minuteRange: ClosedRange<Int> = 0...59
     var secondRange: ClosedRange<Int> = 0...59
     var secondStep: Int = 1
@@ -18,15 +16,23 @@ struct MinSecPicker: View {
     private var minutesBinding: Binding<Int> {
         Binding(
             get: { time.components.m },
-            set: { time = .fromMinSec(minutes: $0, seconds: time.components.s) }
+            set: { newMinutes in
+                let currentSeconds = time.components.s
+                time = .fromMinSec(minutes: newMinutes, seconds: currentSeconds)
+            }
         )
     }
+       
     private var secondsBinding: Binding<Int> {
         Binding(
             get: { time.components.s },
-            set: { time = .fromMinSec(minutes: time.components.m, seconds: $0) }
+            set: { newSeconds in
+                let currentMinutes = time.components.m
+                time = .fromMinSec(minutes: currentMinutes, seconds: newSeconds)
+            }
         )
     }
+
     private var secondOptions: [Int] {
         stride(from: secondRange.lowerBound, through: secondRange.upperBound, by: max(1, secondStep)).map { $0 }
     }

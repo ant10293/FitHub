@@ -1,7 +1,6 @@
 import SwiftUI
 import Symbols
 
-
 struct StartedWorkoutView: View {
     @EnvironmentObject private var ctx: AppContext
     @Environment(\.dismiss) private var dismiss
@@ -9,7 +8,7 @@ struct StartedWorkoutView: View {
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var kbd = KeyboardManager.shared
     @StateObject var viewModel: WorkoutVM
-    @StateObject private var timer = TimerManager()
+    @StateObject private var timer = TimerManager() // needs to remain here for rest timer
     @State private var showingExitConfirmation = false
     @State private var selectedExerciseIndex: Int?
     @State private var showingDetailView: Bool = false
@@ -19,14 +18,13 @@ struct StartedWorkoutView: View {
         ZStack {
             // Main content
             VStack(spacing: 0) {
-               Text(Format.timeString(from: timer.secondsElapsed))
-                   .font(.largeTitle)
-                   .monospacedDigit()
-                   .padding()
+                SimpleStopwatch(start: viewModel.startDate, isStopped: viewModel.showWorkoutSummary)
+                    .font(.largeTitle)
+                    .padding()
                
-               Divider()
+                Divider()
                
-               exerciseList
+                exerciseList
             }
             // Overlay content
             if viewModel.isOverlayVisible { exerciseSetOverlay }
@@ -38,22 +36,22 @@ struct StartedWorkoutView: View {
         .onAppear(perform: performSetup)
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .sheet(isPresented: $showingDetailView, onDismiss: { showingDetailView = false }) {
-            if let index = selectedExerciseIndex {
-                ExerciseDetailView(viewingDuringWorkout: true, exercise: viewModel.template.exercises[index])
+            if let index = selectedExerciseIndex, let exercise = viewModel.template.exercises[safe: index] {
+                ExerciseDetailView(viewingDuringWorkout: true, exercise: exercise)
             }
         }
         .onAppear(perform: performSetup)
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .onChange(of: scenePhase) { oldPhase, newPhase in
             if newPhase == .background || newPhase == .inactive {
-                viewModel.saveWorkoutInProgress(userData: ctx.userData, timer: timer)
+                viewModel.saveWorkoutInProgress(userData: ctx.userData)
             }
         }
     }
     
     private func performSetup() {
         if selectedExerciseIndex == nil {
-            selectedExerciseIndex = viewModel.performSetup(timer: timer, userData: ctx.userData)
+            selectedExerciseIndex = viewModel.performSetup(userData: ctx.userData)
         }
     }
     
@@ -88,10 +86,10 @@ struct StartedWorkoutView: View {
     
     private var workoutSummaryOverlay: some View {
         WorkoutSummary(
-            summary: viewModel.calculateWorkoutSummary(secondsElapsed: timer.secondsElapsed),
+            summary: viewModel.calculateWorkoutSummary(),
             exercises: viewModel.template.exercises,
             onDone: {
-                viewModel.finishWorkoutAndDismiss(ctx: ctx, timer: timer, completion: {
+                viewModel.finishWorkoutAndDismiss(ctx: ctx, completion: {
                     onExit()
                 })
             }
@@ -117,7 +115,7 @@ struct StartedWorkoutView: View {
                     disableRPE: ctx.userData.settings.hideRpeSlider
                 ),
                 goToNextSetOrExercise: {
-                    viewModel.goToNextSetOrExercise(for: selectedExerciseIdx, selectedExerciseIndex: &selectedExerciseIndex, timer: timer)
+                    viewModel.goToNextSetOrExercise(for: selectedExerciseIdx, selectedExerciseIndex: &selectedExerciseIndex)
                 },
                 onClose: {
                     viewModel.isOverlayVisible = false
@@ -154,7 +152,7 @@ struct StartedWorkoutView: View {
             Alert(title: Text("Are you sure you want to go back?"),
                 message: Text("Doing so will end your workout."),
                 primaryButton: .destructive(Text("End Workout")) {
-                    viewModel.endWorkoutAndDismiss(ctx: ctx, timer: timer, shouldRemoveDate: false, completion: {
+                    viewModel.endWorkoutAndDismiss(ctx: ctx, shouldRemoveDate: false, completion: {
                         onExit()
                     })
                 },

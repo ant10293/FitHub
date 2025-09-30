@@ -11,9 +11,9 @@ import SwiftUI
 struct NextButton: View {
     @ObservedObject var timerManager: TimerManager
     @Binding var isPressed: Bool
-    var exercise: Exercise
+    let exercise: Exercise
     let isLastExercise: Bool
-    var restTimerEnabled: Bool
+    let restTimerEnabled: Bool
     let isDisabled: Bool
     let onButtonPress: () -> Int
     let goToNextSetOrExercise: () -> Void

@@ -19,6 +19,7 @@ final class WorkoutVM: ObservableObject {
     var workoutCompleted: Bool = false
     var isOverlayVisible: Bool = true
     var showWorkoutSummary: Bool = false
+    @Published private var completionDuration: Int = 0
 
     init(
         template: WorkoutTemplate,
@@ -59,17 +60,17 @@ final class WorkoutVM: ObservableObject {
         _ = userData.updateTemplate(template: template)
     }
 
-    func goToNextSetOrExercise(for exerciseIndex: Int, selectedExerciseIndex: inout Int?, timer: TimerManager) {
+    func goToNextSetOrExercise(for exerciseIndex: Int, selectedExerciseIndex: inout Int?) {
         let currentExercise = template.exercises[exerciseIndex]
 
         // resume timer if inactive
-        if !timer.isActive { timer.startTimer(startDate: startDate) }
+        //if !timer.isActive { timer.startTimer(startDate: startDate) }
         
         // Helper to allocate time when truly leaving an exercise
         func allocateTimeToCurrentExercise(index: Int, exercise: Exercise) {
-            let timeSpent = timer.secondsElapsed - (currentExerciseState?.startTime ?? 0)
+            let timeSpent = secondsElapsed - (currentExerciseState?.startTime ?? 0)
             template.exercises[index].timeSpent += timeSpent
-            currentExerciseState = CurrentExerciseState(id: exercise.id, name: exercise.name, index: index, startTime: timer.secondsElapsed)
+            currentExerciseState = CurrentExerciseState(id: exercise.id, name: exercise.name, index: index, startTime: secondsElapsed)
             //print("⏱  Allocated \(timeSpent)s to “\(exercise.name)”, new exerciseState=\(currentExerciseState!)")
         }
 
@@ -87,7 +88,7 @@ final class WorkoutVM: ObservableObject {
                 //print("➡️ Main sets remain (\(currentExercise.currentSet)/\(currentExercise.totalSets)), advancing current exercise")
                 allocateTimeToCurrentExercise(index: exerciseIndex, exercise: currentExercise)
                 template.exercises[exerciseIndex].currentSet += 1
-                moveToNextIncompleteExercise(after: supersetIdx - 1, selectedExerciseIndex: &selectedExerciseIndex, timer: timer)
+                moveToNextIncompleteExercise(after: supersetIdx - 1, selectedExerciseIndex: &selectedExerciseIndex)
                 //print("🔄 switched to superset exercise \(supersetExercise.name)")
             // Otherwise both done, mark complete and move on
             } else {
@@ -95,7 +96,7 @@ final class WorkoutVM: ObservableObject {
                 //print("✅ Superset exercise “\(currentExercise.name)” complete")
                 allocateTimeToCurrentExercise(index: exerciseIndex, exercise: currentExercise)
                 template.exercises[exerciseIndex].isCompleted = true
-                moveToNextIncompleteExercise(after: supersetIdx - 1, selectedExerciseIndex: &selectedExerciseIndex, timer: timer)
+                moveToNextIncompleteExercise(after: supersetIdx - 1, selectedExerciseIndex: &selectedExerciseIndex)
                 if showWorkoutSummary { return }
             }
         } else {
@@ -108,13 +109,13 @@ final class WorkoutVM: ObservableObject {
                 //print("✅ “\(currentExercise.name)” fully completed, moving to next incomplete")
                 allocateTimeToCurrentExercise(index: exerciseIndex, exercise: currentExercise)
                 template.exercises[exerciseIndex].isCompleted = true
-                moveToNextIncompleteExercise(after: exerciseIndex, selectedExerciseIndex: &selectedExerciseIndex, timer: timer)
+                moveToNextIncompleteExercise(after: exerciseIndex, selectedExerciseIndex: &selectedExerciseIndex)
                 if showWorkoutSummary { return }
             }
         }
     }
 
-    private func moveToNextIncompleteExercise(after index: Int, selectedExerciseIndex: inout Int?, timer: TimerManager) {
+    private func moveToNextIncompleteExercise(after index: Int, selectedExerciseIndex: inout Int?) {
         // Find the next incomplete exercise starting after the given index
         if let nextExerciseIndex = template.exercises.indices.first(where: { $0 > index && !template.exercises[$0].isCompleted }) {
             setAvgRPE(selectedIndex: selectedExerciseIndex)
@@ -124,7 +125,8 @@ final class WorkoutVM: ObservableObject {
             selectedExerciseIndex = anyExerciseIndex
         } else {
             // No more incomplete exercises, finish the workout
-            timer.stopTimer()
+            //timer.stopTimer()
+            completionDuration = secondsElapsed
             showCompletionAlert()
             return
         }
@@ -157,7 +159,7 @@ final class WorkoutVM: ObservableObject {
         return allOtherExercisesCompleted
     }
 
-    func calculateWorkoutSummary(secondsElapsed: Int) -> WorkoutSummaryData {
+    func calculateWorkoutSummary() -> WorkoutSummaryData {
         var totalVolume: Double = 0
         var totalReps:   Int    = 0
         var weightByExercise: [UUID: Double] = [:]
@@ -197,6 +199,8 @@ final class WorkoutVM: ObservableObject {
                 case .hold:
                     // holds are time-based → no reps/volume contribution
                     break
+                case .cardio:
+                    break
                 }
             }
         }
@@ -204,15 +208,17 @@ final class WorkoutVM: ObservableObject {
         return WorkoutSummaryData(
             totalVolume: Mass(kg: totalVolume),
             totalReps: totalReps,
-            totalTime: TimeSpan(seconds: secondsElapsed),
+            totalTime: TimeSpan(seconds: completionDuration),
             exercisePRs: updates.prExerciseIDs,
             weightByExercise: weightByExercise
         )
     }
     
-    func performSetup(timer: TimerManager, userData: UserData) -> Int {
+    private var secondsElapsed: Int { CalendarUtility.secondsSince(startDate) }
+    
+    func performSetup(userData: UserData) -> Int {
         if !userData.isWorkingOut { userData.isWorkingOut = true }
-        if !timer.isActive { timer.startTimer(startDate: startDate) }
+        //if !timer.isActive { timer.startTimer(startDate: startDate) }
         return getExerciseIndex()
     }
     
@@ -231,7 +237,7 @@ final class WorkoutVM: ObservableObject {
     func updatePerformance(_ update: PerformanceUpdate) { updates.updatePerformance(update) }
     
     @MainActor
-    func saveWorkoutInProgress(userData: UserData, timer: TimerManager) {
+    func saveWorkoutInProgress(userData: UserData) {
         // Create a WorkoutInProgress object to store the current state
         let workoutInProgress = WorkoutInProgress(
             template: template, // this doesnt save the updated template.still works because we only use it to find the actual template in trainer or user list
@@ -246,7 +252,7 @@ final class WorkoutVM: ObservableObject {
     }
 
     @MainActor
-    func finishWorkoutAndDismiss(ctx: AppContext, timer: TimerManager, completion: () -> Void) {
+    func finishWorkoutAndDismiss(ctx: AppContext, completion: () -> Void) {
         var shouldRemoveDate: Bool = false
         let now = Date()
         let roundedDate = CalendarUtility.shared.startOfDay(for: now)
@@ -268,19 +274,19 @@ final class WorkoutVM: ObservableObject {
             ctx.userData.incrementWorkoutStreak(shouldSave: false)
         }
         // save precise date for determing freshness of muscle groups
-        let completedWorkout: CompletedWorkout = .init(template: template, updatedMax: updates.updatedMax, duration: timer.secondsElapsed, date: now)
+        let completedWorkout: CompletedWorkout = .init(template: template, updatedMax: updates.updatedMax, duration: completionDuration, date: now)
         ctx.userData.workoutPlans.completedWorkouts.append(completedWorkout)         // Append to completedWorkouts and save
         
-        endWorkoutAndDismiss(ctx: ctx, timer: timer, shouldRemoveDate: shouldRemoveDate, completion: completion)
+        endWorkoutAndDismiss(ctx: ctx, shouldRemoveDate: shouldRemoveDate, completion: completion)
     }
         
     @MainActor
-    func endWorkoutAndDismiss(ctx: AppContext, timer: TimerManager, shouldRemoveDate: Bool, completion: () -> Void) {
+    func endWorkoutAndDismiss(ctx: AppContext, shouldRemoveDate: Bool, completion: () -> Void) {
         // update exercise performance
         ctx.exercises.applyPerformanceUpdates(updates: updates.updatedMax, csvEstimate: false)
         
         // Reset timer
-        timer.stopAll()
+        //timer.stopAll()
         
         // CRITICAL: Reset all workout state atomically
         ctx.userData.resetExercisesInTemplate(for: template, shouldRemoveDate: shouldRemoveDate)

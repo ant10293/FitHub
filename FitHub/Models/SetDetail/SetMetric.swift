@@ -11,13 +11,13 @@ import SwiftUI
 enum SetMetric: Codable, Equatable, Hashable {
     case reps(Int)
     case hold(TimeSpan)   // isometric: time under tension
-    //case cardio(TimeOrSpeed)
+    case cardio(TimeOrSpeed)
     
     func scaling(by factor: Double) -> SetMetric {
         switch self {
         case .reps(let r): return .reps(max(1, Int((Double(r) * factor).rounded(.down))))
         case .hold(let span): return .hold(.fromSeconds(max(1, Int((Double(span.inSeconds) * factor).rounded(.down)))))
-        //case .cardio: return self
+        case .cardio: return self
         }
     }
     
@@ -30,17 +30,17 @@ enum SetMetric: Codable, Equatable, Hashable {
         if case .hold(let t) = self { return t }
         return nil
     }
-    /*
+    
     var timeSpeed: TimeOrSpeed? {
         if case .cardio(let ts) = self { return ts }
         return nil
     }
-    */
+    
     var fieldString: String {
         switch self {
         case .reps(let r): return r > 0 ? String(r) : ""
         case .hold(let span): return span.inSeconds > 0 ? span.displayStringCompact : ""
-        //case .cardio(let ts): return ts.fieldString
+        case .cardio(let ts): return ts.fieldString
         }
     }
     
@@ -48,7 +48,7 @@ enum SetMetric: Codable, Equatable, Hashable {
         switch self {
         case .reps(let r): return Double(r)
         case .hold(let t): return Double(t.inSeconds)
-        //case .cardio(let ts): return ts.actualValue
+        case .cardio(let ts): return ts.actualValue
         }
     }
     
@@ -56,7 +56,7 @@ enum SetMetric: Codable, Equatable, Hashable {
         switch self {
         case .reps: return "Reps"
         case .hold: return "Time"
-        //case .cardio(let ts): return ts.label
+        case .cardio(let ts): return ts.label
         }
     }
     
@@ -64,7 +64,7 @@ enum SetMetric: Codable, Equatable, Hashable {
         switch self {
         case .reps: return "number"
         case .hold: return "clock"
-        //case .cardio: return "clock"
+        case .cardio: return "clock"
         }
     }
 }

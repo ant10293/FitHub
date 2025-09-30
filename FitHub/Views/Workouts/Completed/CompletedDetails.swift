@@ -27,7 +27,7 @@ struct CompletedDetails: View {
                         .foregroundStyle(.gray)
                         .multilineTextAlignment(.leading)
                     
-                    Text("Duration: \(Format.formatDuration(workout.duration, roundSeconds: true))")
+                    Text("Duration: \(Format.formatDuration(workout.duration))")
                         .font(.subheadline)
                         .padding(.bottom, 5)
                         .multilineTextAlignment(.leading)
@@ -178,6 +178,7 @@ private extension CompletedDetails {
             switch metric {
             case .reps(let r): return "\(max(0, r)) reps"
             case .hold(let span): return span.displayStringCompact
+            case .cardio(let ts): return ts.time.displayStringCompact
             }
         }
         
@@ -185,6 +186,7 @@ private extension CompletedDetails {
             switch m {
             case .reps(let r): return Double(max(0, r))
             case .hold(let span): return Double(max(0, span.inSeconds))
+            case .cardio(let ts): return Double(max(0, ts.time.inSeconds))
             }
         }
     }

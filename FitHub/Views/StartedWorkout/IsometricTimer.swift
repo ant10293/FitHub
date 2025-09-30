@@ -11,7 +11,7 @@ import SwiftUI
 struct IsometricTimerRing: View {
     @ObservedObject var manager: TimerManager
     let holdSeconds: Int   // e.g., 30 or whatever you want as the default
-    var onCompletion: (Int) -> Void
+    let onCompletion: (Int) -> Void
     
     var body: some View {
         VStack(spacing: 12) {

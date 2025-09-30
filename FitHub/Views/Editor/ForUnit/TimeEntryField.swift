@@ -11,6 +11,7 @@ import SwiftUI
 /// - The user can type only digits.
 /// - The ":" is effectively non-removable (we reinsert it every time).
 /// - No normalization/carry: "1:60" stays "1:60".
+// TODO: should take a TimeSpan type instead of String
 struct TimeEntryField: View {
     @Binding var text: String
     var placeholder: String = "h:mm:ss"

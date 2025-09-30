@@ -55,9 +55,7 @@ struct TemplateNavigator<Content: View>: View {
             if shouldShowPopup {
                 Color.black.opacity(0.3)
                     .ignoresSafeArea()
-                    .onTapGesture {
-                        selectedTemplate = nil
-                    }
+                    //.onTapGesture { selectedTemplate = nil }
                 
                 templatePopupOverlay
                     .frame(maxWidth: .infinity, maxHeight: .infinity)

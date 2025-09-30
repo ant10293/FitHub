@@ -79,47 +79,30 @@ struct ExerciseWarmUpDetail: View {
                     .foregroundStyle(.secondary)
             } else {
                 ForEach($rows) { $row in
-                    // Load ↔︎ String (constant for the exercise)
-                    let loadText: Binding<String> = Binding<String>(
-                        get: { row.load.displayString },
-                        set: { newValue in
-                            // Only update the value, not the load type
-                            if let value = Double(newValue) {
-                                switch row.load {
-                                case .weight:
-                                    row.load = .weight(Mass(weight: value))
-                                case .distance:
-                                    row.load = .distance(Distance(distance: value))
-                                case .none:
-                                    break
-                                }
-                            }
-                        }
-                    )
-
-                    // Metric ↔︎ String (reps or seconds depending on exercise)
-                    let metricText: Binding<String> = Binding<String>(
-                        get: {
-                            SetDetail(setNumber: row.setNumber, load: row.load, planned: row.planned)
-                                .metricFieldString
-                        },
-                        set: { newValue in
-                            switch row.planned {
-                            case .reps:
-                                let value = Int(newValue) ?? 0
-                                row.planned = .reps(value)
-                            case .hold:
-                                let secs = TimeSpan.seconds(from: newValue)
-                                row.planned = .hold(TimeSpan(seconds: secs))
-                            }
-                        }
-                    )
-
                     SetInputRow(
                         setNumber: row.setNumber,
                         exercise: exercise,
-                        weightText: loadText,
-                        metricText: metricText
+                        load: row.load,  // Use actual load from setDetails
+                        metric: row.planned,
+                        loadField: {
+                            SetLoadEditor(load: $row.load)
+                                .textFieldStyle(.roundedBorder)
+                        },
+                        metricField: {
+                            // Warm-ups typically don’t track a separate “completed”.
+                            // Mirror planned → completed locally so the editor behaves consistently.
+                            let completedBinding = Binding<SetMetric>(
+                                get: { row.planned },
+                                set: { row.planned = $0 }
+                            )
+                            
+                            SetMetricEditor(
+                                planned: $row.planned,
+                                completed: completedBinding,
+                                load: row.load
+                            )
+                            .textFieldStyle(.roundedBorder)
+                        }
                     )
                     .padding(.horizontal)
                     .listRowSeparator(.hidden)
@@ -163,8 +146,20 @@ struct ExerciseWarmUpDetail: View {
                     SetInputRow(
                         setNumber: idx + 1,
                         exercise: exercise,
-                        weightText: .constant(sd.load.displayString),
-                        metricText: .constant(sd.metricFieldString)
+                        load: sd.load,
+                        metric: sd.planned,
+                        loadField: {
+                            TextField("", text: .constant(sd.load.displayString.isEmpty ? "—" : sd.load.displayString))
+                                .multilineTextAlignment(.center)
+                               .textFieldStyle(.roundedBorder)
+                               .disabled(true)
+                        },
+                        metricField: {
+                            TextField("", text: .constant(sd.metricFieldString.isEmpty ? "—" : sd.metricFieldString))
+                                .multilineTextAlignment(.center)
+                               .textFieldStyle(.roundedBorder)
+                               .disabled(true)
+                        }
                     )
                     .opacity(0.7)
                     .padding(.horizontal)

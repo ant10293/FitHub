@@ -11,11 +11,11 @@ import SwiftUI
 // TODO: should be init() from PeakMetric, PeakMetric should also be init() from these
 // incline will be an ExerciseEquipment adjustment
 struct TimeOrSpeed: Codable, Equatable, Hashable {
-    var showing: InputKey
+    var showing: InputKey = .speed
     var time: TimeSpan
     var speed: Speed
     
-    enum InputKey: String, Codable, Equatable { case time, speed }
+    enum InputKey: String, Codable, Equatable, CaseIterable { case time, speed }
     
     // Computed properties for the non-key value (distance passed as parameter)
     func computedTime(distance: Distance) -> TimeSpan {

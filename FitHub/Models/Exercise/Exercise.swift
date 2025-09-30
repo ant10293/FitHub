@@ -91,8 +91,13 @@ extension Exercise {
             })
     }
     
-    var performanceTitle: String { getPeakMetric(metricValue: 0).performanceTitle }
-    var performanceUnit: String { getPeakMetric(metricValue: 0).unitLabel }
+    var performanceTitle: String {
+        getPeakMetric(metricValue: 0).performanceTitle
+    }
+    
+    var performanceUnit: String {
+        getPeakMetric(metricValue: 0).unitLabel
+    }
     
     var setsSubtitle: Text {
         let (label, range) = setMetricRangeLabeled
@@ -116,14 +121,12 @@ extension Exercise {
             let loStr = TimeSpan(seconds: lo).displayStringCompact
             let hiStr = TimeSpan(seconds: hi).displayStringCompact
             return (label, lo == hi ? loStr : "\(loStr)-\(hiStr)")
-        /*
         case .cardio:
             let secs = setDetails.compactMap { $0.planned.timeSpeed?.time.inSeconds }
             guard let lo = secs.min(), let hi = secs.max() else { return (label, "0:00") }
             let loStr = TimeSpan(seconds: lo).displayStringCompact
             let hiStr = TimeSpan(seconds: hi).displayStringCompact
             return (label, lo == hi ? loStr : "\(loStr)-\(hiStr)")
-        */
         }
     }
     
@@ -139,44 +142,52 @@ extension Exercise {
     }
         
     func getPeakMetric(metricValue: Double) -> PeakMetric {
-        if usesWeight {
-            .oneRepMax(Mass(kg: metricValue))
-        } else {
-            if effort.usesReps {
-                .maxReps(Int(metricValue))
-            } else {
-                .maxHold(TimeSpan.init(seconds: Int(metricValue)))
-            }
+        unitType.getPeakMetric(metricValue: metricValue)
+    }
+    
+    var unitType: ExerciseUnit {
+        switch effort {
+        case .cardio:
+            return .distanceXtimeOrSpeed
+
+        case .isometric:
+            return usesWeight ? .weightXtime : .timeOnly
+
+        // compound / isolation / plyometric (anything reps-driven)
+        default:
+            return usesWeight ? .weightXreps : .repsOnly
         }
     }
     
     func getLoadMetric(metricValue: Double) -> SetLoad {
-        let peak = getPeakMetric(metricValue: metricValue)
-        switch peak {
-        case .oneRepMax(let m): return .weight(m)
-        case .maxReps, .maxHold: return .none
-        // TODO: add for cardio
+        switch unitType {
+        case .weightXreps, .weightXtime:
+            return .weight(Mass(kg: 0))
+        case .repsOnly, .timeOnly:
+            return .none
+        case .distanceXtimeOrSpeed:
+            return .distance(Distance(km: 0))
         }
     }
-    
+    // FIXME: use value and pass distance
     func getPlannedMetric(value: Int) -> SetMetric {
-        let peak = getPeakMetric(metricValue: 0)
-        switch peak {
-        case .oneRepMax, .maxReps:
-            return .reps(value)
-        case .maxHold:
-            return .hold(TimeSpan(seconds: value))
+        switch unitType {
+        case .weightXreps, .repsOnly:
+            return .reps(0)
+        case .timeOnly, .weightXtime:
+            return .hold(TimeSpan(seconds: 0))
+        case .distanceXtimeOrSpeed:
+            return .cardio(TimeOrSpeed(time: TimeSpan(seconds: 0), distance: Distance(km: 0)))
         }
     }
     
     func calculateCSVMax(userData: UserData) -> PeakMetric? {
         guard let url = self.url else { return nil }
         
-        let peak = getPeakMetric(metricValue: 0)
-        switch peak {
-        case .oneRepMax:
+        switch unitType {
+        case .weightXreps:
             return CSVLoader.calculateFinal1RM(userData: userData, exercise: url)
-        case .maxReps:
+        case .repsOnly:
             return CSVLoader.calculateFinalReps(userData: userData, exercise: url)
         default:
             return nil
@@ -312,8 +323,8 @@ extension Exercise {
         }
         
         let (avgPeakMetric, avgRPE) = avgPeakAndRPE
-        guard let avgRPE = avgRPE else { return }
-        let new = RPEentry(id: startDate, rpe: avgRPE, completion: avgPeakMetric)
+        guard let avgPeak = avgPeakMetric, let avgRPE = avgRPE else { return }
+        let new = RPEentry(id: startDate, rpe: avgRPE, completion: avgPeak)
         
         if let current = currentWeekAvgRPE, current.id != startDate {
             //print("existing rpe found. Setting \(current) as last week rpe.")
@@ -330,8 +341,8 @@ extension Exercise {
         currentWeekAvgRPE = new
     }
     
-    private var avgPeakAndRPE: (peak: PeakMetric, rpe: Double?) {
-        let zero = getPeakMetric(metricValue: 0)
+    private var avgPeakAndRPE: (peak: PeakMetric?, rpe: Double?) {
+        let zero = getPeakMetric(metricValue: 0) 
         let acc = setDetails.reduce(into: (pSum: 0.0, pCnt: 0, rSum: 0.0, rCnt: 0)) { a, s in
             if let pm = s.completedPeakMetric(peak: zero) {
                 a.pSum += pm.actualValue          // adjust if your value prop differs

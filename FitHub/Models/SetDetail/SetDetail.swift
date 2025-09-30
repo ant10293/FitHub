@@ -116,7 +116,7 @@ struct SetDetail: Identifiable, Hashable, Codable {
         case .hold(let s):
             let seconds = max(0, s.inSeconds + steps * secondsPerStep)
             planned = .hold(TimeSpan(seconds: seconds))
-        //case .cardio: break
+        case .cardio: break
         }
     }
 }

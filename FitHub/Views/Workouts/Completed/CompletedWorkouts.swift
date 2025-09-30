@@ -52,6 +52,7 @@ struct CompletedWorkouts: View {
                                         }
                                         .buttonStyle(BorderlessButtonStyle())
                                     }
+                                    // TODO: this doesnt look good
                                     VStack(alignment: .leading, spacing: 5) {
                                         Text(workout.name)
                                             .font(.headline)
@@ -61,9 +62,11 @@ struct CompletedWorkouts: View {
                                         Text("Date: \(Format.formatDate(workout.date, dateStyle: .medium, timeStyle: .none))")
                                             .font(.subheadline)
                                             .foregroundStyle(.gray)
-                                        Text("Duration: \(Format.formatDuration(workout.duration, roundSeconds: true))")
+                                        Text("Duration: \(Format.formatDuration(workout.duration))")
                                             .font(.subheadline)
                                             .foregroundStyle(.gray)
+                                        Text("PRs: \(workout.updatedMax.count)")
+                                            .font(.subheadline)
                                     }
                                     .padding(.vertical, 5)
                                 }

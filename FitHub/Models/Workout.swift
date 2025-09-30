@@ -82,6 +82,7 @@ extension WorkoutTemplate {
                 switch metric {
                 case .reps(let r): movement += max(0, r) * secondsPerRep
                 case .hold(let span): movement += max(0, span.inSeconds)
+                case .cardio(let ts): movement += max(0, ts.time.inSeconds)
                 }
             }
 

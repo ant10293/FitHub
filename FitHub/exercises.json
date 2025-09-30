@@ -169,31 +169,6 @@
         "resistance" : "Free Weight"
     },
     {
-        "name" : "Paused Bench Press",
-        "id" : "85CAFEFC-F3C9-4C80-A70E-940E25888A0D",
-        "image" : "paused_bench_press",
-        "url" : "paused-bench-press",
-        "aliases" : ["Pause Press", "Isometric Bench Press"],
-        "description" : "Enhances chest muscle activation by incorporating a pause at the bottom of the lift.",
-        "equipmentRequired" : ["Flat Bench", "Barbell"],
-        "muscles" : [
-            { "engagementPercentage" : 60, "mover" : "primary", "muscleWorked" : "Pectorals", "submusclesWorked" : [
-                { "engagementPercentage" : 100, "submuscleWorked" : "Sternocostal Head" }
-            ] },
-            { "engagementPercentage" : 35, "mover" : "secondary", "muscleWorked" : "Triceps", "submusclesWorked" : [
-                { "engagementPercentage" : 60, "submuscleWorked" : "Triceps Lateral Head" },
-                { "engagementPercentage" : 40, "submuscleWorked" : "Triceps Medial Head" }
-            ] },
-            { "engagementPercentage" : 5, "mover" : "secondary", "muscleWorked" : "Deltoids", "submusclesWorked" : [
-                { "engagementPercentage" : 100, "submuscleWorked" : "Front Delt" }
-            ] }
-        ],
-        "difficulty" : "Nov.",
-        "effort" : "Compound",
-        "limbMovementType" : "Bilateral Dependent",
-        "resistance" : "Free Weight"
-    },
-    {
         "name" : "Reverse Grip Bench Press",
         "id" : "F5DD7891-9C47-4207-9242-25E9B429E2AC",
         "image" : "reverse_grip_bench_press",
@@ -3940,34 +3915,6 @@
 		"resistance" : "Machine"
 	},
 	{
-		"name" : "Pause Squat",
-		"id" : "CABA3632-742D-4E61-931A-DDD5948CDEE9",
-		"image" : "pause_squat",
-		"url" : "pause-squat",
-		"aliases" : ["Paused Back Squat"],
-		"description" : "Increases time under tension by pausing at the bottom of the squat, focusing on leg strength.",
-		"equipmentRequired" : ["Barbell", "Squat Rack"],
-		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Quadriceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
-			] },
-			{ "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Gluteus", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage" : 25, "mover" : "secondary", "muscleWorked" : "Hamstrings", "submusclesWorked" : [
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Semitendinosus" },
-				{ "engagementPercentage" : 20, "submuscleWorked" : "Semimembranosus" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Biceps Femoris" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
-	},
-	{
 		"name" : "Half Squat",
 		"id" : "4B6E3DA8-1C57-4C59-9F1C-8A0D5B3F2C91",
 		"image" : "half_squat",
@@ -6369,32 +6316,6 @@
 		"resistance" : "Free Weight",
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Leg"
-	},
-	{
-		"name" : "Pause Deadlift",
-		"id" : "0A10C93B-87F3-47CA-BD7A-E288E3AFA0E6",
-		"image" : "pause_deadlift",
-		"url" : "pause-deadlift",
-		"aliases" : ["Mid-Pull Deadlift"],
-		"description" : "Enhances tension in the lower back by pausing midway during the deadlift.",
-		"equipmentRequired" : ["Barbell"],
-		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Erector Spinae", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 30, "mover" : "secondary", "muscleWorked" : "Hamstrings", "submusclesWorked" : [
-				{ "engagementPercentage" : 12, "submuscleWorked" : "Semitendinosus" },
-				{ "engagementPercentage" : 6, "submuscleWorked" : "Semimembranosus" },
-				{ "engagementPercentage" : 12, "submuscleWorked" : "Biceps Femoris" }
-			] },
-			{ "engagementPercentage" : 20, "mover" : "secondary", "muscleWorked" : "Quadriceps", "submusclesWorked" : [
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Rectus Femoris" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Lateralis" },
-				{ "engagementPercentage" : 30, "submuscleWorked" : "Vastus Medialis" }
-			] }
-		],
-		"difficulty" : "Nov.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
 	},
 	{
 		"name" : "Rack Pull",

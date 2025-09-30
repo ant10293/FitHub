@@ -18,8 +18,6 @@ struct ExerciseSetDetail: View {
     @Binding var isShowingOptions: Bool
 
     @State private var showSupersetOptions: Bool = false
-    @State private var weightTexts: [String]
-    @State private var metricTexts: [String]   // holds reps OR time "mm:ss"/"ss"
     
     let hasEquipmentAdjustments: Bool
     let perform: (CallBackAction) -> Void
@@ -41,11 +39,6 @@ struct ExerciseSetDetail: View {
         _isCollapsed       = isCollapsed
         _isShowingOptions  = isShowingOptions
         _showSupersetOptions = State(initialValue: exercise.wrappedValue.isSupersettedWith != nil)
-
-        // Seed buffers from current model
-        let sets = exercise.wrappedValue.setDetails
-        _weightTexts = State(initialValue: sets.map { $0.weightFieldString })
-        _metricTexts = State(initialValue: sets.map { $0.metricFieldString })
 
         self.hasEquipmentAdjustments = hasEquipmentAdjustments
         self.perform = perform
@@ -71,65 +64,37 @@ struct ExerciseSetDetail: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(radius: 5)
         .padding(.horizontal, 2.5)
-        .onChange(of: exercise.setDetails) { resyncBuffersFromModel() }
         .onChange(of: exercise.isSupersettedWith) { showSupersetOptions = (exercise.isSupersettedWith != nil) }
     }
 
     // MARK: - Set rows
     @ViewBuilder private var setDetails: some View {
-        ForEach(exercise.setDetails.indices, id: \.self) { index in
-            // Weight text binding with buffer + commit to Mass when numeric
-            /*
-            let weightText: Binding<String> = Binding(
-                get: { weightTexts[safe: index] ?? "" },
-                set: { newText in
-                    weightTexts[safeEdit: index] = newText
-                    let val = Double(newText) ?? 0
-                    exercise.setDetails[index].weight.set(val)   // commits in user’s selected unit
-                }
-            )
-            */
-            
-            let weightText: Binding<String> = Binding(
-                get: { weightTexts[safe: index] ?? "" },
-                set: { newText in
-                    weightTexts[safeEdit: index] = newText
-                    let val = Double(newText) ?? 0
-                    
-                    switch exercise.setDetails[index].load {
-                    case .weight:
-                        exercise.setDetails[index].load = .weight(Mass(weight: val))
-                    case .distance:
-                        exercise.setDetails[index].load = .distance(Distance(distance: val))
-                    case .none:
-                        break
-                    }
-                }
-            )
-
-            // Reps/time text binding with buffer + commit to SetMetric
-            let metricText: Binding<String> = Binding(
-                get: { metricTexts[safe: index] ?? "" },
-                set: { newText in
-                    switch exercise.setDetails[index].planned {
-                    case .reps:
-                        metricTexts[safeEdit: index] = newText
-                        let val = Int(newText) ?? 0
-                        exercise.setDetails[index].planned = .reps(val)
-                    case .hold:
-                        let secs = TimeSpan.seconds(from: newText)
-                        let ts = TimeSpan.init(seconds: secs)
-                        exercise.setDetails[index].planned = .hold(ts)
-                        metricTexts[safeEdit: index] = ts.displayStringCompact
-                    }
-                }
-            )
+        ForEach(exercise.setDetails.indices, id: \.self) { i in
+            let setBinding = $exercise.setDetails[i]
 
             SetInputRow(
-                setNumber: index + 1,
+                setNumber: i + 1,
                 exercise: exercise,
-                weightText: weightText,
-                metricText: metricText
+                load: exercise.setDetails[i].load,  
+                metric: exercise.setDetails[i].planned,
+                loadField: {
+                    // Keep your chrome; just embed the editor
+                    SetLoadEditor(load: setBinding.load)
+                        .textFieldStyle(.roundedBorder)
+                },
+                metricField: {
+                    let plannedBinding = setBinding.planned
+                    let completedBinding = Binding<SetMetric>(
+                        get: { exercise.setDetails[i].completed ?? exercise.setDetails[i].planned },
+                        set: { exercise.setDetails[i].completed = $0 }
+                    )
+                    SetMetricEditor(
+                        planned: plannedBinding,
+                        completed: completedBinding,
+                        load: exercise.setDetails[i].load
+                    )
+                    .textFieldStyle(.roundedBorder)
+                }
             )
         }
         .onMove(perform: moveSet)
@@ -248,34 +213,20 @@ struct ExerciseSetDetail: View {
     // MARK: - Mutations
     private func addSet() {
         perform(.addSet)
-        weightTexts.append("") // Extend buffers so indices stay aligned
-        metricTexts.append("")
     }
 
     private func deleteLastSet() {
         guard !exercise.setDetails.isEmpty else { return }
         perform(.deleteSet)
-        _ = weightTexts.popLast()
-        _ = metricTexts.popLast()
     }
 
     private func moveSet(from source: IndexSet, to destination: Int) {
         exercise.setDetails.move(fromOffsets: source, toOffset: destination)
-        weightTexts.move(fromOffsets: source, toOffset: destination)
-        metricTexts.move(fromOffsets: source, toOffset: destination)
         perform(.saveTemplate)
     }
 
     private func deleteSetDetails(at offsets: IndexSet) {
         exercise.setDetails.remove(atOffsets: offsets)
-        weightTexts.remove(atOffsets: offsets)
-        metricTexts.remove(atOffsets: offsets)
         perform(.saveTemplate)
-    }
-
-    private func resyncBuffersFromModel() {
-        let sets = exercise.setDetails
-        weightTexts = sets.map { $0.weightFieldString }
-        metricTexts = sets.map { $0.metricFieldString }
     }
 }

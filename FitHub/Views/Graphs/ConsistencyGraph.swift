@@ -63,7 +63,7 @@ struct ConsistencyGraph: View {
                         .frame(width: max(CGFloat(workoutData.count) * 60, UIScreen.main.bounds.width - 40), height: UIScreen.main.bounds.height * 0.33)
                         .overlay(alignment: .center) {
                             if workoutData.isEmpty {
-                                Text("No workout data available.")
+                                Text("No workout data available")
                                     .foregroundStyle(.red)
                                     .multilineTextAlignment(.center)
                             }
@@ -72,9 +72,7 @@ struct ConsistencyGraph: View {
                         Color.clear.frame(width: 0.1).id("END")   // sentinel at far right
                     }
                 }
-                .onAppear {
-                    proxy.scrollTo("END", anchor: .trailing)    // jump to the end
-                }
+                .onAppear { proxy.scrollTo("END", anchor: .trailing) }
             }
         
             // Picker for Time Range
