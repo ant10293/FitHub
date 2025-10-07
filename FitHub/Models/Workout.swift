@@ -23,13 +23,14 @@ struct SelectedTemplate: Identifiable, Equatable {
 }
 
 enum TemplateLocation: String, Codable, CaseIterable {
-    case user, trainer, archived
+    case user, trainer, archived, active
     
     var label: String {
         switch self {
         case .user: return "Your Templates"
         case .trainer: return "Trainer Templates"
         case .archived: return "Archived Templates"
+        case .active: return "Active Template"
         }
     }
 }

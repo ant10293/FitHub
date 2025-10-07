@@ -45,26 +45,26 @@ final class WorkoutVM: ObservableObject {
             self.currentExerciseState = currentExerciseState
             self.updates.updatedMax   = updatedMax ?? []
         }
-   }
-
-    func saveTemplate(userData: UserData, detailBinding: Binding<SetDetail>, exerciseBinding: Binding<Exercise>) {
-        // 1) update the SetDetail binding directly
-        detailBinding.wrappedValue = detailBinding.wrappedValue
-
-        // 2) mirror back into the master template
-        if let exIdx = template.exercises.firstIndex(where: { $0.id == exerciseBinding.wrappedValue.id }) {
-            template.exercises[exIdx].setDetails = exerciseBinding.wrappedValue.setDetails
-        }
-        
-        // 3) persist in UserData
-        _ = userData.updateTemplate(template: template)
     }
 
+    // TODO: we only need the setID and exerciseBinding, no need for detailBinding
+    func saveTemplate(userData: UserData, detailBinding: Binding<SetDetail>, exerciseBinding: Binding<Exercise>) {
+        let wrappedDetail = detailBinding.wrappedValue
+        // MARK: the template in UserData should only be updated with set load and metric
+        // only pass ID for template and exercise because we ONLY want to update changes to set load and metric
+        userData.updateTmplExSet(templateID: template.id, exerciseID: exerciseBinding.id, setDetail: wrappedDetail)
+        /*
+        if let setIdx = exerciseBinding.setDetails.firstIndex(where: { $0.id == wrappedDetail.id }) {
+            let set1 = exerciseBinding.wrappedValue.setDetails[setIdx]
+            let set2 = wrappedDetail
+            print("Exercise SetDetail - Load:\(set1.load.weight?.displayValue) Planned:\(set1.planned)")
+            print("Detached SetDetail - Load:\(set2.load.weight?.displayValue) Planned:\(set2.planned)")
+        }
+        */
+    }
+    
     func goToNextSetOrExercise(for exerciseIndex: Int, selectedExerciseIndex: inout Int?) {
         let currentExercise = template.exercises[exerciseIndex]
-
-        // resume timer if inactive
-        //if !timer.isActive { timer.startTimer(startDate: startDate) }
         
         // Helper to allocate time when truly leaving an exercise
         func allocateTimeToCurrentExercise(index: Int, exercise: Exercise) {
@@ -218,7 +218,6 @@ final class WorkoutVM: ObservableObject {
     
     func performSetup(userData: UserData) -> Int {
         if !userData.isWorkingOut { userData.isWorkingOut = true }
-        //if !timer.isActive { timer.startTimer(startDate: startDate) }
         return getExerciseIndex()
     }
     
@@ -285,11 +284,9 @@ final class WorkoutVM: ObservableObject {
         // update exercise performance
         ctx.exercises.applyPerformanceUpdates(updates: updates.updatedMax, csvEstimate: false)
         
-        // Reset timer
-        //timer.stopAll()
-        
         // CRITICAL: Reset all workout state atomically
-        ctx.userData.resetExercisesInTemplate(for: template, shouldRemoveDate: shouldRemoveDate)
+        ctx.userData.resetWorkoutSession(shouldSave: false)
+        //ctx.userData.resetExercisesInTemplate(for: template, shouldRemoveDate: shouldRemoveDate)
         
         // Force save to ensure state is persisted
         ctx.userData.saveToFile()

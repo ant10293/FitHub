@@ -8,16 +8,26 @@ import SwiftUI
 
 struct SetMetricEditor: View {
     @Binding var planned: SetMetric
-    @Binding var completed: SetMetric
     let load: SetLoad
     var style: TextFieldVisualStyle = .rounded
-
-    var onChange: ((SetMetric, SetMetric) -> Void)? = nil
     var onValidityChange: ((Bool) -> Void)? = nil
-    
     @State private var cardioShowing: TimeOrSpeed.InputKey = .time
 
+    var body: some View {
+        switch planned {
+        case .reps:
+            TextField("reps", text: repsBinding)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.center)
 
+        case .hold:
+            TimeEntryField(text: holdBinding, style: style)
+
+        case .cardio:
+            TimeSpeedField(cardio: cardioBinding, distance: cardioDistance, style: style)
+        }
+    }
+    
     private func validate(planned: SetMetric, load: SetLoad) -> Bool {
         let plannedOk: Bool = {
             switch planned {
@@ -46,11 +56,10 @@ struct SetMetricEditor: View {
             },
             set: { newValue in
                 let filtered = InputLimiter.filteredReps(newValue)
+                
                 let r = Int(filtered) ?? 0
                 let newPlanned: SetMetric = .reps(r)
                 planned = newPlanned
-                completed = newPlanned
-                onChange?(planned, completed)
                 onValidityChange?(validate(planned: planned, load: load))
             }
         )
@@ -66,11 +75,10 @@ struct SetMetricEditor: View {
             },
             set: { newValue in
                 let secs = TimeSpan.seconds(from: newValue)
+                
                 let ts = TimeSpan(seconds: secs)
                 let newPlanned: SetMetric = .hold(ts)
                 planned = newPlanned
-                completed = newPlanned
-                onChange?(planned, completed)
                 onValidityChange?(validate(planned: planned, load: load))
             }
         )
@@ -88,8 +96,6 @@ struct SetMetricEditor: View {
             set: { newValue in
                 let newPlanned: SetMetric = .cardio(newValue)
                 planned = newPlanned
-                completed = newPlanned
-                onChange?(planned, completed)
                 onValidityChange?(validate(planned: planned, load: load))
             }
         )
@@ -99,21 +105,6 @@ struct SetMetricEditor: View {
         switch load {
         case .distance(let d): return d
         default: return Distance(distance: 0)
-        }
-    }
-
-    var body: some View {
-        switch planned {
-        case .reps:
-            TextField("reps", text: repsBinding)
-                .keyboardType(.numberPad)
-                .multilineTextAlignment(.center)
-
-        case .hold:
-            TimeEntryField(text: holdBinding, style: style)
-
-        case .cardio:
-            TimeSpeedField(cardio: cardioBinding, distance: cardioDistance, style: style)
         }
     }
 }

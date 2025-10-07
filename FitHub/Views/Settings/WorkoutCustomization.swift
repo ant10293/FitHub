@@ -217,12 +217,13 @@ struct WorkoutCustomization: View {
     
     private var keepCurrentExercisesToggle: some View {
         Toggle("Keep current Exercises", isOn: $keepCurrentExercises) // Add this line
-        .onChange(of: keepCurrentExercises) { oldValue, newValue in
-            if oldValue != newValue {
-                //print("keepCurrentExercises changed")
-                ctx.userData.workoutPrefs.keepCurrentExercises = newValue
+            .disabled(ctx.userData.workoutPlans.trainerTemplates.isEmpty)
+            .onChange(of: keepCurrentExercises) { oldValue, newValue in
+                if oldValue != newValue {
+                    //print("keepCurrentExercises changed")
+                    ctx.userData.workoutPrefs.keepCurrentExercises = newValue
+                }
             }
-        }
     }
     
     private var splitSelector: some View {
@@ -298,7 +299,7 @@ struct WorkoutCustomization: View {
     private func initializeVariables() {
         daysPerWeek = ctx.userData.workoutPrefs.workoutDaysPerWeek
         selectedDays = ctx.userData.workoutPrefs.customWorkoutDays ?? DaysOfWeek.defaultDays(for: ctx.userData.workoutPrefs.workoutDaysPerWeek)
-        keepCurrentExercises = ctx.userData.workoutPrefs.keepCurrentExercises
+        keepCurrentExercises = (ctx.userData.workoutPlans.trainerTemplates.isEmpty ? false : ctx.userData.workoutPrefs.keepCurrentExercises)
         selectedResistanceType = ctx.userData.workoutPrefs.ResistanceType
         selectedSetStructure = ctx.userData.workoutPrefs.setStructure
         duration.setMin(minutes: ctx.userData.workoutPrefs.customDuration ?? defaultDuration.inMinutes)

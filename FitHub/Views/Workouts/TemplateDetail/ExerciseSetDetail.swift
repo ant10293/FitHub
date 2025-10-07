@@ -83,14 +83,8 @@ struct ExerciseSetDetail: View {
                         .textFieldStyle(.roundedBorder)
                 },
                 metricField: {
-                    let plannedBinding = setBinding.planned
-                    let completedBinding = Binding<SetMetric>(
-                        get: { exercise.setDetails[i].completed ?? exercise.setDetails[i].planned },
-                        set: { exercise.setDetails[i].completed = $0 }
-                    )
                     SetMetricEditor(
-                        planned: plannedBinding,
-                        completed: completedBinding,
+                        planned: setBinding.planned,
                         load: exercise.setDetails[i].load
                     )
                     .textFieldStyle(.roundedBorder)

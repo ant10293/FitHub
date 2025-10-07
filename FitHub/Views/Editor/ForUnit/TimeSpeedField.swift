@@ -8,6 +8,7 @@ import SwiftUI
 
 struct TimeSpeedField: View {
     @Binding var cardio: TimeOrSpeed
+    @State private var localText: String = ""
     let distance: Distance
     let style: TextFieldVisualStyle
     
@@ -17,8 +18,10 @@ struct TimeSpeedField: View {
             case .time:
                 TimeEntryField(
                     text: Binding(
-                        get: { cardio.time.inSeconds > 0 ? cardio.time.displayStringCompact : "" },
+                        get: { !localText.isEmpty ? localText : (cardio.time.inSeconds > 0 ? cardio.time.displayStringCompact : "") },
                         set: { newValue in
+                            localText = newValue
+                            
                             let secs = TimeSpan.seconds(from: newValue)
                             cardio.updateTime(TimeSpan(seconds: secs), distance: distance)
                         }
@@ -29,13 +32,14 @@ struct TimeSpeedField: View {
                 
             case .speed:
                 TextField("spd.", text: Binding(
-                    get: { cardio.speed.inKmH > 0 ? cardio.speed.displayString : "" },
+                    get: { !localText.isEmpty ? localText : (cardio.speed.inKmH > 0 ? cardio.speed.displayString : "") },
                     set: { newValue in
-                        if let speedValue = Double(newValue) {
-                            var newSpeed = cardio.speed
-                            newSpeed.setDisplay(speedValue)
-                            cardio.updateSpeed(newSpeed, distance: distance)
-                        }
+                        // TODO: add special filtering for speed
+                        let filtered = InputLimiter.filteredWeight(old: cardio.speed.inKmH > 0 ? cardio.speed.displayString : "", new: newValue)
+                        localText = filtered
+                        
+                        let val = Double(filtered) ?? 0
+                        cardio.updateSpeed(Speed(speed: val), distance: distance)
                     }
                 ))
                 .keyboardType(.decimalPad)
@@ -43,6 +47,7 @@ struct TimeSpeedField: View {
                 .overlay(alignment: .bottomTrailing) { menuButton }
             }
         }
+        .onChange(of: cardio.showing) { localText = "" }
     }
     
     private var menuButton: some View {

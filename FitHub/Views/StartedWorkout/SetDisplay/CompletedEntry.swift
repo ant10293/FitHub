@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// FIXME: sustantial issues with MinSecPicker and completedMetric must be used or else the stepper is very slow
 struct CompletedEntry: View {
     let isWarm: Bool
     let hideRPE: Bool
@@ -15,10 +14,6 @@ struct CompletedEntry: View {
     @Binding var showPicker: Bool
     @Binding var completed: SetMetric
     @Binding var rpe: Double
-    
-    // Closures for updates
-    let onCompletedChange: (SetMetric) -> Void
-    let onRpeChange: (Double) -> Void
     
     var body: some View {
         switch planned {
@@ -44,7 +39,6 @@ struct CompletedEntry: View {
             set: { newValue in
                 let newMetric = SetMetric.reps(newValue)
                 completed = newMetric
-                onCompletedChange(newMetric)
             }
         )
         
@@ -73,7 +67,6 @@ struct CompletedEntry: View {
             set: { newValue in
                 let newMetric = SetMetric.hold(newValue)
                 completed = newMetric
-                onCompletedChange(newMetric)
             }
         )
         
@@ -90,7 +83,6 @@ struct CompletedEntry: View {
                 newTOS.updateTime(newValue, distance: Distance(distance: 0)) // or get from setDetail.load
                 let newMetric = SetMetric.cardio(newTOS)
                 completed = newMetric
-                onCompletedChange(newMetric)
             }
         )
         
@@ -144,10 +136,7 @@ struct CompletedEntry: View {
 
                 Slider(value: Binding(
                     get: { rpe },
-                    set: { newValue in
-                        rpe = newValue
-                        onRpeChange(newValue)
-                    }
+                    set: { rpe = $0 }
                 ), in: 1...10, step: 0.5)
                 .padding(.horizontal)
             }

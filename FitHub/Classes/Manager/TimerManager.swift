@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: remove workoutTimer
 final class TimerManager: ObservableObject {
     // MARK: - Workout (stopwatch by date)
     @Published var secondsElapsed: Int = 0

@@ -41,10 +41,7 @@ struct ExerciseSetOverlay: View {
                     showPicker: $showPicker,
                     timerManager: timerManager,
                     hideRPE: params.disableRPE,
-                    exercise: exercise,
-                    saveTemplate: {
-                        saveTemplate(detail, $exercise)
-                    }
+                    exercise: exercise
                 )
                 
                 if !showPicker {
@@ -56,6 +53,7 @@ struct ExerciseSetOverlay: View {
                         restTimerEnabled: params.restTimerEnabled,
                         isDisabled: shouldDisableNext,
                         onButtonPress: {
+                            saveTemplate(detail, $exercise) // call before set is incremented
                             return handleButtonPress(setDetail: detail)
                         },
                         goToNextSetOrExercise: goToNextSetOrExercise

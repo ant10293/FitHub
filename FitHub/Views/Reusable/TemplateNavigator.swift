@@ -55,7 +55,6 @@ struct TemplateNavigator<Content: View>: View {
             if shouldShowPopup {
                 Color.black.opacity(0.3)
                     .ignoresSafeArea()
-                    //.onTapGesture { selectedTemplate = nil }
                 
                 templatePopupOverlay
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -83,13 +82,8 @@ struct TemplateNavigator<Content: View>: View {
         }
     }
     
-    private var shouldShowPopup: Bool {
-        return selectedTemplate?.mode == .popupOverlay && selectedTemplate != nil
-    }
-    
-    private var shouldDisableContent: Bool {
-        return shouldShowPopup
-    }
+    private var shouldShowPopup: Bool { selectedTemplate?.mode == .popupOverlay && selectedTemplate != nil }
+    private var shouldDisableContent: Bool { return shouldShowPopup }
     
     // MARK: - Navigation Destinations
     private func templateBinding(for sel: SelectedTemplate) -> Binding<WorkoutTemplate>? {
@@ -106,6 +100,7 @@ struct TemplateNavigator<Content: View>: View {
             let idx = userData.workoutPlans.archivedTemplates.firstIndex(where: { $0.id == sel.template.id })
             guard let i = idx else { return nil }
             return $userData.workoutPlans.archivedTemplates[safe: i]
+        case .active: return nil
         }
     }
      
@@ -123,11 +118,10 @@ struct TemplateNavigator<Content: View>: View {
             )
         }
     }
-
+    /*
     @ViewBuilder
     private func startedWorkoutView(route: WorkoutRoute) -> some View {
-        let sel = route.sel
-        if let tpl = templateBinding(for: sel)?.wrappedValue {
+        if let tpl = templateBinding(for: route.sel)?.wrappedValue {
             StartedWorkoutView(
                 viewModel: WorkoutVM(
                     template: tpl,
@@ -144,7 +138,6 @@ struct TemplateNavigator<Content: View>: View {
     }
     
     // MARK: - Popup Overlay
-    
     @ViewBuilder
     private var templatePopupOverlay: some View {
         if let template = selectedTemplate, let tpl = templateBinding(for: template)?.wrappedValue {
@@ -163,6 +156,57 @@ struct TemplateNavigator<Content: View>: View {
                     },
                     onEdit: {
                         currentTemplate = template
+                        navigateToTemplateDetail = true
+                    }
+                )
+                .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.5)
+                .background(colorScheme == .dark ? Color.black : Color.white)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .shadow(radius: 20)
+                .transition(.scale)
+                
+                Spacer()
+            }
+        }
+    }
+    */
+    
+    // MARK: using template direct navigation
+    @ViewBuilder
+    private func startedWorkoutView(route: WorkoutRoute) -> some View {
+        StartedWorkoutView(
+            viewModel: WorkoutVM(
+                template: route.sel.template,
+                activeWorkout: userData.sessionTracking.activeWorkout,
+                workoutsStartDate: userData.workoutPlans.workoutsStartDate
+            ),
+            onExit: {
+                workoutRoute = nil
+                currentTemplate = nil
+                selectedTemplate = nil
+            }
+        )
+    }
+    
+    // MARK: - Popup Overlay
+    @ViewBuilder
+    private var templatePopupOverlay: some View {
+        if let sel = selectedTemplate {
+            VStack {
+                Spacer()
+                
+                TemplatePopup(
+                    userData: userData,
+                    template: sel.template,
+                    onClose: {
+                        selectedTemplate = nil
+                    },
+                    onBeginWorkout: {
+                        currentTemplate = sel
+                        workoutRoute = WorkoutRoute(id: UUID(), sel: sel)
+                    },
+                    onEdit: {
+                        currentTemplate = sel
                         navigateToTemplateDetail = true
                     }
                 )

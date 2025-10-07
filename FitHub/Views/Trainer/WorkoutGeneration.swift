@@ -130,6 +130,7 @@ struct WorkoutGeneration: View {
         }
     }
     
+    // TODO: should shrink and display a message that no template(s) exist
     private var exerciseList: some View {
         List {
             if let template = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] {

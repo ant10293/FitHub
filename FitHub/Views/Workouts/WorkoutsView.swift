@@ -32,16 +32,18 @@ struct WorkoutsView: View {
     private var resumeWorkoutOverlay: some View {
         ResumeWorkoutOverlay(
             cancel: {
+                /*
                 if let workoutInProgress = activeWorkout {
                     ctx.userData.resetExercisesInTemplate(for: workoutInProgress.template, shouldSave: true)
                 }
+                */
+                ctx.userData.resetWorkoutSession(shouldSave: true)
                 showResumeWorkoutOverlay = false
             },
             resume: {
                 // Navigate to the workout in progress
-                // FIXME: use the actual template from activeWorkout                
-                if let active = activeWorkout, let selected = ctx.userData.getTemplate(for: active.template) {
-                    selectedTemplate = selected
+                if let active = activeWorkout {
+                    selectedTemplate = SelectedTemplate(template: active.template, location: .active, mode: .directToWorkout)
                 }
                 showResumeWorkoutOverlay = false
                     
@@ -50,12 +52,10 @@ struct WorkoutsView: View {
     }
     
     private var shouldDisableWorkoutButton: Bool {
-        return ctx.userData.isWorkingOut || ctx.userData.sessionTracking.activeWorkout != nil
+        return ctx.userData.isWorkingOut || activeWorkout != nil
     }
     
-    private var activeWorkout: WorkoutInProgress? {
-        return ctx.userData.sessionTracking.activeWorkout
-    }
+    private var activeWorkout: WorkoutInProgress? { return ctx.userData.sessionTracking.activeWorkout }
     
     private var workoutList: some View {
         List {

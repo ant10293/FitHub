@@ -5,18 +5,21 @@ import SwiftUI
 
 // MARK: - Row view-model (typed to SetMetric)
 private struct WarmUpRowVM: Identifiable {
-    let id = UUID()
+    let id: UUID
     var setNumber: Int
     var load: SetLoad
     var planned: SetMetric   // <-- reps(...) or hold(...)
 
     init(detail: SetDetail) {
+        id        = detail.id
         setNumber = detail.setNumber
         load      = detail.load
         planned   = detail.planned
     }
+    
     func toDetail() -> SetDetail {
         SetDetail(
+            id: id,
             setNumber: setNumber,
             load: load,
             planned: planned
@@ -91,17 +94,8 @@ struct ExerciseWarmUpDetail: View {
                         metricField: {
                             // Warm-ups typically don’t track a separate “completed”.
                             // Mirror planned → completed locally so the editor behaves consistently.
-                            let completedBinding = Binding<SetMetric>(
-                                get: { row.planned },
-                                set: { row.planned = $0 }
-                            )
-                            
-                            SetMetricEditor(
-                                planned: $row.planned,
-                                completed: completedBinding,
-                                load: row.load
-                            )
-                            .textFieldStyle(.roundedBorder)
+                            SetMetricEditor(planned: $row.planned, load: row.load)
+                                .textFieldStyle(.roundedBorder)
                         }
                     )
                     .padding(.horizontal)

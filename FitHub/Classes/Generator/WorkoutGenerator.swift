@@ -220,24 +220,6 @@ extension WorkoutGenerator {
         )
     }
     
-    private func estimateExercises(durationMinutes: Int, repsAndSets: RepsAndSets) -> Int {
-        let secondsPerRep = SetDetail.secPerRep
-        let avgSetup      = SetDetail.secPerSetup
-
-        // Weighted by distribution **and** per-type set counts
-        let setsAvg = max(1.0, repsAndSets.averageSetsPerExercise)
-        let repsAvg = max(1.0, repsAndSets.averageRepsPerSetWeighted)
-        let restPer = max(0, repsAndSets.getRest(for: .working))
-
-        let workSeconds = setsAvg * repsAvg * Double(secondsPerRep)
-        let restSeconds = Double(restPer) * max(0.0, setsAvg - 1.0)
-        let perExercise = max(1, Int(workSeconds) + Int(restSeconds) + avgSetup)
-
-        let totalSeconds = max(60, durationMinutes * 60)
-        let numExercises = max(1, Int((Double(totalSeconds) / Double(perExercise)).rounded()))
-        return numExercises
-    }
-    
     // Selection via engine
     func makeWorkoutTemplate(
         day: DaysOfWeek,
@@ -342,6 +324,24 @@ extension WorkoutGenerator {
         Logger.shared.end(etaTok)
         
         return tpl
+    }
+    
+    private func estimateExercises(durationMinutes: Int, repsAndSets: RepsAndSets) -> Int {
+        let secondsPerRep = SetDetail.secPerRep
+        let avgSetup      = SetDetail.secPerSetup
+
+        // Weighted by distribution **and** per-type set counts
+        let setsAvg = max(1.0, repsAndSets.averageSetsPerExercise)
+        let repsAvg = max(1.0, repsAndSets.averageRepsPerSetWeighted)
+        let restPer = max(0, repsAndSets.getRest(for: .working))
+
+        let workSeconds = setsAvg * repsAvg * Double(secondsPerRep)
+        let restSeconds = Double(restPer) * max(0.0, setsAvg - 1.0)
+        let perExercise = max(1, Int(workSeconds) + Int(restSeconds) + avgSetup)
+
+        let totalSeconds = max(60, durationMinutes * 60)
+        let numExercises = max(1, Int((Double(totalSeconds) / Double(perExercise)).rounded()))
+        return numExercises
     }
     
     private func compareSimilarity(savedExercises: [Exercise], chosenExercises: [Exercise], dayIndex: Int) {
