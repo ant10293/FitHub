@@ -46,21 +46,12 @@ final class WorkoutVM: ObservableObject {
             self.updates.updatedMax   = updatedMax ?? []
         }
     }
-
+    
     // TODO: we only need the setID and exerciseBinding, no need for detailBinding
     func saveTemplate(userData: UserData, detailBinding: Binding<SetDetail>, exerciseBinding: Binding<Exercise>) {
-        let wrappedDetail = detailBinding.wrappedValue
         // MARK: the template in UserData should only be updated with set load and metric
         // only pass ID for template and exercise because we ONLY want to update changes to set load and metric
-        userData.updateTmplExSet(templateID: template.id, exerciseID: exerciseBinding.id, setDetail: wrappedDetail)
-        /*
-        if let setIdx = exerciseBinding.setDetails.firstIndex(where: { $0.id == wrappedDetail.id }) {
-            let set1 = exerciseBinding.wrappedValue.setDetails[setIdx]
-            let set2 = wrappedDetail
-            print("Exercise SetDetail - Load:\(set1.load.weight?.displayValue) Planned:\(set1.planned)")
-            print("Detached SetDetail - Load:\(set2.load.weight?.displayValue) Planned:\(set2.planned)")
-        }
-        */
+        userData.updateTmplExSet(templateID: template.id, exerciseID: exerciseBinding.wrappedValue.id, setDetail: detailBinding.wrappedValue)
     }
     
     func goToNextSetOrExercise(for exerciseIndex: Int, selectedExerciseIndex: inout Int?) {
@@ -125,7 +116,6 @@ final class WorkoutVM: ObservableObject {
             selectedExerciseIndex = anyExerciseIndex
         } else {
             // No more incomplete exercises, finish the workout
-            //timer.stopTimer()
             completionDuration = secondsElapsed
             showCompletionAlert()
             return
@@ -160,58 +150,7 @@ final class WorkoutVM: ObservableObject {
     }
 
     func calculateWorkoutSummary() -> WorkoutSummaryData {
-        var totalVolume: Double = 0
-        var totalReps:   Int    = 0
-        var weightByExercise: [UUID: Double] = [:]
-
-        for exercise in template.exercises {
-            let mv = exercise.limbMovementType
-
-            // unilateral → reps × 2; bilateralIndependent → weight × 2
-            let repsMul: Int = {
-                switch mv {
-                case .unilateral: return 2
-                default:          return 1
-                }
-            }()
-
-            let wtMul: Double = {
-                switch mv {
-                case .bilateralIndependent: return 2
-                default:                    return 1
-                }
-            }()
-
-            for set in exercise.setDetails {
-                let setWeight = set.load.weight?.inKg ?? 0
-                let adjustedWeight = setWeight * wtMul
-                let metric = set.completed ?? set.planned
-
-                switch metric {
-                case .reps(let r):
-                    let adjustedReps = r * repsMul
-                    let setVolume = adjustedWeight * Double(adjustedReps)
-
-                    totalReps += adjustedReps
-                    totalVolume += setVolume
-                    weightByExercise[exercise.id, default: 0] += setVolume
-
-                case .hold:
-                    // holds are time-based → no reps/volume contribution
-                    break
-                case .cardio:
-                    break
-                }
-            }
-        }
-
-        return WorkoutSummaryData(
-            totalVolume: Mass(kg: totalVolume),
-            totalReps: totalReps,
-            totalTime: TimeSpan(seconds: completionDuration),
-            exercisePRs: updates.prExerciseIDs,
-            weightByExercise: weightByExercise
-        )
+        template.calculateWorkoutSummary(completionDuration: completionDuration, updates: updates)
     }
     
     private var secondsElapsed: Int { CalendarUtility.secondsSince(startDate) }
@@ -239,7 +178,7 @@ final class WorkoutVM: ObservableObject {
     func saveWorkoutInProgress(userData: UserData) {
         // Create a WorkoutInProgress object to store the current state
         let workoutInProgress = WorkoutInProgress(
-            template: template, // this doesnt save the updated template.still works because we only use it to find the actual template in trainer or user list
+            template: template,
             currentExerciseState: currentExerciseState,
             dateStarted: startDate,
             updatedMax: updates.updatedMax
@@ -252,41 +191,32 @@ final class WorkoutVM: ObservableObject {
 
     @MainActor
     func finishWorkoutAndDismiss(ctx: AppContext, completion: () -> Void) {
-        var shouldRemoveDate: Bool = false
         let now = Date()
         let roundedDate = CalendarUtility.shared.startOfDay(for: now)
                 
-        let (shouldIncrement, updatedTemplate) = ctx.userData.removePlannedWorkoutDate(template: template, removeNotifications: true, removeDate: false, date: roundedDate)
-        if let updatedTemplate { template = updatedTemplate }
-        let completedToday = ctx.userData.workoutPlans.completedWorkouts.contains { workout in         // Check if there's a workout completed today
+        let completedToday = ctx.userData.workoutPlans.completedWorkouts.contains { workout in // Check if there was a workout completed today
             CalendarUtility.shared.isDate(workout.date, inSameDayAs: roundedDate)
         }
         
-        if !completedToday {
-            if shouldIncrement {
-                print("Date Found. Incrementing Workout Streak...")
-                shouldRemoveDate = true
-            } else {
-                print("Date not found...")
-                print("No workouts completed yet today. Incrementing Workout Streak...")
-            }
-            ctx.userData.incrementWorkoutStreak(shouldSave: false)
-        }
+        // MARK: remove date only if a workout was not already completed today - Maybe remove this requirement so date is always removed
+        ctx.userData.removePlannedWorkoutDate(templateID: template.id, removeDate: !completedToday, date: roundedDate)
+                
+        if !completedToday { ctx.userData.incrementWorkoutStreak(shouldSave: false) }
+        
         // save precise date for determing freshness of muscle groups
         let completedWorkout: CompletedWorkout = .init(template: template, updatedMax: updates.updatedMax, duration: completionDuration, date: now)
-        ctx.userData.workoutPlans.completedWorkouts.append(completedWorkout)         // Append to completedWorkouts and save
+        ctx.userData.workoutPlans.completedWorkouts.append(completedWorkout) // Append to completedWorkouts and save
         
-        endWorkoutAndDismiss(ctx: ctx, shouldRemoveDate: shouldRemoveDate, completion: completion)
+        endWorkoutAndDismiss(ctx: ctx, completion: completion)
     }
         
     @MainActor
-    func endWorkoutAndDismiss(ctx: AppContext, shouldRemoveDate: Bool, completion: () -> Void) {
+    func endWorkoutAndDismiss(ctx: AppContext, completion: () -> Void) {
         // update exercise performance
         ctx.exercises.applyPerformanceUpdates(updates: updates.updatedMax, csvEstimate: false)
         
         // CRITICAL: Reset all workout state atomically
         ctx.userData.resetWorkoutSession(shouldSave: false)
-        //ctx.userData.resetExercisesInTemplate(for: template, shouldRemoveDate: shouldRemoveDate)
         
         // Force save to ensure state is persisted
         ctx.userData.saveToFile()

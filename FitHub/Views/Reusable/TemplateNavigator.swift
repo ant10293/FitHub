@@ -100,7 +100,7 @@ struct TemplateNavigator<Content: View>: View {
             let idx = userData.workoutPlans.archivedTemplates.firstIndex(where: { $0.id == sel.template.id })
             guard let i = idx else { return nil }
             return $userData.workoutPlans.archivedTemplates[safe: i]
-        case .active: return nil
+        case .active: return .constant(sel.template)
         }
     }
      
@@ -118,58 +118,6 @@ struct TemplateNavigator<Content: View>: View {
             )
         }
     }
-    /*
-    @ViewBuilder
-    private func startedWorkoutView(route: WorkoutRoute) -> some View {
-        if let tpl = templateBinding(for: route.sel)?.wrappedValue {
-            StartedWorkoutView(
-                viewModel: WorkoutVM(
-                    template: tpl,
-                    activeWorkout: userData.sessionTracking.activeWorkout,
-                    workoutsStartDate: userData.workoutPlans.workoutsStartDate
-                ),
-                onExit: {
-                    workoutRoute = nil
-                    currentTemplate = nil
-                    selectedTemplate = nil
-                }
-            )
-        }
-    }
-    
-    // MARK: - Popup Overlay
-    @ViewBuilder
-    private var templatePopupOverlay: some View {
-        if let template = selectedTemplate, let tpl = templateBinding(for: template)?.wrappedValue {
-            VStack {
-                Spacer()
-                
-                TemplatePopup(
-                    userData: userData,
-                    template: tpl,
-                    onClose: {
-                        selectedTemplate = nil
-                    }, 
-                    onBeginWorkout: {
-                        currentTemplate = template
-                        workoutRoute = WorkoutRoute(id: UUID(), sel: template)
-                    },
-                    onEdit: {
-                        currentTemplate = template
-                        navigateToTemplateDetail = true
-                    }
-                )
-                .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.5)
-                .background(colorScheme == .dark ? Color.black : Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                .shadow(radius: 20)
-                .transition(.scale)
-                
-                Spacer()
-            }
-        }
-    }
-    */
     
     // MARK: using template direct navigation
     @ViewBuilder
@@ -191,22 +139,23 @@ struct TemplateNavigator<Content: View>: View {
     // MARK: - Popup Overlay
     @ViewBuilder
     private var templatePopupOverlay: some View {
-        if let sel = selectedTemplate {
+        if let sel = currentTemplate, let tpl = templateBinding(for: sel)?.wrappedValue {
+            let newSel = SelectedTemplate(template: tpl, location: sel.location, mode: sel.mode)
             VStack {
                 Spacer()
                 
                 TemplatePopup(
                     userData: userData,
-                    template: sel.template,
+                    template: tpl,
                     onClose: {
                         selectedTemplate = nil
                     },
                     onBeginWorkout: {
-                        currentTemplate = sel
-                        workoutRoute = WorkoutRoute(id: UUID(), sel: sel)
+                        currentTemplate = newSel
+                        workoutRoute = WorkoutRoute(id: UUID(), sel: newSel)
                     },
                     onEdit: {
-                        currentTemplate = sel
+                        currentTemplate = newSel
                         navigateToTemplateDetail = true
                     }
                 )

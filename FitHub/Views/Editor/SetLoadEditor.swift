@@ -9,7 +9,8 @@ import SwiftUI
 struct SetLoadEditor: View {
     @Binding var load: SetLoad
     @State var localText: String = ""
-    
+    var onValidityChange: ((Bool) -> Void)? = nil
+
     private var textBinding: Binding<String>? {
         switch load {
         case .weight(let mass):
@@ -21,6 +22,7 @@ struct SetLoadEditor: View {
                     
                     let val = Double(filtered) ?? 0
                     load = .weight(Mass(weight: val))
+                    onValidityChange?(validate(load: load))
                 }
             )
             
@@ -34,11 +36,20 @@ struct SetLoadEditor: View {
                     
                     let val = Double(filtered) ?? 0
                     load = .distance(Distance(distance: val))
+                    onValidityChange?(validate(load: load))
                 }
             )
             
         case .none:
             return nil
+        }
+    }
+    
+    private func validate(load: SetLoad) -> Bool {
+        switch load {
+        case .none:            return true
+        case .weight(let w):   return w.inKg > 0
+        case .distance(let d): return d.inKm > 0
         }
     }
     

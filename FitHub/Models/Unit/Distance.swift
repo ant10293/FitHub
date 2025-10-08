@@ -50,6 +50,7 @@ struct Distance: Codable, Equatable, Hashable {
         
     var formattedText: Text {
         Text(displayString)
+        + Text(" ")
         + Text(UnitSystem.imperial.distanceUnit).fontWeight(.light)
     }
 }

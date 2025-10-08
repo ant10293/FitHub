@@ -28,6 +28,8 @@ struct SetDetail: Identifiable, Hashable, Codable {
                 let oneRM = OneRMFormula.calculateOneRepMax(weight: weight, reps: reps, formula: .brzycki)
                 return .oneRepMax(oneRM)
             }
+        case .none:
+            return nil
         }
         
         return nil
@@ -53,6 +55,9 @@ struct SetDetail: Identifiable, Hashable, Codable {
             let rxw: RepsXWeight = .init(reps: reps, weight: weight)
             guard let candidate = recalculate1RM(oneRm: best1RM, completed: rxw), candidate.inKg > best1RM.inKg else { return (nil, nil) }
             return (.oneRepMax(candidate), rxw)
+            
+        case .none:
+            return (nil, nil)
         }
     }
 
@@ -103,12 +108,12 @@ struct SetDetail: Identifiable, Hashable, Codable {
         let clamped = min(max(rpe, 1), 10)
         return 1.0 - 0.03 * (10.0 - clamped)
     }
-    
+    /*
     mutating func resetState() {
         completed = nil
         rpe = nil
     }
-    
+    */
     mutating func bumpPlanned(by steps: Int, secondsPerStep: Int) {
         switch planned {
         case .reps(let r):
@@ -127,73 +132,41 @@ extension SetDetail {
         return weight.displayString
     }
     
-    var formattedCompletedText: Text {
-        let head = Text("Set \(setNumber): ").bold()
-        guard let completed = completed else { return head + Text("—") }
+    private func formatLoadMetric(load: SetLoad, metric: SetMetric) -> Text {
+        // tiny helpers so the switch body stays readable
+        let sepTimes = Text(" × ").foregroundStyle(.gray)
+        let sepDash  = Text(" - ").foregroundStyle(.gray)
+        func light(_ s: String) -> Text { Text(s).fontWeight(.light) }
 
-        switch (load, completed) {
+        switch (load, metric) {
         case (.weight(let w), .reps(let r)):
-            return head
-                + w.formattedText()
-                + Text(" × ").foregroundStyle(.gray)
-                + Text("\(r)") + Text(" reps").fontWeight(.light)
+            return w.formattedText() + sepTimes + Text("\(r)") + light(" reps")
 
         case (.none, .reps(let r)):
-            return head + Text("\(r) reps completed")
+            return Text("\(r)") + light(" reps")
 
         case (.weight(let w), .hold(let t)):
-            return head
-                + w.formattedText()
-                + Text(" × ").foregroundStyle(.gray)
-                + Text(t.displayStringCompact)
-                + Text(" hold").fontWeight(.light)
+            return w.formattedText() + sepTimes + Text(t.displayStringCompact) + light(" hold")
 
         case (.none, .hold(let t)):
-            return head + Text(t.displayStringCompact) + Text(" hold completed").fontWeight(.light)
+            return Text(t.displayStringCompact) + light(" hold")
 
-        case (.distance(let d), .hold(let t)):
-            // If you support cardio sets with distance × time
-            return head
-                + d.formattedText
-                + Text(" × ").foregroundStyle(.gray)
-                + Text(t.displayStringCompact)
-                + Text(" hold").fontWeight(.light)
-
-        default:
-            return head + Text("—")
-        }
-    }
-    
-    // Planned
-    var formattedPlannedText: Text {
-        switch (load, planned) {
-        case (.weight(let w), .reps(let r)):
-            return w.formattedText()
-                + Text(" × ").foregroundStyle(.gray)
-                + Text("\(r)") + Text(" reps").fontWeight(.light)
-
-        case (.none, .reps(let r)):
-            return Text("\(r)") + Text(" reps").fontWeight(.light)
-
-        case (.weight(let w), .hold(let t)):
-            return w.formattedText()
-                + Text(" × ").foregroundStyle(.gray)
-                + Text(t.displayStringCompact)
-                + Text(" hold").fontWeight(.light)
-
-        case (.none, .hold(let t)):
-            return Text(t.displayStringCompact) + Text(" hold").fontWeight(.light)
-
-        case (.distance(let d), .hold(let t)):
-            // distance × time planned
-            return d.formattedText
-                + Text(" × ").foregroundStyle(.gray)
-                + Text(t.displayStringCompact)
-                + Text(" hold").fontWeight(.light)
+        case (.distance(let d), .cardio(let ts)):
+            return d.formattedText + sepDash + Text(ts.time.displayString)
 
         default:
             return Text("—")
         }
+    }
+
+    var formattedCompletedText: Text {
+        let head = Text("Set \(setNumber): ").bold()
+        guard let completed else { return head + Text("—") }
+        return head + formatLoadMetric(load: load, metric: completed)
+    }
+
+    var formattedPlannedText: Text {
+        formatLoadMetric(load: load, metric: planned)
     }
     
     static let secPerRep: Int = 3

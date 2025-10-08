@@ -168,8 +168,8 @@ struct ExerciseWarmUpDetail: View {
     // MARK: Row mutators
     private func addRow() {
         let next = rows.count + 1
-        let defaultMetric: SetMetric = exercise.getPlannedMetric(value: 0)
-        let defaultLoad: SetLoad = exercise.getLoadMetric(metricValue: 0)
+        let defaultMetric: SetMetric = exercise.plannedMetric
+        let defaultLoad: SetLoad = exercise.loadMetric
         rows.append(.init(detail: SetDetail(setNumber: next, load: defaultLoad, planned: defaultMetric)))
     }
 

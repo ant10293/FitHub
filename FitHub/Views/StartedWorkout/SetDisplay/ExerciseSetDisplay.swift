@@ -15,6 +15,7 @@ struct ExerciseSetDisplay: View {
     @Binding var showPicker: Bool
 
     @State private var showTimer: Bool = false
+    @State private var hideStartButton: Bool = false
     @State private var load: SetLoad = .weight(Mass(kg: 0))
     @State private var planned: SetMetric = .reps(0)
     @State private var completed: SetMetric = .reps(0)
@@ -38,28 +39,45 @@ struct ExerciseSetDisplay: View {
                 }
                 .padding(.horizontal, -20)
                 .padding(.bottom)
+                
+                if !hideStartButton, let seconds = planned.secondsValue {
+                    RectangularButton(
+                        title: "Start Countdown",
+                        systemImage: "play.fill",
+                        enabled: seconds > 0,
+                        color: .green,
+                        width: .fit,
+                        action: {
+                            showTimer = true
+                        }
+                    )
+                    .clipShape(.capsule)
+                }
             }
             
-            CompletedEntry(
-                isWarm: exercise.isWarmUp,
-                hideRPE: hideRPE,
-                planned: planned,
-                showPicker: $showPicker,
-                completed: Binding(
-                    get: { completed },
-                    set: {
-                        completed = $0
-                        setDetail.completed = $0
-                    }
-                ),
-                rpe: Binding(
-                    get: { rpe },
-                    set: {
-                        rpe = $0
-                        setDetail.rpe = $0
-                    }
+            if !hideCompletedEntry, !timerManager.restIsActive {
+                CompletedEntry(
+                    isWarm: exercise.isWarmUp,
+                    hideRPE: hideRPE,
+                    planned: planned,
+                    showPicker: $showPicker,
+                    completed: Binding(
+                        get: { completed },
+                        set: {
+                            completed = $0
+                            setDetail.completed = $0
+                        }
+                    ),
+                    rpe: Binding(
+                        get: { rpe },
+                        set: {
+                            rpe = $0
+                            setDetail.rpe = $0
+                        }
+                    )
                 )
-            )
+                
+            }
         }
         .padding()
         .onAppear(perform: resetInputs)
@@ -71,23 +89,22 @@ struct ExerciseSetDisplay: View {
             }
         }
         .sheet(isPresented: $showTimer) {
-            // TODO: should also work with cardio based exercises
-            if let hold = planned.holdTime?.inSeconds {
-                IsometricTimerRing(
-                    manager: timerManager,
-                    holdSeconds: hold,
-                    onCompletion: { seconds in
-                        showTimer = false
-                        let ts = TimeSpan(seconds: seconds)
-                        setDetail.completed = .hold(ts)
-                        completed = .hold(ts)
-                    }
-                )
-                .presentationDetents([.fraction(0.75)])
-                .presentationDragIndicator(.visible)
-            }
+            PlannedTimerRing(
+                manager: timerManager,
+                planned: planned,
+                onCompletion: { completedMetric in
+                    showTimer = false
+                    hideStartButton = true
+                    setDetail.completed = completedMetric
+                    completed = completedMetric
+                }
+            )
+            .presentationDetents([.fraction(0.75)])
+            .presentationDragIndicator(.visible)
         }
     }
+    
+    private var hideCompletedEntry: Bool { planned.secondsValue != nil && !hideStartButton }
     
     @ViewBuilder private var setLabel: some View {
         VStack(alignment: .leading, spacing: 2) {
@@ -111,11 +128,15 @@ struct ExerciseSetDisplay: View {
             FieldChrome(width: width, isZero: isZero) {
                 SetLoadEditor(
                     load: Binding(
-                    get: { load },
-                    set: {
-                        load = $0
-                        setDetail.load = $0
-                    })
+                        get: { load },
+                        set: {
+                            load = $0
+                            setDetail.load = $0
+                        }
+                    ),
+                    onValidityChange: { isValid in
+                        shouldDisableNext = !isValid
+                    }
                 )
                 .id(setDetail.id) // refresh for new set
             }
@@ -179,13 +200,15 @@ struct ExerciseSetDisplay: View {
 
         switch planned {
         case .reps(let plannedReps):
-            completed = .reps(setDetail.completed?.repsValue ?? plannedReps)
+            completed = .reps(plannedReps)
 
         case .hold(let plannedTime):
-            completed = .hold(TimeSpan(seconds: setDetail.completed?.holdTime?.inSeconds ?? plannedTime.inSeconds))
+            //completed = .hold(TimeSpan(seconds: setDetail.completed?.holdTime?.inSeconds ?? plannedTime.inSeconds))
+            completed = .hold(TimeSpan(seconds: plannedTime.inSeconds))
            
         case .cardio(let timeSpeed):
-            completed = .cardio(TimeOrSpeed(speed: timeSpeed.speed, distance: setDetail.load.distance ?? .init(distance: 0)))
+          //  completed = .cardio(TimeOrSpeed(speed: timeSpeed.speed, distance: setDetail.load.distance ?? .init(distance: 0)))
+            completed = .cardio(TimeOrSpeed(showing: .time, time: timeSpeed.time, speed: timeSpeed.speed))
         }
     }
 

@@ -281,8 +281,8 @@ struct ExerciseModifier {
             let newSetNumber = template.exercises[index].workingSets + 1
             let newSet = SetDetail(
                 setNumber: newSetNumber,
-                load: exercise.getLoadMetric(metricValue: 0),
-                planned: exercise.getPlannedMetric(value: 0)
+                load: exercise.loadMetric,
+                planned: exercise.plannedMetric
             )
             template.exercises[index].setDetails.append(newSet)
             _ = user.updateTemplate(template: template)

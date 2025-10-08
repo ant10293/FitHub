@@ -107,10 +107,6 @@ extension WorkoutTemplate {
     mutating func setEstimatedCompletionTime(rest: RestPeriods) {
         estimatedCompletionTime = .init(seconds: estimateCompletionTime(rest: rest))
     }
-    
-    mutating func resetState() {
-        for exerciseIndex in exercises.indices { exercises[exerciseIndex].resetState() }
-    }
 
     static func uniqueTemplateName(initialName: String, from templates: [WorkoutTemplate]) -> String {
         let existing = Set(templates.map { $0.name })
@@ -136,6 +132,45 @@ extension WorkoutTemplate {
             if !existing.contains(candidate) { return candidate }
             i += 1
         }
+    }
+    
+    func calculateWorkoutSummary(
+        completionDuration: Int = 0,
+        updates: PerformanceUpdates = .init()
+    ) -> WorkoutSummaryData {
+        var totalVolume: Double = 0
+        var totalReps:   Int    = 0
+        var weightByExercise: [UUID: Double] = [:]
+
+        for exercise in exercises {
+            let repsMul = exercise.limbMovementType?.repsMultiplier ?? 1
+            let wtMul   = exercise.limbMovementType?.weightMultiplier ?? 1
+
+            for set in exercise.setDetails {
+                let weightKg = set.load.weight?.inKg ?? 0
+                let metric   = set.completed ?? set.planned
+
+                let (vol, reps) = metric.volumeContribution(
+                    weightKg: weightKg,
+                    repsMul: repsMul,
+                    weightMul: wtMul
+                )
+
+                if vol != 0 {
+                    totalVolume += vol
+                    weightByExercise[exercise.id, default: 0] += vol
+                }
+                totalReps += reps
+            }
+        }
+
+        return WorkoutSummaryData(
+            totalVolume: Mass(kg: totalVolume),
+            totalReps: totalReps,
+            totalTime: TimeSpan(seconds: completionDuration),
+            exercisePRs: updates.prExerciseIDs,
+            weightByExercise: weightByExercise
+        )
     }
     
     var shouldDisableTemplate: Bool {

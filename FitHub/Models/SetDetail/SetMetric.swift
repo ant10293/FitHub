@@ -36,6 +36,14 @@ enum SetMetric: Codable, Equatable, Hashable {
         return nil
     }
     
+    var secondsValue: Int? {
+        switch self {
+        case .cardio(let ts): return ts.time.inSeconds
+        case .hold(let t): return t.inSeconds
+        case .reps: return nil
+        }
+    }
+    
     var fieldString: String {
         switch self {
         case .reps(let r): return r > 0 ? String(r) : ""
@@ -65,6 +73,18 @@ enum SetMetric: Codable, Equatable, Hashable {
         case .reps: return "number"
         case .hold: return "clock"
         case .cardio: return "clock"
+        }
+    }
+    
+    /// Returns (volumeKg, reps) for this metric given raw kg & movement multipliers.
+    func volumeContribution(weightKg: Double, repsMul: Int, weightMul: Double) -> (volume: Double, reps: Int) {
+        switch self {
+        case .reps(let r):
+            let reps = r * repsMul
+            let kg   = weightKg * weightMul
+            return (kg * Double(reps), reps)
+        case .hold, .cardio:
+            return (0, 0)
         }
     }
 }

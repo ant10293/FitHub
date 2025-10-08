@@ -105,6 +105,7 @@ struct TemplateDetail: View {
             }
         }
         .navigationBarTitle(template.name, displayMode: .inline)
+        // TODO: this doesnt save if the user just closes the app while in this view
         .onDisappear { if !isArchived { saveTemplate() } }
     }
     
@@ -319,8 +320,8 @@ struct TemplateDetail: View {
         exercise.setDetails.append(
             SetDetail(
                 setNumber: 1,
-                load: exercise.getLoadMetric(metricValue: 0),
-                planned: exercise.getPlannedMetric(value: 0)
+                load: exercise.loadMetric,
+                planned: exercise.plannedMetric
             )
         )
         template.exercises.append(exercise)
@@ -338,7 +339,7 @@ struct TemplateDetail: View {
     }
     
     private func saveTemplate(displaySaveConfirm: Bool = false) {
-        ctx.userData.saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) // no need for userData.updateTemplate since we use $binding
+        ctx.userData.saveSingleStructToFile(\.workoutPlans, for: .workoutPlans, delay: 0.0) // no need for userData.updateTemplate since we use $binding
         if displaySaveConfirm { ctx.toast.showSaveConfirmation() }
     }
 }

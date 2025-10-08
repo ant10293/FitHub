@@ -7,7 +7,7 @@ struct DistributionEditor: View {
         VStack(alignment: .leading, spacing: 18) {
 
             // ── Editable rows ────────────────────────────────────────────
-            ForEach(EffortType.allCases, id: \.self) { effort in
+            ForEach(EffortType.strengthTypes, id: \.self) { effort in
                 HStack {
                     Text(effort.rawValue)
                         .fontWeight(.semibold)

@@ -10,15 +10,6 @@ import SwiftUI
 struct MaxTable: View {
     let peak: PeakMetric
 
-    // Rendered percent steps (shared across all modes)
-    private let percents = Array(stride(from: 100, through: 50, by: -5))
-
-    // Standard 1RM % → reps mapping
-    private let oneRMReps: [Int: Int] = [
-        100: 1, 95: 2, 90: 4, 85: 6, 80: 8,
-        75: 10, 70: 12, 65: 16, 60: 20, 55: 24, 50: 30
-    ]
-
     var body: some View {
         Grid(horizontalSpacing: 0, verticalSpacing: 4) {
             ForEach(percents, id: \.self) { pct in
@@ -63,6 +54,9 @@ struct MaxTable: View {
                         Text(secs > 0 ? TimeSpan.fromSeconds(secs).displayStringCompact : "—")
                             .fontWeight(.light)
                             .gridColumnAlignment(.trailing)
+                    
+                    case .none:
+                        EmptyView()
                     }
                 }
 
@@ -72,9 +66,14 @@ struct MaxTable: View {
             }
         }
     }
+    // Rendered percent steps (shared across all modes)
+    private let percents = Array(stride(from: 100, through: 50, by: -5))
 
-    // MARK: - Helpers
-
+    // Standard 1RM % → reps mapping
+    private let oneRMReps: [Int: Int] = [
+        100: 1, 95: 2, 90: 4, 85: 6, 80: 8,
+        75: 10, 70: 12, 65: 16, 60: 20, 55: 24, 50: 30
+    ]
     /// For max-reps: each –5% ≈ +1 RIR ⇒ reps = maxReps – ((100–pct)/5), clamped at 1.
     private func repsFromPercent(_ pct: Int, maxReps: Int) -> Int {
         let rir = max(0, (100 - pct) / 5)

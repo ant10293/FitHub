@@ -6,11 +6,11 @@ struct SetCountEditor: View {
     var effort: ExerciseDistribution
 
     private var visibleTypes: [EffortType] {
-        EffortType.allCases.filter { effort.percentage(for: $0) > 0 }
+        EffortType.strengthTypes.filter { effort.percentage(for: $0) > 0 }
     }
 
     private var hiddenTypes: [EffortType] {
-        EffortType.allCases.filter { effort.percentage(for: $0) <= 0 }
+        EffortType.strengthTypes.filter { effort.percentage(for: $0) <= 0 }
     }
 
     private func binding(for type: EffortType) -> Binding<Int> {

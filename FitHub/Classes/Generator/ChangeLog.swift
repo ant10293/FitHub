@@ -149,7 +149,6 @@ extension WorkoutGenerator {
                     setNumber: set.setNumber,
                     previousSet: nil,
                     newSet: set,
-                   // weightChange: nil,
                     loadChange: nil,
                     metricChange: nil
                 )
@@ -158,8 +157,6 @@ extension WorkoutGenerator {
         
         return new.setDetails.map { newSet in
             let previousSet = previous.setDetails.first { $0.setNumber == newSet.setNumber }
-            
-            //let weightChange = createWeightChange(new: newSet, previous: previousSet)
             let loadChange = createLoadChange(new: newSet, previous: previousSet)
             let metricChange = createMetricChange(new: newSet, previous: previousSet)
             
@@ -167,7 +164,6 @@ extension WorkoutGenerator {
                 setNumber: newSet.setNumber,
                 previousSet: previousSet,
                 newSet: newSet,
-                //weightChange: weightChange,
                 loadChange: loadChange,
                 metricChange: metricChange
             )
@@ -177,14 +173,12 @@ extension WorkoutGenerator {
     private func createLoadChange(new: SetDetail, previous: SetDetail?) -> SetChange.LoadChange? {
         guard let previous = previous else { return nil }
         
-        // Check if loads are different
-        guard new.load != previous.load else { return nil }
+        guard new.load != previous.load else { return nil } // Check if loads are different
         
         let newValue = new.load.actualValue
         let prevValue = previous.load.actualValue
         
-        // Check if values are different
-        guard newValue != prevValue else { return nil }
+        guard newValue != prevValue else { return nil } // Check if values are different
         
         let percentageChange = ((newValue - prevValue) / prevValue) * 100
         
@@ -232,8 +226,7 @@ extension WorkoutGenerator {
             name: "Previous \(dayIndex + 1)",
             exercises: exercises,
             categories: [], // We don't need categories for comparison
-            dayIndex: dayIndex,
-            date: Date()
+            dayIndex: dayIndex
         )
     }
     
@@ -277,13 +270,8 @@ extension WorkoutGenerator {
 
     // Calculate total volume for template
     private func calculateTotalVolume(_ template: WorkoutTemplate) -> Mass {
-        let kg = template.exercises.reduce(0.0) { total, exercise in
-            total + exercise.setDetails.reduce(0.0) { setTotal, set in
-                guard let weight = set.load.weight else { return setTotal }
-                return setTotal + weight.inKg * set.planned.actualValue
-            }
-        }
-        return Mass(kg: kg)
+        let summary = template.calculateWorkoutSummary()
+        return summary.totalVolume
     }
     
     // Create progression details

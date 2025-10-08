@@ -48,7 +48,7 @@ struct Speed: Codable, Equatable, Hashable {
     }
 
     var formattedText: Text {
-        Text(Format.smartFormat(displayValue)) +
+        Text(displayString) +
         Text(" ") +
         Text(unitLabel).fontWeight(.light)
     }

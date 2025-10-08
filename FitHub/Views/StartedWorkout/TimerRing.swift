@@ -7,8 +7,43 @@
 
 import SwiftUI
 
+/// Wrapper that adapts a planned SetMetric (hold/cardio) to IsometricTimerRing's API,
+/// and returns the correctly-shaped completed metric.
+struct PlannedTimerRing: View {
+    @ObservedObject var manager: TimerManager
+    let planned: SetMetric
+    var fallbackSeconds: Int = 30
+    let onCompletion: (SetMetric) -> Void
 
-struct IsometricTimerRing: View {
+    var body: some View {
+        TimerRing(
+            manager: manager,
+            holdSeconds: plannedSeconds
+        ) { seconds in
+            let elapsed = TimeSpan(seconds: max(0, seconds))
+            onCompletion(completedFromTimer(elapsed))
+        }
+    }
+
+    // MARK: - Private
+    private var plannedSeconds: Int { planned.secondsValue ?? fallbackSeconds }
+
+    private func completedFromTimer(_ elapsed: TimeSpan) -> SetMetric {
+        switch planned {
+        case .hold:
+            return .hold(elapsed)
+        case .cardio(let ts):
+            // Preserve other fields if your TimeSpeed carries them.
+            return .cardio(TimeOrSpeed(showing: .time, time: elapsed, speed: ts.speed))
+        default:
+            // Defensive fallback: treat as a plain hold
+            return .hold(elapsed)
+        }
+    }
+}
+
+
+private struct TimerRing: View {
     @ObservedObject var manager: TimerManager
     let holdSeconds: Int   // e.g., 30 or whatever you want as the default
     let onCompletion: (Int) -> Void

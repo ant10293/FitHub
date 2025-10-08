@@ -8,6 +8,36 @@
 import Foundation
 import SwiftUI
 
+enum ExerciseUnit: String {
+    case weightXreps, repsOnly, timeOnly, weightXtime, distanceXtimeOrSpeed
+    
+    func getPeakMetric(metricValue: Double) -> PeakMetric {
+        switch self {
+        case .weightXreps:
+            return .oneRepMax(Mass(kg: metricValue))
+        case .repsOnly:
+            return .maxReps(Int(metricValue))
+        case .timeOnly:
+            return .maxHold(TimeSpan(seconds: Int(metricValue)))
+        // FIXME: temporary - must add PeakMetric cases
+        case .weightXtime:
+            return .oneRepMax(Mass(kg: metricValue))
+        case .distanceXtimeOrSpeed:
+            return .oneRepMax(Mass(kg: metricValue))
+        }
+    }
+    
+    // MARK: no support for weighted hold and cardio exercises
+    var supportsPR: Bool {
+        switch self {
+        case .weightXreps, .repsOnly, .timeOnly:
+            return true
+        case .weightXtime, .distanceXtimeOrSpeed:
+            return false
+        }
+    }
+}
+
 // the saved max value is the max reps or the calculated one rep max (in most cases, because you still can enter a one rep max value)
 struct MaxRecord: Codable, Identifiable {
     var id: UUID = UUID() // Unique identifier for each record (for graphing)
@@ -88,6 +118,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
     case oneRepMax(Mass)     // e.g. 140 kg
     case maxReps(Int)      // e.g. 32 reps
     case maxHold(TimeSpan) // e.g 90 sec or 60 kg for 30 sec
+    case none
     //case maxCarry(LoadedCarry) // e.g. 90 kg for 20 meters
     //case endurance(EndurancePR) // e.g. 800m in 0:02:03 (or 2 min 3 sec)
     
@@ -96,6 +127,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
         case .oneRepMax(let mass): return mass.inKg
         case .maxReps(let reps): return Double(reps)
         case .maxHold(let time): return Double(time.inSeconds)
+        case .none: return 0
         }
     }
     
@@ -104,6 +136,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
         case .oneRepMax(let mass): return mass.displayValue
         case .maxReps: return self.actualValue
         case .maxHold: return self.actualValue
+        case .none: return self.actualValue
         }
     }
     
@@ -113,6 +146,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
             return span.displayStringCompact
         case .oneRepMax, .maxReps:
             return displayValue > 0 ? Format.smartFormat(displayValue) : ""
+        case .none: return ""
         }
     }
     
@@ -120,6 +154,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
         switch self {
         case .oneRepMax, .maxReps: return unitLabel
         case .maxHold: return nil
+        case .none: return nil
         }
     }
     
@@ -144,6 +179,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
         case .oneRepMax: return "One Rep Max"
         case .maxReps: return "Max Reps"
         case .maxHold: return "Max Hold"
+        case .none: return ""
         }
     }
     
@@ -152,6 +188,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
         case .oneRepMax: return UnitSystem.current.weightUnit
         case .maxReps: return "reps"
         case .maxHold: return "time"
+        case .none: return ""
         }
     }
     
@@ -159,26 +196,16 @@ enum PeakMetric: Codable, Equatable, Hashable {
         let base = "Use this table to determine your working "
         let suffix: String
         switch self {
-        case .oneRepMax(_):
+        case .oneRepMax:
             suffix = "weight for each rep range."
-        case .maxReps(_):
+        case .maxReps:
             suffix = "reps based on exertion percentage."
-        case .maxHold(_):
+        case .maxHold:
             suffix = "hold time based on exertion percentage."
+        case .none:
+            return ""
         }
         return base + suffix
-    }
-    
-    func peakMetricConverted(from value: Double) -> PeakMetric {
-        switch self {
-        case .oneRepMax:
-            let kg = UnitSystem.current == .imperial ? UnitSystem.LBtoKG(value) : value
-            return .oneRepMax(Mass(kg: kg))
-        case .maxReps:
-            return .maxReps(Int(value))
-        case .maxHold:
-            return .maxHold(TimeSpan(seconds: Int(value)))
-        }
     }
 }
 

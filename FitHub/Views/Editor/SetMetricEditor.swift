@@ -28,24 +28,12 @@ struct SetMetricEditor: View {
         }
     }
     
-    private func validate(planned: SetMetric, load: SetLoad) -> Bool {
-        let plannedOk: Bool = {
-            switch planned {
-            case .reps(let r):     return r > 0
-            case .hold(let t):     return t.inSeconds > 0
-            case .cardio(let tos): return tos.actualValue > 0
-            }
-        }()
-
-        let loadOk: Bool = {
-            switch load {
-            case .none:            return true
-            case .weight(let w):   return w.inKg > 0
-            case .distance(let d): return d.inKm > 0
-            }
-        }()
-
-        return plannedOk && loadOk
+    private func validate(planned: SetMetric) -> Bool {
+        switch planned {
+        case .reps(let r):     return r > 0
+        case .hold(let t):     return t.inSeconds > 0
+        case .cardio(let tos): return tos.actualValue > 0
+        }
     }
 
     private var repsBinding: Binding<String> {
@@ -60,7 +48,7 @@ struct SetMetricEditor: View {
                 let r = Int(filtered) ?? 0
                 let newPlanned: SetMetric = .reps(r)
                 planned = newPlanned
-                onValidityChange?(validate(planned: planned, load: load))
+                onValidityChange?(validate(planned: planned))
             }
         )
     }
@@ -79,7 +67,7 @@ struct SetMetricEditor: View {
                 let ts = TimeSpan(seconds: secs)
                 let newPlanned: SetMetric = .hold(ts)
                 planned = newPlanned
-                onValidityChange?(validate(planned: planned, load: load))
+                onValidityChange?(validate(planned: planned))
             }
         )
     }
@@ -96,7 +84,7 @@ struct SetMetricEditor: View {
             set: { newValue in
                 let newPlanned: SetMetric = .cardio(newValue)
                 planned = newPlanned
-                onValidityChange?(validate(planned: planned, load: load))
+                onValidityChange?(validate(planned: planned))
             }
         )
     }

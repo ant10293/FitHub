@@ -28,7 +28,7 @@
 		652131722E3D9C3900FDFB9C /* DurationPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652131712E3D9C3900FDFB9C /* DurationPicker.swift */; };
 		6531360A2E4D416600EECCA5 /* CalendarUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653136092E4D416600EECCA5 /* CalendarUtility.swift */; };
 		6531360C2E4FDAF000EECCA5 /* MaxTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6531360B2E4FDAF000EECCA5 /* MaxTable.swift */; };
-		653136102E50381400EECCA5 /* IsometricTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6531360F2E50381400EECCA5 /* IsometricTimer.swift */; };
+		653136102E50381400EECCA5 /* TimerRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6531360F2E50381400EECCA5 /* TimerRing.swift */; };
 		653136122E5112D500EECCA5 /* ExpandCollapseList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653136112E5112D500EECCA5 /* ExpandCollapseList.swift */; };
 		653136142E51521D00EECCA5 /* SetCountEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653136132E51521D00EECCA5 /* SetCountEditor.swift */; };
 		653136162E519AC300EECCA5 /* ChangeLogs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653136152E519AC300EECCA5 /* ChangeLogs.swift */; };
@@ -266,7 +266,7 @@
 		653136062E4C3A6C00EECCA5 /* Premium.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Premium.storekit; sourceTree = "<group>"; };
 		653136092E4D416600EECCA5 /* CalendarUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUtility.swift; sourceTree = "<group>"; };
 		6531360B2E4FDAF000EECCA5 /* MaxTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaxTable.swift; sourceTree = "<group>"; };
-		6531360F2E50381400EECCA5 /* IsometricTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsometricTimer.swift; sourceTree = "<group>"; };
+		6531360F2E50381400EECCA5 /* TimerRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerRing.swift; sourceTree = "<group>"; };
 		653136112E5112D500EECCA5 /* ExpandCollapseList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandCollapseList.swift; sourceTree = "<group>"; };
 		653136132E51521D00EECCA5 /* SetCountEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCountEditor.swift; sourceTree = "<group>"; };
 		653136152E519AC300EECCA5 /* ChangeLogs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeLogs.swift; sourceTree = "<group>"; };
@@ -1052,7 +1052,7 @@
 			children = (
 				65039B792E837179007A31E1 /* SetDisplay */,
 				65CD3BFE2DD3C84F00C2B671 /* StartedWorkoutView.swift */,
-				6531360F2E50381400EECCA5 /* IsometricTimer.swift */,
+				6531360F2E50381400EECCA5 /* TimerRing.swift */,
 				65CD3BFC2DD3C84F00C2B671 /* ExerciseSetOverlay.swift */,
 				65CD3BFD2DD3C84F00C2B671 /* NextButton.swift */,
 				65CD3BFF2DD3C84F00C2B671 /* WorkoutSummary.swift */,
@@ -1303,7 +1303,7 @@
 				65A0D1D02E318D21008466D8 /* RectangularBG.swift in Sources */,
 				65CD3C452DD3C84F00C2B671 /* StrengthPercentileView.swift in Sources */,
 				65CD3C462DD3C84F00C2B671 /* UpdateMaxEditor.swift in Sources */,
-				653136102E50381400EECCA5 /* IsometricTimer.swift in Sources */,
+				653136102E50381400EECCA5 /* TimerRing.swift in Sources */,
 				65C5DC6F2DEFBF0C00B09AD2 /* Formatter.swift in Sources */,
 				65ECFF0E2E21F1BA0091032A /* FloatingButton.swift in Sources */,
 				65CD3C472DD3C84F00C2B671 /* ExercisePerformanceGraph.swift in Sources */,

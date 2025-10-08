@@ -152,7 +152,7 @@ struct StartedWorkoutView: View {
             Alert(title: Text("Are you sure you want to go back?"),
                 message: Text("Doing so will end your workout."),
                 primaryButton: .destructive(Text("End Workout")) {
-                    viewModel.endWorkoutAndDismiss(ctx: ctx, shouldRemoveDate: false, completion: {
+                    viewModel.endWorkoutAndDismiss(ctx: ctx, completion: {
                         onExit()
                     })
                 },

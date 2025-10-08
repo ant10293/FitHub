@@ -118,7 +118,7 @@ private extension CompletedDetails {
                     .fontWeight(.bold)
                 
                 // Planned (weight if relevant) + target (reps or time)
-                plannedText(set: set)
+                set.formattedPlannedText
                     .fontWeight(.regular)
 
                 // Completed + RPE inline on the same row
@@ -131,11 +131,6 @@ private extension CompletedDetails {
             .font(.caption)
             .multilineTextAlignment(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        
-        // Build planned text (weight if relevant + reps/time)
-        private func plannedText(set: SetDetail) -> Text {
-            return set.formattedPlannedText
         }
     }
 }
@@ -178,7 +173,7 @@ private extension CompletedDetails {
             switch metric {
             case .reps(let r): return "\(max(0, r)) reps"
             case .hold(let span): return span.displayStringCompact
-            case .cardio(let ts): return ts.time.displayStringCompact
+            case .cardio(let ts): return "\(ts.speed.displayString) \(ts.speed.unitLabel)"
             }
         }
         

@@ -6119,7 +6119,6 @@
 		"name" : "Weighted Back Extension",
 		"id" : "383DBE0A-3299-4DBD-9B6A-8EE133365155",
 		"image" : "back_extension",
-		"url" : "back-extension",
 		"aliases" : ["Hyperextension"],
 		"description" : "Strengthens the lower back muscles by extending the spine against gravity.",
 		"equipmentRequired" : ["Back Extension Bench", "Weight Plate"],

@@ -352,25 +352,4 @@ final class ExerciseSelector {
     }
 }
 
-/*
-private struct CoverageState {
-    var targets: Set<Muscle>
-    var groups: Set<Muscle>
-    var targetSubs: Set<SubMuscles>
-    var groupSubs: Set<SubMuscles>
-    
-    init(target: [Muscle], group: [Muscle], targetSub: [SubMuscles], groupSub: [SubMuscles]) {
-        self.targets = Set(target)
-        self.groups = Set(group)
-        self.targetSubs = Set(targetSub)
-        self.groupSubs = Set(groupSub)
-    }
-}
 
-private extension Exercise {
-    var primaryMuscleSet: Set<Muscle>   { Set(primaryMuscles) }
-    var secondaryMuscleSet: Set<Muscle> { Set(secondaryMuscles) }
-    var primarySubSet: Set<SubMuscles>  { Set(primarySubMuscles ?? []) }
-    var secondarySubSet: Set<SubMuscles>{ Set(secondarySubMuscles ?? []) }
-}
-*/

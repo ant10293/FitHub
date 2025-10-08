@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ExerciseSetOverlay: View {
     @Binding var exercise: Exercise
-    @State private var isPressed: Bool = false
+    @State private var nextPressed: Bool = false
     @State private var showAdjustmentsView: Bool = false
     @State private var shouldDisableNext: Bool = false
     @State private var showPlateVisualizer: Bool = false
@@ -41,19 +41,18 @@ struct ExerciseSetOverlay: View {
                     showPicker: $showPicker,
                     timerManager: timerManager,
                     hideRPE: params.disableRPE,
-                    exercise: exercise
+                    exercise: exercise,
                 )
                 
                 if !showPicker {
                     NextButton(
                         timerManager: timerManager,
-                        isPressed: $isPressed,
+                        isPressed: $nextPressed,
                         exercise: exercise,
                         isLastExercise: progress.isLastExercise,
                         restTimerEnabled: params.restTimerEnabled,
                         isDisabled: shouldDisableNext,
                         onButtonPress: {
-                            saveTemplate(detail, $exercise) // call before set is incremented
                             return handleButtonPress(setDetail: detail)
                         },
                         goToNextSetOrExercise: goToNextSetOrExercise
@@ -162,6 +161,7 @@ struct ExerciseSetOverlay: View {
                 setId: setDetail.id
             ))
         }
+        saveTemplate(setDetail, $exercise)
         
         return restForSet
     }

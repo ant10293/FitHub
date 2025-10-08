@@ -89,17 +89,7 @@ extension UserData {
         isWorkingOut = false
         if shouldSave { saveSingleStructToFile(\.sessionTracking, for: .sessionTracking) }
     }
-    /*
-    func resetExercisesInTemplate(for template: WorkoutTemplate, shouldRemoveDate: Bool = false, shouldSave: Bool = false) {
-        resetWorkoutSession()
-        
-        var updatedTemplate = template // Create a mutable copy of the template
-        updatedTemplate.resetState()
-        
-        _ = updateTemplate(template: updatedTemplate, shouldRemoveDate: shouldRemoveDate, shouldSave: false)
-        if shouldSave { saveToFile() }
-    }
-    */
+
     func deleteArchivedTemplate(at idx: Int) {
         NotificationManager.remove(ids: workoutPlans.archivedTemplates[idx].notificationIDs)
         workoutPlans.archivedTemplates.remove(at: idx)
@@ -132,8 +122,7 @@ extension UserData {
         var newTemplate = template
 
         if template.date != nil {
-            // Schedule notifications and get the IDs
-            let notificationIDs = scheduleNotification(for: template)
+            let notificationIDs = scheduleNotification(for: template) // Schedule notifications and get the IDs
             newTemplate.notificationIDs.append(contentsOf: notificationIDs) // Append notification IDs
         }
         workoutPlans.userTemplates.append(newTemplate)
@@ -149,70 +138,46 @@ extension UserData {
                 var exercise = tmpl.exercises[exIdx]
                 
                 if let setIdx = exercise.setDetails.firstIndex(where: { $0.id == setDetail.id }) {
-                    exercise.setDetails[setIdx].load = setDetail.load
-                    exercise.setDetails[setIdx].planned = setDetail.planned
-                    tmpl.exercises[exIdx] = exercise
-                    let updated = updateTemplate(template: tmpl, index: index, location: location)
-                    if updated { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
+                    var sd = exercise.setDetails[setIdx]
+                    // only save if there were changes to set load or planned
+                    if sd.load != setDetail.load || sd.planned != setDetail.planned {
+                        sd.load = setDetail.load
+                        sd.planned = setDetail.planned
+                        exercise.setDetails[setIdx] = sd
+                        tmpl.exercises[exIdx] = exercise
+                        let updated = updateTemplate(template: tmpl, index: index, location: location)
+                        if updated { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
+                    }
                 }
             }
         }
-        /*
-        if let idx = workoutPlans.userTemplates.firstIndex(where: { $0.id == templateID }) {
-            var tmpl = workoutPlans.userTemplates[idx] // make a local copy we can mutate
-            
-            if let exIdx = tmpl.exercises.firstIndex(where: { $0.id == exerciseID }) {
-                var exercise = tmpl.exercises[exIdx]
-                
-                if let setIdx = exercise.setDetails.firstIndex(where: { $0.id == setDetail.id }) {
-                    exercise.setDetails[setIdx].load = setDetail.load
-                    exercise.setDetails[setIdx].planned = setDetail.planned
-                    tmpl.exercises[exIdx] = exercise
-                }
-            }
-            
-            workoutPlans.userTemplates[idx] = tmpl
-            saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
-        }
-        */
     }
     
-    func updateTemplate(template: WorkoutTemplate, shouldRemoveNotifications: Bool = false, shouldRemoveDate: Bool = false, shouldSave: Bool = true) -> WorkoutTemplate {
-        if let (template, index, location) = getTemplate(templateID: template.id) {
-            var tmpl = template
+    func updateTemplate(
+        template: WorkoutTemplate,
+        overwrite: Bool = true,
+        shouldRemoveNotifications: Bool = false,
+        shouldRemoveDate: Bool = false,
+        shouldSave: Bool = true
+    ) -> WorkoutTemplate {
+        if let (foundTmpl, index, location) = getTemplate(templateID: template.id) {
+            var tmpl = overwrite ? template : foundTmpl
             if shouldRemoveNotifications { tmpl.notificationIDs.removeAll() }
             if shouldRemoveDate { tmpl.date = nil }
             let updated = updateTemplate(template: tmpl, index: index, location: location)
             if shouldSave, updated { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
             return tmpl
         }
-       /* if let idx = workoutPlans.userTemplates.firstIndex(where: { $0.id == template.id }) {
-            var tmpl = template                     // make a local copy we can mutate
-            if shouldRemoveNotifications { tmpl.notificationIDs.removeAll() }
-            if shouldRemoveDate { tmpl.date = nil }
-            workoutPlans.userTemplates[idx] = tmpl
-            if shouldSave { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
-            return workoutPlans.userTemplates[idx]
-        }
         
-        // 2️⃣  Try workoutPlans.trainerTemplates next
-        if let idx = workoutPlans.trainerTemplates.firstIndex(where: { $0.id == template.id }) {
-            var tmpl = template                     // make a local copy we can mutate
-            if shouldRemoveNotifications { tmpl.notificationIDs.removeAll() }
-            if shouldRemoveDate { tmpl.date = nil }
-            workoutPlans.trainerTemplates[idx] = tmpl
-            if shouldSave { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
-            return workoutPlans.trainerTemplates[idx]
-        }
-        */
         return template
     }
     
     private func getTemplate(templateID: WorkoutTemplate.ID) -> (WorkoutTemplate, Int, TemplateLocation)? {
-        if let index = workoutPlans.userTemplates.firstIndex(where: { $0.id == templateID }) {
-            return (workoutPlans.userTemplates[index], index,  .user)
-        } else if let trainerIndex = workoutPlans.trainerTemplates.firstIndex(where: { $0.id == templateID }) {
-            return  (workoutPlans.trainerTemplates[trainerIndex], trainerIndex, .trainer)
+        if let idx = workoutPlans.userTemplates.firstIndex(where: { $0.id == templateID }) {
+            return (workoutPlans.userTemplates[idx], idx,  .user)
+        }
+        if let idx = workoutPlans.trainerTemplates.firstIndex(where: { $0.id == templateID }) {
+            return  (workoutPlans.trainerTemplates[idx], idx, .trainer)
         }
         return nil
     }
@@ -277,30 +242,24 @@ extension UserData {
         return Array(unique).sorted()     // keep ‘em in order
     }
     
-    func removePlannedWorkoutDate(template: WorkoutTemplate, removeNotifications: Bool, removeDate: Bool, date: Date) -> (Bool, WorkoutTemplate?) {
-        if let templateDate = template.date,
-           CalendarUtility.shared.isDate(templateDate, inSameDayAs: date) || templateDate < date {
-            let template = removeTemplateNotifications(for: template, removeNotifications: removeNotifications, removeDate: removeDate, shouldSave: false)
-            return (true, template)
+    func removePlannedWorkoutDate(templateID: WorkoutTemplate.ID, removeDate: Bool, date: Date) {
+        if let (foundTmpl, _, _) = getTemplate(templateID: templateID),
+            let templateDate = foundTmpl.date, CalendarUtility.shared.isDate(templateDate, inSameDayAs: date) || templateDate < date
+        {
+            // only remove notifications if planned date is today or has already passed && only remove date if there wasn't a workout already completed today
+            removeTemplateNotifications(for: foundTmpl, removeDate: removeDate, shouldSave: false)
         }
-
-        // ── 3.  Nothing matched ───────────────────────────────────────────
-        return (false, nil)
+    }
+    
+    private func removeTemplateNotifications(for template: WorkoutTemplate, removeDate: Bool, shouldSave: Bool) {
+        NotificationManager.remove(ids: template.notificationIDs)
+        _ = updateTemplate(template: template, shouldRemoveNotifications: true, shouldRemoveDate: removeDate, shouldSave: shouldSave)
+        NotificationManager.printAllPendingNotifications() // Fetch pending notifications to verify
     }
     
     func scheduleNotification(for workoutTemplate: WorkoutTemplate) -> [String] {
         let notiIDs = NotificationManager.scheduleNotification(for: workoutTemplate, user: self)
         return notiIDs
-    }
-
-    private func removeTemplateNotifications(for template: WorkoutTemplate, removeNotifications: Bool = true, removeDate: Bool = true, shouldSave: Bool = true) -> WorkoutTemplate {
-        NotificationManager.remove(ids: template.notificationIDs)
-        let updatedTemplate = updateTemplate(template: template, shouldRemoveNotifications: removeNotifications, shouldRemoveDate: removeDate, shouldSave: shouldSave)
-
-        // Fetch pending notifications to verify
-        NotificationManager.printAllPendingNotifications()
-        
-        return updatedTemplate
     }
     
     func incrementWorkoutStreak(shouldSave: Bool = true) {

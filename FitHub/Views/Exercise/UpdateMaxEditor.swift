@@ -26,8 +26,15 @@ struct UpdateMaxEditor: View {
             placeholder: "Enter new \(exercise.performanceUnit)",
             initialValue: "",
             onSave: { newValue in
-                let peak = peakType.peakMetricConverted(from: newValue)
-                onSave(peak)
+                let adjValue: Double
+                switch peakType {
+                case .oneRepMax:
+                    let mass: Mass = .init(weight: newValue)
+                    adjValue = mass.inKg
+                default:
+                    adjValue = newValue
+                }
+                onSave(exercise.getPeakMetric(metricValue: adjValue))
             },
             onExit: onCancel
         )

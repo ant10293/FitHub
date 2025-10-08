@@ -106,7 +106,7 @@ extension Exercise {
     }
     
     private var setMetricRangeLabeled: (label: String, range: String) {
-        let label: String = getPlannedMetric(value: 0).label
+        let label: String = plannedMetric.label
         guard let first = setDetails.first else { return (label, "0") }
         switch first.planned {
         case .reps:
@@ -159,7 +159,7 @@ extension Exercise {
         }
     }
     
-    func getLoadMetric(metricValue: Double) -> SetLoad {
+    var loadMetric: SetLoad {
         switch unitType {
         case .weightXreps, .weightXtime:
             return .weight(Mass(kg: 0))
@@ -169,8 +169,9 @@ extension Exercise {
             return .distance(Distance(km: 0))
         }
     }
+    
     // FIXME: use value and pass distance
-    func getPlannedMetric(value: Int) -> SetMetric {
+    var plannedMetric: SetMetric {
         switch unitType {
         case .weightXreps, .repsOnly:
             return .reps(0)
@@ -301,19 +302,7 @@ extension Exercise {
         
         return true
     }
-    
-    mutating func resetState() {
-        currentSet = 1
-        timeSpent = 0
-        isCompleted = false
-        
-        // Reset repsCompleted & rpe for each setDetail in the exercise
-        for setIndex in setDetails.indices { setDetails[setIndex].resetState() }
-        
-        // Reset repsCompleted & rpe for each warmup set in the exercise
-        for setIndex in warmUpDetails.indices { warmUpDetails[setIndex].resetState() }
-    }
-    
+ 
     mutating func setRPE(hadNewPR: Bool, startDate: Date) {
         if hadNewPR {
             //print("new pr set this week. resetting rpe.")
@@ -493,7 +482,6 @@ extension Exercise {
         let rounding     = userData.settings.roundingPreference
         
         for n in 1...numSets {
-            //var weight = Mass(kg: 0)
             let load: SetLoad
             let planned: SetMetric
 
@@ -554,6 +542,11 @@ extension Exercise {
                 let target = SetDetail.calculateSetWeight(oneRm: oneRM, reps: reps)
                 load = .weight(equipmentData.roundWeight(target, for: equipmentRequired, rounding: rounding))
                 planned = .reps(max(1, reps))
+            
+            // TODO: implement for weighted hold and cardio exercises
+            case .none:
+                load = loadMetric
+                planned = plannedMetric
             }
             
             details.append(SetDetail(setNumber: n, load: load, planned: planned))
@@ -657,11 +650,4 @@ extension Exercise {
     }
 }
 
-/*
-enum SetUnit: Codable {
-    case weightReps
-    case time
-    case weightTime
-    case reps
-}
-*/
+

@@ -8,26 +8,6 @@
 import Foundation
 import SwiftUI
 
-enum ExerciseUnit: String {
-    case weightXreps, repsOnly, timeOnly, weightXtime, distanceXtimeOrSpeed
-    
-    func getPeakMetric(metricValue: Double) -> PeakMetric {
-        switch self {
-        case .weightXreps:
-            return .oneRepMax(Mass(weight: metricValue))
-        case .repsOnly:
-            return .maxReps(Int(metricValue))
-        case .timeOnly:
-            return .maxHold(TimeSpan(seconds: Int(metricValue)))
-        // FIXME: temporary - must add PeakMetric cases
-        case .weightXtime:
-            return .oneRepMax(Mass(weight: metricValue))
-        case .distanceXtimeOrSpeed:
-            return .oneRepMax(Mass(weight: metricValue))
-        }
-    }
-}
-
 enum CategorySelections: Hashable {
     case split(SplitCategory)
     case muscle(Muscle)
@@ -163,6 +143,10 @@ enum LimbMovementType: String, Codable, CaseIterable {
         Text("Limb movement: ").bold() + Text(self.rawValue) + Text("\n ") +
         Text(self.description).foregroundStyle(.secondary).font(.caption)
     }
+    
+    // for volume calculations
+    var repsMultiplier: Int { switch self { case .unilateral: 2; default: 1 } }
+    var weightMultiplier: Double { switch self { case .bilateralIndependent: 2; default: 1 } }
 }
 
 enum EffortType: String, CaseIterable, Identifiable, Codable {
@@ -174,6 +158,8 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
     
     var id: String { self.rawValue }
     
+    static let strengthTypes: [EffortType] = [.compound, .isolation, .isometric, .plyometric]
+        
     var usesReps: Bool {
         switch self {
         case .compound, .isolation, .plyometric:
@@ -186,16 +172,11 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
     // TODO: order in which the exercise with type should occur in the generated workout
     var order: Int {
         switch self {
-        case .plyometric:
-            return 1
-        case .compound:
-            return 2
-        case .isolation:
-            return 3
-        case .isometric:
-            return 4
-        case .cardio:
-            return 5
+        case .plyometric: return 1
+        case .compound: return 2
+        case .isolation: return 3
+        case .isometric: return 4
+        case .cardio: return 5
         }
     }
 }

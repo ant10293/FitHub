@@ -11,11 +11,10 @@ struct TemplatePopup: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var userData: UserData
     @State private var disableMessage: String = "Invalid exercise(s) in template."
-    var template: WorkoutTemplate
-    var onClose: () -> Void
-    var onBeginWorkout: () -> Void
-    var onEdit: () -> Void
-    private var disableTemplate: Bool { template.shouldDisableTemplate }
+    let template: WorkoutTemplate
+    let onClose: () -> Void
+    let onBeginWorkout: () -> Void
+    let onEdit: () -> Void
 
     var body: some View {
         VStack {
@@ -62,11 +61,18 @@ struct TemplatePopup: View {
                     .padding(.horizontal)
             }
             
-            RectangularButton(title: "Begin Workout", enabled: !disableTemplate, width: .fit, action: onBeginWorkout)
+            RectangularButton(
+                title: "Begin Workout",
+                enabled: !disableTemplate && !userData.isWorkingOut,
+                width: .fit,
+                action: onBeginWorkout
+            )
         }
         .padding()
         .background(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground).opacity(0.6))
     }
+    
+    private var disableTemplate: Bool { template.shouldDisableTemplate  }
     
     private var emptyView: some View {
         VStack {
