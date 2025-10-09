@@ -162,7 +162,7 @@ struct UserProfileView: View {
         
         // 1) Update local userData
         ctx.userData.profile.userName = trimmed
-        ctx.userData.saveSingleStructToFile(\.profile, for: .profile)
+        //ctx.userData.saveSingleStructToFile(\.profile, for: .profile)
         
         // 2) Update Firebase displayName
         authService.updateDisplayName(to: trimmed) { result in
@@ -182,7 +182,7 @@ struct UserProfileView: View {
         guard trimmed != ctx.userData.profile.firstName else { return }
         
         ctx.userData.profile.firstName = trimmed
-        ctx.userData.saveSingleStructToFile(\.profile, for: .profile)
+        //ctx.userData.saveSingleStructToFile(\.profile, for: .profile)
         
         alertMessage = "First name updated"
         ctx.toast.showSaveConfirmation(duration: 2.0)
@@ -194,7 +194,7 @@ struct UserProfileView: View {
         guard trimmed != ctx.userData.profile.lastName else { return }
         
         ctx.userData.profile.lastName = trimmed
-        ctx.userData.saveSingleStructToFile(\.profile, for: .profile)
+        //ctx.userData.saveSingleStructToFile(\.profile, for: .profile)
         
         alertMessage = "Last name updated"
         ctx.toast.showSaveConfirmation(duration: 2.0)

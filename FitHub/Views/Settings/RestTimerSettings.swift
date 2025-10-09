@@ -24,7 +24,7 @@ struct RestTimerSettings: View {
                         Toggle("", isOn: $userData.settings.restTimerEnabled)
                             .labelsHidden()
                             .onChange(of: userData.settings.restTimerEnabled) {
-                                userData.saveSingleStructToFile(\.settings, for: .settings)
+                                //userData.saveSingleStructToFile(\.settings, for: .settings)
                             }
                     }
                     .padding(.horizontal)
@@ -57,28 +57,27 @@ struct RestTimerSettings: View {
         .onDisappear(perform: onDisappear)
     }
     
-    func onAppear() {
+    private func onAppear() {
         initialCustom = userData.workoutPrefs.customRestPeriods
         if let open = activeEditor { loadPicker(from: open) }
     }
     
-    func onDisappear() {
+    private func onDisappear() {
         if initialCustom != userData.workoutPrefs.customRestPeriods {
-            userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
+            //userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
         }
     }
     
-    func reset() {
+    private func reset() {
         userData.settings.restTimerEnabled = true
         userData.workoutPrefs.customRestPeriods = nil
         if let open = activeEditor { loadPicker(from: open) }
-        userData.saveToFile()
+        //userData.saveToFile()
     }
     
-    func restRow(kind: RestType) -> some View {
+    private func restRow(kind: RestType) -> some View {
         card {
             VStack(spacing: 0) {
-                // Header (collapsed summary)
                 Button {
                     toggleEditor(kind)
                 } label: {
@@ -124,11 +123,11 @@ struct RestTimerSettings: View {
         .padding(.horizontal)
     }
     
-    var resolved: RestPeriods {
+    private var resolved: RestPeriods {
         userData.workoutPrefs.customRestPeriods ?? userData.physical.goal.defaultRest
     }
     
-    func toggleEditor(_ kind: RestType) {
+    private func toggleEditor(_ kind: RestType) {
         if activeEditor == kind {
             activeEditor = nil
         } else {
@@ -137,12 +136,12 @@ struct RestTimerSettings: View {
         }
     }
     
-    func loadPicker(from kind: RestType) {
+    private func loadPicker(from kind: RestType) {
         let total = max(0, resolved.rest(for: kind)) // seconds
         editTime = TimeSpan(seconds: total)
     }
     
-    func savePicker(into kind: RestType) {
+    private func savePicker(into kind: RestType) {
         var custom = resolved
         custom.modify(for: kind, with: editTime.inSeconds)
         userData.workoutPrefs.customRestPeriods = custom

@@ -83,13 +83,13 @@ struct Questionnaire: View {
                             case 0: // "Are you familiar with gym equipment and exercise techniques?"
                             if let firstAnswer = answers.first {
                                 ctx.userData.evaluation.isFamiliarWithGym = firstAnswer == "Yes"
-                                ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
+                                //ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
                             }
                             
                             case 2: // "How many days per week do you plan on exercising?"
                                 if answers.count > 2, let workoutDays = Int(answers[2]) {
                                     ctx.userData.workoutPrefs.workoutDaysPerWeek = workoutDays
-                                    ctx.userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
+                                    //ctx.userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
                                 }
                             default:
                                 break
@@ -124,7 +124,7 @@ struct Questionnaire: View {
                 onContinue: {
                     showingPopup = false
                     ctx.userData.setup.isEquipmentSelected = true
-                    ctx.userData.saveToFile()
+                    //ctx.userData.saveToFile()
                     handleNavigation()
                 },
                 onEdit: {
@@ -153,13 +153,12 @@ struct Questionnaire: View {
     
     private func handleNavigation() {
         ctx.userData.setup.questionsAnswered = true
-        ctx.userData.saveSingleStructToFile(\.setup, for: .setup)
+       // ctx.userData.saveSingleStructToFile(\.setup, for: .setup)
     }
     
     private func processAnswers() {
         ctx.userData.setup.questionAnswers = answers
-        ctx.userData.saveSingleStructToFile(\.setup, for: .setup)
-        // determine the best split for the user based on goal and workoutDaysPerWeek
+        //ctx.userData.saveSingleStructToFile(\.setup, for: .setup)
     }
 }
 

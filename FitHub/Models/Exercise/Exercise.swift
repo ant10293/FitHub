@@ -436,9 +436,10 @@ extension Exercise {
                         updated.load = .weight(equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding))
                     }
                 }
-            case .distance(let distance):
-                // TODO: implement for distance
+            // TODO: implement for distance
+            case .distance:
                 break
+                
             case .none:
                 // Bodyweight: bump planned target only
                 updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
@@ -460,8 +461,8 @@ extension Exercise {
             case .weight(let weight):
                 let scaledKg = weight.inKg * deloadFactor
                 updated.load = .weight(equipmentData.roundWeight(Mass(kg: scaledKg), for: equipmentRequired, rounding: rounding))
-            case .distance(let distance):
-                // TODO: implement for distance
+            // TODO: implement for distance
+            case .distance:
                 break
             case .none:
                 // Bodyweight: scale planned target
@@ -611,10 +612,6 @@ extension Exercise {
                     load: .none,
                     planned: .hold(.fromSeconds(target))
                 ))
-                
-            case (.distance(let distance), .hold(let ts)):
-                // Handle distance-based loads if needed
-                break
                 
             default:
                 break

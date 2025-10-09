@@ -31,7 +31,6 @@ struct TemplateDetail: View {
     @State private var replaceMessage: String = ""
     private let modifier = ExerciseModifier()
     var isArchived: Bool = false
-    var onDone: () -> Void
     
     var body: some View {
         ZStack {
@@ -81,13 +80,6 @@ struct TemplateDetail: View {
         }
         .alert(item: $activeAlert) { alertType in
             switch alertType {
-            case .fill:
-                return Alert(
-                    title: Text("Fill Template?"),
-                    message: Text("This will require closing and reopening this template."),
-                    primaryButton: .destructive(Text("Fill"), action: { onDone() }),
-                    secondaryButton: .cancel()
-                )
             case .delete:
                 return Alert(
                     title: Text("Are you sure you want to remove '\(exercisePendingDeletion?.name ?? "this exercise")'?"),
@@ -169,13 +161,6 @@ struct TemplateDetail: View {
             .disabled(redoStack.isEmpty)
             
             Spacer()
-            Button(action: { triggerFillAlert() }) {
-                HStack {
-                    Image(systemName: "doc.fill.badge.plus").imageScale(.medium)
-                }.foregroundStyle(template.exercises.isEmpty ? .gray : .blue) // Gray out if disabled
-            }
-            .disabled(template.exercises.isEmpty)
-            Spacer()
             
             Button(action: { saveTemplate(displaySaveConfirm: true) }) {
                 HStack {
@@ -237,8 +222,7 @@ struct TemplateDetail: View {
         .animation(Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: pulsate)
     }
     
-    private enum ActiveAlert: Identifiable { case fill, delete, replace; var id: Int { hashValue } }
-    private func triggerFillAlert() { activeAlert = .fill }
+    private enum ActiveAlert: Identifiable { case delete, replace; var id: Int { hashValue } }
     
     private func performCallBackAction(action: CallBackAction, exercise: Binding<Exercise>) {
         switch action {
@@ -339,7 +323,7 @@ struct TemplateDetail: View {
     }
     
     private func saveTemplate(displaySaveConfirm: Bool = false) {
-        ctx.userData.saveSingleStructToFile(\.workoutPlans, for: .workoutPlans, delay: 0.0) // no need for userData.updateTemplate since we use $binding
+        //ctx.userData.saveSingleStructToFile(\.workoutPlans, for: .workoutPlans, delay: 0.0) // no need for userData.updateTemplate since we use $binding
         if displaySaveConfirm { ctx.toast.showSaveConfirmation() }
     }
 }

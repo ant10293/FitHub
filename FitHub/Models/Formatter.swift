@@ -218,21 +218,19 @@ enum Format {
     }
 }
 
+enum TextFormatter {
+    /// Characters to strip for search keys (spaces, newlines, punctuation)
+    static let searchStripSet: CharacterSet = {
+        CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
+    }()
+}
+
 extension String {
     func trimmingTrailingSpaces() -> String {
         guard let range = range(of: "\\s+$", options: .regularExpression) else { return self }
         return replacingCharacters(in: range, with: "")
     }
-}
-
-extension String {
-    func removingCharacters(in set: CharacterSet) -> String {
-        self.components(separatedBy: set).joined()
-    }
-}
-
-extension String {
-    /// Lower-cases and removes every scalar in `removing`.
+    
     @inline(__always)
     func normalized(removing: CharacterSet) -> String {
         unicodeScalars
@@ -240,4 +238,10 @@ extension String {
             .reduce(into: "") { $0.append(Character($1)) }
             .lowercased()
     }
+    /*
+    func removingCharacters(in set: CharacterSet) -> String {
+        self.components(separatedBy: set).joined()
+    }
+    */
 }
+

@@ -14,7 +14,7 @@ struct MuscleRest: View {
         VStack {
             Stepper("Rest Duration: \(userData.settings.muscleRestDuration) hours", value: $userData.settings.muscleRestDuration, in: 24...168)
                 .onChange(of: userData.settings.muscleRestDuration) {
-                    userData.saveSingleStructToFile(\.settings, for: .settings)
+                    //userData.saveSingleStructToFile(\.settings, for: .settings)
                 }
                 .padding()
             

@@ -23,10 +23,6 @@ final class AdjustmentsData: ObservableObject {
         return viewModel
     }
     
-    func saveAdjustmentsToFile() {
-        JSONFileManager.shared.save(adjustments, to: AdjustmentsData.jsonKey)
-    }
-    
     // Load adjustments for all exercises
     func loadAllAdjustments(for exercises: [Exercise], allEquipment: [GymEquipment]) {
         for exercise in exercises {
@@ -68,6 +64,11 @@ final class AdjustmentsData: ObservableObject {
             adjustmentImage:  exercise.image
         )
         adjustments[exercise.id] = newEntry
+    }
+    
+    // MARK: saving logic
+    func saveAdjustmentsToFile() {
+        JSONFileManager.shared.save(adjustments, to: AdjustmentsData.jsonKey)
     }
 }
 

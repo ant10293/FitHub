@@ -14,7 +14,7 @@ struct EnterMaxReps: View {
     @State private var situpReps: String = ""
     @State private var squatReps: String = ""
     @State private var pushupReps: String = ""
-    var onFinish: () -> Void
+    let onFinish: () -> Void
 
     var body: some View {
         ZStack {
@@ -23,6 +23,8 @@ struct EnterMaxReps: View {
                 .zIndex(0)
             
             VStack {
+                Spacer()
+                
                 Text("How many reps can you perform consecutively in each bodyweight exercise?")
                     .font(.headline)
                     .padding()
@@ -44,7 +46,7 @@ struct EnterMaxReps: View {
                 Spacer()
             }
         }
-        .navigationBarTitle("Enter your Max Reps", displayMode: .large)
+        .navigationBarTitle("Enter Max Reps", displayMode: .large)
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
     }
     
@@ -55,7 +57,6 @@ struct EnterMaxReps: View {
         
         if let situps = Int(situpReps) {
             if let situp = exerciseData.exercise(named: "Sit-Up") {
-                // "D011FE15-0E04-411E-BF9E-5153634CE050"
                 exerciseData.updateExercisePerformance(for: situp, newValue: .maxReps(situps))
             }
             maxValuesEntered = true
@@ -63,7 +64,6 @@ struct EnterMaxReps: View {
         
         if let pushups = Int(pushupReps) {
             if let pushup = exerciseData.exercise(named: "Push-Up") {
-                // "D314DC2A-60C4-4C25-A2CB-F46023462D2E"
                 exerciseData.updateExercisePerformance(for: pushup, newValue: .maxReps(pushups))
             }
             maxValuesEntered = true
@@ -71,7 +71,6 @@ struct EnterMaxReps: View {
         
         if let squats = Int(squatReps) {
             if let squat = exerciseData.exercise(named: "Bodyweight Squat") {
-                // "7A4E8270-424C-432F-9459-C9E2065773F4"
                 exerciseData.updateExercisePerformance(for: squat, newValue: .maxReps(squats))
             }
             maxValuesEntered = true
@@ -80,7 +79,7 @@ struct EnterMaxReps: View {
         if maxValuesEntered {
             exerciseData.savePerformanceData()
             userData.setup.maxRepsEntered = true
-            userData.saveSingleStructToFile(\.setup, for: .setup)
+           // userData.saveSingleStructToFile(\.setup, for: .setup)
             onFinish()
         }
     }

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct AssessmentView: View {
     @EnvironmentObject private var ctx: AppContext
-    @State private var navPath = NavigationPath()
-    
+    @State private var navPath: [ViewOption] = []
+
     var body: some View {
         NavigationStack(path: $navPath) {
             VStack(alignment: .center, spacing: 20) {
@@ -21,9 +21,8 @@ struct AssessmentView: View {
                     .padding(.vertical)
                 
                 VStack(spacing: 16) {
-                    
                     if !ctx.userData.setup.maxRepsEntered {
-                        NavigationLink(value: "EnterMaxReps") {
+                        NavigationLink(value: ViewOption.enterMaxReps) {
                             Label("Enter Max Reps", systemImage: "flame.fill")
                                 .frame(maxWidth: .infinity)
                                 .padding()
@@ -35,7 +34,7 @@ struct AssessmentView: View {
                     }
                     
                     if !ctx.userData.setup.oneRepMaxesEntered {
-                        NavigationLink(value: "EnterOneRepMaxes") {
+                        NavigationLink(value: ViewOption.enterOneRepMaxes) {
                             Label("Enter One Rep Maxes", systemImage: "dumbbell")
                                 .frame(maxWidth: .infinity)
                                 .padding()
@@ -49,36 +48,38 @@ struct AssessmentView: View {
                 .padding([.leading, .trailing], 20)
                                 
                 Spacer(minLength: 75)
+                
+                /*
+                Text("Enter max reps and/or one rep maxes to continue")
+                    .font(.caption)
+                    .foregroundStyle(.red)
+                */
+                
                 skipOrContinueButton
                     .disabled(!ctx.userData.setup.oneRepMaxesEntered && !ctx.userData.setup.maxRepsEntered)
+                
                 Spacer()
             }
             .background(Color(UIColor.secondarySystemBackground))
             .navigationTitle("Tailor Your Workouts")
             .navigationBarBackButtonHidden()
             .onAppear(perform: checkCompletion)
-            .navigationDestination(for: String.self) { route in
+            .navigationDestination(for: ViewOption.self) { route in
                 switch route {
-                case "EnterMaxReps":
-                    EnterMaxReps(userData: ctx.userData, exerciseData: ctx.exercises, onFinish: {
-                            navPath.removeLast()
-                        }
-                    )
-                case "EnterOneRepMaxes":
-                    EnterOneRepMaxes(userData: ctx.userData, exerciseData: ctx.exercises, onFinish: {
-                            navPath.removeLast()
-                        }
-                    )
-                default:
-                    EmptyView()
+                case .enterMaxReps:
+                    EnterMaxReps(userData: ctx.userData, exerciseData: ctx.exercises, onFinish: { navPath.removeLast() })
+                case .enterOneRepMaxes:
+                    EnterOneRepMaxes(userData: ctx.userData, exerciseData: ctx.exercises, onFinish: { navPath.removeLast() })
                 }
             }
         }
     }
     
+    private enum ViewOption: Hashable { case enterMaxReps, enterOneRepMaxes }
+    
     private func handleCompletion() {
         ctx.userData.setup.infoCollected = true
-        ctx.userData.saveSingleStructToFile(\.setup, for: .setup)
+        //ctx.userData.saveSingleStructToFile(\.setup, for: .setup)
         CSVLoader.estimateStrengthCategories(userData: ctx.userData, exerciseData: ctx.exercises)
         calculateFitnessLevel()
     }
@@ -140,22 +141,7 @@ struct AssessmentView: View {
             fitnessLevelScore += 1
         }
         
-        /*// fix accuracy
-         if ctx.userData.setup.oneRepMaxesEntered {
-         let oneRepMaxTotal = ctx.userData.oneRepMaxBench + ctx.userData.oneRepMaxSquat + ctx.userData.oneRepMaxDeadlift
-         if oneRepMaxTotal > 0 {
-         fitnessLevelScore += 2
-         }
-         }
-        // fix accuracy
-        if ctx.userData.physicalAssessmentCompleted {
-            // Evaluate physical assessment
-            let assessmentTotal = ctx.userData.sitUpReps + ctx.userData.squatReps + ctx.userData.pushUpReps
-            if assessmentTotal > 0 {
-                fitnessLevelScore += 2
-            }
-        }*/
         ctx.userData.evaluation.fitnessScore = fitnessLevelScore
-        ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
+        //ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
     }
 }

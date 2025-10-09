@@ -196,7 +196,7 @@ struct WeightIncrementation: View {
         ctx.userData.settings.roundingPreference.setRounding(weight: pinLoadedRounding, for: .pinLoaded)
         ctx.userData.settings.roundingPreference.setRounding(weight: smallWeightsRounding, for: .smallWeights)
         
-        ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
+        //ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
         ctx.toast.showSaveConfirmation()  // Trigger the notification
     }
 }

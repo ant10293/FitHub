@@ -46,7 +46,7 @@ struct PlannedWorkoutTime: View {
             VStack {
                 Toggle("Date Only", isOn: $userData.settings.useDateOnly)
                     .onChange(of: userData.settings.useDateOnly) {
-                        userData.saveSingleStructToFile(\.settings, for: .settings)
+                        //userData.saveSingleStructToFile(\.settings, for: .settings)
                     }
                 Text(userData.settings.useDateOnly ? "Notifications will be based on the date only." : "Notifications will include time of day.")
                     .multilineTextAlignment(.leading)
@@ -57,7 +57,7 @@ struct PlannedWorkoutTime: View {
                 // should be workout reminders?
                 Toggle("Notify Before Workout", isOn: $userData.settings.notifyBeforePlannedTime)
                     .onChange(of: userData.settings.notifyBeforePlannedTime) {
-                        userData.saveSingleStructToFile(\.settings, for: .settings)
+                        //userData.saveSingleStructToFile(\.settings, for: .settings)
                     }
                 
                 Text(userData.settings.notifyBeforePlannedTime ? "You will be notified before the planned workout time." : "You will be dynamically notified the day of your workout.")
@@ -82,7 +82,7 @@ struct PlannedWorkoutTime: View {
                                  // store *only* hour/minute (no seconds)
                                  let comps = CalendarUtility.shared.dateComponents([.hour, .minute], from: newDate)
                                  userData.settings.defaultWorkoutTime = comps
-                                 userData.saveSingleStructToFile(\.settings, for: .settings)
+                                 //userData.saveSingleStructToFile(\.settings, for: .settings)
                              }
                          ),
                          displayedComponents: .hourAndMinute
@@ -277,6 +277,6 @@ struct PlannedWorkoutTime: View {
     }
     
     private func save(shouldSave: Bool) {
-        if shouldSave { userData.saveSingleStructToFile(\.settings, for: .settings) }
+        //if shouldSave { userData.saveSingleStructToFile(\.settings, for: .settings) }
     }
 }

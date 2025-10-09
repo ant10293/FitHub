@@ -71,7 +71,7 @@ struct SplitCategoryPicker: View {
 
                 if saveSelectedSort && userData.sessionTracking.exerciseSortOption != picked {
                     userData.sessionTracking.exerciseSortOption = picked
-                    userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
+                   // userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
                 }
 
                 // keep your existing default selection behavior

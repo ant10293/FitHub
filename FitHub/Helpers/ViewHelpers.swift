@@ -54,12 +54,6 @@ var dismissKeyboardButton: some View {
     .transition(.scale) // Add a transition effect when the button appears/disappears
 }
 
-extension View {
-    func centerHorizontally() -> some View {
-        self.frame(maxWidth: .infinity, alignment: .center)
-    }
-}
-
 struct LazyDestination<Content: View>: View {
     let destination: () -> Content
     var body: some View {
@@ -67,7 +61,7 @@ struct LazyDestination<Content: View>: View {
     }
 }
 
-struct CenterVerticallyModifier: ViewModifier {
+private struct CenterVerticallyModifier: ViewModifier {
     func body(content: Content) -> some View {
         VStack {
             content
@@ -81,6 +75,10 @@ extension View {
     func centerVertically() -> some View {
         self.modifier(CenterVerticallyModifier())
     }
+    
+    func centerHorizontally() -> some View {
+        self.frame(maxWidth: .infinity, alignment: .center)
+    }
 }
 
 extension Color {
@@ -89,16 +87,54 @@ extension Color {
     static let gold = Color(red: 212/255, green: 175/255, blue: 55/255)   // #D4AF37
 }
 
-struct CardContainer: ViewModifier {
+private struct CardContainer: ViewModifier {
+    let cornerRadius: CGFloat
+    let padding: CGFloat
+    let shadowRadius: CGFloat
+    let background: AnyShapeStyle
+
+    init(
+        cornerRadius: CGFloat = 12,
+        padding: CGFloat = 12,
+        shadowRadius: CGFloat = 0,
+        background: some ShapeStyle = Color(uiColor: .secondarySystemBackground)
+    ) {
+        self.cornerRadius = cornerRadius
+        self.padding = padding
+        self.shadowRadius = shadowRadius
+        self.background = AnyShapeStyle(background)
+    }
+
     func body(content: Content) -> some View {
         content
-            .padding()
-            .background(Color(.secondarySystemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding(padding)
+            .background(background)
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+            // optional subtle border for definition
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .strokeBorder(.separator.opacity(0.15))
+            )
+            .shadow(radius: shadowRadius)
     }
 }
 
-extension View { func cardContainer() -> some View { modifier(CardContainer()) } }
+extension View {
+    /// Flexible card container that accepts Color / Material / Gradient backgrounds.
+    func cardContainer(
+        cornerRadius: CGFloat = 12,
+        padding: CGFloat = 16,
+        shadowRadius: CGFloat = 0,
+        background: some ShapeStyle = Color(uiColor: .secondarySystemBackground)
+    ) -> some View {
+        modifier(CardContainer(
+            cornerRadius: cornerRadius,
+            padding: padding,
+            shadowRadius: shadowRadius,
+            background: background
+        ))
+    }
+}
 
 func card<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
     content()

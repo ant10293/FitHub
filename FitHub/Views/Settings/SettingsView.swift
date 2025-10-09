@@ -29,7 +29,7 @@ struct SettingsView: View {
                 Toggle("Enable Notifications", isOn: notifications.toggleBinding)
                 .onChange(of: notifications.isAuthorized) { oldValue, newValue in
                     ctx.userData.settings.allowedNotifications = newValue
-                    ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
+                    //ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
                 }
             }
             label: {
@@ -51,7 +51,7 @@ struct SettingsView: View {
             } else {
                 DispatchQueue.main.async {
                     ctx.userData.settings.allowedNotifications = settings.authorizationStatus == .authorized
-                    ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
+                    //ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
                 }
             }
         }
@@ -61,7 +61,7 @@ struct SettingsView: View {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             DispatchQueue.main.async {
                 ctx.userData.settings.allowedNotifications = granted
-                ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
+                //ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
             }
             if let error = error {
                 print("Error requesting notifications permission: \(error.localizedDescription)")
@@ -81,6 +81,8 @@ struct SettingsView: View {
             navigationLink("slider.horizontal.3", "Volume Deloading") { DeloadSettings(userData: ctx.userData) }
             navigationLink("figure.walk", "Muscle Rest Duration") { MuscleRest(userData: ctx.userData) }
             navigationLink("clock", "Planned Workout Time") { PlannedWorkoutTime(userData: ctx.userData) }
+            // TODO: add symbol
+            navigationLink("switch.2", "SetDetail Entry") { SetDetailSettings(userData: ctx.userData) }
         } header: {
             Text("Workout")
         }

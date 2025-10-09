@@ -11,8 +11,8 @@ import Foundation
 /// One global instance you inject where needed
 final class EquipmentData: ObservableObject {
     private static let userEquipmentFilename: String = "user_equipment.json"
-    private static let bundledBaseWeightsFilename: String = "base_weights.json"
     private static let bundledEquipmentFilename: String = "equipment.json"
+    private static let bundledBaseWeightsFilename: String = "base_weights.json"
 
     // MARK: – Single shared instance
     static let shared = EquipmentData()
@@ -73,14 +73,15 @@ final class EquipmentData: ObservableObject {
     private static func loadUserEquipment(from file: String) -> [GymEquipment] {
         return JSONFileManager.shared.loadUserEquipment(from: file) ?? []
     }
-
-    private func persistUserEquipment() {
-        let snapshot = userEquipment                  // value copy, thread-safe
-        JSONFileManager.shared.save(snapshot, to: EquipmentData.userEquipmentFilename)
-    }
     
     private static func loadBaseWeightsForBundle() -> [UUID: BaseWeight] {
         return JSONFileManager.shared.loadBaseWeights(from: EquipmentData.bundledBaseWeightsFilename) ?? [:]
+    }
+    
+    // MARK: saving logic
+    private func persistUserEquipment() {
+        let snapshot = userEquipment                  // value copy, thread-safe
+        JSONFileManager.shared.save(snapshot, to: EquipmentData.userEquipmentFilename)
     }
     
     private func persistBaseWeights() {
@@ -164,37 +165,43 @@ extension EquipmentData {
         }
     }
 
-    // FIXME: entering "T-Bar" or anything with symbols yields no results, even if it matches the equipment name exactly
     func filteredEquipment(searchText: String, category: EquipmentCategory? = nil) -> [GymEquipment] {
-        let searchKey = normalize(searchText.removingCharacters(in: .whitespacesAndNewlines.union(.punctuationCharacters))) // make this a reusable func in Formatter
-
-        var results = allEquipment.filter { item in
-            // a) category
-            let okCat = category.map { $0 == item.equCategory } ?? true
-
-            // b) text match
-            if searchKey.isEmpty { return okCat }
-
-            let nameKey   = normalize(item.name)
-            let aliasKeys = (item.aliases ?? []).map(normalize)
-
-            let okText = nameKey.contains(searchKey) || aliasKeys.contains(where: { $0.contains(searchKey) })
-
-            return okCat && okText
-        }
-
-        // c) sort: prefix match first, then alphabetical
-        results.sort { a, b in
-            let na = normalize(a.name)
-            let nb = normalize(b.name)
-
-            if !searchKey.isEmpty {
-                let aStarts = na.hasPrefix(searchKey)
-                let bStarts = nb.hasPrefix(searchKey)
-                if aStarts != bStarts { return aStarts }
+        // ── 0. Cached constants (mirror exercises) ───────────────────────────────
+        let removingSet      = TextFormatter.searchStripSet
+        let normalizedSearch = searchText.normalized(removing: removingSet)
+        
+        // ── 1. Filter pass ───────────────────────────────────────────────────────
+        var results: [GymEquipment] = []
+        results.reserveCapacity(allEquipment.count)
+        
+        for item in allEquipment {
+            // a) Category gate
+            if let category, category != item.equCategory { continue }
+            
+            // b) Search-text gate
+            if !normalizedSearch.isEmpty {
+                let nameKey   = item.name.normalized(removing: removingSet)
+                let aliasHit  = (item.aliases ?? []).contains { $0.normalized(removing: removingSet).contains(normalizedSearch) }
+                if !(nameKey.contains(normalizedSearch) || aliasHit) { continue }
             }
-            return na < nb
+            
+            results.append(item)
         }
+        
+        // ── 2. Sort: prefix matches first, then alphabetical ─────────────────────
+        if !normalizedSearch.isEmpty {
+            results.sort { a, b in
+                let na = a.name.normalized(removing: removingSet)
+                let nb = b.name.normalized(removing: removingSet)
+                let aStarts = na.hasPrefix(normalizedSearch)
+                let bStarts = nb.hasPrefix(normalizedSearch)
+                if aStarts != bStarts { return aStarts } // true first
+                return na < nb
+            }
+        } else {
+            results.sort { $0.name < $1.name }
+        }
+        
         return results
     }
 

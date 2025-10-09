@@ -65,6 +65,7 @@ final class UserData: ObservableObject, Codable {
         return JSONFileManager.shared.loadUserData(from: UserData.jsonKey)
     }
     
+    // MARK: saving logic
     /// Save a single stored struct (debounced).
     func saveSingleStructToFile<T: Encodable>(_ keyPath: KeyPath<UserData, T>, for key: CodingKeys, delay: TimeInterval = 0.4) {
         let value = self[keyPath: keyPath]
@@ -87,13 +88,13 @@ extension UserData {
     func resetWorkoutSession(shouldSave: Bool) {
         sessionTracking.activeWorkout = nil // reset the active workout property
         isWorkingOut = false
-        if shouldSave { saveSingleStructToFile(\.sessionTracking, for: .sessionTracking) }
+        //if shouldSave { saveSingleStructToFile(\.sessionTracking, for: .sessionTracking) }
     }
 
     func deleteArchivedTemplate(at idx: Int) {
         NotificationManager.remove(ids: workoutPlans.archivedTemplates[idx].notificationIDs)
         workoutPlans.archivedTemplates.remove(at: idx)
-        saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
+        //saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
     }
     
     func deleteTrainerTemplate(at offsets: IndexSet) {
@@ -104,7 +105,7 @@ extension UserData {
     func deleteTrainerTemplate(at idx: Int) {
         NotificationManager.remove(ids: workoutPlans.trainerTemplates[idx].notificationIDs)
         workoutPlans.trainerTemplates.remove(at: idx)
-        saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
+        //saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
     }
     
     func deleteUserTemplate(at offsets: IndexSet) {
@@ -115,7 +116,7 @@ extension UserData {
     func deleteUserTemplate(at idx: Int) {
         NotificationManager.remove(ids: workoutPlans.userTemplates[idx].notificationIDs)
         workoutPlans.userTemplates.remove(at: idx)
-        saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
+        //saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
     }
     
     func addUserTemplate(template: WorkoutTemplate, shouldSave: Bool = true) {
@@ -126,7 +127,7 @@ extension UserData {
             newTemplate.notificationIDs.append(contentsOf: notificationIDs) // Append notification IDs
         }
         workoutPlans.userTemplates.append(newTemplate)
-        if shouldSave { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
+        //if shouldSave { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
     }
     
     // MARK: new func to be called in WorkoutVM to update non progression changes to template
@@ -146,7 +147,7 @@ extension UserData {
                         exercise.setDetails[setIdx] = sd
                         tmpl.exercises[exIdx] = exercise
                         let updated = updateTemplate(template: tmpl, index: index, location: location)
-                        if updated { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
+                        //if updated { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
                     }
                 }
             }
@@ -165,7 +166,7 @@ extension UserData {
             if shouldRemoveNotifications { tmpl.notificationIDs.removeAll() }
             if shouldRemoveDate { tmpl.date = nil }
             let updated = updateTemplate(template: tmpl, index: index, location: location)
-            if shouldSave, updated { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
+            //if shouldSave, updated { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
             return tmpl
         }
         
@@ -210,10 +211,9 @@ extension UserData {
                 physical.pastMeasurements[type] = []
             }
             physical.pastMeasurements[type]?.append(currentMeasurement)
-            if shouldSave { saveSingleStructToFile(\.physical, for: .physical) }
         }
         physical.currentMeasurements[type] = Measurement(type: type, entry: measurementValue, date: Date())
-        if shouldSave { saveSingleStructToFile(\.physical, for: .physical) }
+        //if shouldSave { saveSingleStructToFile(\.physical, for: .physical) }
     }
             
     func currentMeasurementValue(for type: MeasurementType) -> MeasurementValue { physical.currentMeasurements[type]?.entry ?? type.getMeasurmentValue(value: 0) }
@@ -270,7 +270,7 @@ extension UserData {
             sessionTracking.longestWorkoutStreak = sessionTracking.workoutStreak
         }
         //print("After Incrementing Workout Streak: \(sessionTracking.workoutStreak)")
-        if shouldSave { saveToFile() }
+        //if shouldSave { saveToFile() }
     }
 
     func checkAndUpdateAge() {
@@ -370,7 +370,7 @@ extension UserData {
 
                 exerciseData.applyPerformanceUpdates(updates: output.updatedMax, csvEstimate: true)
          
-                if shouldSave { self.saveToFile() }
+                //if shouldSave { self.saveToFile() }
 
                 self.isGeneratingWorkout = false
                 

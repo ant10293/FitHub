@@ -232,7 +232,7 @@ struct DetailsView: View {
         userData.physical.gender  = gender
 
         // 2️⃣ Persist _all_ changes together
-        userData.saveToFile()
+        //userData.saveToFile()
     }
      
     private var canContinue: Bool {

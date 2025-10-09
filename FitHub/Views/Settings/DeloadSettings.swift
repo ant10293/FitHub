@@ -66,7 +66,7 @@ struct DeloadSettings: View {
         }
         .onChange(of: userData.settings) { old, new in
             if old != new {
-                userData.saveSingleStructToFile(\.settings, for: .settings)
+                //userData.saveSingleStructToFile(\.settings, for: .settings)
             }
         }
         .listStyle(.insetGrouped)

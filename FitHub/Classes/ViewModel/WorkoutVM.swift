@@ -219,7 +219,7 @@ final class WorkoutVM: ObservableObject {
         ctx.userData.resetWorkoutSession(shouldSave: false)
         
         // Force save to ensure state is persisted
-        ctx.userData.saveToFile()
+        //ctx.userData.saveToFile()
         completion()
     }
 }

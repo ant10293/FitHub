@@ -77,7 +77,7 @@ final class HealthKitManager: ObservableObject {
                 DispatchQueue.main.async { self.pollForData(userData: userData) }
             } else {
                 userData.setup.setupState = .detailsView
-                userData.saveToFile()
+                //userData.saveToFile()
             }
         })
     }
@@ -102,7 +102,7 @@ final class HealthKitManager: ObservableObject {
         if let dob = dob { userData.profile.dob = dob }
 
         userData.setup.setupState = .detailsView
-        userData.saveToFile()
+        //userData.saveToFile()
     }
 
     private func checkIfAllDataReady(shouldPoll: Bool) {

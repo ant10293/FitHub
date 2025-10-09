@@ -83,9 +83,9 @@ struct WelcomeView: View {
     private func handleNavigation(saveSingleVar: Bool) {
         userData.setup.setupState = .healthKitView
         if saveSingleVar {
-            userData.saveSingleStructToFile(\.setup, for: .setup)
+            //userData.saveSingleStructToFile(\.setup, for: .setup)
         } else {
-            userData.saveToFile()
+            //userData.saveToFile()
         }
     }
 }

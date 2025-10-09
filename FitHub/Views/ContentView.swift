@@ -6,25 +6,26 @@ struct ContentView: View {
     @EnvironmentObject private var ctx: AppContext
     @ObservedObject var notifications = NotificationManager.shared
     @State private var showResumeWorkoutOverlay: Bool = false
-    
+    @Environment(\.scenePhase) var scenePhase
+
     var body: some View {
-        if ctx.userData.setup.setupState == .finished {
-            MainAppView(userData: ctx.userData, showResumeWorkoutOverlay: $showResumeWorkoutOverlay)
-                .onReceive(notifications.$isAuthorized) { ctx.userData.settings.allowedNotifications = $0 }
-                // should also clear passed planned dates and notis
-                // need to do this on a background thread
-                .onAppear {
-                    notifications.requestIfNeeded()
-                    ctx.adjustments.loadAllAdjustments(for: ctx.exercises.allExercises, allEquipment: ctx.equipment.allEquipment)
-                    if ctx.userData.sessionTracking.activeWorkout != nil { showResumeWorkoutOverlay = true }
-                    if ctx.userData.setup.infoCollected { determineUserStrengthLevel() }
-                    ctx.userData.checkAndUpdateAge()
-                    generateTemplate()
-                    ctx.userData.saveToFile()
-                }
-        } else {
-            NavigationStack {
-                Group {
+        Group {
+            if ctx.userData.setup.setupState == .finished {
+                MainAppView(userData: ctx.userData, showResumeWorkoutOverlay: $showResumeWorkoutOverlay)
+                    .onReceive(notifications.$isAuthorized) { ctx.userData.settings.allowedNotifications = $0 }
+                    // should also clear passed planned dates and notis
+                    // need to do this on a background thread
+                    .onAppear {
+                        notifications.requestIfNeeded()
+                        ctx.adjustments.loadAllAdjustments(for: ctx.exercises.allExercises, allEquipment: ctx.equipment.allEquipment)
+                        if ctx.userData.sessionTracking.activeWorkout != nil { showResumeWorkoutOverlay = true }
+                        if ctx.userData.setup.infoCollected { determineUserStrengthLevel() }
+                        ctx.userData.checkAndUpdateAge()
+                        generateTemplate()
+                        //ctx.userData.saveToFile()
+                    }
+            } else {
+                NavigationStack {
                     if ctx.userData.setup.setupState == .welcomeView {
                         WelcomeView(userData: ctx.userData)
                     } else if ctx.userData.setup.setupState == .healthKitView {
@@ -35,6 +36,12 @@ struct ContentView: View {
                         GoalSelectionView(userData: ctx.userData)
                     }
                 }
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            guard !ctx.userData.isWorkingOut else { return }
+            if newPhase == .background {
+                ctx.userData.saveToFileImmediate()
             }
         }
     }
@@ -135,24 +142,6 @@ struct ContentView: View {
             if !ctx.userData.workoutPlans.trainerTemplates.isEmpty {
                 ctx.userData.generateWorkoutPlan(exerciseData: ctx.exercises, equipmentData: ctx.equipment, keepCurrentExercises: true, nextWeek: true, shouldSave: false)
             }
-            /*
-            // Get the start of the current week
-            guard let currentWeekStart = CalendarUtility.shared.startOfWeek(for: currentDate) else { return }
-
-            // Get the start of the week for the last planned workout date
-            if let lastPlannedDate = plannedWorkoutDates.last {
-                guard let lastWeekStart = CalendarUtility.shared.startOfWeek(for: lastPlannedDate) else { return }
-
-                // Only generate a new workout plan if the current week is different from the last workout week's start date
-                if currentWeekStart > lastWeekStart {
-                    // Generate new workout plan
-                    ctx.userData.generateWorkoutPlan(exerciseData: ctx.exercises, equipmentData: ctx.equipment, keepCurrentExercises: true, nextWeek: true, shouldSave: false)
-                    print("New workout plan generated.")
-                } else {
-                    print("The current week is not different from the last workout week. No need to generate a new workout plan.")
-                }
-            }
-            */
         } else {
             print("No past dates found. No need to generate a new workout plan.")
         }

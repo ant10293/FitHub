@@ -12,17 +12,13 @@ struct EnterOneRepMaxes: View {
     @ObservedObject var userData: UserData
     @ObservedObject var exerciseData: ExerciseData
     @StateObject private var kbd = KeyboardManager.shared
-
-    // Use Mass instead of String
     @State private var benchPressMax: Mass = .init(kg: 0)
     @State private var squatMax: Mass      = .init(kg: 0)
     @State private var deadliftMax: Mass   = .init(kg: 0)
-
     @State private var numberReps: Int = 1
     // Usually 2–8 for submax estimation (tweak as you like)
     let repOptions: [Int] = Array(1...8)
-
-    var onFinish: () -> Void
+    let onFinish: () -> Void
 
     var body: some View {
         ZStack {
@@ -55,7 +51,7 @@ struct EnterOneRepMaxes: View {
                 Spacer()
             }
         }
-        .navigationBarTitle("Enter your \(numberReps) Rep Max", displayMode: .large)
+        .navigationBarTitle("Enter \(numberReps) Rep Maxes", displayMode: .large)
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
     }
 
@@ -117,15 +113,13 @@ struct EnterOneRepMaxes: View {
         if maxValuesEntered {
             exerciseData.savePerformanceData()
             userData.setup.oneRepMaxesEntered = true
-            userData.saveSingleStructToFile(\.setup, for: .setup)
+            //userData.saveSingleStructToFile(\.setup, for: .setup)
             onFinish()
         }
     }
 
-    // MARK: - Small subview
-
     private func InputSection(label: String, mass: Binding<Mass>) -> some View {
-        InputField(text: mass.asText(), label: label, placeholder: "Enter Weight")
+        InputField(text: mass.asText(), label: label, placeholder: "Enter Weight (\(UnitSystem.current.weightUnit))")
     }
 }
 

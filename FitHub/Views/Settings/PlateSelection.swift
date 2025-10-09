@@ -102,7 +102,7 @@ struct PlateSelection: View {
 
     private func setPlates(_ plates: [Mass]) {
         userData.evaluation.availablePlates.setPlates(plates.sorted(by: massLessThan))
-        userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
+        //userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
     }
 
     private func massLessThan(_ a: Mass, _ b: Mass) -> Bool {

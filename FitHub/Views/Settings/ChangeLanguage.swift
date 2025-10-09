@@ -12,7 +12,6 @@ struct ChangeLanguage: View {
     
     var body: some View {
         VStack {
-            
             Picker("Language", selection: $userData.settings.userLanguage) {
                 ForEach(Languages.allCases, id: \.self) { language in
                     Text(language.rawValue).tag(language)

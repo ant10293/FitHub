@@ -134,7 +134,7 @@ final class AuthService: ObservableObject {
                 }
 
                 userData.profile.userName = userName
-                userData.saveToFile()  // call userData here only to establish all variables and prevent loading failure
+                //userData.saveToFile()  // call userData here only to establish all variables and prevent loading failure
             }
 
             completion(.success(()))
@@ -177,7 +177,7 @@ final class AuthService: ObservableObject {
             userData.profile.firstName         = ""
             userData.profile.lastName          = ""
             userData.profile.email             = ""
-            userData.saveToFile()
+            //userData.saveToFile()
             completion(.success(()))
         } catch {
             completion(.failure(error))

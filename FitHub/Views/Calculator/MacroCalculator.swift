@@ -166,7 +166,7 @@ struct MacroCalculator: View {
             userData.updateMeasurementValue(for: .caloricIntake, with: r.totalCalories, shouldSave: false)
         }
 
-        userData.saveToFile()
+        //userData.saveToFile()
     }
 
     // MARK: - View Models

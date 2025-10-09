@@ -52,14 +52,14 @@ struct CompletedWorkouts: View {
                                         }
                                         .buttonStyle(BorderlessButtonStyle())
                                     }
-                                    // TODO: this doesnt look good
+                                    // TODO: this doesnt look good use card { } to improve styling
                                     VStack(alignment: .leading, spacing: 5) {
                                         Text(workout.name)
                                             .font(.headline)
                                         if !categories.isEmpty {
                                             Text(categories)
                                         }
-                                        Text("Date: \(Format.formatDate(workout.date, dateStyle: .medium, timeStyle: .none))")
+                                        Text("Date: \(Format.formatDate(workout.date, dateStyle: .medium, timeStyle: .short))")
                                             .font(.subheadline)
                                             .foregroundStyle(.gray)
                                         Text("Duration: \(Format.formatDuration(workout.duration))")
@@ -155,7 +155,7 @@ struct CompletedWorkouts: View {
             // remove the exercises instead of the entire completed workout, since we need the data in CompletedWorkouts for reference
             userData.workoutPlans.completedWorkouts[index].template.exercises = []
             print("Workout Deleted!")
-            userData.saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
+            //userData.saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
         }
     }
 }

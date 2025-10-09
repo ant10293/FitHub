@@ -92,7 +92,6 @@ struct TimesEditor: View {
     }
 
     private func persist() {
-        userData.saveToFile()
-        // or: userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
+        //userData.saveToFile()
     }
 }

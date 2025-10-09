@@ -32,7 +32,7 @@ struct EquipmentManagement: View {
             ToolbarItem(placement: .topBarTrailing) {
                 if ctx.userData.setup.isEquipmentSelected {
                     Button("Save") {
-                        ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
+                        //ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
                         ctx.toast.showSaveConfirmation()
                     }
                 }
@@ -55,9 +55,9 @@ struct EquipmentManagement: View {
                 if saveVisible {
                     FloatingButton(image: "checkmark") {
                         // First-time setup: persist and mark complete
-                        ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
+                        //ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
                         ctx.userData.setup.isEquipmentSelected = true
-                        ctx.userData.saveToFile()
+                        //ctx.userData.saveToFile()
                     }
                 } else if actionVisible {
                     FloatingButton(image: "plus") {

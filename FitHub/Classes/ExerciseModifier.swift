@@ -141,7 +141,7 @@ struct ExerciseModifier {
             userData.evaluation.dislikedExercises.remove(exerciseId)   // exclusivity
             userData.evaluation.favoriteExercises.insert(exerciseId)
         }
-        userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
+        //userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
     }
 
     func toggleDislike(for exerciseId: UUID, userData: UserData) {
@@ -151,7 +151,7 @@ struct ExerciseModifier {
             userData.evaluation.favoriteExercises.remove(exerciseId)   // exclusivity
             userData.evaluation.dislikedExercises.insert(exerciseId)
         }
-        userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
+        //userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
     }
     
     /// Establish / clear a 2‑way superset relationship and keep the paired

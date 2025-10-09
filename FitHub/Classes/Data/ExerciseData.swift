@@ -64,6 +64,7 @@ final class ExerciseData: ObservableObject {
         allExercisePerformance = JSONFileManager.shared.loadPerformanceData(from: fileName) ?? [:]
     }
     
+    // MARK: saving logic
     func savePerformanceData() {
         JSONFileManager.shared.save(Array(allExercisePerformance.values), to: ExerciseData.performanceFileName, dateEncoding: true)
     }
@@ -117,9 +118,9 @@ extension ExerciseData {
     ) -> [Exercise] {
         
         // ── 0. Cached constants ───────────────────────────────────────────────
-        let removingSet      = CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
+        let removingSet      = TextFormatter.searchStripSet
         let normalizedSearch = searchText.normalized(removing: removingSet)
-        
+
         let favoriteSet = userData.evaluation.favoriteExercises
         let dislikedSet = userData.evaluation.dislikedExercises
         

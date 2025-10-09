@@ -103,7 +103,7 @@ struct FavoriteExercisesView: View {
     private func removeAll() {
         ctx.userData.evaluation.favoriteExercises.removeAll()
         ctx.userData.evaluation.dislikedExercises.removeAll()
-        ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
+       // ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
     }
     
     private var filteredExercises: [Exercise] {

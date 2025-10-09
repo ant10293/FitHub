@@ -10,9 +10,7 @@ import SwiftUI
 
 
 struct SortSettings: View {
-    // Persisted settings
     @ObservedObject var userData: UserData
-    
     
     var body: some View {
         List {
@@ -21,7 +19,7 @@ struct SortSettings: View {
                 // option to disable ExerciseSortOptions picker
                 Toggle("Exercise Sort Picker", isOn: $userData.settings.enableSortPicker)
                     .onChange(of: userData.settings.enableSortPicker) {
-                        userData.saveSingleStructToFile(\.settings, for: .settings)
+                        //userData.saveSingleStructToFile(\.settings, for: .settings)
                     }
             } footer: {
                 Text("When disabled, the Sort picker in the exercise category selection bar is hidden.")
@@ -32,7 +30,7 @@ struct SortSettings: View {
                 // option to save new selections as default
                 Toggle("Save New Selection as Default", isOn: $userData.settings.saveSelectedSort)
                     .onChange(of: userData.settings.saveSelectedSort) {
-                        userData.saveSingleStructToFile(\.settings, for: .settings)
+                        //userData.saveSingleStructToFile(\.settings, for: .settings)
                     }
                 
                 // Only show the default-category picker when NOT saving current selection
@@ -46,7 +44,7 @@ struct SortSettings: View {
                     }
                     .onChange(of: userData.sessionTracking.exerciseSortOption) { oldValue, newValue in
                         if oldValue != newValue {
-                            userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
+                            //userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
                         }
                     }
                 }
@@ -64,7 +62,7 @@ struct SortSettings: View {
                 Toggle("Sort by Template Categories", isOn: $userData.settings.sortByTemplateCategories)
                     .onChange(of: userData.settings.sortByTemplateCategories) {
                         if isDefault {
-                            userData.saveSingleStructToFile(\.settings, for: .settings)
+                            //userData.saveSingleStructToFile(\.settings, for: .settings)
                         }
                     }
             } footer: {
@@ -77,7 +75,7 @@ struct SortSettings: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Toggle("Hide Unequipped Exercises", isOn: $userData.settings.hideUnequippedExercises)
                         .onChange(of: userData.settings.hideUnequippedExercises) {
-                            userData.saveSingleStructToFile(\.settings, for: .settings)
+                            //userData.saveSingleStructToFile(\.settings, for: .settings)
                         }
 
                     Text("Hides any exercise that requires equipment you haven’t selected.")
@@ -89,7 +87,7 @@ struct SortSettings: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Toggle("Hide Difficult Exercises", isOn: $userData.settings.hideDifficultExercises)
                         .onChange(of: userData.settings.hideDifficultExercises) {
-                            userData.saveSingleStructToFile(\.settings, for: .settings)
+                            //userData.saveSingleStructToFile(\.settings, for: .settings)
                         }
 
                     Text("Filters out exercises that exceed your current strength level of '\(userData.evaluation.strengthLevel.fullName)'.")
@@ -101,7 +99,7 @@ struct SortSettings: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Toggle("Hide Disliked Exercises", isOn: $userData.settings.hideDislikedExercises)
                         .onChange(of: userData.settings.hideDislikedExercises) {
-                            userData.saveSingleStructToFile(\.settings, for: .settings)
+                            //userData.saveSingleStructToFile(\.settings, for: .settings)
                         }
 
                     Text("Hides any exercise you’ve marked as “disliked.”")
@@ -132,7 +130,7 @@ struct SortSettings: View {
         userData.settings.hideDifficultExercises = false
         userData.settings.hideDislikedExercises = false
 
-        userData.saveToFile()
+        //userData.saveToFile()
     }
 
     private var isDefault: Bool {

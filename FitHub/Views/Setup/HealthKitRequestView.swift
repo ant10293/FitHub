@@ -35,7 +35,7 @@ struct HealthKitRequestView: View {
                 
                 RectangularButton(title: "Get Started", enabled: !userName.isEmpty, action: {
                     userData.profile.userName = userName
-                    userData.saveSingleStructToFile(\.profile, for: .profile)
+                    //userData.saveSingleStructToFile(\.profile, for: .profile)
                     healthKit.requestAuthorization(userData: userData)
                 })
                 .clipShape(Capsule())

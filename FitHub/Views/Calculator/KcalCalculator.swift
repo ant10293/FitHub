@@ -137,7 +137,7 @@ struct KcalCalculator: View {
         userData.physical.avgSteps = Int(stepsText) ?? 0
         userData.profile.age       = Int(ageText) ?? 0
 
-        userData.saveToFile()
+        //userData.saveToFile()
     }
 
     // MARK: - Result view

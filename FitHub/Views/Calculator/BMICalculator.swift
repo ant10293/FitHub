@@ -84,7 +84,7 @@ struct BMICalculator: View {
 
         userData.physical.height = height
         
-        userData.saveSingleStructToFile(\.physical, for: .physical)
+        //userData.saveSingleStructToFile(\.physical, for: .physical)
     }
     
     struct BMIResultView: View {

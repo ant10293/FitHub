@@ -9,12 +9,9 @@ import SwiftUI
 
 struct AddCategoryPicker: View {
     @Environment(\.dismiss) private var dismiss
-    var exercise: Exercise
-    var existingCategories: Set<AdjustmentCategory>
-    var onAddCategory: (AdjustmentCategory) -> Void
-    var availableCategories: [AdjustmentCategory] {
-        AdjustmentCategory.allCases.filter { !existingCategories.contains($0) }
-    }
+    let exercise: Exercise
+    let existingCategories: Set<AdjustmentCategory>
+    let onAddCategory: (AdjustmentCategory) -> Void
     
     var body: some View {
         NavigationStack {
@@ -54,5 +51,9 @@ struct AddCategoryPicker: View {
                 }
             }
         }
+    }
+    
+    var availableCategories: [AdjustmentCategory] {
+        AdjustmentCategory.allCases.filter { !existingCategories.contains($0) }
     }
 }

@@ -96,7 +96,7 @@ struct HomeView: View {
                 .padding()
                 .onChange(of: selectedView) { oldValue, newValue in
                     ctx.userData.sessionTracking.selectedView = newValue
-                    ctx.userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
+                    //ctx.userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
                 }
                 if selectedView == .exercisePerformance {
                     exercisePerformanceSection
@@ -136,7 +136,7 @@ struct HomeView: View {
         .onChange(of: selectedExercise) { oldValue, newValue in
             if oldValue != newValue { // Only perform side effects if the value has truly changed
                 ctx.userData.sessionTracking.selectedExercise = newValue
-                ctx.userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
+                //ctx.userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
             }
         }
         .sheet(isPresented: $showingExerciseSelection) {
@@ -181,7 +181,7 @@ struct HomeView: View {
         .onChange(of: selectedMeasurement) { old, new in
             if old != new {
                 ctx.userData.sessionTracking.selectedMeasurement = new
-                ctx.userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
+                //ctx.userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
             }
         }
     }

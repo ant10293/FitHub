@@ -109,12 +109,7 @@ struct TemplateNavigator<Content: View>: View {
         if let sel = currentTemplate, let binding = templateBinding(for: sel) {
             TemplateDetail(
                 template: binding,
-                isArchived: sel.location == .archived,
-                onDone: {
-                    navigateToTemplateDetail = false
-                    currentTemplate = nil
-                    selectedTemplate = nil
-                }
+                isArchived: sel.location == .archived
             )
         }
     }

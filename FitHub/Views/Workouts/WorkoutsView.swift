@@ -32,11 +32,6 @@ struct WorkoutsView: View {
     private var resumeWorkoutOverlay: some View {
         ResumeWorkoutOverlay(
             cancel: {
-                /*
-                if let workoutInProgress = activeWorkout {
-                    ctx.userData.resetExercisesInTemplate(for: workoutInProgress.template, shouldSave: true)
-                }
-                */
                 ctx.userData.resetWorkoutSession(shouldSave: true)
                 showResumeWorkoutOverlay = false
             },
