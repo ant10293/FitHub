@@ -54,6 +54,15 @@ var dismissKeyboardButton: some View {
     .transition(.scale) // Add a transition effect when the button appears/disappears
 }
 
+// MARK: – thin separator line
+struct Line: View {
+    var body: some View {
+        Rectangle()
+            .frame(height: 1)
+            .foregroundStyle(Color.secondary)
+    }
+}
+
 struct LazyDestination<Content: View>: View {
     let destination: () -> Content
     var body: some View {
@@ -85,55 +94,6 @@ extension Color {
     static let darkGreen = Color(UIColor(red: 0.0, green: 0.5, blue: 0.0, alpha: 1.0))
     static let darkBlue = Color(UIColor(red: 0.0, green: 0.0, blue: 0.5, alpha: 1.0))
     static let gold = Color(red: 212/255, green: 175/255, blue: 55/255)   // #D4AF37
-}
-
-private struct CardContainer: ViewModifier {
-    let cornerRadius: CGFloat
-    let padding: CGFloat
-    let shadowRadius: CGFloat
-    let background: AnyShapeStyle
-
-    init(
-        cornerRadius: CGFloat = 12,
-        padding: CGFloat = 12,
-        shadowRadius: CGFloat = 0,
-        background: some ShapeStyle = Color(uiColor: .secondarySystemBackground)
-    ) {
-        self.cornerRadius = cornerRadius
-        self.padding = padding
-        self.shadowRadius = shadowRadius
-        self.background = AnyShapeStyle(background)
-    }
-
-    func body(content: Content) -> some View {
-        content
-            .padding(padding)
-            .background(background)
-            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-            // optional subtle border for definition
-            .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .strokeBorder(.separator.opacity(0.15))
-            )
-            .shadow(radius: shadowRadius)
-    }
-}
-
-extension View {
-    /// Flexible card container that accepts Color / Material / Gradient backgrounds.
-    func cardContainer(
-        cornerRadius: CGFloat = 12,
-        padding: CGFloat = 16,
-        shadowRadius: CGFloat = 0,
-        background: some ShapeStyle = Color(uiColor: .secondarySystemBackground)
-    ) -> some View {
-        modifier(CardContainer(
-            cornerRadius: cornerRadius,
-            padding: padding,
-            shadowRadius: shadowRadius,
-            background: background
-        ))
-    }
 }
 
 func card<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {

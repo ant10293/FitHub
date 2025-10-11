@@ -96,18 +96,6 @@
         "implementation" : "Unified"
     },
     {
-        "name" : "Farmer's Walk Handles",
-        "id" : "B26BE5A4-1CBD-408D-A8DA-B612DB71705E",
-        "image" : "farmers_walk_handles",
-        "aliases" : ["farmer grips", "carry handles", "farmer bars"],
-        "description" : "Pair of suitcase‑style handles loaded with plates for loaded carries that hammer grip and total‑body stability.",
-        "equCategory" : "Bars & Plates",
-        "baseWeight" : { "lb": 20, "kg": 10 },
-        "alternativeEquipment" : ["Dumbbells", "Kettlebells"],
-        "pegCount" : 2,
-        "implementation" : "Individual"
-    },
-    {
         "name" : "Trap Bar",
         "id" : "A9D92A0E-A940-4305-A6D9-BD4E0CDADD45",
         "image" : "hex_bar",
@@ -890,14 +878,6 @@
         "equCategory" : "Other"
     },
     {
-        "name" : "Pinch Blocks",
-        "id" : "21FFE42D-A14C-47D0-A4D1-88AAEA802DE8",
-        "image" : "pinch_blocks",
-        "aliases" : ["pinch grip blocks"],
-        "description" : "Rectangular blocks held by the fingers and thumb for static or dynamic pinch‑grip training.",
-        "equCategory" : "Other"
-    },
-    {
         "name" : "Rice Bucket",
         "id" : "FE405266-EAD9-4128-BAF9-FFBE71F45949",
         "image" : "rice_bucket",
@@ -920,5 +900,55 @@
         "aliases" : ["kitchen chair", "dining chair"],
         "description" : "Sturdy household chair leveraged for step‑ups, dips, incline push‑ups, or seated exercises.",
         "equCategory" : "Household Items"
+    },
+    {
+        "name" : "Treadmill",
+        "id" : "3E96F7E0-AD39-4F2D-A14A-27F3C99C5E7C",
+        "image" : "treadmill",
+        "aliases" : ["running machine", "walking machine"],
+        "description" : "Motorized cardio machine designed for walking, jogging, or running indoors with adjustable speed and incline.",
+        "equCategory" : "Cardio Machines",
+        "adjustments" : ["Incline Grade"]
+    },
+    {
+        "name" : "Rowing Machine",
+        "id" : "8B5B7F9C-7F66-4A0B-B4B0-95E4708C5D14",
+        "image" : "rowing_machine",
+        "aliases" : ["row machine", "ergometer", "erg"],
+        "description" : "Cardio machine simulating the motion of rowing, engaging upper and lower body for endurance and strength training.",
+        "equCategory" : "Cardio Machines"
+    },
+    {
+        "name" : "Elliptical",
+        "id" : "C90DB0E2-5206-41E7-8248-1AE37D6C2C56",
+        "image" : "elliptical",
+        "aliases" : ["cross trainer", "elliptical trainer"],
+        "description" : "Low-impact cardio machine providing smooth, elliptical strides that engage arms and legs simultaneously.",
+        "equCategory" : "Cardio Machines"
+    },
+    {
+        "name" : "Stationary Bike",
+        "id" : "F84C7429-0DC7-4373-B9D7-2F45F676982C",
+        "image" : "stationary_bike",
+        "aliases" : ["exercise bike", "spin bike"],
+        "description" : "Indoor cycling machine with adjustable resistance, ideal for low-impact cardio and leg endurance training.",
+        "equCategory" : "Cardio Machines",
+        "adjustments" : ["Seat Height"]
+    },
+    {
+        "name" : "Stair Climber",
+        "id" : "5B4A08CE-F0E7-4F48-AE3C-20660DF5A5BA",
+        "image" : "stair_climber",
+        "aliases" : ["stair stepper", "stair machine"],
+        "description" : "Cardio machine replicating stair climbing motion to build lower-body strength and cardiovascular endurance.",
+        "equCategory" : "Cardio Machines"
+    },
+    {
+        "name" : "Jacob’s Ladder",
+        "id" : "D4B2F1E8-36E2-46FD-93B1-2C8C0B06A2E9",
+        "image" : "jacobs_ladder",
+        "aliases" : ["ladder climber", "vertical treadmill"],
+        "description" : "Self-paced cardio machine using a continuous ladder climbing motion for a high-intensity, full-body workout.",
+        "equCategory" : "Cardio Machines"
     }
 ]

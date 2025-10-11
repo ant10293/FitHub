@@ -21,7 +21,7 @@ struct Profile: Codable, Equatable {
 
 // physical         = PhysicalStats()
 struct PhysicalStats: Codable {
-    var gender: Gender = .male
+    var gender: Gender = .notSet
     var avgSteps: Int = 0
     var activityLevel: ActivityLevel = .select
     var goal: FitnessGoal = .getStronger

@@ -18,11 +18,6 @@ import SwiftUI
                 Text("Monday").tag(DaysOfWeek.monday)
             }
             .pickerStyle(SegmentedPickerStyle())
-            .onChange(of: userData.startWeekOn) { oldValue, newValue in
-                if oldValue != newValue {
-                    //userData.saveSingleVariableToFile(\.startWeekOn, for: .startWeekOn)
-                }
-            }
         }
         .navigationTitle("Start Week On")
     }

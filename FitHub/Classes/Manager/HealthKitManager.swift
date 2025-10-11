@@ -16,6 +16,8 @@ final class HealthKitManager: ObservableObject {
     /// shouldPoll: Bool (true = should poll for data, false = should not poll -> Progress)
     private var completionHandler: ((Bool) -> Void)?
     
+    private var processedKeys = Set<ReadKey>()
+    
     @Published var dob: Date? = nil
     @Published var sex: Gender? = nil
     @Published var heightCm: Double = -1
@@ -32,7 +34,7 @@ final class HealthKitManager: ObservableObject {
         healthStore = HKHealthStore.isHealthDataAvailable() ? HKHealthStore() : nil
     }
     
-    var readTypes: Set<HKObjectType> {
+    private var readTypes: Set<HKObjectType> {
         let types: [HKObjectType?] = [
             HKTypes.bodyMass, HKTypes.bodyFat, HKTypes.height, HKTypes.dateOfBirth, HKTypes.biologicalSex,
             HKTypes.stepCount, HKTypes.dietaryEnergy, HKTypes.dietaryFat, HKTypes.dietaryProtein, HKTypes.dietaryCarbs
@@ -40,15 +42,25 @@ final class HealthKitManager: ObservableObject {
         return Set(types.compactMap { $0 })
     }
     
+    private var allCategoriesProcessed: Bool {
+        processedKeys.count == ReadKey.allCases.count
+    }
+    
+    private func markProcessed(_ key: ReadKey, shouldPoll: Bool = true) {
+        processedKeys.insert(key)
+        checkIfAllDataReady(shouldPoll: shouldPoll)
+    }
+    
     private func handleAuthorization(userData: UserData, onComplete: @escaping (Bool) -> Void) {
         self.completionHandler = onComplete
 
-        healthStore?.requestAuthorization(toShare: [], read: readTypes) { success, error in
+        guard let store = self.healthStore else {
+            DispatchQueue.main.async { self.completionHandler?(false) } 
+            return
+        }
+        
+        store.requestAuthorization(toShare: [], read: readTypes) { success, error in
             if success {
-                guard let store = self.healthStore else {
-                    DispatchQueue.main.async { self.completionHandler?(false) }
-                    return
-                }
                 // first check if permission is valid
                 if let components = self.checkDOB(store: store) {
                     self.retrieveDOB(components: components)
@@ -58,15 +70,15 @@ final class HealthKitManager: ObservableObject {
                     self.retrieveSex(sex: sex)
                 }
                 
-                self.retrieveHeight()
-                self.retrieveWeight()
-                self.retrieveBodyFat()
+                self.retrieveHeight(store: store)
+                self.retrieveWeight(store: store)
+                self.retrieveBodyFat(store: store)
                 
-                self.retrieveAverageSteps()
-                self.retrieveCalories()
-                self.retrieveCarbs()
-                self.retrieveFats()
-                self.retrieveProteins()
+                self.retrieveAverageSteps(store: store)
+                self.retrieveCalories(store: store)
+                self.retrieveCarbs(store: store)
+                self.retrieveFats(store: store)
+                self.retrieveProteins(store: store)
             }
         }
     }
@@ -77,24 +89,16 @@ final class HealthKitManager: ObservableObject {
                 DispatchQueue.main.async { self.pollForData(userData: userData) }
             } else {
                 userData.setup.setupState = .detailsView
-                //userData.saveToFile()
             }
         })
     }
     
     private func pollForData(userData: UserData) {
-        // Make sure we have both a height & a DOB before proceeding
-        guard heightCm > 0 else {
-            // Not ready yet → retry in 0.5 s
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { self.pollForData(userData: userData) }
-            return
-        }
-
         userData.physical.height.setCm(heightCm)
         userData.physical.avgSteps = avgSteps
-        userData.updateMeasurementValue(for: .weight, with: weightKg, shouldSave: false)
-        userData.updateMeasurementValue(for: .bodyFatPercentage, with: bodyFat, shouldSave: false)
-        userData.updateMeasurementValue(for: .caloricIntake, with: Double(caloricIntake), shouldSave: false)
+        userData.updateMeasurementValue(for: .weight, with: weightKg)
+        userData.updateMeasurementValue(for: .bodyFatPercentage, with: bodyFat)
+        userData.updateMeasurementValue(for: .caloricIntake, with: Double(caloricIntake))
         userData.physical.carbs = Double(dietaryCarbs)
         userData.physical.proteins = Double(dietaryProtein)
         userData.physical.fats = Double(dietaryFats)
@@ -102,7 +106,6 @@ final class HealthKitManager: ObservableObject {
         if let dob = dob { userData.profile.dob = dob }
 
         userData.setup.setupState = .detailsView
-        //userData.saveToFile()
     }
 
     private func checkIfAllDataReady(shouldPoll: Bool) {
@@ -110,55 +113,51 @@ final class HealthKitManager: ObservableObject {
         
         if allCategoriesProcessed {
             completionCalled = true
+            // this is the only way to trigger completion
             DispatchQueue.main.async { self.completionHandler?(shouldPoll) }
         }
     }
-    
-    private var allCategoriesProcessed: Bool {
-        sex != nil && dob != nil && heightCm > -1 && weightKg > -1 && avgSteps > -1 &&
-        caloricIntake > -1 && dietaryFats > -1 && dietaryCarbs > -1 && dietaryProtein > -1
-    }
-    
+}
+
+// MARK: DOB
+extension HealthKitManager {
     private func checkDOB(store: HKHealthStore) -> DateComponents? {
         do {
             return try store.dateOfBirthComponents() // success
         } catch {
             // 3. Failure – log and notify the caller on the main queue.
             print("DOB read error:", error)
-            DispatchQueue.main.async { self.completionHandler?(true) }
+            DispatchQueue.main.async { self.markProcessed(.dob) }
             return nil
         }
     }
 
     private func retrieveDOB(components: DateComponents) {
-        if let day = components.day, let month = components.month, let year = components.year {
-            if let dob = CalendarUtility.shared.date(from: DateComponents(year: year, month: month, day: day)) {
-                DispatchQueue.main.async {
-                    self.dob = dob
-                    self.checkIfAllDataReady(shouldPoll: true)
-                }
-            } else {
-                print("⚠️ Could not create date from components: \(components)")
-                DispatchQueue.main.async {
-                    self.dob = nil
-                    self.checkIfAllDataReady(shouldPoll: true)
-                }
+        if let day = components.day, let month = components.month, let year = components.year,
+           let dob = CalendarUtility.shared.date(from: DateComponents(year: year, month: month, day: day))
+        {
+            DispatchQueue.main.async {
+                self.dob = dob
+                self.markProcessed(.dob)
             }
         } else {
             print("⚠️ Missing date components: \(components)")
             DispatchQueue.main.async {
                 self.dob = nil
-                self.checkIfAllDataReady(shouldPoll: true)
+                self.markProcessed(.dob)
             }
         }
     }
-    
+}
+
+// MARK: Sex
+extension HealthKitManager {
     private func checkSex(store: HKHealthStore) -> HKBiologicalSex? {
         do {
             return try store.biologicalSex().biologicalSex // success
         } catch {
             print("Sex read error:", error)
-            DispatchQueue.main.async { self.completionHandler?(true) }
+            DispatchQueue.main.async { self.markProcessed(.sex) }
             return nil
         }
     }
@@ -168,252 +167,222 @@ final class HealthKitManager: ObservableObject {
             switch sex {
             case .female: self.sex = .female
             case .male: self.sex = .male
-            default: self.sex = .male
+            default: break // keep sex as nil
             }
-
-            self.checkIfAllDataReady(shouldPoll: true)
+            self.markProcessed(.sex)
         }
     }
-    
-    private func retrieveHeight() {
+}
+
+// MARK: Physical Stats (Height, Weight, BF%)
+extension HealthKitManager {
+    private func retrieveHeight(store: HKHealthStore) {
         guard let heightType = HKTypes.height else {
             print("⚠️ Height type not available in HealthKit")
-            DispatchQueue.main.async {
-                self.heightCm = -1
-                self.checkIfAllDataReady(shouldPoll: true)
-            }
+            DispatchQueue.main.async { self.markProcessed(.height) }
             return
         }
-        runSampleQuery(type: heightType, handler: { [weak self] sample in
-            guard let self = self else { return }
-            guard let q = sample as? HKQuantitySample else { return }
-            let meters = q.quantity.doubleValue(for: .meter())           // e.g. 1.82
-            let heightCm = meters * 100
-
-            DispatchQueue.main.async {
-                self.heightCm = heightCm
-                self.checkIfAllDataReady(shouldPoll: true)
-            }
-        },
-        assign: { newValue in
-            self.heightCm = newValue
-        })
+        runQuantitySample(store: store, type: heightType, unit: .meter()) { meters in
+            self.heightCm = meters * 100
+            self.markProcessed(.height)
+        }
     }
 
-    private func retrieveWeight() {
+    private func retrieveWeight(store: HKHealthStore) {
         guard let bodyMassType = HKTypes.bodyMass else {
             print("⚠️ Body mass type not available in HealthKit")
-            DispatchQueue.main.async {
-                self.weightKg = -1
-                self.checkIfAllDataReady(shouldPoll: true)
-            }
+            DispatchQueue.main.async { self.markProcessed(.weight) }
             return
         }
-        runSampleQuery(type: bodyMassType, handler: { [weak self] sample in
-            guard let self = self else { return }
-            guard let q = sample as? HKQuantitySample else { return }
-            let kg = q.quantity.doubleValue(for: .gramUnit(with: .kilo)) 
-            
-            DispatchQueue.main.async {
-                self.weightKg = kg
-                self.checkIfAllDataReady(shouldPoll: true)
-                print("weight: \(kg) kg")
-            }
-        },
-        assign: { newValue in
-            self.weightKg = newValue
-        })
+        runQuantitySample(store: store, type: bodyMassType, unit: .gramUnit(with: .kilo)) { kg in
+            self.weightKg = kg
+            self.markProcessed(.weight)
+        }
     }
 
-    private func retrieveBodyFat() {
+    private func retrieveBodyFat(store: HKHealthStore) {
         guard let bodyFatType = HKTypes.bodyFat else {
             print("⚠️ Body fat type not available in HealthKit")
-            DispatchQueue.main.async {
-                self.bodyFat = -1
-                self.checkIfAllDataReady(shouldPoll: true)
-            }
+            DispatchQueue.main.async { self.markProcessed(.bodyFat) }
             return
         }
-        runSampleQuery(type: bodyFatType, handler: { [weak self] sample in
-            guard let self = self else { return }
-            guard let q = sample as? HKQuantitySample else { return }
-            let pct = q.quantity.doubleValue(for: .percent()) * 100     // → human-readable %
-
-            DispatchQueue.main.async {
-                self.bodyFat = pct
-                self.checkIfAllDataReady(shouldPoll: true)
-            }
-        },
-        assign: { newValue in
-            self.bodyFat = newValue
-        })
+        runQuantitySample(store: store, type: bodyFatType, unit: .percent()) { fraction in
+            self.bodyFat = fraction * 100 // 0.23 → 23.0%
+            self.markProcessed(.bodyFat)
+        }
     }
 
-    // MARK: - Average steps (default = past 7 days)
-    private func retrieveAverageSteps(daysBack: Int = 30) {
+    /// Reads the most-recent quantity sample, converts with `unit`,
+    /// calls `assign(value)`, and *always* marks `key` processed.
+    private func runQuantitySample(
+        store: HKHealthStore,
+        type: HKQuantityType,
+        unit: HKUnit,
+        assign: @escaping (Double) -> Void
+    ) {
+        let query = HKSampleQuery(
+            sampleType: type,
+            predicate: nil,
+            limit: 1,
+            sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)]
+        ) { [weak self] _, results, error in
+            guard let self = self else { return }
+
+            let value: Double
+            if let error = error {
+                print("❌ HK query error for \(type.identifier):", error.localizedDescription)
+                value = 0
+            } else if let sample = results?.first as? HKQuantitySample {
+                value = sample.quantity.doubleValue(for: unit)
+                let start = sample.startDate.formatted(date: .numeric, time: .standard)
+                print("✅ HK query → \(type.identifier) (\(start)) = \(value)")
+            } else {
+                let st = store.authorizationStatus(for: type)
+                print("⚠️ No sample for \(type.identifier) – \(self.statusLabel(st)).")
+                value = 0
+            }
+
+            DispatchQueue.main.async { assign(value) } // exactly once
+        }
+
+        store.execute(query)
+    }
+}
+
+// MARK: - Average steps (default = past 7 days)
+extension HealthKitManager {
+    private func retrieveAverageSteps(store: HKHealthStore) {
         guard let stepCountType = HKTypes.stepCount else {
             print("⚠️ Step count type not available in HealthKit")
             DispatchQueue.main.async {
-                self.avgSteps = -1
-                self.checkIfAllDataReady(shouldPoll: true)
+                self.markProcessed(.steps)
             }
             return
         }
-        
-        let endDay = CalendarUtility.shared.startOfDay(for: Date())            // today @ 00:00
-        guard let startDay = CalendarUtility.shared.date(byAdding: .day, value: -daysBack, to: endDay) else { return }
+
+        retrieveDailyAverage(store: store, quantityType: stepCountType, unit: .count(), assign: { avg in
+            self.avgSteps = Int(avg)
+            self.markProcessed(.steps)
+        })
+    }
+
+    private func retrieveDailyAverage(
+        store: HKHealthStore,
+        quantityType: HKQuantityType,
+        unit: HKUnit,
+        assign: @escaping (Double) -> Void
+    ) {
+        let endDay = CalendarUtility.shared.startOfDay(for: Date())
+        guard let startDay = CalendarUtility.shared.date(byAdding: .day, value: -30, to: endDay) else { return }
         var dayComp = DateComponents(); dayComp.day = 1
 
+        let pred = HKQuery.predicateForSamples(withStart: startDay, end: endDay, options: .strictStartDate)
         let query = HKStatisticsCollectionQuery(
-            quantityType: stepCountType,
-            quantitySamplePredicate: HKQuery.predicateForSamples(withStart: startDay, end: endDay, options: .strictStartDate),
+            quantityType: quantityType,
+            quantitySamplePredicate: pred,
             options: .cumulativeSum,
             anchorDate: startDay,
-            intervalComponents: dayComp)
+            intervalComponents: dayComp
+        )
 
         query.initialResultsHandler = { [weak self] _, collection, error in
             guard let self = self else { return }
 
-            // -- 2. No data ------------------------------------------------------
-            guard let collection = collection else {
-                 let st = self.healthStore?.authorizationStatus(for: stepCountType)
-                 print("⚠️ Steps query returned no collection – \(statusLabel(st)).")
-
-                 DispatchQueue.main.async {
-                     self.avgSteps = 0
-                     self.checkIfAllDataReady(shouldPoll: true)
-                 }
-                 return
-             }
-            
-            // -- 1. Error path ---------------------------------------------------
+            let value: Double
             if let error = error {
-                print("❌ Steps query error:", error.localizedDescription)
-                DispatchQueue.main.async {
-                    self.avgSteps = 0
-                    self.checkIfAllDataReady(shouldPoll: true)
+                print("❌ Stats collection error (\(quantityType.identifier)):", error.localizedDescription)
+                value = 0
+            } else if let collection = collection {
+                var total: Double = 0
+                var days: Int = 0
+                collection.enumerateStatistics(from: startDay, to: endDay) { stats, _ in
+                    if let sum = stats.sumQuantity() {
+                        total += sum.doubleValue(for: unit)
+                        days += 1
+                    }
                 }
-                return
+                value = days > 0 ? total / Double(days) : 0
+                print("✅ \(quantityType.identifier) daily average over \(days) days → \(value)")
+            } else {
+                let st = store.authorizationStatus(for: quantityType)
+                print("⚠️ Stats collection nil for \(quantityType.identifier) – \(self.statusLabel(st)).")
+                value = 0
             }
 
-            // -- 3. Success ------------------------------------------------------
-            var total: Double = 0; var days = 0
-            collection.enumerateStatistics(from: startDay, to: endDay) { stats, _ in
-                if let sum = stats.sumQuantity() {
-                    total += sum.doubleValue(for: .count())
-                    days  += 1
-                }
-            }
+            DispatchQueue.main.async { assign(value) } // ← exactly once
+        }
 
-            let avg = days > 0 ? total / Double(days) : 0
-            print("✅ Steps average over \(days) days →", Int(avg))
-
-            DispatchQueue.main.async {
-                self.avgSteps = Int(avg)
-                self.checkIfAllDataReady(shouldPoll: true)
-            }
-        }
-        healthStore?.execute(query)
-    }
-    
-    private func retrieveCalories() {
-        guard let dietaryEnergyType = HKTypes.dietaryEnergy else {
-            print("⚠️ Dietary energy type not available in HealthKit")
-            DispatchQueue.main.async {
-                self.caloricIntake = -1
-                self.checkIfAllDataReady(shouldPoll: true)
-            }
-            return
-        }
-        retrieveDietaryTotal(quantityType: dietaryEnergyType, unit: .kilocalorie(), assign: {
-            self.caloricIntake = Int($0)
-        })
-    }
-    
-    private func retrieveCarbs() {
-        guard let dietaryCarbsType = HKTypes.dietaryCarbs else {
-            print("⚠️ Dietary carbs type not available in HealthKit")
-            DispatchQueue.main.async {
-                self.dietaryCarbs = -1
-                self.checkIfAllDataReady(shouldPoll: true)
-            }
-            return
-        }
-        retrieveDietaryTotal(quantityType: dietaryCarbsType, unit: .gram(), assign: {
-            self.dietaryCarbs = Int($0)
-        })
-    }
-    
-    private func retrieveFats() {
-        guard let dietaryFatType = HKTypes.dietaryFat else {
-            print("⚠️ Dietary fat type not available in HealthKit")
-            DispatchQueue.main.async {
-                self.dietaryFats = -1
-                self.checkIfAllDataReady(shouldPoll: true)
-            }
-            return
-        }
-        retrieveDietaryTotal(quantityType: dietaryFatType, unit: .gram(), assign: {
-            self.dietaryFats = Int($0)
-        })
-    }
-    
-    private func retrieveProteins() {
-        guard let dietaryProteinType = HKTypes.dietaryProtein else {
-            print("⚠️ Dietary protein type not available in HealthKit")
-            DispatchQueue.main.async {
-                self.dietaryProtein = -1
-                self.checkIfAllDataReady(shouldPoll: true)
-            }
-            return
-        }
-        retrieveDietaryTotal(quantityType: dietaryProteinType, unit: .gram(), assign: {
-            self.dietaryProtein = Int($0)
-        })
+        store.execute(query)
     }
 }
 
+// MARK: - Dietary Needs
 extension HealthKitManager {
-    /// Reads the most-recent *sample* of `type`, prints debug info, then calls `handler`.
-    /// Only Quantity / Category / Correlation / Series / Workout / Document types are valid.
-    private func runSampleQuery(type: HKSampleType, handler: @escaping (_ sample: HKSample?) -> Void, assign: @escaping (Double) -> Void) {
-        let query = HKSampleQuery(sampleType: type, predicate:  nil, limit: 1, sortDescriptors: [
-                NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
-            ]
-        ) { _, results, error in
-
-            // ---- Empty results --------------------------------------------------
-            guard let sample = results?.first else {
-                let st = self.healthStore?.authorizationStatus(for: type)
-                print("⚠️ HK query for \(type) returned 0 results – \(self.statusLabel(st)).")
-                DispatchQueue.main.async {
-                    assign(0)
-                }
-                return
+    private func retrieveCalories(store: HKHealthStore) {
+        guard let dietaryEnergyType = HKTypes.dietaryEnergy else {
+            print("⚠️ Dietary energy type not available in HealthKit")
+            DispatchQueue.main.async {
+                self.markProcessed(.calories)
             }
-            
-            // ---- Error path -----------------------------------------------------
-            if let error = error {
-                print("❌ HK query error for \(type):", error.localizedDescription)
-                return
-            }
-
-            // ---- Success --------------------------------------------------------
-            if let qs = sample as? HKQuantitySample {
-                let start = qs.startDate.formatted(date: .numeric, time: .standard)
-                print("✅ HK query → \(type)  (\(start))")
-            } else {
-                print("✅ HK query → \(type)  (non-quantity sample)")
-            }
-            handler(sample)
+            return
         }
-        healthStore?.execute(query)
+        retrieveDietaryTotal(store: store, quantityType: dietaryEnergyType, unit: .kilocalorie(), assign: {
+            self.caloricIntake = Int($0)
+            self.markProcessed(.calories)
+        })
+    }
+    
+    private func retrieveCarbs(store: HKHealthStore) {
+        guard let dietaryCarbsType = HKTypes.dietaryCarbs else {
+            print("⚠️ Dietary carbs type not available in HealthKit")
+            DispatchQueue.main.async {
+                self.markProcessed(.carbs)
+            }
+            return
+        }
+        retrieveDietaryTotal(store: store, quantityType: dietaryCarbsType, unit: .gram(), assign: {
+            self.dietaryCarbs = Int($0)
+            self.markProcessed(.carbs)
+        })
+    }
+    
+    private func retrieveFats(store: HKHealthStore) {
+        guard let dietaryFatType = HKTypes.dietaryFat else {
+            print("⚠️ Dietary fat type not available in HealthKit")
+            DispatchQueue.main.async {
+                self.markProcessed(.fats)
+            }
+            return
+        }
+        retrieveDietaryTotal(store: store, quantityType: dietaryFatType, unit: .gram(), assign: {
+            self.dietaryFats = Int($0)
+            self.markProcessed(.fats)
+        })
+    }
+    
+    private func retrieveProteins(store: HKHealthStore) {
+        guard let dietaryProteinType = HKTypes.dietaryProtein else {
+            print("⚠️ Dietary protein type not available in HealthKit")
+            DispatchQueue.main.async {
+                self.markProcessed(.proteins)
+            }
+            return
+        }
+        retrieveDietaryTotal(store: store, quantityType: dietaryProteinType, unit: .gram(), assign: {
+            self.dietaryProtein = Int($0)
+            self.markProcessed(.proteins)
+        })
     }
     
     // -----------------------------------------------------------------------------
     //  Shared “do the query” helper — private inside HealthKitManager
     // -----------------------------------------------------------------------------
-    private func retrieveDietaryTotal(quantityType: HKQuantityType, unit: HKUnit, assign: @escaping (Double) -> Void) {
+    private func retrieveDietaryTotal(
+        store: HKHealthStore,
+        quantityType: HKQuantityType,
+        unit: HKUnit,
+        assign: @escaping (Double) -> Void
+    ) {
         let startDay = CalendarUtility.shared.startOfDay(for: Date())
         guard let endDay = CalendarUtility.shared.date(byAdding: .day, value: 1, to: startDay) else { return }
         let pred = HKQuery.predicateForSamples(withStart: startDay, end: endDay, options: .strictStartDate)
@@ -422,7 +391,7 @@ extension HealthKitManager {
             
             // ---------- Debug prints ----------
             if stats == nil {
-                let st = self.healthStore?.authorizationStatus(for: quantityType)
+                let st = store.authorizationStatus(for: quantityType)
                 print("⚠️ HK macro query found NO samples for \(quantityType.identifier) – \(statusLabel(st)).")
             } else if let error = error {
                 print("❌ HK macro query error (\(quantityType.identifier)):", error.localizedDescription)
@@ -431,22 +400,25 @@ extension HealthKitManager {
             // ---------- Result (nil ⇒ 0) ----------
             let total = stats?.sumQuantity()?.doubleValue(for: unit) ?? 0
 
-            DispatchQueue.main.async {
-                assign(total)              // update local & UserData
-                self.checkIfAllDataReady(shouldPoll: true)
-            }
+            DispatchQueue.main.async { assign(total) }
         }
-        healthStore?.execute(query)
+        store.execute(query)
     }
-    
+}
+
+extension HealthKitManager {
     /// Human-readable text for a Health-Kit authorisation status
     private func statusLabel(_ s: HKAuthorizationStatus?) -> String {
         switch s {
-            case .sharingAuthorized: return "authorised ✅"
+            case .sharingAuthorized: return "authorized ✅"
             case .sharingDenied:     return "denied 🚫"
             case .notDetermined:     return "not-determined ❓"
             default:                 return "unknown"
         }
+    }
+    
+    private enum ReadKey: CaseIterable {
+        case dob, sex, height, weight, bodyFat, steps, calories, carbs, fats, proteins
     }
     
     // MARK: - One-stop list of the HK types we care about

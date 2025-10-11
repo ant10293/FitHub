@@ -88,8 +88,7 @@ struct DetailsView: View {
                 unitPicker
             }
         }
-        .background(Color(UIColor.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .roundedBackground(cornerRadius: 10, color: Color(UIColor.secondarySystemBackground))
         .padding(.horizontal)
     }
 
@@ -123,8 +122,7 @@ struct DetailsView: View {
                 unitPicker
             }
         }
-        .background(Color(UIColor.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .roundedBackground(cornerRadius: 10, color: Color(UIColor.secondarySystemBackground))
         .padding(.horizontal)
     }
     
@@ -157,8 +155,7 @@ struct DetailsView: View {
                     .padding(.vertical, 6)
             }
         }
-        .background(Color(UIColor.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .roundedBackground(cornerRadius: 10, color: Color(UIColor.secondarySystemBackground))
         .padding(.horizontal)
     }
     
@@ -224,30 +221,25 @@ struct DetailsView: View {
     private func saveUserData(gender: Gender) {
         userData.checkAndUpdateAge()
         // 1️⃣ Update everything in memory first
-        userData.updateMeasurementValue(for: .weight, with: weight.inKg, shouldSave: false)
+        userData.updateMeasurementValue(for: .weight, with: weight.inKg)
         userData.setup.setupState = .goalView
         userData.profile.userName = userName
         userData.profile.dob      = dob
         userData.physical.height  = height
         userData.physical.gender  = gender
-
-        // 2️⃣ Persist _all_ changes together
-        //userData.saveToFile()
     }
      
     private var canContinue: Bool {
         // Ensure a gender is selected
-        guard selectedGender != nil else {
+        guard let gender = selectedGender, gender != .notSet else {
             return false
         }
         
         // Check that height is selected and not at some default or invalid value
         // Assuming heightFeet or heightInches being > 0 is a valid selection
-
         guard height.displayValue > 0 else {
             return false
         }
-        
         
         // Check that a weight is selected and not at some default or invalid value
         guard weight.displayValue > 0 else {
@@ -255,8 +247,7 @@ struct DetailsView: View {
         }
         
         // Check DOB is selected and not the default value if applicable
-        // This is a simplistic check; you might need a more sophisticated check for validity
-        guard dob != Date() else {
+        guard !CalendarUtility.shared.isDate(dob, inSameDayAs: Date()) else {
             return false
         }
         

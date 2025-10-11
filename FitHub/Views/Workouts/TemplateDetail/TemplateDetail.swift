@@ -323,7 +323,6 @@ struct TemplateDetail: View {
     }
     
     private func saveTemplate(displaySaveConfirm: Bool = false) {
-        //ctx.userData.saveSingleStructToFile(\.workoutPlans, for: .workoutPlans, delay: 0.0) // no need for userData.updateTemplate since we use $binding
         if displaySaveConfirm { ctx.toast.showSaveConfirmation() }
     }
 }

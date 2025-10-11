@@ -155,7 +155,6 @@ struct CompletedWorkouts: View {
             // remove the exercises instead of the entire completed workout, since we need the data in CompletedWorkouts for reference
             userData.workoutPlans.completedWorkouts[index].template.exercises = []
             print("Workout Deleted!")
-            //userData.saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
         }
     }
 }

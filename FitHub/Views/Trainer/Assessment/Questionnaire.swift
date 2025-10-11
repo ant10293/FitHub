@@ -11,12 +11,13 @@ import SwiftUI
 struct Questionnaire: View {
     @EnvironmentObject private var ctx: AppContext
     @State private var currentQuestionIndex: Int = 0
-    @State private var answers: [String] = ["", "", "", ""]
-    @State private var isPresenting: Bool = false
+    @State private var answers: [String] = ["", "", "", "", ""]
+   // @State private var isPresenting: Bool = false
     @State private var showingPopup: Bool = false
     
     let questions = [
         "Are you familiar with gym equipment and exercise techniques?",
+        "How long have you been training (consistently)?",
         "Are you currently following a structured workout program?",
         "How many days per week do you plan on exercising?",
         "What equipment do you have access to?"
@@ -24,6 +25,7 @@ struct Questionnaire: View {
     
     let options = [
         ["Yes", "Somewhat", "No"],
+        ["< 3 months", "3–12 months", "1–3 years", "3–5 years", "5+ years"],
         ["Yes, I am currently following a structured workout program", "No, I do not workout at all", "I workout consistently but without a structured plan", "I workout occasionally but without a structured plan"],
         ["3", "4", "5", "6"],
         ["All (Gym Membership)", "Some (Home Gym)", "None (Bodyweight Only)"]
@@ -83,13 +85,11 @@ struct Questionnaire: View {
                             case 0: // "Are you familiar with gym equipment and exercise techniques?"
                             if let firstAnswer = answers.first {
                                 ctx.userData.evaluation.isFamiliarWithGym = firstAnswer == "Yes"
-                                //ctx.userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
                             }
                             
-                            case 2: // "How many days per week do you plan on exercising?"
-                                if answers.count > 2, let workoutDays = Int(answers[2]) {
+                            case 3: // "How many days per week do you plan on exercising?"
+                                if answers.count > 3, let workoutDays = Int(answers[3]) {
                                     ctx.userData.workoutPrefs.workoutDaysPerWeek = workoutDays
-                                    //ctx.userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
                                 }
                             default:
                                 break
@@ -124,7 +124,6 @@ struct Questionnaire: View {
                 onContinue: {
                     showingPopup = false
                     ctx.userData.setup.isEquipmentSelected = true
-                    //ctx.userData.saveToFile()
                     handleNavigation()
                 },
                 onEdit: {
@@ -136,6 +135,7 @@ struct Questionnaire: View {
     }
     
     private func initializeQuestions() {
+        // already answered
         if ctx.userData.setup.questionAnswers.count == questions.count {
             currentQuestionIndex = questions.count - 1
             answers = ctx.userData.setup.questionAnswers
@@ -145,20 +145,18 @@ struct Questionnaire: View {
     }
     
     private func updateSelectedEquipment() {
-        if answers.count > 3 {
-            let equipment = ctx.equipment.selectEquipment(basedOn: answers[3])
+        if answers.count > 4 {
+            let equipment = ctx.equipment.selectEquipment(basedOn: answers[4])
             ctx.userData.evaluation.equipmentSelected = equipment.map(\.id)
         }
     }
     
     private func handleNavigation() {
         ctx.userData.setup.questionsAnswered = true
-       // ctx.userData.saveSingleStructToFile(\.setup, for: .setup)
     }
     
     private func processAnswers() {
         ctx.userData.setup.questionAnswers = answers
-        //ctx.userData.saveSingleStructToFile(\.setup, for: .setup)
     }
 }
 

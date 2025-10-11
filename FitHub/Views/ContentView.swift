@@ -22,7 +22,6 @@ struct ContentView: View {
                         if ctx.userData.setup.infoCollected { determineUserStrengthLevel() }
                         ctx.userData.checkAndUpdateAge()
                         generateTemplate()
-                        //ctx.userData.saveToFile()
                     }
             } else {
                 NavigationStack {
@@ -140,7 +139,7 @@ struct ContentView: View {
         if allDatesArePast {
             // only generate if we are updating existing templates
             if !ctx.userData.workoutPlans.trainerTemplates.isEmpty {
-                ctx.userData.generateWorkoutPlan(exerciseData: ctx.exercises, equipmentData: ctx.equipment, keepCurrentExercises: true, nextWeek: true, shouldSave: false)
+                ctx.userData.generateWorkoutPlan(exerciseData: ctx.exercises, equipmentData: ctx.equipment, keepCurrentExercises: true, nextWeek: true)
             }
         } else {
             print("No past dates found. No need to generate a new workout plan.")

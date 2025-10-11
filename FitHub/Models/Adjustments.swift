@@ -28,6 +28,7 @@ enum AdjustmentValue: Codable, Equatable, Hashable {
     }
 }
 
+// TODO: add units for each category (%, Int, Small, etc)
 enum AdjustmentCategory: String, CaseIterable, Identifiable, Codable, Comparable, Equatable, Hashable {
     case seatHeight = "Seat Height"
     case benchAngle = "Bench Angle"
@@ -48,10 +49,11 @@ enum AdjustmentCategory: String, CaseIterable, Identifiable, Codable, Comparable
     
     case legPadPosition = "Leg Pad Position"
     
-    
     case sundialAdjustment = "Sundial Adjustment"
     
     case handlePosition = "Handle Position"
+    
+    case inclineGrade = "Incline Grade"
     
     
     var id: String { self.rawValue }

@@ -274,7 +274,7 @@ extension Exercise {
         let equipmentObjects = equipmentData.equipmentObjects(for: equipmentSelected)
         
         // 1️⃣ Gear the user explicitly owns
-        let owned: Set<String> = Set(equipmentObjects.map { normalize($0.name) })
+        let owned: Set<String> = Set(equipmentObjects.map { $0.name.normalize() })
 
         // 2️⃣ Alternatives provided BY the gear the user owns
         let altFromOwned: Set<String> = equipmentData.altFromOwned(equipmentObjects)
@@ -284,11 +284,11 @@ extension Exercise {
         // 3️⃣  Build lookup of each *required* item → its own alternatives
         let neededGear = equipmentData.equipmentForExercise(self)     // [GymEquipment]
         let altForRequired: [String: Set<String>] = neededGear.reduce(into: [:]) { dict, gear in
-            dict[normalize(gear.name)] = Set((gear.alternativeEquipment ?? []).map(normalize))
+            dict[gear.name.normalize()] = Set((gear.alternativeEquipment ?? []).map { $0.normalize() })
         }
         // 4️⃣  Check every requirement
         for raw in equipmentRequired {          // [String]
-            let req = normalize(raw)
+            let req = raw.normalize()
             
             // Own the exact item?
             if allowed.contains(req) { continue }

@@ -6682,24 +6682,6 @@
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
-		"name" : "Prone Cobra",
-		"id" : "AB52BA4B-4AD0-4E1A-9A07-6B40AB2BA4AB",
-		"image" : "prone_cobra",
-		"aliases" : ["Back Extension Hold"],
-		"description" : "Isometric hold in a prone, arms-back position that reinforces spinal extensors and postural muscles.",
-		"equipmentRequired" : [],
-		"muscles" : [
-			{ "engagementPercentage" : 50, "mover" : "primary", "muscleWorked" : "Erector Spinae", "submusclesWorked" : [] },
-			{ "engagementPercentage" : 50, "mover" : "secondary", "muscleWorked" : "Trapezius", "submusclesWorked" : [
-				{ "engagementPercentage" : 100, "submuscleWorked" : "Lower Traps" }
-			] }
-		],
-		"difficulty" : "Beg.",
-		"effort" : "Isolation",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Bodyweight"
-	},
-	{
 		"name" : "Superman",
 		"id" : "0D4C40E3-2160-40BB-9F50-45F0D2B7D55B",
 		"image" : "superman",
@@ -7427,24 +7409,6 @@
 		],
 		"difficulty" : "Beg.",
 		"effort" : "Isolation",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
-	},
-	{
-		"name" : "Farmer's Walk Pinch-Grip",
-		"id" : "6627D014-13C3-4166-BF1B-4650E27954EA",
-		"image" : "farmer_walk_pinch_grip",
-		"aliases" : ["Pinch-Block Carry", "Pinch Farmer Walk"],
-		"description" : "Walk for distance while pinching smooth blocks or plates together to tax thumbs and forearm flexors intensely.",
-		"equipmentRequired" : ["Pinch Blocks", "Weight Plate"],
-		"muscles" : [
-			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Forearms", "submusclesWorked" : [
-				{ "engagementPercentage" : 60, "submuscleWorked" : "Forearm Flexors" },
-				{ "engagementPercentage" : 40, "submuscleWorked" : "Forearm Extensors" }
-			] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Free Weight"
 	},
@@ -8497,36 +8461,6 @@
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
-		"name" : "Pinch-Block Static Hold",
-		"id" : "96BDA4F5-6029-4E6D-89E9-214F1E76294D",
-		"image" : "pinch_block_hold",
-		"aliases" : ["Pinch Grip Hold"],
-		"description" : "Grip pinch blocks and hold for time to develop crushing thumb strength.",
-		"equipmentRequired" : ["Pinch Blocks"],
-		"muscles" : [
-			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Forearms", "submusclesWorked" : [] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Isolation",
-		"limbMovementType" : "Bilateral Dependent",
-		"resistance" : "Free Weight"
-	},
-	{
-		"name" : "Farmer's Walk",
-		"id" : "05AC06BB-CE8E-4CDC-BF2C-1EFC3C4CB6B3",
-		"image" : "farmers_walk",
-		"aliases" : ["Farmer's Carry"],
-		"description" : "Builds crushing grip and whole-body stability by carrying heavy implements for distance or time.",
-		"equipmentRequired" : ["Farmer's Walk Handles"],
-		"muscles" : [
-			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Forearms", "submusclesWorked" : [] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Compound",
-		"limbMovementType" : "Bilateral Independent",
-		"resistance" : "Free Weight"
-	},
-	{
 		"name" : "One-Handed Bar Hang",
 		"id" : "2582781C-F587-4455-8DD1-15DDB8A62BEB",
 		"image" : "one_handed_bar_hang",
@@ -9168,21 +9102,6 @@
 		"resistance" : "Machine"
 	},
 	{
-		"name" : "Pinch Block Hold",
-		"id" : "0A6971AE-7DEF-43DC-94A2-337C135C8577",
-		"image" : "placeholder_ex_img",
-		"aliases" : [],
-		"description" : "Grip blocks between the fingers and thumb to build pinch-grip strength.",
-		"equipmentRequired" : ["Pinch Blocks"],
-		"muscles" : [
-			{ "engagementPercentage" : 100, "mover" : "primary", "muscleWorked" : "Forearms", "submusclesWorked" : [] }
-		],
-		"difficulty" : "Int.",
-		"effort" : "Isolation",
-		"limbMovementType" : "Bilateral Independent",
-		"resistance" : "Free Weight"
-	},
-	{
 		"name" : "Machine Preacher Curl",
 		"id" : "12A445B6-6E78-4ABC-9AFA-C92801F9C7E3",
 		"image" : "placeholder_ex_img",
@@ -9346,5 +9265,127 @@
 		"effort" : "Compound",
 		"limbMovementType" : "Bilateral Dependent",
 		"resistance" : "Free Weight"
-	}
+	},
+    {
+        "name": "Treadmill Walk/Run",
+        "id": "A3C7F2E1-5D4B-4E9A-90C1-7B9E3F2A6C51",
+        "image": "treadmill",
+        "aliases": ["Treadmill Walking", "Treadmill Running"],
+        "description": "Walk or run on a motorized deck; adjust speed and incline to build cardiovascular endurance with controlled impact.",
+        "equipmentRequired": ["Treadmill"],
+        "muscles": [
+            { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 40, "submuscleWorked": "Vastus Medialis" }
+            ]},
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ]},
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Calves", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Gastrocnemius" },
+                { "engagementPercentage": 40, "submuscleWorked": "Soleus" }
+            ]}
+        ],
+        "difficulty": "Beg.",
+        "effort": "Cardio",
+        "resistance": "Machine"
+    },
+    {
+        "name": "Endurance Row",
+        "id": "6F9D2318-7C8B-4C0E-9E4B-0B7F2B5A1C33",
+        "image": "row_machine",
+        "aliases": ["Rowing Erg", "Ergometer Row"],
+        "description": "Rhythmic drive and recovery sequence on a rowing machine emphasizing leg drive, hip swing, and arm pull.",
+        "equipmentRequired": ["Rowing Machine"],
+        "muscles": [
+            { "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [] },
+            { "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Biceps Long Head" }
+            ]},
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Middle Traps" }
+            ]}
+        ],
+        "difficulty": "Beg.",
+        "effort": "Cardio",
+        "resistance": "Machine"
+    },
+    {
+        "name": "Elliptical Stride",
+        "id": "D2A4B6C8-19E3-4F75-A2E1-5C7B9D0E1F22",
+        "image": "elliptical",
+        "aliases": ["Cross Trainer Stride", "Elliptical Trainer"],
+        "description": "Low-impact, continuous elliptical motion with optional moving handles to raise heart rate while reducing joint stress.",
+        "equipmentRequired": ["Elliptical"],
+        "muscles": [
+            { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ]},
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Cardio",
+        "resistance": "Machine"
+    },
+    {
+        "name": "Indoor Cycling",
+        "id": "01E8C5B7-2A43-4F9C-8D61-7A4B2E3C5D6F",
+        "image": "stationary_bike",
+        "aliases": ["Spin Bike Ride", "Exercise Bike Ride"],
+        "description": "Seated or standing pedaling on a stationary bike with adjustable resistance to develop aerobic capacity and leg endurance.",
+        "equipmentRequired": ["Stationary Bike"],
+        "muscles": [
+            { "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [] },
+            { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ]}
+        ],
+        "difficulty": "Beg.",
+        "effort": "Cardio",
+        "resistance": "Machine"
+    },
+    {
+        "name": "Stair Climb",
+        "id": "9B7C4E2A-3D1F-4A6E-9C8B-2E1F5D7A0C34",
+        "image": "stair_climber",
+        "aliases": ["Stepper Climb", "Stair Machine Climb"],
+        "description": "Continuous step-climbing pattern with adjustable speed to emphasize glutes and quads while elevating heart rate.",
+        "equipmentRequired": ["Stair Climber"],
+        "muscles": [
+            { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ]},
+            { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [] },
+            { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Calves", "submusclesWorked": [] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Cardio",
+        "resistance": "Machine"
+    },
+    {
+        "name": "Ladder Climb",
+        "id": "E5D1F0A2-7C3B-4B9E-8A16-9D2F4C7A1B58",
+        "image": "jacobs_ladder",
+        "aliases": ["Jacob's Ladder Climb", "Vertical Treadmill Climb"],
+        "description": "Self-paced climbing on a rotating ladder engaging upper and lower body for sustained, high-aerobic work.",
+        "equipmentRequired": ["Jacob's Ladder"],
+        "muscles": [
+            { "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [] },
+            { "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ]}
+        ],
+        "difficulty": "Beg.",
+        "effort": "Cardio",
+        "resistance": "Machine"
+    }
 ]

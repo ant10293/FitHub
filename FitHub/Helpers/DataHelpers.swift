@@ -36,22 +36,16 @@ extension Bundle {
     }
 }
 
-@inline(__always)
-func normalize(_ s: String) -> String {
-    s.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-}
-
 extension Collection {
     /// Return `nil` if empty; otherwise the collection.
     var nilIfEmpty: Self? { isEmpty ? nil : self }
-}
-
-// A safe subscript to prevent out of range errors.
-extension Collection {
+    
+    // A safe subscript to prevent out of range errors.
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
     }
 }
+
 
 extension UIApplication {
     func endEditing() {
@@ -78,24 +72,13 @@ extension Array where Element: Numeric {
     }
 }
 
-// Extension for safe array indexing
 extension Array {
+    // Extension for safe array indexing
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
     }
-}
-
-// Splits an array into chunks of a given size.
-extension Array {
-    func chunked(into size: Int) -> [[Element]] {
-        stride(from: 0, to: count, by: size).map {
-            Array(self[$0..<Swift.min($0 + size, count)])
-        }
-    }
-}
-
-// Small safety helpers
-extension Array {
+    
+    // Small safety helpers
     subscript(safeEdit index: Index) -> Element? {
         get { indices.contains(index) ? self[index] : nil }
         set {
@@ -107,10 +90,15 @@ extension Array {
             }
         }
     }
-}
-
-// MARK: - Array Extension for Shuffling with RNG - ExerciseSelector()
-extension Array {
+    
+    // Splits an array into chunks of a given size.
+    func chunked(into size: Int) -> [[Element]] {
+        stride(from: 0, to: count, by: size).map {
+            Array(self[$0..<Swift.min($0 + size, count)])
+        }
+    }
+    
+    // MARK: - Array Extension for Shuffling with RNG - ExerciseSelector()
     func shuffled<T: RandomNumberGenerator>(using generator: inout T) -> [Element] {
         var array = self
         for i in stride(from: array.count - 1, through: 1, by: -1) {
@@ -120,3 +108,5 @@ extension Array {
         return array
     }
 }
+
+

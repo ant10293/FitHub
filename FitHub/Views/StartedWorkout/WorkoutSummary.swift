@@ -34,7 +34,7 @@ struct WorkoutSummary: View {
             }
             .padding()
 
-            RectangularButton(title: "Done", color: .blue, action: onDone)
+            RectangularButton(title: "Done", bgColor: .blue, action: onDone)
                 .padding()
 
         }

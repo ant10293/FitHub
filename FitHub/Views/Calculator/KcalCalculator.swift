@@ -121,14 +121,14 @@ struct KcalCalculator: View {
         // Your original rule: +100 kcal per 1,000 steps
         let total = bmr + (Double(steps) * 0.1)
         resultCalories = round(total)
-        userData.updateMeasurementValue(for: .caloricIntake, with: resultCalories ?? 0, shouldSave: false)
+        userData.updateMeasurementValue(for: .caloricIntake, with: resultCalories ?? 0)
         showingResult = true
     }
 
     private func persistInputs() {
         // Weight (kg always)
         let roundedKg = round(weight.inKg * 100) / 100
-        userData.updateMeasurementValue(for: .weight, with: roundedKg, shouldSave: false)
+        userData.updateMeasurementValue(for: .weight, with: roundedKg)
 
         // Height (cm int)
         userData.physical.height = height
@@ -136,8 +136,6 @@ struct KcalCalculator: View {
         // Steps / Age
         userData.physical.avgSteps = Int(stepsText) ?? 0
         userData.profile.age       = Int(ageText) ?? 0
-
-        //userData.saveToFile()
     }
 
     // MARK: - Result view

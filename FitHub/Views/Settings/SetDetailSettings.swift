@@ -15,10 +15,6 @@ struct SetDetailSettings: View {
         card {
             Toggle("Hide RPE slider", isOn: $userData.settings.hideRpeSlider)
                 .padding()
-                .onChange(of: userData.settings.hideRpeSlider) {
-                    //userData.saveSingleStructToFile(\.settings, for: .settings)
-                }
-            
         }
         .padding(.horizontal)
     }

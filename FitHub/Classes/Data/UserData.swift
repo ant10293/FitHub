@@ -66,12 +66,6 @@ final class UserData: ObservableObject, Codable {
     }
     
     // MARK: saving logic
-    /// Save a single stored struct (debounced).
-    func saveSingleStructToFile<T: Encodable>(_ keyPath: KeyPath<UserData, T>, for key: CodingKeys, delay: TimeInterval = 0.4) {
-        let value = self[keyPath: keyPath]
-        JSONFileManager.shared.debouncedSingleFieldSave(value, for: key.stringValue, in: UserData.jsonKey, delay: delay)
-    }
-
     /// Call this when you really need *everything* persisted (debounced).
     func saveToFile(delay: TimeInterval = 0.8) {
         JSONFileManager.shared.debouncedSave(self, to: UserData.jsonKey, delay: delay)
@@ -81,20 +75,26 @@ final class UserData: ObservableObject, Codable {
     func saveToFileImmediate() {
         JSONFileManager.shared.save(self, to: UserData.jsonKey)
     }
+    
+    /*
+    /// Save a single stored struct (debounced).
+    func saveSingleStructToFile<T: Encodable>(_ keyPath: KeyPath<UserData, T>, for key: CodingKeys, delay: TimeInterval = 0.4) {
+        let value = self[keyPath: keyPath]
+        JSONFileManager.shared.debouncedSingleFieldSave(value, for: key.stringValue, in: UserData.jsonKey, delay: delay)
+    }
+    */
 }
 
 extension UserData {
     // FIXME: doesnt always reset
-    func resetWorkoutSession(shouldSave: Bool) {
+    func resetWorkoutSession() {
         sessionTracking.activeWorkout = nil // reset the active workout property
         isWorkingOut = false
-        //if shouldSave { saveSingleStructToFile(\.sessionTracking, for: .sessionTracking) }
     }
 
     func deleteArchivedTemplate(at idx: Int) {
         NotificationManager.remove(ids: workoutPlans.archivedTemplates[idx].notificationIDs)
         workoutPlans.archivedTemplates.remove(at: idx)
-        //saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
     }
     
     func deleteTrainerTemplate(at offsets: IndexSet) {
@@ -105,7 +105,6 @@ extension UserData {
     func deleteTrainerTemplate(at idx: Int) {
         NotificationManager.remove(ids: workoutPlans.trainerTemplates[idx].notificationIDs)
         workoutPlans.trainerTemplates.remove(at: idx)
-        //saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
     }
     
     func deleteUserTemplate(at offsets: IndexSet) {
@@ -116,10 +115,9 @@ extension UserData {
     func deleteUserTemplate(at idx: Int) {
         NotificationManager.remove(ids: workoutPlans.userTemplates[idx].notificationIDs)
         workoutPlans.userTemplates.remove(at: idx)
-        //saveSingleStructToFile(\.workoutPlans, for: .workoutPlans)
     }
     
-    func addUserTemplate(template: WorkoutTemplate, shouldSave: Bool = true) {
+    func addUserTemplate(template: WorkoutTemplate) {
         var newTemplate = template
 
         if template.date != nil {
@@ -127,7 +125,6 @@ extension UserData {
             newTemplate.notificationIDs.append(contentsOf: notificationIDs) // Append notification IDs
         }
         workoutPlans.userTemplates.append(newTemplate)
-        //if shouldSave { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
     }
     
     // MARK: new func to be called in WorkoutVM to update non progression changes to template
@@ -146,8 +143,7 @@ extension UserData {
                         sd.planned = setDetail.planned
                         exercise.setDetails[setIdx] = sd
                         tmpl.exercises[exIdx] = exercise
-                        let updated = updateTemplate(template: tmpl, index: index, location: location)
-                        //if updated { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
+                        _ = updateTemplate(template: tmpl, index: index, location: location)
                     }
                 }
             }
@@ -158,19 +154,14 @@ extension UserData {
         template: WorkoutTemplate,
         overwrite: Bool = true,
         shouldRemoveNotifications: Bool = false,
-        shouldRemoveDate: Bool = false,
-        shouldSave: Bool = true
-    ) -> WorkoutTemplate {
+        shouldRemoveDate: Bool = false
+    ) {
         if let (foundTmpl, index, location) = getTemplate(templateID: template.id) {
             var tmpl = overwrite ? template : foundTmpl
             if shouldRemoveNotifications { tmpl.notificationIDs.removeAll() }
             if shouldRemoveDate { tmpl.date = nil }
-            let updated = updateTemplate(template: tmpl, index: index, location: location)
-            //if shouldSave, updated { saveSingleStructToFile(\.workoutPlans, for: .workoutPlans) }
-            return tmpl
+            _ = updateTemplate(template: tmpl, index: index, location: location)
         }
-        
-        return template
     }
     
     private func getTemplate(templateID: WorkoutTemplate.ID) -> (WorkoutTemplate, Int, TemplateLocation)? {
@@ -202,7 +193,7 @@ extension UserData {
         return measurements
     }
     
-    func updateMeasurementValue(for type: MeasurementType, with newValue: Double, shouldSave: Bool) {
+    func updateMeasurementValue(for type: MeasurementType, with newValue: Double) {
         if newValue <= 0 { return }
         let measurementValue = type.getMeasurmentValue(value: newValue)
         
@@ -213,7 +204,6 @@ extension UserData {
             physical.pastMeasurements[type]?.append(currentMeasurement)
         }
         physical.currentMeasurements[type] = Measurement(type: type, entry: measurementValue, date: Date())
-        //if shouldSave { saveSingleStructToFile(\.physical, for: .physical) }
     }
             
     func currentMeasurementValue(for type: MeasurementType) -> MeasurementValue { physical.currentMeasurements[type]?.entry ?? type.getMeasurmentValue(value: 0) }
@@ -247,13 +237,13 @@ extension UserData {
             let templateDate = foundTmpl.date, CalendarUtility.shared.isDate(templateDate, inSameDayAs: date) || templateDate < date
         {
             // only remove notifications if planned date is today or has already passed && only remove date if there wasn't a workout already completed today
-            removeTemplateNotifications(for: foundTmpl, removeDate: removeDate, shouldSave: false)
+            removeTemplateNotifications(for: foundTmpl, removeDate: removeDate)
         }
     }
     
-    private func removeTemplateNotifications(for template: WorkoutTemplate, removeDate: Bool, shouldSave: Bool) {
+    private func removeTemplateNotifications(for template: WorkoutTemplate, removeDate: Bool) {
         NotificationManager.remove(ids: template.notificationIDs)
-        _ = updateTemplate(template: template, shouldRemoveNotifications: true, shouldRemoveDate: removeDate, shouldSave: shouldSave)
+        updateTemplate(template: template, shouldRemoveNotifications: true, shouldRemoveDate: removeDate)
         NotificationManager.printAllPendingNotifications() // Fetch pending notifications to verify
     }
     
@@ -262,7 +252,7 @@ extension UserData {
         return notiIDs
     }
     
-    func incrementWorkoutStreak(shouldSave: Bool = true) {
+    func incrementWorkoutStreak() {
         //print("Before Incrementing Workout Streak: \(sessionTracking.workoutStreak)")
         sessionTracking.workoutStreak += 1
         sessionTracking.totalNumWorkouts += 1
@@ -270,7 +260,6 @@ extension UserData {
             sessionTracking.longestWorkoutStreak = sessionTracking.workoutStreak
         }
         //print("After Incrementing Workout Streak: \(sessionTracking.workoutStreak)")
-        //if shouldSave { saveToFile() }
     }
 
     func checkAndUpdateAge() {
@@ -331,11 +320,10 @@ extension UserData {
         equipmentData: EquipmentData,
         keepCurrentExercises: Bool,
         nextWeek: Bool,
-        shouldSave: Bool = true,
         onDone: @escaping () -> Void = {}
     ) {
         isGeneratingWorkout = true
-        resetWorkoutSession(shouldSave: false)
+        resetWorkoutSession()
         
         let saved = manageOldTemplates()
         let generator = WorkoutGenerator()
@@ -370,8 +358,6 @@ extension UserData {
 
                 exerciseData.applyPerformanceUpdates(updates: output.updatedMax, csvEstimate: true)
          
-                //if shouldSave { self.saveToFile() }
-
                 self.isGeneratingWorkout = false
                 
                 // 🆕 SHOW CHANGELOG IF IT'S NEXT WEEK

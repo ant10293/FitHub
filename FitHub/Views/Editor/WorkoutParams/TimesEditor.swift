@@ -11,13 +11,7 @@ import SwiftUI
 struct TimesEditor: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var userData: UserData
-    var days: [DaysOfWeek]
-    @Environment(\.calendar) private var calendar
-
-    // Fallback time used when no custom is set yet
-    private var defaultComponents: DateComponents {
-        userData.settings.defaultWorkoutTime ?? DateComponents(hour: 11, minute: 0)
-    }
+    let days: [DaysOfWeek]
 
     var body: some View {
         NavigationStack {
@@ -38,12 +32,10 @@ struct TimesEditor: View {
                 }
             }
             .navigationBarTitle("Workout Times", displayMode: .inline)
-            .onDisappear { persist() }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Reset") {
                         userData.workoutPrefs.customWorkoutTimes = nil
-                        persist()
                     }
                     .foregroundStyle(.red)
                 }
@@ -55,8 +47,11 @@ struct TimesEditor: View {
             }
         }
     }
-
-    // MARK: - Bindings
+    
+    // Fallback time used when no custom is set yet
+    private var defaultComponents: DateComponents {
+        userData.settings.defaultWorkoutTime ?? DateComponents(hour: 11, minute: 0)
+    }
 
     private func binding(for day: DaysOfWeek) -> Binding<Date> {
         Binding<Date>(
@@ -66,10 +61,9 @@ struct TimesEditor: View {
             },
             set: { newDate in
                 var custom = userData.workoutPrefs.customWorkoutTimes ?? WorkoutTimes(distribution: [:])
-                let hm = calendar.dateComponents([.hour, .minute], from: newDate)
+                let hm = CalendarUtility.shared.dateComponents([.hour, .minute], from: newDate)
                 custom.modify(for: day, with: hm)
                 userData.workoutPrefs.customWorkoutTimes = custom
-                persist()
             }
         )
     }
@@ -80,18 +74,14 @@ struct TimesEditor: View {
         if let custom = userData.workoutPrefs.customWorkoutTimes?.time(for: day) {
             return custom
         }
-        // use defaultWorkoutTime if available, else 00:00
-        return defaultComponents
+        return defaultComponents // use defaultWorkoutTime if available, else 00:00
     }
 
     private func date(from comps: DateComponents) -> Date {
-        let base = calendar.startOfDay(for: Date())
         let h = comps.hour ?? 0
         let m = comps.minute ?? 0
-        return calendar.date(bySettingHour: h, minute: m, second: 0, of: base) ?? base
-    }
-
-    private func persist() {
-        //userData.saveToFile()
+        let base = CalendarUtility.shared.startOfDay(for: Date())
+        
+        return CalendarUtility.shared.date(bySettingHour: h, minute: m, second: 0, of: base) ?? base
     }
 }

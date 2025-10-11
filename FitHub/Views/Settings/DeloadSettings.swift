@@ -64,11 +64,6 @@ struct DeloadSettings: View {
                 Text("Number of consecutive weeks without progress—while RPE keeps rising—before a deload week is automatically scheduled.")
             }
         }
-        .onChange(of: userData.settings) { old, new in
-            if old != new {
-                //userData.saveSingleStructToFile(\.settings, for: .settings)
-            }
-        }
         .listStyle(.insetGrouped)
         .navigationTitle("Volume Deload")
         .navigationBarTitleDisplayMode(.inline)

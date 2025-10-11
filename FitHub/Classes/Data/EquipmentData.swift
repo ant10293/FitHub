@@ -144,21 +144,21 @@ extension EquipmentData {
         let homeKit:  Set<String> = [
             "Barbell", "Dumbbells", "Pull-Up Bar", "Squat Rack",
             "Flat Bench", "Incline Bench Rack", "Dip Bar", "EZ Bar"
-        ].map(normalize).reduce(into: []) { $0.insert($1) }
+        ].map { $0.normalize()  }.reduce(into: []) { $0.insert($1) }
 
         let bodyKit:  Set<String> = [
             "Pull-Up Bar", "Dip Bar"
-        ].map(normalize).reduce(into: []) { $0.insert($1) }
+        ].map { $0.normalize()  }.reduce(into: []) { $0.insert($1) }
 
         switch option {
         case "All (Gym Membership)":
             return allEquipment
 
         case "Some (Home Gym)":
-            return allEquipment.filter { homeKit.contains(normalize($0.name)) }
+            return allEquipment.filter { homeKit.contains($0.name.normalize()) }
 
         case "None (Bodyweight Only)":
-            return allEquipment.filter { bodyKit.contains(normalize($0.name)) }
+            return allEquipment.filter { bodyKit.contains($0.name.normalize()) }
 
         default:
             return []
@@ -207,12 +207,12 @@ extension EquipmentData {
 
     // MARK: Simple look-ups
     func category(for equipName: String) -> EquipmentCategory? {
-        allEquipment.first { normalize($0.name) == normalize(equipName) }?.equCategory
+        allEquipment.first { $0.name.normalize() == equipName.normalize() }?.equCategory
     }
 
     func getEquipment(from names: [String]) -> [GymEquipment] {
-        let want = names.map(normalize)
-        return allEquipment.filter { want.contains(normalize($0.name)) }
+        let want = names.map { $0.normalize() }
+        return allEquipment.filter { want.contains($0.name.normalize()) }
     }
 
     func equipmentForExercise(_ ex: Exercise, includeAlternatives: Bool = false) -> [GymEquipment] {
@@ -241,7 +241,7 @@ extension EquipmentData {
             equipment
                 .compactMap(\.alternativeEquipment)
                 .flatMap { $0 }
-                .map(normalize)
+                .map { $0.normalize() }
         )
     }
      

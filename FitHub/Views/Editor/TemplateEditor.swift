@@ -75,7 +75,7 @@ struct TemplateEditor: View {
                     RectangularButton(
                         title: mode == .create ? "Create Template" : "Save Changes",
                         enabled: isInputValid,
-                        color: isInputValid ? Color.blue : Color.gray,
+                        bgColor: isInputValid ? Color.blue : Color.gray,
                         action: submit
                     )
                     .padding()

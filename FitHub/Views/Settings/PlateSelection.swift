@@ -82,7 +82,7 @@ struct PlateSelection: View {
                 RectangularButton(
                     title: "Select All",
                     enabled: !isAllSelected,
-                    color: .green,
+                    bgColor: .green,
                     action: {
                         setPlates(defaults)
                     }
@@ -102,7 +102,6 @@ struct PlateSelection: View {
 
     private func setPlates(_ plates: [Mass]) {
         userData.evaluation.availablePlates.setPlates(plates.sorted(by: massLessThan))
-        //userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
     }
 
     private func massLessThan(_ a: Mass, _ b: Mass) -> Bool {

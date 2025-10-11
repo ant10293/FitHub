@@ -152,8 +152,6 @@ final class SplitSelectionVM: ObservableObject {
             cats[idx] = selections[day] ?? []
         }
         userData.workoutPrefs.customWorkoutSplit = WorkoutWeek(categories: cats)
-        //userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
-
         originalSelections = selections
     }
 

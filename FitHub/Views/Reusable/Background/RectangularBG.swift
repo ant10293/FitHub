@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct RectangularBG: ViewModifier {
+private struct RectangularBG: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
-    var cornerRadius: CGFloat
-    var color: Color?
-    var style: RoundedCornerStyle?
+    let cornerRadius: CGFloat
+    let color: Color?
+    let style: RoundedCornerStyle?
 
     func body(content: Content) -> some View {
         let fillColor = color ?? (colorScheme == .dark ? Color.black : Color(UIColor.secondarySystemBackground))
@@ -31,7 +31,7 @@ extension View {
         color: Color? = nil,
         style: RoundedCornerStyle? = nil
     ) -> some View {
-        self.modifier(RectangularBG(cornerRadius: cornerRadius, color: color))
+        self.modifier(RectangularBG(cornerRadius: cornerRadius, color: color, style: style))
     }
 }
 

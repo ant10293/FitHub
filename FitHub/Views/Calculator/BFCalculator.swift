@@ -121,12 +121,12 @@ struct BFCalculator: View {
         }
 
         // 1) Save back numbers if they changed (stored in metric)
-        userData.updateMeasurementValue(for: .waist, with: w,  shouldSave: false)
-        userData.updateMeasurementValue(for: .neck,  with: n,  shouldSave: false)
+        userData.updateMeasurementValue(for: .waist, with: w)
+        userData.updateMeasurementValue(for: .neck,  with: n)
         if userData.physical.gender == .female {
-            userData.updateMeasurementValue(for: .hips, with: hp, shouldSave: false)
+            userData.updateMeasurementValue(for: .hips, with: hp)
         }
-        userData.updateMeasurementValue(for: .bodyFatPercentage, with: bf, shouldSave: true)
+        userData.updateMeasurementValue(for: .bodyFatPercentage, with: bf)
 
         computedBF = bf
         showingResult = true

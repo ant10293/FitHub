@@ -72,7 +72,7 @@ struct ExerciseModifier {
                 workingReplaced.append(target.name)
 
                 // Update the template in userData on main thread
-                _ = userData.updateTemplate(template: workingTemplate)
+                userData.updateTemplate(template: workingTemplate)
 
                 onComplete(ReplaceResult(
                     newExercise: detailed,
@@ -90,7 +90,7 @@ struct ExerciseModifier {
         let detailed = Self.detailed(exercise: newExercise, ctx: ctx)
 
         template.exercises[idx] = detailed
-        _ = ctx.userData.updateTemplate(template: template)
+        ctx.userData.updateTemplate(template: template)
     }
     
     @MainActor static func detailed(
@@ -120,7 +120,7 @@ struct ExerciseModifier {
     func remove(_ exercise: Exercise, from template: inout WorkoutTemplate, user: UserData) -> String {
         template.exercises.removeAll { $0.id == exercise.id }
         removeSupersetForDeletedExercise(exercise, from: &template)
-        _ = user.updateTemplate(template: template)
+        user.updateTemplate(template: template)
         return exercise.name
     }
     
@@ -141,7 +141,6 @@ struct ExerciseModifier {
             userData.evaluation.dislikedExercises.remove(exerciseId)   // exclusivity
             userData.evaluation.favoriteExercises.insert(exerciseId)
         }
-        //userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
     }
 
     func toggleDislike(for exerciseId: UUID, userData: UserData) {
@@ -151,7 +150,6 @@ struct ExerciseModifier {
             userData.evaluation.favoriteExercises.remove(exerciseId)   // exclusivity
             userData.evaluation.dislikedExercises.insert(exerciseId)
         }
-        //userData.saveSingleStructToFile(\.evaluation, for: .evaluation)
     }
     
     /// Establish / clear a 2‑way superset relationship and keep the paired
@@ -285,7 +283,7 @@ struct ExerciseModifier {
                 planned: exercise.plannedMetric
             )
             template.exercises[index].setDetails.append(newSet)
-            _ = user.updateTemplate(template: template)
+            user.updateTemplate(template: template)
         }
     }
     
@@ -293,7 +291,7 @@ struct ExerciseModifier {
         if let index = template.exercises.firstIndex(where: { $0.id == exercise.id }) {
             guard !template.exercises[index].setDetails.isEmpty else { return }
             template.exercises[index].setDetails.removeLast()
-            _ = user.updateTemplate(template: template)
+            user.updateTemplate(template: template)
         }
     }
 }

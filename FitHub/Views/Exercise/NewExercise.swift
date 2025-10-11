@@ -82,7 +82,7 @@ struct NewExercise: View {
                         RectangularButton(
                             title: isEditing ? "Save Changes" : "Create Exercise",
                             enabled: isInputValid,
-                            color: isInputValid ? .blue : .gray
+                            bgColor: isInputValid ? .blue : .gray
                         ) {
                             exerciseCreated = true
                             draft.name = InputLimiter.trimmed(draft.name)
@@ -100,7 +100,7 @@ struct NewExercise: View {
                         .padding()
                         
                         if isEditing {
-                            RectangularButton(title: "Delete Exercise", systemImage: "trash", color: .red, action: {
+                            RectangularButton(title: "Delete Exercise", systemImage: "trash", bgColor: .red, action: {
                                 showDeleteAlert = true
                             })
                             .padding()
@@ -340,33 +340,6 @@ struct NewExercise: View {
         ctx.exercises.allExercises.contains {
             $0.id != original?.id &&                       // ← ignore self
             $0.name.caseInsensitiveCompare(draft.name) == .orderedSame
-        }
-    }
-}
-
-struct MenuPickerRow<Selection: Hashable, Options: View>: View {
-    let title: String
-    @Binding var selection: Selection
-    var showDivider: Bool = true
-    var minSpacer: CGFloat = 12
-    var insets: EdgeInsets = .init(top: 6, leading: 16, bottom: 6, trailing: 16)
-    @ViewBuilder var options: () -> Options
-
-    var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Text(title)
-                Spacer(minLength: minSpacer)
-                Picker("", selection: $selection) {
-                    options()
-                }
-                .labelsHidden()
-                .pickerStyle(.menu)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(insets)
-
-            if showDivider { Divider() }
         }
     }
 }

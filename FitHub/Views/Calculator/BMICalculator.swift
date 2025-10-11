@@ -79,12 +79,10 @@ struct BMICalculator: View {
     private func calculateAndUpdateBMI() {
         bmi = BMI.calculateBMI(heightCm: height.inCm, weightKg: weight.inKg)
         
-        userData.updateMeasurementValue(for: .bmi, with: bmi, shouldSave: false)
-        userData.updateMeasurementValue(for: .weight, with: weight.inKg, shouldSave: true)
+        userData.updateMeasurementValue(for: .bmi, with: bmi)
+        userData.updateMeasurementValue(for: .weight, with: weight.inKg)
 
         userData.physical.height = height
-        
-        //userData.saveSingleStructToFile(\.physical, for: .physical)
     }
     
     struct BMIResultView: View {

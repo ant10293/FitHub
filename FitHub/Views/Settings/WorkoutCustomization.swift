@@ -51,7 +51,6 @@ struct WorkoutCustomization: View {
         .background(Color(UIColor.systemGroupedBackground))
         .navigationBarTitle("Generation Parameters", displayMode: .inline)
         .onAppear(perform: initializeVariables)
-        //.onChange(of: ctx.userData.workoutPrefs) { ctx.userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs) }
         .sheet(isPresented: $showingSplitSelection) { SplitSelection(vm: SplitSelectionVM(userData: ctx.userData)) }
         .sheet(isPresented: $showingDayPicker) { DaysEditor(selectedDays: $selectedDays, numDays: $daysPerWeek) }
         .sheet(isPresented: $showingTimePicker) { TimesEditor(userData: ctx.userData, days: selectedDays) }
@@ -316,9 +315,7 @@ struct WorkoutCustomization: View {
         ctx.userData.workoutPrefs.customDuration = nil
         ctx.userData.workoutPrefs.customDistribution = nil
         ctx.userData.workoutPrefs.customWorkoutTimes = nil
-        
-       // ctx.userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
-        
+                
         initializeVariables()
 
         ctx.toast.showSaveConfirmation()

@@ -13,9 +13,6 @@ struct MuscleRest: View {
     var body: some View {
         VStack {
             Stepper("Rest Duration: \(userData.settings.muscleRestDuration) hours", value: $userData.settings.muscleRestDuration, in: 24...168)
-                .onChange(of: userData.settings.muscleRestDuration) {
-                    //userData.saveSingleStructToFile(\.settings, for: .settings)
-                }
                 .padding()
             
             Text("The typical rest duration is 48 hours, but you can adjust it to suit your recovery needs.")

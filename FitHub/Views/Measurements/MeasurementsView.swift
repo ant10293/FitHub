@@ -81,7 +81,7 @@ struct MeasurementsView: View {
                     measurement: userData.currentMeasurementValue(for: type),
                     measurementType: type,
                     onSave: { newValue in
-                        userData.updateMeasurementValue(for: type, with: newValue, shouldSave: true)
+                        userData.updateMeasurementValue(for: type, with: newValue)
                         closeEditor()
                     },
                     onExit: {

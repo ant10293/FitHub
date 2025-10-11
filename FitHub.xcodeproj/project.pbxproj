@@ -23,6 +23,7 @@
 		65039B8A2E8474BC007A31E1 /* SetLoadEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B892E8474BC007A31E1 /* SetLoadEditor.swift */; };
 		65039B8F2E88D807007A31E1 /* SimpleStopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B8E2E88D807007A31E1 /* SimpleStopwatch.swift */; };
 		65039B912E970D12007A31E1 /* SetDetailSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B902E970D12007A31E1 /* SetDetailSettings.swift */; };
+		65039B932E9869E9007A31E1 /* MenuPickerRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65039B922E9869E9007A31E1 /* MenuPickerRow.swift */; };
 		6510A2D22E28843C0051D002 /* SetInputRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510A2D12E28843C0051D002 /* SetInputRow.swift */; };
 		6510A2D42E2DB5440051D002 /* HeightSelectorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510A2D32E2DB5440051D002 /* HeightSelectorRow.swift */; };
 		6510A2D62E2DB5500051D002 /* WeightSelectorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510A2D52E2DB5500051D002 /* WeightSelectorRow.swift */; };
@@ -236,6 +237,8 @@
 		65E05D112E7B88FC00E39CC2 /* WeightPlates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */; };
 		65E05D132E7B894900E39CC2 /* InitEquipment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D122E7B894900E39CC2 /* InitEquipment.swift */; };
 		65E05D152E7B899100E39CC2 /* Implementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D142E7B899100E39CC2 /* Implementation.swift */; };
+		65E199D32E99CF9300682415 /* RectangularLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E199D22E99CF9300682415 /* RectangularLabel.swift */; };
+		65E199D62E99D7B600682415 /* CardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E199D52E99D7B600682415 /* CardContainer.swift */; };
 		65E4E2E32DEE1ABD00AF41B8 /* AppContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E4E2E22DEE1ABD00AF41B8 /* AppContext.swift */; };
 		65ECFF0E2E21F1BA0091032A /* FloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ECFF0D2E21F1BA0091032A /* FloatingButton.swift */; };
 		65ECFF102E221FB80091032A /* KeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ECFF0F2E221FB80091032A /* KeyboardManager.swift */; };
@@ -261,6 +264,7 @@
 		65039B892E8474BC007A31E1 /* SetLoadEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetLoadEditor.swift; sourceTree = "<group>"; };
 		65039B8E2E88D807007A31E1 /* SimpleStopwatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleStopwatch.swift; sourceTree = "<group>"; };
 		65039B902E970D12007A31E1 /* SetDetailSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDetailSettings.swift; sourceTree = "<group>"; };
+		65039B922E9869E9007A31E1 /* MenuPickerRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPickerRow.swift; sourceTree = "<group>"; };
 		6510A2D12E28843C0051D002 /* SetInputRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetInputRow.swift; sourceTree = "<group>"; };
 		6510A2D32E2DB5440051D002 /* HeightSelectorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightSelectorRow.swift; sourceTree = "<group>"; };
 		6510A2D52E2DB5500051D002 /* WeightSelectorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightSelectorRow.swift; sourceTree = "<group>"; };
@@ -472,6 +476,8 @@
 		65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightPlates.swift; sourceTree = "<group>"; };
 		65E05D122E7B894900E39CC2 /* InitEquipment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitEquipment.swift; sourceTree = "<group>"; };
 		65E05D142E7B899100E39CC2 /* Implementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Implementation.swift; sourceTree = "<group>"; };
+		65E199D22E99CF9300682415 /* RectangularLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularLabel.swift; sourceTree = "<group>"; };
+		65E199D52E99D7B600682415 /* CardContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardContainer.swift; sourceTree = "<group>"; };
 		65E4E2E22DEE1ABD00AF41B8 /* AppContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContext.swift; sourceTree = "<group>"; };
 		65ECFF0D2E21F1BA0091032A /* FloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingButton.swift; sourceTree = "<group>"; };
 		65ECFF0F2E221FB80091032A /* KeyboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardManager.swift; sourceTree = "<group>"; };
@@ -695,6 +701,7 @@
 				6510A2D32E2DB5440051D002 /* HeightSelectorRow.swift */,
 				6510A2D52E2DB5500051D002 /* WeightSelectorRow.swift */,
 				6550ADBD2E6BBEAA002072C1 /* TemplateRow.swift */,
+				65039B922E9869E9007A31E1 /* MenuPickerRow.swift */,
 			);
 			path = Row;
 			sourceTree = "<group>";
@@ -994,6 +1001,7 @@
 		65CD3BE72DD3C84F00C2B671 /* Reusable */ = {
 			isa = PBXGroup;
 			children = (
+				65E199D42E99D78200682415 /* Background */,
 				65039B682E7E2EF1007A31E1 /* ExerciseSorting */,
 				6550ADAA2E6A2B60002072C1 /* Row */,
 				6550ADA92E6A2B2B002072C1 /* Button */,
@@ -1004,12 +1012,12 @@
 				65ECFF172E2609190091032A /* SearchBar.swift */,
 				65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */,
 				65CD3BE62DD3C84F00C2B671 /* WeightSelectorView.swift */,
-				65A0D1CF2E318D21008466D8 /* RectangularBG.swift */,
 				65A0D1D22E38639A008466D8 /* GeneratingOverlay.swift */,
 				653136112E5112D500EECCA5 /* ExpandCollapseList.swift */,
 				653BF8B02E6618E2005A07EA /* GenericEditor.swift */,
 				653136202E53F11A00EECCA5 /* TappableDisclosure.swift */,
 				6550ADB92E6BAC12002072C1 /* TemplateNavigator.swift */,
+				65E199D22E99CF9300682415 /* RectangularLabel.swift */,
 			);
 			path = Reusable;
 			sourceTree = "<group>";
@@ -1168,6 +1176,15 @@
 			path = Equipment;
 			sourceTree = "<group>";
 		};
+		65E199D42E99D78200682415 /* Background */ = {
+			isa = PBXGroup;
+			children = (
+				65A0D1CF2E318D21008466D8 /* RectangularBG.swift */,
+				65E199D52E99D7B600682415 /* CardContainer.swift */,
+			);
+			path = Background;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1292,6 +1309,7 @@
 				65CD3C3C2DD3C84F00C2B671 /* OneRMCalculator.swift in Sources */,
 				65CD3C3D2DD3C84F00C2B671 /* EquipmentDetail.swift in Sources */,
 				65CFBFAB2E1F747A00CD521E /* UploadImage.swift in Sources */,
+				65E199D62E99D7B600682415 /* CardContainer.swift in Sources */,
 				65A0D1D32E38639A008466D8 /* GeneratingOverlay.swift in Sources */,
 				65CD3C3E2DD3C84F00C2B671 /* EquipmentPopUp.swift in Sources */,
 				65CD3C3F2DD3C84F00C2B671 /* EquipmentSelection.swift in Sources */,
@@ -1315,6 +1333,7 @@
 				65AC86492E2836070034FAA3 /* ExEquipImage.swift in Sources */,
 				65CD3C492DD3C84F00C2B671 /* CalendarView.swift in Sources */,
 				65CD3C4A2DD3C84F00C2B671 /* HistoryView.swift in Sources */,
+				65039B932E9869E9007A31E1 /* MenuPickerRow.swift in Sources */,
 				6550ADBE2E6BBEAA002072C1 /* TemplateRow.swift in Sources */,
 				65CD3C4B2DD3C84F00C2B671 /* ConsistencyGraph.swift in Sources */,
 				65C5DC712DF01FD500B09AD2 /* BMICategoryTable.swift in Sources */,
@@ -1413,6 +1432,7 @@
 				65CD3C782DD3C84F00C2B671 /* WeekWorkout.swift in Sources */,
 				65CD3C792DD3C84F00C2B671 /* WorkoutGeneration.swift in Sources */,
 				65C5DC592DEFB5AE00B09AD2 /* Split.swift in Sources */,
+				65E199D32E99CF9300682415 /* RectangularLabel.swift in Sources */,
 				653BF89F2E595AFB005A07EA /* EquipmentRow.swift in Sources */,
 				653BF8AF2E5FA803005A07EA /* ImplementRow.swift in Sources */,
 				65039B912E970D12007A31E1 /* SetDetailSettings.swift in Sources */,

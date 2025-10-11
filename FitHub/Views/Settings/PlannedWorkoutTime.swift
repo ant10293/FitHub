@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-
+// TODO: we should separate the interval and time logic into separate views
 // Date only? or Date and Hour
 // Notify how long before planned Time or Notify at Beginning of Day
 // Select Default Workout Time
@@ -45,9 +45,6 @@ struct PlannedWorkoutTime: View {
         Section {
             VStack {
                 Toggle("Date Only", isOn: $userData.settings.useDateOnly)
-                    .onChange(of: userData.settings.useDateOnly) {
-                        //userData.saveSingleStructToFile(\.settings, for: .settings)
-                    }
                 Text(userData.settings.useDateOnly ? "Notifications will be based on the date only." : "Notifications will include time of day.")
                     .multilineTextAlignment(.leading)
                     .font(.caption)
@@ -56,10 +53,6 @@ struct PlannedWorkoutTime: View {
             VStack {
                 // should be workout reminders?
                 Toggle("Notify Before Workout", isOn: $userData.settings.notifyBeforePlannedTime)
-                    .onChange(of: userData.settings.notifyBeforePlannedTime) {
-                        //userData.saveSingleStructToFile(\.settings, for: .settings)
-                    }
-                
                 Text(userData.settings.notifyBeforePlannedTime ? "You will be notified before the planned workout time." : "You will be dynamically notified the day of your workout.")
                     .multilineTextAlignment(.leading)
                     .font(.caption)
@@ -82,7 +75,6 @@ struct PlannedWorkoutTime: View {
                                  // store *only* hour/minute (no seconds)
                                  let comps = CalendarUtility.shared.dateComponents([.hour, .minute], from: newDate)
                                  userData.settings.defaultWorkoutTime = comps
-                                 //userData.saveSingleStructToFile(\.settings, for: .settings)
                              }
                          ),
                          displayedComponents: .hourAndMinute
@@ -107,7 +99,7 @@ struct PlannedWorkoutTime: View {
                 RectangularButton(
                     title: isPickerExpanded ? "Hide Picker" : "Add Notification Time",
                     systemImage: isPickerExpanded ? "xmark" : "plus",
-                    color: isPickerExpanded ? .red : .blue,
+                    bgColor: isPickerExpanded ? .red : .blue,
                     action: {
                         isPickerExpanded.toggle()
                     }
@@ -240,7 +232,7 @@ struct PlannedWorkoutTime: View {
         }
     }
     
-   private var totalSeconds: Int { duration.inSeconds }
+    private var totalSeconds: Int { duration.inSeconds }
         
     private var components: DateComponents {
         return CalendarUtility.shared.dateComponents([.hour, .minute], from: draftTime)
@@ -256,27 +248,19 @@ struct PlannedWorkoutTime: View {
         let added = userData.settings.notifications.addInterval(totalSeconds: totalSeconds)
         if added { duration = .hrMinToSec(hours: 1, minutes: 0) }
         isPickerExpanded = false
-        save(shouldSave: added)
     }
     
     private func removeInterval(_ interval: TimeInterval) {
-        let removed = userData.settings.notifications.removeInterval(interval)
-        save(shouldSave: removed)
+        _ = userData.settings.notifications.removeInterval(interval)
     }
     
     // MARK: - Time-of-day helpers
     private func addTime() {
-        let added = userData.settings.notifications.addTime(components: components)
+        _ = userData.settings.notifications.addTime(components: components)
         isPickerExpanded = false
-        save(shouldSave: added)
     }
 
     private func removeTime(_ comps: DateComponents) {
-        let removed = userData.settings.notifications.removeTime(comps)
-        save(shouldSave: removed)
-    }
-    
-    private func save(shouldSave: Bool) {
-        //if shouldSave { userData.saveSingleStructToFile(\.settings, for: .settings) }
+        _ = userData.settings.notifications.removeTime(comps)
     }
 }

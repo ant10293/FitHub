@@ -336,7 +336,7 @@ extension CSVLoader {
         return decideFinalFitnessLevel(fitnessLevelAge, fitnessLevelBW)
     }
     
-    // this is not good for accomodating older users
+    // FIXME: this is not good for accomodating older users
     static private func decideFinalFitnessLevel(_ ageLevel: StrengthLevel, _ bwLevel: StrengthLevel) -> StrengthLevel {
         let ageWeight = 0.3  // 30% weight to the age level
         let bwWeight = 0.7   // 70% weight to the bodyweight level

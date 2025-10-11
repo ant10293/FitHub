@@ -1,8 +1,6 @@
 import SwiftUI
 import AuthenticationServices
 
-
-
 struct WelcomeView: View {
     @Environment(\.colorScheme) private var colorScheme
     @ObservedObject var userData: UserData
@@ -38,7 +36,7 @@ struct WelcomeView: View {
                         authService.signIn(with: result, into: userData) { res in
                             switch res {
                             case .success:
-                                handleNavigation(saveSingleVar: true)
+                                handleNavigation()
                             case .failure(let err):
                                 print("Sign-in failed:", err)
                             }
@@ -54,7 +52,7 @@ struct WelcomeView: View {
                     // ───── Guest button ─────────
                     Button("Continue without Account") {
                         userData.settings.allowedCredentials = false
-                        handleNavigation(saveSingleVar: false)
+                        handleNavigation()
                     }
                     .bold()
                     .frame(width: btnW, height: btnH)
@@ -70,22 +68,8 @@ struct WelcomeView: View {
         .navigationTitle("Welcome")
     }
 
-    // MARK: – thin separator line
-    struct Line: View {
-        var body: some View {
-            Rectangle()
-                .frame(height: 1)
-                .foregroundStyle(Color.secondary)
-        }
-    }
-
     // MARK: – Navigation / persistence
-    private func handleNavigation(saveSingleVar: Bool) {
+    private func handleNavigation() {
         userData.setup.setupState = .healthKitView
-        if saveSingleVar {
-            //userData.saveSingleStructToFile(\.setup, for: .setup)
-        } else {
-            //userData.saveToFile()
-        }
     }
 }

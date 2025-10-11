@@ -18,9 +18,6 @@ struct SortSettings: View {
             Section {
                 // option to disable ExerciseSortOptions picker
                 Toggle("Exercise Sort Picker", isOn: $userData.settings.enableSortPicker)
-                    .onChange(of: userData.settings.enableSortPicker) {
-                        //userData.saveSingleStructToFile(\.settings, for: .settings)
-                    }
             } footer: {
                 Text("When disabled, the Sort picker in the exercise category selection bar is hidden.")
             }
@@ -29,9 +26,6 @@ struct SortSettings: View {
             Section {
                 // option to save new selections as default
                 Toggle("Save New Selection as Default", isOn: $userData.settings.saveSelectedSort)
-                    .onChange(of: userData.settings.saveSelectedSort) {
-                        //userData.saveSingleStructToFile(\.settings, for: .settings)
-                    }
                 
                 // Only show the default-category picker when NOT saving current selection
                 if !userData.settings.saveSelectedSort {
@@ -40,11 +34,6 @@ struct SortSettings: View {
                     Picker("Default Category", selection: $userData.sessionTracking.exerciseSortOption) {
                         ForEach(ExerciseSortOption.allCases.filter { $0 != .templateCategories }, id: \.self) { option in
                             Text(option.rawValue).tag(Optional(option))
-                        }
-                    }
-                    .onChange(of: userData.sessionTracking.exerciseSortOption) { oldValue, newValue in
-                        if oldValue != newValue {
-                            //userData.saveSingleStructToFile(\.sessionTracking, for: .sessionTracking)
                         }
                     }
                 }
@@ -60,11 +49,6 @@ struct SortSettings: View {
             Section {
                 // option to sort by template categories by default when editing a template with categories
                 Toggle("Sort by Template Categories", isOn: $userData.settings.sortByTemplateCategories)
-                    .onChange(of: userData.settings.sortByTemplateCategories) {
-                        if isDefault {
-                            //userData.saveSingleStructToFile(\.settings, for: .settings)
-                        }
-                    }
             } footer: {
                 Text("If a workout template has its own category list, enabling this will automatically filter exercises to match those categories.")
             }
@@ -74,10 +58,6 @@ struct SortSettings: View {
                 // ── Hide Unequipped ─────────────────────────────
                 VStack(alignment: .leading, spacing: 2) {
                     Toggle("Hide Unequipped Exercises", isOn: $userData.settings.hideUnequippedExercises)
-                        .onChange(of: userData.settings.hideUnequippedExercises) {
-                            //userData.saveSingleStructToFile(\.settings, for: .settings)
-                        }
-
                     Text("Hides any exercise that requires equipment you haven’t selected.")
                         .font(.caption)
                         .foregroundStyle(Color.secondary)
@@ -86,10 +66,6 @@ struct SortSettings: View {
                 // ── Hide Difficult ─────────────────────────────
                 VStack(alignment: .leading, spacing: 2) {
                     Toggle("Hide Difficult Exercises", isOn: $userData.settings.hideDifficultExercises)
-                        .onChange(of: userData.settings.hideDifficultExercises) {
-                            //userData.saveSingleStructToFile(\.settings, for: .settings)
-                        }
-
                     Text("Filters out exercises that exceed your current strength level of '\(userData.evaluation.strengthLevel.fullName)'.")
                         .font(.caption)
                         .foregroundStyle(Color.secondary)
@@ -98,10 +74,6 @@ struct SortSettings: View {
                 // ── Hide Disliked ──────────────────────────────
                 VStack(alignment: .leading, spacing: 2) {
                     Toggle("Hide Disliked Exercises", isOn: $userData.settings.hideDislikedExercises)
-                        .onChange(of: userData.settings.hideDislikedExercises) {
-                            //userData.saveSingleStructToFile(\.settings, for: .settings)
-                        }
-
                     Text("Hides any exercise you’ve marked as “disliked.”")
                         .font(.caption)
                         .foregroundStyle(Color.secondary)
@@ -129,8 +101,6 @@ struct SortSettings: View {
         userData.settings.hideUnequippedExercises = false
         userData.settings.hideDifficultExercises = false
         userData.settings.hideDislikedExercises = false
-
-        //userData.saveToFile()
     }
 
     private var isDefault: Bool {

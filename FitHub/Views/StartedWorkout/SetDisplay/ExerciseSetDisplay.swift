@@ -45,13 +45,12 @@ struct ExerciseSetDisplay: View {
                         title: "Start Countdown",
                         systemImage: "play.fill",
                         enabled: seconds > 0,
-                        color: .green,
+                        bgColor: .green,
                         width: .fit,
                         action: {
                             showTimer = true
                         }
                     )
-                    .clipShape(.capsule)
                 }
             }
             
@@ -203,11 +202,9 @@ struct ExerciseSetDisplay: View {
             completed = .reps(plannedReps)
 
         case .hold(let plannedTime):
-            //completed = .hold(TimeSpan(seconds: setDetail.completed?.holdTime?.inSeconds ?? plannedTime.inSeconds))
             completed = .hold(TimeSpan(seconds: plannedTime.inSeconds))
            
         case .cardio(let timeSpeed):
-          //  completed = .cardio(TimeOrSpeed(speed: timeSpeed.speed, distance: setDetail.load.distance ?? .init(distance: 0)))
             completed = .cardio(TimeOrSpeed(showing: .time, time: timeSpeed.time, speed: timeSpeed.speed))
         }
     }

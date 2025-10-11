@@ -155,7 +155,7 @@ struct MacroCalculator: View {
 
         // Persist weight/height (always metric in storage)
         let kg = round(weight.inKg * 100) / 100
-        userData.updateMeasurementValue(for: .weight, with: kg, shouldSave: false)
+        userData.updateMeasurementValue(for: .weight, with: kg)
         userData.physical.height = height
 
         // Persist macros & calories
@@ -163,10 +163,8 @@ struct MacroCalculator: View {
             userData.physical.carbs    = r.carbs
             userData.physical.proteins = r.proteins
             userData.physical.fats     = r.fats
-            userData.updateMeasurementValue(for: .caloricIntake, with: r.totalCalories, shouldSave: false)
+            userData.updateMeasurementValue(for: .caloricIntake, with: r.totalCalories)
         }
-
-        //userData.saveToFile()
     }
 
     // MARK: - View Models

@@ -16,16 +16,12 @@ struct RestTimerSettings: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 12) {
-                // Master toggle
                 card {
                     HStack {
                         Text("Rest Timer").font(.headline)
                         Spacer()
                         Toggle("", isOn: $userData.settings.restTimerEnabled)
                             .labelsHidden()
-                            .onChange(of: userData.settings.restTimerEnabled) {
-                                //userData.saveSingleStructToFile(\.settings, for: .settings)
-                            }
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 12)
@@ -54,25 +50,6 @@ struct RestTimerSettings: View {
             }
         }
         .onAppear(perform: onAppear)
-        .onDisappear(perform: onDisappear)
-    }
-    
-    private func onAppear() {
-        initialCustom = userData.workoutPrefs.customRestPeriods
-        if let open = activeEditor { loadPicker(from: open) }
-    }
-    
-    private func onDisappear() {
-        if initialCustom != userData.workoutPrefs.customRestPeriods {
-            //userData.saveSingleStructToFile(\.workoutPrefs, for: .workoutPrefs)
-        }
-    }
-    
-    private func reset() {
-        userData.settings.restTimerEnabled = true
-        userData.workoutPrefs.customRestPeriods = nil
-        if let open = activeEditor { loadPicker(from: open) }
-        //userData.saveToFile()
     }
     
     private func restRow(kind: RestType) -> some View {
@@ -105,7 +82,9 @@ struct RestTimerSettings: View {
                 if activeEditor == kind {
                     VStack(spacing: 10) {
                         MinSecPicker(time: $editTime)
-                            .onChange(of: editTime) { savePicker(into: kind) }
+                            .onChange(of: editTime) {
+                                savePicker(into: kind)
+                            }
                         
                         HStack {
                             Spacer()
@@ -121,6 +100,17 @@ struct RestTimerSettings: View {
             }
         }
         .padding(.horizontal)
+    }
+    
+    private func onAppear() {
+        initialCustom = userData.workoutPrefs.customRestPeriods
+        if let open = activeEditor { loadPicker(from: open) }
+    }
+    
+    private func reset() {
+        userData.settings.restTimerEnabled = true
+        userData.workoutPrefs.customRestPeriods = nil
+        if let open = activeEditor { loadPicker(from: open) }
     }
     
     private var resolved: RestPeriods {

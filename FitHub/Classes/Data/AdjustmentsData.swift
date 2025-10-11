@@ -44,9 +44,7 @@ final class AdjustmentsData: ObservableObject {
         var adjustmentValues: [AdjustmentCategory : AdjustmentValue] = [:]
 
         for requiredName in exercise.equipmentRequired {            // [String]
-            if let gear = allEquipment.first(where: {
-                    normalize($0.name) == normalize(requiredName)
-                }),
+            if let gear = allEquipment.first(where: { $0.name.normalize() == requiredName.normalize() }),
                let gearAdjustments = gear.adjustments {
 
                 // create default values for every adjustment category

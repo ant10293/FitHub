@@ -42,7 +42,6 @@ struct GoalSelectionView: View {
                     dismissButton: .default(Text("OK")) {
                         if let goal = userGoal {
                             userData.physical.goal = goal
-                            //userData.saveSingleStructToFile(\.physical, for: .physical)
                         }
                     }
                 )
@@ -113,10 +112,9 @@ struct GoalSelectionView: View {
     
     private func updateUserGoal() {
         if let goal = userGoal {
-            userData.updateMeasurementValue(for: .bmi, with: bmi, shouldSave: false)
+            userData.updateMeasurementValue(for: .bmi, with: bmi)
             userData.setup.setupState = .finished
             userData.physical.goal = goal
-            //userData.saveToFile()
         }
     }
     

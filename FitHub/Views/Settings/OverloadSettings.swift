@@ -17,9 +17,6 @@ struct OverloadSettings: View {
             if !fromCalculator {
                 Section {
                     Toggle("Progressive Overload", isOn: $userData.settings.progressiveOverload)
-                        .onChange(of: userData.settings.progressiveOverload) {
-                            //userData.saveSingleStructToFile(\.settings, for: .settings)
-                        }
                 } footer: {
                     Text("When enabled, trainer templates will be automatically updated weekly based on your performance.")
                 }
@@ -32,11 +29,6 @@ struct OverloadSettings: View {
                     }
                 }
                 .pickerStyle(MenuPickerStyle())
-                .onChange(of: userData.settings.progressiveOverloadStyle) { oldValue, newValue in
-                    if oldValue != newValue {
-                        //userData.saveSingleStructToFile(\.settings, for: .settings)
-                    }
-                }
             } header: {
                 Text("Overload Style")
             } footer: {
@@ -66,9 +58,6 @@ struct OverloadSettings: View {
             
             Section {
                 Stepper("\(userData.settings.progressiveOverloadPeriod) weeks", value: $userData.settings.progressiveOverloadPeriod, in: 1...12)
-                .onChange(of: userData.settings.progressiveOverloadPeriod) {
-                    //userData.saveSingleStructToFile(\.settings, for: .settings)
-                }
             } header: {
                 Text("Overload Period")
             } footer: {
@@ -78,9 +67,6 @@ struct OverloadSettings: View {
             if !fromCalculator {
                 Section {
                     Stepper("\(userData.settings.stagnationPeriod) weeks", value: $userData.settings.stagnationPeriod, in: 1...12)
-                        .onChange(of: userData.settings.stagnationPeriod) {
-                            //userData.saveSingleStructToFile(\.settings, for: .settings)
-                        }
                 } header: {
                     Text("Stagnation Duration")
                 } footer: {

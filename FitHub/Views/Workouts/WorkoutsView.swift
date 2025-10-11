@@ -32,7 +32,7 @@ struct WorkoutsView: View {
     private var resumeWorkoutOverlay: some View {
         ResumeWorkoutOverlay(
             cancel: {
-                ctx.userData.resetWorkoutSession(shouldSave: true)
+                ctx.userData.resetWorkoutSession()
                 showResumeWorkoutOverlay = false
             },
             resume: {
@@ -135,7 +135,7 @@ struct WorkoutsView: View {
                 },
                 onUpdateTemplate: { updatedTemplate in
                     if let updatedTemplate = updatedTemplate {
-                        _ = ctx.userData.updateTemplate(template: updatedTemplate)
+                        ctx.userData.updateTemplate(template: updatedTemplate)
                     }
                 },
                 onArchiveTemplate: { templateToArchive in

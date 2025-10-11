@@ -232,6 +232,11 @@ extension String {
     }
     
     @inline(__always)
+    func normalize() -> String {
+        self.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    }
+    
+    @inline(__always)
     func normalized(removing: CharacterSet) -> String {
         unicodeScalars
             .filter { !removing.contains($0) }

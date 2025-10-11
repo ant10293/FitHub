@@ -42,7 +42,7 @@ struct EnterOneRepMaxes: View {
                     RectangularButton(
                         title: "Submit",
                         enabled: submitEnabled,
-                        color: submitEnabled ? .green : .gray,
+                        bgColor: submitEnabled ? .green : .gray,
                         action: handleSubmit
                     )
                     .padding()
@@ -113,7 +113,6 @@ struct EnterOneRepMaxes: View {
         if maxValuesEntered {
             exerciseData.savePerformanceData()
             userData.setup.oneRepMaxesEntered = true
-            //userData.saveSingleStructToFile(\.setup, for: .setup)
             onFinish()
         }
     }

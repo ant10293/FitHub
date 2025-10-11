@@ -29,7 +29,6 @@ struct SettingsView: View {
                 Toggle("Enable Notifications", isOn: notifications.toggleBinding)
                 .onChange(of: notifications.isAuthorized) { oldValue, newValue in
                     ctx.userData.settings.allowedNotifications = newValue
-                    //ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
                 }
             }
             label: {
@@ -43,34 +42,6 @@ struct SettingsView: View {
             Text("General")
         }
     }
-    
-    private func requestNotificationPermissionIfNeeded() {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            if settings.authorizationStatus == .notDetermined {
-                requestNotificationPermission()
-            } else {
-                DispatchQueue.main.async {
-                    ctx.userData.settings.allowedNotifications = settings.authorizationStatus == .authorized
-                    //ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
-                }
-            }
-        }
-    }
-    
-    private func requestNotificationPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-            DispatchQueue.main.async {
-                ctx.userData.settings.allowedNotifications = granted
-                //ctx.userData.saveSingleStructToFile(\.settings, for: .settings)
-            }
-            if let error = error {
-                print("Error requesting notifications permission: \(error.localizedDescription)")
-            } else {
-                print(granted ? "Notification permission granted" : "Notification permission denied")
-            }
-        }
-    }
-    
  
     private func advancedWorkoutSection() -> some View {
         Section {

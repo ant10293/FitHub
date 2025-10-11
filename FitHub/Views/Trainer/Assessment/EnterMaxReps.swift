@@ -39,7 +39,7 @@ struct EnterMaxReps: View {
                 Spacer()
                 
                 if !kbd.isVisible {
-                    RectangularButton(title: "Submit", enabled: submitEnabled, color: submitEnabled ? .green : .gray, action: handleSubmit)
+                    RectangularButton(title: "Submit", enabled: submitEnabled, bgColor: submitEnabled ? .green : .gray, action: handleSubmit)
                         .padding()
                 }
                 
@@ -79,7 +79,6 @@ struct EnterMaxReps: View {
         if maxValuesEntered {
             exerciseData.savePerformanceData()
             userData.setup.maxRepsEntered = true
-           // userData.saveSingleStructToFile(\.setup, for: .setup)
             onFinish()
         }
     }

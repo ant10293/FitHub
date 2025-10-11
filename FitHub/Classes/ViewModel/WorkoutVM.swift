@@ -201,7 +201,7 @@ final class WorkoutVM: ObservableObject {
         // MARK: remove date only if a workout was not already completed today - Maybe remove this requirement so date is always removed
         ctx.userData.removePlannedWorkoutDate(templateID: template.id, removeDate: !completedToday, date: roundedDate)
                 
-        if !completedToday { ctx.userData.incrementWorkoutStreak(shouldSave: false) }
+        if !completedToday { ctx.userData.incrementWorkoutStreak() }
         
         // save precise date for determing freshness of muscle groups
         let completedWorkout: CompletedWorkout = .init(template: template, updatedMax: updates.updatedMax, duration: completionDuration, date: now)
@@ -216,10 +216,8 @@ final class WorkoutVM: ObservableObject {
         ctx.exercises.applyPerformanceUpdates(updates: updates.updatedMax, csvEstimate: false)
         
         // CRITICAL: Reset all workout state atomically
-        ctx.userData.resetWorkoutSession(shouldSave: false)
+        ctx.userData.resetWorkoutSession()
         
-        // Force save to ensure state is persisted
-        //ctx.userData.saveToFile()
         completion()
     }
 }

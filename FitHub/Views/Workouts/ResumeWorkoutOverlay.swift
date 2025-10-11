@@ -27,8 +27,8 @@ struct ResumeWorkoutOverlay: View {
                     .minimumScaleFactor(0.7)
                 
                 HStack {
-                    RectangularButton(title: "Cancel", color: .red, action: cancel)
-                    RectangularButton(title: "Resume", color: .blue, action: resume)
+                    RectangularButton(title: "Cancel", bgColor: .red, action: cancel)
+                    RectangularButton(title: "Resume", bgColor: .blue, action: resume)
                 }
                 .padding(.top, 10)
             }

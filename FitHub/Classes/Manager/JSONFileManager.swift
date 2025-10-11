@@ -184,6 +184,7 @@ final class JSONFileManager {
         debounceQueue.asyncAfter(deadline: .now() + delay, execute: work)
     }
     
+    /*
     func debouncedSingleFieldSave<T: Encodable>(_ value: T, for key: String, in filename: String, delay: TimeInterval = 0.4) {
         let saveKey = "\(filename)-\(key)"
         
@@ -225,4 +226,5 @@ final class JSONFileManager {
         pendingSingleSaves[saveKey] = work
         debounceQueue.asyncAfter(deadline: .now() + delay, execute: work)
     }
+    */
 }

@@ -77,7 +77,7 @@ struct NewEquipment: View {
                         RectangularButton(
                             title: isEditing ? "Save Changes" : "Create Equipment",
                             enabled: isInputValid,
-                            color: isInputValid ? .blue : .gray
+                            bgColor: isInputValid ? .blue : .gray
                         ) {
                             equipmentCreated = true
                             draft.name = InputLimiter.trimmed(draft.name)
@@ -95,7 +95,7 @@ struct NewEquipment: View {
                         .padding()
                         
                         if isEditing {
-                            RectangularButton(title: "Delete Equipment", systemImage: "trash", color: .red, action: {
+                            RectangularButton(title: "Delete Equipment", systemImage: "trash", bgColor: .red, action: {
                                 showDeleteAlert = true
                             })
                             .padding()
@@ -166,6 +166,7 @@ struct NewEquipment: View {
         }
     }
     
+    // TODO: use MenuPickerRow here
     private var categoryPicker: some View {
         HStack {
             Text("Category").font(.headline)
@@ -222,7 +223,6 @@ struct NewEquipment: View {
             Text(pegs.wrappedValue.helpText)
                 .font(.footnote)
                 .foregroundStyle(.secondary)
-            
         }
     }
     

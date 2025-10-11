@@ -86,11 +86,12 @@ enum EquipmentCategory: String, CaseIterable, Identifiable, Codable {
     case smallWeights = "Small Weights" // dumbbells
     case barsPlates = "Bars & Plates"
     case benchesRacks = "Benches & Racks"
-    case cableMachines = "Cable Machines" //
-    case platedMachines = "Plated Machines" //
-    case weightMachines = "Weight Machines" //
+    case cableMachines = "Cable Machines"
+    case platedMachines = "Plated Machines"
+    case weightMachines = "Weight Machines"
     case resistanceBands = "Resistance Bands"
     case householdItems = "Household Items"
+    case cardioMachines = "Cardio Machines"
     case other = "Other"
     
     var id: String { self.rawValue }
@@ -100,7 +101,7 @@ enum EquipmentCategory: String, CaseIterable, Identifiable, Codable {
         return categories.map { $0.rawValue }.joined(separator: ", ")
     }
     
-    static let machineCats: Set<EquipmentCategory> = [.platedMachines, .weightMachines, .cableMachines]
+    static let machineCats: Set<EquipmentCategory> = [.platedMachines, .weightMachines, .cableMachines, .cardioMachines]
     static let freeWeightCats: Set<EquipmentCategory> = [.smallWeights, .barsPlates]
     static let platedCats: Set<EquipmentCategory> = [.platedMachines, .smallWeights, .barsPlates]
 }
