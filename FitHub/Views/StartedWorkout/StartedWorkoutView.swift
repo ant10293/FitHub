@@ -29,6 +29,7 @@ struct StartedWorkoutView: View {
             // Overlay content
             if viewModel.isOverlayVisible { exerciseSetOverlay }
             if viewModel.showWorkoutSummary { workoutSummaryOverlay }
+            if !ctx.userData.evaluation.askedRPEprompt { rpePromptOverlay }
         }
         .navigationBarTitle("\(viewModel.template.name)", displayMode: .inline)
         .navigationBarBackButtonHidden(true)
@@ -84,14 +85,21 @@ struct StartedWorkoutView: View {
       .disabled(viewModel.isOverlayVisible)
     }
     
+    private var rpePromptOverlay: some View {
+        RPEPrompt(
+            onSelect: { hideRPE in
+                ctx.userData.settings.hideRpeSlider = hideRPE
+                ctx.userData.evaluation.askedRPEprompt = true
+            }
+        )
+    }
+    
     private var workoutSummaryOverlay: some View {
         WorkoutSummary(
             summary: viewModel.calculateWorkoutSummary(),
             exercises: viewModel.template.exercises,
             onDone: {
-                viewModel.finishWorkoutAndDismiss(ctx: ctx, completion: {
-                    onExit()
-                })
+                viewModel.finishWorkoutAndDismiss(ctx: ctx, completion: onExit)
             }
         )
     }
@@ -152,9 +160,7 @@ struct StartedWorkoutView: View {
             Alert(title: Text("Are you sure you want to go back?"),
                 message: Text("Doing so will end your workout."),
                 primaryButton: .destructive(Text("End Workout")) {
-                    viewModel.endWorkoutAndDismiss(ctx: ctx, completion: {
-                        onExit()
-                    })
+                    viewModel.endWorkoutAndDismiss(ctx: ctx, completion: onExit)
                 },
                 secondaryButton: .cancel()
             )

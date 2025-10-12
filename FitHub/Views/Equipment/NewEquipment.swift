@@ -21,7 +21,7 @@ struct NewEquipment: View {
     @State private var showDeleteAlert: Bool = false
     @State private var alternativeEquipment: [GymEquipment] = []
     @State private var draft: InitEquipment
-    var original: GymEquipment? = nil
+    let original: GymEquipment? 
     
     init(original: GymEquipment? = nil) {
         self.original = original
@@ -84,7 +84,7 @@ struct NewEquipment: View {
                             
                             if !isReadOnly {
                                 if let orig = original {
-                                    ctx.equipment.replace(orig, with: equipment)
+                                    ctx.equipment.replace(at: orig.id, with: equipment)
                                 } else {
                                     ctx.equipment.addEquipment(equipment)
                                 }
@@ -166,7 +166,6 @@ struct NewEquipment: View {
         }
     }
     
-    // TODO: use MenuPickerRow here
     private var categoryPicker: some View {
         HStack {
             Text("Category").font(.headline)

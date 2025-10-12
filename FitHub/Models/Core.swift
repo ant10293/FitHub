@@ -108,35 +108,31 @@ enum inOut { case input, output }
 enum OneRMFormula {
     case epleys, landers, brzycki, oconnor
     
-    static func calculateOneRepMax(weight: Mass, reps: Int, formula: OneRMFormula) -> Mass {
-        guard reps > 1 else { return weight }   // 1 rep ⇒ already a 1 RM
-        let r = Double(reps), w = weight.inKg
-        guard w > 0 else { return weight }
-
-        let resultKg: Double
-        switch formula {
+    static let canonical: OneRMFormula = .brzycki
+    
+    @inline(__always)
+    func percent(at reps: Int) -> Double {
+        let r = max(1, min(reps, 20)) // clamp to sane range
+        switch self {
         case .epleys:
-            // 1RM = W * (1 + 0.0333 * r)
-            resultKg = w * (1.0 + 0.0333 * r)
-
+            // 1RM = W * (1 + 0.0333*r)  =>  % = 1 / (1 + 0.0333*r)
+            return 1.0 / (1.0 + 0.0333 * Double(r))
         case .landers:
-            // 1RM = (100 * W) / (101.3 − 2.67123 * r)
-            // Denominator can approach zero at very high reps; clamp to stay safe.
-            let denom = max(101.3 - 2.67123 * r, 0.0001)
-            resultKg = (100.0 * w) / denom
-
+            // 1RM = (100*W) / (101.3 − 2.67123*r)  =>  % = (101.3 − 2.67123*r) / 100
+            return max((101.3 - 2.67123 * Double(r)) / 100.0, 0.0001)
         case .brzycki:
-            // 1RM = W / (1.0278 − 0.0278 * r)
-            // Clamp denominator to avoid blow-ups past ~37 reps (we clamp reps anyway).
-            let denom = max(1.0278 - 0.0278 * r, 0.0001)
-            resultKg = w / denom
-
+            // 1RM = W / (1.0278 − 0.0278*r)  =>  % = (1.0278 − 0.0278*r)
+            return max(1.0278 - 0.0278 * Double(r), 0.0001)
         case .oconnor:
-            // 1RM = W * (1 + 0.025 * r)
-            resultKg = w * (1.0 + 0.025 * r)
+            // 1RM = W * (1 + 0.025*r)  =>  % = 1 / (1 + 0.025*r)
+            return 1.0 / (1.0 + 0.025 * Double(r))
         }
-
-        return Mass(kg: resultKg)
+    }
+    
+    static func calculateOneRepMax(weight: Mass, reps: Int, formula: OneRMFormula = canonical) -> Mass {
+        guard weight.inKg > 0, reps > 1 else { return weight }
+        let p = formula.percent(at: reps) // %1RM fraction
+        return Mass(kg: weight.inKg / p)
     }
 
     var description: String {
@@ -150,11 +146,6 @@ enum OneRMFormula {
         case .oconnor:
             return "1RM = weight(kg) × (1 + 0.025 × reps)"
         }
-    }
-    
-    /// “Auto‐select” rule: up to 8 reps → Brzycki; beyond 8 reps → Epley.
-    static func recommendedFormula(forReps reps: Int) -> OneRMFormula {
-        return reps <= 10 ? .epleys : .oconnor
     }
 }
 
@@ -187,10 +178,11 @@ enum BMI {
 
 enum BMR {
     static func calculateBMR(gender: Gender, weightKg: Double, heightCm: Double, age: Double) -> Double {
+        let bmr: Double = 10.0 * weightKg + 6.25 * heightCm - 5 * age
         if gender == .male {
-            return 10.0 * weightKg + 6.25 * heightCm - 5 * age + 5
+            return bmr + 5
         } else {
-            return 10.0 * weightKg + 6.25 * heightCm - 5 * age - 161
+            return bmr - 161
         }
     }
 }

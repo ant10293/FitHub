@@ -158,7 +158,7 @@ struct WorkoutCustomization: View {
         .onChange(of: selectedResistanceType) { oldValue, newValue in
             if oldValue != newValue {
                 //print("ResistanceType changed")
-                ctx.userData.workoutPrefs.ResistanceType = newValue
+                ctx.userData.workoutPrefs.resistance = newValue
             }
         }
     }
@@ -299,7 +299,7 @@ struct WorkoutCustomization: View {
         daysPerWeek = ctx.userData.workoutPrefs.workoutDaysPerWeek
         selectedDays = ctx.userData.workoutPrefs.customWorkoutDays ?? DaysOfWeek.defaultDays(for: ctx.userData.workoutPrefs.workoutDaysPerWeek)
         keepCurrentExercises = (ctx.userData.workoutPlans.trainerTemplates.isEmpty ? false : ctx.userData.workoutPrefs.keepCurrentExercises)
-        selectedResistanceType = ctx.userData.workoutPrefs.ResistanceType
+        selectedResistanceType = ctx.userData.workoutPrefs.resistance
         selectedSetStructure = ctx.userData.workoutPrefs.setStructure
         duration.setMin(minutes: ctx.userData.workoutPrefs.customDuration ?? defaultDuration.inMinutes)
     }
@@ -310,7 +310,7 @@ struct WorkoutCustomization: View {
         ctx.userData.workoutPrefs.customWorkoutDays = nil
         ctx.userData.workoutPrefs.customWorkoutSplit = nil
         ctx.userData.workoutPrefs.keepCurrentExercises = false
-        ctx.userData.workoutPrefs.ResistanceType = .any
+        ctx.userData.workoutPrefs.resistance = .any
         ctx.userData.workoutPrefs.setStructure = .pyramid
         ctx.userData.workoutPrefs.customDuration = nil
         ctx.userData.workoutPrefs.customDistribution = nil
@@ -329,7 +329,7 @@ struct WorkoutCustomization: View {
             && pref.customWorkoutDays == nil
             && pref.customWorkoutSplit == nil
             && pref.keepCurrentExercises == false
-            && pref.ResistanceType == .any
+            && pref.resistance == .any
             && pref.setStructure == .pyramid
             && pref.customDuration == nil
             && pref.customDistribution == nil

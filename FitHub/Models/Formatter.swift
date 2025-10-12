@@ -214,7 +214,11 @@ enum Format {
     }
     
     static func formatRange(range: ClosedRange<Int>) -> String {
-        "\(range.lowerBound)-\(range.upperBound)"
+        if range.lowerBound == range.upperBound {
+            "\(range.lowerBound)"
+        } else {
+            "\(range.lowerBound)-\(range.upperBound)"
+        }
     }
 }
 

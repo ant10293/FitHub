@@ -92,9 +92,9 @@ struct PlateVisualizer: View {
                     exercise: exercise,
                     gymEquip: equip,
                     onSave: { newValue in
-                        var base = BaseWeight(lb: 0, kg: 0)
-                        base.setWeight(newValue)
-                        ctx.equipment.updateBaseWeight(equipment: equip, new: base)
+                        var mutableEquip = equip
+                        mutableEquip.baseWeight?.setWeight(newValue)
+                        ctx.equipment.updateEquipment(equipment: mutableEquip)
                         showBaseWeightEditor = false
                     },
                     onExit: {

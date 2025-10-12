@@ -107,32 +107,45 @@ struct ExerciseDetailView: View {
                 ExEquipImage(image: exercise.fullImage, button: .expand)
                     .centerHorizontally()
 
-                //Text("Description: ").bold() + Text(exercise.description)
                 Text("How to perform: ").bold() // Placeholder text
+                Group {
+                    if let printedInstructions = exercise.instructions.formattedString() {
+                        Text(printedInstructions)
+                    } else {
+                        Text("No instructions available.")
+                            .foregroundStyle(Color.secondary)
+                    }
+                }
+                .padding(.bottom)
                 
                 if let limbMovementType = exercise.limbMovementType {
                     limbMovementType.displayInfoText
+                        .padding(.bottom)
                 }
                 
-                Text("Difficulty: ").bold() + Text(exercise.difficulty.fullName)
+                (Text("Difficulty: ").bold() + Text(exercise.difficulty.fullName))
+                    .padding(.bottom)
                 
-                Text("Primary Muscles: ").bold()
-                exercise.primaryMusclesFormatted
-                    .multilineTextAlignment(.leading)
-                    .font(.caption)
-                    .foregroundStyle(Color.secondary)
+                if !exercise.primaryMuscleEngagements.isEmpty {
+                    Text("Primary Muscles: ").bold()
+                    exercise.primaryMusclesFormatted
+                        .multilineTextAlignment(.leading)
+                        .font(.caption)
+                        .foregroundStyle(Color.secondary)
+                }
                 
-                
-                // Join all secondary muscles into a single comma-separated string
-                Text("Secondary Muscles: ").bold()
-                exercise.secondaryMusclesFormatted
-                    .multilineTextAlignment(.leading)
-                    .font(.caption)
-                    .foregroundStyle(Color.secondary)
+                if !exercise.secondaryMuscleEngagements.isEmpty {
+                    Text("Secondary Muscles: ").bold()
+                    exercise.secondaryMusclesFormatted
+                        .multilineTextAlignment(.leading)
+                        .font(.caption)
+                        .foregroundStyle(Color.secondary)
+                }
                 
                 if !exercise.equipmentRequired.isEmpty {
                     let equipment = ctx.equipment.equipmentForExercise(exercise)
                     EquipmentScrollRow(equipment: equipment, title: "Equipment Required")
+                        .padding(.vertical)
                 }
                 
                 if ctx.equipment.hasEquipmentAdjustments(for: exercise) {

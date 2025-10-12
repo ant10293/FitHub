@@ -64,8 +64,7 @@ struct SetDetail: Identifiable, Hashable, Codable {
     private mutating func recalculate1RM(oneRm: Mass, completed: RepsXWeight) -> Mass? {
         let base = OneRMFormula.calculateOneRepMax(
             weight: completed.weight,
-            reps: completed.reps,
-            formula: .brzycki
+            reps: completed.reps
         )
 
         // Apply RPE multiplier (if any) by constructing a new Mass
@@ -82,22 +81,10 @@ struct SetDetail: Identifiable, Hashable, Codable {
         // Only return if it truly beats the current 1RM
         return adjusted.inKg > oneRm.inKg ? adjusted : nil
     }
-    
-    /*
-    static func calculateSetWeight(oneRm: Mass, reps: Int) -> Mass {
-        // Epley‐based percentage: 1RM × (1 + reps × 0.0333)  ⇒  weight = 1RM / (1 + reps × 0.0333)
-        let r = Double(reps)
-        let percent = 1.0 / (1.0 + 0.0333 * r)
-        let weight = oneRm.inKg * percent
-        return Mass(kg: weight)
-    }
-    */
-    
-    static func calculateSetWeight(oneRm: Mass, reps: Int) -> Mass {
-        let r = max(1, reps)                           // no 0-rep sets
-        let percent = max(0.0, (37.0 - Double(r)) / 36.0)
-        let weight = oneRm.inKg * percent
-        return Mass(kg: weight)
+
+    static func calculateSetWeight(oneRm: Mass, reps: Int, formula: OneRMFormula = .canonical) -> Mass {
+        let p = formula.percent(at: max(1, reps))   // %1RM fraction
+        return Mass(kg: oneRm.inKg * p)
     }
     
     /// Multiplier that *reduces* the estimated 1 RM as RPE drops:
@@ -108,12 +95,7 @@ struct SetDetail: Identifiable, Hashable, Codable {
         let clamped = min(max(rpe, 1), 10)
         return 1.0 - 0.03 * (10.0 - clamped)
     }
-    /*
-    mutating func resetState() {
-        completed = nil
-        rpe = nil
-    }
-    */
+    
     mutating func bumpPlanned(by steps: Int, secondsPerStep: Int) {
         switch planned {
         case .reps(let r):

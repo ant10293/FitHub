@@ -224,6 +224,37 @@ struct ExerciseInstructions: Codable, Hashable {
         let item = steps.remove(at: from)
         steps.insert(item, at: clampedTo)
     }
+    
+    // MARK: - Pretty printing
+    func formattedString(prefix: String = "", numberingStyle: NumberingStyle = .oneDot, leadingNewline: Bool = false) -> String? {
+        let clean = steps
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+        guard !clean.isEmpty else { return nil }
+
+        let body = clean.enumerated().map { idx, text in
+            "\(prefix)\(numberingStyle.label(for: idx + 1)) \(text)"
+        }
+        .joined(separator: "\n")
+
+        return (leadingNewline ? "\n" : "") + body
+    }
+
+    enum NumberingStyle {
+        case oneDot        // "1."
+        case oneParen      // "1)"
+        case stepWord      // "Step 1:"
+        case bullet        // "•" (no number)
+
+        fileprivate func label(for n: Int) -> String {
+            switch self {
+            case .oneDot:   return "\(n)."
+            case .oneParen: return "\(n))"
+            case .stepWord: return "Step \(n):"
+            case .bullet:   return "•"
+            }
+        }
+    }
 }
 
 enum CallBackAction: String {

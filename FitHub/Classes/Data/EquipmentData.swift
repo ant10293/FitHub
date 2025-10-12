@@ -12,7 +12,7 @@ import Foundation
 final class EquipmentData: ObservableObject {
     private static let userEquipmentFilename: String = "user_equipment.json"
     private static let bundledEquipmentFilename: String = "equipment.json"
-    private static let bundledBaseWeightsFilename: String = "base_weights.json"
+    private static let bundledOverridesFilename: String = "equipment_overrides.json"
 
     // MARK: – Single shared instance
     static let shared = EquipmentData()
@@ -23,7 +23,7 @@ final class EquipmentData: ObservableObject {
 
     /// Mutable user-created gear (lives in Documents/)
     @Published private(set) var userEquipment: [GymEquipment]
-    @Published var bundledBaseWeights: [UUID: BaseWeight]
+    @Published var bundledOverrides: [UUID: GymEquipment]
 
     // MARK: – Public unified view
     var allEquipment: [GymEquipment] { bundledEquipment + userEquipment }
@@ -31,23 +31,24 @@ final class EquipmentData: ObservableObject {
     
     // MARK: – Init
     init() {
-        let overrides = EquipmentData.loadBaseWeightsForBundle()
+        let overrides = EquipmentData.loadBundledOverrides()
         let bundled = EquipmentData.loadBundledEquipment(overrides: overrides)
         let user = EquipmentData.loadUserEquipment(from: EquipmentData.userEquipmentFilename)
 
-        self.bundledBaseWeights = overrides
+        self.bundledOverrides   = overrides
         self.bundledEquipment   = bundled
         self.userEquipment      = user
     }
     
     // MARK: – Persistence Logic
-    private static func loadBundledEquipment(overrides: [UUID: BaseWeight]) -> [GymEquipment] {
+    //private static func loadBundledEquipment(overrides: [UUID: BaseWeight]) -> [GymEquipment] {
+    private static func loadBundledEquipment(overrides: [UUID: GymEquipment]) -> [GymEquipment] {
         do {
             let seed: [InitEquipment] = try Bundle.main.decode(bundledEquipmentFilename)
             let mapping = seed.map { item -> GymEquipment in
-                var eq = GymEquipment(from: item)
-                if let bw = overrides[eq.id] { eq.baseWeight = bw }   // <-- apply override
-                return eq
+                let eq = GymEquipment(from: item)
+                if let override = overrides[eq.id] { return override }
+                else { return eq }
             }
             print("✅ Successfully loaded \(mapping.count) equipment items from \(bundledEquipmentFilename)")
             return mapping
@@ -59,9 +60,9 @@ final class EquipmentData: ObservableObject {
                 decoder: { jsonDict in
                     let equipmentData = try JSONSerialization.data(withJSONObject: jsonDict)
                     let initEquipment = try JSONDecoder().decode(InitEquipment.self, from: equipmentData)
-                    var eq = GymEquipment(from: initEquipment)
-                    if let bw = overrides[eq.id] { eq.baseWeight = bw }   // <-- apply override
-                    return eq
+                    let eq = GymEquipment(from: initEquipment)
+                    if let override = overrides[eq.id] { return override }
+                    else { return eq }
                 },
                 validator: { equipment in
                     !equipment.name.isEmpty && !equipment.image.isEmpty
@@ -74,20 +75,31 @@ final class EquipmentData: ObservableObject {
         return JSONFileManager.shared.loadUserEquipment(from: file) ?? []
     }
     
-    private static func loadBaseWeightsForBundle() -> [UUID: BaseWeight] {
-        return JSONFileManager.shared.loadBaseWeights(from: EquipmentData.bundledBaseWeightsFilename) ?? [:]
-    }
-    
     // MARK: saving logic
     private func persistUserEquipment() {
         let snapshot = userEquipment                  // value copy, thread-safe
         JSONFileManager.shared.save(snapshot, to: EquipmentData.userEquipmentFilename)
     }
     
+    private static func loadBundledOverrides() -> [UUID: GymEquipment] {
+        return JSONFileManager.shared.loadBundledOverrides(from: EquipmentData.bundledOverridesFilename) ?? [:]
+    }
+    
+    private func persistOverrides() {
+        let snapshot = bundledOverrides
+        JSONFileManager.shared.save(snapshot, to: EquipmentData.bundledOverridesFilename)
+    }
+    
+    /*
+    private static func loadBaseWeightsForBundle() -> [UUID: BaseWeight] {
+        return JSONFileManager.shared.loadBaseWeights(from: EquipmentData.bundledBaseWeightsFilename) ?? [:]
+    }
+    
     private func persistBaseWeights() {
         let snapshot = bundledBaseWeights
         JSONFileManager.shared.save(snapshot, to: EquipmentData.bundledBaseWeightsFilename)
     }
+    */
 }
 
 extension EquipmentData {
@@ -98,8 +110,8 @@ extension EquipmentData {
         persistUserEquipment()
     }
 
-    func replace(_ old: GymEquipment, with updated: GymEquipment) {
-        userEquipment.removeAll { $0.id == old.id }
+    func replace(at id: UUID, with updated: GymEquipment) {
+        userEquipment.removeAll { $0.id == id }
         userEquipment.append(updated)
         persistUserEquipment()
     }
@@ -114,26 +126,19 @@ extension EquipmentData {
         userEquipment.contains(where: { $0.id == equipment.id })
     }
     
-    private func updateBundledBaseWeight(equipmentId: UUID, new: BaseWeight) {
-        bundledBaseWeights[equipmentId] = new
-        if let index = bundledEquipment.firstIndex(where: { $0.id == equipmentId }) {
-            bundledEquipment[index].baseWeight = new
-            persistBaseWeights()
+    private func updateBundledEquipment(equipment: GymEquipment) {
+        bundledOverrides[equipment.id] = equipment
+        if let index = bundledEquipment.firstIndex(where: { $0.id == equipment.id }) {
+            bundledEquipment[index] = equipment
+            persistOverrides()
         }
     }
     
-    private func updateUserBaseWeight(equipmentId: UUID, new: BaseWeight) {
-        if let index = userEquipment.firstIndex(where: { $0.id == equipmentId }) {
-            userEquipment[index].baseWeight = new
-            persistUserEquipment()
-        }
-    }
-    
-    func updateBaseWeight(equipment: GymEquipment, new: BaseWeight) {
+    func updateEquipment(equipment: GymEquipment) {
         if isUserEquipment(equipment) {
-            updateUserBaseWeight(equipmentId: equipment.id, new: new)
+            replace(at: equipment.id, with: equipment)
         } else {
-            updateBundledBaseWeight(equipmentId: equipment.id, new: new)
+            updateBundledEquipment(equipment: equipment)
         }
     }
 }
@@ -267,7 +272,6 @@ extension EquipmentData {
         let increment = incrementForEquipment(names: equipmentNames, rounding: p)
 
         // Round in the chosen unit, then convert back to canonical kg
-        // FIXME: sometimes causes a week to pass without incrementing caused by rounding issues
         switch UnitSystem.current {
         case .imperial:
             let roundedLb = (weight.inLb / increment.inLb).rounded() * increment.inLb

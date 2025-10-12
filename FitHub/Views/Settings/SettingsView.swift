@@ -21,9 +21,9 @@ struct SettingsView: View {
             navigationLink("timer", "Rest Timer") { RestTimerSettings(userData: ctx.userData) }
             navigationLink("arrow.up.arrow.down", "Exercise Sorting") { SortSettings(userData: ctx.userData) }
             // navigationLink("calendar", "Start Week On") { StartWeekOn() }
-            navigationLink("globe", "Change Language") { ChangeLanguage(userData: ctx.userData) }
+            //navigationLink("globe", "Change Language") { ChangeLanguage(userData: ctx.userData) }
             navigationLink("ruler", "Imperial / Metric") { UnitSelection(userData: ctx.userData) }
-            navigationLink("paintbrush", "Change Theme") { ChangeTheme(userData: ctx.userData) }
+            //navigationLink("paintbrush", "Change Theme") { ChangeTheme(userData: ctx.userData) }
             
             DisclosureGroup(isExpanded: $isNotificationsExpanded) {
                 Toggle("Enable Notifications", isOn: notifications.toggleBinding)
@@ -50,9 +50,8 @@ struct SettingsView: View {
             navigationLink("scalemass", "Available Weight Plates") { PlateSelection(userData: ctx.userData) }
             navigationLink("chart.bar", "Progressive Overload") { OverloadSettings(userData: ctx.userData) }
             navigationLink("slider.horizontal.3", "Volume Deloading") { DeloadSettings(userData: ctx.userData) }
-            navigationLink("figure.walk", "Muscle Rest Duration") { MuscleRest(userData: ctx.userData) }
+            //navigationLink("figure.walk", "Muscle Rest Duration") { MuscleRest(userData: ctx.userData) }
             navigationLink("clock", "Planned Workout Time") { PlannedWorkoutTime(userData: ctx.userData) }
-            // TODO: add symbol
             navigationLink("switch.2", "SetDetail Entry") { SetDetailSettings(userData: ctx.userData) }
         } header: {
             Text("Workout")

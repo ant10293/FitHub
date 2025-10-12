@@ -13,9 +13,7 @@ struct NameField: View {
     var placeholder: String
     @Binding var text: String
     var error: String?          // nil → no error label
-    
-    @Environment(\.colorScheme) private var colorScheme
-    
+        
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)

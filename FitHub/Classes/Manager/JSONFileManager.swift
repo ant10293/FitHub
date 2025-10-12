@@ -123,7 +123,6 @@ final class JSONFileManager {
                 print("✅ Successfully loaded \(array.count) \(itemDescription) from \(filename)")
             } else if let dict = result as? [AnyHashable: Any] {
                 print("✅ Successfully loaded \(dict.count) \(itemDescription) from \(filename)")
-                
             } else {
                 print("✅ Successfully loaded \(itemDescription) from \(filename)")
             }
@@ -145,10 +144,10 @@ final class JSONFileManager {
         return loadFromDocuments([UUID: ExerciseEquipmentAdjustments].self, from: filename, itemType: "adjustments")
     }
     
-    func loadBaseWeights(from filename: String) -> [UUID: BaseWeight]? {
-        return loadFromDocuments([UUID: BaseWeight].self, from: filename, itemType: "base weight")
+    func loadBundledOverrides(from filename: String) -> [UUID: GymEquipment]? {
+        return loadFromDocuments([UUID: GymEquipment].self, from: filename, itemType: "bundled overrides")
     }
-        
+    
     func loadUserEquipment(from filename: String) -> [GymEquipment]? {
         return loadFromDocuments([GymEquipment].self, from: filename, itemType: "user equipment")
     }

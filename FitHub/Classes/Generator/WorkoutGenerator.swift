@@ -66,7 +66,7 @@ final class WorkoutGenerator {
             selectedEquipment: input.user.evaluation.equipmentSelected,
             favorites: Set(input.user.evaluation.favoriteExercises),
             disliked: Set(input.user.evaluation.dislikedExercises),
-            resistance: input.user.workoutPrefs.ResistanceType,
+            resistance: input.user.workoutPrefs.resistance,
             strengthCeiling: input.user.evaluation.strengthLevel.strengthValue,
             policy: .init(minCount: 1, maxCount: 20),
             logger: Logger.shared,

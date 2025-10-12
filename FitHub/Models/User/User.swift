@@ -44,7 +44,7 @@ struct WorkoutPreferences: Codable, Equatable {
     var workoutDaysPerWeek: Int = 3 // days per week user wants to work out
     var keepCurrentExercises: Bool = false
     //var withPerformanceData: Bool = true // only use exercises with performance data when creating workouts
-    var ResistanceType: ResistanceType = .any
+    var resistance: ResistanceType = .any
     var setStructure: SetStructures = .pyramid
     var customDuration: Int? /// minutes
     var customDistribution: ExerciseDistribution?
@@ -108,6 +108,7 @@ struct Evaluation: Codable {
     var favoriteExercises: Set<UUID> = []
     var dislikedExercises: Set<UUID> = []
     var availablePlates: WeightPlates = WeightPlates()
+    var askedRPEprompt: Bool = false
 }
 
 // sessionTracking  = SessionTracking()

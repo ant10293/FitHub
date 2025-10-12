@@ -26,6 +26,7 @@ struct NewExercise: View {
     @State private var selectingEquipment: Bool = false
     @State private var showingMuscleEditor: Bool = false
     @State private var showingAdjustmentsView: Bool = false
+    @State private var showingInstructionEditor: Bool = false
     @State private var showDeleteAlert: Bool = false
     @State private var equipmentRequired: [GymEquipment] = []
     @State private var draft: InitExercise
@@ -41,7 +42,7 @@ struct NewExercise: View {
                 aliases: [],
                 image: "",
                 muscles: [],
-                description: "",
+                instructions: ExerciseInstructions(steps: []),
                 equipmentRequired: [],
                 effort: .compound,
                 resistance: .freeWeight,
@@ -63,13 +64,13 @@ struct NewExercise: View {
                         equipmentSection
                                   
                         if !equipmentRequired.isEmpty { adjustmentsField }
+                        
+                        instructionsSection
                                   
                         if !isReadOnly {
                             ImageField(initialFilename: draft.image, onImageUpdate: { name in
                                 draft.image = name
                             })
-                            
-                            DescriptionField(text: $draft.description)
                         }
                         
                         difficultySection
@@ -108,7 +109,7 @@ struct NewExercise: View {
                     }
                 }
             }
-            .navigationTitle(isEditing ? "Edit Exercise" : "New Exercise").navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitle(isEditing ? "Edit Exercise" : "New Exercise", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel", role: .destructive) {
@@ -129,6 +130,9 @@ struct NewExercise: View {
         }
         .sheet(isPresented: $showingAdjustmentsView) {
             AdjustmentsView(exercise: exercise)
+        }
+        .sheet(isPresented: $showingInstructionEditor) {
+            ExInstructionsEditor(instructions: $draft.instructions)
         }
         .alert("Delete this exercise?", isPresented: $showDeleteAlert) {
             Button("Cancel", role: .cancel) {}
@@ -230,6 +234,32 @@ struct NewExercise: View {
                     HStack(spacing: 4) {
                         Image(systemName: "plus")
                         Text("Select Equipment")
+                    }
+                }
+                .foregroundStyle(.blue)
+                .buttonStyle(.plain)
+            }
+        }
+    }
+    
+    private var instructionsSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            (
+                Text("Instructions: ")
+                    .font(.headline)
+                +
+                Text(draft.instructions.formattedString(leadingNewline: true) ?? "None")
+                    .foregroundStyle(draft.instructions.steps.isEmpty ? .secondary : .primary)
+            )
+            .multilineTextAlignment(.leading)
+   
+            if !isReadOnly {
+                Button {
+                    showingInstructionEditor = true
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "plus")
+                        Text("Edit Instructions")
                     }
                 }
                 .foregroundStyle(.blue)

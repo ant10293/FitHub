@@ -15,7 +15,7 @@ struct AliasesField: View {
     // MARK: – Local state
     @State private var adding: Bool = false
     @State private var input: String = ""
-    var readOnly: Bool
+    let readOnly: Bool
 
     @Environment(\.colorScheme) private var colorScheme
 

@@ -15,8 +15,7 @@ struct Exercise: Identifiable, Hashable, Codable {
     let aliases: [String]?
     let image: String
     let muscles: [MuscleEngagement]
-    let description: String // TODO: remove or change to 'note: String?'
-   // let instructions: ExerciseInstructions
+    let instructions: ExerciseInstructions
     let equipmentRequired: [String]
     let effort: EffortType
     let resistance: ResistanceType
@@ -55,8 +54,7 @@ extension Exercise {
         self.aliases              = initEx.aliases
         self.image                = initEx.image
         self.muscles              = initEx.muscles
-        self.description          = initEx.description
-        //self.instructions         = initEx.instructions
+        self.instructions         = initEx.instructions
         self.equipmentRequired    = initEx.equipmentRequired
         self.effort               = initEx.effort
         self.resistance           = initEx.resistance
@@ -113,7 +111,7 @@ extension Exercise {
             // Reps range (e.g., "8-12")
             let reps = setDetails.compactMap { $0.planned.repsValue }
             guard let lo = reps.min(), let hi = reps.max() else { return (label, "0") }
-            return (label, lo == hi ? "\(lo)" : "\(lo)-\(hi)")
+            return (label, Format.formatRange(range: lo...hi))
         case .hold:
             // Time range (e.g., "0:30–1:00")
             let secs = setDetails.compactMap { $0.planned.holdTime?.inSeconds }
