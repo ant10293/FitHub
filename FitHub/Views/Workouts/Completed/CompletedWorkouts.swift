@@ -96,7 +96,7 @@ struct CompletedWorkouts: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: { isEditing.toggle() }) {
-                    Text(isEditing ? "Done" : "Edit")
+                    Text(isEditing ? "Close" : "Edit")
                 }
                 .disabled(sortedWorkouts.isEmpty)
             }

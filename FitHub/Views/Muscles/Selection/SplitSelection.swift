@@ -43,7 +43,7 @@ struct SplitSelection: View {
                         .foregroundStyle(.red)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button("Close") {
                         if vm.hasUnsavedChanges {
                             askSave = true                  // show alert
                         } else {

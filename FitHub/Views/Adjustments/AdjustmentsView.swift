@@ -46,7 +46,7 @@ struct AdjustmentsView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button("Close") {
                         commitIfChanged()
                         dismiss()
                         donePressed = true

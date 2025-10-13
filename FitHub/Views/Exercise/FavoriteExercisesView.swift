@@ -52,7 +52,7 @@ struct FavoriteExercisesView: View {
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button("Close") {
                         dismiss()
                     }
                 }

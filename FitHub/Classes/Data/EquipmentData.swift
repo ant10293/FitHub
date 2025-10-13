@@ -35,13 +35,12 @@ final class EquipmentData: ObservableObject {
         let bundled = EquipmentData.loadBundledEquipment(overrides: overrides)
         let user = EquipmentData.loadUserEquipment(from: EquipmentData.userEquipmentFilename)
 
-        self.bundledOverrides   = overrides
-        self.bundledEquipment   = bundled
-        self.userEquipment      = user
+        self.bundledOverrides = overrides
+        self.bundledEquipment = bundled
+        self.userEquipment    = user
     }
     
     // MARK: – Persistence Logic
-    //private static func loadBundledEquipment(overrides: [UUID: BaseWeight]) -> [GymEquipment] {
     private static func loadBundledEquipment(overrides: [UUID: GymEquipment]) -> [GymEquipment] {
         do {
             let seed: [InitEquipment] = try Bundle.main.decode(bundledEquipmentFilename)
@@ -89,17 +88,6 @@ final class EquipmentData: ObservableObject {
         let snapshot = bundledOverrides
         JSONFileManager.shared.save(snapshot, to: EquipmentData.bundledOverridesFilename)
     }
-    
-    /*
-    private static func loadBaseWeightsForBundle() -> [UUID: BaseWeight] {
-        return JSONFileManager.shared.loadBaseWeights(from: EquipmentData.bundledBaseWeightsFilename) ?? [:]
-    }
-    
-    private func persistBaseWeights() {
-        let snapshot = bundledBaseWeights
-        JSONFileManager.shared.save(snapshot, to: EquipmentData.bundledBaseWeightsFilename)
-    }
-    */
 }
 
 extension EquipmentData {
@@ -251,8 +239,12 @@ extension EquipmentData {
     }
      
     func hasEquipmentAdjustments(for exercise: Exercise) -> Bool {
-        getEquipment(from: exercise.equipmentRequired)
-            .contains { $0.adjustments?.isEmpty == false }
+        let equipment = getEquipment(from: exercise.equipmentRequired)
+        return hasEquipmentAdjustments(for: equipment)
+    }
+    
+    func hasEquipmentAdjustments(for equipment: [GymEquipment]) -> Bool {
+        equipment.contains { $0.adjustments?.isEmpty == false }
     }
     
     func incrementForEquipment(names: [String], rounding p: RoundingPreference) -> Mass {

@@ -134,7 +134,8 @@ struct OneRMCalculator: View {
                         ctx.exercises.updateExercisePerformance(
                             for: exercise,
                             newValue: .oneRepMax(oneRM),               // 1RM in kg
-                            repsXweight: RepsXWeight(reps: repsVal, weight: weightLifted)
+                            loadXmetric: LoadXMetric(load: .weight(weightLifted), metric: .reps(repsVal))
+                            //repsXweight: RepsXWeight(reps: repsVal, weight: weightLifted)
                         )
                         ctx.exercises.savePerformanceData()
                         ctx.toast.showSaveConfirmation(duration: 2) {

@@ -146,7 +146,7 @@ struct BFCalculator: View {
                 Text("\(bodyFat, specifier: "%.2f") %")
                     .font(.title2)
 
-                RectangularButton(title: "Done", action: dismissAction)
+                RectangularButton(title: "Close", action: dismissAction)
                     .padding()
             }
             .frame(width: UIScreen.main.bounds.width * 0.8,

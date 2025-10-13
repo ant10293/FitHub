@@ -198,7 +198,7 @@ struct MacroCalculator: View {
                          proteins: result.proteins)
                     .padding(.vertical)
 
-                RectangularButton(title: "Done", action: dismissAction)
+                RectangularButton(title: "Close", action: dismissAction)
             }
             .padding()
             .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : .white)

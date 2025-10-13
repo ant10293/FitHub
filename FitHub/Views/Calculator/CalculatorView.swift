@@ -19,6 +19,8 @@ struct CalculatorView: View {
                     } label: {
                         CalculatorRow(title: "Progressive Overload Calculator", systemName: "chart.line.uptrend.xyaxis")
                     }
+                    // MARK: premium feature only
+                    /* .disabled(ctx.store.membershipType != .free) */
                 }
 
                 Section(header: Text("Health")) {

@@ -7,98 +7,129 @@
 
 import SwiftUI
 
-/// A self-contained editor for a list of alias strings.
 struct AliasesField: View {
-    // MARK: – External binding
     @Binding var aliases: [String]?
-
-    // MARK: – Local state
-    @State private var adding: Bool = false
-    @State private var input: String = ""
+    @State private var showSheet = false
     let readOnly: Bool
-
-    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-
-            // ── Label row ─────────────────────────────────────────────
             let label = aliases ?? []
             (
                 Text("Aliases: ").font(.headline)
-                +
-                Text(label.isEmpty ? "None" : label.joined(separator: ", "))
+                + Text(label.isEmpty ? "None" : label.joined(separator: ", "))
                     .foregroundStyle(label.isEmpty ? .secondary : .primary)
             )
-            .multilineTextAlignment(.leading)
 
             if !readOnly {
-                // ── Add / edit row ───────────────────────────────────────
-                if adding {
+                Button {
+                    showSheet = true
+                } label: {
+                    Label("Add Alias", systemImage: "plus")
+                }
+                .foregroundStyle(.blue)
+                .buttonStyle(.plain)
+            }
+        }
+        .sheet(isPresented: $showSheet) {
+            AliasesEditorSheet(
+                aliases: Binding(
+                    get: { aliases ?? [] },
+                    set: { new in aliases = new.isEmpty ? nil : new }
+                )
+            )
+        }
+    }
+}
+
+private struct AliasesEditorSheet: View {
+    @Binding var aliases: [String]
+    @State private var newAlias: String = ""
+    @State private var isEditing: Bool = false
+    @StateObject private var kbd = KeyboardManager.shared
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section("Add") {
                     HStack {
-                        TextField("Enter alias", text: $input, onCommit: appendIfValid)
+                        TextField("New alias", text: $newAlias)
                             .textInputAutocapitalization(.words)
                             .disableAutocorrection(true)
-                            .padding(8)
-                            .background(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .fill(colorScheme == .dark
-                                          ? .black.opacity(0.2)
-                                          : Color(UIColor.secondarySystemBackground))
-                            )
-                            .overlay(alignment: .trailing) {
-                                Button {
-                                    appendIfValid()
-                                } label: {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundStyle(isValid ? .green : .gray)
+                            .onSubmit(addAlias)
+
+                        Button {
+                            addAlias()
+                        } label: {
+                            Image(systemName: "checkmark.circle.fill")
+                        }
+                        .disabled(!isNewValid)
+                        .accessibilityLabel("Add alias")
+                    }
+                }
+
+                Section("Aliases") {
+                    if aliases.isEmpty {
+                        Text("No aliases yet")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ForEach(Array(aliases.enumerated()), id: \.offset) { i, alias in
+                            HStack(spacing: 10) {
+                                if isEditing {
+                                    Button(role: .destructive) {
+                                        withAnimation { deleteIndex(i) }
+                                    } label: {
+                                        Image(systemName: "minus.circle.fill")
+                                            .foregroundStyle(.red)
+                                    }
+                                    .buttonStyle(.plain)
                                 }
-                                .disabled(!isValid)
-                                .padding(.trailing, 6)
+                                Text(alias)
+                                Spacer()
                             }
-                        
-                        Button("Close") {
-                            resetEditor()
-                        }
-                        .foregroundStyle(.red)
-                    }
-                } else {
-                    Button {
-                        adding = true
-                    } label: {
-                        HStack(spacing: 4) {
-                            Image(systemName: "plus")
-                            Text("Add Alias")
                         }
                     }
-                    .foregroundStyle(.blue)
-                    .buttonStyle(.plain)
+                }
+            }
+            .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+            .navigationBarTitle("Aliases", displayMode: .inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(isEditing ? "Done" : "Edit") {
+                        isEditing.toggle()
+                    }
+                    .disabled(aliases.isEmpty)
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Close") { dismiss() }
                 }
             }
         }
-    }
-
-    // MARK: – Validation & helpers
-    private var isValid: Bool {
-        InputLimiter.isValidInput(input)
-        && !input.trimmingCharacters(in: .whitespaces).isEmpty
-        && !(aliases ?? []).contains {
-            $0.caseInsensitiveCompare(input.trimmingCharacters(in: .whitespaces)) == .orderedSame
+        .onChange(of: aliases.count) { _, newCount in
+            if newCount == 0 { isEditing = false }
         }
     }
 
-    private func appendIfValid() {
-        let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard isValid else { return }
-        if aliases == nil { aliases = [] }
-        if aliases?.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) == true { return }
-        aliases?.append(trimmed)
-        input = ""
-        adding = false
+    // MARK: - Logic
+    private var trimmed: String {
+        newAlias.trimmingCharacters(in: .whitespacesAndNewlines)
     }
-
-    private func resetEditor() {
-        input = ""
-        adding = false
+    
+    private var isNewValid: Bool {
+        InputLimiter.isValidInput(trimmed)
+        && !trimmed.isEmpty
+        && !aliases.contains { $0.caseInsensitiveCompare(trimmed) == .orderedSame }
+    }
+    
+    private func addAlias() {
+        guard isNewValid else { return }
+        aliases.append(trimmed)
+        newAlias = ""
+    }
+    
+    private func deleteIndex(_ i: Int) {
+        guard aliases.indices.contains(i) else { return }
+        aliases.remove(at: i)
     }
 }

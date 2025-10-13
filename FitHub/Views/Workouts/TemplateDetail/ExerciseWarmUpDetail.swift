@@ -63,7 +63,7 @@ struct ExerciseWarmUpDetail: View {
             .listStyle(.plain)
             .navigationBarTitle(exercise.name, displayMode: .inline)
             .toolbar { ToolbarItem(placement: .topBarTrailing) {
-                Button("Done", action: saveAndDismiss)
+                Button("Close", action: saveAndDismiss)
             }}
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
             .onDisappear(perform: saveIfNeeded)

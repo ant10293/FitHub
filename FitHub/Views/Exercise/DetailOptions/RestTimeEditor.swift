@@ -88,7 +88,7 @@ struct RestTimeEditor: View {
             .navigationBarTitle(exercise.name, displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") { dismiss() }
+                    Button("Close") { dismiss() }
                 }
             }
         }

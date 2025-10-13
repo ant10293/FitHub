@@ -100,7 +100,7 @@ struct ExerciseSelection: View {
                         onDone(selectedExercises)
                         dismiss()
                     }) {
-                        Text(forPerformanceView ? "Close" : "Done")
+                        Text(forPerformanceView ? "Close" : "Close")
                             .padding(10)
                     }
                 }

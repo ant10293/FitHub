@@ -90,8 +90,10 @@ private extension CompletedDetails {
         }) {
             HStack {
                 Image(systemName: "trophy.fill")
-                if let prRepsWeight = prUpdate.repsXweight, prRepsWeight.reps > 1 {
-                    prRepsWeight.formattedText +
+                //if let prRepsWeight = prUpdate.repsXweight, prRepsWeight.reps > 1 {
+                if let prLoadxMetric = prUpdate.loadXmetric, prLoadxMetric.load != set.load {
+                    //prRepsWeight.formattedText +
+                    prLoadxMetric.formattedText +
                     Text(" ≈ ") +
                     prUpdate.value.labeledText
                 } else {

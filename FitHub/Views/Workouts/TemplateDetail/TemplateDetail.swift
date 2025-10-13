@@ -18,7 +18,7 @@ struct TemplateDetail: View {
     @State private var showingDetailView: Bool = false
     @State private var pulsate: Bool = false
     @State private var isEditing: Bool = false // State to manage editing mode
-    @State var isCollapsed: Bool = false // Control collapsed state
+    @State private var isCollapsed: Bool = false // Control collapsed state
     @State private var originalTemplate: WorkoutTemplate?
     @State private var undoStack: [WorkoutTemplate] = []
     @State private var redoStack: [WorkoutTemplate] = []
@@ -97,8 +97,6 @@ struct TemplateDetail: View {
             }
         }
         .navigationBarTitle(template.name, displayMode: .inline)
-        // TODO: this doesnt save if the user just closes the app while in this view
-        .onDisappear { if !isArchived { saveTemplate() } }
     }
     
     private var setDetailList: some View {
@@ -119,7 +117,7 @@ struct TemplateDetail: View {
                     onSuperSet: { ssIdString in
                         captureSnapshot()
                         modifier.handleSupersetSelection(for: &exercise, with: ssIdString, in: &template)
-                    },
+                    }
                 )
                 .listRowBackground(Color.clear) // Ensure list rows have a clear background
                 .listRowSeparator(.hidden)
@@ -156,17 +154,20 @@ struct TemplateDetail: View {
                 HStack {
                     Image(systemName: "arrow.uturn.forward").imageScale(.large)
                     Text("Redo").font(.caption)
-                }.foregroundStyle(redoStack.isEmpty ? .gray : .blue) // Gray out if disabled
+                }
+                .foregroundStyle(redoStack.isEmpty ? .gray : .blue) // Gray out if disabled
             }
             .disabled(redoStack.isEmpty)
             
             Spacer()
             
-            Button(action: { saveTemplate(displaySaveConfirm: true) }) {
+            Button(action: { isCollapsed.toggle() }) {
                 HStack {
-                    Text("Save")
-                    Image(systemName: "tray.and.arrow.down").imageScale(.large)
-                }.padding(.trailing, 15)
+                    Text(isCollapsed ? "Expand" : "Collapse")
+                    Image(systemName: isCollapsed ? "rectangle.expand.vertical" : "rectangle.compress.vertical")
+                        .imageScale(.large)
+                }
+                .padding(.trailing, 15)
             }
         }
         .padding()
@@ -195,7 +196,6 @@ struct TemplateDetail: View {
                 }
                 
                 template.exercises = orderedExercises
-                saveTemplate()
             }
         )
     }
@@ -232,7 +232,7 @@ struct TemplateDetail: View {
         case .replaceExercise: replaceExercise(exercise.wrappedValue)
         case .viewAdjustments: showingAdjustmentsView = true; selectedExercise = exercise.wrappedValue
         case .viewDetail: showingDetailView = true; selectedExercise = exercise.wrappedValue
-        case .saveTemplate: saveTemplate()
+        case .saveTemplate: break // no need. template is a binding and json is saved onChange(of: scenePhase)
         }
     }
     
@@ -256,19 +256,16 @@ struct TemplateDetail: View {
         guard let lastUndo = undoStack.popLast() else { return }
         redoStack.append(template)  // Save the current state before applying the undo
         template = lastUndo  // Load the last template state from the undo stack
-        saveTemplate()
     }
     
     private func redoAction() {
         guard let lastRedo = redoStack.popLast() else { return }
         undoStack.append(template)  // Save the current state before applying the redo
         template = lastRedo  // Load the template state from the redo stack
-        saveTemplate()
     }
     
     private func moveExercise(from source: IndexSet, to destination: Int) {
         template.exercises.move(fromOffsets: source, toOffset: destination)
-        saveTemplate()
         isCollapsed = false
     }
     
@@ -320,10 +317,6 @@ struct TemplateDetail: View {
         for index in offsets {
             _ = modifier.remove(template.exercises[index], from: &template, user: ctx.userData)
         }
-    }
-    
-    private func saveTemplate(displaySaveConfirm: Bool = false) {
-        if displaySaveConfirm { ctx.toast.showSaveConfirmation() }
     }
 }
 

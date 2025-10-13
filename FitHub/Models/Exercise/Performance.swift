@@ -21,19 +21,18 @@ enum ExerciseUnit: String {
             return .maxHold(TimeSpan(seconds: Int(metricValue)))
         // FIXME: temporary - must add PeakMetric cases
         case .weightXtime:
-            return .oneRepMax(Mass(kg: metricValue))
+            return .none
         case .distanceXtimeOrSpeed:
-            return .oneRepMax(Mass(kg: metricValue))
+            return .none
         }
     }
     
     // MARK: no support for weighted hold and cardio exercises
     var supportsPR: Bool {
-        switch self {
-        case .weightXreps, .repsOnly, .timeOnly:
-            return true
-        case .weightXtime, .distanceXtimeOrSpeed:
-            return false
+        let peak = getPeakMetric(metricValue: 0)
+        switch peak {
+        case .none: return false
+        default: return true
         }
     }
 }
@@ -42,7 +41,8 @@ enum ExerciseUnit: String {
 struct MaxRecord: Codable, Identifiable {
     var id: UUID = UUID() // Unique identifier for each record (for graphing)
     var value: PeakMetric
-    var repsXweight: RepsXWeight?
+    //var repsXweight: RepsXWeight?
+    var loadXmetric: LoadXMetric?
     var date: Date        // Date when the record was set
 }
 
@@ -64,11 +64,14 @@ struct PerformanceUpdates: Codable, Hashable {
 
     mutating func updatePerformance(_ update: PerformanceUpdate) {
         if let index = updatedMax.firstIndex(where: { $0.exerciseId == update.exerciseId }) {
+            var existingUpdate = updatedMax[index]
             // Overwrite existing record if necessary
-            if updatedMax[index].value.actualValue < update.value.actualValue {
-                updatedMax[index].value = update.value
-                updatedMax[index].repsXweight = update.repsXweight
-                updatedMax[index].setId = update.setId
+            if existingUpdate.value.actualValue < update.value.actualValue {
+                existingUpdate.value = update.value
+                //existingUpdate.repsXweight = update.repsXweight
+                existingUpdate.loadXmetric = update.loadXmetric
+                existingUpdate.setId = update.setId
+                updatedMax[index] = existingUpdate
             }
         } else {
             // Add new record
@@ -80,10 +83,11 @@ struct PerformanceUpdates: Codable, Hashable {
 struct PerformanceUpdate: Codable, Hashable {
     var exerciseId: UUID
     var value: PeakMetric
-    var repsXweight: RepsXWeight?
+    //var repsXweight: RepsXWeight?
+    var loadXmetric: LoadXMetric?
     var setId: UUID?
 }
-
+/*
 struct RepsXWeight: Codable, Hashable {
     var reps: Int
     var weight: Mass
@@ -92,6 +96,15 @@ struct RepsXWeight: Codable, Hashable {
         weight.formattedText()
         + Text(" x \(reps) ")
         + Text("reps").fontWeight(.light)
+    }
+}
+*/
+struct LoadXMetric: Codable, Hashable {
+    let load: SetLoad
+    let metric: SetMetric
+    
+    var formattedText: Text {
+        SetDetail.formatLoadMetric(load: load, metric: metric)
     }
 }
 

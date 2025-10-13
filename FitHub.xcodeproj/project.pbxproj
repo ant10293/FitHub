@@ -507,13 +507,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		65039B682E7E2EF1007A31E1 /* ExerciseSorting */ = {
+		65039B682E7E2EF1007A31E1 /* Sorting */ = {
 			isa = PBXGroup;
 			children = (
 				65CD3BE52DD3C84F00C2B671 /* SplitCategoryPicker.swift */,
 				65039B6A2E7E2F1D007A31E1 /* SortOptionSheet.swift */,
 			);
-			path = ExerciseSorting;
+			path = Sorting;
 			sourceTree = "<group>";
 		};
 		65039B6C2E81D91B007A31E1 /* Unit */ = {
@@ -952,6 +952,7 @@
 		65CD3BCE2DD3C84F00C2B671 /* Exercise */ = {
 			isa = PBXGroup;
 			children = (
+				65039B682E7E2EF1007A31E1 /* Sorting */,
 				6550ADD52E74D74B002072C1 /* DetailOptions */,
 				6550ADD42E74D2A4002072C1 /* Options */,
 				65CD3BC72DD3C84F00C2B671 /* ExerciseDetailView.swift */,
@@ -1007,7 +1008,6 @@
 			isa = PBXGroup;
 			children = (
 				65E199D42E99D78200682415 /* Background */,
-				65039B682E7E2EF1007A31E1 /* ExerciseSorting */,
 				6550ADAA2E6A2B60002072C1 /* Row */,
 				6550ADA92E6A2B2B002072C1 /* Button */,
 				6531363A2E5902A800EECCA5 /* Picker */,

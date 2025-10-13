@@ -98,7 +98,7 @@ struct BMICalculator: View {
                 BMICategoryTable(userBMI: bmi)
                     .frame(height: UIScreen.main.bounds.height * 0.1)
 
-                RectangularButton(title: "Done", action: { dismissAction() })
+                RectangularButton(title: "Close", action: { dismissAction() })
                     .padding(.vertical)
             }
             .padding()

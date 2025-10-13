@@ -40,7 +40,7 @@ struct TimesEditor: View {
                     .foregroundStyle(.red)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button("Close") {
                         dismiss()
                     }
                 }

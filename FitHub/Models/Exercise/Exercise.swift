@@ -135,7 +135,9 @@ extension Exercise {
         case .bodyweight: return false
         case .banded: return false
         // any other, weighted - Only used for sorting, not an option
-        default: return false
+        case .weighted: return true
+        case .any: return false
+        //default: return false
         }
     }
         
@@ -216,28 +218,6 @@ extension Exercise {
 }
 
 extension Exercise {
-    var primaryMuscleEngagements: [MuscleEngagement] { muscles.primary }
-    var secondaryMuscleEngagements: [MuscleEngagement] { muscles.secondary }
-    
-    var primaryMuscles: [Muscle]   { muscles.primaryMuscles }
-    var secondaryMuscles: [Muscle] { muscles.secondaryMuscles }
-    var allMuscles: [Muscle]       { muscles.allMuscles }
-    
-    var primarySubMuscles: [SubMuscles]?   { muscles.primary.allSubMuscles.nilIfEmpty }
-    var secondarySubMuscles: [SubMuscles]? { muscles.secondary.allSubMuscles.nilIfEmpty }
-    var allSubMuscles: [SubMuscles]?       { muscles.allSubMuscles.nilIfEmpty }
-    
-    /// Highest-engagement primary muscle (nil if none)
-    private var topPrimaryMuscle: Muscle? { muscles.topPrimaryMuscle }
-    
-    /// Auto-derived split category from dominant prime mover
-    var splitCategory: SplitCategory { topPrimaryMuscle?.splitCategory ?? .all }
-    
-    /// Higher-level group category if you have that mapping
-    var groupCategory: SplitCategory? { topPrimaryMuscle?.groupCategory }
-}
-
-extension Exercise {
     @inline(__always)
     func resistanceOK(_ selectedType: ResistanceType) -> Bool {
         switch selectedType {
@@ -247,7 +227,6 @@ extension Exercise {
         case .freeWeight: return resistance == .freeWeight
         case .machine:    return resistance == .machine
         case .banded:     return resistance == .banded
-        case .other:      return resistance == .other
         }
     }
     
@@ -270,32 +249,23 @@ extension Exercise {
     func canPerform(equipmentData: EquipmentData, equipmentSelected: [UUID]) -> Bool {
         // Retrieve GymEquipment objects from stored UUIDs
         let equipmentObjects = equipmentData.equipmentObjects(for: equipmentSelected)
-        
         // 1️⃣ Gear the user explicitly owns
         let owned: Set<String> = Set(equipmentObjects.map { $0.name.normalize() })
-
         // 2️⃣ Alternatives provided BY the gear the user owns
         let altFromOwned: Set<String> = equipmentData.altFromOwned(equipmentObjects)
-        
         let allowed = owned.union(altFromOwned)
-        
         // 3️⃣  Build lookup of each *required* item → its own alternatives
-        let neededGear = equipmentData.equipmentForExercise(self)     // [GymEquipment]
+        let neededGear = equipmentData.equipmentForExercise(self)  // [GymEquipment]
         let altForRequired: [String: Set<String>] = neededGear.reduce(into: [:]) { dict, gear in
             dict[gear.name.normalize()] = Set((gear.alternativeEquipment ?? []).map { $0.normalize() })
         }
         // 4️⃣  Check every requirement
-        for raw in equipmentRequired {          // [String]
+        for raw in equipmentRequired {   // [String]
             let req = raw.normalize()
-            
-            // Own the exact item?
-            if allowed.contains(req) { continue }
-            
+            if allowed.contains(req) { continue } // Own the exact item?
             // Own an acceptable alternative?
             if let altSet = altForRequired[req], !owned.isDisjoint(with: altSet) { continue }
-            
-            // Missing both required item and its alternatives
-            return false
+            return false // Missing both required item and its alternatives
         }
         
         return true
@@ -346,17 +316,6 @@ extension Exercise {
         return (peak, rpe)
     }
 }
-
-extension Exercise {
-    /// Prefer groupCategory if available; otherwise fall back to splitCategory
-    private var bucketCategory: SplitCategory { groupCategory ?? splitCategory }
-
-    var isUpperBody: Bool { SplitCategory.upperBody.contains(bucketCategory) }
-    var isLowerBody: Bool { SplitCategory.lowerBody.contains(bucketCategory) }
-    var isPush:      Bool { SplitCategory.push.contains(bucketCategory) }
-    var isPull:      Bool { SplitCategory.pull.contains(bucketCategory) }
-}
-
 
 extension Exercise {
     /*
@@ -618,6 +577,38 @@ extension Exercise {
 
         warmUpDetails = details
     }
+}
+
+extension Exercise {
+    var primaryMuscleEngagements: [MuscleEngagement] { muscles.primary }
+    var secondaryMuscleEngagements: [MuscleEngagement] { muscles.secondary }
+    
+    var primaryMuscles: [Muscle]   { muscles.primaryMuscles }
+    var secondaryMuscles: [Muscle] { muscles.secondaryMuscles }
+    var allMuscles: [Muscle]       { muscles.allMuscles }
+    
+    var primarySubMuscles: [SubMuscles]?   { muscles.primary.allSubMuscles.nilIfEmpty }
+    var secondarySubMuscles: [SubMuscles]? { muscles.secondary.allSubMuscles.nilIfEmpty }
+    var allSubMuscles: [SubMuscles]?       { muscles.allSubMuscles.nilIfEmpty }
+    
+    /// Highest-engagement primary muscle (nil if none)
+    private var topPrimaryMuscle: Muscle? { muscles.topPrimaryMuscle }
+    
+    /// Auto-derived split category from dominant prime mover
+    var splitCategory: SplitCategory { topPrimaryMuscle?.splitCategory ?? .all }
+    
+    /// Higher-level group category if you have that mapping
+    var groupCategory: SplitCategory? { topPrimaryMuscle?.groupCategory }
+}
+
+extension Exercise {
+    /// Prefer groupCategory if available; otherwise fall back to splitCategory
+    private var bucketCategory: SplitCategory { groupCategory ?? splitCategory }
+
+    var isUpperBody: Bool { SplitCategory.upperBody.contains(bucketCategory) }
+    var isLowerBody: Bool { SplitCategory.lowerBody.contains(bucketCategory) }
+    var isPush:      Bool { SplitCategory.push.contains(bucketCategory) }
+    var isPull:      Bool { SplitCategory.pull.contains(bucketCategory) }
 }
 
 extension Exercise {

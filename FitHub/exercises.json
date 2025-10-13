@@ -952,21 +952,6 @@
 		"resistance": "Machine"
 	},
 	{
-		"name": "Standing Resistance Band Chest Fly",
-		"id": "77EB887A-D914-4D94-A47A-D005ACFF944D",
-		"image": "standing_resistance_band_chest_fly",
-		"aliases": ["Band Chest Fly", "Standing Band Fly"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Loop Bands"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Banded"
-	},
-	{
 		"name": "Kneeling Incline Push-Up",
 		"id": "5FB19801-1D9E-4EBE-9BB1-4D014C048FDC",
 		"image": "kneeling_incline_push_up",
@@ -1921,26 +1906,6 @@
 		"resistance": "Free Weight"
 	},
 	{
-		"name": "Band Pull-Apart",
-		"id": "B16BCDA0-BBB9-427E-B3AD-19AB18AE6F56",
-		"image": "band_pull_apart",
-		"aliases": ["Band Face-Pull-Apart"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Handle Bands", "Mini Loop Bands", "Loop Bands"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
-			] },
-			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Upper Traps" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Bodyweight"
-	},
-	{
 		"name": "Cable Rear Delt Row",
 		"id": "65C8762D-D6D5-4E5F-9F7B-C8004CB5BEEF",
 		"image": "cable_rear_delt_row",
@@ -1961,23 +1926,6 @@
 		"resistance": "Machine"
 	},
 	{
-		"name": "Band External Shoulder Rotation",
-		"id": "3C0D0256-70CD-4F01-8E84-08EB2E6F69E1",
-		"image": "band_external_shoulder_rotation",
-		"aliases": ["Band ER", "External Rotation (Band)"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Handle Bands", "Mini Loop Bands", "Loop Bands"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Unilateral",
-		"resistance": "Bodyweight"
-	},
-	{
 		"name": "Cable External Rotation",
 		"id": "5A7D9C1E-2F3B-4D6A-8E0B-F1C2D3E4A5B6",
 		"image": "cable_external_rotation",
@@ -1994,23 +1942,6 @@
 		"effort": "Isolation",
 		"limbMovementType": "Unilateral",
 		"resistance": "Machine"
-	},
-	{
-		"name": "Band Internal Shoulder Rotation",
-		"id": "0DCF3B61-96BF-42F3-B0B1-0BABC412729F",
-		"image": "band_internal_shoulder_rotation",
-		"aliases": ["Band IR", "Internal Rotation (Band)"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Handle Bands", "Mini Loop Bands", "Loop Bands"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Unilateral",
-		"resistance": "Bodyweight"
 	},
 	{
 		"name": "Lying Dumbbell External Shoulder Rotation",
@@ -2337,23 +2268,6 @@
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight"
-	},
-	{
-		"name": "Banded Lateral Raise",
-		"id": "17418419-039B-4F68-A326-D887A9C85249",
-		"image": "banded_lateral_raise",
-		"aliases": ["Resistance-Band Lateral Raise"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Loop Bands"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Side Delt" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Banded"
 	},
 	{
 		"name": "Military Press",
@@ -3082,27 +2996,6 @@
 		"resistance": "Free Weight"
 	},
 	{
-		"name": "Band Biceps Curl",
-		"id": "3DE3E114-FA06-41C1-94DC-BC8D04CA00C0",
-		"image": "band_biceps_curl",
-		"aliases": ["Resistance Band Curl"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Handle Bands", "Loop Bands"],
-		"muscles": [
-			{ "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Forearm Flexors" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Banded"
-	},
-	{
 		"name": "Reverse-Grip Preacher Curl",
 		"id": "1C1B9A49-7655-47E9-A344-C4284EE392F3",
 		"image": "reverse_grip_preacher_curl",
@@ -3780,7 +3673,7 @@
 		"image": "weighted_parallel_bar_dip",
 		"aliases": ["Weighted Parallel Dip", "Weighted Bar Dip"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dip Bar"],
+		"equipmentRequired": ["Dip Bar", "Dip Belt", "Weight Plate"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
@@ -3797,7 +3690,7 @@
 		"difficulty": "Adv.",
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
+		"resistance": "Free Weight"
 	},
 	{
 		"name": "Bodyweight Squat",
@@ -4961,28 +4854,6 @@
 		"repsInstruction" : "Per Leg"
 	},
 	{
-		"name": "Spanish Squat",
-		"id": "6DC1C171-6F30-46BA-BE17-B77D911E0D33",
-		"image": "spanish_squat",
-		"aliases": ["Banded Quad Squat"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Loop Bands"],
-		"muscles": [
-			{ "engagementPercentage": 90, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-			] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
 		"name": "Jefferson Deadlift",
 		"id": "8F1B0D24-3C7E-4A97-9B53-5A2F4D7C1E8A",
 		"image": "jefferson_deadlift",
@@ -6014,31 +5885,6 @@
 		"resistance": "Free Weight"
 	},
 	{
-		"name": "Banded Hip Thrust",
-		"id": "3A8E4268-0485-4C76-8A6D-B5FD0DEBB663",
-		"image": "banded_hip_thrust",
-		"aliases": ["Resistance Band Hip Thrust"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Loop Bands", "Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
-			] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Rectus Femoris" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Banded"
-	},
-	{
 		"name": "Hip Airplane",
 		"id": "8D554BC7-BC11-48B6-977A-4F5703BDACC5",
 		"image": "hip_airplane",
@@ -6850,7 +6696,7 @@
 		"image": "weighted_chin_up",
 		"aliases": ["Underhand Pull-Up"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar", "Dip Belt"],
+		"equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
 		"muscles": [
 			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
 			{ "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
@@ -6861,7 +6707,7 @@
 		"difficulty": "Int.",
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
+		"resistance": "Free Weight"
 	},
 	{
 		"name": "Pull-Up",
@@ -6908,7 +6754,7 @@
 		"image": "weighted_pull_up",
 		"aliases": ["Overhand Pull-Up"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar", "Dip Belt"],
+		"equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
 			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
@@ -6919,7 +6765,7 @@
 		"difficulty": "Adv.",
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
+		"resistance": "Free Weight"
 	},
 	{
 		"name": "Neutral Grip Pull-Up",
@@ -6966,7 +6812,7 @@
 		"image": "weighted_neutral_grip_pull_up",
 		"aliases": ["Parallel Grip Pull-Up"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar", "Dip Belt"],
+		"equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
 		"muscles": [
 			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
 			{ "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
@@ -6977,7 +6823,7 @@
 		"difficulty": "Int.",
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
+		"resistance": "Free Weight"
 	},
 	{
 		"name": "Muscle-Up",
@@ -7005,7 +6851,7 @@
 		"image": "weighted_muscle_up",
 		"aliases": ["Bar Muscle-Up"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar", "Dip Belt"],
+		"equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
 			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
@@ -7016,7 +6862,7 @@
 		"difficulty": "Elite",
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
+		"resistance": "Free Weight"
 	},
 	{
 		"name": "Dumbbell Thruster",
@@ -7376,7 +7222,7 @@
 		"difficulty": "Beg.",
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
+		"resistance": "Bodyweight"
 	},
 	{
 		"name": "Thick-Bar Hold",
@@ -9315,5 +9161,159 @@
         "difficulty": "Beg.",
         "effort": "Cardio",
         "resistance": "Machine"
+    },
+    {
+        "name": "Standing Resistance Band Chest Fly",
+        "id": "77EB887A-D914-4D94-A47A-D005ACFF944D",
+        "image": "standing_resistance_band_chest_fly",
+        "aliases": ["Band Chest Fly", "Standing Band Fly"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Loop Bands"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Independent",
+        "resistance": "Banded"
+    },
+    {
+        "name": "Band Pull-Apart",
+        "id": "B16BCDA0-BBB9-427E-B3AD-19AB18AE6F56",
+        "image": "band_pull_apart",
+        "aliases": ["Band Face-Pull-Apart"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Handle Bands"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
+            ] },
+            { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Upper Traps" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Independent",
+        "resistance": "Banded"
+    },
+    {
+        "name": "Band External Shoulder Rotation",
+        "id": "3C0D0256-70CD-4F01-8E84-08EB2E6F69E1",
+        "image": "band_external_shoulder_rotation",
+        "aliases": ["Band ER", "External Rotation (Band)"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Handle Bands"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Banded"
+    },
+    {
+        "name": "Band Internal Shoulder Rotation",
+        "id": "0DCF3B61-96BF-42F3-B0B1-0BABC412729F",
+        "image": "band_internal_shoulder_rotation",
+        "aliases": ["Band IR", "Internal Rotation (Band)"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Handle Bands"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Banded"
+    },
+    {
+        "name": "Banded Lateral Raise",
+        "id": "17418419-039B-4F68-A326-D887A9C85249",
+        "image": "banded_lateral_raise",
+        "aliases": ["Resistance-Band Lateral Raise"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Loop Bands"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Side Delt" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Independent",
+        "resistance": "Banded"
+    },
+    {
+        "name": "Band Biceps Curl",
+        "id": "3DE3E114-FA06-41C1-94DC-BC8D04CA00C0",
+        "image": "band_biceps_curl",
+        "aliases": ["Resistance Band Curl"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Loop Bands"],
+        "muscles": [
+            { "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Forearm Flexors" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Banded"
+    },
+    {
+        "name": "Spanish Squat",
+        "id": "6DC1C171-6F30-46BA-BE17-B77D911E0D33",
+        "image": "spanish_squat",
+        "aliases": ["Banded Quad Squat"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Loop Bands"],
+        "muscles": [
+            { "engagementPercentage": 90, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Banded"
+    },
+    {
+        "name": "Banded Hip Thrust",
+        "id": "3A8E4268-0485-4C76-8A6D-B5FD0DEBB663",
+        "image": "banded_hip_thrust",
+        "aliases": ["Resistance Band Hip Thrust"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Loop Bands", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Rectus Femoris" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Banded"
     }
 ]

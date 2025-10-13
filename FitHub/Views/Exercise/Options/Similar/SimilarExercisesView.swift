@@ -22,7 +22,7 @@ struct SimilarExercises: View {
                         .font(.title2).fontWeight(.bold)
                         .minimumScaleFactor(0.5).lineLimit(1)
                     Spacer()
-                    Button("Done") { dismiss() }.padding(.horizontal)
+                    Button("Close") { dismiss() }.padding(.horizontal)
                 }
                 HStack(spacing: 16) {
                     currentExercise.fullImageView(

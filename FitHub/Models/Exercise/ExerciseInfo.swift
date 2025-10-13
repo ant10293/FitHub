@@ -102,12 +102,13 @@ enum ResistanceType: String, CaseIterable, Identifiable, Codable {
     case weighted = "Weighted"
     case freeWeight = "Free Weight"
     case machine = "Machine"
-    case banded = "Banded"
-    case other = "Other"
+    case banded = "Banded" 
     
     var id: String { self.rawValue }
   
-    static let forExercises: [ResistanceType] = [.freeWeight, .bodyweight, .machine, .banded]
+    static let forExercises: [ResistanceType] = [
+        .freeWeight, .bodyweight, .machine, .banded
+    ]
 }
 
 enum RepsInstruction: String, Codable, CaseIterable {

@@ -26,7 +26,7 @@ struct EquipmentSelection: View {
             .navigationBarTitle("Select Equipment", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button("Close") {
                         onDone(selection)
                         donePressed = true
                         dismiss()

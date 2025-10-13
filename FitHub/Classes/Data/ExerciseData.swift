@@ -303,18 +303,26 @@ extension ExerciseData {
     func updateExercisePerformance(
          for exerciseId: UUID,
          newValue: PeakMetric,
-         repsXweight: RepsXWeight? = nil,
+         //repsXweight: RepsXWeight? = nil,
+         loadXmetric: LoadXMetric? = nil,
          csvEstimate: Bool = false
      ) {
          if let exercise = exercise(for: exerciseId) {
-             updateExercisePerformance(for: exercise, newValue: newValue, repsXweight: repsXweight, csvEstimate: csvEstimate)
+             updateExercisePerformance(
+                for: exercise,
+                newValue: newValue,
+               // repsXweight: repsXweight,
+                loadXmetric: loadXmetric,
+                csvEstimate: csvEstimate
+             )
          }
     }
     
     func updateExercisePerformance(
         for exercise: Exercise,
         newValue: PeakMetric,
-        repsXweight: RepsXWeight? = nil,
+       // repsXweight: RepsXWeight? = nil,
+        loadXmetric: LoadXMetric? = nil,
         csvEstimate: Bool = false
     ) {
         let roundedDate = CalendarUtility.shared.startOfDay(for: Date())
@@ -327,7 +335,12 @@ extension ExerciseData {
         // ────────────────────────────────────────────────────────────────
 
         func makeRecord() -> MaxRecord {
-            MaxRecord(value: newValue, repsXweight: repsXweight, date: roundedDate)
+            MaxRecord(
+                value: newValue,
+                //repsXweight: repsXweight,
+                loadXmetric: loadXmetric,
+                date: roundedDate
+            )
         }
 
         func archive(_ record: MaxRecord) {
@@ -354,7 +367,8 @@ extension ExerciseData {
                 // Same calendar day → treat as correction / improvement
                 if newValue.actualValue >= current.value.actualValue {
                     current.value        = newValue
-                    current.repsXweight  = repsXweight
+                    //current.repsXweight  = repsXweight
+                    current.loadXmetric  = loadXmetric
                     current.date         = roundedDate      // stays "today"
                     perf.currentMax      = current
                     print("Updated today's max for \(exercise.name) → \(current.value.actualValue).")
@@ -398,7 +412,13 @@ extension ExerciseData {
     }
     
     func applyPerformanceUpdate(update: PerformanceUpdate, csvEstimate: Bool, shouldSave: Bool) {
-        updateExercisePerformance(for: update.exerciseId, newValue: update.value, repsXweight: update.repsXweight, csvEstimate: csvEstimate)
+        updateExercisePerformance(
+            for: update.exerciseId,
+            newValue: update.value,
+            //repsXweight: update.repsXweight,
+            loadXmetric: update.loadXmetric,
+            csvEstimate: csvEstimate
+        )
         if shouldSave { savePerformanceData() }
     }
     

@@ -9,7 +9,6 @@ import SwiftUI
 
 
 // dumbell, stack, handle, peg, etc
-
 struct GymEquipment: Identifiable, Hashable, Codable {
     let id: UUID
     let name: String
@@ -55,7 +54,7 @@ extension GymEquipment {
             aliases: nil,
             alternativeEquipment: nil,
             image: "",
-            equCategory: .all,
+            equCategory: .other,
             adjustments: nil,
             pegCount: nil,
             implementation: nil,
@@ -90,7 +89,6 @@ enum EquipmentCategory: String, CaseIterable, Identifiable, Codable {
     case platedMachines = "Plated Machines"
     case weightMachines = "Weight Machines"
     case resistanceBands = "Resistance Bands"
-    case householdItems = "Household Items"
     case cardioMachines = "Cardio Machines"
     case other = "Other"
     

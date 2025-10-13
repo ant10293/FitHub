@@ -35,7 +35,8 @@ struct SetDetail: Identifiable, Hashable, Codable {
         return nil
     }
     
-    mutating func updateCompletedMetrics(currentBest: PeakMetric) -> (newMax: PeakMetric?, rxw: RepsXWeight?) {
+    //mutating func updateCompletedMetrics(currentBest: PeakMetric) -> (newMax: PeakMetric?, rxw: RepsXWeight?) {
+    mutating func updateCompletedMetrics(currentBest: PeakMetric) -> (newMax: PeakMetric?, lxm: LoadXMetric?) {
         // If nothing was logged, persist the planned as the completion.
         if completed == nil { completed = planned } // MARK: Essential for updating peakMetric
         let metric = completed ?? planned
@@ -52,19 +53,22 @@ struct SetDetail: Identifiable, Hashable, Codable {
         case .oneRepMax(let best1RM):
             // Need reps to estimate a 1RM from the set weight (+ RPE)
             guard let reps = metric.repsValue, reps > 0, let weight = load.weight else { return (nil, nil) }
-            let rxw: RepsXWeight = .init(reps: reps, weight: weight)
-            guard let candidate = recalculate1RM(oneRm: best1RM, completed: rxw), candidate.inKg > best1RM.inKg else { return (nil, nil) }
-            return (.oneRepMax(candidate), rxw)
+            //let rxw: RepsXWeight = .init(reps: reps, weight: weight)
+           // guard let candidate = recalculate1RM(oneRm: best1RM, completed: rxw),
+            guard let candidate = recalculate1RM(oneRm: best1RM, completedWeight: weight, completedReps: reps),
+                    candidate.inKg > best1RM.inKg else { return (nil, nil) }
+            return (.oneRepMax(candidate), LoadXMetric(load: .weight(weight), metric: .reps(reps)))
             
         case .none:
             return (nil, nil)
         }
     }
 
-    private mutating func recalculate1RM(oneRm: Mass, completed: RepsXWeight) -> Mass? {
+    //private mutating func recalculate1RM(oneRm: Mass, completed: RepsXWeight) -> Mass? {
+    private mutating func recalculate1RM(oneRm: Mass, completedWeight: Mass, completedReps: Int) -> Mass? {
         let base = OneRMFormula.calculateOneRepMax(
-            weight: completed.weight,
-            reps: completed.reps
+            weight: completedWeight,
+            reps: completedReps
         )
 
         // Apply RPE multiplier (if any) by constructing a new Mass
@@ -114,10 +118,10 @@ extension SetDetail {
         return weight.displayString
     }
     
-    private func formatLoadMetric(load: SetLoad, metric: SetMetric) -> Text {
+    static func formatLoadMetric(load: SetLoad, metric: SetMetric) -> Text {
         // tiny helpers so the switch body stays readable
-        let sepTimes = Text(" × ").foregroundStyle(.gray)
-        let sepDash  = Text(" - ").foregroundStyle(.gray)
+        let sepTimes = Text(" × ")//.foregroundStyle(.gray)
+        let sepDash  = Text(" - ")//.foregroundStyle(.gray)
         func light(_ s: String) -> Text { Text(s).fontWeight(.light) }
 
         switch (load, metric) {
@@ -144,11 +148,11 @@ extension SetDetail {
     var formattedCompletedText: Text {
         let head = Text("Set \(setNumber): ").bold()
         guard let completed else { return head + Text("—") }
-        return head + formatLoadMetric(load: load, metric: completed)
+        return head + SetDetail.formatLoadMetric(load: load, metric: completed)
     }
 
     var formattedPlannedText: Text {
-        formatLoadMetric(load: load, metric: planned)
+        SetDetail.formatLoadMetric(load: load, metric: planned)
     }
     
     static let secPerRep: Int = 3

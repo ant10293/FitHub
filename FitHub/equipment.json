@@ -883,7 +883,7 @@
         "image" : "rice_bucket",
         "aliases" : ["rice bucket", "hand strengthening bucket"],
         "description" : "Bucket filled with rice or sand in which the hand is plunged and manipulated to improve finger, wrist, and forearm strength.",
-        "equCategory" : "Household Items"
+        "equCategory" : "Other"
     },
     {
         "name" : "Towel",
@@ -891,7 +891,7 @@
         "image" : "towel",
         "aliases" : ["bath towel", "gym towel"],
         "description" : "Ordinary towel used as a grip implement or slider for various body‑weight and mobility drills.",
-        "equCategory" : "Household Items"
+        "equCategory" : "Other"
     },
     {
         "name" : "Chair",
@@ -899,7 +899,8 @@
         "image" : "chair",
         "aliases" : ["kitchen chair", "dining chair"],
         "description" : "Sturdy household chair leveraged for step‑ups, dips, incline push‑ups, or seated exercises.",
-        "equCategory" : "Household Items"
+        "equCategory" : "Other",
+        "alternativeEquipment" : ["Plyometric Box"]
     },
     {
         "name" : "Treadmill",

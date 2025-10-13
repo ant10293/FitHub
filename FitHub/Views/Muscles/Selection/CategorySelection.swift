@@ -46,7 +46,7 @@ struct CategorySelection: View {
                         .foregroundStyle(.red)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button("Close") {
                         if newTemplate {
                             saveExitAction()
                         } else {

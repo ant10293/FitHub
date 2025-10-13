@@ -54,7 +54,7 @@ struct DaysEditor: View {
                     .foregroundStyle(.red)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button("Close") {
                         if selectedDays.count != numDays, selectedDays.count >= 3 {
                             numDays = selectedDays.count
                         }

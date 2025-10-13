@@ -17,6 +17,7 @@ struct ContentView: View {
                     // need to do this on a background thread
                     .onAppear {
                         notifications.requestIfNeeded()
+                        NotificationManager.printAllPendingNotifications()
                         ctx.adjustments.loadAllAdjustments(for: ctx.exercises.allExercises, allEquipment: ctx.equipment.allEquipment)
                         if ctx.userData.sessionTracking.activeWorkout != nil { showResumeWorkoutOverlay = true }
                         if ctx.userData.setup.infoCollected { determineUserStrengthLevel() }

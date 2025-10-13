@@ -30,7 +30,7 @@ struct NewExercise: View {
     @State private var showDeleteAlert: Bool = false
     @State private var equipmentRequired: [GymEquipment] = []
     @State private var draft: InitExercise
-    var original: Exercise? = nil
+    let original: Exercise?
 
     init(original: Exercise? = nil) {
         self.original = original
@@ -63,7 +63,9 @@ struct NewExercise: View {
                         muscleField
                         equipmentSection
                                   
-                        if !equipmentRequired.isEmpty { adjustmentsField }
+                        if !equipmentRequired.isEmpty, ctx.equipment.hasEquipmentAdjustments(for: equipmentRequired) {
+                            adjustmentsField
+                        }
                         
                         instructionsSection
                                   
@@ -120,7 +122,7 @@ struct NewExercise: View {
         }
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .onDisappear(perform: disappearAction)
-        .sheet(isPresented: $selectingEquipment, onDismiss: { draft.resistance = determineType() }) {
+        .sheet(isPresented: $selectingEquipment) {
             EquipmentSelection(selection: equipmentRequired, onDone: { selection in
                 setEquipment(selection: selection)
             })
@@ -162,26 +164,33 @@ struct NewExercise: View {
     private func setEquipment(selection: [GymEquipment]) {
         draft.equipmentRequired = selection.map(\.name)
         equipmentRequired = ctx.equipment.getEquipment(from: draft.equipmentRequired)
+        if let newResistance = determineType() { draft.resistance = newResistance }
     }
     
-    private func determineType() -> ResistanceType {
+    // FIXME: the selection "any" is invalid and does not have an associated tag, this will give undefined results
+    private func determineType() -> ResistanceType? {
         if equipmentRequired.contains(where: { EquipmentCategory.machineCats.contains($0.equCategory) }){
             return .machine
         } else if equipmentRequired.contains(where: { EquipmentCategory.freeWeightCats.contains($0.equCategory) }) {
             return .freeWeight
         } else if equipmentRequired.isEmpty || equipmentRequired.contains(where: { $0.equCategory == .benchesRacks }) {
             return .bodyweight
+        } else if equipmentRequired.contains(where: { $0.equCategory == .resistanceBands }){
+            return .banded
         } else {
-            return .any
+            return nil
         }
     }
     
+    // FIXME: doesnt accomodate others like per peg, etc
     private func determineWeightInstruction() -> WeightInstruction? {
         if let movement = draft.limbMovementType, movement != .bilateralDependent {
             if draft.equipmentRequired.contains("Dumbbells") {
                 return .perDumbbell
             } else if equipmentRequired.contains(where: { $0.equCategory == .cableMachines }) {
                 return .perStack
+            } else if equipmentRequired.contains(where: { $0.equCategory == .platedMachines }) {
+                return .perPeg
             }
         }
         return nil
@@ -200,6 +209,7 @@ struct NewExercise: View {
                 )
                 .foregroundStyle(draft.muscles.isEmpty ? .secondary : .primary)
             )
+            .multilineTextAlignment(.leading)
             
             if !isReadOnly {
                 Button {

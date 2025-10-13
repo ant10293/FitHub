@@ -150,7 +150,7 @@ struct KcalCalculator: View {
                 Text("Daily Caloric Intake").font(.headline)
                 Text("\(Int(calories)) Calories").font(.title2)
 
-                RectangularButton(title: "Done", action: dismissAction)
+                RectangularButton(title: "Close", action: dismissAction)
                     .padding(.horizontal)
             }
             .frame(width: UIScreen.main.bounds.width * 0.8,
