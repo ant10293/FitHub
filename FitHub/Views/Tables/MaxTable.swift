@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// FIXME: messy asf. doesn't use existing display logic
 struct MaxTable: View {
     let peak: PeakMetric
 
@@ -51,8 +52,19 @@ struct MaxTable: View {
                         
                         // Col 2: time scaled by %
                         let secs = Int((Double(span.inSeconds) * Double(pct) / 100.0).rounded())
-                        Text(secs > 0 ? TimeSpan.fromSeconds(secs).displayStringCompact : "—")
+                        Text(secs > 0 ? TimeSpan(seconds: secs).displayStringCompact : "—")
                             .fontWeight(.light)
+                            .gridColumnAlignment(.trailing)
+                        
+                    case .hold30sLoad(let l30):
+                        // Col 2: empty to keep grid structure consistent
+                        Text(" ").hidden()
+                            .gridColumnAlignment(.center)
+                        
+                        // Col 3: load at %
+                        let load = l30.displayValue * Double(pct) / 100.0
+                        (Text(load > 0 ? Format.smartFormat(load) : "—")
+                         + Text(" \(UnitSystem.current.weightUnit)").fontWeight(.light))
                             .gridColumnAlignment(.trailing)
                     
                     case .none:

@@ -28,6 +28,8 @@ func getFullImage(_ imageName: String, _ fullPath: String) -> Image {
     return Image(systemName: "photo")
 }
 
+enum WidthStyle { case fit, fill }
+
 var dismissKeyboardButton: some View {
     Button(action: {
         // Move any potential non-UI related work off the main thread

@@ -7,48 +7,71 @@
 import SwiftUI
 
 struct TimeSpeedField: View {
-    @Binding var cardio: TimeOrSpeed
+    @Binding var tos: TimeOrSpeed
+    @Binding var showing: TimeOrSpeed.InputKey?
     @State private var localText: String = ""
     let distance: Distance
+    let hideMenuButton: Bool
     let style: TextFieldVisualStyle
     
     var body: some View {
         Group {
-            switch cardio.showing {
+            switch showingResolved {
             case .time:
                 TimeEntryField(
                     text: Binding(
-                        get: { !localText.isEmpty ? localText : (cardio.time.inSeconds > 0 ? cardio.time.displayStringCompact : "") },
+                        get: { !localText.isEmpty ? localText : (tos.time.fieldString) },
                         set: { newValue in
                             localText = newValue
-                            
-                            let secs = TimeSpan.seconds(from: newValue)
-                            cardio.updateTime(TimeSpan(seconds: secs), distance: distance)
                         }
                     ),
                     style: style
                 )
-                .overlay(alignment: .bottomTrailing) { menuButton }
+                .overlay(alignment: .bottomTrailing) { if !hideMenuButton { menuButton } }
+                .onChange(of: localText) { _, newValue in
+                    let ts = TimeSpan.seconds(from: newValue)
+                    tos.updateTime(ts, distance: distance, keyOverride: showing)
+                }
                 
             case .speed:
                 TextField("spd.", text: Binding(
-                    get: { !localText.isEmpty ? localText : (cardio.speed.inKmH > 0 ? cardio.speed.displayString : "") },
+                    get: { !localText.isEmpty ? localText : (tos.speed.fieldString) },
                     set: { newValue in
                         // TODO: add special filtering for speed
-                        let filtered = InputLimiter.filteredWeight(old: cardio.speed.inKmH > 0 ? cardio.speed.displayString : "", new: newValue)
+                        let filtered = InputLimiter.filteredWeight(old: tos.speed.fieldString, new: newValue)
                         localText = filtered
-                        
                         let val = Double(filtered) ?? 0
-                        cardio.updateSpeed(Speed(speed: val), distance: distance)
+                        tos.updateSpeed(Speed(speed: val), distance: distance, keyOverride: showing)
                     }
                 ))
                 .keyboardType(.decimalPad)
                 .multilineTextAlignment(.center)
-                .overlay(alignment: .bottomTrailing) { menuButton }
+                .overlay(alignment: .bottomTrailing) { if !hideMenuButton { menuButton } }
             }
         }
-        .onChange(of: cardio.showing) { localText = "" }
+        .onChange(of: distance) { _, newD in
+            switch showingResolved {
+            case .time:
+                let speed = Speed.speedFromTime(tos.time, distance: distance)
+                if speed != tos.speed { tos.speed = speed } // avoid redundant writes
+            case .speed:
+                let time = Speed.timeFromSpeed(tos.speed, distance: distance)
+                if time != tos.time { tos.time = time } // avoid redundant writes
+            }
+        }
+        .onChange(of: showingResolved) { _, newShowing in
+            switch newShowing {
+            case .time:
+                let t = tos.time.fieldString
+                if localText != t { localText = t }
+            case .speed:
+                let s = tos.speed.fieldString
+                if localText != s { localText = s }
+            }
+        }
     }
+    
+    private var showingResolved: TimeOrSpeed.InputKey { showing ?? tos.showing }
     
     private var menuButton: some View {
         Menu {
@@ -56,11 +79,12 @@ struct TimeSpeedField: View {
                 Button {
                     // Unfocus the text field first
                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    cardio.showing = key
+                    if showing != nil { showing = key }
+                    tos.showing = key
                 } label: {
                     HStack {
                         Text(key.rawValue.capitalized)
-                        if cardio.showing == key {
+                        if showingResolved == key {
                             Image(systemName: "checkmark")
                         }
                     }

@@ -59,9 +59,7 @@ enum InputLimiter {
     static func isValidInput(_ input: String) -> Bool {
         // first trim trailing whitespaces
         // Check if the name is empty or contains only whitespace
-        guard !input.trimmingCharacters(in: .whitespaces).isEmpty else {
-            return false
-        }
+        guard !input.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
         
         // Define a character set of valid characters (letters, numbers, spaces)
         let allowedCharacters = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789- ")
@@ -96,12 +94,6 @@ enum Format {
         return formatter.string(from: date)
     }
     
-    private func weekdayLong(date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMM d, yyyy"
-        return formatter.string(from: date)
-    }
-    
     static func shortDate(from date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d"
@@ -113,7 +105,7 @@ enum Format {
         formatter.dateFormat = "MMMM d, yyyy"
         return formatter.string(from: date)
     }
-
+     
     static func dayOfWeek(from date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE"
@@ -150,11 +142,15 @@ enum Format {
     /// - Parameter totalSeconds: Total seconds to format.
     /// - Returns: A string like “1:05:30” or “05:30” if under an hour.
     static func timeString(from totalSeconds: Int) -> String {
-        let hours = totalSeconds / 3600
-        let minutes = (totalSeconds % 3600) / 60
-        let seconds = totalSeconds % 60
-        
-        return formatDurationCompact(h: hours, m: minutes, s: seconds)
+        let (h, m, s) = secondsToHMS(totalSeconds)
+        return formatDurationCompact(h: h, m: m, s: s)
+    }
+    
+    static func secondsToHMS(_ seconds: Int) -> (h: Int, m: Int, s: Int) {
+        let hours = seconds / 3600
+        let minutes = (seconds % 3600) / 60
+        let secondsPart = seconds % 60
+        return (h: hours, m: minutes, s: secondsPart)
     }
     
     static func formatTimeComponents(_ components: DateComponents) -> String {
@@ -183,34 +179,29 @@ enum Format {
         }()
 
         // 2️⃣  Break into h-m-s
-        let hours   = totalSeconds / 3600
-        let minutes = (totalSeconds % 3600) / 60
-        let secs    = totalSeconds % 60
+        let (h, m, s) = secondsToHMS(totalSeconds)
 
         // 3️⃣  Build display parts
         var parts: [String] = []
-        if hours   > 0 { parts.append("\(hours) hr") }
-        if minutes > 0 { parts.append("\(minutes) min") }
-        if secs    > 0 { parts.append("\(secs) sec") }
+        if h > 0 { parts.append("\(h) hr") }
+        if m > 0 { parts.append("\(m) min") }
+        if s > 0 { parts.append("\(s) sec") }
 
         return parts.isEmpty ? "0 sec" : parts.joined(separator: " ")
     }
     
     static func formatDurationCompact(h: Int, m: Int, s: Int, roundSeconds: Bool = false) -> String {
         let hh = max(0, h), mm = max(0, m), ss = max(0, s)
-        var total = hh * 3_600 + mm * 60 + ss
+        var totalSeconds = hh * 3_600 + mm * 60 + ss
 
-        if roundSeconds {
-            total = ((total + 30) / 60) * 60   // nearest minute
-        }
+        // nearest minute
+        if roundSeconds { totalSeconds = ((totalSeconds + 30) / 60) * 60 }
 
-        let H = total / 3_600
-        let M = (total % 3_600) / 60
-        let S = total % 60
+        let (h, m, s) = secondsToHMS(totalSeconds)
 
-        return H > 0
-            ? String(format: "%d:%02d:%02d", H, M, S)
-            : String(format: "%d:%02d", M, S)
+        return h > 0
+            ? String(format: "%d:%02d:%02d", h, m, s)
+            : String(format: "%d:%02d", m, s)
     }
     
     static func formatRange(range: ClosedRange<Int>) -> String {

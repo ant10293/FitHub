@@ -114,7 +114,7 @@ struct ExerciseSelection: View {
     
     private var templateSortingEnabled: Bool { ctx.userData.settings.sortByTemplateCategories && !(templateCategories?.isEmpty ?? true) }
     
-    private var filteredExercises: [Exercise] {        
+    private var filteredExercises: [Exercise] {
         let base = ctx.exercises.filteredExercises(
             searchText: searchText,
             selectedCategory: selectedCategory,
@@ -125,21 +125,24 @@ struct ExerciseSelection: View {
             equipmentData: ctx.equipment
         )
         
-        // If `forPerformanceView` is true, filter out exercises with no performance or maxValue <= 0
-        if forPerformanceView {
-            let perfByName = ctx.exercises.allExercisePerformance // Grab the lookup once
-            let filtered = base.filter { ex in // Filter out the ones you don’t want
-                guard let perf = perfByName[ex.id], let max = perf.currentMax, max.value.displayValue > 0 else { return false }
-                return true
-            }
-            
-            return filtered.sorted { a, b in // Sort in one pass, looking up each date on the fly
-                let da = perfByName[a.id]?.currentMax?.date ?? .distantPast
-                let db = perfByName[b.id]?.currentMax?.date ?? .distantPast
-                return da > db
-            }
-        } else {
-            return base
+        guard forPerformanceView else { return base }
+
+
+        // Dedupe by ID, preserve order
+        var seen = Set<Exercise.ID>()
+        let uniqueBase = base.filter { seen.insert($0.id).inserted }
+
+        // ✅ Filter: must have a peak and its actualValue > 0
+        let filtered = uniqueBase.filter { ex in
+            guard let peak = ctx.exercises.peakMetric(for: ex.id) else { return false }
+            return peak.actualValue > 0
+        }
+
+        // ✅ Sort: newest max first (same source of truth)
+        return filtered.sorted { a, b in
+            let da = ctx.exercises.getMax(for: a.id)?.date ?? .distantPast
+            let db = ctx.exercises.getMax(for: b.id)?.date ?? .distantPast
+            return da > db
         }
     }
 }

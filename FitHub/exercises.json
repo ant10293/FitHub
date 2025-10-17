@@ -1560,7 +1560,7 @@
 	},
 	{
 		"name": "Push Jerk",
-		"id": "F3E2D1C0-B9A8-4765-4E3F-2D1C0B9A8E7D",
+		"id": "C7F9A2E1-4B3D-4C8A-9F12-6A5B3E7D9C40",
 		"image": "push_jerk",
 		"url": "push-jerk",
 		"aliases": ["Dip Jerk"],
@@ -5909,25 +5909,6 @@
 		"repsInstruction" : "Per Leg"
 	},
 	{
-		"name": "Copenhagen Plank",
-		"id": "224A1AEC-CC47-4EA3-9569-9051769DBE05",
-		"image": "copenhagen_plank",
-		"aliases": ["Adductor Side Plank"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Medius" }
-			] },
-			{ "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Adductors", "submusclesWorked": [] }
-		],
-		"difficulty": "Int.",
-		"effort": "Isometric",
-		"limbMovementType": "Unilateral",
-		"resistance": "Bodyweight",
-		"repsInstruction" : "Per Side"
-	},
-	{
 		"name": "Weighted Back Extension",
 		"id": "383DBE0A-3299-4DBD-9B6A-8EE133365155",
 		"image": "back_extension",
@@ -7730,75 +7711,6 @@
 		"resistance": "Bodyweight"
 	},
 	{
-		"name": "Side Plank",
-		"id": "321A748C-6F7A-4BDF-B069-7CF6AAA89B42",
-		"image": "side_plank",
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Obliques" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isometric",
-		"limbMovementType": "Unilateral",
-		"resistance": "Bodyweight",
-		"repsInstruction" : "Per Side"
-	},
-	{
-		"name": "Kneeling Plank",
-		"id": "EE5FD372-EAE4-4C96-9493-3B825468E582",
-		"image": "kneeling_plank",
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Upper Abs" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Lower Abs" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Obliques" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isometric",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Kneeling Side Plank",
-		"id": "48FB0852-58FE-404D-B971-B4565035F673",
-		"image": "kneeling_side_plank",
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Obliques" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isometric",
-		"limbMovementType": "Unilateral",
-		"resistance": "Bodyweight",
-		"repsInstruction" : "Per Side"
-	},
-	{
-		"name": "Hollow Body Hold",
-		"id": "7D6CD89B-6106-492E-B72D-3D3D8145C75B",
-		"image": "hollow_body_hold",
-		"aliases": ["Hollow Hold", "Gymnast Hollow"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
-				{ "engagementPercentage": 50, "submuscleWorked": "Upper Abs" },
-				{ "engagementPercentage": 50, "submuscleWorked": "Lower Abs" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isometric",
-		"resistance": "Bodyweight"
-	},
-	{
 		"name": "V-Up",
 		"id": "70109F04-FCBC-41D6-BED7-8F543A6E3258",
 		"image": "v_up",
@@ -7872,44 +7784,6 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Bodyweight",
 		"repsInstruction" : "Per Side"
-	},
-	{
-		"name": "Plank",
-		"id": "C699E355-84F6-4244-ADCC-96B29F39E17C",
-		"image": "plank",
-		"aliases": ["Front Plank"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Upper Abs" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Lower Abs" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Obliques" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isometric",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "RKC Plank",
-		"id": "B552CF20-7BA5-4994-9EED-5E604544DF84",
-		"image": "rkc_plank",
-		"aliases": ["Hard-Style Plank"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Upper Abs" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Lower Abs" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Obliques" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Isometric",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
 	},
 	{
 		"name": "Stability Ball Rollout",
@@ -9315,5 +9189,467 @@
         "effort": "Compound",
         "limbMovementType": "Bilateral Dependent",
         "resistance": "Banded"
+    },
+    {
+        "name": "Plank",
+        "id": "C699E355-84F6-4244-ADCC-96B29F39E17C",
+        "image": "plank",
+        "aliases": ["Front Plank"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Upper Abs" },
+                { "engagementPercentage": 30, "submuscleWorked": "Lower Abs" },
+                { "engagementPercentage": 30, "submuscleWorked": "Obliques" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isometric",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Copenhagen Plank",
+        "id": "224A1AEC-CC47-4EA3-9569-9051769DBE05",
+        "image": "copenhagen_plank",
+        "aliases": ["Adductor Side Plank"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Medius" }
+            ] },
+            { "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Adductors", "submusclesWorked": [] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Isometric",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction" : "Per Side"
+    },
+    {
+        "name": "Side Plank",
+        "id": "321A748C-6F7A-4BDF-B069-7CF6AAA89B42",
+        "image": "side_plank",
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Obliques" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isometric",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction" : "Per Side"
+    },
+    {
+        "name": "Kneeling Plank",
+        "id": "EE5FD372-EAE4-4C96-9493-3B825468E582",
+        "image": "kneeling_plank",
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Upper Abs" },
+                { "engagementPercentage": 30, "submuscleWorked": "Lower Abs" },
+                { "engagementPercentage": 30, "submuscleWorked": "Obliques" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isometric",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Hollow Body Hold",
+        "id": "7D6CD89B-6106-492E-B72D-3D3D8145C75B",
+        "image": "hollow_body_hold",
+        "aliases": ["Hollow Hold", "Gymnast Hollow"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
+                { "engagementPercentage": 50, "submuscleWorked": "Upper Abs" },
+                { "engagementPercentage": 50, "submuscleWorked": "Lower Abs" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isometric",
+        "resistance": "Bodyweight"
+    },
+    {
+      "name": "L-Sit",
+      "id": "7A0E05A7-6D6A-4B2B-95E5-1F6B5D5B8C91",
+      "image": "l_sit",
+      "aliases": ["LSit", "Parallette L-Sit"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Dip Bar"],
+      "muscles": [
+        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
+          { "engagementPercentage": 40, "submuscleWorked": "Lower Abs" },
+          { "engagementPercentage": 35, "submuscleWorked": "Transverse Abdominis" },
+          { "engagementPercentage": 25, "submuscleWorked": "External Obliques" }
+        ] },
+        { "engagementPercentage": 25, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+          { "engagementPercentage": 60, "submuscleWorked": "Rectus Femoris" },
+          { "engagementPercentage": 40, "submuscleWorked": "Vastus Medialis" }
+        ] },
+        { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+          { "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
+          { "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
+        ] }
+      ],
+      "difficulty": "Int.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Bodyweight"
+    },
+    {
+      "name": "Reverse Plank Hold",
+      "id": "A3C2773B-60B5-4B41-A3B9-1E8C4DB7F4A9",
+      "image": "reverse_plank_hold",
+      "aliases": ["Supine Plank Hold"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": [],
+      "muscles": [
+        { "engagementPercentage": 45, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
+          { "engagementPercentage": 40, "submuscleWorked": "Longissimus" },
+          { "engagementPercentage": 35, "submuscleWorked": "Iliocostalis" },
+          { "engagementPercentage": 25, "submuscleWorked": "Spinalis" }
+        ] },
+        { "engagementPercentage": 35, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+          { "engagementPercentage": 80, "submuscleWorked": "Gluteus Maximus" },
+          { "engagementPercentage": 20, "submuscleWorked": "Gluteus Medius" }
+        ] },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+          { "engagementPercentage": 60, "submuscleWorked": "Biceps Femoris" },
+          { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" }
+        ] }
+      ],
+      "difficulty": "Beg.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Bodyweight"
+    },
+    {
+      "name": "Arch Body Hold",
+      "id": "B6D2C7F9-8DAB-413E-8D2E-5B3B2A1D6F20",
+      "image": "arch_body_hold",
+      "aliases": ["Superman Hold"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": [],
+      "muscles": [
+        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
+          { "engagementPercentage": 45, "submuscleWorked": "Longissimus" },
+          { "engagementPercentage": 35, "submuscleWorked": "Iliocostalis" },
+          { "engagementPercentage": 20, "submuscleWorked": "Spinalis" }
+        ] },
+        { "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+          { "engagementPercentage": 85, "submuscleWorked": "Gluteus Maximus" },
+          { "engagementPercentage": 15, "submuscleWorked": "Gluteus Medius" }
+        ] },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings" }
+      ],
+      "difficulty": "Beg.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Bodyweight"
+    },
+    {
+      "name": "Handstand Hold",
+      "id": "E2E6E9E0-6C7F-4E3E-9FC0-1F2B7A6D5C48",
+      "image": "handstand_hold",
+      "aliases": ["Wall Handstand Hold"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": [],
+      "muscles": [
+        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+          { "engagementPercentage": 55, "submuscleWorked": "Front Delt" },
+          { "engagementPercentage": 45, "submuscleWorked": "Side Delt" }
+        ] },
+        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Triceps" },
+        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+          { "engagementPercentage": 60, "submuscleWorked": "Upper Traps" },
+          { "engagementPercentage": 40, "submuscleWorked": "Middle Traps" }
+        ] }
+      ],
+      "difficulty": "Int.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Bodyweight"
+    },
+    {
+      "name": "Overhead Press Pin Hold",
+      "id": "5D39B0C5-6D1F-43D1-8D3C-1D0F6BA7B5E2",
+      "image": "overhead_press_pin_hold",
+      "aliases": ["OHP Pin Hold", "Press Against Pins"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Squat Rack", "Barbell"],
+      "muscles": [
+        { "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+          { "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
+          { "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
+        ] },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps" },
+        { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+          { "engagementPercentage": 70, "submuscleWorked": "Upper Traps" },
+          { "engagementPercentage": 30, "submuscleWorked": "Middle Traps" }
+        ] }
+      ],
+      "difficulty": "Int.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Free Weight"
+    },
+    {
+      "name": "Bench Press Pin Hold",
+      "id": "2B5F4C7E-9A13-4C1D-9E52-6B7A9C3D8F1E",
+      "image": "bench_press_pin_hold",
+      "aliases": ["Bench Against Pins"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Barbell", "Flat Bench", "Squat Rack"],
+      "muscles": [
+        { "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+          { "engagementPercentage": 60, "submuscleWorked": "Sternocostal Head" },
+          { "engagementPercentage": 30, "submuscleWorked": "Clavicular Head" },
+          { "engagementPercentage": 10, "submuscleWorked": "Costal Head" }
+        ] },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps" },
+        { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+          { "engagementPercentage": 70, "submuscleWorked": "Front Delt" },
+          { "engagementPercentage": 30, "submuscleWorked": "Side Delt" }
+        ] }
+      ],
+      "difficulty": "Int.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Free Weight"
+    },
+    {
+      "name": "Dead Hang",
+      "id": "9E2A1B4C-73D1-49B8-8C0E-51F8D2B6A91C",
+      "image": "dead_hang",
+      "aliases": ["Passive Hang"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Pull-Up Bar"],
+      "muscles": [
+        { "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [
+          { "engagementPercentage": 60, "submuscleWorked": "Forearm Flexors" },
+          { "engagementPercentage": 25, "submuscleWorked": "Brachioradialis" },
+          { "engagementPercentage": 15, "submuscleWorked": "Forearm Extensors" }
+        ] },
+        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+          { "engagementPercentage": 70, "submuscleWorked": "Upper Traps" },
+          { "engagementPercentage": 30, "submuscleWorked": "Middle Traps" }
+        ] },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Latissimus Dorsi" }
+      ],
+      "difficulty": "Beg.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Bodyweight"
+    },
+    {
+      "name": "Weighted Dead Hang",
+      "id": "0C7A2E5D-4F18-44C3-86CE-7B9D1C2F3E44",
+      "image": "dead_hang_weighted",
+      "aliases": ["Weighted Hang"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
+      "muscles": [
+        { "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Forearms" },
+        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Trapezius" },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Latissimus Dorsi" }
+      ],
+      "difficulty": "Int.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Free Weight"
+    },
+    {
+      "name": "Flexed-Arm Hang",
+      "id": "6F3D1A2B-8E9C-47BA-BD3E-1A2B3C4D5E6F",
+      "image": "flexed_arm_hang",
+      "aliases": ["Chin-Over-Bar Hold"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Pull-Up Bar"],
+      "muscles": [
+        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
+          { "engagementPercentage": 55, "submuscleWorked": "Biceps Short Head" },
+          { "engagementPercentage": 30, "submuscleWorked": "Biceps Long Head" },
+          { "engagementPercentage": 15, "submuscleWorked": "Brachialis" }
+        ] },
+        { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Latissimus Dorsi" },
+        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Forearms" }
+      ],
+      "difficulty": "Beg.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Bodyweight"
+    },
+    {
+      "name": "Weighted Flexed-Arm Hang",
+      "id": "4E1B2C3D-5A6F-4789-9B0C-1D2E3F4A5B6C",
+      "image": "flexed_arm_hang_weighted",
+      "aliases": [],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
+      "muscles": [
+        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Biceps" },
+        { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Latissimus Dorsi" },
+        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Forearms" }
+      ],
+      "difficulty": "Int.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Free Weight"
+    },
+    {
+      "name": "Wall Sit",
+      "id": "1A2B3C4D-5E6F-4A7B-8C9D-0E1F2A3B4C5D",
+      "image": "wall_sit",
+      "aliases": [],
+      "instructions": { "steps": [] },
+      "equipmentRequired": [],
+      "muscles": [
+        { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+          { "engagementPercentage": 35, "submuscleWorked": "Vastus Medialis" },
+          { "engagementPercentage": 35, "submuscleWorked": "Vastus Lateralis" },
+          { "engagementPercentage": 30, "submuscleWorked": "Rectus Femoris" }
+        ] },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus" },
+        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Hamstrings" }
+      ],
+      "difficulty": "Beg.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Bodyweight"
+    },
+    {
+      "name": "Weighted Wall Sit",
+      "id": "8F9E1A2B-3C4D-5E6F-8A9B-0C1D2E3F4A5B",
+      "image": "weighted_wall_sit",
+      "aliases": ["Plate Wall Sit"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Weight Plate"],
+      "muscles": [
+        {
+          "engagementPercentage": 70,
+          "mover": "primary",
+          "muscleWorked": "Quadriceps",
+          "submusclesWorked": [
+            { "engagementPercentage": 35, "submuscleWorked": "Vastus Medialis" },
+            { "engagementPercentage": 35, "submuscleWorked": "Vastus Lateralis" },
+            { "engagementPercentage": 30, "submuscleWorked": "Rectus Femoris" }
+          ]
+        },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus" },
+        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Hamstrings" }
+      ],
+      "difficulty": "Int.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Free Weight"
+    },
+    {
+      "name": "Hip Thrust Top Hold",
+      "id": "C1D2E3F4-A5B6-47C8-9D0E-1F2A3B4C5D6E",
+      "image": "hip_thrust_top_hold",
+      "aliases": ["Glute Bridge Top Hold"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Flat Bench"],
+      "muscles": [
+        { "engagementPercentage": 65, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+          { "engagementPercentage": 85, "submuscleWorked": "Gluteus Maximus" },
+          { "engagementPercentage": 15, "submuscleWorked": "Gluteus Medius" }
+        ] },
+        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Hamstrings" },
+        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Erector Spinae" }
+      ],
+      "difficulty": "Beg.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Bodyweight"
+    },
+    {
+      "name": "Hamstring Bridge",
+      "id": "D4E5F6A7-B8C9-4D0E-A1B2-C3D4E5F6A7B8",
+      "image": "hamstring_bridge",
+      "aliases": ["Heels-Elevated Bridge"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Flat Bench"],
+      "muscles": [
+        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+          { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" },
+          { "engagementPercentage": 35, "submuscleWorked": "Semitendinosus" },
+          { "engagementPercentage": 25, "submuscleWorked": "Semimembranosus" }
+        ] },
+        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Gluteus" },
+        { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Erector Spinae" }
+      ],
+      "difficulty": "Beg.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Bodyweight"
+    },
+    {
+      "name": "Trap Bar Hold",
+      "id": "E7F8A9B0-C1D2-43E4-85F6-1A2B3C4D5E6F",
+      "image": "trap_bar_hold",
+      "aliases": ["Hex Bar Hold"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Trap Bar", "Weight Plates"],
+      "muscles": [
+        { "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Forearms" },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Trapezius" },
+        { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Erector Spinae" }
+      ],
+      "difficulty": "Int.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Free Weight"
+    },
+    {
+      "name": "Front Rack Hold",
+      "id": "F0A1B2C3-D4E5-46F7-98A9-B0C1D2E3F4A5",
+      "image": "front_rack_hold",
+      "aliases": ["Front Rack Carry Hold"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Barbell", "Squat Rack"],
+      "muscles": [
+        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+          { "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
+          { "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
+        ] },
+        { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+          { "engagementPercentage": 70, "submuscleWorked": "Upper Traps" },
+          { "engagementPercentage": 30, "submuscleWorked": "Middle Traps" }
+        ] },
+        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Forearms" }
+      ],
+      "difficulty": "Int.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Free Weight"
+    },
+    {
+      "name": "Overhead Hold",
+      "id": "A1B2C3D4-E5F6-47A8-9B0C-1D2E3F4A5B6C",
+      "image": "overhead_hold",
+      "aliases": ["Lockout Hold"],
+      "instructions": { "steps": [] },
+      "equipmentRequired": ["Barbell"],
+      "muscles": [
+        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Deltoids" },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps" },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Trapezius" }
+      ],
+      "difficulty": "Int.",
+      "effort": "Isometric",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Free Weight"
     }
 ]

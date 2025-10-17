@@ -19,10 +19,16 @@ struct StrengthPercentileView: View {
             // dont have any strength standards for isometric or cardio exercises
             maxView(usesWeight: exercise.usesWeight)
 
-            Text("\(exercise.performanceTitle) values for \(exercise.name) \(exercise.weightInstruction?.rawValue ?? ""):")
-                .font(.headline)
-                .padding(.top)
-
+            Group {
+                let base = "\(exercise.performanceTitle) values for \(exercise.name)"
+                if let wInstruction = exercise.weightInstruction?.rawValue {
+                    Text(base) + Text(" \(wInstruction):")
+                } else {
+                    Text("\(base):")
+                }
+            }
+            .font(.headline)
+            .padding(.top)
             
             ageBasedStats
                 .padding(.bottom)
@@ -103,9 +109,7 @@ struct StrengthPercentileView: View {
                     .padding()
             }
         }
-        .padding()
-        .background(Color(UIColor.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .cardContainer(cornerRadius: 8, backgroundColor: Color(UIColor.secondarySystemBackground))
     }
     
     // MARK: - Helper Methods
@@ -134,7 +138,7 @@ struct StrengthPercentileView: View {
             }
     }
     
-    struct HorizontalTableView: View {
+    private struct HorizontalTableView: View {
         var values: [(key: String, value: PeakMetric)]
         var maxValue: Double
             
@@ -150,9 +154,11 @@ struct StrengthPercentileView: View {
                         // PeakMetric handles unit rendering (e.g., "120 kg" or "18 reps")
                         Text("\(Int(round(metric.displayValue)))")
                             .font(.body)
-                            .padding(4)
-                            .background(category == userCategory ? Color.yellow.opacity(0.4) : Color.clear)
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                            .cardContainer(
+                                cornerRadius: 5,
+                                padding: 4,
+                                backgroundColor: category == userCategory ? Color.yellow.opacity(0.4) : Color.clear
+                            )
                     }
                 }
             }

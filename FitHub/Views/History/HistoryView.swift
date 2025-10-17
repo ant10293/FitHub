@@ -53,18 +53,27 @@ struct HistoryView: View {
     private var headerSection: some View {
         HStack {
             Spacer()
-            VStack(spacing: 1) {
-                HStack(spacing: 0) {
-                    Text("Workout Streak: ").bold()
-                    + Text("\(userData.sessionTracking.workoutStreak) ")
-                    Image(systemName: "flame")
-                }
+            VStack(spacing: 2) {
+                let count = userData.sessionTracking.workoutStreak
+                (
+                  Text("Workout Streak: ").bold()
+                + Text("\(count) ")
+                + Text(Image(systemName: "flame"))
+                )
+                .lineLimit(1)
+                .layoutPriority(1)             // claim width before shrinking
+                .minimumScaleFactor(0.85)
 
                 let longest = userData.sessionTracking.longestWorkoutStreak
-                (Text("Longest Streak:").bold() +
-                 Text(" \(longest) \(longest == 1 ? "day" : "days")"))
-                    .font(.subheadline)
+                (
+                  Text("Longest Streak: ").bold()
+                + Text(" \(longest) \(longest == 1 ? "day" : "days")")
+                )
+                .lineLimit(1)
+                .minimumScaleFactor(0.85)
             }
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)  // stable line height
             Spacer()
         }
         .overlay(alignment: .trailing) {
@@ -119,11 +128,11 @@ struct HistoryView: View {
                     Text("\(workoutCountForLastMonth())")
                 }
                 .padding()
+                
                 VStack {
                     Text("This Month")
                         .font(.subheadline)
                         .foregroundStyle(.gray)
-                    
                     Text("\(workoutCountForCurrentMonth())")
                 }
                 .padding()

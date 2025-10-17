@@ -10,7 +10,22 @@ struct SetLoadEditor: View {
     @Binding var load: SetLoad
     @State var localText: String = ""
     var onValidityChange: ((Bool) -> Void)? = nil
-
+    
+    var body: some View {
+        switch load {
+        case .none:
+            // Nothing to edit visually for no-load sets
+            EmptyView()
+            
+        case .weight, .distance:
+            if let binding = textBinding {
+                TextField(placeholder, text: binding)
+                    .keyboardType(.decimalPad)
+                    .multilineTextAlignment(.center)
+            }
+        }
+    }
+    
     private var textBinding: Binding<String>? {
         switch load {
         case .weight(let mass):
@@ -19,7 +34,6 @@ struct SetLoadEditor: View {
                 set: { newValue in
                     let filtered = InputLimiter.filteredWeight(old: mass.inKg > 0 ? mass.displayString : "", new: newValue)
                     localText = filtered
-                    
                     let val = Double(filtered) ?? 0
                     load = .weight(Mass(weight: val))
                     onValidityChange?(validate(load: load))
@@ -29,11 +43,10 @@ struct SetLoadEditor: View {
         case .distance(let dist):
             return Binding<String>(
                 get: { !localText.isEmpty ? localText : (dist.inKm > 0 ? dist.displayString : "") },
-                set: { newValue in                    
+                set: { newValue in
                     // TODO: add special filtering for distance
                     let filtered = InputLimiter.filteredWeight(old: dist.inKm > 0 ? dist.displayString : "", new: newValue)
                     localText = filtered
-                    
                     let val = Double(filtered) ?? 0
                     load = .distance(Distance(distance: val))
                     onValidityChange?(validate(load: load))
@@ -58,21 +71,6 @@ struct SetLoadEditor: View {
         case .weight:   return "wt."
         case .distance: return "dist."
         case .none:     return ""
-        }
-    }
-    
-    var body: some View {
-        switch load {
-        case .none:
-            // Nothing to edit visually for no-load sets
-            EmptyView()
-            
-        case .weight, .distance:
-            if let binding = textBinding {
-                TextField(placeholder, text: binding)
-                    .keyboardType(.decimalPad)
-                    .multilineTextAlignment(.center)
-            }
         }
     }
 }

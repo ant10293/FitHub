@@ -13,14 +13,14 @@ struct EditTemplate: View {
     let originalTemplate: WorkoutTemplate
     let useDateOnly: Bool
     let checkDuplicate: (String) -> Bool
-    var onDelete: () -> Void
-    var onUpdateTemplate: (WorkoutTemplate?) -> Void
-    var onArchiveTemplate: (WorkoutTemplate?) -> Void
+    let onDelete: () -> Void
+    let onUpdateTemplate: (WorkoutTemplate?) -> Void
+    let onArchiveTemplate: (WorkoutTemplate?) -> Void
 
     var body: some View {
         TemplateEditor(
-            mode: .edit,
             template: $template,
+            mode: .edit,
             originalName: originalTemplate.name,
             useDateOnly: useDateOnly,
             checkDuplicate: checkDuplicate,

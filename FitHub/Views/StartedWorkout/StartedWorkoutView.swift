@@ -41,8 +41,6 @@ struct StartedWorkoutView: View {
                 ExerciseDetailView(viewingDuringWorkout: true, exercise: exercise)
             }
         }
-        .onAppear(perform: performSetup)
-        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .background {
                 viewModel.saveWorkoutInProgress(userData: ctx.userData)

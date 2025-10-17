@@ -94,10 +94,16 @@ struct OneRMCalculator: View {
                                         favState: FavoriteState.getState(for: exercise, userData: ctx.userData),
                                         accessory: { EmptyView() },
                                         detail: {
-                                            let cur = current1RM(for: exercise.id)
-                                            Text("Current 1RM: ").foregroundStyle(.gray)
-                                            + Text(cur > 0 ? Format.smartFormat(cur) : "-")
-                                            + Text(" \(unitLabel)").fontWeight(.light)
+                                            if let oneRM = ctx.exercises.getMax(for: exercise.id)?.value {
+                                                (
+                                                    Text(Image(systemName: "trophy.fill"))
+                                                    +
+                                                    Text(" ")
+                                                    +
+                                                    oneRM.labeledText
+                                                )
+                                                .font(.caption2)
+                                            }
                                         },
                                         onTap: { exerciseTap(exercise) }
                                     )
@@ -133,9 +139,8 @@ struct OneRMCalculator: View {
                     {
                         ctx.exercises.updateExercisePerformance(
                             for: exercise,
-                            newValue: .oneRepMax(oneRM),               // 1RM in kg
+                            newValue: .oneRepMax(oneRM), // 1RM in kg
                             loadXmetric: LoadXMetric(load: .weight(weightLifted), metric: .reps(repsVal))
-                            //repsXweight: RepsXWeight(reps: repsVal, weight: weightLifted)
                         )
                         ctx.exercises.savePerformanceData()
                         ctx.toast.showSaveConfirmation(duration: 2) {
@@ -147,16 +152,6 @@ struct OneRMCalculator: View {
                 secondaryButton: .cancel()
             )
         }
-    }
-    
-    // Add this helper in OneRMCalculator (pure, no publish)
-    private func current1RM(for id: UUID) -> Double {
-        // Read from the snapshot dictionary; don't call methods that mutate/publish
-        if let perf = ctx.exercises.allExercisePerformance[id],
-           let max = perf.currentMax?.value {
-            return max.displayValue   // or whatever your Mass/Value exposes
-        }
-        return 0
     }
 
     // MARK: - Filters / Derived

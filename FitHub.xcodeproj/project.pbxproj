@@ -97,6 +97,7 @@
 		65A0D1D02E318D21008466D8 /* RectangularBG.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1CF2E318D21008466D8 /* RectangularBG.swift */; };
 		65A0D1D32E38639A008466D8 /* GeneratingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1D22E38639A008466D8 /* GeneratingOverlay.swift */; };
 		65A0D1D72E3AF28A008466D8 /* ExerciseSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1D62E3AF28A008466D8 /* ExerciseSelector.swift */; };
+		65AB47F12EA043B9001BEAFE /* LabelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47F02EA043B9001BEAFE /* LabelButton.swift */; };
 		65AC86472E261D040034FAA3 /* MuscleSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AC86462E261D040034FAA3 /* MuscleSelection.swift */; };
 		65AC86492E2836070034FAA3 /* ExEquipImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AC86482E2836070034FAA3 /* ExEquipImage.swift */; };
 		65C5DC552DEFB46400B09AD2 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC542DEFB46400B09AD2 /* Core.swift */; };
@@ -336,6 +337,7 @@
 		65A0D1CF2E318D21008466D8 /* RectangularBG.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularBG.swift; sourceTree = "<group>"; };
 		65A0D1D22E38639A008466D8 /* GeneratingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratingOverlay.swift; sourceTree = "<group>"; };
 		65A0D1D62E3AF28A008466D8 /* ExerciseSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSelector.swift; sourceTree = "<group>"; };
+		65AB47F02EA043B9001BEAFE /* LabelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelButton.swift; sourceTree = "<group>"; };
 		65AC86462E261D040034FAA3 /* MuscleSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleSelection.swift; sourceTree = "<group>"; };
 		65AC86482E2836070034FAA3 /* ExEquipImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExEquipImage.swift; sourceTree = "<group>"; };
 		65C5DC542DEFB46400B09AD2 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
@@ -694,6 +696,7 @@
 				6548AB862DDAB5DE00BD9DAD /* RectangularButton.swift */,
 				65ECFF0D2E21F1BA0091032A /* FloatingButton.swift */,
 				6550ADAB2E6A2C82002072C1 /* TextButton.swift */,
+				65AB47F02EA043B9001BEAFE /* LabelButton.swift */,
 			);
 			path = Button;
 			sourceTree = "<group>";
@@ -1290,6 +1293,7 @@
 				65CFBFB32E1F9B4500CD521E /* AliasesField.swift in Sources */,
 				65039B762E81D98B007A31E1 /* Distance.swift in Sources */,
 				65E05D0F2E7B81F900E39CC2 /* Rounding.swift in Sources */,
+				65AB47F12EA043B9001BEAFE /* LabelButton.swift in Sources */,
 				6550ADC72E70C43E002072C1 /* SubMuscleEditor.swift in Sources */,
 				653BF8B12E6618E2005A07EA /* GenericEditor.swift in Sources */,
 				653BF89B2E595AA3005A07EA /* EquipmentManagement.swift in Sources */,

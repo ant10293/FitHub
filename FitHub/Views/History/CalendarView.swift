@@ -157,7 +157,7 @@ struct CalendarView: View {
         return CalendarUtility.shared.isDate(date, equalTo: nextMonth, toGranularity: .month)
     }
 
-    struct DayView: View {
+    private struct DayView: View {
         @Environment(\.colorScheme) var colorScheme
         let day: Date
         let completedWorkouts: [Date]

@@ -16,17 +16,17 @@ struct TemplateEditor: View {
     @StateObject private var kbd = KeyboardManager.shared
 
     // Configuration
-    let mode: Mode
     @Binding var template: WorkoutTemplate
+    let mode: Mode
     let originalName: String?        // pass originalTemplate.name for edit; nil for create
     let useDateOnly: Bool
     let checkDuplicate: (String) -> Bool
 
     // Actions
-    var onSubmit: (WorkoutTemplate?) -> Void
-    var onDelete: (() -> Void)? = nil
-    var onArchive: ((WorkoutTemplate?) -> Void)? = nil
-    var onCancel: (() -> Void)? = nil   // optional; default uses dismiss()
+    let onSubmit: (WorkoutTemplate?) -> Void
+    let onDelete: (() -> Void)?
+    let onArchive: ((WorkoutTemplate?) -> Void)?
+    let onCancel: (() -> Void)?   // optional; default uses dismiss()
 
     // Local state
     @State private var showingCategorySelection: Bool = false
@@ -34,8 +34,8 @@ struct TemplateEditor: View {
     @State private var submitted: Bool = false
 
     init(
-        mode: Mode,
         template: Binding<WorkoutTemplate>,
+        mode: Mode,
         originalName: String?,
         useDateOnly: Bool,
         checkDuplicate: @escaping (String) -> Bool,
@@ -44,8 +44,8 @@ struct TemplateEditor: View {
         onArchive: ((WorkoutTemplate?) -> Void)? = nil,
         onCancel: (() -> Void)? = nil
     ) {
-        self.mode = mode
         self._template = template
+        self.mode = mode
         self.originalName = originalName
         self.useDateOnly = useDateOnly
         self.checkDuplicate = checkDuplicate
@@ -85,19 +85,23 @@ struct TemplateEditor: View {
                     // Secondary actions for Edit only
                     HStack(spacing: 12) {
                         if let onDelete {
-                            Button("Delete", systemImage: "trash.fill", action: onDelete)
-                                .buttonStyle(.bordered)
-                                .foregroundStyle(.red)
-                                .tint(.red)
+                            LabelButton(
+                                title: "Delete",
+                                systemImage: "trash.fill",
+                                tint: .red,
+                                action: onDelete
+                            )
                         }
                         if let onArchive {
-                            Button("Archive", systemImage: "archivebox") { onArchive(template) }
-                                .buttonStyle(.bordered)
-                                .foregroundStyle(.blue)
-                                .tint(.blue)
+                            LabelButton(
+                                title: "Archive",
+                                systemImage: "archivebox",
+                                tint: .blue,
+                                action: { onArchive(template) }
+                            )
                         }
                     }
-                    .padding(.bottom)
+                    .padding([.horizontal, .bottom])
                 }
 
                 Spacer(minLength: 0)

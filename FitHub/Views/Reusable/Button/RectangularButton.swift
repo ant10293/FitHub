@@ -13,7 +13,7 @@ struct RectangularButton: View {
     let enabled: Bool
     let bgColor: Color
     let fgColor: Color
-    let width: RectangularLabel.WidthStyle
+    let width: WidthStyle
     let bold: Bool
     let iconPosition: RectangularLabel.IconPosition
     let action: () -> Void
@@ -24,7 +24,7 @@ struct RectangularButton: View {
         enabled: Bool = true,
         bgColor: Color = .blue,
         fgColor: Color = .primary,
-        width: RectangularLabel.WidthStyle = .fill,
+        width: WidthStyle = .fill,
         bold: Bool = false,
         iconPosition: RectangularLabel.IconPosition = .leading,
         action: @escaping () -> Void

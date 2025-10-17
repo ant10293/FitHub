@@ -303,7 +303,6 @@ extension ExerciseData {
     func updateExercisePerformance(
          for exerciseId: UUID,
          newValue: PeakMetric,
-         //repsXweight: RepsXWeight? = nil,
          loadXmetric: LoadXMetric? = nil,
          csvEstimate: Bool = false
      ) {
@@ -311,7 +310,6 @@ extension ExerciseData {
              updateExercisePerformance(
                 for: exercise,
                 newValue: newValue,
-               // repsXweight: repsXweight,
                 loadXmetric: loadXmetric,
                 csvEstimate: csvEstimate
              )
@@ -321,7 +319,6 @@ extension ExerciseData {
     func updateExercisePerformance(
         for exercise: Exercise,
         newValue: PeakMetric,
-       // repsXweight: RepsXWeight? = nil,
         loadXmetric: LoadXMetric? = nil,
         csvEstimate: Bool = false
     ) {
@@ -337,7 +334,6 @@ extension ExerciseData {
         func makeRecord() -> MaxRecord {
             MaxRecord(
                 value: newValue,
-                //repsXweight: repsXweight,
                 loadXmetric: loadXmetric,
                 date: roundedDate
             )
@@ -367,7 +363,6 @@ extension ExerciseData {
                 // Same calendar day → treat as correction / improvement
                 if newValue.actualValue >= current.value.actualValue {
                     current.value        = newValue
-                    //current.repsXweight  = repsXweight
                     current.loadXmetric  = loadXmetric
                     current.date         = roundedDate      // stays "today"
                     perf.currentMax      = current
@@ -415,7 +410,6 @@ extension ExerciseData {
         updateExercisePerformance(
             for: update.exerciseId,
             newValue: update.value,
-            //repsXweight: update.repsXweight,
             loadXmetric: update.loadXmetric,
             csvEstimate: csvEstimate
         )

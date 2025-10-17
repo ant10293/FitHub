@@ -157,7 +157,6 @@ struct ExerciseSetOverlay: View {
             onPerformanceUpdate(PerformanceUpdate(
                 exerciseId: exercise.id,
                 value: newPR,
-                //repsXweight: result.rxw,
                 loadXmetric: result.lxm,
                 setId: setDetail.id
             ))

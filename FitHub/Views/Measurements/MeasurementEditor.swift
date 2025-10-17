@@ -8,31 +8,29 @@
 import SwiftUI
 
 struct MeasurementEditor: View {
-    var measurement: MeasurementValue
-    var measurementType: MeasurementType
-    var onSave: ((Double) -> Void)?
-    var onExit: () -> Void
+    let measurement: MeasurementValue
+    let measurementType: MeasurementType
+    let onSave: ((Double) -> Void)?
+    let onExit: () -> Void
     
     var body: some View {
         GenericEditor(
             title: "Edit \(measurementType.rawValue)",
-            placeholder: getString,
-            initialValue: measurement.displayValueString,
+            placeholder: measurementType.placeholder,
+            initialValue: measurement.fieldString,
             onSave: { newValue in
-                let new = measurement.metricDouble(from: newValue)
-                onSave?(new)
+                let convertedVal: Double
+                switch measurement {
+                case .size:
+                    convertedVal = UnitSystem.current == .imperial ? UnitSystem.INtoCM(newValue) : newValue
+                case .weight:
+                    convertedVal = UnitSystem.current == .imperial ? UnitSystem.LBtoKG(newValue) : newValue
+                case .bmi, .calories, .percentage:
+                    convertedVal = newValue
+                }
+                onSave?(convertedVal)
             },
             onExit: onExit
         )
-    }
-    
-    private var getString: String {
-        if let unitLabel = measurementType.unitLabel {
-            return MeasurementType.bodyPartMeasurements.contains(measurementType)
-                ? "Enter Circumference (\(unitLabel))"
-                : "Enter Value (\(unitLabel))"
-        } else {
-            return "Enter Value"
-        }
     }
 }

@@ -93,6 +93,7 @@ extension UserData {
     }
 
     func deleteArchivedTemplate(at idx: Int) {
+        guard workoutPlans.archivedTemplates.indices.contains(idx) else { return }
         NotificationManager.remove(ids: workoutPlans.archivedTemplates[idx].notificationIDs)
         workoutPlans.archivedTemplates.remove(at: idx)
     }
@@ -103,6 +104,7 @@ extension UserData {
     }
     
     func deleteTrainerTemplate(at idx: Int) {
+        guard workoutPlans.trainerTemplates.indices.contains(idx) else { return }
         NotificationManager.remove(ids: workoutPlans.trainerTemplates[idx].notificationIDs)
         workoutPlans.trainerTemplates.remove(at: idx)
     }
@@ -113,6 +115,7 @@ extension UserData {
     }
     
     func deleteUserTemplate(at idx: Int) {
+        guard workoutPlans.userTemplates.indices.contains(idx) else { return }
         NotificationManager.remove(ids: workoutPlans.userTemplates[idx].notificationIDs)
         workoutPlans.userTemplates.remove(at: idx)
     }

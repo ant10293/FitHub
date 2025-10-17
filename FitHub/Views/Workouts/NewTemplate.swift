@@ -17,8 +17,8 @@ struct NewTemplate: View {
 
     var body: some View {
         TemplateEditor(
-            mode: .create,
             template: $template,
+            mode: .create,
             originalName: nil,
             useDateOnly: useDateOnly,
             checkDuplicate: checkDuplicate,

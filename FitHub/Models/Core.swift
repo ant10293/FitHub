@@ -149,6 +149,23 @@ enum OneRMFormula {
     }
 }
 
+enum WeightedHoldFormula {
+    static let canonical: TimeSpan = .init(seconds: 30)
+    
+    /// Convert (weight × time) hold to an equivalent load at reference time.
+    static func equivalentHoldLoad(
+        weight: Mass,                  // effective kg for the hold
+        duration: TimeSpan,          // seconds
+        reference: TimeSpan = canonical,
+        exponent k: Double = 0.5
+    ) -> Mass {
+        let t = max(1.0, Double(duration.inSeconds))
+        let tRef = max(1.0, Double(reference.inSeconds))
+        let scale = pow(t / tRef, k)
+        return Mass(kg: weight.inKg * scale)
+    }
+}
+
 enum BMI {
     static func calculateBMI(heightCm: Double, weightKg: Double) -> Double {
         let heightM = heightCm / 100.0                     // convert to metres

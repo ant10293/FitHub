@@ -67,12 +67,12 @@ struct MaxRecordInfoRow: View {
                 Spacer()
             }
             
-            Text(maxRecordInfo.displayText)
+            maxRecordInfo.displayText
                 .font(.caption)
                 .foregroundStyle(.secondary)
             
-            if let weeksSince = maxRecordInfo.weeksSinceLastUpdate {
-                Text("Last updated \(weeksSince) week\(weeksSince == 1 ? "" : "s") ago")
+            if let daysSince = maxRecordInfo.daysSinceLastUpdate {
+                Text(sinceString(fromDays: daysSince))
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
@@ -81,6 +81,13 @@ struct MaxRecordInfoRow: View {
         .padding(.vertical, 6)
         .background(Color.gold.opacity(0.1))
         .clipShape(RoundedRectangle(cornerRadius: 6))
+    }
+    
+    private func sinceString(fromDays days: Int) -> String {
+        if days == 0 { return "Updated today" }
+        if days <= 6 { return "Last updated \(days) day\(days == 1 ? "" : "s") ago" }
+        let w = days / 7
+        return "Last updated \(w) week\(w == 1 ? "" : "s") ago"
     }
 }
 

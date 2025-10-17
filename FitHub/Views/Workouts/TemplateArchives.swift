@@ -75,29 +75,36 @@ struct TemplateArchives: View {
             Text("\(template.name)")
                 .foregroundStyle(Color.secondary)
                 .italic()
-            
-            Button("Unarchive", systemImage: "tray.full") {
-                moveTemplateBack(template: template)
-            }
-            .buttonStyle(.bordered)
-            .foregroundStyle(.green)
-            .tint(.green)
+      
+            LabelButton(
+                title: "Unarchive",
+                systemImage: "tray.full",
+                tint: .green,
+                width: .fit,
+                action: {
+                    moveTemplateBack(template: template)
+                }
+            )
             .padding(.top)
             
             HStack {
-                Button("Delete", systemImage: "trash.fill") {
-                    deleteTemplate(template: template)
-                }
-                .buttonStyle(.bordered)
-                .foregroundStyle(.red)
-                .tint(.red)
+                LabelButton(
+                    title: "Delete",
+                    systemImage: "trash.fill",
+                    tint: .red,
+                    width: .fit,
+                    action: {
+                        deleteTemplate(template: template)
+                    }
+                )
                 
-                Button("Cancel", systemImage: "xmark") {
-                    resetEditing()
-                }
-                .buttonStyle(.bordered)
-                .foregroundStyle(.gray)
-                .tint(.gray)
+                LabelButton(
+                    title: "Cancel",
+                    systemImage: "xmark",
+                    tint: .gray,
+                    width: .fit,
+                    action: resetEditing
+                )
             }
             .padding()
         }

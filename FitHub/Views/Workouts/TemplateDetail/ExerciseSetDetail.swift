@@ -18,11 +18,11 @@ struct ExerciseSetDetail: View {
     @Binding var isShowingOptions: Bool
 
     @State private var showSupersetOptions: Bool = false
+    @State private var tosInputKey: TimeOrSpeed.InputKey?
     
     let hasEquipmentAdjustments: Bool
     let perform: (CallBackAction) -> Void
     let onSuperset: (String) -> Void
-
     
     // MARK: - Init
     init(
@@ -38,7 +38,13 @@ struct ExerciseSetDetail: View {
         _exercise          = exercise
         _isCollapsed       = isCollapsed
         _isShowingOptions  = isShowingOptions
-        _showSupersetOptions = State(initialValue: exercise.wrappedValue.isSupersettedWith != nil)
+        
+        let wrappedEx = exercise.wrappedValue
+        _showSupersetOptions = State(initialValue: wrappedEx.isSupersettedWith != nil)
+        
+        if let set = wrappedEx.setDetails.first, let tos = set.planned.timeSpeed {
+            _tosInputKey = State(initialValue: tos.showing)
+        }
 
         self.hasEquipmentAdjustments = hasEquipmentAdjustments
         self.perform = perform
@@ -53,7 +59,7 @@ struct ExerciseSetDetail: View {
             if !isCollapsed {
                 superSetOptions
                 setDetails
-                AddDeleteButtons(addSet: addSet, deleteLastSet: deleteLastSet)
+                AddDeleteButtons(addSet: addSet, deleteSet: deleteLastSet)
                 equipmentAdjustments
             }
         }
@@ -71,9 +77,10 @@ struct ExerciseSetDetail: View {
     @ViewBuilder private var setDetails: some View {
         ForEach(exercise.setDetails.indices, id: \.self) { i in
             let setBinding = $exercise.setDetails[i]
-
+            let setNumber = i + 1
+            
             SetInputRow(
-                setNumber: i + 1,
+                setNumber: setNumber,
                 exercise: exercise,
                 load: exercise.setDetails[i].load,  
                 metric: exercise.setDetails[i].planned,
@@ -85,6 +92,8 @@ struct ExerciseSetDetail: View {
                 metricField: {
                     SetMetricEditor(
                         planned: setBinding.planned,
+                        showing: $tosInputKey,
+                        hideTOSMenu: setNumber != 1,
                         load: exercise.setDetails[i].load
                     )
                     .textFieldStyle(.roundedBorder)
@@ -189,17 +198,14 @@ struct ExerciseSetDetail: View {
     // MARK: - Equipment adjustments
     @ViewBuilder private var equipmentAdjustments: some View {
         if hasEquipmentAdjustments {
-            HStack {
-                Spacer()
-                Button(action: { perform(.viewAdjustments) }) {
-                    Label("Equipment Adjustments", systemImage: "slider.horizontal.3")
-                        .foregroundStyle(.green)
-                }
-                .centerHorizontally()
-                .buttonStyle(.bordered)
-                .tint(.green)
-                Spacer()
-            }
+            LabelButton(
+                title: "Equipment Adjustments",
+                systemImage: "slider.horizontal.3",
+                tint: .green,
+                width: .fit,
+                action: { perform(.viewAdjustments) }
+            )
+            .centerHorizontally()
             .padding(.top, -5)
         }
     }
@@ -212,6 +218,7 @@ struct ExerciseSetDetail: View {
     private func deleteLastSet() {
         guard !exercise.setDetails.isEmpty else { return }
         perform(.deleteSet)
+        if exercise.setDetails.isEmpty { tosInputKey = nil }
     }
 
     private func moveSet(from source: IndexSet, to destination: Int) {

@@ -8,6 +8,116 @@
 import Foundation
 import SwiftUI
 
+enum PeakMetric: Codable, Equatable, Hashable {
+    case oneRepMax(Mass)     // e.g. 140 kg
+    case maxReps(Int)      // e.g. 32 reps
+    case maxHold(TimeSpan) // e.g 90 sec or 60 kg for 30 sec
+    case hold30sLoad(Mass)
+    case none
+    
+    var actualValue: Double {
+        switch self {
+        case .oneRepMax(let mass): return mass.inKg
+        case .maxReps(let reps): return Double(reps)
+        case .maxHold(let time): return Double(time.inSeconds)
+        case .hold30sLoad(let mass): return mass.inKg
+        case .none: return 0
+        }
+    }
+    
+    var displayValue: Double {
+        switch self {
+        case .oneRepMax(let mass): return mass.displayValue
+        case .maxReps, .maxHold: return self.actualValue // unit doesnt matter
+        case .hold30sLoad(let mass): return mass.displayValue
+        case .none: return self.actualValue
+        }
+    }
+    
+    var displayString: String {
+        switch self {
+        case .oneRepMax(let mass): return mass.displayString
+        case .maxReps(let reps): return String(reps)
+        case .maxHold(let time): return time.displayStringCompact
+        case .hold30sLoad(let mass): return mass.displayString
+        case .none: return ""
+        }
+    }
+    
+    var unitLabel: String? {
+        switch self {
+        case .oneRepMax, .hold30sLoad: return UnitSystem.current.weightUnit
+        case .maxReps: return "reps"
+        case .maxHold: return "sec"
+        case .none: return nil
+        }
+    }
+
+    var performanceTitle: String {
+        switch self {
+        case .oneRepMax: return "One Rep Max"
+        case .maxReps: return "Max Reps"
+        case .maxHold: return "Max Hold"
+        case .hold30sLoad: return "30s Max Load"
+        case .none: return ""
+        }
+    }
+    
+    var percentileHeader: String {
+        let base = "Use this table to determine your working "
+        let suffix: String
+        switch self {
+        case .oneRepMax:
+            suffix = "weight for each rep range."
+        case .maxReps:
+            suffix = "reps based on exertion percentage."
+        case .maxHold:
+            suffix = "hold time based on exertion percentage."
+        case .hold30sLoad:
+            suffix = "load for a 30-second hold based on exertion percentage."
+        case .none:
+            return ""
+        }
+        return base + suffix
+    }
+}
+
+extension PeakMetric {
+    private var displayLabel: String? {
+        switch self {
+        case .oneRepMax, .hold30sLoad: return unitLabel
+        case .maxHold, .maxReps, .none: return nil
+        }
+    }
+    
+    var labeledText: Text {
+        let base = Text(displayString)
+        guard let label = displayLabel, !label.isEmpty else { return base }
+        return base + Text(" ") + Text(label).fontWeight(.light)
+    }
+    
+    var formattedText: Text {
+        return Text("\(performanceTitle): ").bold() + labeledText
+    }
+    
+    var placeholder: String {
+        let base: String = "Enter"
+        
+        if let placeholderLabel {
+            return base + " (\(placeholderLabel))"
+        } else {
+            return base + " value"
+        }
+    }
+    
+    private var placeholderLabel: String? {
+        switch self {
+        case .maxHold: return "h:m:s"
+        default: return unitLabel
+        }
+    }
+}
+
 enum ExerciseUnit: String {
     case weightXreps, repsOnly, timeOnly, weightXtime, distanceXtimeOrSpeed
     
@@ -21,7 +131,7 @@ enum ExerciseUnit: String {
             return .maxHold(TimeSpan(seconds: Int(metricValue)))
         // FIXME: temporary - must add PeakMetric cases
         case .weightXtime:
-            return .none
+            return .hold30sLoad(Mass(kg: metricValue))
         case .distanceXtimeOrSpeed:
             return .none
         }
@@ -41,7 +151,6 @@ enum ExerciseUnit: String {
 struct MaxRecord: Codable, Identifiable {
     var id: UUID = UUID() // Unique identifier for each record (for graphing)
     var value: PeakMetric
-    //var repsXweight: RepsXWeight?
     var loadXmetric: LoadXMetric?
     var date: Date        // Date when the record was set
 }
@@ -68,7 +177,6 @@ struct PerformanceUpdates: Codable, Hashable {
             // Overwrite existing record if necessary
             if existingUpdate.value.actualValue < update.value.actualValue {
                 existingUpdate.value = update.value
-                //existingUpdate.repsXweight = update.repsXweight
                 existingUpdate.loadXmetric = update.loadXmetric
                 existingUpdate.setId = update.setId
                 updatedMax[index] = existingUpdate
@@ -83,22 +191,10 @@ struct PerformanceUpdates: Codable, Hashable {
 struct PerformanceUpdate: Codable, Hashable {
     var exerciseId: UUID
     var value: PeakMetric
-    //var repsXweight: RepsXWeight?
     var loadXmetric: LoadXMetric?
     var setId: UUID?
 }
-/*
-struct RepsXWeight: Codable, Hashable {
-    var reps: Int
-    var weight: Mass
-    
-    var formattedText: Text {
-        weight.formattedText()
-        + Text(" x \(reps) ")
-        + Text("reps").fontWeight(.light)
-    }
-}
-*/
+
 struct LoadXMetric: Codable, Hashable {
     let load: SetLoad
     let metric: SetMetric
@@ -107,121 +203,3 @@ struct LoadXMetric: Codable, Hashable {
         SetDetail.formatLoadMetric(load: load, metric: metric)
     }
 }
-
-/*
-struct TimedHold: Codable, Equatable {
-    var weight: Mass?
-    var time: TimeSpan
-}
-
-struct LoadedCarry: Codable, Equatable {
-    var weight: Mass
-    var distance: Distance
-}
-
-struct EndurancePR: Codable, Equatable {
-    var distance: Distance
-    var time: TimeSpan
-    var speed: Speed?
-    var incline: Incline?
-}
-*/
-
-enum PeakMetric: Codable, Equatable, Hashable {
-    case oneRepMax(Mass)     // e.g. 140 kg
-    case maxReps(Int)      // e.g. 32 reps
-    case maxHold(TimeSpan) // e.g 90 sec or 60 kg for 30 sec
-    case none
-    //case maxCarry(LoadedCarry) // e.g. 90 kg for 20 meters
-    //case endurance(EndurancePR) // e.g. 800m in 0:02:03 (or 2 min 3 sec)
-    
-    var actualValue: Double {
-        switch self {
-        case .oneRepMax(let mass): return mass.inKg
-        case .maxReps(let reps): return Double(reps)
-        case .maxHold(let time): return Double(time.inSeconds)
-        case .none: return 0
-        }
-    }
-    
-    var displayValue: Double {
-        switch self {
-        case .oneRepMax(let mass): return mass.displayValue
-        case .maxReps: return self.actualValue
-        case .maxHold: return self.actualValue
-        case .none: return self.actualValue
-        }
-    }
-    
-    var displayValueString: String {
-        switch self {
-        case .maxHold(let span):
-            return span.displayStringCompact
-        case .oneRepMax, .maxReps:
-            return displayValue > 0 ? Format.smartFormat(displayValue) : ""
-        case .none: return ""
-        }
-    }
-    
-    private var fieldLabel: String? {
-        switch self {
-        case .oneRepMax, .maxReps: return unitLabel
-        case .maxHold: return nil
-        case .none: return nil
-        }
-    }
-    
-    var labeledText: Text {
-        let base = Text(displayValueString)
-        guard let label = fieldLabel, !label.isEmpty else { return base }
-        return base + Text(" ") + Text(label).fontWeight(.light)
-    }
-    
-    var loggingEntry: String {
-        let base = "\(performanceTitle): \(displayValueString)"
-        guard let label = fieldLabel, !label.isEmpty else { return base }
-        return base + " " + label
-    }
-    
-    var formattedText: Text {
-        return Text("\(performanceTitle): ").bold() + labeledText
-    }
-    
-    var performanceTitle: String {
-        switch self {
-        case .oneRepMax: return "One Rep Max"
-        case .maxReps: return "Max Reps"
-        case .maxHold: return "Max Hold"
-        case .none: return ""
-        }
-    }
-    
-    var unitLabel: String {
-        switch self {
-        case .oneRepMax: return UnitSystem.current.weightUnit
-        case .maxReps: return "reps"
-        case .maxHold: return "time"
-        case .none: return ""
-        }
-    }
-    
-    var percentileHeader: String {
-        let base = "Use this table to determine your working "
-        let suffix: String
-        switch self {
-        case .oneRepMax:
-            suffix = "weight for each rep range."
-        case .maxReps:
-            suffix = "reps based on exertion percentage."
-        case .maxHold:
-            suffix = "hold time based on exertion percentage."
-        case .none:
-            return ""
-        }
-        return base + suffix
-    }
-}
-
-
-
-

@@ -10,36 +10,35 @@ import SwiftUI
 
 // MARK: Length
 struct Length: Codable, Equatable, Hashable {
-    private var cm: Double                 // canonical storage
+    /// Canonical backing-store in **centimeters**.
+    private var cm: Double
     
     // MARK: – Inits
     init(cm: Double) { self.cm = cm }
     init(inch: Double) { self.cm = UnitSystem.INtoCM(inch) }
+    init(length: Double) {
+        self.cm = 0
+        self.set(length)
+    }
     
     // MARK: – Accessors
     var inCm: Double { cm }
     var inInch: Double { UnitSystem.CMtoIN(cm) }
     
-    /// Returns the weight in the caller‑specified unit system.
-    var displayValue: Double {
-        UnitSystem.current == .imperial ? inInch : inCm
-    }
+    // MARK: – Display
+    var displayValue: Double { UnitSystem.current == .imperial ? inInch : inCm }
+    var displayString: String { Format.smartFormat(displayValue) }
+    var fieldString: String { cm > 0 ? displayString : "" }
     
-    /// Replace the mass with a new *kg* value.
-    mutating func setCm(_ cm: Double) {
-        self.cm = cm
-    }
-    
-    /// Replace the mass with a new *lb* value (auto‑converts to kg).
-    mutating func setIn(_ inch: Double) {
-        self.cm = UnitSystem.INtoCM(inch)
-    }
-    
-    /// Convenience: update using the caller’s preferred unit system.
-    mutating func set(_ value: Double) {
+    // MARK: - Mutating setters
+    mutating func setCm(_ cm: Double) { self.cm = cm }
+    mutating func setIn(_ inch: Double) { self.cm = UnitSystem.INtoCM(inch) }
+    mutating func set(_ value: Double) { /// Convenience: update using the caller’s preferred unit system.
         self.cm = UnitSystem.current == .imperial ? UnitSystem.INtoCM(value) : value
     }
-    
+}
+
+extension Length {
     var totalInches: Int { return Int(round(inInch)) }
     
     var heightFormatted: Text {
@@ -54,6 +53,7 @@ struct Length: Codable, Equatable, Hashable {
         }
     }
 }
+
 extension Binding where Value == Length {
     func asText(
         format: @escaping (Double) -> String = { Format.smartFormat($0) },

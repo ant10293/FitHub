@@ -368,14 +368,11 @@ extension WorkoutGenerator {
         
         if let max = input.exerciseData.peakMetric(for: ex.id), max.actualValue > 0 {
             ex.draftMax = max
-            Logger.shared.add("• Exercise: \(ex.name), \(max.loggingEntry), No Recalculation Needed", lineBreak: .before)
         } else if let estMax = input.exerciseData.estimatedPeakMetric(for: ex.id), estMax.actualValue > 0 {
             ex.draftMax = estMax
-            Logger.shared.add("• Exercise: \(ex.name), Estimated \(estMax.loggingEntry), No Recalculation Needed", lineBreak: .before)
         } else if let calcMax = ex.calculateCSVMax(userData: input.user) {
             ex.draftMax = calcMax
             maxUpdated(PerformanceUpdate(exerciseId: ex.id, value: calcMax))
-            Logger.shared.add("• Exercise: \(ex.name), Estimated \(calcMax.loggingEntry), Calculation Completed", lineBreak: .before)
         }
 
         // —— Set details ————————————————————————————

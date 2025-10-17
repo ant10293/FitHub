@@ -85,15 +85,15 @@ struct MaxRecordInfo: Codable {
     let currentMax: MaxRecord?
     let csvEstimate: PeakMetric?
     let lastUpdated: Date?
-    let weeksSinceLastUpdate: Int?
+    let daysSinceLastUpdate: Int?
     
-    var displayText: String {
+    var displayText: Text {
         if let currentMax = currentMax {
-            return "Current \(currentMax.value.loggingEntry) (set \(Format.shortDate(from: currentMax.date)))"
+            return Text("Current \(currentMax.value.formattedText) (set \(Format.shortDate(from: currentMax.date)))")
         } else if let csvEstimate = csvEstimate {
-            return "Estimated \(csvEstimate.loggingEntry) (from CSV data)"
+            return Text("Estimated \(csvEstimate.formattedText) (from CSV data)")
         } else {
-            return "No max recorded"
+            return Text("No max recorded")
         }
     }
 }

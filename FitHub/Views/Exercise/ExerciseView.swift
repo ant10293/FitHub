@@ -76,32 +76,27 @@ struct ExerciseView: View {
                             accessory: { EmptyView() },
                             detail: {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    // 🔄 Aliases
                                     if let aliases = exercise.aliases, !aliases.isEmpty {
                                         (
                                             Text(aliases.count == 1 ? "Alias: " : "Aliases: ")
-                                                .font(.caption)
                                                 .fontWeight(.semibold)
                                             +
                                             Text(aliases.joined(separator: ", "))
-                                                .font(.caption)
                                                 .foregroundStyle(.gray)
                                         )
+                                        .font(.caption)
                                     }
                                     
                                     // 🏆 1RM
                                     if let max = ctx.exercises.peakMetric(for: exercise.id) {
-                                        HStack(spacing: 4) {
-                                            Image(systemName: "trophy.fill")
-                                                .font(.caption2)
-                                            
-                                            Text("PR: ")
-                                                .bold()
-                                                .font(.caption2)
+                                        (
+                                            Text(Image(systemName: "trophy.fill"))
                                             +
-                                            max.labeledText
-                                                .font(.caption2)
-                                        }
+                                            Text(" ")
+                                            +
+                                            max.formattedText
+                                        )
+                                        .font(.caption2)
                                     }
                                 }
                             },

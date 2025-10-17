@@ -149,14 +149,13 @@ struct ExerciseDetailView: View {
                 }
                 
                 if ctx.equipment.hasEquipmentAdjustments(for: exercise) {
-                    Button(action: { showingAdjustmentsView.toggle() }) {
-                        Label("Equipment Adjustments", systemImage: "slider.horizontal.3")
-                            .foregroundStyle(.green)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.bordered)
-                    .tint(.green)
+                    LabelButton(
+                        title: "Equipment Adjustments",
+                        systemImage: "slider.horizontal.3",
+                        tint: .green,
+                        controlSize: .large,
+                        action: { showingAdjustmentsView.toggle() }
+                    )
                     .padding(.horizontal)
                 }
                 

@@ -107,26 +107,26 @@ extension WorkoutGenerator {
     }
 
     private func createMaxRecordInfo(exercise: Exercise, input: Input) -> MaxRecordInfo {
-        let currentMax = input.exerciseData.getMax(for: exercise.id)
-        let csvEstimate = input.exerciseData.estimatedPeakMetric(for: exercise.id)
-        
+        let currentMax   = input.exerciseData.getMax(for: exercise.id)
+        let csvEstimate  = input.exerciseData.estimatedPeakMetric(for: exercise.id)
+
         let lastUpdated = currentMax?.date
-        let weeksSinceLastUpdate: Int?
-        
+        let daysSinceLastUpdate: Int?
+
         if let lastUpdate = lastUpdated {
             let startOfLastUpdate = CalendarUtility.shared.startOfDay(for: lastUpdate)
-            let startOfToday = CalendarUtility.shared.startOfDay(for: Date())
-            let components = CalendarUtility.shared.dateComponents([.weekOfYear], from: startOfLastUpdate, to: startOfToday)
-            weeksSinceLastUpdate = max(0, components.weekOfYear ?? 0)
+            let startOfToday      = CalendarUtility.shared.startOfDay(for: Date())
+            let comps = CalendarUtility.shared.dateComponents([.day], from: startOfLastUpdate, to: startOfToday)
+            daysSinceLastUpdate = max(0, comps.day ?? 0)   // clamp if somehow in the future
         } else {
-            weeksSinceLastUpdate = nil
+            daysSinceLastUpdate = nil
         }
-        
+
         return MaxRecordInfo(
             currentMax: currentMax,
             csvEstimate: csvEstimate,
             lastUpdated: lastUpdated,
-            weeksSinceLastUpdate: weeksSinceLastUpdate
+            daysSinceLastUpdate: daysSinceLastUpdate
         )
     }
     

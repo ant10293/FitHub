@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct RectangularLabel: View {
-    enum WidthStyle { case fit, fill }
     enum IconPosition { case leading, trailing }
 
     let title: String

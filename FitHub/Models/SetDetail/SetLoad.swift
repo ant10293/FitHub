@@ -13,51 +13,33 @@ enum SetLoad: Codable, Equatable, Hashable {
     case distance(Distance)
     case none
     
-    var weight: Mass? {
-        if case .weight(let w) = self { return w }
-        return nil
-    }
-    
-    var distance: Distance? {
-        if case .distance(let d) = self { return d }
-        return nil
-    }
-    
-    var iconName: String {
+    var fieldString: String {
         switch self {
-        case .weight: return "scalemass"
-        case .distance: return "figure.walk"
+        case .weight(let m): return m.fieldString
+        case .distance(let d): return d.fieldString
         case .none: return ""
         }
     }
     
     var actualValue: Double {
         switch self {
-        case .weight(let w): return w.displayValue
-        case .distance(let d): return d.displayValue
+        case .weight(let m): return m.inKg
+        case .distance(let d): return d.inKm
         case .none: return 0
-        }
-    }
-    
-    var fieldString: String {
-        switch self {
-        case .weight(let w): return w.inKg > 0 ? w.displayString : ""
-        case .distance(let d): return d.inKm > 0 ? d.displayString : ""
-        case .none: return ""
         }
     }
     
     var displayString: String {
         switch self {
-        case .weight(let w): return w.displayString
+        case .weight(let m): return m.displayString
         case .distance(let d): return d.displayString
         case .none: return ""
         }
     }
-    
+     
     var formattedText: Text {
         switch self {
-        case .weight(let w): return w.formattedText()
+        case .weight(let m): return m.formattedText()
         case .distance(let d): return d.formattedText
         case .none: return Text("Body-weight")
         }
@@ -67,6 +49,28 @@ enum SetLoad: Codable, Equatable, Hashable {
         switch self {
         case .weight: return UnitSystem.current.weightUnit
         case .distance: return UnitSystem.current.distanceUnit
+        case .none: return ""
+        }
+    }
+}
+
+extension SetLoad {
+    var weight: Mass? {
+        if case .weight(let m) = self { return m }
+        return nil
+    }
+    
+    var distance: Distance? {
+        if case .distance(let d) = self { return d }
+        return nil
+    }
+}
+
+extension SetLoad {
+    var iconName: String {
+        switch self {
+        case .weight: return "scalemass"
+        case .distance: return "figure.walk"
         case .none: return ""
         }
     }

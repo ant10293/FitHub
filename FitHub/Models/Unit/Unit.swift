@@ -73,12 +73,3 @@ enum UnitSystem: String, Codable, CaseIterable {
     static func KMHtoMPH(_ kmh: Double) -> Double { kmh * miPerKm }
 }
 
-struct Incline: Codable, Error, Equatable, Hashable {
-    
-}
-
-//typealias Count = Int   // reps, sets, etc.
-//typealias Ratio = Double // % values
-
-
-//enum UnitCategory { case weightUnit, sizeUnit, none }

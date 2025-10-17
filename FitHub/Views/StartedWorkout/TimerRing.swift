@@ -18,17 +18,18 @@ struct PlannedTimerRing: View {
     var body: some View {
         TimerRing(
             manager: manager,
-            holdSeconds: plannedSeconds
-        ) { seconds in
-            let elapsed = TimeSpan(seconds: max(0, seconds))
-            onCompletion(completedFromTimer(elapsed))
-        }
+            holdSeconds: planned.secondsValue ?? fallbackSeconds,
+            onCompletion: { seconds in
+                let elapsed = TimeSpan(seconds: max(0, seconds))
+                if let completed = completedFromTimer(elapsed) {
+                    onCompletion(completed)
+                }
+            }
+        )
     }
 
     // MARK: - Private
-    private var plannedSeconds: Int { planned.secondsValue ?? fallbackSeconds }
-
-    private func completedFromTimer(_ elapsed: TimeSpan) -> SetMetric {
+    private func completedFromTimer(_ elapsed: TimeSpan) -> SetMetric? {
         switch planned {
         case .hold:
             return .hold(elapsed)
@@ -37,7 +38,7 @@ struct PlannedTimerRing: View {
             return .cardio(TimeOrSpeed(showing: .time, time: elapsed, speed: ts.speed))
         default:
             // Defensive fallback: treat as a plain hold
-            return .hold(elapsed)
+            return nil
         }
     }
 }

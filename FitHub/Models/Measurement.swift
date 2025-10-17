@@ -17,19 +17,10 @@ struct Measurement: Codable, Identifiable {
 }
 
 enum MeasurementType: String, Codable, CaseIterable, Identifiable, Hashable, Equatable {
-    // kg
     case weight = "Weight"
-    
-    // %
     case bodyFatPercentage = "Body Fat Percentage"
-    
-    // kcal
     case caloricIntake = "Caloric Intake"
-    
-    // n/a
     case bmi = "BMI"
-    
-    // cm
     case neck = "Neck"
     case shoulders = "Shoulders"
     case chest = "Chest"
@@ -61,12 +52,18 @@ enum MeasurementType: String, Codable, CaseIterable, Identifiable, Hashable, Equ
 }
 extension MeasurementType {
     var unitLabel: String? {
-        switch self {
-        case .weight: return UnitSystem.current.weightUnit
-        case .bodyFatPercentage: return "%"
-        case .caloricIntake: return "kcal"
-        case .bmi: return nil // BMI has no unit
-        default: return UnitSystem.current.sizeUnit
+        getMeasurmentValue(value: 0).unitLabel
+    }
+    
+    var placeholder: String {
+        var base: String = "Enter"
+        if MeasurementType.bodyPartMeasurements.contains(self) {
+            base = base + " Circumference"
+        }
+        if let unitLabel {
+            return base + " (\(unitLabel))"
+        } else {
+            return base + " value"
         }
     }
     
@@ -81,7 +78,7 @@ extension MeasurementType {
     }
     
     func getMeasurmentValue(value: Double) -> MeasurementValue {
-        return self.valueCategory(value: value)
+        valueCategory(value: value)
     }
 }
 
@@ -100,10 +97,8 @@ enum MeasurementValue: Codable, Equatable {
     var displayValue: Double {
         switch self {
         case .weight(let mass): return mass.displayValue
-        case .percentage(let percent): return percent
-        case .calories(let calories): return Double(calories)
-        case .bmi(let bmi): return bmi
         case .size(let length): return length.displayValue
+        case .percentage, .calories, .bmi: return actualValue
         }
     }
     
@@ -112,49 +107,18 @@ enum MeasurementValue: Codable, Equatable {
         switch self {
         case .weight(let mass): return mass.inKg
         case .size(let length): return length.inCm
-        default: return self.displayValue
+        case .percentage(let percent): return percent
+        case .calories(let calories): return Double(calories)
+        case .bmi(let bmi): return bmi
         }
     }
     
-    var asLength: Length? {
-        if case .size(let length) = self { return length }
-        return nil
-    }
-    
-    var asMass: Mass? {
-        if case .weight(let mass) = self { return mass }
-        return nil
-    }
-
-    /// will convert:
-    /// FALSE: the selected unit is metric
-    /// FALSE: the selected unit is imperial and we are working with: .percentage, .calories,  or .bmi
-    /// TRUE: the selected unit is imperial and we are working with: .weight or .size
-    func metricDouble(from value: Double) -> Double {
-        switch self {
-        case .weight:
-           return UnitSystem.current == .imperial ? UnitSystem.LBtoKG(value) : value
-        case .size:
-           return UnitSystem.current == .imperial ? UnitSystem.INtoCM(value) : value
-        case .percentage, .calories, .bmi:
-           return value
-        }
-    }
-    
-    var displayValueString: String { displayValue > 0 ? Format.smartFormat(displayValue) : "" }
-    
-    var unitLabel: String? {
-        switch self {
-        case .weight: return UnitSystem.current.weightUnit
-        case .size:   return UnitSystem.current.sizeUnit
-        case .percentage: return "%"
-        case .calories:   return "kcal"
-        case .bmi:        return nil
-        }
-    }
-    
+    var displayString: String { Format.smartFormat(displayValue) }
+    var fieldString: String { actualValue > 0 ? displayString : "" }
+}
+extension MeasurementValue {
     var formattedText: Text {
-        let value = Text(displayValueString)
+        let value = Text(displayString)
 
         if let unit = unitLabel, !unit.isEmpty {
             return value
@@ -164,5 +128,27 @@ enum MeasurementValue: Codable, Equatable {
         } else {
             return value
         }
+    }
+    
+    var unitLabel: String? {
+        switch self {
+        case .weight:     return UnitSystem.current.weightUnit
+        case .size:       return UnitSystem.current.sizeUnit
+        case .percentage: return "%"
+        case .calories:   return "kcal"
+        case .bmi:        return nil
+        }
+    }
+}
+
+extension MeasurementValue {
+    var asLength: Length? {
+        if case .size(let length) = self { return length }
+        return nil
+    }
+    
+    var asMass: Mass? {
+        if case .weight(let mass) = self { return mass }
+        return nil
     }
 }

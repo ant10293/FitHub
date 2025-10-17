@@ -89,11 +89,15 @@ extension Exercise {
             })
     }
     
+    func getPeakMetric(metricValue: Double) -> PeakMetric {
+        unitType.getPeakMetric(metricValue: metricValue)
+    }
+    
     var performanceTitle: String {
         getPeakMetric(metricValue: 0).performanceTitle
     }
     
-    var performanceUnit: String {
+    var performanceUnit: String? {
         getPeakMetric(metricValue: 0).unitLabel
     }
     
@@ -137,14 +141,9 @@ extension Exercise {
         // any other, weighted - Only used for sorting, not an option
         case .weighted: return true
         case .any: return false
-        //default: return false
         }
     }
         
-    func getPeakMetric(metricValue: Double) -> PeakMetric {
-        unitType.getPeakMetric(metricValue: metricValue)
-    }
-    
     var unitType: ExerciseUnit {
         switch effort {
         case .cardio:
@@ -163,10 +162,10 @@ extension Exercise {
         switch unitType {
         case .weightXreps, .weightXtime:
             return .weight(Mass(kg: 0))
-        case .repsOnly, .timeOnly:
-            return .none
         case .distanceXtimeOrSpeed:
             return .distance(Distance(km: 0))
+        case .repsOnly, .timeOnly:
+            return .none
         }
     }
     
@@ -318,10 +317,6 @@ extension Exercise {
 }
 
 extension Exercise {
-    /*
-     TODO: utilize oldExercise to ensure that overloading remains smooth and does not progress too slowly or quickly
-     also ensure that overloadFactor is implemented
-    */
     mutating func applyProgressiveOverload(
         equipmentData: EquipmentData,
         period: Int,
@@ -463,7 +458,7 @@ extension Exercise {
                     sec = min(maxSec, max(1, Int(Double(maxSec) * 0.95))) // ~95% of max, constant
                 }
                 load = .none // should change if we add weighted isometric
-                planned = .hold(.fromSeconds(sec))
+                planned = .hold(TimeSpan(seconds: sec))
 
             // ───────── bodyweight reps: drive off saved max reps ─────────
             case .maxReps(let maxReps):
@@ -500,6 +495,27 @@ extension Exercise {
                 let target = SetDetail.calculateSetWeight(oneRm: oneRM, reps: reps)
                 load = .weight(equipmentData.roundWeight(target, for: equipmentRequired, rounding: rounding))
                 planned = .reps(max(1, reps))
+                
+            case .hold30sLoad(let l30):
+                // Plan: constant 30s holds; vary load by structure %.
+                let tRefSec = WeightedHoldFormula.canonical.inSeconds
+                let pct: Double
+                switch setStructure {
+                case .pyramid:
+                    // 80% → 100% across sets
+                    let progress = (numSets > 1) ? Double(n - 1) / Double(numSets - 1) : 1.0
+                    pct = 0.80 + 0.20 * progress
+                case .reversePyramid:
+                    // 100% then ~90% then ~80%...
+                    pct = max(0.50, 1.00 - 0.10 * Double(n - 1))
+                case .fixed:
+                    // ~95% steady
+                    pct = 0.95
+                }
+                let targetKg = max(0.0, l30.inKg * pct)
+                let rounded = equipmentData.roundWeight(Mass(kg: targetKg), for: equipmentRequired, rounding: rounding)
+                load = .weight(rounded)
+                planned = .hold(TimeSpan(seconds: tRefSec))
             
             // TODO: implement for weighted hold and cardio exercises
             case .none:
@@ -546,29 +562,13 @@ extension Exercise {
                 let targetKg = baseKg * reductionSteps[i]
                 var warmW = Mass(kg: targetKg)
                 warmW = equipmentData.roundWeight(warmW, for: equipmentRequired, rounding: rounding)
-                details.append(SetDetail(
-                    setNumber: idx,
-                    load: .weight(warmW),
-                    planned: .reps(reps)
-                ))
-                
-            case (.none, .reps):
-                let reps = repSteps[i]
-                details.append(SetDetail(
-                    setNumber: idx,
-                    load: .none,
-                    planned: .reps(reps)
-                ))
-                
-            case (.none, .hold(let ts)):
-                let baseSec = ts.inSeconds
-                let factor = reductionSteps[i]
-                let target = Int((Double(baseSec) * factor).rounded())
-                details.append(SetDetail(
-                    setNumber: idx,
-                    load: .none,
-                    planned: .hold(.fromSeconds(target))
-                ))
+                details.append(
+                    SetDetail(
+                        setNumber: idx,
+                        load: .weight(warmW),
+                        planned: .reps(reps)
+                    )
+                )
                 
             default:
                 break

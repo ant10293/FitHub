@@ -10,7 +10,7 @@ import SwiftUI
 
 // MARK: Speed
 struct Speed: Codable, Equatable, Hashable {
-    // Canonical storage in km/h
+    /// Canonical backing-store in **kilometers/hour**.
     private var kmh: Double
 
     // MARK: - Inits
@@ -28,31 +28,27 @@ struct Speed: Codable, Equatable, Hashable {
     // MARK: - Mutating setters
     mutating func setKmH(_ v: Double) { kmh = max(0, v) }
     mutating func setMPH(_ v: Double) { kmh = max(0, UnitSystem.MPHtoKMH(v)) }
-
-    /// Convenience: set using the current unit system (mph for imperial, km/h for metric).
-    mutating func setDisplay(_ value: Double) {
+    mutating func setDisplay(_ value: Double) {  /// Convenience: set using the current unit system (mph for imperial, km/h for metric).
         if UnitSystem.current == .imperial { setMPH(value) } else { setKmH(value) }
     }
 
-    // MARK: - Display helpers
-    var displayValue: Double {
-        UnitSystem.current == .imperial ? inMPH : inKmH
-    }
-    
-    var displayString: String {
-        Format.smartFormat(displayValue)
-    }
+    // MARK: – Display
+    var displayValue: Double { UnitSystem.current == .imperial ? inMPH : inKmH }
+    var displayString: String { Format.smartFormat(displayValue) }
+    var fieldString: String { kmh > 0 ? displayString : "" }
+}
 
-    var unitLabel: String {
-        UnitSystem.current == .imperial ? "mph" : "kmh"
-    }
+extension Speed {
+    var unitLabel: String { UnitSystem.current.speedUnit }
 
     var formattedText: Text {
         Text(displayString) +
         Text(" ") +
         Text(unitLabel).fontWeight(.light)
     }
-    
+}
+
+extension Speed {
     // MARK: - Conversion Methods
     static func speedFromTime(_ time: TimeSpan, distance: Distance) -> Speed {
         guard time.inSeconds > 0 else { return Speed(kmh: 0) }
@@ -79,4 +75,5 @@ struct Speed: Codable, Equatable, Hashable {
         
         return TimeSpan(seconds: timeSeconds)
     }
+    
 }

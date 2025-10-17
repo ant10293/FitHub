@@ -9,13 +9,20 @@ import Foundation
 import SwiftUI
 
 struct SetDetail: Identifiable, Hashable, Codable {
-    var id: UUID = UUID()
+    let id: UUID
     let setNumber: Int
     var load: SetLoad
     var planned: SetMetric
     var completed: SetMetric?
     var rpe: Double?
     var restPeriod: Int?
+    
+    init(id: UUID? = nil, setNumber: Int, load: SetLoad, planned: SetMetric) {
+        self.id = id ?? UUID()
+        self.setNumber = setNumber
+        self.load = load
+        self.planned = planned
+    }
     
     func completedPeakMetric(peak: PeakMetric) -> PeakMetric? {
         let metric = completed ?? planned
@@ -28,6 +35,11 @@ struct SetDetail: Identifiable, Hashable, Codable {
                 let oneRM = OneRMFormula.calculateOneRepMax(weight: weight, reps: reps, formula: .brzycki)
                 return .oneRepMax(oneRM)
             }
+        case .hold30sLoad:
+            if let hold = metric.holdTime, let weight = load.weight {
+                let load30s = WeightedHoldFormula.equivalentHoldLoad(weight: weight, duration: hold)
+                return .hold30sLoad(load30s)
+            }
         case .none:
             return nil
         }
@@ -35,7 +47,6 @@ struct SetDetail: Identifiable, Hashable, Codable {
         return nil
     }
     
-    //mutating func updateCompletedMetrics(currentBest: PeakMetric) -> (newMax: PeakMetric?, rxw: RepsXWeight?) {
     mutating func updateCompletedMetrics(currentBest: PeakMetric) -> (newMax: PeakMetric?, lxm: LoadXMetric?) {
         // If nothing was logged, persist the planned as the completion.
         if completed == nil { completed = planned } // MARK: Essential for updating peakMetric
@@ -53,19 +64,20 @@ struct SetDetail: Identifiable, Hashable, Codable {
         case .oneRepMax(let best1RM):
             // Need reps to estimate a 1RM from the set weight (+ RPE)
             guard let reps = metric.repsValue, reps > 0, let weight = load.weight else { return (nil, nil) }
-            //let rxw: RepsXWeight = .init(reps: reps, weight: weight)
-           // guard let candidate = recalculate1RM(oneRm: best1RM, completed: rxw),
-            guard let candidate = recalculate1RM(oneRm: best1RM, completedWeight: weight, completedReps: reps),
-                    candidate.inKg > best1RM.inKg else { return (nil, nil) }
+            guard let candidate = recalculate1RM(best: best1RM, completedWeight: weight, completedReps: reps) else { return (nil, nil) }
             return (.oneRepMax(candidate), LoadXMetric(load: .weight(weight), metric: .reps(reps)))
+        
+        case .hold30sLoad(let bestLoad):
+            guard let held = metric.holdTime, held.inSeconds > 0, let weight = load.weight else { return (nil, nil) }
+            guard let candidate = recalculateHoldLoad(best: bestLoad, weight: weight, duration: held) else { return (nil, nil) }
+            return (.hold30sLoad(candidate), LoadXMetric(load: .weight(weight), metric: .hold(held)))
             
         case .none:
             return (nil, nil)
         }
     }
 
-    //private mutating func recalculate1RM(oneRm: Mass, completed: RepsXWeight) -> Mass? {
-    private mutating func recalculate1RM(oneRm: Mass, completedWeight: Mass, completedReps: Int) -> Mass? {
+    private func recalculate1RM(best: Mass, completedWeight: Mass, completedReps: Int) -> Mass? {
         let base = OneRMFormula.calculateOneRepMax(
             weight: completedWeight,
             reps: completedReps
@@ -83,12 +95,7 @@ struct SetDetail: Identifiable, Hashable, Codable {
         let adjusted = base
 
         // Only return if it truly beats the current 1RM
-        return adjusted.inKg > oneRm.inKg ? adjusted : nil
-    }
-
-    static func calculateSetWeight(oneRm: Mass, reps: Int, formula: OneRMFormula = .canonical) -> Mass {
-        let p = formula.percent(at: max(1, reps))   // %1RM fraction
-        return Mass(kg: oneRm.inKg * p)
+        return adjusted.inKg > best.inKg ? adjusted : nil
     }
     
     /// Multiplier that *reduces* the estimated 1 RM as RPE drops:
@@ -98,6 +105,21 @@ struct SetDetail: Identifiable, Hashable, Codable {
     static func rpeMultiplier(for rpe: Double) -> Double {
         let clamped = min(max(rpe, 1), 10)
         return 1.0 - 0.03 * (10.0 - clamped)
+    }
+    
+    /// Convert (weight × time) hold to an equivalent load at reference time.
+    func recalculateHoldLoad(best: Mass, weight: Mass, duration: TimeSpan) -> Mass? {
+        let new = WeightedHoldFormula.equivalentHoldLoad(
+            weight: weight,
+            duration: duration
+        )
+        
+        return new.inKg > best.inKg ? new : nil
+    }
+
+    static func calculateSetWeight(oneRm: Mass, reps: Int, formula: OneRMFormula = .canonical) -> Mass {
+        let p = formula.percent(at: max(1, reps))   // %1RM fraction
+        return Mass(kg: oneRm.inKg * p)
     }
     
     mutating func bumpPlanned(by steps: Int, secondsPerStep: Int) {
@@ -111,17 +133,12 @@ struct SetDetail: Identifiable, Hashable, Codable {
         }
     }
 }
+
 extension SetDetail {
-    var metricFieldString: String { planned.fieldString }
-    var weightFieldString: String {
-        guard let weight = load.weight, weight.displayValue > 0 else { return "" }
-        return weight.displayString
-    }
-    
     static func formatLoadMetric(load: SetLoad, metric: SetMetric) -> Text {
         // tiny helpers so the switch body stays readable
-        let sepTimes = Text(" × ")//.foregroundStyle(.gray)
-        let sepDash  = Text(" - ")//.foregroundStyle(.gray)
+        let sepTimes = Text(" × ")
+        let sepDash  = Text(" - ")
         func light(_ s: String) -> Text { Text(s).fontWeight(.light) }
 
         switch (load, metric) {

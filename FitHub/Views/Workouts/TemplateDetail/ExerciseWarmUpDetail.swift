@@ -110,17 +110,16 @@ struct ExerciseWarmUpDetail: View {
     // MARK: Buttons (add / delete / autofill)
     private var buttonSection: some View {
         VStack {
-           AddDeleteButtons(addSet: addRow, deleteLastSet: deleteRow)
+           AddDeleteButtons(addSet: addRow, deleteSet: deleteRow)
             .listRowSeparator(.hidden)
 
-            HStack {
-                Spacer()
-                Button(action: autofill) {
-                    Label("Autofill", systemImage: "wand.and.stars").foregroundStyle(.green)
-                }
-                .buttonStyle(.bordered).tint(.green)
-                Spacer()
-            }
+            LabelButton(
+                title: "Autofill",
+                systemImage: "wand.and.stars",
+                tint: .green,
+                action: autofill
+            )
+            .padding(.horizontal)
             .listRowSeparator(.hidden)
         }
     }
@@ -143,13 +142,13 @@ struct ExerciseWarmUpDetail: View {
                         load: sd.load,
                         metric: sd.planned,
                         loadField: {
-                            TextField("", text: .constant(sd.load.displayString.isEmpty ? "—" : sd.load.displayString))
+                            TextField("", text: .constant(sd.load.fieldString.isEmpty ? "—" : sd.load.fieldString))
                                 .multilineTextAlignment(.center)
                                .textFieldStyle(.roundedBorder)
                                .disabled(true)
                         },
                         metricField: {
-                            TextField("", text: .constant(sd.metricFieldString.isEmpty ? "—" : sd.metricFieldString))
+                            TextField("", text: .constant(sd.planned.fieldString.isEmpty ? "—" : sd.planned.fieldString))
                                 .multilineTextAlignment(.center)
                                .textFieldStyle(.roundedBorder)
                                .disabled(true)

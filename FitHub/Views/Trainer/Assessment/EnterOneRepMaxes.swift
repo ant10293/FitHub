@@ -90,12 +90,10 @@ struct EnterOneRepMaxes: View {
         if benchPressMax.inKg > 0,
            let bench = exerciseData.exercise(named: "Bench Press") {
             let est = OneRMFormula.calculateOneRepMax(weight: benchPressMax, reps: numberReps, formula: formula)
-            //let repsXweight = numberReps > 1 ? RepsXWeight(reps: numberReps, weight: benchPressMax) : nil
             let loadXmetric = numberReps > 1 ? LoadXMetric(load: .weight(benchPressMax), metric: metric) : nil
             exerciseData.updateExercisePerformance(
                 for: bench,
                 newValue: .oneRepMax(est),
-                //repsXweight: repsXweight
                 loadXmetric: loadXmetric
             )
             maxValuesEntered = true
@@ -104,12 +102,10 @@ struct EnterOneRepMaxes: View {
         if squatMax.inKg > 0,
            let squat = exerciseData.exercise(named: "Back Squat") {
             let est = OneRMFormula.calculateOneRepMax(weight: squatMax, reps: numberReps, formula: formula)
-            //let repsXweight = numberReps > 1 ? RepsXWeight(reps: numberReps, weight: squatMax) : nil
             let loadXmetric = numberReps > 1 ? LoadXMetric(load: .weight(squatMax), metric: metric) : nil
             exerciseData.updateExercisePerformance(
                 for: squat,
                 newValue: .oneRepMax(est),
-                //repsXweight: repsXweight
                 loadXmetric: loadXmetric
             )
             maxValuesEntered = true
@@ -118,12 +114,10 @@ struct EnterOneRepMaxes: View {
         if deadliftMax.inKg > 0,
            let deadlift = exerciseData.exercise(named: "Deadlift") {
             let est = OneRMFormula.calculateOneRepMax(weight: deadliftMax, reps: numberReps, formula: formula)
-            //let repsXweight = numberReps > 1 ? RepsXWeight(reps: numberReps, weight: deadliftMax) : nil
             let loadXmetric = numberReps > 1 ? LoadXMetric(load: .weight(deadliftMax), metric: metric) : nil
             exerciseData.updateExercisePerformance(
                 for: deadlift,
                 newValue: .oneRepMax(est),
-                //repsXweight: repsXweight
                 loadXmetric: loadXmetric
             )
             maxValuesEntered = true

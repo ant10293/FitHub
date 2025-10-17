@@ -13,42 +13,11 @@ enum SetMetric: Codable, Equatable, Hashable {
     case hold(TimeSpan)   // isometric: time under tension
     case cardio(TimeOrSpeed)
     
-    func scaling(by factor: Double) -> SetMetric {
-        switch self {
-        case .reps(let r): return .reps(max(1, Int((Double(r) * factor).rounded(.down))))
-        case .hold(let span): return .hold(.fromSeconds(max(1, Int((Double(span.inSeconds) * factor).rounded(.down)))))
-        case .cardio: return self
-        }
-    }
-    
-    var repsValue: Int? {
-        if case .reps(let n) = self { return n }
-        return nil
-    }
-    
-    var holdTime: TimeSpan? {
-        if case .hold(let t) = self { return t }
-        return nil
-    }
-    
-    var timeSpeed: TimeOrSpeed? {
-        if case .cardio(let ts) = self { return ts }
-        return nil
-    }
-    
-    var secondsValue: Int? {
-        switch self {
-        case .cardio(let ts): return ts.time.inSeconds
-        case .hold(let t): return t.inSeconds
-        case .reps: return nil
-        }
-    }
-    
     var fieldString: String {
         switch self {
         case .reps(let r): return r > 0 ? String(r) : ""
-        case .hold(let span): return span.inSeconds > 0 ? span.displayStringCompact : ""
-        case .cardio(let ts): return ts.fieldString
+        case .hold(let span): return span.fieldString
+        case .cardio(let tos): return tos.fieldString
         }
     }
     
@@ -68,14 +37,41 @@ enum SetMetric: Codable, Equatable, Hashable {
         }
     }
     
-    var iconName: String {
+    var zeroValue: Self {
         switch self {
-        case .reps: return "number"
-        case .hold: return "clock"
-        case .cardio: return "clock"
+        case .reps: return .reps(0)
+        case .hold: return .hold(.init())
+        case .cardio: return .cardio(.init())
         }
     }
+}
+
+extension SetMetric {
+    var repsValue: Int? {
+        if case .reps(let n) = self { return n }
+        return nil
+    }
     
+    var holdTime: TimeSpan? {
+        if case .hold(let t) = self { return t }
+        return nil
+    }
+    
+    var timeSpeed: TimeOrSpeed? {
+        if case .cardio(let tos) = self { return tos }
+        return nil
+    }
+    
+    var secondsValue: Int? {
+        switch self {
+        case .cardio(let ts): return ts.time.inSeconds
+        case .hold(let t): return t.inSeconds
+        case .reps: return nil
+        }
+    }
+}
+
+extension SetMetric {
     /// Returns (volumeKg, reps) for this metric given raw kg & movement multipliers.
     func volumeContribution(weightKg: Double, repsMul: Int, weightMul: Double) -> (volume: Double, reps: Int) {
         switch self {
@@ -83,8 +79,30 @@ enum SetMetric: Codable, Equatable, Hashable {
             let reps = r * repsMul
             let kg   = weightKg * weightMul
             return (kg * Double(reps), reps)
-        case .hold, .cardio:
+            
+        case .hold:
+            return (weightKg, 0)
+                
+        case .cardio:
             return (0, 0)
+        }
+    }
+    
+    // for progression
+    func scaling(by factor: Double) -> SetMetric {
+        switch self {
+        case .reps(let r): return .reps(max(1, Int((Double(r) * factor).rounded(.down))))
+        case .hold(let span): return .hold(TimeSpan(seconds: (max(1, Int((Double(span.inSeconds) * factor).rounded(.down))))))
+        case .cardio: return self
+        }
+    }
+}
+
+extension SetMetric {
+    var iconName: String {
+        switch self {
+        case .reps: return "number"
+        case .hold, .cardio: return "clock"
         }
     }
 }

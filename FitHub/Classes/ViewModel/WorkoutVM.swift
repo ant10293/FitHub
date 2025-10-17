@@ -10,15 +10,15 @@ import SwiftUI
 
 
 final class WorkoutVM: ObservableObject {
-    var template: WorkoutTemplate
+    @Published var template: WorkoutTemplate
     let activeWorkout: WorkoutInProgress?
     let startDate: Date
     let workoutsStartDate: Date? // for week of templates
-    var currentExerciseState: CurrentExerciseState?
-    var updates: PerformanceUpdates
-    var workoutCompleted: Bool = false
-    var isOverlayVisible: Bool = true
-    var showWorkoutSummary: Bool = false
+    @Published var currentExerciseState: CurrentExerciseState?
+    @Published var updates: PerformanceUpdates
+    @Published var workoutCompleted: Bool = false
+    @Published var isOverlayVisible: Bool = true
+    @Published var showWorkoutSummary: Bool = false
     @Published private var completionDuration: Int = 0
 
     init(
@@ -48,6 +48,7 @@ final class WorkoutVM: ObservableObject {
     }
     
     // TODO: we only need the setID and exerciseBinding, no need for detailBinding
+    // TODO: this shouldnt be called after moving to next set. should be called for entire template once at the end
     func saveTemplate(userData: UserData, detailBinding: Binding<SetDetail>, exerciseBinding: Binding<Exercise>) {
         // MARK: the template in UserData should only be updated with set load and metric
         // only pass ID for template and exercise because we ONLY want to update changes to set load and metric

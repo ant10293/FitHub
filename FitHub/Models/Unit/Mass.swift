@@ -10,7 +10,8 @@ import SwiftUI
 
 // MARK: Mass
 struct Mass: Codable, Equatable, Hashable {
-    private var kg: Double                 // canonical storage
+    /// Canonical backing-store in **kilograms**.
+    private var kg: Double
     
     // MARK: – Inits
     init(kg: Double) { self.kg = kg }
@@ -24,39 +25,29 @@ struct Mass: Codable, Equatable, Hashable {
     var inKg: Double { kg }
     var inLb: Double { UnitSystem.KGtoLB(kg) }
     
-    /// Returns the weight in the caller‑specified unit system.
-    var displayValue: Double {
-        UnitSystem.current == .imperial ? inLb : inKg
-    }
-    
+    // MARK: – Display
+    var displayValue: Double { UnitSystem.current == .imperial ? inLb : inKg }
     var displayString: String { Format.smartFormat(displayValue) }
+    var fieldString: String { kg > 0 ? displayString : "" }
     
-    func formattedText(asInteger: Bool = false) -> Text {
-        let unitSystem = UnitSystem.current
-        let display = asInteger ? String(Int(round(displayValue))) : Format.smartFormat(displayValue)
-        
-        return (Text("\(display) ") +
-            Text(unitSystem.weightUnit).fontWeight(.light)
-        )
-    }
-    
-    var abs: Mass { Mass(kg: Swift.abs(inKg)) }
-    
-    /// Replace the mass with a new *kg* value.
-    mutating func setKg(_ kg: Double) {
-        self.kg = kg
-    }
-    
-    /// Replace the mass with a new *lb* value (auto‑converts to kg).
-    mutating func setLb(_ lb: Double) {
-        self.kg = UnitSystem.LBtoKG(lb)
-    }
-    
-    /// Convenience: update using the caller’s preferred unit system.
-    mutating func set(_ value: Double) {
+    // MARK: - Mutating setters
+    mutating func setKg(_ kg: Double) { self.kg = kg }
+    mutating func setLb(_ lb: Double) { self.kg = UnitSystem.LBtoKG(lb) }
+    mutating func set(_ value: Double) { /// Convenience: update using the caller’s preferred unit system.
         self.kg = UnitSystem.current == .imperial ? UnitSystem.LBtoKG(value) : value
     }
 }
+
+extension Mass {
+    func formattedText(asInteger: Bool = false) -> Text {
+        let display = asInteger ? String(Int(round(displayValue))) : Format.smartFormat(displayValue)
+        return (Text("\(display) ") + Text(UnitSystem.current.weightUnit).fontWeight(.light))
+    }
+    
+    var abs: Mass { Mass(kg: Swift.abs(inKg)) }
+}
+
+
 extension Binding where Value == Mass {
     func asText(
         format: @escaping (Double) -> String = { Format.smartFormat($0) },

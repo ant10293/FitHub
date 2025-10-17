@@ -121,8 +121,7 @@ struct WorkoutsView: View {
     }
     
     @ViewBuilder private var templateEditorView: some View {
-        if let index = editingTemplateIndex {
-            let currentTemplate = ctx.userData.workoutPlans.userTemplates[index]
+        if let index = editingTemplateIndex, let currentTemplate = ctx.userData.workoutPlans.userTemplates[safe: index] {
             EditTemplate(
                 template: currentTemplate,
                 originalTemplate: currentTemplate,

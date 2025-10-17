@@ -86,13 +86,11 @@ private extension CompletedDetails {
     @ViewBuilder func prBadge(for exercise: Exercise, set: SetDetail) -> some View {
         // PR line (unchanged logic)
         if let prUpdate = workout.updatedMax.first(where: {
-            $0.exerciseId == exercise.id && $0.setId == set.id //$0.setNumber == set.setNumber
+            $0.exerciseId == exercise.id && $0.setId == set.id
         }) {
             HStack {
                 Image(systemName: "trophy.fill")
-                //if let prRepsWeight = prUpdate.repsXweight, prRepsWeight.reps > 1 {
-                if let prLoadxMetric = prUpdate.loadXmetric, prLoadxMetric.load != set.load {
-                    //prRepsWeight.formattedText +
+                if let prLoadxMetric = prUpdate.loadXmetric, prUpdate.value.actualValue != set.load.actualValue {
                     prLoadxMetric.formattedText +
                     Text(" ≈ ") +
                     prUpdate.value.labeledText
@@ -160,7 +158,7 @@ private extension CompletedDetails {
         private func completedDisplay() -> (String, Color) {
             // If not logged, show planned as neutral
             guard let comp = completed else {
-                return (string(from: planned) + " completed", .secondary)
+                return (string(from: planned.zeroValue) + " completed", .secondary)
             }
             
             // Compare completed vs planned (reps as count, holds as seconds)

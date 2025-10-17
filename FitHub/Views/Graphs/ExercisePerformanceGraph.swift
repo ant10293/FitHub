@@ -63,9 +63,11 @@ struct ExercisePerformanceGraph: View {
                             }
                         }
                         .overlay(alignment: .bottomTrailing, content: {
-                            Text(exercise.performanceUnit)
-                                .font(.caption)
-                                .foregroundStyle(Color.secondary)
+                            if let unit = exercise.performanceUnit {
+                                Text(unit)
+                                    .font(.caption)
+                                    .foregroundStyle(Color.secondary)
+                            }
                         })
                         .padding()
                         

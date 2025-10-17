@@ -61,11 +61,6 @@ struct ExercisePerformanceView: View {
                                 
                                 record.value.formattedText
 
-                                /*
-                                if let repsW = record.repsXweight {
-                                    repsW.formattedText        
-                                }
-                                */
                                 if let loadXmetric = record.loadXmetric {
                                     loadXmetric.formattedText
                                 }
