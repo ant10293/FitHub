@@ -4,7 +4,7 @@
 //
 //  Created by Anthony Cantu on 5/3/25.
 //
-
+/*
 import SwiftUI
 
 struct ChangeTheme: View {
@@ -29,3 +29,4 @@ struct ChangeTheme: View {
         .navigationBarTitle("Change Theme", displayMode: .inline)
     }
 }
+*/

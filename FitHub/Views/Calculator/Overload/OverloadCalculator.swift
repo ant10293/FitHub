@@ -11,7 +11,7 @@ struct OverloadCalculator: View {
     @EnvironmentObject private var ctx: AppContext
     @State private var selectedWeek: Int = 1
     @State private var weekExerciseMap: [Int: [Exercise]] = [:] // Map weeks to processed exercises
-    var template: WorkoutTemplate
+    let template: WorkoutTemplate
 
     var body: some View {
         ZStack {
@@ -39,7 +39,7 @@ struct OverloadCalculator: View {
                 }
                 
                 if let processedExercises = weekExerciseMap[selectedWeek] {
-                    let previousWeekExercises = weekExerciseMap[selectedWeek - 1] ?? []// Safely fetch previous week
+                    let previousWeekExercises = weekExerciseMap[selectedWeek - 1] ?? [] // Safely fetch previous week
                     TemplateOverload(processedExercises: processedExercises, previousWeekExercises: previousWeekExercises, templateName: template.name)
                 }
             }
@@ -63,7 +63,6 @@ struct OverloadCalculator: View {
         if weekExerciseMap[0] == nil {
             weekExerciseMap[0] = template.exercises.map { exercise in
                 var baseExercise = exercise
-                baseExercise.weeksStagnated = ctx.userData.settings.stagnationPeriod
                 baseExercise.overloadProgress = 0
                 baseExercise.setDetails = exercise.setDetails // Original details are preserved here
                 return baseExercise
@@ -82,11 +81,7 @@ struct OverloadCalculator: View {
                 if let weekZeroExercises = weekExerciseMap[0] {
                     weekExerciseMap[week] = weekZeroExercises.map { exercise in
                     var newExercise = exercise
-                    
-                    // Set weeks stagnated to the user's stagnation period
-                    newExercise.weeksStagnated = ctx.userData.settings.stagnationPeriod
-                    //print("Debug: Updated weeksStagnated for exercise \(exercise.name) to \(newExercise.weeksStagnated)")
-                    
+                                                        
                     // Update overload progress based on the week
                     newExercise.overloadProgress = week
                     //print("Debug: Updated overloadProgress for exercise \(exercise.name) to \(week)")

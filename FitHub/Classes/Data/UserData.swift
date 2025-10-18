@@ -293,7 +293,6 @@ extension UserData {
             input: input,
             exercise: exercise,
             repsAndSets: rs,
-            overloadFactor: settings.customOverloadFactor ?? 1.0,
             maxUpdated: { update in
                 exerciseData.applyPerformanceUpdate(update: update, csvEstimate: true, shouldSave: true)
             }

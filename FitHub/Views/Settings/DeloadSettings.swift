@@ -23,7 +23,7 @@ struct DeloadSettings: View {
             Section {
                 Toggle("Auto-Deloading", isOn: $userData.settings.allowDeloading)
             } footer: {
-                Text("When Auto-Deload is on, the trainer will inject a lighter “deload” week into your plan whenever your progress stalls and effort (RPE) keeps climbing.")
+                Text("When Auto-Deload is on, the trainer will inject a lighter “deload” week into your plan whenever your progress stalls.")
             }
             
             // ── DELOAD INTENSITY % ────────────────────────────────────────
@@ -61,17 +61,16 @@ struct DeloadSettings: View {
             } header: {
                 Text("Stall Window")
             } footer: {
-                Text("Number of consecutive weeks without progress—while RPE keeps rising—before a deload week is automatically scheduled.")
+                Text("Number of consecutive weeks without progress before a deload week is automatically scheduled.")
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("Volume Deload")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle("Volume Deload", displayMode: .inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Reset") { reset() }
-                    .foregroundStyle(isDefault() ? .gray : .red)
-                    .disabled(isDefault())
+                    .foregroundStyle(isDefault ? .gray : .red)
+                    .disabled(isDefault)
             }
         }
     }
@@ -83,7 +82,7 @@ struct DeloadSettings: View {
         deloadIntensity = 85
     }
     
-    private func isDefault() -> Bool {
+    private var isDefault: Bool {
         return userData.settings.allowDeloading
         && userData.settings.periodUntilDeload == 2
         && userData.settings.deloadIntensity == 85

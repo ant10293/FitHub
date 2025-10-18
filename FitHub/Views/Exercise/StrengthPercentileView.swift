@@ -19,16 +19,9 @@ struct StrengthPercentileView: View {
             // dont have any strength standards for isometric or cardio exercises
             maxView(usesWeight: exercise.usesWeight)
 
-            Group {
-                let base = "\(exercise.performanceTitle) values for \(exercise.name)"
-                if let wInstruction = exercise.weightInstruction?.rawValue {
-                    Text(base) + Text(" \(wInstruction):")
-                } else {
-                    Text("\(base):")
-                }
-            }
-            .font(.headline)
-            .padding(.top)
+            Text(exercise.performanceTitle(includeInstruction: true))
+                .font(.headline)
+                .padding(.top)
             
             ageBasedStats
                 .padding(.bottom)
@@ -40,7 +33,7 @@ struct StrengthPercentileView: View {
     private func maxView(usesWeight: Bool) -> some View {
         if maxValue.actualValue <= 0 {
             return AnyView(
-                Text("No \(exercise.performanceTitle) available for this exercise.")
+                Text("No \(exercise.performanceTitle(includeInstruction: false)) available for this exercise.")
                     .font(.subheadline)
                     .foregroundStyle(.gray)
                     .padding(.bottom)

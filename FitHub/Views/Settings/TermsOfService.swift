@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct TermsOfService: View {
     var body: some View {
         Text("Terms of Service")

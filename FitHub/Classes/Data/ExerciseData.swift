@@ -105,201 +105,7 @@ extension ExerciseData {
         if let est = estimatedPeakMetric(for: exercise.id), est.actualValue > 0 { return true }
         return exercise.url != nil
     }
-    
-    func filteredExercises(
-        searchText: String,
-        selectedCategory: CategorySelections,
-        templateCategories: [SplitCategory]? = nil,
-        templateFilter: Bool = false,
-        favoritesOnly: Bool = false,
-        dislikedOnly: Bool = false,
-        userData: UserData,
-        equipmentData: EquipmentData
-    ) -> [Exercise] {
         
-        // ── 0. Cached constants ───────────────────────────────────────────────
-        let removingSet      = TextFormatter.searchStripSet
-        let normalizedSearch = searchText.normalized(removing: removingSet)
-
-        let favoriteSet = userData.evaluation.favoriteExercises
-        let dislikedSet = userData.evaluation.dislikedExercises
-        
-        let hideUnequipped = userData.settings.hideUnequippedExercises
-        let hideDisliked   = userData.settings.hideDislikedExercises
-        let hideDifficult  = userData.settings.hideDifficultExercises
-        let maxStrength    = userData.evaluation.strengthLevel.strengthValue
-        
-        // ── Category matcher (pulled out of the hot loop) ─────────────────────
-        func matchesCategory(_ ex: Exercise) -> Bool {
-            switch selectedCategory {
-                
-            // -------- Split selections ---------------------------------------
-            case .split(let splitCat):
-                let cat        = ex.splitCategory
-                let usingTempl = templateFilter
-                let templates  = templateCategories ?? []
-                
-                if splitCat == .all {
-                    return usingTempl ? templates.contains(cat) : true
-                }
-                if splitCat == .arms {
-                    return SplitCategory.armsFocus.contains(cat)
-                }
-                if splitCat == .legs {
-                    return SplitCategory.lowerBody.contains(cat)
-                }
-                if splitCat == .back {
-                    if let groupCat = ex.groupCategory {
-                        return groupCat == .back
-                    } else {
-                        return false
-                    }
-                }
-                
-                return cat == splitCat || (usingTempl && templates.contains(cat))
-                
-            // -------- Muscle selections --------------------------------------
-            case .muscle(let m):
-                return m == .all || ex.primaryMuscles.contains(m)
-                
-            // -------- Upper / Lower selections -------------------------------
-            case .upperLower(let ul):
-                return ul == .upperBody ? ex.isUpperBody : ex.isLowerBody
-                
-            // -------- Push / Pull / Legs selections --------------------------
-            case .pushPull(let pp):
-                switch pp {
-                    case .push: return ex.isPush
-                    case .pull: return ex.isPull
-                    case .legs: return ex.isLowerBody
-                }
-                
-            // -------- Difficulty selections ----------------------------------
-            case .difficulty(let diff):
-                return ex.difficulty == diff
-                
-            // -------- Exercise-type selections -------------------------------
-            case .resistanceType(let type):
-                return ex.resistanceOK(type)
-                
-            case .effortType(let type):
-                return ex.effort == type
-                                
-            case .limbMovement(let type):
-                return ex.limbMovementType == type
-            }
-        }
-        
-        // ── 1. Filter pass ───────────────────────────────────────────────────
-        var results: [Exercise] = []
-        results.reserveCapacity(allExercises.count)
-        
-        for ex in allExercises {
-            // a) Fav / disliked quick gates
-            let isFavorite = favoriteSet.contains(ex.id)
-            let isDisliked = dislikedSet.contains(ex.id)
-            if favoritesOnly && !isFavorite { continue }
-            if dislikedOnly  && !isDisliked { continue }
-            if hideDisliked  &&  isDisliked { continue }
-            
-            // b) Equipment / difficulty gates
-            if hideUnequipped &&
-                !ex.canPerform(
-                    equipmentData: equipmentData,
-                    equipmentSelected: userData.evaluation.equipmentSelected
-                ) { continue }
-            if hideDifficult && !ex.difficultyOK(maxStrength) { continue }
-            
-            // c) Category gate
-            guard matchesCategory(ex) else { continue }
-            
-            // d) Search-text gate
-            if !normalizedSearch.isEmpty {
-                let nameNorm   = ex.name.normalized(removing: removingSet)
-                let aliasMatch = ex.aliases?.contains(where: {
-                    $0.normalized(removing: removingSet).contains(normalizedSearch)
-                }) ?? false
-                
-                guard nameNorm.contains(normalizedSearch) || aliasMatch else { continue }
-            }
-            
-            // Passed all gates → keep it
-            results.append(ex)
-        }
-        
-        // ── 2. Sort (items that *start* with query bubble to top) ─────────────
-        if !normalizedSearch.isEmpty {
-            results.sort { a, b in
-                let na = a.name.normalized(removing: removingSet)
-                let nb = b.name.normalized(removing: removingSet)
-                
-                let aStarts = na.hasPrefix(normalizedSearch)
-                let bStarts = nb.hasPrefix(normalizedSearch)
-                if aStarts != bStarts { return aStarts }   // true first
-                return na < nb
-            }
-        } else {
-            results.sort { $0.name < $1.name }
-        }
-        
-        return results
-    }
-    
-    func similarExercises(
-        to exercise: Exercise,
-        equipmentData: EquipmentData,
-        availableEquipmentIDs: [UUID],
-        existing: [Exercise],
-        replaced: Set<String>
-    ) -> [Exercise] {
-        let pool             = allExercises
-        let targetPrimSet    = Set(exercise.primaryMuscles)
-        let existingNames    = Set(existing.map(\.name))
-        let targetEffort     = exercise.effort
-        let targetUsesWeight = exercise.usesWeight
-
-        var strict:    [Exercise] = []; strict.reserveCapacity(8)
-        var relaxed:   [Exercise] = []; relaxed.reserveCapacity(8)
-        var strictFB:  [Exercise] = []; strictFB.reserveCapacity(8)   // allow replaced only if needed
-        var relaxedFB: [Exercise] = []; relaxedFB.reserveCapacity(8)
-
-        for cand in pool {
-            // quick rejects
-            if cand.id == exercise.id || cand.name == exercise.name { continue }
-            if existingNames.contains(cand.name) { continue }
-            if !hasPerformanceData(exercise: cand) { continue }
-
-            // muscle/effort logic
-            let candSet = Set(cand.primaryMuscles)
-            let isStrictMuscle  = (candSet == targetPrimSet) && (cand.effort == targetEffort)
-            let isRelaxedMuscle = !isStrictMuscle && !candSet.isDisjoint(with: targetPrimSet)
-            if !(isStrictMuscle || isRelaxedMuscle) { continue }
-
-            // weighted ↔︎ bodyweight mismatch → relaxed
-            let goesToRelaxed = isRelaxedMuscle || (cand.usesWeight != targetUsesWeight)
-
-            // expensive check last
-            guard cand.canPerform(
-                equipmentData: equipmentData,
-                equipmentSelected: availableEquipmentIDs
-            ) else { continue }
-
-            let wasReplaced = replaced.contains(cand.name)
-
-            switch (goesToRelaxed, wasReplaced) {
-            case (true,  true):  relaxedFB.append(cand)
-            case (true,  false): relaxed.append(cand)
-            case (false, true):  strictFB.append(cand)
-            case (false, false): strict.append(cand)
-            }
-        }
-
-        if !strict.isEmpty   { return strict }
-        if !relaxed.isEmpty  { return relaxed }
-        if !strictFB.isEmpty { return strictFB }
-        return relaxedFB
-    }
-    
     func updateExercisePerformance(
          for exerciseId: UUID,
          newValue: PeakMetric,
@@ -503,3 +309,226 @@ extension ExerciseData {
     func exercise(for id: UUID) -> Exercise? { allExercises.first { $0.id == id } }
 }
 
+extension ExerciseData {
+    // MARK: - Shared search helpers (single source of truth)
+    private func normalizedSearch(_ raw: String) -> String {
+        let removing = TextFormatter.searchStripSet
+        return raw.normalized(removing: removing)
+    }
+    
+    private func matchesQuery(_ ex: Exercise, normalizedQuery: String) -> Bool {
+        guard !normalizedQuery.isEmpty else { return true }
+        let removing = TextFormatter.searchStripSet
+        let nameNorm = ex.name.normalized(removing: removing)
+        let aliasHit = ex.aliases?.contains {
+            $0.normalized(removing: removing).contains(normalizedQuery)
+        } ?? false
+        return nameNorm.contains(normalizedQuery) || aliasHit
+    }
+    
+    private func sortByPrefix(_ items: inout [Exercise], normalizedQuery: String) {
+        guard !normalizedQuery.isEmpty else {
+            items.sort { $0.name < $1.name }
+            return
+        }
+        let removing = TextFormatter.searchStripSet
+        items.sort { a, b in
+            let na = a.name.normalized(removing: removing)
+            let nb = b.name.normalized(removing: removing)
+            let aStarts = na.hasPrefix(normalizedQuery)
+            let bStarts = nb.hasPrefix(normalizedQuery)
+            if aStarts != bStarts { return aStarts } // true first
+            return na < nb
+        }
+    }
+    
+    
+    func filteredExercises(
+        searchText: String,
+        selectedCategory: CategorySelections,
+        templateCategories: [SplitCategory]? = nil,
+        templateFilter: Bool = false,
+        favoritesOnly: Bool = false,
+        dislikedOnly: Bool = false,
+        userData: UserData,
+        equipmentData: EquipmentData
+    ) -> [Exercise] {
+        
+        // ── 0. Cached constants ───────────────────────────────────────────────
+        let q = normalizedSearch(searchText)  // <— shared
+        let favoriteSet = userData.evaluation.favoriteExercises
+        let dislikedSet = userData.evaluation.dislikedExercises
+        
+        let hideUnequipped = userData.settings.hideUnequippedExercises
+        let hideDisliked   = userData.settings.hideDislikedExercises
+        let hideDifficult  = userData.settings.hideDifficultExercises
+        let maxStrength    = userData.evaluation.strengthLevel.strengthValue
+        
+        // ── Category matcher (pulled out of the hot loop) ─────────────────────
+        func matchesCategory(_ ex: Exercise) -> Bool {
+            switch selectedCategory {
+                
+                // -------- Split selections ---------------------------------------
+            case .split(let splitCat):
+                let cat        = ex.splitCategory
+                let usingTempl = templateFilter
+                let templates  = templateCategories ?? []
+                
+                if splitCat == .all {
+                    return usingTempl ? templates.contains(cat) : true
+                }
+                if splitCat == .arms {
+                    return SplitCategory.armsFocus.contains(cat)
+                }
+                if splitCat == .legs {
+                    return SplitCategory.lowerBody.contains(cat)
+                }
+                if splitCat == .back {
+                    if let groupCat = ex.groupCategory {
+                        return groupCat == .back
+                    } else {
+                        return false
+                    }
+                }
+                
+                return cat == splitCat || (usingTempl && templates.contains(cat))
+                
+                // -------- Muscle selections --------------------------------------
+            case .muscle(let m):
+                return m == .all || ex.primaryMuscles.contains(m)
+                
+                // -------- Upper / Lower selections -------------------------------
+            case .upperLower(let ul):
+                return ul == .upperBody ? ex.isUpperBody : ex.isLowerBody
+                
+                // -------- Push / Pull / Legs selections --------------------------
+            case .pushPull(let pp):
+                switch pp {
+                case .push: return ex.isPush
+                case .pull: return ex.isPull
+                case .legs: return ex.isLowerBody
+                }
+                
+                // -------- Difficulty selections ----------------------------------
+            case .difficulty(let diff):
+                return ex.difficulty == diff
+                
+                // -------- Exercise-type selections -------------------------------
+            case .resistanceType(let type):
+                return ex.resistanceOK(type)
+                
+            case .effortType(let type):
+                return ex.effort == type
+                
+            case .limbMovement(let type):
+                return ex.limbMovementType == type
+            }
+        }
+        
+        // ── 1. Filter pass ───────────────────────────────────────────────────
+        var results: [Exercise] = []
+        results.reserveCapacity(allExercises.count)
+        
+        for ex in allExercises {
+            // a) Fav / disliked quick gates
+            let isFavorite = favoriteSet.contains(ex.id)
+            let isDisliked = dislikedSet.contains(ex.id)
+            if favoritesOnly && !isFavorite { continue }
+            if dislikedOnly  && !isDisliked { continue }
+            if hideDisliked  &&  isDisliked { continue }
+            
+            // b) Equipment / difficulty gates
+            if hideUnequipped &&
+                !ex.canPerform(
+                    equipmentData: equipmentData,
+                    equipmentSelected: userData.evaluation.equipmentSelected
+                ) { continue }
+            if hideDifficult && !ex.difficultyOK(maxStrength) { continue }
+            
+            // c) Category gate
+            guard matchesCategory(ex) else { continue }
+            
+            // d) Search-text gate
+            guard matchesQuery(ex, normalizedQuery: q) else { continue }
+            
+            
+            // Passed all gates → keep it
+            results.append(ex)
+        }
+        
+        // ── 2. Sort (items that *start* with query bubble to top) ─────────────
+        sortByPrefix(&results, normalizedQuery: q)
+        
+        return results
+    }
+    
+    func similarExercises(
+        to exercise: Exercise,
+        equipmentData: EquipmentData,
+        availableEquipmentIDs: [UUID],
+        existing: [Exercise],
+        replaced: Set<String> = [],
+        searchText: String = ""
+    ) -> [Exercise] {
+        
+        let q = normalizedSearch(searchText)  // <— shared
+        let existingNames = Set(existing.map(\.name))
+        
+        // Common pool: not the current exercise, not already present
+        let basePool = allExercises.filter {
+            $0.id != exercise.id && !existingNames.contains($0.name)
+        }
+        
+        // --- Search mode: global, not constrained by similarity buckets ---
+        if !q.isEmpty {
+            var results = basePool.filter {
+                $0.canPerform(equipmentData: equipmentData, equipmentSelected: availableEquipmentIDs)
+            }.filter { ex in
+                matchesQuery(ex, normalizedQuery: q) // <— shared
+            }
+            
+            sortByPrefix(&results, normalizedQuery: q) // <— shared
+            return results
+        }
+        
+        // --- No search: your original similarity tiers ---
+        let targetPrimSet    = Set(exercise.primaryMuscles)
+        let targetEffort     = exercise.effort
+        let targetUsesWeight = exercise.usesWeight
+        
+        var strict:    [Exercise] = []; strict.reserveCapacity(8)
+        var relaxed:   [Exercise] = []; relaxed.reserveCapacity(8)
+        var strictFB:  [Exercise] = []; strictFB.reserveCapacity(8)
+        var relaxedFB: [Exercise] = []; relaxedFB.reserveCapacity(8)
+        
+        for cand in basePool {
+            if !hasPerformanceData(exercise: cand) { continue }   // keep your perf gate
+            
+            let candSet = Set(cand.primaryMuscles)
+            let isStrictMuscle  = (candSet == targetPrimSet) && (cand.effort == targetEffort)
+            let isRelaxedMuscle = !isStrictMuscle && !candSet.isDisjoint(with: targetPrimSet)
+            if !(isStrictMuscle || isRelaxedMuscle) { continue }
+            
+            let goesToRelaxed = isRelaxedMuscle || (cand.usesWeight != targetUsesWeight)
+            
+            guard cand.canPerform(
+                equipmentData: equipmentData,
+                equipmentSelected: availableEquipmentIDs
+            ) else { continue }
+            
+            let wasReplaced = replaced.contains(cand.name)
+            
+            switch (goesToRelaxed, wasReplaced) {
+            case (true,  true):  relaxedFB.append(cand)
+            case (true,  false): relaxed.append(cand)
+            case (false, true):  strictFB.append(cand)
+            case (false, false): strict.append(cand)
+            }
+        }
+        
+        if !strict.isEmpty   { return strict }
+        if !relaxed.isEmpty  { return relaxed }
+        if !strictFB.isEmpty { return strictFB }
+        return relaxedFB
+    }
+}

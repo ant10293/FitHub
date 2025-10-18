@@ -75,13 +75,14 @@ extension WorkoutTemplate {
 
         for ex in exercises {
             let sets = ex.setDetails
+            let limbMovement = ex.limbMovementType ?? .bilateralDependent
 
             // movement time: reps → reps*sec/rep; hold → seconds directly
             var movement = 0
             for set in sets {
                 let metric = set.planned       // or: set.completed ?? set.planned
                 switch metric {
-                case .reps(let r): movement += max(0, r) * secondsPerRep
+                case .reps(let r): movement += (max(0, r) * secondsPerRep) * limbMovement.repsMultiplier
                 case .hold(let span): movement += max(0, span.inSeconds)
                 case .cardio(let ts): movement += max(0, ts.time.inSeconds)
                 }
@@ -177,8 +178,8 @@ extension WorkoutTemplate {
         exercises.isEmpty || exercises.contains { $0.setDetails.isEmpty }
     }
     
-    // List of names of exercises already in the template for quick lookup
-    var exerciseNames: Set<String> { Set(exercises.map { $0.name }) }
+    // List of UUID of exercises already in the template for quick lookup
+    var exerciseIDs: Set<Exercise.ID> { Set(exercises.map { $0.id }) }
     
     var numExercises: Int { exercises.count }
 }

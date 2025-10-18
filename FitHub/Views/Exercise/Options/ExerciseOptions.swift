@@ -106,7 +106,7 @@ struct ExerciseOptions: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(radius: 10)
         .sheet(isPresented: $showSimilarExercises) {
-            SimilarExercises(userData: ctx.userData, currentExercise: exercise, template: template, allExercises: ctx.exercises.allExercises) { replacedExercise in
+            SimilarExercises(currentExercise: exercise, template: template) { replacedExercise in
                 modifier.replaceSpecific(currentExercise: exercise, with: replacedExercise, in: &template, ctx: ctx)
             }
         }

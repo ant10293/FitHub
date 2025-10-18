@@ -77,11 +77,7 @@ struct UnitSelection: View {
 
             Spacer()
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color(UIColor.secondarySystemBackground))
-        )
+        .cardContainer(cornerRadius: 12, backgroundColor: Color(UIColor.secondarySystemBackground))
     }
 
     private var restartBanner: some View {
@@ -104,6 +100,7 @@ struct UnitSelection: View {
             HStack {
                 Spacer()
                 Button(role: .destructive) {
+                    userData.saveToFileImmediate()
                     exit(0)
                 } label: {
                     Label("Close App", systemImage: "power")

@@ -132,7 +132,9 @@ struct ProgressionDetails: Codable {
     
     enum ProgressionType: String, Codable {
         case progressiveOverload = "Progressive Overload"
+        case prUpdate = "PR Update"
         case deload = "Deload"
+        case endedDeload = "Ended Deload"
         case reset = "Reset"
         case stagnation = "Stagnation"
         case none = "No Change"
@@ -141,7 +143,9 @@ struct ProgressionDetails: Codable {
     var progressionIcon: String {
         switch progressionType {
         case .progressiveOverload: return "arrow.up.circle.fill"
+        case .prUpdate:            return "trophy.fill"
         case .deload: return "arrow.down.circle.fill"
+        case .endedDeload: return "arrow.right.circle.fill"
         case .reset: return "arrow.clockwise.circle.fill"
         case .stagnation: return "plus.circle.fill"
         case .none: return "minus.circle.fill"
@@ -151,7 +155,9 @@ struct ProgressionDetails: Codable {
     var progressionColor: Color {
         switch progressionType {
         case .progressiveOverload: return .green
+        case .prUpdate:            return .gold
         case .deload: return .orange
+        case .endedDeload:         return .teal
         case .reset: return .blue
         case .stagnation: return .yellow
         case .none: return .secondary

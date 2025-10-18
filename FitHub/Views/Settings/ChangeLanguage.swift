@@ -4,7 +4,7 @@
 //
 //  Created by Anthony Cantu on 5/3/25.
 //
-
+/*
 import SwiftUI
 
 struct ChangeLanguage: View {
@@ -23,3 +23,4 @@ struct ChangeLanguage: View {
         .navigationBarTitle("Change Language", displayMode: .inline)
     }
 }
+*/

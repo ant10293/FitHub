@@ -932,7 +932,8 @@
 		"difficulty": "Beg.",
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Independent",
-		"resistance": "Machine"
+		"resistance": "Machine",
+        "weightInstruction" : "Per Stack"
 	},
 	{
 		"name": "High to Low Cable Chest Fly",
@@ -949,7 +950,8 @@
 		"difficulty": "Beg.",
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Independent",
-		"resistance": "Machine"
+		"resistance": "Machine",
+        "weightInstruction" : "Per Dumbbell"
 	},
 	{
 		"name": "Kneeling Incline Push-Up",
@@ -2497,26 +2499,6 @@
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Machine"
-	},
-	{
-		"name": "Dumbbell Concentration Curl",
-		"id": "A9A12CB6-0186-4B84-99D9-A46A40073EBE",
-		"image": "dumbbell_concentration_curl",
-		"url": "dumbbell-concentration-curl",
-		"aliases": ["Concentration Curl"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Unilateral",
-		"resistance": "Machine",
-		"repsInstruction" : "Per Arm"
 	},
 	{
 		"name": "Dumbbell Curl",

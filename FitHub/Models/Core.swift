@@ -112,7 +112,7 @@ enum OneRMFormula {
     
     @inline(__always)
     func percent(at reps: Int) -> Double {
-        let r = max(1, min(reps, 20)) // clamp to sane range
+        let r = max(1, reps) // clamp to sane range
         switch self {
         case .epleys:
             // 1RM = W * (1 + 0.0333*r)  =>  % = 1 / (1 + 0.0333*r)

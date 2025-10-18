@@ -199,7 +199,7 @@ struct LoadXMetric: Codable, Hashable {
     let load: SetLoad
     let metric: SetMetric
     
-    var formattedText: Text {
-        SetDetail.formatLoadMetric(load: load, metric: metric)
+    func formattedText(simple: Bool = false) -> Text {
+        SetDetail.formatLoadMetric(load: load, metric: metric, simple: simple)
     }
 }

@@ -7,9 +7,9 @@
 import SwiftUI
 
 struct TemplateOverload: View {
-    var processedExercises: [Exercise]
-    var previousWeekExercises: [Exercise]?
-    var templateName: String
+    let processedExercises: [Exercise]
+    let previousWeekExercises: [Exercise]?
+    let templateName: String
 
     var body: some View {
         ZStack {
@@ -28,10 +28,7 @@ struct TemplateOverload: View {
                                 .foregroundStyle(.gray)
                             Spacer()
                         }
-                        .padding()
-                        .background(Color(UIColor.secondarySystemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .padding(.horizontal)
+                        .cardContainer(cornerRadius: 10, backgroundColor: Color(UIColor.secondarySystemBackground))
                     } else {
                         ForEach(processedExercises) { exercise in
                             VStack(alignment: .leading, spacing: 10) {
@@ -39,6 +36,7 @@ struct TemplateOverload: View {
                                     .font(.headline)
                                     .foregroundStyle(.primary)
 
+                                // FIXME: change header labels (e.g. Load: Weight, Distance - Metric: Reps, Time, Speed)
                                 // Headers (unchanged visuals)
                                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 10)], spacing: 5) {
                                     Text("Set")
@@ -74,7 +72,6 @@ struct TemplateOverload: View {
                                                 HStack(spacing: 2) {
                                                     Text(prevLoad.displayString).foregroundStyle(.gray)
                                                     Text("→")
-                                                    //loadText(set.load, true)
                                                     set.load.formattedText
                                                         .foregroundStyle(set.load.actualValue > prevLoad.actualValue ? .green : .red)
                                                 }
@@ -82,6 +79,7 @@ struct TemplateOverload: View {
                                                 set.load.formattedText
                                             }
 
+                                            // FIXME: planned should include unit
                                             // 3) Metric (reps OR hold), compare only if same kind
                                             if let prev = prevSet?.planned {
                                                 let (prevStr, prevVal) = metricStringAndValue(prev)

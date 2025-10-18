@@ -51,11 +51,11 @@ struct CompletedDetails: View {
                                 .foregroundStyle(Color.secondary)
                             
                             if !exercise.warmUpDetails.isEmpty {
-                                exerciseSets(exercise: exercise, details: exercise.warmUpDetails, warmup: true)
+                                CompletedDetails.exerciseSets(exercise: exercise, warmup: true, prs: workout.updatedMax)
                                 Divider().padding(.vertical, 4)
                             }
                             
-                            exerciseSets(exercise: exercise, details: exercise.setDetails, warmup: false)
+                            CompletedDetails.exerciseSets(exercise: exercise, warmup: false, prs: workout.updatedMax)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)   // ← row block stretches
                         .padding(.bottom, 10)
@@ -70,37 +70,16 @@ struct CompletedDetails: View {
 }
 
 // MARK: - Subviews / helpers
-private extension CompletedDetails {
-    func exerciseSets(exercise: Exercise, details: [SetDetail], warmup: Bool) -> some View {
-        ForEach(details) { set in
+extension CompletedDetails {
+    static func exerciseSets(exercise: Exercise, warmup: Bool, prs: [PerformanceUpdate]) -> some View {
+        ForEach(warmup ? exercise.warmUpDetails : exercise.setDetails) { set in
             VStack(alignment: .leading, spacing: 2) {
                 // Single line: planned + completed + RPE
-                SetRow(set: set, exercise: exercise, warmup: warmup)
+                SetRow(set: set, warmup: warmup)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
-                prBadge(for: exercise, set: set)
+                prBadge(for: exercise.id, set: set, prs: prs)
             }
-        }
-    }
-    
-    @ViewBuilder func prBadge(for exercise: Exercise, set: SetDetail) -> some View {
-        // PR line (unchanged logic)
-        if let prUpdate = workout.updatedMax.first(where: {
-            $0.exerciseId == exercise.id && $0.setId == set.id
-        }) {
-            HStack {
-                Image(systemName: "trophy.fill")
-                if let prLoadxMetric = prUpdate.loadXmetric, prUpdate.value.actualValue != set.load.actualValue {
-                    prLoadxMetric.formattedText +
-                    Text(" ≈ ") +
-                    prUpdate.value.labeledText
-                } else {
-                    prUpdate.value.labeledText
-                }
-            }
-            .font(.caption2)
-            .foregroundStyle(Color.gold)
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }
@@ -109,7 +88,6 @@ private extension CompletedDetails {
 private extension CompletedDetails {
     struct SetRow: View {
         let set: SetDetail
-        let exercise: Exercise
         let warmup: Bool
         
         var body: some View {
@@ -133,6 +111,27 @@ private extension CompletedDetails {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
+    
+    @ViewBuilder static func prBadge(for exerciseID: Exercise.ID, set: SetDetail, prs: [PerformanceUpdate]) -> some View {
+        // PR line (unchanged logic)
+        if let prUpdate = prs.first(where: {
+            $0.exerciseId == exerciseID && $0.setId == set.id
+        }) {
+            HStack {
+                Image(systemName: "trophy.fill")
+                if let prLoadxMetric = prUpdate.loadXmetric, prUpdate.value.actualValue != set.load.actualValue {
+                    prLoadxMetric.formattedText() +
+                    Text(" ≈ ") +
+                    prUpdate.value.labeledText
+                } else {
+                    prUpdate.value.labeledText
+                }
+            }
+            .font(.caption2)
+            .foregroundStyle(Color.gold)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
 }
 
 // MARK: - Inline completed metric + tint + RPE (same name, new inline usage)
@@ -149,7 +148,7 @@ private extension CompletedDetails {
                     .foregroundStyle(tint)
                 
                 if let rpe {
-                    Text("@ RPE \(String(format: "%.1f", rpe))")
+                    Text("@ RPE \(Format.smartFormat(rpe))")
                         .foregroundStyle(.secondary)
                 }
             }

@@ -23,7 +23,7 @@ struct UpdateMaxEditor: View {
     
     var body: some View {
         GenericEditWrapper(
-            title: "Update \(exercise.performanceTitle)",
+            title: "Update \(exercise.performanceTitle(includeInstruction: false))",
             onSave: {
                 onSave(peak)
             },

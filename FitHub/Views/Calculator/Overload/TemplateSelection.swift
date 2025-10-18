@@ -10,8 +10,8 @@ import SwiftUI
 struct TemplateSelection: View {
     @State private var selectedTemplate: SelectedTemplate?
     @State private var navigateToOverload: Bool = false
-    var userTemplates: [WorkoutTemplate]
-    var trainerTemplates: [WorkoutTemplate]
+    let userTemplates: [WorkoutTemplate]
+    let trainerTemplates: [WorkoutTemplate]
     
     var body: some View {
         workoutList

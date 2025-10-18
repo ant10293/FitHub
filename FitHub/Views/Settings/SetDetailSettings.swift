@@ -17,6 +17,22 @@ struct SetDetailSettings: View {
                 .padding()
         }
         .padding(.horizontal)
+        .navigationBarTitle("SetDetail Settings", displayMode: .inline)
+        .toolbar {
+             ToolbarItem(placement: .topBarTrailing) {
+                 Button("Reset") { resetAll() }
+                     .foregroundStyle(isDefault ? Color.gray : Color.red)        // make the label red
+                     .disabled(isDefault)       // disable when no items
+             }
+         }
+    }
+    
+    var isDefault: Bool {
+        userData.settings.hideRpeSlider == false
+    }
+    
+    func resetAll() {
+        userData.settings.hideRpeSlider = false
     }
 }
 

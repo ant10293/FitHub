@@ -72,7 +72,9 @@ struct Settings: Codable, Equatable {
     var userLanguage: Languages = .english
     var selectedTheme: Themes = .defaultMode // Default style
     var roundingPreference: RoundingPreference = RoundingPreference()
-    var stagnationPeriod: Int = 4 // Default to 4 weeks
+    
+    //var stagnationPeriod: Int = 4 // Default to 4 weeks
+    
     var progressiveOverloadPeriod: Int = 6 // Default to 6 weeks
     var progressiveOverloadStyle: ProgressiveOverloadStyle = .dynamic // Default style
     var muscleRestDuration: Int = 48 // Default to 48 hours

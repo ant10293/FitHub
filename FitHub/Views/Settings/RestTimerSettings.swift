@@ -46,7 +46,8 @@ struct RestTimerSettings: View {
                 Button("Reset") {
                     reset()
                 }
-                .foregroundStyle(.red)
+                .foregroundStyle(isDefault ? Color.gray : Color.red)
+                .disabled(isDefault)
             }
         }
         .onAppear(perform: onAppear)
@@ -100,6 +101,11 @@ struct RestTimerSettings: View {
             }
         }
         .padding(.horizontal)
+    }
+    
+    private var isDefault: Bool {
+        userData.workoutPrefs.customRestPeriods == nil
+        && userData.settings.restTimerEnabled == true
     }
     
     private func onAppear() {

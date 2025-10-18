@@ -110,19 +110,18 @@ final class WorkoutVM: ObservableObject {
     private func moveToNextIncompleteExercise(after index: Int, selectedExerciseIndex: inout Int?) {
         // Find the next incomplete exercise starting after the given index
         if let nextExerciseIndex = template.exercises.indices.first(where: { $0 > index && !template.exercises[$0].isCompleted }) {
-            setAvgRPE(selectedIndex: selectedExerciseIndex)
+            //setAvgRPE(selectedIndex: selectedExerciseIndex)
             selectedExerciseIndex = nextExerciseIndex
         } else if let anyExerciseIndex = template.exercises.firstIndex(where: { !$0.isCompleted } ) {
-            setAvgRPE(selectedIndex: selectedExerciseIndex)
+            //setAvgRPE(selectedIndex: selectedExerciseIndex)
             selectedExerciseIndex = anyExerciseIndex
         } else {
             // No more incomplete exercises, finish the workout
-            completionDuration = secondsElapsed
             showCompletionAlert()
             return
         }
     }
-
+    /*
     private func setAvgRPE(selectedIndex: Int?) {
         guard let selectedIndex = selectedIndex else { return }
         
@@ -135,8 +134,10 @@ final class WorkoutVM: ObservableObject {
             template.exercises[selectedIndex] = exercise
         }
     }
+    */
 
     private func showCompletionAlert() {
+        completionDuration = secondsElapsed
         isOverlayVisible = false
         showWorkoutSummary = true
         workoutCompleted = true
@@ -162,15 +163,18 @@ final class WorkoutVM: ObservableObject {
     }
     
     private func getExerciseIndex() -> Int {
-        if let state = currentExerciseState {
+        if let state = currentExerciseState, template.exercises.indices.contains(state.index) {
             let resumeIdx = state.index
             // only resume if still valid and not completed
-            guard template.exercises.indices.contains(resumeIdx) else { return 0 }
             if !template.exercises[resumeIdx].isCompleted { return resumeIdx }
         }
-        
         // 2) Otherwise Find the first unfinished exercise (or 0 if none)
-        return template.exercises.firstIndex(where: { !$0.isCompleted }) ?? 0
+        if let idx = template.exercises.firstIndex(where: { !$0.isCompleted }) {
+            return idx
+        } else {
+            showCompletionAlert()
+            return 0
+        }
     }
     
     func updatePerformance(_ update: PerformanceUpdate) { updates.updatePerformance(update) }

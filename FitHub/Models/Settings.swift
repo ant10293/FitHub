@@ -40,6 +40,34 @@ enum ProgressiveOverloadStyle: String, CaseIterable, Codable {
             return "Reps will be increased each week. Once halfway through period, reps will return to original value and weight will be increased slightly. For remainder of weeks, reps will remain the same while weight increases."
         }
     }
+    
+    static func determineStyle(
+        overloadStyle: ProgressiveOverloadStyle,
+        overloadPeriod: Int,
+        rAndS: RepsAndSets
+    ) -> ProgressiveOverloadStyle {
+        let incompatible = incompatibleOverloadStyle(
+            overloadStyle: overloadStyle,
+            overloadPeriod: overloadPeriod,
+            rAndS: rAndS
+        )
+        
+        return incompatible ? .dynamic : overloadStyle
+    }
+    
+    static func incompatibleOverloadStyle(
+        overloadStyle: ProgressiveOverloadStyle,
+        overloadPeriod: Int,
+        rAndS: RepsAndSets,
+    ) -> Bool {
+        guard overloadStyle == .decreaseReps else { return false }
+        let range = rAndS.reps.overallRange(filteredBy: rAndS.distribution)
+        if range.lowerBound <= overloadPeriod {
+            return true
+        } else {
+            return false
+        }
+    }
 }
 
 enum SetStructures: String, CaseIterable, Codable, Identifiable {

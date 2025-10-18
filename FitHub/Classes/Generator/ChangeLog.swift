@@ -13,7 +13,7 @@ extension WorkoutGenerator {
         params: GenerationParameters,
         templates: [WorkoutTemplate],
         generationStartTime: Date,
-        performanceUpdates: PerformanceUpdates
+        //performanceUpdates: PerformanceUpdates
     ) -> WorkoutChangelog? {
         
         // Only generate changelog for next week workouts
@@ -36,6 +36,7 @@ extension WorkoutGenerator {
             exercisesKept: countExercises(for: .kept, templates: templates, saved: input.saved),
             exercisesChanged: countExercises(for: .changed, templates: templates, saved: input.saved),
             performanceUpdates: maxUpdates.count, // Use tracked state instead of countActualMaxUpdates
+            //performanceUpdates: performanceUpdates.updatedMax.count,
             progressiveOverloadApplied: overloadingExercises.count, // Use tracked state
             deloadsApplied: deloadingExercises.count // Use tracked state
         )
@@ -274,7 +275,7 @@ extension WorkoutGenerator {
         return summary.totalVolume
     }
     
-    // Create progression details
+    /*
     private func createProgressionDetails(new: Exercise, input: Input) -> ProgressionDetails? {
         let progressionType: ProgressionDetails.ProgressionType
         let appliedChange: String
@@ -307,6 +308,67 @@ extension WorkoutGenerator {
         
         return ProgressionDetails(
             progressionType: progressionType,
+            previousWeek: max(0, new.overloadProgress - 1),
+            newWeek: new.overloadProgress,
+            stagnationWeeks: new.weeksStagnated,
+            appliedChange: appliedChange
+        )
+    }
+    */
+    
+    // TODO: add case for prUpdated. "New PR. SetDetails recalculated."
+    // MARK: also add case for deload ending
+    // Create progression details
+    private func createProgressionDetails(new: Exercise, input: Input) -> ProgressionDetails? {
+        let s = input.user.settings
+        let stagnationLimit = s.periodUntilDeload
+        let olPeriod       = s.progressiveOverloadPeriod   // full overload cycle length
+
+        let progressionType: ProgressionDetails.ProgressionType
+        let appliedChange: String
+
+        if maxUpdates.contains(new.id) {
+            progressionType = .prUpdate
+            appliedChange = "New PR since last generation. Set Details recalculated using new PR."
+        }
+        else if overloadingExercises.contains(new.id) {
+            // Overload happened this tick
+            let step = new.overloadProgress
+            progressionType = .progressiveOverload
+            appliedChange = "Progressive overload applied (Week \(step)/\(olPeriod))"
+        }
+        else if deloadingExercises.contains(new.id) {
+            // Deload happened due to stagnation threshold
+            progressionType = .deload
+            appliedChange = "Deload applied after reaching stagnation threshold (\(stagnationLimit) weeks)"
+        }
+        else if endedDeloadExercises.contains(new.id) {
+            progressionType = .endedDeload
+            appliedChange = "Deload complete. Restoring previous working weights."
+        }
+        else if resetExercises.contains(new.id) {
+            // Typically new PR → reset
+            progressionType = .reset
+            appliedChange = "Progression reset"
+        }
+        else if new.weeksStagnated >= stagnationLimit, s.allowDeloading == false {
+            // Edge case: deloads disabled → we can sit at/above limit
+            progressionType = .stagnation
+            appliedChange = "Weeks stagnated: \(new.weeksStagnated)/\(stagnationLimit) (at limit; deloads disabled)"
+        }
+        else if new.weeksStagnated > 0 {
+            // Normal stagnation increment
+            progressionType = .stagnation
+            appliedChange = "Weeks stagnated: \(new.weeksStagnated)/\(stagnationLimit)"
+        }
+        else {
+            progressionType = .none
+            appliedChange = "No progression changes"
+        }
+
+        return ProgressionDetails(
+            progressionType: progressionType,
+            // If overload applied, new.overloadProgress already includes the new step; otherwise it’s unchanged.
             previousWeek: max(0, new.overloadProgress - 1),
             newWeek: new.overloadProgress,
             stagnationWeeks: new.weeksStagnated,

@@ -87,6 +87,7 @@ struct SetDistribution: Codable, Hashable {
     }
 }
 
+// FIXME: should be labeled EffortDistribution
 struct ExerciseDistribution: Codable, Hashable {
     var distribution: [EffortType: Double]
     

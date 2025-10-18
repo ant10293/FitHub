@@ -123,8 +123,14 @@ final class ExerciseSelector {
             return []
         }
         
-        // filter by difficulty
-        let eligibleFiltered = eligibleExercises.filter { $0.difficultyOK(strengthCeiling) }
+        // filter by difficulty, still allowing favorites
+        let eligibleFiltered = eligibleExercises.filter {
+            if favorites.contains($0.id) {
+                return true
+            } else {
+                return $0.difficultyOK(strengthCeiling)
+            }
+        }
         
         // TODO: add logic to derive muscles and submuscles from [SplitCategory]
         /*

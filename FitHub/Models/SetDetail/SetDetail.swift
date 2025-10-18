@@ -135,27 +135,32 @@ struct SetDetail: Identifiable, Hashable, Codable {
 }
 
 extension SetDetail {
-    static func formatLoadMetric(load: SetLoad, metric: SetMetric) -> Text {
-        // tiny helpers so the switch body stays readable
+    static func formatLoadMetric(load: SetLoad, metric: SetMetric, simple: Bool = false) -> Text {
+        // separators
         let sepTimes = Text(" × ")
         let sepDash  = Text(" - ")
         func light(_ s: String) -> Text { Text(s).fontWeight(.light) }
 
+        // adapters to avoid duplication
+        func W(_ w: Mass)   -> Text { simple ? Text(w.displayString) : w.formattedText() }
+        func D(_ d: Distance) -> Text { simple ? Text(d.displayString) : d.formattedText }
+        func T(_ t: TimeSpan) -> Text { Text(t.displayStringCompact) }
+
         switch (load, metric) {
         case (.weight(let w), .reps(let r)):
-            return w.formattedText() + sepTimes + Text("\(r)") + light(" reps")
+            return W(w) + sepTimes + Text("\(r)") + (simple ? Text("") : light(" reps"))
 
         case (.none, .reps(let r)):
-            return Text("\(r)") + light(" reps")
+            return Text("\(r)") + (simple ? Text("") : light(" reps"))
 
         case (.weight(let w), .hold(let t)):
-            return w.formattedText() + sepTimes + Text(t.displayStringCompact) + light(" hold")
+            return W(w) + sepTimes + T(t) + (simple ? Text("") : light(" hold"))
 
         case (.none, .hold(let t)):
-            return Text(t.displayStringCompact) + light(" hold")
+            return T(t) + (simple ? Text("") : light(" hold"))
 
         case (.distance(let d), .cardio(let ts)):
-            return d.formattedText + sepDash + Text(ts.time.displayString)
+            return D(d) + sepDash + Text(ts.time.displayString)
 
         default:
             return Text("—")

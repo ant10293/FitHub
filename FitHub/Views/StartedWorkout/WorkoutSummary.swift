@@ -38,13 +38,11 @@ struct WorkoutSummary: View {
                 .padding()
 
         }
-        .background(Color(.secondarySystemBackground).opacity(0.8))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .padding()
-        .shadow(radius: 5)
+        .cardContainer(cornerRadius: 20, shadowRadius: 5, backgroundColor: Color(.secondarySystemBackground))
+        .opacity(0.8)
     }
 
-    struct BarChartView: View {
+    private struct BarChartView: View {
         let exercises: [Exercise]
         let prExerciseIDs: [UUID]
         let weightByExercise: [UUID: Double]
@@ -102,13 +100,13 @@ struct WorkoutSummary: View {
                     }
                 }
                 .chartYScale(domain: 0...maxY)
-                .frame(height: 150)
+                .frame(height: UIScreen.main.bounds.width * 0.33)
             }
             .padding()
         }
     }
 
-    struct StatRow: View {
+    private struct StatRow: View {
         let title: String
         var value: String?
         var text: Text?

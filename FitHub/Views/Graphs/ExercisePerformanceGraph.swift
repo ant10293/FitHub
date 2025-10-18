@@ -16,11 +16,12 @@ struct ExercisePerformanceGraph: View {
     
     var body: some View {
         VStack {
-            Text("\(exercise.name) \(exercise.performanceTitle)")
+            Text("\(exercise.name) \(exercise.performanceTitle(includeInstruction: true))")
                 .font(.headline)
                 .centerHorizontally()
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
+            
             
             ScrollViewReader { proxy in
                 ScrollView(.horizontal) {
@@ -31,17 +32,17 @@ struct ExercisePerformanceGraph: View {
                                 ForEach(sortedRecords) { record in
                                     LineMark(
                                         x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
-                                        y: .value(exercise.performanceTitle, record.value.displayValue)
+                                        y: .value("Value", record.value.displayValue)
                                     )
                                     .foregroundStyle(.blue)
                                     
                                     PointMark(
                                         x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
-                                        y: .value(exercise.performanceTitle, record.value.displayValue)
+                                        y: .value("Value", record.value.displayValue)
                                     )
                                     .foregroundStyle(record.id == performance?.currentMax?.id ? .green : .blue)
                                     .annotation(position: .top) {
-                                        Text(Format.smartFormat(record.value.displayValue))
+                                        recordBadge(record)
                                             .font(.caption)
                                             .foregroundStyle(record.id == performance?.currentMax?.id ? .green : .blue)
                                             .padding(1)
@@ -62,14 +63,13 @@ struct ExercisePerformanceGraph: View {
                                     .multilineTextAlignment(.center)
                             }
                         }
-                        .overlay(alignment: .bottomTrailing, content: {
-                            if let unit = exercise.performanceUnit {
+                        .chartYAxisLabel(position: .trailing) {
+                            if let unit = exercise.getPeakMetric(metricValue: 0).unitLabel {
                                 Text(unit)
                                     .font(.caption)
-                                    .foregroundStyle(Color.secondary)
+                                    .foregroundStyle(.secondary)
                             }
-                        })
-                        .padding()
+                        }
                         
                         Color.clear.frame(width: 0.1).id("END")   // sentinel at far right
                     }
@@ -86,6 +86,19 @@ struct ExercisePerformanceGraph: View {
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding()
+        }
+    }
+    
+    private func recordBadge(_ record: MaxRecord) -> Text {
+        let rhs = Text(record.value.displayString)
+        if let lxm = record.loadXmetric {
+            return (
+                /*lxm.formattedText(simple: true) +
+                Text("\n") +*/
+                Text("≈ ") + rhs
+            )
+        } else {
+            return rhs
         }
     }
     

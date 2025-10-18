@@ -4,7 +4,7 @@
 //
 //  Created by Anthony Cantu on 5/3/25.
 //
-
+/*
 import SwiftUI
 
 struct MuscleRest: View {
@@ -37,3 +37,4 @@ struct MuscleRest: View {
     
     private var isDefault: Bool { userData.settings.muscleRestDuration == 48 }
 }
+*/

@@ -13,6 +13,7 @@ import Foundation
 final class WorkoutGenerator {
     // Track progression states during generation
     var deloadingExercises: Set<Exercise.ID> = []
+    var endedDeloadExercises: Set<Exercise.ID> = []
     var overloadingExercises: Set<Exercise.ID> = []
     var resetExercises: Set<Exercise.ID> = []
     var maxUpdates: Set<Exercise.ID> = []
@@ -46,6 +47,7 @@ final class WorkoutGenerator {
         var startDate: Date
         var categoriesPerDay: [[SplitCategory]]
         var overloadFactor: Double
+        var overloadStyle: ProgressiveOverloadStyle
     }
 
     // MARK: – Public façade
@@ -90,7 +92,7 @@ final class WorkoutGenerator {
         }
 
         // 3️⃣  Build templates day-by-day (selection via selector)
-        var updates = PerformanceUpdates()
+        var csvUpdates = PerformanceUpdates() // these are estimates only
 
         var templates: [WorkoutTemplate] = []
         for (idx, day) in params.days.enumerated() {
@@ -102,7 +104,7 @@ final class WorkoutGenerator {
                 input: input,
                 selector: selector,                
                 maxUpdated: { update in
-                    updates.updatePerformance(update)
+                    csvUpdates.updatePerformance(update)
                 }
             ) {
                 templates.append(tpl)
@@ -124,7 +126,7 @@ final class WorkoutGenerator {
             params: params,
             templates: templates,
             generationStartTime: creationDate,
-            performanceUpdates: updates
+            //performanceUpdates: updates
         )
         
         resetSets() // Clear tracking sets AFTER changelog generation
@@ -134,7 +136,7 @@ final class WorkoutGenerator {
             workoutsStartDate: params.startDate,
             workoutsCreationDate: creationDate,
             logFileName: fileName,
-            updatedMax: updates.updatedMax,
+            updatedMax: csvUpdates.updatedMax,
             changelog: changelog
         )
     }
@@ -160,6 +162,11 @@ extension WorkoutGenerator {
             customRepsRange: input.user.workoutPrefs.customRepsRange,
             customSets: input.user.workoutPrefs.customSets,
             customDistribution: input.user.workoutPrefs.customDistribution,
+        )
+        let overloadStyle = ProgressiveOverloadStyle.determineStyle(
+            overloadStyle: input.user.settings.progressiveOverloadStyle,
+            overloadPeriod: input.user.settings.progressiveOverloadPeriod,
+            rAndS: repsAndSets
         )
         let duration = WorkoutParams.determineWorkoutDuration(
             age: age,
@@ -216,7 +223,8 @@ extension WorkoutGenerator {
             workoutWeek: workoutWeek,
             startDate: start,
             categoriesPerDay: categoriesPerDay,
-            overloadFactor: overloadFactor
+            overloadFactor: overloadFactor,
+            overloadStyle: overloadStyle
         )
     }
     
@@ -294,17 +302,25 @@ extension WorkoutGenerator {
         let detailTok = Logger.shared.start("[\(dayName)] detail exercises", indentTabs: 2)
         let detailedExercises: [Exercise] = exercises.map { ex in
             Logger.shared.time("[\(dayName)] \(ex.name) details", indentTabs: 3, minMs: 1.0) {
-                calculateDetailedExercise(
+                let newEx = calculateDetailedExercise(
                     input: input,
                     exercise: ex,
-                    completedExercise: completed.byID[ex.id],
                     repsAndSets: params.repsAndSets,
-                    overloadFactor: params.overloadFactor,
-                    templateCompleted: wasCompleted,
                     maxUpdated: { update in
                         maxUpdated(update)
                     }
                 )
+                // —— Overload/deload progression ——————————————
+                return Logger.shared.time("handleExerciseProgression \(ex.name)", indentTabs: 4, minMs: 0.5) {
+                    handleExerciseProgression(
+                        input: input,
+                        exercise: newEx,
+                        completedExercise: completed.byID[ex.id],
+                        overloadFactor: params.overloadFactor,
+                        overloadStyle: params.overloadStyle,
+                        templateCompleted: wasCompleted
+                    )
+                }
             }
         }
         Logger.shared.end(detailTok, suffix: "x\(exercises.count)")
@@ -358,10 +374,7 @@ extension WorkoutGenerator {
     func calculateDetailedExercise(
         input: Input,
         exercise: Exercise,
-        completedExercise: Exercise? = nil, // last week's exercise
         repsAndSets: RepsAndSets,
-        overloadFactor: Double,
-        templateCompleted: Bool = false,
         maxUpdated: @escaping (PerformanceUpdate) -> Void
     ) -> Exercise {
         var ex  = exercise
@@ -379,17 +392,7 @@ extension WorkoutGenerator {
         Logger.shared.time("createSetDetails \(ex.name)", indentTabs: 4, minMs: 0.5) {
             ex.createSetDetails(repsAndSets: repsAndSets, userData: input.user, equipmentData: input.equipmentData)
         }
-
-        // —— Overload/deload progression ——————————————
-        return Logger.shared.time("handleExerciseProgression \(ex.name)", indentTabs: 4, minMs: 0.5) {
-            handleExerciseProgression(
-                input: input,
-                exercise: ex,
-                completedExercise: completedExercise,
-                overloadFactor: overloadFactor,
-                templateCompleted: templateCompleted
-            )
-        }
+        return ex
     }
     
     /*
@@ -399,92 +402,103 @@ extension WorkoutGenerator {
     func handleExerciseProgression(
         input: Input,
         exercise: Exercise,
-        completedExercise: Exercise? = nil, // last week's exercise
+        completedExercise: Exercise? = nil, // last week's
         overloadFactor: Double,
+        overloadStyle: ProgressiveOverloadStyle,
         templateCompleted: Bool
     ) -> Exercise {
-        var ex = exercise
-        var prog = ex.overloadProgress
+        var ex   = exercise
+        let s    = input.user.settings
 
         func resetProgression() {
-            ex.currentWeekAvgRPE   = nil
-            ex.previousWeeksAvgRPE = nil
             ex.weeksStagnated      = 0
             ex.overloadProgress    = 0
+            ex.isDeloading         = false
             resetExercises.insert(ex.id)
         }
 
-        if input.nextWeek && input.keepCurrentExercises {
-            // 0️⃣ NEW PR check (day-normalized)
-            let newPRLogged = newPRSincePlanCreation(input: input, exerciseID: ex.id)
+        /// Try to apply OL if enabled. Returns true only if a real change was applied.
+        @discardableResult
+        func tryOverload() -> Bool {
+            guard s.progressiveOverload else { return false }
 
-            if newPRLogged {
-                Logger.shared.add("◦ New 1RM since plan creation → reset stagnation.", indentTabs: 1)
-                maxUpdates.insert(ex.id)
-                resetProgression()
-            }
-            
-            if !templateCompleted {
-                Logger.shared.add("Template was not completed last week. Skipping exercise progression.", indentTabs: 1)
-                return ex
-            }
-            // 1️⃣ PROGRESSIVE OVERLOAD
-            else if ex.weeksStagnated >= input.user.settings.stagnationPeriod, input.user.settings.progressiveOverload {
-                let next = prog + 1
-                ex.overloadProgress = next // optimistic: make it visible to apply()
-                
-                Logger.shared.add(
-                    "◦ Weeks stagnated \(ex.weeksStagnated) ≥ \(input.user.settings.stagnationPeriod) — attempting overload.", indentTabs: 1
-                )
-                let overloadApplied = ex.applyProgressiveOverload(
-                    equipmentData: input.equipmentData,
-                    period:   input.user.settings.progressiveOverloadPeriod,
-                    style:    input.user.settings.progressiveOverloadStyle,
-                    rounding: input.user.settings.roundingPreference,
-                    overloadFactor: overloadFactor,
-                    oldExercise: completedExercise
-                )
-                if overloadApplied {
-                    prog = next                 // commit progression
-                    Logger.shared.add("◦ Applied overload (step \(prog)).", indentTabs: 1)
-                    overloadingExercises.insert(ex.id)
-                } else {
-                    ex.overloadProgress = prog  // rollback progression only
-                    Logger.shared.add("◦ Overload skipped (no eligible/effective change).", indentTabs: 1)
-                }
-            }
-            // 2️⃣ DELOAD or +1 week stagnant (no new PR in window)
-            else {
-                if let current  = ex.currentWeekAvgRPE,
-                   let previous = ex.previousWeeksAvgRPE,
-                   let avgPrevRPEs = previous.avgRPE,
-                   let prevPeaks = previous.avgPeakValue,
-                   current.rpe > avgPrevRPEs, // rpe trend increasing (difficulty increasing)
-                   current.completion.actualValue <= prevPeaks, // weight completed same or lower
-                   previous.entries.count + 1 >= input.user.settings.periodUntilDeload, // using +1 also accounts for the current week
-                   input.user.settings.allowDeloading
-                {
-                    Logger.shared.add(
-                        "◦ RPE \(current.rpe) > \(avgPrevRPEs), Weight \(current.completion.actualValue) <= \(prevPeaks) — over \(previous.entries.count)w — deload.",
-                        indentTabs: 1
-                    )
-                    ex.applyDeload(
-                        equipmentData: input.equipmentData,
-                        deloadPct: input.user.settings.deloadIntensity,
-                        rounding: input.user.settings.roundingPreference
-                    )
-                    resetProgression()
-                    deloadingExercises.insert(ex.id)
-                } else {
-                    Logger.shared.add("◦ Weeks stagnated: \(ex.weeksStagnated) → \(ex.weeksStagnated + 1)", indentTabs: 1)
-                    ex.weeksStagnated += 1
-                }
+            let oldProgress = ex.overloadProgress
+            let next        = oldProgress + 1
+
+            ex.overloadProgress = next // optimistic bump for apply()
+            Logger.shared.add("◦ Attempting overload (step \(next)).", indentTabs: 1)
+
+            let applied = ex.applyProgressiveOverload(
+                equipmentData: input.equipmentData,
+                period:   s.progressiveOverloadPeriod,
+                style:    overloadStyle,
+                rounding: s.roundingPreference,
+                overloadFactor: overloadFactor,
+                oldExercise: completedExercise
+            )
+
+            if applied {
+                ex.weeksStagnated = 0
+                Logger.shared.add("◦ Overload applied. Progress step = \(ex.overloadProgress).", indentTabs: 1)
+                overloadingExercises.insert(ex.id)
+                return true
+            } else {
+                ex.overloadProgress = oldProgress // rollback only the visual bump
+                Logger.shared.add("◦ Overload not applied.", indentTabs: 1)
+                return false
             }
         }
 
-        // 3️⃣ Reset after completing a full overload cycle
-        if prog == input.user.settings.progressiveOverloadPeriod {
-            Logger.shared.add("◦ Resetting progressive-overload cycle.", indentTabs: 1)
+        /// If no PR/OL change happened, advance stagnation and maybe deload.
+        func stagnateOrDeload() {
+            ex.weeksStagnated += 1
+            Logger.shared.add("◦ weeksStagnated = \(ex.weeksStagnated).", indentTabs: 1)
+
+            if s.allowDeloading && ex.weeksStagnated >= s.periodUntilDeload {
+                Logger.shared.add("◦ Stagnation threshold reached → Deload.", indentTabs: 1)
+                ex.applyDeload(
+                    equipmentData: input.equipmentData,
+                    deloadPct: s.deloadIntensity,
+                    rounding: s.roundingPreference
+                )
+                resetProgression()
+                deloadingExercises.insert(ex.id)
+                ex.isDeloading = true
+            }
+        }
+
+        // ── Early exits ───────────────────────────────────────────────────────────────
+        guard input.nextWeek && input.keepCurrentExercises else { return ex }
+
+        // 0️⃣ New PR → reset.
+        if newPRSincePlanCreation(input: input, exerciseID: ex.id) {
+            Logger.shared.add("◦ New 1RM since plan creation → reset.", indentTabs: 1)
+            resetProgression()
+            maxUpdates.insert(ex.id)
+            return ex
+        }
+
+        // 1️⃣ Skip if last week’s template wasn’t completed.
+        guard templateCompleted else {
+            Logger.shared.add("Template not completed last week → no progression changes.", indentTabs: 1)
+            return ex
+        }
+        
+        // 2️⃣ Prevent overload immediately after deload.
+        if completedExercise?.isDeloading == true {
+            Logger.shared.add("◦ Skipping overload — previous week was deload.", indentTabs: 1)
+            ex.isDeloading = false
+            endedDeloadExercises.insert(ex.id)
+            return ex
+        }
+
+        // 3️⃣ Try overload → else stagnate/deload.
+        let appliedOL = tryOverload()
+        if !appliedOL { stagnateOrDeload() }
+
+        // 4️⃣ Reset after completing a full overload cycle.
+        if s.progressiveOverload && ex.overloadProgress >= s.progressiveOverloadPeriod {
+            Logger.shared.add("◦ Completed overload cycle → reset progression.", indentTabs: 1)
             resetProgression()
         }
 
@@ -507,6 +521,7 @@ extension WorkoutGenerator {
     
     private func resetSets() {
         deloadingExercises.removeAll()
+        endedDeloadExercises.removeAll()
         overloadingExercises.removeAll()
         resetExercises.removeAll()
         maxUpdates.removeAll()

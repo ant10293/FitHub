@@ -41,14 +41,10 @@ struct AssessmentView: View {
 
                 // NEW: warning if neither input was provided
                 if needsEstimate {
-                    HStack(spacing: 8) {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                        Text("No 1RM or Max Reps entered. We'll estimate your strength level from your answers; accuracy will be limited.")
-                    }
-                    .font(.footnote)
-                    .foregroundStyle(.orange)
-                    .multilineTextAlignment(.center)
-                    .frame(width: width)
+                    WarningFooter(
+                        message: "No 1RM or Max Reps entered. We'll estimate your strength level from your answers; accuracy will be limited.",
+                        width: width
+                    )
                 }
                                 
                 skipOrContinueButton

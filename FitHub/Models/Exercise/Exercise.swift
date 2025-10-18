@@ -42,8 +42,9 @@ struct Exercise: Identifiable, Hashable, Codable {
     var isWarmUp: Bool { currentSet <= warmUpSets }
     var currentSetIndex: Int { currentSet - 1 }
         
-    var currentWeekAvgRPE: RPEentry?
-    var previousWeeksAvgRPE: RPEentries?
+    //var currentWeekAvgRPE: RPEentry?
+    //var previousWeeksAvgRPE: RPEentries?
+    var isDeloading: Bool = false
     var weeksStagnated: Int = 0
     var overloadProgress: Int = 0
 }
@@ -92,14 +93,35 @@ extension Exercise {
     func getPeakMetric(metricValue: Double) -> PeakMetric {
         unitType.getPeakMetric(metricValue: metricValue)
     }
-    
-    var performanceTitle: String {
-        getPeakMetric(metricValue: 0).performanceTitle
+
+    func performanceTitle(includeInstruction: Bool) -> String {
+        let base = getPeakMetric(metricValue: 0).performanceTitle
+        guard includeInstruction, let performanceInstruction else { return base }
+        return base + " (\(performanceInstruction))"
     }
     
-    var performanceUnit: String? {
-        getPeakMetric(metricValue: 0).unitLabel
+    private var performanceInstruction: String? {
+        let w = weightInstruction?.rawValue
+        let r = repsInstruction?.rawValue
+
+        // Decide which instruction to append
+        let instruction: String? = {
+            if !usesWeight {
+                // Non-loaded
+                return (limbMovementType == .unilateral) ? (r?.isEmpty == false ? r : nil) : nil
+            } else {
+                // Loaded
+                if let w, !w.isEmpty { return w }
+                // Fallback for unilateral entries that only specify reps
+                if limbMovementType == .unilateral, let r, !r.isEmpty { return r }
+                return nil
+            }
+        }()
+
+        return instruction
     }
+    
+    //var performanceUnit: String? { getPeakMetric(metricValue: 0).unitLabel }
     
     var setsSubtitle: Text {
         let (label, range) = setMetricRangeLabeled
@@ -269,7 +291,7 @@ extension Exercise {
         
         return true
     }
- 
+    /*
     mutating func setRPE(hadNewPR: Bool, startDate: Date) {
         if hadNewPR {
             //print("new pr set this week. resetting rpe.")
@@ -314,6 +336,7 @@ extension Exercise {
         let rpe  = acc.rCnt > 0 ? acc.rSum / Double(acc.rCnt) : nil
         return (peak, rpe)
     }
+    */
 }
 
 extension Exercise {
