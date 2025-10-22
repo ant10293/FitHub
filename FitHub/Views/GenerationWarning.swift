@@ -50,25 +50,31 @@ private struct TemplateReasoning: View {
     private let previewCount = 3
 
     var body: some View {
-        
         let items = filteredAndSorted(reductions)
         let byId = Dictionary(uniqueKeysWithValues: allExercises.map { ($0.id, $0) })
 
         TappableDisclosure(isExpanded: $isExpanded) {
             // TODO: display a warning symbol if not enough exercises or if filter was relaxed
-            VStack(alignment: .leading) {
-                Text(template.name)
-                    .font(.headline)
-                
-                HStack {
-                    Text(Format.exerciseCountText(template.exercises.count))
-                    if let est = template.estimatedCompletionTime {
-                        Text("•")
-                        Text("Est. Completion: \(est.displayStringCompact)")
-                    }
+            HStack {
+                if let reductions, reductions.relaxedFiltering {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .imageScale(.large)
+                        .foregroundStyle(.yellow)
                 }
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                VStack(alignment: .leading) {
+                    Text(template.name)
+                        .font(.headline)
+                    
+                    HStack {
+                        Text(Format.exerciseCountText(template.exercises.count, capitalize: true))
+                        if let est = template.estimatedCompletionTime {
+                            Text("•")
+                            Text("Est. Duration: \(est.displayStringCompact)")
+                        }
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
             }
         } content: {
             if items.isEmpty {
@@ -132,7 +138,7 @@ private struct ReasonRow: View {
             // Updated copy
             Group {
                 Text("\(Format.exerciseCountText(count)) filtered out")
-                if let remaining = rc.remaining {
+                if let remaining = rc.afterCount {
                     Text("\(remaining) remaining in pool")
                 }
             }

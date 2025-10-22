@@ -219,10 +219,10 @@ enum Format {
             "\(range.lowerBound)-\(range.upperBound)"
         }
     }
-    
+    /// Returns "N exercise(s)" with optional capitalization of the leading "e".
     static func exerciseCountText(_ count: Int, capitalize: Bool = false) -> String {
         let base = "\(count) exercise" + (count == 1 ? "" : "s")
-        return capitalize ? base.prefix(1).uppercased() + base.dropFirst() : base
+        return capitalize ? base.capitalizeFirstLetter() : base
     }
 }
 
@@ -251,10 +251,13 @@ extension String {
             .reduce(into: "") { $0.append(Character($1)) }
             .lowercased()
     }
-    /*
-    func removingCharacters(in set: CharacterSet) -> String {
-        self.components(separatedBy: set).joined()
+    
+    func capitalizeFirstLetter() -> String {
+        guard let idx = self.firstIndex(where: { $0.isLetter }) else { return self }
+        var result = self
+        let upper = String(result[idx]).uppercased()
+        result.replaceSubrange(idx...idx, with: upper)
+        return result
     }
-    */
 }
 

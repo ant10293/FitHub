@@ -14,9 +14,12 @@ enum WorkoutParams {
         strengthLevel: StrengthLevel,
         goal: FitnessGoal,
         customDuration: Int?
-    ) -> Int {
-        return customDuration
-        ?? defaultWorkoutDuration(age: age, frequency: frequency, strengthLevel: strengthLevel, goal: goal).inMinutes
+    ) -> TimeSpan {
+        if let customDuration {
+            return TimeSpan.fromMinutes(customDuration)
+        } else {
+            return defaultWorkoutDuration(age: age, frequency: frequency, strengthLevel: strengthLevel, goal: goal)
+        }
     }
     
     /// Heuristic workout duration (minutes) based on user profile.

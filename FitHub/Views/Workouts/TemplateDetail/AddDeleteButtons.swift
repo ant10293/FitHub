@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct AddDeleteButtons: View {
-    var addSet: () -> Void
-    var deleteSet: () -> Void
+    let addSet: () -> Void
+    let deleteSet: () -> Void
+    let disableDelete: Bool
     
     var body: some View {
         HStack {
@@ -28,6 +29,7 @@ struct AddDeleteButtons: View {
                 tint: .red,
                 action: deleteSet
             )
+            .disabled(disableDelete)
             
             Spacer()
         }

@@ -17,12 +17,13 @@ struct ExerciseSetDetail: View {
 
     @Binding var template: WorkoutTemplate
     @Binding var exercise: Exercise
-    @Binding var isCollapsed: Bool
     @Binding var isShowingOptions: Bool
 
     @State private var showSupersetOptions: Bool = false
     @State private var tosInputKey: TimeOrSpeed.InputKey?
     
+    let isCollapsed: Bool
+    let keyboardVisible: Bool
     let hasEquipmentAdjustments: Bool
     let perform: (CallBackAction) -> Void
     let onSuperset: (String) -> Void
@@ -31,15 +32,15 @@ struct ExerciseSetDetail: View {
     init(
         template: Binding<WorkoutTemplate>,
         exercise: Binding<Exercise>,
-        isCollapsed: Binding<Bool>,
         isShowingOptions: Binding<Bool>,
+        isCollapsed: Bool,
+        keyboardVisible: Bool,
         hasEquipmentAdjustments: Bool,
         perform: @escaping (CallBackAction) -> Void,
         onSuperSet: @escaping (String) -> Void
     ) {
         _template          = template
         _exercise          = exercise
-        _isCollapsed       = isCollapsed
         _isShowingOptions  = isShowingOptions
                 
         let wrappedEx = exercise.wrappedValue
@@ -48,7 +49,9 @@ struct ExerciseSetDetail: View {
         if let set = wrappedEx.setDetails.first, let tos = set.planned.timeSpeed {
             _tosInputKey = State(initialValue: tos.showing)
         }
-
+        
+        self.isCollapsed = isCollapsed
+        self.keyboardVisible = keyboardVisible
         self.hasEquipmentAdjustments = hasEquipmentAdjustments
         self.perform = perform
         self.onSuperset = onSuperSet
@@ -62,16 +65,20 @@ struct ExerciseSetDetail: View {
             if !isCollapsed {
                 superSetOptions
                 setDetails
-                AddDeleteButtons(addSet: addSet, deleteSet: deleteLastSet)
+                AddDeleteButtons(
+                    addSet: addSet,
+                    deleteSet: deleteLastSet,
+                    disableDelete: exercise.setDetails.isEmpty
+                )
                 equipmentAdjustments
             }
         }
         .disabled(isShowingOptions)
         .overlay(alignment: .topTrailing) { isShowingOptions ? exerciseDetailOptions : nil }
-        .padding()
-        .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .shadow(radius: 5)
+        .cardContainer(
+            cornerRadius: 10,
+            backgroundColor: colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white
+        )
         .padding(.horizontal, 2.5)
         .onChange(of: exercise.isSupersettedWith) { showSupersetOptions = (exercise.isSupersettedWith != nil) }
     }
@@ -102,7 +109,7 @@ struct ExerciseSetDetail: View {
             )
         }
         .onMove(perform: moveSet)
-        .onDelete(perform: deleteSetDetails)
+        //.onDelete(perform: deleteSetDetails)
     }
 
     // MARK: - Top bar
@@ -120,13 +127,15 @@ struct ExerciseSetDetail: View {
             }
             .buttonStyle(.plain)
 
-            Button(action: { showSupersetOptions.toggle() }) {
-                Image(systemName: showSupersetOptions ? "chevron.down" : "chevron.right")
-                    .foregroundStyle(.blue)
-                    .frame(width: 44, height: 44)
-                    .contentShape(Rectangle())
+            if !isCollapsed {
+                Button(action: { showSupersetOptions.toggle() }) {
+                    Image(systemName: showSupersetOptions ? "chevron.down" : "chevron.right")
+                        .foregroundStyle(.blue)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
 
             Spacer()
 
@@ -216,17 +225,16 @@ struct ExerciseSetDetail: View {
 
     private func deleteLastSet() {
         guard !exercise.setDetails.isEmpty else { return }
+        // Unfocus the text field first
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         perform(.deleteSet)
         if exercise.setDetails.isEmpty { tosInputKey = nil }
     }
 
     private func moveSet(from source: IndexSet, to destination: Int) {
+        // Unfocus the text field first
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         exercise.setDetails.move(fromOffsets: source, toOffset: destination)
-        perform(.saveTemplate)
-    }
-
-    private func deleteSetDetails(at offsets: IndexSet) {
-        exercise.setDetails.remove(atOffsets: offsets)
         perform(.saveTemplate)
     }
 }

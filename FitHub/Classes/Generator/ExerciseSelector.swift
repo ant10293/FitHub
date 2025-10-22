@@ -125,7 +125,7 @@ final class ExerciseSelector {
         logger?.add("[\(dayLabel)] Pool size: \(unionIdxs.count) exercises")
         
         let ewd = idx.getExercisesWithDataCount()
-        reductions.record(dayRaw: dayLabel, reason: .split, removed: ewd - unionIdxs.count, remaining: unionIdxs.count)
+        reductions.record(dayRaw: dayLabel, reason: .split, before: ewd, after: unionIdxs.count)
         
         // 1. Filter exercises based on basic criteria
         let eligibleExercises = filterEligibleExercises(
@@ -165,7 +165,7 @@ final class ExerciseSelector {
         // TODO: if still not enough exercises after relaxing the muscle requirements, use the unfiltered eligibleExercises
         var finalSelection = selectedWithExisting
         if finalSelection.count < clampedTotal {
-            
+            reductions.record(dayRaw: dayLabel, relaxed: true)
             reductions.clear(dayRaw: dayLabel, reasons: [.repCap, .tooDifficult])
             
             let missingCount = clampedTotal - finalSelection.count
@@ -230,9 +230,9 @@ final class ExerciseSelector {
         
         var isDisliked: Set<Exercise.ID> = []
         var cannotPerform: Set<Exercise.ID> = []
-        var resistanceIncompat: Set<Exercise.ID> = []
-        var effort: Set<Exercise.ID> = []
-        var lackingSets: Set<Exercise.ID> = []
+        var invalidResistance: Set<Exercise.ID> = []
+        var invalidEffort: Set<Exercise.ID> = []
+        var invalidSets: Set<Exercise.ID> = []
         
         for idx in indices {
             guard idx < self.idx.exercises.count else { continue }
@@ -247,37 +247,27 @@ final class ExerciseSelector {
                 continue
             }
             if !ex.resistanceOK(resistance) {
-                resistanceIncompat.insert(ex.id)
+                invalidResistance.insert(ex.id)
                 continue
             }
             // DO NOT check difficulty here
             if !ex.effortOK(rAndS) {
-                effort.insert(ex.id)
+                invalidEffort.insert(ex.id)
                 continue
             }
             if rAndS.sets.sets(for: ex.effort) < 1 {
-                lackingSets.insert(ex.id)
+                invalidSets.insert(ex.id)
                 continue
             }
 
             result.append(ex)
         }
         
-        if !isDisliked.isEmpty {
-            reductions.record(dayRaw: dayLabel, reason: .disliked, ids: isDisliked, removed: isDisliked.count)
-        }
-        if !cannotPerform.isEmpty {
-            reductions.record(dayRaw: dayLabel, reason: .cannotPerform, ids: cannotPerform, removed: cannotPerform.count)
-        }
-        if !resistanceIncompat.isEmpty {
-            reductions.record(dayRaw: dayLabel, reason: .resistance, ids: resistanceIncompat, removed: resistanceIncompat.count)
-        }
-        if !effort.isEmpty {
-            reductions.record(dayRaw: dayLabel, reason: .effort, ids: effort, removed: effort.count)
-        }
-        if !lackingSets.isEmpty {
-            reductions.record(dayRaw: dayLabel, reason: .sets, ids: lackingSets, removed: lackingSets.count)
-        }
+        if !isDisliked.isEmpty { reductions.record(dayRaw: dayLabel, reason: .disliked, ids: isDisliked) }
+        if !cannotPerform.isEmpty { reductions.record(dayRaw: dayLabel, reason: .cannotPerform, ids: cannotPerform) }
+        if !invalidResistance.isEmpty { reductions.record(dayRaw: dayLabel, reason: .resistance, ids: invalidResistance) }
+        if !invalidEffort.isEmpty { reductions.record(dayRaw: dayLabel, reason: .effort, ids: invalidEffort) }
+        if !invalidSets.isEmpty { reductions.record(dayRaw: dayLabel, reason: .sets, ids: invalidSets) }
         
         return result
     }
@@ -309,12 +299,8 @@ final class ExerciseSelector {
             return true
         }
         
-        if !tooDifficult.isEmpty {
-            reductions.record(dayRaw: dayLabel, reason: .tooDifficult, ids: tooDifficult, removed: tooDifficult.count)
-        }
-        if !exceedsRepCap.isEmpty {
-            reductions.record(dayRaw: dayLabel, reason: .repCap, ids: exceedsRepCap, removed: exceedsRepCap.count)
-        }
+        if !tooDifficult.isEmpty { reductions.record(dayRaw: dayLabel, reason: .tooDifficult, ids: tooDifficult) }
+        if !exceedsRepCap.isEmpty { reductions.record(dayRaw: dayLabel, reason: .repCap, ids: exceedsRepCap) }
         
         return eligibleFiltered
     }

@@ -60,15 +60,18 @@ struct TemplateDetail: View {
             }
         }
         .generatingOverlay(isReplacing, message: "Replacing Exercise...")
-        .overlay(alignment: .center, content: { template.exercises.isEmpty ? emptyView() : nil })
-        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-        .overlay(!kbd.isVisible ?
-             FloatingButton(
-                image: "plus",
-                disabled: isArchived,
-                action: { showingExerciseSelection = true }
-             ) : nil, alignment: .bottomTrailing
-        )
+        .overlay(alignment: .center) { template.exercises.isEmpty ? emptyView() : nil }
+        .overlay(alignment: .bottomTrailing) {
+            if kbd.isVisible {
+                dismissKeyboardButton
+            } else {
+                FloatingButton(
+                   image: "plus",
+                   disabled: isArchived,
+                   action: { showingExerciseSelection = true }
+                )
+            }
+        }
         .navigationBarItems(trailing: Button(isEditing ? "Close" : "Edit") { isEditing.toggle() }.disabled(isArchived))
         .sheet(isPresented: $showingExerciseSelection) { exerciseSelectionSheet }
         .sheet(item: $selectedExercise, onDismiss: { handleSheetDismiss() }) { exercise in
@@ -105,11 +108,12 @@ struct TemplateDetail: View {
                 ExerciseSetDetail(
                     template: $template,
                     exercise: $exercise,
-                    isCollapsed: $isCollapsed,
                     isShowingOptions: Binding(
                         get: { activeDetailID == exercise.id },
                         set: { newVal in activeDetailID = newVal ? exercise.id : nil }
                     ),
+                    isCollapsed: isCollapsed,
+                    keyboardVisible: kbd.isVisible,
                     hasEquipmentAdjustments: ctx.equipment.hasEquipmentAdjustments(for: exercise),
                     perform: { action in
                         performCallBackAction(action: action, exercise: $exercise)

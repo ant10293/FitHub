@@ -110,7 +110,7 @@ struct ExerciseWarmUpDetail: View {
     // MARK: Buttons (add / delete / autofill)
     private var buttonSection: some View {
         VStack {
-           AddDeleteButtons(addSet: addRow, deleteSet: deleteRow)
+            AddDeleteButtons(addSet: addRow, deleteSet: deleteRow, disableDelete: exercise.warmUpDetails.isEmpty)
             .listRowSeparator(.hidden)
 
             LabelButton(

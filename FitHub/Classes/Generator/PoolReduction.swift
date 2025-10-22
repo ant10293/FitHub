@@ -12,14 +12,16 @@ import SwiftUI
 // if noData is the primary reduction, prompt the user to try again (warn that setDetails will not be autofilled)
 struct PoolReduction: Codable, Equatable, Hashable {
     var reasons: [ReasoningCount]
+    var relaxedFiltering: Bool = false
     
     init() {
         self.reasons = Reason.allCases.map { ReasoningCount(reason: $0) }
     }
     
     enum Reason: Codable, Equatable, Hashable, CaseIterable {
+        // Filtering / eligibility removals
         case cannotPerform, disliked, resistance, effort, sets, repCap, split, noData, tooDifficult
-        
+                
         var description: String {
             switch self {
             case .cannotPerform: return "Missing Required Equipment"
@@ -58,7 +60,7 @@ struct PoolReduction: Codable, Equatable, Hashable {
             case .sets:          .teal
             case .repCap:        .indigo
             case .split:         .green
-            case .tooDifficult:  .cyan  
+            case .tooDifficult:  .cyan
             }
         }
     }
@@ -66,21 +68,28 @@ struct PoolReduction: Codable, Equatable, Hashable {
     struct ReasoningCount: Codable, Equatable, Hashable {
         let reason: Reason
         var exerciseIDs: Set<Exercise.ID> = []
-        var removed: Int?
-        var remaining: Int?
+        var beforeCount: Int?
+        var afterCount: Int?
+        
+        var removed: Int? {
+            guard let beforeCount, let afterCount else { return nil }
+            return beforeCount - afterCount
+        }
     }
     
     // NEW: bulk record
     mutating func record(
-        reason: Reason,
+        reason: Reason? = nil,
         ids: Set<Exercise.ID> = [], /// filtered out ids
-        removed: Int? = nil,
-        remaining: Int? = nil
+        before: Int? = nil,
+        after: Int? = nil,
+        relaxed: Bool? = nil
     ) {
-        guard let idx = reasons.firstIndex(where: { $0.reason == reason }) else { return }
+        if let relaxed { relaxedFiltering = relaxed }
+        guard let reason, let idx = reasons.firstIndex(where: { $0.reason == reason }) else { return }
         if !ids.isEmpty { reasons[idx].exerciseIDs.formUnion(ids) }
-        if let removed { reasons[idx].removed = removed } // overwrite only when provided
-        if let remaining { reasons[idx].remaining = remaining }
+        if let before { reasons[idx].beforeCount = before } // overwrite only when provided
+        if let after { reasons[idx].afterCount = after }
     }
     
     // MARK: - Clear (requested)
@@ -88,7 +97,8 @@ struct PoolReduction: Codable, Equatable, Hashable {
      mutating func clear(_ reason: Reason) {
          guard let idx = reasons.firstIndex(where: { $0.reason == reason }) else { return }
          reasons[idx].exerciseIDs.removeAll()
-         reasons[idx].removed = nil
+         reasons[idx].beforeCount = nil
+         reasons[idx].afterCount = nil
      }
 
      /// Convenience: clear multiple reasons at once.
@@ -138,33 +148,28 @@ struct DayReductions: Codable, Equatable, Hashable {
     // MARK: - Record by enum
     mutating func record(
         day: DaysOfWeek,
-        reason: PoolReduction.Reason,
+        reason: PoolReduction.Reason? = nil,
         ids: Set<Exercise.ID> = [],
-        removed: Int? = nil,
-        remaining: Int? = nil
+        before: Int? = nil,
+        after: Int? = nil,
+        relaxed: Bool? = nil
     ) {
         var reduction = pool[day] ?? PoolReduction()
-        reduction.record(reason: reason, ids: ids, removed: removed, remaining: remaining)
+        reduction.record(reason: reason, ids: ids, before: before, after: after, relaxed: relaxed)
         pool[day] = reduction
     }
 
     // MARK: - Overload using rawValue
     mutating func record(
         dayRaw: DaysOfWeek.RawValue,
-        reason: PoolReduction.Reason,
+        reason: PoolReduction.Reason? = nil,
         ids: Set<Exercise.ID> = [],
-        removed: Int? = nil,
-        remaining: Int? = nil
+        before: Int? = nil,
+        after: Int? = nil,
+        relaxed: Bool? = nil
     ) {
         guard let day = DaysOfWeek(rawValue: dayRaw) else { return }
-        record(day: day, reason: reason, ids: ids, removed: removed, remaining: remaining)
-    }
-    
-    // Clear (mirror PoolReduction.clear)
-    mutating func clear(day: DaysOfWeek, reason: PoolReduction.Reason) {
-        var reduction = pool[day] ?? PoolReduction()
-        reduction.clear(reason)
-        pool[day] = reduction
+        record(day: day, reason: reason, ids: ids, before: before, after: after, relaxed: relaxed)
     }
 
     /// Clear multiple reasons for a day.
@@ -172,11 +177,6 @@ struct DayReductions: Codable, Equatable, Hashable {
         var reduction = pool[day] ?? PoolReduction()
         reduction.clear(reasons)
         pool[day] = reduction
-    }
-    
-    mutating func clear(dayRaw: DaysOfWeek.RawValue, reason: PoolReduction.Reason) {
-        guard let day = DaysOfWeek(rawValue: dayRaw) else { return }
-        clear(day: day, reason: reason)
     }
     
     mutating func clear(dayRaw: DaysOfWeek.RawValue, reasons: [PoolReduction.Reason]) {

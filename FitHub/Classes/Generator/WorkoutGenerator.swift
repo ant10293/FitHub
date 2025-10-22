@@ -41,6 +41,7 @@ final class WorkoutGenerator {
     }
     
     struct GenerationParameters {
+        var duration: TimeSpan
         var exercisesPerWorkout: Int
         var repsAndSets: RepsAndSets
         var days: [DaysOfWeek]
@@ -130,7 +131,6 @@ final class WorkoutGenerator {
             params: params,
             templates: templates,
             generationStartTime: creationDate,
-            //performanceUpdates: updates
         )
         
         resetSets() // Clear tracking sets AFTER changelog generation
@@ -182,7 +182,7 @@ extension WorkoutGenerator {
         )
         let overloadFactor = input.user.settings.customOverloadFactor ?? 1.0
         let exPerWorkout = estimateExercises(
-            durationMinutes: duration,
+            duration: duration,
             repsAndSets: repsAndSets
         )
         let dayIndices = DaysOfWeek.calculateWorkoutDayIndexes(
@@ -221,6 +221,7 @@ extension WorkoutGenerator {
         Logger.shared.add("Workout schedule:\n\(schedule)")
 
         return GenerationParameters(
+            duration: duration,
             exercisesPerWorkout: exPerWorkout,
             repsAndSets: repsAndSets,
             days: days,
@@ -339,6 +340,7 @@ extension WorkoutGenerator {
         }
         Logger.shared.end(detailTok, suffix: "x\(exercises.count)")
         
+        // TODO: do something if the estimated time is too high
         // [3] Build the template
         let tpl = WorkoutTemplate(
             id: templateID,
@@ -349,7 +351,18 @@ extension WorkoutGenerator {
             date: workoutDate,
             restPeriods: params.repsAndSets.rest
         )
-
+        /*
+        if let est = tpl.estimatedCompletionTime {
+            let estMin = est.inMinutes
+            let desiredMin = params.duration.inMinutes
+            
+            // add more exercises
+            if estMin < desiredMin {
+                
+            }
+        }
+        */
+        
         // [5] Completion-time estimate
         let etaTok = Logger.shared.start("[\(dayName)] estimate completion time", indentTabs: 2)
         Logger.shared.end(etaTok)
@@ -357,7 +370,7 @@ extension WorkoutGenerator {
         return tpl
     }
     
-    private func estimateExercises(durationMinutes: Int, repsAndSets: RepsAndSets) -> Int {
+    private func estimateExercises(duration: TimeSpan, repsAndSets: RepsAndSets) -> Int {
         let secondsPerRep = SetDetail.secPerRep
         let avgSetup      = SetDetail.secPerSetup
 
@@ -370,7 +383,7 @@ extension WorkoutGenerator {
         let restSeconds = Double(restPer) * max(0.0, setsAvg - 1.0)
         let perExercise = max(1, Int(workSeconds) + Int(restSeconds) + avgSetup)
 
-        let totalSeconds = max(60, durationMinutes * 60)
+        let totalSeconds = max(60, duration.inMinutes * 60)
         let numExercises = max(1, Int((Double(totalSeconds) / Double(perExercise)).rounded()))
         return numExercises
     }
