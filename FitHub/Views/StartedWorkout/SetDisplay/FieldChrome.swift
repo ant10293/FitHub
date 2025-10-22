@@ -13,7 +13,11 @@ struct FieldChrome<Content: View>: View {
     let isZero: Bool
     let content: () -> Content
 
-    init(width: CGFloat, isZero: Bool, @ViewBuilder content: @escaping () -> Content) {
+    init(
+        width: CGFloat,
+        isZero: Bool = false,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
         self.width = width
         self.isZero = isZero
         self.content = content

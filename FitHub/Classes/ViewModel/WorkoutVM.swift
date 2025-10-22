@@ -13,7 +13,6 @@ final class WorkoutVM: ObservableObject {
     @Published var template: WorkoutTemplate
     let activeWorkout: WorkoutInProgress?
     let startDate: Date
-    let workoutsStartDate: Date? // for week of templates
     @Published var currentExerciseState: CurrentExerciseState?
     @Published var updates: PerformanceUpdates
     @Published var workoutCompleted: Bool = false
@@ -23,16 +22,11 @@ final class WorkoutVM: ObservableObject {
 
     init(
         template: WorkoutTemplate,
-        activeWorkout: WorkoutInProgress? = nil,
-        startDate: Date = Date(),
-        workoutsStartDate: Date?,
-        currentExerciseState: CurrentExerciseState? = nil,
-        updatedMax: [PerformanceUpdate]? = nil
+        activeWorkout: WorkoutInProgress? = nil
     ) {
         self.template = template
         self.activeWorkout = activeWorkout
         self.updates = PerformanceUpdates()
-        self.workoutsStartDate = workoutsStartDate
 
         if let aw = activeWorkout {
             // ---- resume a paused session ----
@@ -41,9 +35,9 @@ final class WorkoutVM: ObservableObject {
             self.updates.updatedMax   = aw.updatedMax
         } else {
             // ---- brand-new session ----
-            self.startDate            = startDate
-            self.currentExerciseState = currentExerciseState
-            self.updates.updatedMax   = updatedMax ?? []
+            self.startDate            = Date()
+            self.currentExerciseState = nil
+            self.updates.updatedMax   = []
         }
     }
     
@@ -110,10 +104,8 @@ final class WorkoutVM: ObservableObject {
     private func moveToNextIncompleteExercise(after index: Int, selectedExerciseIndex: inout Int?) {
         // Find the next incomplete exercise starting after the given index
         if let nextExerciseIndex = template.exercises.indices.first(where: { $0 > index && !template.exercises[$0].isCompleted }) {
-            //setAvgRPE(selectedIndex: selectedExerciseIndex)
             selectedExerciseIndex = nextExerciseIndex
         } else if let anyExerciseIndex = template.exercises.firstIndex(where: { !$0.isCompleted } ) {
-            //setAvgRPE(selectedIndex: selectedExerciseIndex)
             selectedExerciseIndex = anyExerciseIndex
         } else {
             // No more incomplete exercises, finish the workout
@@ -121,20 +113,6 @@ final class WorkoutVM: ObservableObject {
             return
         }
     }
-    /*
-    private func setAvgRPE(selectedIndex: Int?) {
-        guard let selectedIndex = selectedIndex else { return }
-        
-        if var exercise = template.exercises[safe: selectedIndex], let startDate = workoutsStartDate, exercise.isCompleted {
-            print("Last set completed of \(exercise.name)")
-            
-            let hadNewPR = updates.prExerciseIDs.contains(exercise.id)
-            
-            exercise.setRPE(hadNewPR: hadNewPR, startDate: startDate)
-            template.exercises[selectedIndex] = exercise
-        }
-    }
-    */
 
     private func showCompletionAlert() {
         completionDuration = secondsElapsed
@@ -191,7 +169,7 @@ final class WorkoutVM: ObservableObject {
         
         // Save this to userData
         userData.sessionTracking.activeWorkout = workoutInProgress
-        userData.saveToFileImmediate()
+        userData.saveToFile()
     }
 
     @MainActor

@@ -16,10 +16,10 @@ struct ExerciseDetailOptions: View {
     @State private var replacedExercises: [String] = []
     @State private var showRestTimeEditor: Bool = false
     @State private var showWarmupSets: Bool = false
-    var onReplaceExercise: () -> Void
-    var onRemoveExercise: () -> Void
-    var onClose: () -> Void
-    var onSave: () -> Void
+    let onReplaceExercise: () -> Void
+    let onRemoveExercise: () -> Void
+    let onClose: () -> Void
+    let onSave: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -70,10 +70,11 @@ struct ExerciseDetailOptions: View {
                 onSave()
             })
         }
-        .padding()
-        .background(Color(UIColor.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(radius: 5)
+        .cardContainer(
+            cornerRadius: 8,
+            shadowRadius: 5,
+            backgroundColor: Color(UIColor.secondarySystemBackground)
+        )
     }
 }
 

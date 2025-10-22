@@ -9,6 +9,7 @@ import SwiftUI
 struct SetMetricEditor: View {
     @Binding var planned: SetMetric
     @Binding var showing: TimeOrSpeed.InputKey?
+    @State private var localText: String = ""
     let hideTOSMenu: Bool
     let load: SetLoad
     let style: TextFieldVisualStyle
@@ -32,17 +33,46 @@ struct SetMetricEditor: View {
 
     var body: some View {
         switch planned {
-        case .reps:
-            TextField("reps", text: repsBinding)
-                .keyboardType(.numberPad)
-                .multilineTextAlignment(.center)
+        case .reps(let r):
+            TextField("reps", text: Binding<String>(
+                get: { localText.isEmpty ? (r > 0 ? String(r) : "") : localText },
+                set: { newValue in
+                    let filtered = InputLimiter.filteredReps(newValue)
+                    localText = filtered
+                    let r = Int(filtered) ?? 0
+                    let newPlanned: SetMetric = .reps(r)
+                    planned = newPlanned
+                    onValidityChange?(validate(planned: planned))
+                }
+            ))
+            .keyboardType(.numberPad)
+            .multilineTextAlignment(.center)
 
-        case .hold:
-            TimeEntryField(text: holdBinding, style: style)
+        case .hold(let t):
+            TimeEntryField(
+                text: Binding<String>(
+                    get: { return localText.isEmpty ? t.fieldString : localText },
+                    set: { newValue in
+                        localText = newValue
+                        let ts = TimeSpan.seconds(from: newValue)
+                        let newPlanned: SetMetric = .hold(ts)
+                        planned = newPlanned
+                        onValidityChange?(validate(planned: planned))
+                    }
+                ),
+                style: style
+            )
 
-        case .cardio:
+        case .cardio(let tos):
             TimeSpeedField(
-                tos: cardioBinding,
+                tos: Binding<TimeOrSpeed>(
+                    get: { return tos },
+                    set: { newValue in
+                        let newPlanned: SetMetric = .cardio(newValue)
+                        planned = newPlanned
+                        onValidityChange?(validate(planned: planned))
+                    }
+                ),
                 showing: $showing,
                 distance: load.distance ?? Distance(km: 0),
                 hideMenuButton: hideTOSMenu,
@@ -51,54 +81,6 @@ struct SetMetricEditor: View {
         }
     }
 
-    private var repsBinding: Binding<String> {
-        Binding<String>(
-            get: {
-                if let r = planned.repsValue { return r > 0 ? String(r) : "" }
-                return ""
-            },
-            set: { newValue in
-                let filtered = InputLimiter.filteredReps(newValue)
-                let r = Int(filtered) ?? 0
-                let newPlanned: SetMetric = .reps(r)
-                planned = newPlanned
-                onValidityChange?(validate(planned: planned))
-            }
-        )
-    }
-
-    private var holdBinding: Binding<String> {
-        Binding<String>(
-            get: {
-                if let ts = planned.holdTime { return ts.fieldString }
-                return ""
-            },
-            set: { newValue in
-                let ts = TimeSpan.seconds(from: newValue)
-                let newPlanned: SetMetric = .hold(ts)
-                planned = newPlanned
-                onValidityChange?(validate(planned: planned))
-            }
-        )
-    }
-    // TODO: use text or else 0:00 will always be present
-    // Cardio binding uses your TimeSpeedField component
-    private var cardioBinding: Binding<TimeOrSpeed> {
-        Binding<TimeOrSpeed>(
-            get: {
-                if let tos = planned.timeSpeed { return tos }
-                // Fallback default if planned isn’t cardio yet
-                let defaultTOS = TimeOrSpeed(time: TimeSpan(seconds: 0), distance: load.distance ?? Distance(km: 0))
-                return defaultTOS
-            },
-            set: { newValue in
-                let newPlanned: SetMetric = .cardio(newValue)
-                planned = newPlanned
-                onValidityChange?(validate(planned: planned))
-            }
-        )
-    }
-    
     private func validate(planned: SetMetric) -> Bool {
         switch planned {
         case .reps(let r):     return r > 0

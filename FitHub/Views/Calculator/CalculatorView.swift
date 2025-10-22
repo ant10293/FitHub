@@ -73,7 +73,6 @@ struct CalculatorView: View {
                     MacroCalculator(userData: ctx.userData)
                 }
             }
-            
         }
     }
     

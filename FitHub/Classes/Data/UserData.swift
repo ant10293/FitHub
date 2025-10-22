@@ -25,8 +25,12 @@ final class UserData: ObservableObject, Codable {
     @Published var isWorkingOut: Bool = false
     @Published var disableTabView: Bool = false
     @Published var isGeneratingWorkout: Bool = false // set it to true before starting, and set it back to false after the background save completes
+    
     @Published var showingChangelog: Bool = false
     @Published var currentChangelog: WorkoutChangelog?
+    
+    @Published var workoutReductions: WorkoutReductions?
+    @Published var showingGenerationWarning: Bool = false
     
     init(){}
 
@@ -67,7 +71,7 @@ final class UserData: ObservableObject, Codable {
     
     // MARK: saving logic
     /// Call this when you really need *everything* persisted (debounced).
-    func saveToFile(delay: TimeInterval = 0.8) {
+    func saveToFile(delay: TimeInterval = 0.2) {
         JSONFileManager.shared.debouncedSave(self, to: UserData.jsonKey, delay: delay)
     }
 
@@ -307,16 +311,10 @@ extension UserData {
         // Remove all related notifications in one go
         let ids = workoutPlans.trainerTemplates.flatMap(\.notificationIDs)
         NotificationManager.remove(ids: ids)
-
+        
         return saved
     }
 
-    // Add this method to UserData:
-    func showChangelog(_ changelog: WorkoutChangelog) {
-        currentChangelog = changelog
-        showingChangelog = true
-    }
-    
     func generateWorkoutPlan(
         exerciseData: ExerciseData,
         equipmentData: EquipmentData,
@@ -364,7 +362,13 @@ extension UserData {
                 
                 // 🆕 SHOW CHANGELOG IF IT'S NEXT WEEK
                 if nextWeek, let changelog = output.changelog {
-                    self.showChangelog(changelog)
+                    self.currentChangelog = changelog
+                    self.showingChangelog = true
+                }
+                
+                if !nextWeek, let reductions = output.reductions {
+                    self.workoutReductions = reductions
+                    self.showingGenerationWarning = true
                 }
                                 
                 onDone()

@@ -99,6 +99,9 @@
 		65AB47F12EA043B9001BEAFE /* LabelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47F02EA043B9001BEAFE /* LabelButton.swift */; };
 		65AB47F52EA31362001BEAFE /* WarningFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47F42EA31362001BEAFE /* WarningFooter.swift */; };
 		65AB47F72EA342B4001BEAFE /* ExerciseHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47F62EA342B4001BEAFE /* ExerciseHistory.swift */; };
+		65AB47F92EA6E008001BEAFE /* GenerationWarning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47F82EA6E008001BEAFE /* GenerationWarning.swift */; };
+		65AB47FB2EA709A5001BEAFE /* PoolReduction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47FA2EA709A5001BEAFE /* PoolReduction.swift */; };
+		65AB47FD2EA73AF4001BEAFE /* UnitCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47FC2EA73AF4001BEAFE /* UnitCategory.swift */; };
 		65AC86472E261D040034FAA3 /* MuscleSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AC86462E261D040034FAA3 /* MuscleSelection.swift */; };
 		65AC86492E2836070034FAA3 /* ExEquipImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AC86482E2836070034FAA3 /* ExEquipImage.swift */; };
 		65C5DC552DEFB46400B09AD2 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC542DEFB46400B09AD2 /* Core.swift */; };
@@ -340,6 +343,9 @@
 		65AB47F02EA043B9001BEAFE /* LabelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelButton.swift; sourceTree = "<group>"; };
 		65AB47F42EA31362001BEAFE /* WarningFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningFooter.swift; sourceTree = "<group>"; };
 		65AB47F62EA342B4001BEAFE /* ExerciseHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseHistory.swift; sourceTree = "<group>"; };
+		65AB47F82EA6E008001BEAFE /* GenerationWarning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationWarning.swift; sourceTree = "<group>"; };
+		65AB47FA2EA709A5001BEAFE /* PoolReduction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolReduction.swift; sourceTree = "<group>"; };
+		65AB47FC2EA73AF4001BEAFE /* UnitCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitCategory.swift; sourceTree = "<group>"; };
 		65AC86462E261D040034FAA3 /* MuscleSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleSelection.swift; sourceTree = "<group>"; };
 		65AC86482E2836070034FAA3 /* ExEquipImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExEquipImage.swift; sourceTree = "<group>"; };
 		65C5DC542DEFB46400B09AD2 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
@@ -529,6 +535,7 @@
 				65039B712E81D94C007A31E1 /* TimeSpan.swift */,
 				65039B732E81D983007A31E1 /* Speed.swift */,
 				65039B752E81D98B007A31E1 /* Distance.swift */,
+				65AB47FC2EA73AF4001BEAFE /* UnitCategory.swift */,
 			);
 			path = Unit;
 			sourceTree = "<group>";
@@ -752,6 +759,7 @@
 				65CD3C9B2DD7C43E00C2B671 /* WorkoutGenerator.swift */,
 				6550ADCA2E71169A002072C1 /* ChangeLog.swift */,
 				65A0D1D62E3AF28A008466D8 /* ExerciseSelector.swift */,
+				65AB47FA2EA709A5001BEAFE /* PoolReduction.swift */,
 			);
 			path = Generator;
 			sourceTree = "<group>";
@@ -1113,6 +1121,7 @@
 				65CD3C192DD3C84F00C2B671 /* HomeView.swift */,
 				65CD3C1C2DD3C84F00C2B671 /* StatsView.swift */,
 				65CD3C1E2DD3C84F00C2B671 /* UserProfileView.swift */,
+				65AB47F82EA6E008001BEAFE /* GenerationWarning.swift */,
 				653BF8AB2E5AC732005A07EA /* PlateVisualization */,
 				6531362C2E53FB7600EECCA5 /* Editor */,
 				6531362B2E53FB2500EECCA5 /* Subscription */,
@@ -1302,12 +1311,14 @@
 				65CD3C302DD3C84F00C2B671 /* TimerManager.swift in Sources */,
 				65CD3C312DD3C84F00C2B671 /* ToastManager.swift in Sources */,
 				65CFBF9F2E1DC6B800CD521E /* MuscleEngagementEditor.swift in Sources */,
+				65AB47F92EA6E008001BEAFE /* GenerationWarning.swift in Sources */,
 				65CD3C332DD3C84F00C2B671 /* WorkoutVM.swift in Sources */,
 				65039B6E2E81D936007A31E1 /* Mass.swift in Sources */,
 				65CD3C342DD3C84F00C2B671 /* AddCategoryPicker.swift in Sources */,
 				65CD3C352DD3C84F00C2B671 /* AdjustmentsView.swift in Sources */,
 				65CD3C362DD3C84F00C2B671 /* BFCalculator.swift in Sources */,
 				6550ADBC2E6BBCD1002072C1 /* ResumeWorkoutOverlay.swift in Sources */,
+				65AB47FB2EA709A5001BEAFE /* PoolReduction.swift in Sources */,
 				657067A02E4172300063090C /* DistributionEditor.swift in Sources */,
 				6550ADDA2E775FD1002072C1 /* Engagement.swift in Sources */,
 				65CD3C372DD3C84F00C2B671 /* BMICalculator.swift in Sources */,
@@ -1455,6 +1466,7 @@
 				65039B912E970D12007A31E1 /* SetDetailSettings.swift in Sources */,
 				6550ADD72E775A72002072C1 /* Submuscle.swift in Sources */,
 				65CD3C7A2DD3C84F00C2B671 /* WorkoutPlan.swift in Sources */,
+				65AB47FD2EA73AF4001BEAFE /* UnitCategory.swift in Sources */,
 				65CD3C7B2DD3C84F00C2B671 /* CompletedDetails.swift in Sources */,
 				653136232E53F7EB00EECCA5 /* RepsAndSets.swift in Sources */,
 				65CD3C7C2DD3C84F00C2B671 /* CompletedWorkouts.swift in Sources */,

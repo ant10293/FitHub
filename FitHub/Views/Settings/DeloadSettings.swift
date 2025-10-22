@@ -56,7 +56,7 @@ struct DeloadSettings: View {
                 Stepper(
                     "\(userData.settings.periodUntilDeload) weeks",
                     value: $userData.settings.periodUntilDeload,
-                    in: 1...8
+                    in: 2...12
                 )
             } header: {
                 Text("Stall Window")
@@ -77,14 +77,14 @@ struct DeloadSettings: View {
     
     private func reset() {
         userData.settings.allowDeloading = true
-        userData.settings.periodUntilDeload = 2
+        userData.settings.periodUntilDeload = 4
         userData.settings.deloadIntensity = 85
         deloadIntensity = 85
     }
     
     private var isDefault: Bool {
         return userData.settings.allowDeloading
-        && userData.settings.periodUntilDeload == 2
+        && userData.settings.periodUntilDeload == 4
         && userData.settings.deloadIntensity == 85
     }
 }

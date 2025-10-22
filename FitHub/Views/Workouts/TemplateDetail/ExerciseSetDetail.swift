@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+// FIXME: CRITICAL ERRORS when moving exercises. It's because of TimeEntryField
+// cannot allow set deletion if keyboard is open
+// FIXME: 0.5 cannot be typed without later converting to 5, using 0.** causes issues with time speed conversion (sync issue?)
 
 // MARK: - ExerciseSetDetail (SetMetric-aware)
 struct ExerciseSetDetail: View {
@@ -38,7 +41,7 @@ struct ExerciseSetDetail: View {
         _exercise          = exercise
         _isCollapsed       = isCollapsed
         _isShowingOptions  = isShowingOptions
-        
+                
         let wrappedEx = exercise.wrappedValue
         _showSupersetOptions = State(initialValue: wrappedEx.isSupersettedWith != nil)
         
@@ -75,26 +78,24 @@ struct ExerciseSetDetail: View {
 
     // MARK: - Set rows
     @ViewBuilder private var setDetails: some View {
-        ForEach(exercise.setDetails.indices, id: \.self) { i in
-            let setBinding = $exercise.setDetails[i]
-            let setNumber = i + 1
-            
+        ForEach($exercise.setDetails) { $set in
+            let setNumber = set.setNumber
+
             SetInputRow(
                 setNumber: setNumber,
                 exercise: exercise,
-                load: exercise.setDetails[i].load,  
-                metric: exercise.setDetails[i].planned,
+                load: set.load,
+                metric: set.planned,
                 loadField: {
-                    // Keep your chrome; just embed the editor
-                    SetLoadEditor(load: setBinding.load)
+                    SetLoadEditor(load: $set.load)
                         .textFieldStyle(.roundedBorder)
                 },
                 metricField: {
                     SetMetricEditor(
-                        planned: setBinding.planned,
+                        planned: $set.planned,
                         showing: $tosInputKey,
                         hideTOSMenu: setNumber != 1,
-                        load: exercise.setDetails[i].load
+                        load: set.load
                     )
                     .textFieldStyle(.roundedBorder)
                 }
@@ -175,7 +176,7 @@ struct ExerciseSetDetail: View {
     @ViewBuilder private var exerciseDetailOptions: some View {
         ZStack {
             Color.clear.contentShape(Rectangle())
-                .onTapGesture { withAnimation { isShowingOptions = false } }
+                .onTapGesture { isShowingOptions = false }
             VStack {
                 HStack {
                     Spacer()
@@ -187,8 +188,6 @@ struct ExerciseSetDetail: View {
                         onClose: { isShowingOptions = false },
                         onSave: { perform(.saveTemplate) }
                     )
-                    .onTapGesture { }
-                    .transition(.slide)
                 }
                 Spacer()
             }

@@ -80,7 +80,6 @@ final class CSVLoader {
 
 
 extension CSVLoader {
-    
     static func getMaxValues(for exercise: Exercise, key: CSVKey, value: Double, userData: UserData) -> [String: PeakMetric] {
         guard let url = exercise.url else { return [:] }
 
@@ -213,6 +212,19 @@ extension CSVLoader {
         let finalReps = (2 * predictedCombined) / 3
         //print("Predicted Reps for \(exercise) - BW: \(predictedReps_BW), Age: \(predictedReps_Age), Final: \(finalReps)")
         return .maxReps(finalReps)
+    }
+    
+    static func calculateMaxValue(for exercise: Exercise, userData: UserData) -> PeakMetric? {
+        guard let url = exercise.url else { return nil }
+        
+        switch exercise.getPeakMetric(metricValue: 0) {
+        case .oneRepMax:
+            return calculateFinal1RM(userData: userData, exercise: url)
+        case .maxReps:
+            return calculateFinalReps(userData: userData, exercise: url)
+        default:
+            return nil
+        }
     }
     
     static func calculateExercisePercentile(for exercise: Exercise, maxValue: Double, userData: UserData) -> Int? {

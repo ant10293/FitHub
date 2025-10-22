@@ -41,6 +41,14 @@ enum FavoriteState: String, CaseIterable {
         return userData.evaluation.favoriteExercises.contains(exercise.id) ? .favorite
         : (userData.evaluation.dislikedExercises.contains(exercise.id) ? .disliked : .unmarked)
     }
+    
+    var systemImageName: (String?, Color?) {
+        switch self {
+        case .favorite: ("heart.fill", .red)
+        case .disliked: ("hand.thumbsdown.fill", .blue)
+        case .unmarked: (nil, nil)
+        }
+    }
 }
 
 enum UpperLower: String, Codable, CaseIterable {
@@ -119,8 +127,9 @@ enum RepsInstruction: String, Codable, CaseIterable {
 
 enum WeightInstruction: String, Codable, CaseIterable {
     case perDumbbell = "Per Dumbbell"
-    case perStack = "Per Stack"
-    case perPeg = "Per Peg"
+    case perStack = "Per Stack" // cable loaded
+    case perPeg = "Per Peg" // iso-lateral chest press
+    case perHandle = "Per Handle" // farmer's walk handles
     // case perSleeve = "Per Sleeve"
 }
 

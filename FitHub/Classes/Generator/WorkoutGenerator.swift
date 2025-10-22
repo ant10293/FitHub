@@ -17,6 +17,7 @@ final class WorkoutGenerator {
     var overloadingExercises: Set<Exercise.ID> = []
     var resetExercises: Set<Exercise.ID> = []
     var maxUpdates: Set<Exercise.ID> = []
+    var reductions: WorkoutReductions = .init()
     
     // •–––––––––  Inputs  –––––––––•
     struct Input {
@@ -36,6 +37,7 @@ final class WorkoutGenerator {
         var logFileName: String?
         var updatedMax: [PerformanceUpdate]?
         var changelog: WorkoutChangelog? // NEW
+        var reductions: WorkoutReductions?
     }
     
     struct GenerationParameters {
@@ -57,6 +59,12 @@ final class WorkoutGenerator {
         Logger.shared.add("Current Date: \(Format.fullDate(from: creationDate))", timestamp: false, lineBreak: .before)
         Logger.shared.add("Starting workout generation...", timestamp: true, lineBreak: .both)
 
+        
+        //  Derive all knobs the old method used
+        let params = Logger.shared.time("2) deriveParameters", indentTabs: 1) {
+            deriveParameters(input: input)
+        }
+        
         // TOTAL (compute only; we time flush separately)
         let totalTok = Logger.shared.start("TOTAL generation time", lineBreak: .before)
 
@@ -66,6 +74,7 @@ final class WorkoutGenerator {
             data: input.exerciseData,
             equipment: input.equipmentData,
             selectedEquipment: input.user.evaluation.equipmentSelected,
+            days: params.days,
             favorites: Set(input.user.evaluation.favoriteExercises),
             disliked: Set(input.user.evaluation.dislikedExercises),
             resistance: input.user.workoutPrefs.resistance,
@@ -75,11 +84,6 @@ final class WorkoutGenerator {
             seed: UInt64(max(1, Int(creationDate.timeIntervalSince1970))) // deterministic per run
         )
         Logger.shared.end(selTok)
-
-        //  Derive all knobs the old method used
-        let params = Logger.shared.time("2) deriveParameters", indentTabs: 1) {
-            deriveParameters(input: input)
-        }
         
         // Early-exit guard
         guard !params.days.isEmpty else {
@@ -137,7 +141,8 @@ final class WorkoutGenerator {
             workoutsCreationDate: creationDate,
             logFileName: fileName,
             updatedMax: csvUpdates.updatedMax,
-            changelog: changelog
+            changelog: changelog,
+            reductions: reductions
         )
     }
 }
@@ -263,29 +268,38 @@ extension WorkoutGenerator {
 
         // Selection
         let selectTok = Logger.shared.start("[\(dayName)] select exercises", indentTabs: 2)
-        let exercises: [Exercise] = {
-            // TODO: this must also add exercises if desired duration changed
-            if input.keepCurrentExercises, dayHasExercises {
+        // returns both
+        let (exercises, dayReductions): ([Exercise], PoolReduction?) = {
+            // Reuse existing?
+            let existing: [Exercise]? = (input.keepCurrentExercises && dayHasExercises) ? savedDay.exercises : nil
+            if let existing, existing.count >= params.exercisesPerWorkout {
                 Logger.shared.add("\(dayName) Workout: Reusing saved exercises.", lineBreak: .before, numLines: 3)
-                return savedDay.exercises
+                // no new selection happened → reductions empty
+                return (existing, nil)
             }
 
             Logger.shared.add("\(dayName) Workout: Selecting new exercises.", lineBreak: .before, numLines: 3)
             print("[\(dayName)] \(categoriesForDay)")
-            
+
             // Selector enforces exact `exercisesPerWorkout` when the pool allows.
-            let result = selector.select(
+            let (picked, dayReductions) = selector.select(
                 dayIndex: dayIndex,
                 categories: categoriesForDay,
                 total: params.exercisesPerWorkout,
                 rAndS: params.repsAndSets,
-                dayLabel: dayName
+                dayLabel: dayName,
+                existing: existing
             )
-            return result
+            return (picked, dayReductions)
         }()
-        
+
         Logger.shared.end(selectTok, suffix: "\(exercises.count) selected")
 
+        let templateID: UUID = UUID()
+        if let dayReductions {
+            reductions.record(templateID: templateID, newPool: dayReductions)
+        }
+        
         if exercises.isEmpty {
             Logger.shared.add("No exercises selected. Check the selection criteria and available exercises.")
             return nil
@@ -326,17 +340,18 @@ extension WorkoutGenerator {
         Logger.shared.end(detailTok, suffix: "x\(exercises.count)")
         
         // [3] Build the template
-        var tpl = WorkoutTemplate(
+        let tpl = WorkoutTemplate(
+            id: templateID,
             name: "\(dayName) Workout",
             exercises: detailedExercises,
             categories: categoriesForDay,
             dayIndex: dayIndex,
-            date: workoutDate
+            date: workoutDate,
+            restPeriods: params.repsAndSets.rest
         )
 
         // [5] Completion-time estimate
         let etaTok = Logger.shared.start("[\(dayName)] estimate completion time", indentTabs: 2)
-        tpl.setEstimatedCompletionTime(rest: params.repsAndSets.rest)
         Logger.shared.end(etaTok)
         
         return tpl
@@ -379,13 +394,16 @@ extension WorkoutGenerator {
     ) -> Exercise {
         var ex  = exercise
         
-        if let max = input.exerciseData.peakMetric(for: ex.id), max.actualValue > 0 {
-            ex.draftMax = max
-        } else if let estMax = input.exerciseData.estimatedPeakMetric(for: ex.id), estMax.actualValue > 0 {
-            ex.draftMax = estMax
-        } else if let calcMax = ex.calculateCSVMax(userData: input.user) {
-            ex.draftMax = calcMax
-            maxUpdated(PerformanceUpdate(exerciseId: ex.id, value: calcMax))
+        // Only try to fetch/compute if we don't already have a valid draftMax
+        if ex.draftMax.valid == nil {
+            if let max = input.exerciseData.peakMetric(for: ex.id), max.actualValue > 0 {
+                ex.draftMax = max
+            } else if let estMax = input.exerciseData.estimatedPeakMetric(for: ex.id), estMax.actualValue > 0 {
+                ex.draftMax = estMax
+            } else if let calcMax = ex.calculateCSVMax(userData: input.user) {
+                ex.draftMax = calcMax
+                maxUpdated(PerformanceUpdate(exerciseId: ex.id, value: calcMax))
+            }
         }
 
         // —— Set details ————————————————————————————

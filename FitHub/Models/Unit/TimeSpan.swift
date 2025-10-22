@@ -38,6 +38,9 @@ struct TimeSpan: Codable, Equatable, Hashable {
         self.seconds = TimeSpan.hrMinToSec(hours: h, minutes: m).inSeconds
     }
     mutating func setSec(seconds s: Int) { self.seconds = s } /// Convenience: update using the caller’s preferred unit system.
+
+    // MARK: – Unit
+    var unit: UnitCategory { .time }
 }
 
 extension TimeSpan {

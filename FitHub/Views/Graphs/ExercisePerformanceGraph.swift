@@ -42,7 +42,7 @@ struct ExercisePerformanceGraph: View {
                                     )
                                     .foregroundStyle(record.id == performance?.currentMax?.id ? .green : .blue)
                                     .annotation(position: .top) {
-                                        recordBadge(record)
+                                        Text(recordBadge(record))
                                             .font(.caption)
                                             .foregroundStyle(record.id == performance?.currentMax?.id ? .green : .blue)
                                             .padding(1)
@@ -89,17 +89,10 @@ struct ExercisePerformanceGraph: View {
         }
     }
     
-    private func recordBadge(_ record: MaxRecord) -> Text {
-        let rhs = Text(record.value.displayString)
-        if let lxm = record.loadXmetric {
-            return (
-                /*lxm.formattedText(simple: true) +
-                Text("\n") +*/
-                Text("≈ ") + rhs
-            )
-        } else {
-            return rhs
-        }
+    private func recordBadge(_ record: MaxRecord) -> String {
+        let rhs = record.value.displayString
+        let prefix = (record.loadXmetric != nil) ? "≈ " : ""
+        return prefix + rhs
     }
     
     // MARK: – Derived helpers

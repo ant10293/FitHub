@@ -103,7 +103,7 @@ struct TemplateNavigator<Content: View>: View {
         case .active: return .constant(sel.template)
         }
     }
-     
+
     @ViewBuilder
     private var templateDetailView: some View {
         if let sel = currentTemplate, let binding = templateBinding(for: sel) {
@@ -120,8 +120,7 @@ struct TemplateNavigator<Content: View>: View {
         StartedWorkoutView(
             viewModel: WorkoutVM(
                 template: route.sel.template,
-                activeWorkout: userData.sessionTracking.activeWorkout,
-                workoutsStartDate: userData.workoutPlans.workoutsStartDate
+                activeWorkout: userData.sessionTracking.activeWorkout
             ),
             onExit: {
                 workoutRoute = nil

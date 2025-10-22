@@ -6,6 +6,7 @@ struct TrainerView: View {
 
     var body: some View {
         VStack {
+            // use an enum instead?
             if !ctx.userData.setup.questionsAnswered {
                 Questionnaire()
             } else if !ctx.userData.setup.isEquipmentSelected {
@@ -18,7 +19,6 @@ struct TrainerView: View {
         }
     }
 }
-
 
 
 

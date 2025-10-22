@@ -12,15 +12,17 @@ struct ContentView: View {
         Group {
             if ctx.userData.setup.setupState == .finished {
                 MainAppView(userData: ctx.userData, showResumeWorkoutOverlay: $showResumeWorkoutOverlay)
-                    .onReceive(notifications.$isAuthorized) { ctx.userData.settings.allowedNotifications = $0 }
+                    //.onReceive(notifications.$isAuthorized) { ctx.userData.settings.allowedNotifications = $0 }
                     // should also clear passed planned dates and notis
                     // need to do this on a background thread
                     .onAppear {
-                        notifications.requestIfNeeded()
+                        notifications.requestIfNeeded(onUpdate: { allowed in
+                            ctx.userData.settings.allowedNotifications = allowed
+                        })
                         NotificationManager.printAllPendingNotifications()
                         ctx.adjustments.loadAllAdjustments(for: ctx.exercises.allExercises, allEquipment: ctx.equipment.allEquipment)
                         if ctx.userData.sessionTracking.activeWorkout != nil { showResumeWorkoutOverlay = true }
-                        if ctx.userData.setup.infoCollected { determineUserStrengthLevel() }
+                        if ctx.userData.setup.infoCollected { determineStrengthAndSeedMaxes() }
                         ctx.userData.checkAndUpdateAge()
                         generateTemplate()
                     }
@@ -38,44 +40,55 @@ struct ContentView: View {
                 }
             }
         }
-        .onChange(of: scenePhase) { _, newPhase in
+        .onChange(of: scenePhase) { oldPhase, newPhase in
             guard !ctx.userData.isWorkingOut else { return }
-            if newPhase == .background {
-                ctx.userData.saveToFileImmediate()
+            if oldPhase == .active, newPhase == .inactive {
+                ctx.userData.saveToFile()
             }
         }
     }
     
-    func generateTemplate() {
+    private func generateTemplate() {
         let plannedWorkoutDates = ctx.userData.getAllPlannedWorkoutDates()
         if checkAndResetWorkoutStreak(plannedWorkoutDates: plannedWorkoutDates), ctx.userData.settings.progressiveOverload {
             generateNewWorkoutTemplates(plannedWorkoutDates: plannedWorkoutDates)
        }
     }
+    
+    private func determineStrengthAndSeedMaxes() {
+        let (skipped, oldLvl) = determineUserStrengthLevel()
+        // only if strength level changed. already seeded after assessment
+        if ctx.userData.evaluation.strengthLevel != oldLvl {
+            ctx.exercises.seedEstimatedMaxes(skipped: skipped, userData: ctx.userData)
+        }
+    }
 
     //  MARK: - Strength / Weakness Assessment
     // add an option to disable this
-    func determineUserStrengthLevel() {
+    func determineUserStrengthLevel() -> (Set<Exercise.ID>, StrengthLevel?) {
         // --- Guard: run at most once every 30 days -----------------------------
         let now = Date()
         if let last = ctx.userData.evaluation.determineStrengthLevelDate,
            CalendarUtility.shared.daysBetween(last, and: now) < 30 {
             print("⏩ Skipping determination; only \(Int(now.timeIntervalSince(last)/86400)) days since last run.")
-            return
+            return ([], nil)
         }
+        
+        let ogLvl: StrengthLevel = ctx.userData.evaluation.strengthLevel
 
         // --- Pass 1: tally categories -----------------------------------------
         var globalCounts: [StrengthLevel: Int] = [:]
         var muscleCounts: [Muscle: [StrengthLevel: Int]] = [:]
-        
      
         let (basePathAge, basePathBW) = CSVLoader.getBasePaths(gender: ctx.userData.physical.gender)
 
+        var skippedIDs: Set<UUID> = []
         for ex in ctx.exercises.allExercises {
-            guard let maxValue = ctx.exercises.peakMetric(for: ex.id)?.actualValue, maxValue > 0,
-                    let url = ex.url
-            else {
-                print("⚠️ \(ex.name) skipped – no PR recorded"); continue
+            guard let url = ex.url else { continue }
+            guard let maxValue = ctx.exercises.peakMetric(for: ex.id)?.actualValue, maxValue > 0 else {
+                print("⚠️ \(ex.name) skipped – no PR recorded")
+                skippedIDs.insert(ex.id)
+                continue
             }
             
             let level = CSVLoader.calculateFitnessCategory(
@@ -124,6 +137,8 @@ struct ContentView: View {
         print("✓ strengths:", strengthsPerMuscle)
         print("✓ weaknesses:", weaknessesPerMuscle)
         print("✓ next evaluation eligible after 30 days.")
+        
+        return (skippedIDs, ogLvl)
     }
     
     private func generateNewWorkoutTemplates(plannedWorkoutDates: [Date]) {

@@ -58,9 +58,31 @@ struct TimeOrSpeed: Codable, Equatable, Hashable {
             time = Speed.timeFromSpeed(newSpeed, distance: distance)
         }
     }
+    
+    // MARK: – Unit
+    var unit: UnitCategory {
+        switch showing {
+        case .speed: return .speed
+        case .time: return .time
+        }
+    }
 }
 
 extension TimeOrSpeed {
+    var formattedText: Text {
+        switch showing {
+        case .speed: return speed.formattedText
+        case .time: return Text(time.displayStringCompact)
+        }
+    }
+    
+    var displayString: String {
+        switch showing {
+        case .speed: return speed.displayString
+        case .time: return time.displayStringCompact
+        }
+    }
+
     var label: String {
         switch showing {
         case .speed: return UnitSystem.current.speedUnit

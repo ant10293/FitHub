@@ -42,8 +42,6 @@ struct Exercise: Identifiable, Hashable, Codable {
     var isWarmUp: Bool { currentSet <= warmUpSets }
     var currentSetIndex: Int { currentSet - 1 }
         
-    //var currentWeekAvgRPE: RPEentry?
-    //var previousWeeksAvgRPE: RPEentries?
     var isDeloading: Bool = false
     var weeksStagnated: Int = 0
     var overloadProgress: Int = 0
@@ -74,20 +72,17 @@ extension Exercise {
     
     func fullImageView(favState: FavoriteState) -> some View {
         fullImage
-            .resizable()
-            .scaledToFit()
-            .clipShape(RoundedRectangle(cornerRadius: 6))
-            .overlay(alignment: .bottomTrailing, content: {
-                if favState == .favorite {
-                    Image(systemName: "heart.fill")
-                        .imageScale(.small)
-                        .foregroundStyle(.red)
-                } else if favState == .disliked {
-                    Image(systemName: "hand.thumbsdown.fill")
-                        .imageScale(.small)
-                        .foregroundStyle(.blue)
-                }
-            })
+        .resizable()
+        .scaledToFit()
+        .clipShape(RoundedRectangle(cornerRadius: 6))
+        .overlay(alignment: .bottomTrailing) {
+            let (image, color) = favState.systemImageName
+            if let image, let color {
+                Image(systemName: image)
+                    .imageScale(.small)
+                    .foregroundStyle(color)
+            }
+        }
     }
     
     func getPeakMetric(metricValue: Double) -> PeakMetric {
@@ -120,9 +115,7 @@ extension Exercise {
 
         return instruction
     }
-    
-    //var performanceUnit: String? { getPeakMetric(metricValue: 0).unitLabel }
-    
+        
     var setsSubtitle: Text {
         let (label, range) = setMetricRangeLabeled
         return Text("Sets: ") + Text("\(workingSets), ").fontWeight(.light)
@@ -291,52 +284,6 @@ extension Exercise {
         
         return true
     }
-    /*
-    mutating func setRPE(hadNewPR: Bool, startDate: Date) {
-        if hadNewPR {
-            //print("new pr set this week. resetting rpe.")
-            currentWeekAvgRPE = nil
-            previousWeeksAvgRPE = nil
-            return
-        }
-        
-        let (avgPeakMetric, avgRPE) = avgPeakAndRPE
-        guard let avgPeak = avgPeakMetric, let avgRPE = avgRPE else { return }
-        let new = RPEentry(id: startDate, rpe: avgRPE, completion: avgPeak)
-        
-        if let current = currentWeekAvgRPE, current.id != startDate {
-            //print("existing rpe found. Setting \(current) as last week rpe.")
-            if previousWeeksAvgRPE == nil { previousWeeksAvgRPE = RPEentries(entries: []) }
-            previousWeeksAvgRPE?.entries.removeAll { $0.id == current.id } // avoid duplicates, overwrite with newest
-            previousWeeksAvgRPE?.entries.append(current)
-            //if let prevList = previousWeeksAvgRPE { print("previous weeks rpes: \(prevList)") }
-        }
-        
-        // Ensure no same-week entry lives in 'previous'
-        previousWeeksAvgRPE?.entries.removeAll { $0.id == startDate }
-        
-        // Set/overwrite current week
-        currentWeekAvgRPE = new
-    }
-    
-    private var avgPeakAndRPE: (peak: PeakMetric?, rpe: Double?) {
-        let zero = getPeakMetric(metricValue: 0) 
-        let acc = setDetails.reduce(into: (pSum: 0.0, pCnt: 0, rSum: 0.0, rCnt: 0)) { a, s in
-            if let pm = s.completedPeakMetric(peak: zero) {
-                a.pSum += pm.actualValue          // adjust if your value prop differs
-                a.pCnt += 1
-            }
-            if let r = s.rpe {                    // Int? or Double? -> cast to Double
-                a.rSum += Double(r)
-                a.rCnt += 1
-            }
-        }
-
-        let peak = acc.pCnt > 0 ? getPeakMetric(metricValue: acc.pSum / Double(acc.pCnt)) : zero
-        let rpe  = acc.rCnt > 0 ? acc.rSum / Double(acc.rCnt) : nil
-        return (peak, rpe)
-    }
-    */
 }
 
 extension Exercise {

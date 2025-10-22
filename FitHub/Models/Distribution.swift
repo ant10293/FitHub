@@ -127,7 +127,6 @@ struct ExerciseDistribution: Codable, Hashable {
         }
         return out
     }
-
 }
 
 struct RestPeriods: Codable, Hashable {

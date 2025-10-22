@@ -36,6 +36,9 @@ struct Mass: Codable, Equatable, Hashable {
     mutating func set(_ value: Double) { /// Convenience: update using the caller’s preferred unit system.
         self.kg = UnitSystem.current == .imperial ? UnitSystem.LBtoKG(value) : value
     }
+    
+    // MARK: – Unit
+    var unit: UnitCategory { .weight }
 }
 
 extension Mass {

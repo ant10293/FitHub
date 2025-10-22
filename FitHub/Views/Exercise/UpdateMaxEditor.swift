@@ -39,6 +39,7 @@ struct UpdateMaxEditor: View {
 
 private struct NewPeakEntry: View {
     @Binding var newPeak: PeakMetric
+    @State private var localText: String = ""
     let focus: FocusState<Bool>.Binding   // <<< receive focus
     
     var body: some View {
@@ -68,9 +69,10 @@ private struct NewPeakEntry: View {
         switch newPeak {
         case .oneRepMax(let mass):
             return Binding<String>(
-                get: { mass.fieldString },
+                get: { localText.isEmpty ? mass.fieldString : localText },
                 set: { newValue in
                     let filtered = InputLimiter.filteredWeight(old: mass.fieldString, new: newValue)
+                    localText = filtered
                     let val = Double(filtered) ?? 0
                     newPeak = .oneRepMax(Mass(weight: val))
                 }
@@ -78,9 +80,10 @@ private struct NewPeakEntry: View {
             
         case .maxReps(let r):
             return Binding<String>(
-                get: { r > 0 ? String(r) : "" },
+                get: { localText.isEmpty ? (r > 0 ? String(r) : "") : localText  },
                 set: { newValue in
                     let filtered = InputLimiter.filteredReps(newValue)
+                    localText = filtered
                     let val = Int(filtered) ?? 0
                     newPeak = .maxReps(val)
                 }
@@ -88,8 +91,9 @@ private struct NewPeakEntry: View {
         
         case .maxHold(let h):
             return Binding<String>(
-                get: { h.fieldString },
+                get: { localText.isEmpty ? h.fieldString: localText },
                 set: { newValue in
+                    localText = newValue
                     let ts = TimeSpan.seconds(from: newValue)
                     newPeak = .maxHold(ts)
                 }
@@ -100,6 +104,7 @@ private struct NewPeakEntry: View {
                 get: { h30l.fieldString },
                 set: { newValue in
                     let filtered = InputLimiter.filteredWeight(old: h30l.fieldString, new: newValue)
+                    localText = filtered
                     let val = Double(filtered) ?? 0
                     newPeak = .hold30sLoad(Mass(weight: val))
                 }

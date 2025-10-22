@@ -26,10 +26,20 @@ struct SettingsView: View {
             //navigationLink("paintbrush", "Change Theme") { ChangeTheme(userData: ctx.userData) }
             
             DisclosureGroup(isExpanded: $isNotificationsExpanded) {
-                Toggle("Enable Notifications", isOn: notifications.toggleBinding)
-                .onChange(of: notifications.isAuthorized) { oldValue, newValue in
-                    ctx.userData.settings.allowedNotifications = newValue
-                }
+                VStack {
+                    Toggle("Workout Reminders", isOn: Binding<Bool>(
+                        get: { ctx.userData.settings.allowedNotifications },
+                        set: { newValue in
+                            ctx.userData.settings.allowedNotifications = newValue
+                            if newValue == false {
+                                NotificationManager.removeAllPending()
+                            }
+                        }
+                    ))
+                    if !notifications.isAuthorized, ctx.userData.settings.allowedNotifications {
+                        WarningFooter(message: "Must allow Notifications in Device Settings.")
+                    }
+                }               
             }
             label: {
                 HStack {

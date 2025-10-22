@@ -31,84 +31,10 @@ struct TemplateOverload: View {
                         .cardContainer(cornerRadius: 10, backgroundColor: Color(UIColor.secondarySystemBackground))
                     } else {
                         ForEach(processedExercises) { exercise in
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text(exercise.name)
-                                    .font(.headline)
-                                    .foregroundStyle(.primary)
-
-                                // FIXME: change header labels (e.g. Load: Weight, Distance - Metric: Reps, Time, Speed)
-                                // Headers (unchanged visuals)
-                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 10)], spacing: 5) {
-                                    Text("Set")
-                                        .font(.caption).fontWeight(.semibold).foregroundStyle(.gray)
-                                    Text("Load")
-                                        .font(.caption).fontWeight(.semibold).foregroundStyle(.gray)
-                                    Text("Reps")   // keep label "Reps" for identical visuals
-                                        .font(.caption).fontWeight(.semibold).foregroundStyle(.gray)
-                                }
-
-                                // Rows
-                                LazyVGrid(
-                                    columns: [
-                                        GridItem(.adaptive(minimum: 80), spacing: 10),
-                                        GridItem(.adaptive(minimum: 80), spacing: 10),
-                                        GridItem(.adaptive(minimum: 80), spacing: 10)
-                                    ],
-                                    spacing: 5
-                                ) {
-                                    ForEach(exercise.setDetails) { set in
-                                        let prevSet = previousWeekExercises?
-                                            .first(where: { $0.id == exercise.id })?
-                                            .setDetails
-                                            .first(where: { $0.setNumber == set.setNumber })
-
-                                        Group {
-                                            // 1) Set #
-                                            Text("\(set.setNumber)")
-
-                                            // 2) Load (weight or distance)
-                                            if let prevLoad = prevSet?.load,
-                                               prevLoad != set.load {
-                                                HStack(spacing: 2) {
-                                                    Text(prevLoad.displayString).foregroundStyle(.gray)
-                                                    Text("→")
-                                                    set.load.formattedText
-                                                        .foregroundStyle(set.load.actualValue > prevLoad.actualValue ? .green : .red)
-                                                }
-                                            } else {
-                                                set.load.formattedText
-                                            }
-
-                                            // FIXME: planned should include unit
-                                            // 3) Metric (reps OR hold), compare only if same kind
-                                            if let prev = prevSet?.planned {
-                                                let (prevStr, prevVal) = metricStringAndValue(prev)
-                                                let (curStr,  curVal)  = metricStringAndValue(set.planned)
-
-                                                if curVal != prevVal {
-                                                    HStack(spacing: 2) {
-                                                        Text(prevStr).foregroundStyle(.gray)
-                                                        Text("→")
-                                                        Text(curStr)
-                                                            .foregroundStyle(curVal > prevVal ? .green :
-                                                                             (curVal < prevVal ? .red : .primary))
-                                                    }
-                                                } else {
-                                                    // No change → just show the current value, no arrow
-                                                    Text(curStr)
-                                                }
-                                            } else {
-                                                Text(set.planned.fieldString)
-                                            }
-                                        }
-                                        .font(.caption)
-                                    }
-                                }
-                                .padding(.vertical, 5)
-                                .background(Color(UIColor.secondarySystemBackground))
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                            }
-                            .padding(.horizontal)
+                            let oldExercise = previousWeekExercises?
+                                .first(where: { $0.id == exercise.id })
+                            
+                            ExerciseSetChange(newExercise: exercise, oldExercise: oldExercise)
                         }
                     }
                 }
@@ -116,10 +42,90 @@ struct TemplateOverload: View {
             }
         }
     }
+}
 
-    /// Return a display string and a numeric value for comparison.
-    private func metricStringAndValue(_ m: SetMetric) -> (String, Double) {
-        return (m.fieldString, m.actualValue)
+struct ExerciseSetChange: View {
+    let newExercise: Exercise
+    let oldExercise: Exercise?
+    
+    var body: some View {
+        let firstSet = newExercise.setDetails.first
+        
+        VStack(alignment: .leading, spacing: 10) {
+            Text(newExercise.name)
+                .font(.headline)
+                .foregroundStyle(.primary)
+
+            // Headers (unchanged visuals)
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 10)], spacing: 5) {
+                Text("Set")
+                    .font(.caption).fontWeight(.semibold).foregroundStyle(.gray)
+                let load = firstSet?.load ?? newExercise.loadMetric
+                if let unit = load.unit, let label = unit.label(for: .label)  {
+                    Text(label)
+                        .font(.caption).fontWeight(.semibold).foregroundStyle(.gray)
+                } else {
+                    Spacer()
+                }
+                let planned = firstSet?.planned ?? newExercise.plannedMetric
+                if let label = planned.unit.label(for: .label)  {
+                    Text(label)
+                        .font(.caption).fontWeight(.semibold).foregroundStyle(.gray)
+                }
+            }
+            // Rows
+            LazyVGrid(
+                columns: [
+                    GridItem(.adaptive(minimum: 80), spacing: 10),
+                    GridItem(.adaptive(minimum: 80), spacing: 10),
+                    GridItem(.adaptive(minimum: 80), spacing: 10)
+                ],
+                spacing: 5
+            ) {
+                ForEach(newExercise.setDetails) { set in
+                    let prevSet = oldExercise?.setDetails
+                        .first(where: { $0.setNumber == set.setNumber })
+
+                    Group {
+                        // 1) Set #
+                        Text("\(set.setNumber)")
+
+                        // 2) Load (weight or distance)
+                        if let prevLoad = prevSet?.load, prevLoad != set.load {
+                            HStack(spacing: 2) {
+                                Text(prevLoad.displayString).foregroundStyle(.gray)
+                                Text("→")
+                                set.load.formattedText
+                                    .foregroundStyle(set.load.actualValue > prevLoad.actualValue ? .green : .red)
+                            }
+                        } else {
+                            set.load.formattedText
+                        }
+
+                        // 3) Metric (reps OR hold), compare only if same kind
+                        if let prevPlanned = prevSet?.planned, prevPlanned != set.planned  {
+                            let curVal = set.planned.actualValue
+                            let prevVal = prevPlanned.actualValue
+                            
+                            HStack(spacing: 2) {
+                                Text(prevPlanned.displayString).foregroundStyle(.gray)
+                                Text("→")
+                                set.planned.formattedText
+                                    .foregroundStyle(curVal > prevVal ? .green :
+                                                     (curVal < prevVal ? .red : .primary))
+                            }
+                        } else {
+                            set.planned.formattedText
+                        }
+                    }
+                    .font(.caption)
+                }
+            }
+            .padding(.vertical, 5)
+            .background(Color(UIColor.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
+        .padding(.horizontal)
     }
 }
 

@@ -16,7 +16,7 @@ struct RestTimeEditor: View {
     @State private var showingRestPicker: Bool = false
     @State private var currentRestSetIndex: Int? = nil
     @State private var pickerTime: TimeSpan = .init(seconds: 0)
-    var onSave: () -> Void
+    let onSave: () -> Void
 
     var body: some View {
         NavigationStack {
@@ -34,37 +34,39 @@ struct RestTimeEditor: View {
                     if oldValue != newValue { resetPicker() }
                 }
 
-                List {
+                ScrollView {
                     if selectedSets.isEmpty {
                         Text(setType == .working ? "No working sets available." : "No warm-up sets available.")
-                    } else {
-                        ForEach(selectedSets.indices, id: \.self) { index in
-                            HStack {
-                                Text("Set \(index + 1)")
-                                Spacer()
-
-                                Button(action: { initializePicker(for: index) }) {
-                                    let seconds = isActive(idx: index) ? pickerTime.inSeconds : effectiveRestSeconds(for: index)
-                                    Text(Format.timeString(from: seconds))
-                                        .frame(width: 80, height: 30)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 5)
-                                                .fill(Color(UIColor.secondarySystemBackground))
-                                                .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.secondary, lineWidth: 1))
-                                        )
-                                }
-                            }
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity)
+                            .cardContainer()
                             .padding()
-                            .listRowSeparator(isActive(idx: index) ? .hidden : .visible)
-
-                            if isActive(idx: index) {
-                                VStack {
+                    } else {
+                        let width = calculateTextWidth(text: "00:00", minWidth: 80, maxWidth: 100)
+                        
+                        ForEach(selectedSets.indices, id: \.self) { index in
+                            VStack {
+                                HStack {
+                                    Text("Set \(index + 1)")
+                                    Spacer()
+                                    
+                                    Button(action: { initializePicker(for: index) }) {
+                                        let seconds = isActive(idx: index) ? pickerTime.inSeconds : effectiveRestSeconds(for: index)
+                                 
+                                        FieldChrome(width: width) {
+                                            Text(Format.timeString(from: seconds))
+                                        }
+                                    }
+                                }
+                                .padding()
+                                
+                                if isActive(idx: index) {
                                     Text("Adjust Rest Period for Set \(index + 1)")
                                         .font(.headline)
-
+                                    
                                     HStack {
                                         MinSecPicker(time: $pickerTime)
-
+                                        
                                         Button(action: {
                                             guard let idx = currentRestSetIndex else { return }
                                             updateRestPeriod(for: idx, with: pickerTime)
@@ -78,11 +80,12 @@ struct RestTimeEditor: View {
                                         .background(Circle().fill(Color.blue))
                                     }
                                 }
+                                
+                                Divider()
                             }
                         }
                     }
                 }
-                .listStyle(PlainListStyle())
             }
             .padding()
             .navigationBarTitle(exercise.name, displayMode: .inline)
@@ -117,11 +120,10 @@ struct RestTimeEditor: View {
 
     /// Read the per-set override if present; otherwise use your resolver.
     private func effectiveRestSeconds(for index: Int) -> Int {
-        if let override = selectedSets[index].restPeriod { return override }
+        if let override = selectedSets[safe: index]?.restPeriod { return override }
         // Fallback: ask the exercise itself
-        let isWarm = (setType == .warmUp)
         return exercise.getRestPeriod(
-            isWarm: isWarm,
+            isWarm: setType == .warmUp,
             rest: ctx.userData.workoutPrefs.customRestPeriods ?? ctx.userData.physical.goal.defaultRest
         )
     }
@@ -129,13 +131,14 @@ struct RestTimeEditor: View {
     /// Updates the rest period for the set at the specified index.
     private func updateRestPeriod(for index: Int, with time: TimeSpan) {
         let newRest = time.inSeconds
-        if setType == .warmUp {
+        switch setType {
+        case .warmUp:
             var sets = exercise.warmUpDetails
-            sets[index].restPeriod = newRest
+            sets[safeEdit: index]?.restPeriod = newRest
             exercise.warmUpDetails = sets
-        } else {
+        case .working:
             var sets = exercise.setDetails
-            sets[index].restPeriod = newRest
+            sets[safeEdit: index]?.restPeriod = newRest
             exercise.setDetails = sets
         }
     }

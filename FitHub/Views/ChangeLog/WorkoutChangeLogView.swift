@@ -85,13 +85,6 @@ struct WorkoutChangelogView: View {
                     color: .blue
                 )
                 
-                /*StatCard(
-                    title: "Exercises",
-                    value: "\(changelog.generationStats.exercisesSelected)",
-                    icon: "dumbbell.fill",
-                    color: .green
-                )*/
-                
                 StatCard(
                     title: "Deloads Applied",
                     value: "\(changelog.generationStats.deloadsApplied)",
@@ -152,8 +145,6 @@ struct StatCard: View {
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
-        .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .cardContainer(cornerRadius: 8, backgroundColor: Color(.systemBackground))
     }
 }

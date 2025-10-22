@@ -19,13 +19,13 @@ final class ExerciseData: ObservableObject {
     var allExercises: [Exercise] { bundledExercises + userExercises }
        
     @Published var allExercisePerformance: [UUID: ExercisePerformance] = [:]
-        
+    
     var exercisesWithData: [Exercise] {
-        allExercises.filter { ex in
-            return hasPerformanceData(exercise: ex)
+        allExercises.compactMap { ex in
+            hasPerformanceData(exercise: ex)
         }
     }
-
+    
     init() {
         bundledExercises = ExerciseData.loadBundledExercises()
         userExercises = ExerciseData.loadUserExercises(from: ExerciseData.userExercisesFileName)
@@ -100,12 +100,48 @@ extension ExerciseData {
 }
 
 extension ExerciseData {
-    private func hasPerformanceData(exercise: Exercise) -> Bool {
-        if let peak = peakMetric(for: exercise.id), peak.actualValue > 0 { return true }
-        if let est = estimatedPeakMetric(for: exercise.id), est.actualValue > 0 { return true }
-        return exercise.url != nil
+    func seedEstimatedMaxes(userData: UserData) {
+        for ex in allExercises {
+            if peakMetric(for: ex.id).valid != nil { continue }
+            if estimatedPeakMetric(for: ex.id).valid == nil {
+                seedEstimatedMaxValue(exercise: ex, userData: userData)
+            }
+        }
+        savePerformanceData()
     }
-        
+
+    func seedEstimatedMaxes(skipped: Set<Exercise.ID>, userData: UserData) {
+        guard !skipped.isEmpty else { return }
+        // Only exercises we actually know about & have CSV URLs for
+        let lookup = Dictionary(uniqueKeysWithValues: allExercises.map { ($0.id, $0) })
+
+        for id in skipped {
+            guard let ex = lookup[id], ex.url != nil else { continue }
+            // Don’t overwrite if user already has any max saved (peak or estimate)
+            if estimatedPeakMetric(for: id).valid == nil {
+                seedEstimatedMaxValue(exercise: ex, userData: userData)
+            }
+        }
+        savePerformanceData()
+    }
+
+    private func seedEstimatedMaxValue(exercise: Exercise, userData: UserData) {
+        let peak = CSVLoader.calculateMaxValue(for: exercise, userData: userData).valid
+        guard let max = peak else { return }
+        updateExercisePerformance(for: exercise.id, newValue: max, csvEstimate: true)
+    }
+}
+
+extension ExerciseData {
+    private func hasPerformanceData(exercise: Exercise) -> Exercise? {
+        let best = peakMetric(for: exercise.id).valid ?? estimatedPeakMetric(for: exercise.id).valid
+           
+        guard let max = best else { return nil }
+        var ex = exercise
+        ex.draftMax = max
+        return ex
+    }
+    
     func updateExercisePerformance(
          for exerciseId: UUID,
          newValue: PeakMetric,
@@ -342,7 +378,6 @@ extension ExerciseData {
         }
     }
     
-    
     func filteredExercises(
         searchText: String,
         selectedCategory: CategorySelections,
@@ -434,8 +469,14 @@ extension ExerciseData {
             let isFavorite = favoriteSet.contains(ex.id)
             let isDisliked = dislikedSet.contains(ex.id)
             if favoritesOnly && !isFavorite { continue }
-            if dislikedOnly  && !isDisliked { continue }
-            if hideDisliked  &&  isDisliked { continue }
+            
+            // Keep only disliked when dislikedOnly == true.
+            // Otherwise (normal mode), optionally hide disliked if hideDisliked == true.
+            if dislikedOnly {
+                if !isDisliked { continue }
+            } else if hideDisliked && isDisliked {
+                continue
+            }
             
             // b) Equipment / difficulty gates
             if hideUnequipped &&
@@ -450,7 +491,6 @@ extension ExerciseData {
             
             // d) Search-text gate
             guard matchesQuery(ex, normalizedQuery: q) else { continue }
-            
             
             // Passed all gates → keep it
             results.append(ex)
@@ -502,7 +542,7 @@ extension ExerciseData {
         var relaxedFB: [Exercise] = []; relaxedFB.reserveCapacity(8)
         
         for cand in basePool {
-            if !hasPerformanceData(exercise: cand) { continue }   // keep your perf gate
+            if hasPerformanceData(exercise: cand) == nil { continue }
             
             let candSet = Set(cand.primaryMuscles)
             let isStrictMuscle  = (candSet == targetPrimSet) && (cand.effort == targetEffort)

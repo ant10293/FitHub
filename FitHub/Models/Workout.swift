@@ -44,17 +44,19 @@ struct WorkoutTemplate: Identifiable, Hashable, Codable, Equatable {
     var date: Date?
     var notificationIDs: [String] = [] // Store notification identifiers for removal
     var estimatedCompletionTime: TimeSpan?
-        
+    
     init(
+        id: UUID? = nil,
         name: String,
         exercises: [Exercise],
         categories: [SplitCategory] = [],
         dayIndex: Int? = nil,
         date: Date? = nil,
         notificationIDs: [String] = [],
-        estimatedCompletionTime: TimeSpan? = nil
+        estimatedCompletionTime: TimeSpan? = nil,
+        restPeriods: RestPeriods? = nil
     ) {
-        self.id = UUID()
+        self.id = id ?? UUID()
         self.name = name
         self.exercises = exercises
         self.categories = categories
@@ -62,6 +64,10 @@ struct WorkoutTemplate: Identifiable, Hashable, Codable, Equatable {
         self.date = date
         self.notificationIDs = notificationIDs
         self.estimatedCompletionTime = estimatedCompletionTime
+        if let rest = restPeriods {
+            let sec = estimateCompletionTime(rest: rest)
+            self.estimatedCompletionTime = TimeSpan(seconds: sec)
+        }
     }
 }
 
@@ -104,11 +110,11 @@ extension WorkoutTemplate {
         print("Estimated seconds: \(total)")
         return total
     }
-
+    /*
     mutating func setEstimatedCompletionTime(rest: RestPeriods) {
         estimatedCompletionTime = .init(seconds: estimateCompletionTime(rest: rest))
     }
-
+    */
     static func uniqueTemplateName(initialName: String, from templates: [WorkoutTemplate]) -> String {
         let existing = Set(templates.map { $0.name })
 

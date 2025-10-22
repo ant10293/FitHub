@@ -81,11 +81,9 @@ struct ExerciseSetDisplay: View {
         .padding()
         .onAppear(perform: resetInputs)
         // TODO: test with setDetail changes
-        .onChange(of: exercise) { oldValue, newValue in
+        .onChange(of: setDetail.id) {
             // if exercise has changed or moved to next set
-            if oldValue.id != newValue.id || oldValue.currentSet != newValue.currentSet {
-                resetInputs()
-            }
+            resetInputs()
         }
         .sheet(isPresented: $showTimer) {
             PlannedTimerRing(

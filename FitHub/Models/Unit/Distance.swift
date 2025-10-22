@@ -36,6 +36,9 @@ struct Distance: Codable, Equatable, Hashable {
     mutating func set(_ value: Double) {  /// Convenience: update using the caller’s preferred unit system.
         self.km = UnitSystem.current == .imperial ? UnitSystem.MItoKM(value) : value
     }
+    
+    // MARK: – Unit
+    var unit: UnitCategory { .distance }
 }
 
 extension Distance {

@@ -92,6 +92,7 @@ enum DaysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
         case .sunday: return "Sun"
         }
     }
+    
     // Explicitly define the order of the week days
     static let orderedDays: [DaysOfWeek] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
     

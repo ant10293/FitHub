@@ -30,9 +30,9 @@ struct SetLoadEditor: View {
         switch load {
         case .weight(let mass):
             return Binding<String>(
-                get: { !localText.isEmpty ? localText : (mass.inKg > 0 ? mass.displayString : "") },
+                get: { localText.isEmpty ? mass.fieldString : localText },
                 set: { newValue in
-                    let filtered = InputLimiter.filteredWeight(old: mass.inKg > 0 ? mass.displayString : "", new: newValue)
+                    let filtered = InputLimiter.filteredWeight(old: mass.fieldString, new: newValue)
                     localText = filtered
                     let val = Double(filtered) ?? 0
                     load = .weight(Mass(weight: val))
@@ -42,10 +42,10 @@ struct SetLoadEditor: View {
             
         case .distance(let dist):
             return Binding<String>(
-                get: { !localText.isEmpty ? localText : (dist.inKm > 0 ? dist.displayString : "") },
+                get: { localText.isEmpty ? dist.fieldString : localText },
                 set: { newValue in
                     // TODO: add special filtering for distance
-                    let filtered = InputLimiter.filteredWeight(old: dist.inKm > 0 ? dist.displayString : "", new: newValue)
+                    let filtered = InputLimiter.filteredWeight(old: dist.fieldString, new: newValue)
                     localText = filtered
                     let val = Double(filtered) ?? 0
                     load = .distance(Distance(distance: val))

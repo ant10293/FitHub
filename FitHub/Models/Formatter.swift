@@ -76,15 +76,23 @@ enum Format {
     /// - Parameter value: The value to format.
     /// - Returns: A string with no decimal if integer, or up to two decimal places.
     static func smartFormat(_ value: Double) -> String {
-        let roundedValue = round(value * 100) / 100  // Round to two decimal places
-        if roundedValue.truncatingRemainder(dividingBy: 1) == 0 {
-            // It's effectively an integer
-            return String(format: "%.0f", roundedValue)
-        } else {
-            // Keep two-decimal precision, then trim trailing zeros and punctuation
-            return String(format: "%.2f", roundedValue)
-                .trimmingCharacters(in: CharacterSet(charactersIn: "0").union(.punctuationCharacters))
-        }
+        // Handle non-finite values explicitly
+        guard value.isFinite else { return "\(value)" }
+
+        // Round to 2 decimals in a stable way
+        let rounded = (value * 100).rounded() / 100
+
+        // Avoid "-0"
+        if abs(rounded) < 0.0005 { return "0" }
+
+        // Start with 2-dp string using "." as decimal separator
+        var s = String(format: "%.2f", rounded)
+
+        // Trim ONLY trailing zeros, then an optional trailing "."
+        while s.last == "0" { s.removeLast() }
+        if s.last == "." { s.removeLast() }
+
+        return s
     }
     
     // MARK: - Date & Time Formatting
@@ -210,6 +218,11 @@ enum Format {
         } else {
             "\(range.lowerBound)-\(range.upperBound)"
         }
+    }
+    
+    static func exerciseCountText(_ count: Int, capitalize: Bool = false) -> String {
+        let base = "\(count) exercise" + (count == 1 ? "" : "s")
+        return capitalize ? base.prefix(1).uppercased() + base.dropFirst() : base
     }
 }
 

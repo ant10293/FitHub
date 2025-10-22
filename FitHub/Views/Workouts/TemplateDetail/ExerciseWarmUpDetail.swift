@@ -135,20 +135,20 @@ struct ExerciseWarmUpDetail: View {
                 Text("No working sets available.")
                     .foregroundStyle(.secondary)
             } else {
-                ForEach(Array(exercise.setDetails.enumerated()), id: \.offset) { idx, sd in
+                ForEach(exercise.setDetails) { set in
                     SetInputRow(
-                        setNumber: idx + 1,
+                        setNumber: set.setNumber,
                         exercise: exercise,
-                        load: sd.load,
-                        metric: sd.planned,
+                        load: set.load,
+                        metric: set.planned,
                         loadField: {
-                            TextField("", text: .constant(sd.load.fieldString.isEmpty ? "—" : sd.load.fieldString))
+                            TextField("", text: .constant(set.load.fieldString))
                                 .multilineTextAlignment(.center)
                                .textFieldStyle(.roundedBorder)
                                .disabled(true)
                         },
                         metricField: {
-                            TextField("", text: .constant(sd.planned.fieldString.isEmpty ? "—" : sd.planned.fieldString))
+                            TextField("", text: .constant(set.planned.fieldString))
                                 .multilineTextAlignment(.center)
                                .textFieldStyle(.roundedBorder)
                                .disabled(true)

@@ -52,6 +52,14 @@ enum SetLoad: Codable, Equatable, Hashable {
         case .none: return ""
         }
     }
+    
+    var unit: UnitCategory? {
+        switch self {
+        case .weight: return .weight
+        case .distance: return .distance
+        case .none: return nil
+        }
+    }
 }
 
 extension SetLoad {

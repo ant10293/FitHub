@@ -118,6 +118,13 @@ extension PeakMetric {
     }
 }
 
+extension Optional where Wrapped == PeakMetric {
+    var valid: PeakMetric? {
+        guard let v = self, v.actualValue > 0 else { return nil }
+        return v
+    }
+}
+
 enum ExerciseUnit: String {
     case weightXreps, repsOnly, timeOnly, weightXtime, distanceXtimeOrSpeed
     

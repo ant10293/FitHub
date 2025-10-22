@@ -41,8 +41,8 @@ struct StartedWorkoutView: View {
                 ExerciseDetailView(viewingDuringWorkout: true, exercise: exercise)
             }
         }
-        .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .background {
+        .onChange(of: scenePhase) { oldPhase, newPhase in
+            if oldPhase == .active, newPhase == .inactive {
                 viewModel.saveWorkoutInProgress(userData: ctx.userData)
             }
         }

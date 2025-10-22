@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// FIXME: should use a binding template so that changes are properly reflected
 struct TemplateSelection: View {
     @State private var selectedTemplate: SelectedTemplate?
     @State private var navigateToOverload: Bool = false
@@ -16,12 +17,17 @@ struct TemplateSelection: View {
     var body: some View {
         workoutList
             .navigationDestination(isPresented: $navigateToOverload) {
-                if let sel = selectedTemplate {
-                    OverloadCalculator(template: sel.template)
+                if let sel = selectedTemplate, let tpl = allTemplates.first(where: { $0.id == sel.template.id }) {
+                    OverloadCalculator(template: tpl)
+                } else {
+                    // template got deleted while we were on the detail screen → pop
+                    Color.clear.onAppear { selectedTemplate = nil; navigateToOverload = false }
                 }
             }
             .navigationBarTitle("Select Template", displayMode: .inline)
     }
+    
+    private var allTemplates: [WorkoutTemplate] { userTemplates + trainerTemplates }
     
     private var workoutList: some View {
         List {

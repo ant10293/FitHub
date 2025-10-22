@@ -88,6 +88,7 @@ struct AssessmentView: View {
         } else {
             calculateFitnessLevel()
         }
+        ctx.exercises.seedEstimatedMaxes(userData: ctx.userData)
     }
     
     private func checkCompletion() {

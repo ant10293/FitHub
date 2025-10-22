@@ -36,6 +36,9 @@ struct Length: Codable, Equatable, Hashable {
     mutating func set(_ value: Double) { /// Convenience: update using the caller’s preferred unit system.
         self.cm = UnitSystem.current == .imperial ? UnitSystem.INtoCM(value) : value
     }
+    
+    // MARK: – Unit
+    var unit: UnitCategory { .size }
 }
 
 extension Length {

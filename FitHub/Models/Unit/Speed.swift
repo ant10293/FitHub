@@ -36,6 +36,9 @@ struct Speed: Codable, Equatable, Hashable {
     var displayValue: Double { UnitSystem.current == .imperial ? inMPH : inKmH }
     var displayString: String { Format.smartFormat(displayValue) }
     var fieldString: String { kmh > 0 ? displayString : "" }
+    
+    // MARK: – Unit
+    var unit: UnitCategory { .speed }
 }
 
 extension Speed {

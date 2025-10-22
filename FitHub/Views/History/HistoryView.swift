@@ -12,7 +12,6 @@ struct HistoryView: View {
     
     var body: some View {
         NavigationStack {
-            //VStack(spacing: 20) {
             ScrollView {
                 headerSection
                 
@@ -67,7 +66,7 @@ struct HistoryView: View {
                 let longest = userData.sessionTracking.longestWorkoutStreak
                 (
                   Text("Longest Streak: ").bold()
-                + Text(" \(longest) \(longest == 1 ? "day" : "days")")
+                + Text("\(longest) \(longest == 1 ? "day" : "days")")
                 )
                 .lineLimit(1)
                 .minimumScaleFactor(0.85)

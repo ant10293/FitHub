@@ -44,6 +44,11 @@ struct MainAppView: View {
                     WorkoutChangelogView(changelog: changelog)
                 }
             }
+            .sheet(isPresented: $userData.showingGenerationWarning) {
+                if let reductions = userData.workoutReductions {
+                    GenerationWarning(workoutReductions: reductions)
+                }
+            }
             .onChange(of: selectedTab) {
                 if userData.disableTabView {
                     selectedTab = lockedTab ?? 0

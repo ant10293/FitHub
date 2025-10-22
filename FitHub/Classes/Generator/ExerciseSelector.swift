@@ -7,7 +7,7 @@
 
 import Foundation
 
-// TODO: strengthCeiling should be applied unless we dont have enough exercises
+
 // MARK: - ExerciseSelector (Simplified & Reliable)
 final class ExerciseSelector {
     // MARK: Dependencies
@@ -19,12 +19,14 @@ final class ExerciseSelector {
     private let policy: Policy
     private let logger: Logger?
     private let baseSeed: UInt64
-
+    private var reductions: DayReductions
+    
     // MARK: Init
     init(
         data: ExerciseData,
         equipment: EquipmentData,
         selectedEquipment: [GymEquipment.ID],
+        days: [DaysOfWeek],
         favorites: Set<Exercise.ID>,
         disliked: Set<Exercise.ID>,
         resistance: ResistanceType,
@@ -41,6 +43,7 @@ final class ExerciseSelector {
         self.policy = policy
         self.logger = logger
         self.baseSeed = seed
+        self.reductions = .init(preseed: days)
     }
 
     // MARK: Policy
@@ -51,13 +54,20 @@ final class ExerciseSelector {
 
     // MARK: Immutable catalog snapshot
     private struct ExerciseIndex {
+        let allExercisesCount: Int
+        let exercisesWithDataCount: Int
         let exercises: [Exercise]
         let bySplit: [SplitCategory: [Int]]
         let byGroup: [SplitCategory: [Int]]
         let canPerform: [Bool]
 
         init(data: ExerciseData, equipment: EquipmentData, selection: [GymEquipment.ID]) {
+            self.allExercisesCount = data.allExercises.count
+            
+            // TODO: add option to use all exercises instead of just those with data
             self.exercises = data.exercisesWithData
+            
+            self.exercisesWithDataCount = exercises.count
 
             var split: [SplitCategory: [Int]] = [:]
             var group: [SplitCategory: [Int]] = [:]
@@ -91,6 +101,9 @@ final class ExerciseSelector {
             }
             return out
         }
+        
+        func getAllExercisesCount() -> Int { return allExercisesCount }
+        func getExercisesWithDataCount() -> Int { return exercisesWithDataCount }
     }
 
     // MARK: Public API - Simplified & Reliable
@@ -99,16 +112,21 @@ final class ExerciseSelector {
         categories: [SplitCategory],
         total: Int,
         rAndS: RepsAndSets,
-        dayLabel: String
-    ) -> [Exercise] {
+        dayLabel: String,
+        existing: [Exercise]? = nil
+    ) -> ([Exercise], PoolReduction?) {
+                
         let clampedTotal = max(policy.minCount, min(policy.maxCount, total))
-        guard clampedTotal > 0 else { return [] }
+        guard clampedTotal > 0 else { return ([], nil) }
 
         var rng = seededRNG(for: dayIndex)
         let unionIdxs = idx.union(for: categories)
 
         logger?.add("[\(dayLabel)] Pool size: \(unionIdxs.count) exercises")
-
+        
+        let ewd = idx.getExercisesWithDataCount()
+        reductions.record(dayRaw: dayLabel, reason: .split, removed: ewd - unionIdxs.count, remaining: unionIdxs.count)
+        
         // 1. Filter exercises based on basic criteria
         let eligibleExercises = filterEligibleExercises(
             from: unionIdxs,
@@ -117,152 +135,62 @@ final class ExerciseSelector {
         )
 
         logger?.add("[\(dayLabel)] Eligible after filtering: \(eligibleExercises.count) exercises")
-
-        if eligibleExercises.isEmpty {
-            logger?.add("[\(dayLabel)] No eligible exercises found")
-            return []
-        }
         
-        // filter by difficulty, still allowing favorites
-        let eligibleFiltered = eligibleExercises.filter {
-            if favorites.contains($0.id) {
-                return true
-            } else {
-                return $0.difficultyOK(strengthCeiling)
-            }
-        }
-        
-        // TODO: add logic to derive muscles and submuscles from [SplitCategory]
-        /*
-        let muscles = deriveTargetMuscles(from: categories)
-        print("Muscles: \(muscles)")
-        let submuscles = deriveTargetSubmuscles(from: muscles)
-        print("Submuscles: \(submuscles)")
-        */
-        
-        /*
-        let (targetted, grouped) = deriveTargetMuscles(from: categories)
-        let targetSub = deriveTargetSubmuscles(from: targetted)
-        let groupSub = deriveTargetSubmuscles(from: grouped)
-        
-        var coverage: CoverageState = .init(target: targetted, group: grouped, targetSub: targetSub, groupSub: groupSub)
-        */
+        // 2) Difficulty AND too-easy-reps, favorites bypass
+        let eligibleFiltered = additionalFiltering(
+            eligibleExercises: eligibleExercises,
+            rAndS: rAndS,
+            dayLabel: dayLabel
+        )    
         
         // 2. Apply distribution logic - removes exercises with effortType of 0% or setCount of 0
+        let baseExisting = existing ?? []
         let countByEffort = rAndS.distribution.allocateCountsPerEffort(targetCount: clampedTotal)
+        let countByEffortWithExisting = neededCounts(initialCounts: countByEffort, subtractingSelected: baseExisting)
+        
         let selectedExercises = applyDistributionLogic(
             pool: eligibleFiltered,
+            existing: baseExisting,
             targetCount: clampedTotal,
-            countByEffort: countByEffort,
+            countByEffort: countByEffortWithExisting,
             rng: &rng
         )
-
         logger?.add("[\(dayLabel)] Selected: \(selectedExercises.count) exercises")
         print("[\(dayLabel)] Selected: \(selectedExercises.map(\.name).joined(separator: ", "))")
         
+        let selectedWithExisting = selectedExercises + baseExisting
+        
+        // TODO: remove reduction reasons for difficulty and repCap if we use this
         // 3. Apply balancing and return
         // TODO: if still not enough exercises after relaxing the muscle requirements, use the unfiltered eligibleExercises
-        var finalSelection = selectedExercises
+        var finalSelection = selectedWithExisting
         if finalSelection.count < clampedTotal {
+            
+            reductions.clear(dayRaw: dayLabel, reasons: [.repCap, .tooDifficult])
+            
             let missingCount = clampedTotal - finalSelection.count
-            let remainingCountByEffort = neededCounts(initialCounts: countByEffort, subtractingSelected: selectedExercises)
+            let remainingCountByEffort = neededCounts(
+                initialCounts: countByEffortWithExisting,
+                subtractingSelected: selectedExercises
+            )
             let extraExercises = applyDistributionLogic(
                 pool: eligibleExercises,
-                existing: selectedExercises,
+                existing: selectedWithExisting, // include both existing + already picked
                 targetCount: missingCount,
                 countByEffort: remainingCountByEffort,
                 rng: &rng
             )
             finalSelection.append(contentsOf: extraExercises)
         }
-
-        // Ensure we don't exceed the target
-        /*
-        if finalSelection.count > clampedTotal {
-            finalSelection = Array(finalSelection.prefix(clampedTotal))
-        }
-        */
         
         // TODO: free weight compound should go before machine
         let sortedSelection = finalSelection.sorted { $0.effort.order < $1.effort.order }
 
-        return sortedSelection
+        let pool = reductions.pool(for: dayLabel)
+        return (sortedSelection, pool)
     }
     
-    private func effortExerciseCount(_ exercises: [Exercise]) -> [EffortType: Int] {
-        Dictionary(grouping: exercises, by: { $0.effort }).mapValues { $0.count }
-    }
-    
-    func neededCounts(initialCounts: [EffortType: Int], subtractingSelected selected: [Exercise]) -> [EffortType: Int] {
-        let selectedCounts = effortExerciseCount(selected)
-        var out: [EffortType: Int] = [:]
-        out.reserveCapacity(initialCounts.count)
-        for (type, target) in initialCounts {
-            let left = target - (selectedCounts[type] ?? 0)
-            if left > 0 { out[type] = left }
-        }
-        return out
-    }
-    
-    /*
-    private func deriveTargetMuscles(from categories: [SplitCategory]) -> [Muscle] {
-        var targetMuscles: Set<Muscle> = []
-        
-        for category in categories {
-            if let muscles = SplitCategory.muscles[category] { targetMuscles.formUnion(muscles) }
-            if let groupMuscles = SplitCategory.groups[category] { targetMuscles.formUnion(groupMuscles) }
-        }
-        
-        return Array(targetMuscles)
-    }
-    */
-    private func deriveTargetMuscles(from categories: [SplitCategory]) -> (target: [Muscle], group: [Muscle]) {
-        var targetMuscles: Set<Muscle> = []
-        var groupMuscles: Set<Muscle> = []
-        
-        for category in categories {
-            if let muscles = SplitCategory.muscles[category] { targetMuscles.formUnion(muscles) }
-            if let groups = SplitCategory.groups[category] { groupMuscles.formUnion(groups) }
-        }
-        
-        return (Array(targetMuscles), Array(groupMuscles))
-    }
-
-    private func deriveTargetSubmuscles(from muscles: [Muscle]) -> [SubMuscles] {
-        var targetSubmuscles: Set<SubMuscles> = []
-        
-        for muscle in muscles {
-            if let submuscles = Muscle.SubMuscles[muscle] { targetSubmuscles.formUnion(submuscles) }
-        }
-        
-        return Array(targetSubmuscles)
-    }
-    
-    // MARK: - Simplified Filtering
-    private func filterEligibleExercises(
-        from indices: [Int],
-        rAndS: RepsAndSets,
-        dayLabel: String
-    ) -> [Exercise] {
-        var result: [Exercise] = []
-
-        for idx in indices {
-            guard idx < self.idx.exercises.count else { continue }
-            let ex = self.idx.exercises[idx]
-
-            if disliked.contains(ex.id) { continue }
-            if !self.idx.canPerform[idx] { continue }
-            if !ex.resistanceOK(resistance) { continue }
-            // DO NOT check difficulty here
-            if !ex.effortOK(rAndS) { continue }
-            if rAndS.sets.sets(for: ex.effort) < 1 { continue }
-
-            result.append(ex)
-        }
-        return result
-    }
     // TODO: we need to select using SubMuscle, but if the Muscle has no submucles, we use Muscle
-    
     // MARK: - Simplified Distribution Logic
     private func applyDistributionLogic(
         pool: [Exercise],
@@ -277,10 +205,10 @@ final class ExerciseSelector {
         // For each effort type, select exercises according to distribution
         for (effort, needed) in countByEffort {
             let matchingExercises = remainingExercises.filter { $0.effort == effort }
-            let neededCount = min(needed, targetCount)
-            
+            let take = min(needed, matchingExercises.count) // cap by availability
+
             // TODO: this should take parameters for the SplitCategory/Muscle
-            let selected = selectRandomExercises(from: matchingExercises, count: neededCount, rng: &rng)
+            let selected = selectRandomExercises(from: matchingExercises, count: take, rng: &rng)
             
             selectedExercises.append(contentsOf: selected)
             
@@ -288,17 +216,111 @@ final class ExerciseSelector {
             let selectedIds = Set(selected.map(\.id))
             remainingExercises = remainingExercises.filter { !selectedIds.contains($0.id) }
         }
-        
-        // If we still need more exercises, fill from remaining pool
-        if selectedExercises.count < targetCount && !remainingExercises.isEmpty {
-            let needed = targetCount - selectedExercises.count
-            let additional = selectRandomExercises(from: remainingExercises, count: needed, rng: &rng)
-            selectedExercises.append(contentsOf: additional)
-        }
-        
+
         return selectedExercises
     }
     
+    // MARK: - Simplified Filtering
+    private func filterEligibleExercises(
+        from indices: [Int],
+        rAndS: RepsAndSets,
+        dayLabel: String
+    ) -> [Exercise] {
+        var result: [Exercise] = []
+        
+        var isDisliked: Set<Exercise.ID> = []
+        var cannotPerform: Set<Exercise.ID> = []
+        var resistanceIncompat: Set<Exercise.ID> = []
+        var effort: Set<Exercise.ID> = []
+        var lackingSets: Set<Exercise.ID> = []
+        
+        for idx in indices {
+            guard idx < self.idx.exercises.count else { continue }
+            let ex = self.idx.exercises[idx]
+
+            if disliked.contains(ex.id) {
+                isDisliked.insert(ex.id)
+                continue
+            }
+            if !self.idx.canPerform[idx] {
+                cannotPerform.insert(ex.id)
+                continue
+            }
+            if !ex.resistanceOK(resistance) {
+                resistanceIncompat.insert(ex.id)
+                continue
+            }
+            // DO NOT check difficulty here
+            if !ex.effortOK(rAndS) {
+                effort.insert(ex.id)
+                continue
+            }
+            if rAndS.sets.sets(for: ex.effort) < 1 {
+                lackingSets.insert(ex.id)
+                continue
+            }
+
+            result.append(ex)
+        }
+        
+        if !isDisliked.isEmpty {
+            reductions.record(dayRaw: dayLabel, reason: .disliked, ids: isDisliked, removed: isDisliked.count)
+        }
+        if !cannotPerform.isEmpty {
+            reductions.record(dayRaw: dayLabel, reason: .cannotPerform, ids: cannotPerform, removed: cannotPerform.count)
+        }
+        if !resistanceIncompat.isEmpty {
+            reductions.record(dayRaw: dayLabel, reason: .resistance, ids: resistanceIncompat, removed: resistanceIncompat.count)
+        }
+        if !effort.isEmpty {
+            reductions.record(dayRaw: dayLabel, reason: .effort, ids: effort, removed: effort.count)
+        }
+        if !lackingSets.isEmpty {
+            reductions.record(dayRaw: dayLabel, reason: .sets, ids: lackingSets, removed: lackingSets.count)
+        }
+        
+        return result
+    }
+    
+    // MARK: - Advanced Filtering (for difficulty & rep cap)
+    // FIXME: should use indices like other filter func
+    private func additionalFiltering(
+        eligibleExercises: [Exercise],
+        rAndS: RepsAndSets,
+        dayLabel: String
+    ) -> [Exercise] {
+        var tooDifficult: Set<Exercise.ID> = []
+        var exceedsRepCap: Set<Exercise.ID> = []
+        
+        let eligibleFiltered = eligibleExercises.filter { ex in
+            if favorites.contains(ex.id) { return true }
+            // cheap early checks
+            guard ex.difficultyOK(strengthCeiling) else {
+                tooDifficult.insert(ex.id)
+                return false
+            }
+            // reps-cap check only for repsOnly + when we actually have a max
+            if ex.unitType == .repsOnly, let max = ex.draftMax?.actualValue,
+               Double(rAndS.reps.reps(for: ex.effort).upperBound) * 2 < max
+            {
+                exceedsRepCap.insert(ex.id)
+                return false
+            }
+            return true
+        }
+        
+        if !tooDifficult.isEmpty {
+            reductions.record(dayRaw: dayLabel, reason: .tooDifficult, ids: tooDifficult, removed: tooDifficult.count)
+        }
+        if !exceedsRepCap.isEmpty {
+            reductions.record(dayRaw: dayLabel, reason: .repCap, ids: exceedsRepCap, removed: exceedsRepCap.count)
+        }
+        
+        return eligibleFiltered
+    }
+}
+
+extension ExerciseSelector {
     private func getExercisePool(pool: [Exercise], existing: [Exercise]? = nil) -> [Exercise] {
         guard let existing, !existing.isEmpty else { return pool }
         
@@ -314,29 +336,20 @@ final class ExerciseSelector {
     
     // MARK: - Exercise Selection with Favorite Prioritization
     private func selectRandomExercises(from array: [Exercise], count: Int, rng: inout SeededRNG) -> [Exercise] {
-        let actualCount = min(count, array.count)
-        guard actualCount > 0 else { return [] }
-        
-        if actualCount == array.count { return array.shuffled(using: &rng) }
-        
-        // Prioritize favorite exercises first
-        let sortedExercises = array.sorted { ex1, ex2 in
-            let ex1IsFavorite = favorites.contains(ex1.id)
-            let ex2IsFavorite = favorites.contains(ex2.id)
-            
-            if ex1IsFavorite != ex2IsFavorite { return ex1IsFavorite } // Favorites first
-            // If both are favorites or both are not, maintain random order
-            return false
+        let actual = min(count, array.count)
+        guard actual > 0 else { return [] }
+
+        let favs = array.filter { favorites.contains($0.id) }
+        let non  = array.filter { !favorites.contains($0.id) }
+
+        let takeFav = min(favs.count, actual)
+        var picked  = Array(favs.shuffled(using: &rng).prefix(takeFav))
+
+        if picked.count < actual {
+            let need = actual - picked.count
+            picked.append(contentsOf: non.shuffled(using: &rng).prefix(need))
         }
-        
-        // Log favorite prioritization
-        let favoriteCount = sortedExercises.prefix(actualCount).filter { favorites.contains($0.id) }.count
-        if favoriteCount > 0 {
-            logger?.add("Prioritized \(favoriteCount) favorite exercises")
-        }
-        
-        let shuffled = sortedExercises.shuffled(using: &rng)
-        return Array(shuffled.prefix(actualCount))
+        return picked
     }
     
     // MARK: Deterministic RNG
@@ -358,4 +371,45 @@ final class ExerciseSelector {
     }
 }
 
+extension ExerciseSelector {
+    private func effortExerciseCount(_ exercises: [Exercise]) -> [EffortType: Int] {
+        Dictionary(grouping: exercises, by: { $0.effort }).mapValues { $0.count }
+    }
+    
+    private func neededCounts(initialCounts: [EffortType: Int], subtractingSelected selected: [Exercise]) -> [EffortType: Int] {
+        guard !selected.isEmpty else { return initialCounts }
+        let selectedCounts = effortExerciseCount(selected)
+        var out: [EffortType: Int] = [:]
+        out.reserveCapacity(initialCounts.count)
+        for (type, target) in initialCounts {
+            let left = target - (selectedCounts[type] ?? 0)
+            if left > 0 { out[type] = left }
+        }
+        return out
+    }
+}
+
+extension ExerciseSelector {
+    private func deriveTargetMuscles(from categories: [SplitCategory]) -> (target: [Muscle], group: [Muscle]) {
+        var targetMuscles: Set<Muscle> = []
+        var groupMuscles: Set<Muscle> = []
+        
+        for category in categories {
+            if let muscles = SplitCategory.muscles[category] { targetMuscles.formUnion(muscles) }
+            if let groups = SplitCategory.groups[category] { groupMuscles.formUnion(groups) }
+        }
+        
+        return (Array(targetMuscles), Array(groupMuscles))
+    }
+
+    private func deriveTargetSubmuscles(from muscles: [Muscle]) -> [SubMuscles] {
+        var targetSubmuscles: Set<SubMuscles> = []
+        
+        for muscle in muscles {
+            if let submuscles = Muscle.SubMuscles[muscle] { targetSubmuscles.formUnion(submuscles) }
+        }
+        
+        return Array(targetSubmuscles)
+    }
+}
 

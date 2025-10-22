@@ -100,7 +100,7 @@ struct UnitSelection: View {
             HStack {
                 Spacer()
                 Button(role: .destructive) {
-                    userData.saveToFileImmediate()
+                    userData.saveToFile()
                     exit(0)
                 } label: {
                     Label("Close App", systemImage: "power")

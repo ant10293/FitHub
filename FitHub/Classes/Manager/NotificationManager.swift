@@ -6,8 +6,17 @@ import UserNotifications
 final class NotificationManager: ObservableObject {
     // ── singleton (easy to inject) ──────────────────────────────────
     static let shared = NotificationManager()          // ← no @MainActor
-    private init() { refreshStatus() }
 
+    private var bag = Set<AnyCancellable>()
+
+    private init() {
+        refreshStatus()
+        // Refresh whenever the app becomes active (e.g., after user changes Settings)
+        NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
+            .sink { [weak self] _ in self?.refreshStatus() }
+            .store(in: &bag)
+    }
+    
     // published so UI toggles can bind to it
     @Published private(set) var isAuthorized: Bool = false
 
@@ -16,9 +25,6 @@ final class NotificationManager: ObservableObject {
         var notificationIDs: [String] = []
         let now = Date()
         let categories = SplitCategory.concatenateCategories(for: workoutTemplate.categories)
-
-        // Skip if not authorized (optional but cleaner)
-        //if !NotificationManager.shared.isAuthorized { return notificationIDs }
 
         // Safely unwrap planned date
         guard let workoutDate = workoutTemplate.date else { return notificationIDs }
@@ -130,35 +136,26 @@ final class NotificationManager: ObservableObject {
                     self.requestIfNeeded()
                 } else {
                     self._removeAllPending()
-                    Task { @MainActor in self.isAuthorized = false }
+                    Task { @MainActor in
+                        self.isAuthorized = false
+                    }
                 }
             }
         )
     }
 
     // MARK: – Public wrappers (no MainActor assumptions)
-    static func printAllPendingNotifications() {
-        shared._printAllPendingNotifications()
-    }
-
-    static func schedule(noti: Notification) -> String {
-        shared._schedule(noti: noti)
-    }
-
-    static func remove(ids: [String]) {
-        shared._remove(ids: ids)
-    }
-
-    static func removeAllPending() {
-        shared._removeAllPending()
-    }
+    static func printAllPendingNotifications() { shared._printAllPendingNotifications() }
+    static func schedule(noti: Notification) -> String { shared._schedule(noti: noti) }
+    static func remove(ids: [String]) { shared._remove(ids: ids) }
+    static func removeAllPending() { shared._removeAllPending() }
 
     // MARK: – Permission helpers
     /// Ask only if the user hasn’t made a choice yet.
-    func requestIfNeeded() {
+    func requestIfNeeded(onUpdate: ((Bool) -> Void)? = nil) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             if settings.authorizationStatus == .notDetermined {
-                self.requestPermission()
+                self.requestPermission(onUpdate: onUpdate)
             } else {
                 Task { @MainActor in
                     self.isAuthorized = settings.authorizationStatus == .authorized
@@ -168,9 +165,12 @@ final class NotificationManager: ObservableObject {
     }
 
     /// Force the system prompt.
-    func requestPermission() {
+    private func requestPermission(onUpdate: ((Bool) -> Void)? = nil) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-            Task { @MainActor in self.isAuthorized = granted }
+            Task { @MainActor in
+                self.isAuthorized = granted
+                onUpdate?(granted)
+            }
             if let error { print("⚠️ Notification request failed:", error.localizedDescription) }
         }
     }
@@ -198,13 +198,11 @@ final class NotificationManager: ObservableObject {
     }
 
     private func _remove(ids: [String]) {
-        UNUserNotificationCenter.current()
-            .removePendingNotificationRequests(withIdentifiers: ids)
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ids)
     }
 
     private func _removeAllPending() {
-        UNUserNotificationCenter.current()
-            .removeAllPendingNotificationRequests()
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
     }
 
     /// Prints every pending UNNotificationRequest identifier to Xcode’s console.

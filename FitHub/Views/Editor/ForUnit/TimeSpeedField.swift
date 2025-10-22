@@ -20,24 +20,21 @@ struct TimeSpeedField: View {
             case .time:
                 TimeEntryField(
                     text: Binding(
-                        get: { !localText.isEmpty ? localText : (tos.time.fieldString) },
+                        get: { localText.isEmpty ? tos.time.fieldString : localText },
                         set: { newValue in
                             localText = newValue
+                            let ts = TimeSpan.seconds(from: newValue)
+                            tos.updateTime(ts, distance: distance, keyOverride: showing)
                         }
                     ),
                     style: style
                 )
                 .overlay(alignment: .bottomTrailing) { if !hideMenuButton { menuButton } }
-                .onChange(of: localText) { _, newValue in
-                    let ts = TimeSpan.seconds(from: newValue)
-                    tos.updateTime(ts, distance: distance, keyOverride: showing)
-                }
-                
+  
             case .speed:
                 TextField("spd.", text: Binding(
-                    get: { !localText.isEmpty ? localText : (tos.speed.fieldString) },
+                    get: { localText.isEmpty ? tos.speed.fieldString : localText },
                     set: { newValue in
-                        // TODO: add special filtering for speed
                         let filtered = InputLimiter.filteredWeight(old: tos.speed.fieldString, new: newValue)
                         localText = filtered
                         let val = Double(filtered) ?? 0

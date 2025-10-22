@@ -24,17 +24,25 @@ struct FavoriteExercisesView: View {
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
                 .padding(.top, 8)
-                if filteredExercises.isEmpty {
-                    List {
+                
+                List {
+                    if filteredExercises.isEmpty {
                         // Display a message if no exercises match the filter
                         Text(selectedFilter == .favorites ? "No favorite exercises found." : (selectedFilter == .disliked ? "No disliked exercises found." : "No exercises found."))
                             .foregroundStyle(.gray)
                             .padding()
-                    }
-                } else {
-                    List(filteredExercises, id: \.self) { exercise in
-                        ExerciseRow(exercise, accessory: { ratingIcons(for: exercise) }) {
-                            EmptyView()
+                    } else {
+                        Section {
+                            ForEach(filteredExercises, id: \.id) { exercise in
+                                ExerciseRow(exercise, accessory: { ratingIcons(for: exercise) }) {
+                                    EmptyView()
+                                }
+                            }
+                        } header: {
+                            if selectedFilter != .all {
+                                Text(Format.exerciseCountText(filteredExercises.count))
+                                    .font(.caption)
+                            }
                         }
                     }
                 }
@@ -79,16 +87,20 @@ struct FavoriteExercisesView: View {
     @ViewBuilder
     private func ratingIcons(for exercise: Exercise) -> some View {
         HStack(spacing: 12) {
+            let favState = FavoriteState.getState(for: exercise, userData: ctx.userData)
+            
             if selectedFilter != .favorites {
-                Image(systemName: ctx.userData.evaluation.dislikedExercises.contains(exercise.id) ? "hand.thumbsdown.fill" : "hand.thumbsdown")
-                    .foregroundStyle(ctx.userData.evaluation.dislikedExercises.contains(exercise.id) ? .blue : .gray)
+                let isDisliked = favState == .disliked
+                Image(systemName: isDisliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
+                    .foregroundStyle(isDisliked ? .blue : .gray)
                     .onTapGesture {
                         modifier.toggleDislike(for: exercise.id, userData: ctx.userData)
                     }
             }
             if selectedFilter != .disliked {
-                Image(systemName: ctx.userData.evaluation.favoriteExercises.contains(exercise.id) ? "heart.fill" : "heart")
-                    .foregroundStyle(ctx.userData.evaluation.favoriteExercises.contains(exercise.id) ? .red : .gray)
+                let isFavorite = favState == .favorite
+                Image(systemName: isFavorite ? "heart.fill" : "heart")
+                    .foregroundStyle(isFavorite ? .red : .gray)
                     .onTapGesture {
                         modifier.toggleFavorite(for: exercise.id, userData: ctx.userData)
                     }

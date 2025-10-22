@@ -37,7 +37,8 @@ struct TimesEditor: View {
                     Button("Reset") {
                         userData.workoutPrefs.customWorkoutTimes = nil
                     }
-                    .foregroundStyle(.red)
+                    .foregroundStyle(isDefault ? .gray : .red)
+                    .disabled(isDefault)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Close") {
@@ -46,6 +47,10 @@ struct TimesEditor: View {
                 }
             }
         }
+    }
+    
+    private var isDefault: Bool {
+        userData.workoutPrefs.customWorkoutTimes == nil
     }
     
     // Fallback time used when no custom is set yet

@@ -275,49 +275,6 @@ extension WorkoutGenerator {
         return summary.totalVolume
     }
     
-    /*
-    private func createProgressionDetails(new: Exercise, input: Input) -> ProgressionDetails? {
-        let progressionType: ProgressionDetails.ProgressionType
-        let appliedChange: String
-        
-        // must also show when weekStagnated is incremented, show weeks stagnated compared to stagnationPeriod
-        if overloadingExercises.contains(new.id) {
-            progressionType = .progressiveOverload
-            appliedChange = "Progressive overload applied (Week \(new.overloadProgress))"
-        } else if deloadingExercises.contains(new.id) {
-            progressionType = .deload
-            // Use prevRPEs.count to show how many weeks led to deload
-            if let prevRPEs = new.previousWeeksAvgRPE {
-                appliedChange = "Deload applied after \(prevRPEs.entries.count + 1) weeks of increasing RPE"
-            } else {
-                appliedChange = "Deload applied"
-            }
-        } else if resetExercises.contains(new.id) {
-            progressionType = .reset
-            appliedChange = "Progression reset"
-        } else if new.weeksStagnated >= input.user.settings.stagnationPeriod {
-            progressionType = .stagnation
-            appliedChange = "Weeks stagnated: \(new.weeksStagnated) (at stagnation limit)"
-        } else if new.weeksStagnated > 0 {
-            progressionType = .stagnation
-            appliedChange = "Weeks stagnated: \(new.weeksStagnated)"
-        } else {
-            progressionType = .none
-            appliedChange = "No progression changes"
-        }
-        
-        return ProgressionDetails(
-            progressionType: progressionType,
-            previousWeek: max(0, new.overloadProgress - 1),
-            newWeek: new.overloadProgress,
-            stagnationWeeks: new.weeksStagnated,
-            appliedChange: appliedChange
-        )
-    }
-    */
-    
-    // TODO: add case for prUpdated. "New PR. SetDetails recalculated."
-    // MARK: also add case for deload ending
     // Create progression details
     private func createProgressionDetails(new: Exercise, input: Input) -> ProgressionDetails? {
         let s = input.user.settings

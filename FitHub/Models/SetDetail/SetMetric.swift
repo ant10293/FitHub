@@ -44,6 +44,30 @@ enum SetMetric: Codable, Equatable, Hashable {
         case .cardio: return .cardio(.init())
         }
     }
+    
+    var unit: UnitCategory {
+        switch self {
+        case .reps: return .reps
+        case .hold: return .time
+        case .cardio(let tos): return tos.unit
+        }
+    }
+    
+    var displayString: String {
+        switch self {
+        case .reps(let r): return String(r)
+        case .hold(let t): return t.displayStringCompact
+        case .cardio(let tos): return tos.displayString
+        }
+    }
+    
+   var formattedText: Text {
+       switch self {
+       case .reps: return Text(displayString)
+       case .hold(let t): return Text(t.displayStringCompact)
+       case .cardio(let tos): return tos.formattedText
+       }
+   }
 }
 
 extension SetMetric {

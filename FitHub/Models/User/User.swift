@@ -72,15 +72,12 @@ struct Settings: Codable, Equatable {
     var userLanguage: Languages = .english
     var selectedTheme: Themes = .defaultMode // Default style
     var roundingPreference: RoundingPreference = RoundingPreference()
-    
-    //var stagnationPeriod: Int = 4 // Default to 4 weeks
-    
     var progressiveOverloadPeriod: Int = 6 // Default to 6 weeks
     var progressiveOverloadStyle: ProgressiveOverloadStyle = .dynamic // Default style
     var muscleRestDuration: Int = 48 // Default to 48 hours
     var deloadIntensity: Int = 85
     var customOverloadFactor: Double?
-    var periodUntilDeload: Int = 2
+    var periodUntilDeload: Int = 4
     var useDateOnly: Bool = true // If true, only the date is considered
     var notifyBeforePlannedTime: Bool = true // If true, notify before planned time; otherwise, notify at the beginning of the day
     var notifications: Notifications = Notifications()

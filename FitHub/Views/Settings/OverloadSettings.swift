@@ -61,7 +61,7 @@ struct OverloadSettings: View {
              */
             
             Section {
-                Stepper("\(userData.settings.progressiveOverloadPeriod) weeks", value: $userData.settings.progressiveOverloadPeriod, in: 1...12)
+                Stepper("\(userData.settings.progressiveOverloadPeriod) weeks", value: $userData.settings.progressiveOverloadPeriod, in: 2...12)
             } header: {
                 Text("Overload Period")
             } footer: {
