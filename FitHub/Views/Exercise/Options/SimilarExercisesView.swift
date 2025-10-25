@@ -1,5 +1,7 @@
 import SwiftUI
 
+/*
+// FIXME: MASSIVE Slowdown when typing. WORST performance in whole app
 struct SimilarExercises: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var ctx: AppContext
@@ -73,6 +75,7 @@ struct SimilarExercises: View {
                         baseExercise: currentExercise,
                         width: width,
                         onReplace: {
+                            kbd.dismiss()
                             let old = currentExercise
                             currentExercise = exercise
                             onExerciseReplaced(exercise)
@@ -219,3 +222,4 @@ private struct SimilarExerciseRow: View {
         return union == 0 ? 0 : Int((Double(shared) / Double(union)) * 100.0)
     }
 }
+*/

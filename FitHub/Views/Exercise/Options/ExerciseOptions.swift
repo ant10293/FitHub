@@ -74,6 +74,7 @@ struct ExerciseOptions: View {
                     .foregroundStyle(.gray)
                     .padding(.bottom)
                 
+                /*
                 Button(action: { showSimilarExercises = true }) {
                     HStack {
                         Image(systemName: "magnifyingglass")
@@ -85,6 +86,7 @@ struct ExerciseOptions: View {
                     .font(.subheadline)
                     .foregroundStyle(.gray)
                     .padding(.bottom)
+                */
                 
                 Button(action: { removeExercise() }) {
                     HStack {
@@ -106,9 +108,11 @@ struct ExerciseOptions: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(radius: 10)
         .sheet(isPresented: $showSimilarExercises) {
+            /*
             SimilarExercises(currentExercise: exercise, template: template) { replacedExercise in
                 modifier.replaceSpecific(currentExercise: exercise, with: replacedExercise, in: &template, ctx: ctx)
             }
+            */
         }
     }
     

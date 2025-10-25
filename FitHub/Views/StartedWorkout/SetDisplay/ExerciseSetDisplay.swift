@@ -23,6 +23,7 @@ struct ExerciseSetDisplay: View {
     
     let timerManager: TimerManager
     let hideRPE: Bool
+    let hideCompleted: Bool
     let exercise: Exercise
     
     var body: some View {
@@ -58,6 +59,7 @@ struct ExerciseSetDisplay: View {
                 CompletedEntry(
                     isWarm: exercise.isWarmUp,
                     hideRPE: hideRPE,
+                    hideCompleted: hideCompleted,
                     planned: planned,
                     showPicker: $showPicker,
                     completed: Binding(

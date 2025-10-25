@@ -40,7 +40,7 @@ struct FavoriteExercisesView: View {
                             }
                         } header: {
                             if selectedFilter != .all {
-                                Text(Format.exerciseCountText(filteredExercises.count))
+                                Text(Format.countText(filteredExercises.count))
                                     .font(.caption)
                             }
                         }

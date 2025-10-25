@@ -151,7 +151,7 @@ struct WorkoutCustomization: View {
     
     private var ResistanceTypeSelector: some View {
         Picker("Resistance Type", selection: $selectedResistanceType) {
-            ForEach(ResistanceType.allCases) { type in
+            ForEach(ResistanceType.allCases.filter { $0 != .banded }) { type in
                 Text(type.rawValue).tag(type)
             }
         }
@@ -228,15 +228,33 @@ struct WorkoutCustomization: View {
     private var splitSelector: some View {
         VStack(alignment: .leading) {
             Button(action: { showingSplitSelection = true }) {
-                HStack {
-                    Text("Customize Split")
-                        .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .foregroundStyle(.gray)
+                VStack {
+                    HStack {
+                        Text("Customize Split")
+                            .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.gray)
+                    }
+                    if let splitWarning {
+                        WarningFooter(message: splitWarning)
+                    }
                 }
             }
         }
+    }
+    
+    private var splitWarning: String? {
+        let split = WorkoutWeek.determineSplit(customSplit: ctx.userData.workoutPrefs.customWorkoutSplit, daysPerWeek: daysPerWeek)
+        if let customSplit = ctx.userData.workoutPrefs.customWorkoutSplit, customSplit != split {
+            let base = "Custom split will not be used. "
+            if customSplit.categories.count != daysPerWeek {
+                return base + "Does not match selected number of days."
+            } else {
+                return base + "Check for day(s) without categories."
+            }
+        }
+        return nil
     }
     
     private var workoutDaysSelector: some View {

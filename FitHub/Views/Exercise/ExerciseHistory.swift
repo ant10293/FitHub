@@ -30,7 +30,7 @@ struct ExerciseHistory: View {
                 if sortedExercise.isEmpty {
                     Text("No recent sets available for this exercise.")
                         .foregroundStyle(.gray)
-                        .padding()
+                        .cardContainer()
                 } else {
                     ForEach(sortedExercise, id: \.self) { workout in
                         VStack(alignment: .leading) {
@@ -78,14 +78,14 @@ struct ExerciseHistory: View {
             }
         case .mostSets:
             return filteredWorkouts.sorted {
-                let setsInFirst = $0.template.exercises.reduce(0) { $0 + $1.setDetails.count }
-                let setsInSecond = $1.template.exercises.reduce(0) { $0 + $1.setDetails.count }
+                let setsInFirst = $0.template.exercises.reduce(0) { $0 + $1.workingSets }
+                let setsInSecond = $1.template.exercises.reduce(0) { $0 + $1.workingSets }
                 return setsInFirst > setsInSecond
             }
         case .leastSets:
             return filteredWorkouts.sorted {
-                let setsInFirst = $0.template.exercises.reduce(0) { $0 + $1.setDetails.count }
-                let setsInSecond = $1.template.exercises.reduce(0) { $0 + $1.setDetails.count }
+                let setsInFirst = $0.template.exercises.reduce(0) { $0 + $1.workingSets }
+                let setsInSecond = $1.template.exercises.reduce(0) { $0 + $1.workingSets }
                 return setsInFirst < setsInSecond
             }
         }

@@ -40,8 +40,9 @@ struct ExerciseSetOverlay: View {
                     shouldDisableNext: $shouldDisableNext,
                     showPicker: $showPicker,
                     timerManager: timerManager,
-                    hideRPE: params.disableRPE,
-                    exercise: exercise,
+                    hideRPE: params.hideRPE,
+                    hideCompleted: params.hideCompleted,
+                    exercise: exercise
                 )
                 
                 if !showPicker {

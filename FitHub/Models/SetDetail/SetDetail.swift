@@ -177,7 +177,27 @@ extension SetDetail {
         SetDetail.formatLoadMetric(load: load, metric: planned)
     }
     
-    static let secPerRep: Int = 3
+    static func secPerRep(for reps: Int, isWarm: Bool) -> Int {
+        guard reps > 0 else { return 2 }
+
+        // Base: slower for low reps, faster for high reps
+        // 1–5 reps: ~3s each
+        // 6–12 reps: ~2s each
+        // 13–20 reps: ~1.5s each
+        // 21+ reps: ~1s each
+        let base: Double
+        switch reps {
+        case 1...5:   base = 3.0
+        case 6...12:  base = 2.0
+        case 13...20: base = 1.5
+        default:      base = 1.0
+        }
+
+        // Warm-ups move a bit faster (about 15% faster)
+        let adjusted = isWarm ? base * 0.85 : base
+        return Int(round(adjusted))
+    }
+    
     static let secPerSetup: Int = 90
     static let extraSecPerDiff: Int = 10
     static let secPerStep: Int = 5 // conversion for time-based sets

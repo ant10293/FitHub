@@ -39,7 +39,7 @@ var dismissKeyboardButton: some View {
             // UI work should remain on the main thread
             DispatchQueue.main.async {
                 // Dismiss the keyboard
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                KeyboardManager.dismissKeyboard()
             }
         }
     }) {

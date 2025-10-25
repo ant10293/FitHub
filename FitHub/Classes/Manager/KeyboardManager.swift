@@ -39,11 +39,12 @@ final class KeyboardManager: ObservableObject {
     }
     
     func dismiss() {
-        UIApplication.shared
-            .sendAction(#selector(UIResponder.resignFirstResponder),
-                        to: nil, from: nil, for: nil)
-
+        KeyboardManager.dismissKeyboard()
         // Update the published state so any listeners refresh right away.
         isVisible = false
+    }
+    
+    static func dismissKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

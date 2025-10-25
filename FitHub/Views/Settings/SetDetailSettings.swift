@@ -11,12 +11,20 @@ struct SetDetailSettings: View {
     @ObservedObject var userData: UserData
     
     var body: some View {
-        // TODO: add other settings + describe what each does
-        card {
-            Toggle("Hide RPE slider", isOn: $userData.settings.hideRpeSlider)
-                .padding()
+        List {
+            Section {
+                Toggle("Hide RPE slider", isOn: $userData.settings.hideRpeSlider)
+            } footer: {
+                Text("Removes the RPE control from Set Detail so you’re not prompted to rate effort during/after sets.")
+            }
+            
+            Section {
+                Toggle("Hide Completed Input", isOn: $userData.settings.hideCompletedInput)
+            } footer: {
+                Text("Hides the “Completed” fields (reps, time). When a set is marked finished, its completed values will automatically match the planned ones.")
+            }
         }
-        .padding(.horizontal)
+        .listStyle(InsetGroupedListStyle())
         .navigationBarTitle("SetDetail Settings", displayMode: .inline)
         .toolbar {
              ToolbarItem(placement: .topBarTrailing) {
@@ -29,10 +37,12 @@ struct SetDetailSettings: View {
     
     var isDefault: Bool {
         userData.settings.hideRpeSlider == false
+        && userData.settings.hideCompletedInput == false
     }
     
     func resetAll() {
         userData.settings.hideRpeSlider = false
+        userData.settings.hideCompletedInput = false
     }
 }
 

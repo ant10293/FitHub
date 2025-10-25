@@ -16,6 +16,7 @@ struct ContentView: View {
                     // should also clear passed planned dates and notis
                     // need to do this on a background thread
                     .onAppear {
+                        //ctx.exercises.testCSVs(userData: ctx.userData)
                         notifications.requestIfNeeded(onUpdate: { allowed in
                             ctx.userData.settings.allowedNotifications = allowed
                         })

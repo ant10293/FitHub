@@ -8,32 +8,46 @@ struct DistributionEditor: View {
 
             // ── Editable rows ────────────────────────────────────────────
             ForEach(EffortType.strengthTypes, id: \.self) { effort in
-                HStack {
-                    Text(effort.rawValue)
-                        .fontWeight(.semibold)
-                        .lineLimit(1)
-                        .layoutPriority(1)
+                let pctInt = distribution.displayPct(for: effort)
 
-                    Slider(
-                        value: sliderBinding(for: effort),
-                        in: 0...100,
-                        step: 1
-                    )
-
-                    Text("\(distribution.displayPct(for: effort)) %")
-                        .monospacedDigit()
-                        .lineLimit(1)
-                        .layoutPriority(1)
-                        .foregroundStyle(.secondary)
+                VStack {
+                    HStack {
+                        Text(effort.rawValue)
+                            .fontWeight(.semibold)
+                            .lineLimit(1)
+                            .layoutPriority(1)
+                        
+                        Slider(
+                            value: sliderBinding(for: effort),
+                            in: 0...100,
+                            step: 1
+                        )
+                        
+                        Text("\(pctInt) %")
+                            .monospacedDigit()
+                            .lineLimit(1)
+                            .layoutPriority(1)
+                            .foregroundStyle(.secondary)
+                    }
+                    .contentShape(Rectangle())
+                    
+                    if let recPct = effort.recommenedPct {
+                        if pctInt > recPct.upperBound {
+                            // Over the recommended cap → show max only
+                            WarningFooter(message: "\(effort.rawValue) is high (\(pctInt)%). Keep ≤ \(recPct.upperBound)%")
+                        } else if pctInt < recPct.lowerBound {
+                            // Under the recommended floor → show min only
+                            WarningFooter(message: "\(effort.rawValue) is low (\(pctInt)%). Aim ≥ \(recPct.lowerBound)%")
+                        }
+                    }
                 }
-                .contentShape(Rectangle())
             }
 
             // ── Total read-out ───────────────────────────────────────────
             HStack {
                 Text("Total: \(totalPct) %")
                 if totalPct != 100 {
-                    Text("[sum must equal 100 %]").italic()
+                    Text("(sum must equal 100 %)").italic()
                 }
             }
             .font(.footnote)
@@ -42,6 +56,7 @@ struct DistributionEditor: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
+    
 
     // MARK: helpers
     private var total: Double { distribution.total }

@@ -49,6 +49,8 @@ struct WorkoutPreferences: Codable, Equatable {
     var customDuration: Int? /// minutes
     var customDistribution: ExerciseDistribution?
     //var supersetSettings: SupersetSettings = SupersetSettings()
+    //var minBwRepsMultiplier: Double = 0.5
+    //var maxBwRepsMultiplier: Double = 2.0
 }
 
 // setup            = Setup()
@@ -90,8 +92,8 @@ struct Settings: Codable, Equatable {
     var hideDislikedExercises: Bool = false // hide exercises that the user has disliked
     var hiddenExercises: Set<UUID> = []
     var hideRpeSlider: Bool = false // TODO: Implement
+    var hideCompletedInput: Bool = false
     //var monthlyStrengthUpdate: Bool = true
-    // var hideCompletedInput: Bool = false
 }
 
 // evaluation       = Evaluation()
@@ -129,8 +131,6 @@ struct WorkoutPlans: Codable, Equatable {
     var archivedTemplates: [WorkoutTemplate] = []
     var workoutsCreationDate: Date?
     var workoutsStartDate: Date?
-    var logFileName: String?      // ← replace old logFileUrl
-    var logFileURL: URL? { logFileName.map { Logger.url(for: $0) } }
     var generatedWeeksWorkout: Bool = false // TODO: remove
     var completedWorkouts: [CompletedWorkout] = []
 }

@@ -18,16 +18,9 @@ struct WorkoutWeek: Identifiable, Codable, Equatable {
         
         switch days {
         case 2:
-            workoutWeek.categories = [
-                [.all], // Index 0
-                [.all]  // Index 1
-            ]
+            workoutWeek.categories = Array(repeating: [.all], count: 2)
         case 3: // Full body workouts
-            workoutWeek.categories = [
-                [.all], // Index 0
-                [.all], // Index 1
-                [.all]  // Index 2
-            ]
+            workoutWeek.categories = Array(repeating: [.all], count: 3)
         case 4: // Upper/Lower split
             workoutWeek.categories = [
                 [.chest, .triceps, .shoulders], // Index 0
@@ -54,7 +47,7 @@ struct WorkoutWeek: Identifiable, Codable, Equatable {
             ]
         default:
             // Rest or custom split, use a sensible default or empty
-            workoutWeek.categories = []
+            workoutWeek.categories = Array(repeating: [.all], count: days)
         }
         
         return workoutWeek
@@ -67,7 +60,13 @@ struct WorkoutWeek: Identifiable, Codable, Equatable {
     }
     
     static func determineSplit(customSplit: WorkoutWeek?, daysPerWeek: Int) -> WorkoutWeek {
-        customSplit ?? WorkoutWeek.createSplit(forDays: daysPerWeek)
+        let defaultSplit = WorkoutWeek.createSplit(forDays: daysPerWeek)
+        guard let customSplit else { return defaultSplit }
+        if customSplit.categories.count != daysPerWeek || customSplit.categories.contains(where: { $0.isEmpty }) {
+            return defaultSplit
+        } else {
+            return customSplit
+        }
     }
 }
 

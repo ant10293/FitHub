@@ -14,7 +14,6 @@ struct WorkoutGeneration: View {
     @State private var showingCustomizationForm: Bool = false
     @State private var showAlert: Bool = false
     @State private var showingExerciseOptions: Bool = false
-    @State private var showingLogDetail: Bool = false   // ← add near other @State vars
     @State private var expandList: Bool = false
     @State private var currentTemplateIndex: Int = 0
     @State private var selectedExercise: Exercise?
@@ -36,7 +35,23 @@ struct WorkoutGeneration: View {
                     if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Workout Plan Generated!").zIndex(1) }
                     
                     selectionBar
-                    ExpandCollapseList(expandList: $expandList)
+                    HStack {
+                        ExpandCollapseList(expandList: $expandList)
+                        Spacer()
+                        TextButton(
+                            title: "Edit",
+                            systemImage: "square.and.pencil",
+                            action: {
+                                if let template = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] {
+                                    selectedTemplate = .init(template: template, location: .trainer, mode: .directToDetail)
+                                }
+                            },
+                            color: .blue
+                        )
+                        .padding(.top)
+                    }
+                    .padding(.horizontal)
+                    
                     exerciseList
                     manageSection
                         
@@ -47,23 +62,6 @@ struct WorkoutGeneration: View {
             }
             .generatingOverlay(isReplacing, message: "Replacing Exercise...")
             .navigationBarTitle("Workout Generation", displayMode: .inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    if ctx.userData.workoutPlans.logFileURL != nil {      // only show when we have a file
-                        Button {
-                            showingLogDetail = true                       // push detail view
-                        } label: {
-                            Image(systemName: "doc.text.magnifyingglass") // pick any icon you like
-                                .imageScale(.medium)
-                        }
-                    }
-                }
-            }
-            .navigationDestination(isPresented: $showingLogDetail) {
-                if let url = ctx.userData.workoutPlans.logFileURL {
-                    LogDetailView(url: url)      // <— the reader view you built earlier
-                }
-            }
             .navigationDestination(isPresented: $showingCustomizationForm) { WorkoutCustomization() }
             .alert(isPresented: $showAlert) { Alert(title: Text("Template Update"), message: Text(alertMessage), dismissButton: .default(Text("OK"))) }
             .overlay(showingExerciseOptions ? exerciseOptions : nil)
@@ -108,16 +106,6 @@ struct WorkoutGeneration: View {
                             .zIndex(1)  // Ensures is above all other content
                     }
                 }
-                
-                Image(systemName: "square.and.pencil")
-                    .foregroundStyle(.blue)
-                    .padding(.leading, -5)
-            }
-            .contentShape(Rectangle())
-            .onTapGesture { 
-                if let template = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] {
-                    selectedTemplate = .init(template: template, location: .trainer, mode: .directToDetail)
-                }
             }
             .frame(alignment: .center)
             .padding(.horizontal)
@@ -135,26 +123,32 @@ struct WorkoutGeneration: View {
         List {
             if let template = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] {
                 Section {
-                    ForEach(template.exercises, id: \.id) { exercise in
-                        ExerciseRow(
-                            exercise,
-                            secondary: true,
-                            heartOverlay: true,
-                            favState: FavoriteState.getState(for: exercise, userData: ctx.userData)
-                        ) {
-                            Button(action: {
-                                selectedExercise = exercise
-                                showingExerciseOptions = true
-                            }) {
-                                Image(systemName: "ellipsis")
-                                    .imageScale(.medium)
-                                    .contentShape(Rectangle())
+                    if template.exercises.isEmpty {
+                        Text("No exercises defined for this template.")
+                            .foregroundStyle(.secondary)
+                            .padding(.vertical)
+                    } else {
+                        ForEach(template.exercises, id: \.id) { exercise in
+                            ExerciseRow(
+                                exercise,
+                                secondary: true,
+                                heartOverlay: true,
+                                favState: FavoriteState.getState(for: exercise, userData: ctx.userData)
+                            ) {
+                                Button(action: {
+                                    selectedExercise = exercise
+                                    showingExerciseOptions = true
+                                }) {
+                                    Image(systemName: "ellipsis")
+                                        .imageScale(.medium)
+                                        .contentShape(Rectangle())
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            } detail: {
+                                exercise.setsSubtitle
+                                    .font(.subheadline)
+                                    .foregroundStyle(Color.secondary)
                             }
-                            .buttonStyle(PlainButtonStyle())
-                        } detail: {
-                            exercise.setsSubtitle
-                                .font(.subheadline)
-                                .foregroundStyle(Color.secondary)
                         }
                     }
                 } header: {

@@ -17,7 +17,7 @@ final class WorkoutGenerator {
     var overloadingExercises: Set<Exercise.ID> = []
     var resetExercises: Set<Exercise.ID> = []
     var maxUpdates: Set<Exercise.ID> = []
-    var reductions: WorkoutReductions = .init()
+    var changes: WorkoutChanges = .init()
     
     // •–––––––––  Inputs  –––––––––•
     struct Input {
@@ -34,10 +34,9 @@ final class WorkoutGenerator {
         var trainerTemplates: [WorkoutTemplate]
         var workoutsStartDate: Date
         var workoutsCreationDate: Date
-        var logFileName: String?
         var updatedMax: [PerformanceUpdate]?
         var changelog: WorkoutChangelog? // NEW
-        var reductions: WorkoutReductions?
+        var changes: WorkoutChanges?
     }
     
     struct GenerationParameters {
@@ -56,44 +55,24 @@ final class WorkoutGenerator {
     // MARK: – Public façade
     func generate(from input: Input) -> Output {
         let creationDate: Date = Date()
-        
-        Logger.shared.add("Current Date: \(Format.fullDate(from: creationDate))", timestamp: false, lineBreak: .before)
-        Logger.shared.add("Starting workout generation...", timestamp: true, lineBreak: .both)
-
-        
+  
         //  Derive all knobs the old method used
-        let params = Logger.shared.time("2) deriveParameters", indentTabs: 1) {
-            deriveParameters(input: input)
-        }
-        
-        // TOTAL (compute only; we time flush separately)
-        let totalTok = Logger.shared.start("TOTAL generation time", lineBreak: .before)
-
-        // 0) Build selector (index + policy + deterministic seed)
-        let selTok = Logger.shared.start("0) build selector (index + policy)", indentTabs: 1)
+        let params = deriveParameters(input: input)
+    
         let selector = ExerciseSelector(
-            data: input.exerciseData,
-            equipment: input.equipmentData,
-            selectedEquipment: input.user.evaluation.equipmentSelected,
+            exerciseData: input.exerciseData,
+            equipmentData: input.equipmentData,
+            userData: input.user,
             days: params.days,
-            favorites: Set(input.user.evaluation.favoriteExercises),
-            disliked: Set(input.user.evaluation.dislikedExercises),
-            resistance: input.user.workoutPrefs.resistance,
-            strengthCeiling: input.user.evaluation.strengthLevel.strengthValue,
             policy: .init(minCount: 1, maxCount: 20),
-            logger: Logger.shared,
             seed: UInt64(max(1, Int(creationDate.timeIntervalSince1970))) // deterministic per run
         )
-        Logger.shared.end(selTok)
         
         // Early-exit guard
         guard !params.days.isEmpty else {
-            Logger.shared.add("ERROR: No workout days were determined.", lineBreak: .before)
-            Logger.shared.end(totalTok, suffix: "early exit")
             return Output(trainerTemplates: [],
                           workoutsStartDate: params.startDate,
-                          workoutsCreationDate: creationDate,
-                          logFileName: nil)
+                          workoutsCreationDate: creationDate)
         }
 
         // 3️⃣  Build templates day-by-day (selection via selector)
@@ -101,7 +80,6 @@ final class WorkoutGenerator {
 
         var templates: [WorkoutTemplate] = []
         for (idx, day) in params.days.enumerated() {
-            let dayTok = Logger.shared.start("3) build \(day.rawValue) template", indentTabs: 1)
             if let tpl = makeWorkoutTemplate(
                 day: day,
                 dayIndex: idx,
@@ -114,23 +92,14 @@ final class WorkoutGenerator {
             ) {
                 templates.append(tpl)
             }
-            Logger.shared.end(dayTok)
         }
-        
-        Logger.shared.add("Workout Generation Complete!", timestamp: true, lineBreak: .both, numLines: 2)
-        Logger.shared.end(totalTok)  // end TOTAL
-
-        // Flush separately so TOTAL reflects compute only
-        let flushTok = Logger.shared.start("flush logs to disk")
-        let fileName = try? Logger.shared.flush()
-        Logger.shared.end(flushTok)
         
         // �� GENERATE CHANGELOG HERE
         let changelog = generateChangelog(
             input: input,
             params: params,
             templates: templates,
-            generationStartTime: creationDate,
+            generationStartTime: creationDate
         )
         
         resetSets() // Clear tracking sets AFTER changelog generation
@@ -139,10 +108,9 @@ final class WorkoutGenerator {
             trainerTemplates: templates,
             workoutsStartDate: params.startDate,
             workoutsCreationDate: creationDate,
-            logFileName: fileName,
             updatedMax: csvUpdates.updatedMax,
             changelog: changelog,
-            reductions: reductions
+            changes: changes
         )
     }
 }
@@ -200,9 +168,9 @@ extension WorkoutGenerator {
         // FIXME: if on a saturday, the start date will be saved as the next week's start date
         if let lastDate = dayIndices.compactMap({ weekDays[$0] }).last {
             if CalendarUtility.shared.isDateInToday(lastDate) {
-                Logger.shared.add("Last relevant workout day is today → stay in current week.")
+                // Last relevant workout day is today → stay in current week.
             } else if lastDate < today {
-                Logger.shared.add("Last relevant workout day is past → bump to next week.")
+                // Last relevant workout day is past → bump to next week.
                 start = CalendarUtility.shared.date(byAdding: .weekOfYear, value: 1, to: start) ?? start
                 weekDays = CalendarUtility.shared.datesInWeek(startingFrom: start)
             }
@@ -210,15 +178,6 @@ extension WorkoutGenerator {
         
         let days = dayIndices.map { DaysOfWeek.orderedDays[$0] }
         let dates = dayIndices.map { weekDays[$0] }
-        let schedule = zip(days, dates).map { name, date in
-            "\t\(name.rawValue): \(Format.shortDate(from: date))"
-        }.joined(separator: "\n")
-        
-        Logger.shared.add("New Week: \(input.nextWeek ? "yes" : "no")", lineBreak: .before)
-        Logger.shared.add("Exercises: \(input.keepCurrentExercises ? "keep current" : "select new") exercises")
-        Logger.shared.add("Days per week: \(daysPerWeek)")
-        Logger.shared.add("Workout week:\n \(workoutWeek)")
-        Logger.shared.add("Workout schedule:\n\(schedule)")
 
         return GenerationParameters(
             duration: duration,
@@ -266,57 +225,46 @@ extension WorkoutGenerator {
                 workoutDate = CalendarUtility.shared.date(bySettingHour: h, minute: m, second: 0, of: workoutDate) ?? workoutDate
             }
         }
-
-        // Selection
-        let selectTok = Logger.shared.start("[\(dayName)] select exercises", indentTabs: 2)
-        // returns both
-        let (exercises, dayReductions): ([Exercise], PoolReduction?) = {
-            // Reuse existing?
-            let existing: [Exercise]? = (input.keepCurrentExercises && dayHasExercises) ? savedDay.exercises : nil
-            if let existing, existing.count >= params.exercisesPerWorkout {
-                Logger.shared.add("\(dayName) Workout: Reusing saved exercises.", lineBreak: .before, numLines: 3)
-                // no new selection happened → reductions empty
-                return (existing, nil)
-            }
-
-            Logger.shared.add("\(dayName) Workout: Selecting new exercises.", lineBreak: .before, numLines: 3)
-            print("[\(dayName)] \(categoriesForDay)")
-
-            // Selector enforces exact `exercisesPerWorkout` when the pool allows.
-            let (picked, dayReductions) = selector.select(
-                dayIndex: dayIndex,
-                categories: categoriesForDay,
-                total: params.exercisesPerWorkout,
-                rAndS: params.repsAndSets,
-                dayLabel: dayName,
-                existing: existing
-            )
-            return (picked, dayReductions)
-        }()
-
-        Logger.shared.end(selectTok, suffix: "\(exercises.count) selected")
-
-        let templateID: UUID = UUID()
-        if let dayReductions {
-            reductions.record(templateID: templateID, newPool: dayReductions)
-        }
         
-        if exercises.isEmpty {
-            Logger.shared.add("No exercises selected. Check the selection criteria and available exercises.")
-            return nil
-        }
+        var tpl = WorkoutTemplate(
+            name: "\(dayName) Workout",
+            exercises: [],
+            categories: categoriesForDay,
+            dayIndex: dayIndex,
+            date: workoutDate,
+        )
         
-        // [1] Similarity debug (only when *not* keeping current)
-        if !input.keepCurrentExercises, dayHasExercises {
-            let simTok = Logger.shared.start("[\(dayName)] similarity", indentTabs: 2)
-            compareSimilarity(savedExercises: savedDay.exercises, chosenExercises: exercises, dayIndex: dayIndex)
-            Logger.shared.end(simTok)
-        }
-                
-        // [2] Detail each exercise (aggregate timing, plus per-ex timing with threshold)
-        let detailTok = Logger.shared.start("[\(dayName)] detail exercises", indentTabs: 2)
-        let detailedExercises: [Exercise] = exercises.map { ex in
-            Logger.shared.time("[\(dayName)] \(ex.name) details", indentTabs: 3, minMs: 1.0) {
+        func getExercisesForTemplate(
+            exerciseCount: Int,
+            relaxed: [PoolChanges.RelaxedFilter]? = nil
+        ) -> ([Exercise], [PoolChanges.RelaxedFilter]?){
+            let (exercises, dayChanges): ([Exercise], PoolChanges?) = {
+                // Reuse existing?
+                let existing: [Exercise]? = (input.keepCurrentExercises && dayHasExercises) ? savedDay.exercises : nil
+                if let existing, existing.count >= params.exercisesPerWorkout {
+                    // no new selection happened → reductions empty
+                    return (existing, nil)
+                }
+
+                // Selector enforces exact `exercisesPerWorkout` when the pool allows.
+                let (picked, dayChanges) = selector.select(
+                    dayIndex: dayIndex,
+                    dayLabel: day.rawValue,
+                    categories: categoriesForDay,
+                    total: exerciseCount,
+                    rAndS: params.repsAndSets,
+                    existing: existing,
+                    relaxed: relaxed ?? []
+                )
+                return (picked, dayChanges)
+            }()
+          
+            if let dayChanges { changes.record(templateID: tpl.id, newPool: dayChanges) }
+            
+            if exercises.isEmpty { return ([], dayChanges?.relaxedFilters) }
+            
+            // [2] Detail each exercise (aggregate timing, plus per-ex timing with threshold)
+            let detailedExercises: [Exercise] = exercises.map { ex in
                 let newEx = calculateDetailedExercise(
                     input: input,
                     exercise: ex,
@@ -326,77 +274,44 @@ extension WorkoutGenerator {
                     }
                 )
                 // —— Overload/deload progression ——————————————
-                return Logger.shared.time("handleExerciseProgression \(ex.name)", indentTabs: 4, minMs: 0.5) {
-                    handleExerciseProgression(
-                        input: input,
-                        exercise: newEx,
-                        completedExercise: completed.byID[ex.id],
-                        overloadFactor: params.overloadFactor,
-                        overloadStyle: params.overloadStyle,
-                        templateCompleted: wasCompleted
-                    )
-                }
+                return handleExerciseProgression(
+                    input: input,
+                    exercise: newEx,
+                    completedExercise: completed.byID[ex.id],
+                    overloadFactor: params.overloadFactor,
+                    overloadStyle: params.overloadStyle,
+                    templateCompleted: wasCompleted
+                )
             }
-        }
-        Logger.shared.end(detailTok, suffix: "x\(exercises.count)")
-        
-        // TODO: do something if the estimated time is too high
-        // [3] Build the template
-        let tpl = WorkoutTemplate(
-            id: templateID,
-            name: "\(dayName) Workout",
-            exercises: detailedExercises,
-            categories: categoriesForDay,
-            dayIndex: dayIndex,
-            date: workoutDate,
-            restPeriods: params.repsAndSets.rest
-        )
-        /*
-        if let est = tpl.estimatedCompletionTime {
-            let estMin = est.inMinutes
-            let desiredMin = params.duration.inMinutes
             
-            // add more exercises
-            if estMin < desiredMin {
-                
-            }
+            return (detailedExercises, dayChanges?.relaxedFilters)
         }
-        */
         
-        // [5] Completion-time estimate
-        let etaTok = Logger.shared.start("[\(dayName)] estimate completion time", indentTabs: 2)
-        Logger.shared.end(etaTok)
+        let (exercises, relaxed) = getExercisesForTemplate(exerciseCount: params.exercisesPerWorkout)
+        
+        tpl.exercises = exercises
+        
+        let (est, perExercise) = tpl.estimateCompletionTime(
+            rest: params.repsAndSets.rest,
+            includePerExercise: true
+        )
+        
+        if let perExercise {
+            let newCount = targetExerciseCount(
+                perExercise: perExercise,
+                target: params.duration
+            )
+            
+            if newCount < params.exercisesPerWorkout {
+                let (exercises, _) = getExercisesForTemplate(exerciseCount: newCount, relaxed: relaxed)
+                tpl.exercises = exercises
+                tpl.setEstimatedCompletionTime(rest: params.repsAndSets.rest)
+            }
+        } else {
+            tpl.estimatedCompletionTime = est
+        }
         
         return tpl
-    }
-    
-    private func estimateExercises(duration: TimeSpan, repsAndSets: RepsAndSets) -> Int {
-        let secondsPerRep = SetDetail.secPerRep
-        let avgSetup      = SetDetail.secPerSetup
-
-        // Weighted by distribution **and** per-type set counts
-        let setsAvg = max(1.0, repsAndSets.averageSetsPerExercise)
-        let repsAvg = max(1.0, repsAndSets.averageRepsPerSetWeighted)
-        let restPer = max(0, repsAndSets.getRest(for: .working))
-
-        let workSeconds = setsAvg * repsAvg * Double(secondsPerRep)
-        let restSeconds = Double(restPer) * max(0.0, setsAvg - 1.0)
-        let perExercise = max(1, Int(workSeconds) + Int(restSeconds) + avgSetup)
-
-        let totalSeconds = max(60, duration.inMinutes * 60)
-        let numExercises = max(1, Int((Double(totalSeconds) / Double(perExercise)).rounded()))
-        return numExercises
-    }
-    
-    private func compareSimilarity(savedExercises: [Exercise], chosenExercises: [Exercise], dayIndex: Int) {
-        let savedNames    = Set(savedExercises.map(\.name))
-        let selectedNames = Set(chosenExercises.map(\.name))
-        let overlap       = Double(savedNames.intersection(selectedNames).count)
-        let maxCount      = Double(max(savedNames.count, selectedNames.count))
-        if maxCount > 0 {
-            let sim = overlap / maxCount * 100
-            Logger.shared.add("Similarity with previous week: \(String(format: "%.0f%%", sim))")
-        }
     }
     
     func calculateDetailedExercise(
@@ -420,9 +335,8 @@ extension WorkoutGenerator {
         }
 
         // —— Set details ————————————————————————————
-        Logger.shared.time("createSetDetails \(ex.name)", indentTabs: 4, minMs: 0.5) {
-            ex.createSetDetails(repsAndSets: repsAndSets, userData: input.user, equipmentData: input.equipmentData)
-        }
+        ex.createSetDetails(repsAndSets: repsAndSets, userData: input.user, equipmentData: input.equipmentData)
+        
         return ex
     }
     
@@ -457,7 +371,6 @@ extension WorkoutGenerator {
             let next        = oldProgress + 1
 
             ex.overloadProgress = next // optimistic bump for apply()
-            Logger.shared.add("◦ Attempting overload (step \(next)).", indentTabs: 1)
 
             let applied = ex.applyProgressiveOverload(
                 equipmentData: input.equipmentData,
@@ -470,12 +383,10 @@ extension WorkoutGenerator {
 
             if applied {
                 ex.weeksStagnated = 0
-                Logger.shared.add("◦ Overload applied. Progress step = \(ex.overloadProgress).", indentTabs: 1)
                 overloadingExercises.insert(ex.id)
                 return true
             } else {
                 ex.overloadProgress = oldProgress // rollback only the visual bump
-                Logger.shared.add("◦ Overload not applied.", indentTabs: 1)
                 return false
             }
         }
@@ -483,10 +394,8 @@ extension WorkoutGenerator {
         /// If no PR/OL change happened, advance stagnation and maybe deload.
         func stagnateOrDeload() {
             ex.weeksStagnated += 1
-            Logger.shared.add("◦ weeksStagnated = \(ex.weeksStagnated).", indentTabs: 1)
 
             if s.allowDeloading && ex.weeksStagnated >= s.periodUntilDeload {
-                Logger.shared.add("◦ Stagnation threshold reached → Deload.", indentTabs: 1)
                 ex.applyDeload(
                     equipmentData: input.equipmentData,
                     deloadPct: s.deloadIntensity,
@@ -503,21 +412,16 @@ extension WorkoutGenerator {
 
         // 0️⃣ New PR → reset.
         if newPRSincePlanCreation(input: input, exerciseID: ex.id) {
-            Logger.shared.add("◦ New 1RM since plan creation → reset.", indentTabs: 1)
             resetProgression()
             maxUpdates.insert(ex.id)
             return ex
         }
 
         // 1️⃣ Skip if last week’s template wasn’t completed.
-        guard templateCompleted else {
-            Logger.shared.add("Template not completed last week → no progression changes.", indentTabs: 1)
-            return ex
-        }
+        guard templateCompleted else { return ex }
         
         // 2️⃣ Prevent overload immediately after deload.
         if completedExercise?.isDeloading == true {
-            Logger.shared.add("◦ Skipping overload — previous week was deload.", indentTabs: 1)
             ex.isDeloading = false
             endedDeloadExercises.insert(ex.id)
             return ex
@@ -529,7 +433,6 @@ extension WorkoutGenerator {
 
         // 4️⃣ Reset after completing a full overload cycle.
         if s.progressiveOverload && ex.overloadProgress >= s.progressiveOverloadPeriod {
-            Logger.shared.add("◦ Completed overload cycle → reset progression.", indentTabs: 1)
             resetProgression()
         }
 
@@ -556,5 +459,66 @@ extension WorkoutGenerator {
         overloadingExercises.removeAll()
         resetExercises.removeAll()
         maxUpdates.removeAll()
+    }
+}
+
+extension WorkoutGenerator {
+    private func targetExerciseCount(
+        perExercise: [(id: Exercise.ID, seconds: Int)],
+        target: TimeSpan,
+        // minimal asymmetry knobs
+        underTolerancePct: Double = 0.05,  // tighter under
+        overTolerancePct:  Double = 0.12,  // looser over
+        underMinSlackSec:  Int    = 45,
+        overMinSlackSec:   Int    = 120
+    ) -> Int {
+        let targetSec = max(0, target.inSeconds)
+        let count     = max(1, perExercise.count)
+        let totalSec  = perExercise.reduce(0) { $0 + max(0, $1.seconds) }
+        let avgSec    = max(1, totalSec / count)
+
+        // Asymmetric tolerance
+        let allowedUnder = max(Int(Double(targetSec) * underTolerancePct), underMinSlackSec)
+        let allowedOver  = max(Int(Double(targetSec) * overTolerancePct),  overMinSlackSec)
+
+        // Already “close enough”?
+        if totalSec <= targetSec {
+            if (targetSec - totalSec) <= allowedUnder { return count }
+        } else {
+            if (totalSec - targetSec) <= allowedOver { return count }
+        }
+
+        // Ideal by average; clamp to [1, count]
+        let ideal = max(1, min(count, Int(round(Double(targetSec) / Double(avgSec)))))
+
+        // Evaluate close-by options to avoid big swings
+        let candidates = Set([ideal - 1, ideal, ideal + 1].filter { (1...count).contains($0) })
+        let pick = candidates.min { a, b in
+            let errA = abs(a * avgSec - targetSec)
+            let errB = abs(b * avgSec - targetSec)
+            if errA != errB { return errA < errB }
+            // tie-breaker: prefer slightly *more* work if both are equally close
+            return a > b
+        } ?? ideal
+
+        return pick
+    }
+    
+    private func estimateExercises(duration: TimeSpan, repsAndSets: RepsAndSets) -> Int {
+        // Weighted by distribution **and** per-type set counts
+        let setsAvg = max(1.0, repsAndSets.averageSetsPerExercise)
+        let repsAvg = max(1.0, repsAndSets.averageRepsPerSetWeighted)
+        let restPer = max(0, repsAndSets.getRest(for: .working))
+        
+        let secondsPerRep = SetDetail.secPerRep(for: Int(repsAvg), isWarm: false)
+        let avgSetup      = SetDetail.secPerSetup
+
+        let workSeconds = setsAvg * repsAvg * Double(secondsPerRep)
+        let restSeconds = Double(restPer) * max(0.0, setsAvg - 1.0)
+        let perExercise = max(1, Int(workSeconds) + Int(restSeconds) + avgSetup)
+
+        let totalSeconds = max(60, duration.inMinutes * 60)
+        let numExercises = max(1, Int((Double(totalSeconds) / Double(perExercise)).rounded()))
+        return numExercises
     }
 }

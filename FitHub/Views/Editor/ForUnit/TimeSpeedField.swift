@@ -75,7 +75,7 @@ struct TimeSpeedField: View {
             ForEach(TimeOrSpeed.InputKey.allCases, id: \.self) { key in
                 Button {
                     // Unfocus the text field first
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    KeyboardManager.dismissKeyboard()
                     if showing != nil { showing = key }
                     tos.showing = key
                 } label: {

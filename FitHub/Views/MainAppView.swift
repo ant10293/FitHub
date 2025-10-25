@@ -45,8 +45,9 @@ struct MainAppView: View {
                 }
             }
             .sheet(isPresented: $userData.showingGenerationWarning) {
-                if let reductions = userData.workoutReductions {
-                    GenerationWarning(workoutReductions: reductions)
+                if let reductions = userData.workoutChanges, let creation = userData.workoutPlans.workoutsCreationDate {
+                    GenerationWarning(workoutChanges: reductions)
+                        .id(creation)
                 }
             }
             .onChange(of: selectedTab) {

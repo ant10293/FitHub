@@ -10,21 +10,24 @@ import SwiftUI
 struct CompletedEntry: View {
     let isWarm: Bool
     let hideRPE: Bool
+    let hideCompleted: Bool
     let planned: SetMetric
     @Binding var showPicker: Bool
     @Binding var completed: SetMetric
     @Binding var rpe: Double
     
-    var body: some View {        
-        switch planned {
-        case .reps(let plannedReps):
-            repsField(plannedReps: plannedReps)
-            
-        case .hold(let plannedTime):
-            holdField(plannedTime: plannedTime)
-            
-        case .cardio(let plannedTOS):
-            cardioField(plannedTOS: plannedTOS)
+    var body: some View {
+        if !hideCompleted {
+            switch planned {
+            case .reps(let plannedReps):
+                repsField(plannedReps: plannedReps)
+                
+            case .hold(let plannedTime):
+                holdField(plannedTime: plannedTime)
+                
+            case .cardio(let plannedTOS):
+                cardioField(plannedTOS: plannedTOS)
+            }
         }
         
         // TODO: hide for cardio exercises

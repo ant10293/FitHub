@@ -22,8 +22,7 @@ struct WorkoutChangelogView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Workout Changes")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitle("Workout Changes", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Close") { dismiss() }

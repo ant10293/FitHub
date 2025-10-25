@@ -41,7 +41,6 @@ struct WorkoutsView: View {
                     selectedTemplate = SelectedTemplate(template: active.template, location: .active, mode: .directToWorkout)
                 }
                 showResumeWorkoutOverlay = false
-                    
             }
         )
     }
@@ -150,7 +149,6 @@ struct WorkoutsView: View {
     }
     
     private var uniqueTemplateName: String {
-        let initialName: String = "New Template"
-        return WorkoutTemplate.uniqueTemplateName(initialName: initialName, from: ctx.userData.workoutPlans.userTemplates)
+        return WorkoutTemplate.uniqueTemplateName(initialName: "New Template", from: ctx.userData.workoutPlans.userTemplates)
     }
 }

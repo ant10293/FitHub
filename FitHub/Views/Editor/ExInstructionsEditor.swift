@@ -65,16 +65,19 @@ struct ExInstructionsEditor: View {
     }
 
     private func addStep() {
+        kbd.dismiss()
         let newIndex = instructions.count
         instructions.add("")
         focusedIndex = newIndex
     }
 
     private func delete(at offsets: IndexSet) {
+        kbd.dismiss()
         for i in offsets.sorted(by: >) { instructions.remove(at: i) }
     }
 
     private func move(from source: IndexSet, to destination: Int) {
+        kbd.dismiss()
         for s in source.sorted() {
             let dest = destination > s ? destination - 1 : destination
             instructions.move(from: s, to: dest)

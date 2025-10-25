@@ -219,9 +219,10 @@ enum Format {
             "\(range.lowerBound)-\(range.upperBound)"
         }
     }
+    
     /// Returns "N exercise(s)" with optional capitalization of the leading "e".
-    static func exerciseCountText(_ count: Int, capitalize: Bool = false) -> String {
-        let base = "\(count) exercise" + (count == 1 ? "" : "s")
+    static func countText(_ count: Int, base: String = "exercise", capitalize: Bool = false) -> String {
+        let base = "\(count) \(base)" + (count == 1 ? "" : "s")
         return capitalize ? base.capitalizeFirstLetter() : base
     }
 }

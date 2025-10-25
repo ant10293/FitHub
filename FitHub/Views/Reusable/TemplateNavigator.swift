@@ -46,7 +46,9 @@ struct TemplateNavigator<Content: View>: View {
         ZStack {
             content()
                 .disabled(shouldDisableContent)
-                .navigationDestination(isPresented: $navigateToTemplateDetail) { templateDetailView }
+                .navigationDestination(isPresented: $navigateToTemplateDetail) {
+                    templateDetailView
+                }
                 .navigationDestination(item: $workoutRoute) { route in
                     startedWorkoutView(route: route)
                 }
@@ -111,6 +113,12 @@ struct TemplateNavigator<Content: View>: View {
                 template: binding,
                 isArchived: sel.location == .archived
             )
+        } else {
+            Color.clear.onAppear {
+                navigateToTemplateDetail = false
+                selectedTemplate = nil
+                currentTemplate = nil
+            }
         }
     }
     

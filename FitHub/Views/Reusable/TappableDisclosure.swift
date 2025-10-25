@@ -20,12 +20,11 @@ struct TappableDisclosure<Label: View, Content: View>: View {
                 Spacer(minLength: 0)
                 Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
                     .foregroundStyle(.secondary)
-                    .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isExpanded)
                     .accessibilityHidden(true)
             }
             .padding(.vertical, 12)
             .contentShape(Rectangle())
-            .onTapGesture { withAnimation(.snappy) { isExpanded.toggle() } }
+            .onTapGesture { isExpanded.toggle() }
 
             if isExpanded { // now valid even when content has if/else inside
                 content()

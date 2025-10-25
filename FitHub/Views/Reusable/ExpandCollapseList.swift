@@ -14,9 +14,7 @@ struct ExpandCollapseList: View {
     
     var body: some View {
         Button(action: {
-            withAnimation {
-                expandList.toggle()
-            }
+            withAnimation { expandList.toggle() }
         }) {
             HStack {
                 Label(

@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 struct SortSettings: View {
     @ObservedObject var userData: UserData
     

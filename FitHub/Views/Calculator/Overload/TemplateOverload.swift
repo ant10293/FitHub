@@ -59,20 +59,21 @@ struct ExerciseSetChange: View {
             // Headers (unchanged visuals)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 10)], spacing: 5) {
                 Text("Set")
-                    .font(.caption).fontWeight(.semibold).foregroundStyle(.gray)
                 let load = firstSet?.load ?? newExercise.loadMetric
                 if let unit = load.unit, let label = unit.label(for: .label)  {
                     Text(label)
-                        .font(.caption).fontWeight(.semibold).foregroundStyle(.gray)
                 } else {
-                    Spacer()
+                    Text("Load")
                 }
                 let planned = firstSet?.planned ?? newExercise.plannedMetric
                 if let label = planned.unit.label(for: .label)  {
                     Text(label)
-                        .font(.caption).fontWeight(.semibold).foregroundStyle(.gray)
                 }
             }
+            .font(.caption)
+            .fontWeight(.semibold)
+            .foregroundStyle(.gray)
+            
             // Rows
             LazyVGrid(
                 columns: [

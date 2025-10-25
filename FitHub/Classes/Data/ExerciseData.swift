@@ -130,6 +130,65 @@ extension ExerciseData {
         guard let max = peak else { return }
         updateExercisePerformance(for: exercise.id, newValue: max, csvEstimate: true)
     }
+    
+    
+    func testCSVs(userData: UserData) {
+        var skipped: [Exercise] = []
+        for exercise in allExercises {
+            let peak = CSVLoader.calculateMaxValue(for: exercise, userData: userData).valid
+            guard let max = peak else {
+                skipped.append(exercise)
+                continue
+            }
+            print("\(exercise.name) max: \(max.displayValue)")
+        }
+        
+        if !skipped.isEmpty {
+            var oneRms: Set<Exercise> = []
+            var maxReps: Set<Exercise> = []
+            var maxHolds: Set<Exercise> = []
+            var hold30sLoads: Set<Exercise> = []
+            
+            print("------------------ total: \(skipped.count)/\(allExercises.count) ------------------")
+            for exercise in skipped {
+                switch exercise.getPeakMetric(metricValue: 0) {
+                case .oneRepMax: oneRms.insert(exercise)
+                case .maxReps: maxReps.insert(exercise)
+                case .maxHold: maxHolds.insert(exercise)
+                case .hold30sLoad: hold30sLoads.insert(exercise)
+                case .none: break
+                }
+            }
+            
+            if !oneRms.isEmpty {
+                print("------------------ One Rep Maxes ------------------")
+                for ex in oneRms {
+                    print("\(ex.name) has no CSV data")
+                }
+            }
+            
+            if !maxReps.isEmpty {
+                print("------------------ Max Reps ------------------")
+                for ex in maxReps {
+                    print("\(ex.name) has no CSV data")
+                }
+            }
+            
+            if !maxHolds.isEmpty {
+                print("------------------ Max Holds ------------------")
+                for ex in maxHolds {
+                    print("\(ex.name) has no CSV data")
+                }
+            }
+            
+            if !hold30sLoads.isEmpty {
+                print("------------------ Max Load 30s ------------------")
+                for ex in hold30sLoads {
+                    print("\(ex.name) has no CSV data")
+                }
+            }
+        }
+    }
 }
 
 extension ExerciseData {

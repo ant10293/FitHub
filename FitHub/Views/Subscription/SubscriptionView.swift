@@ -47,7 +47,7 @@ struct SubscriptionView: View {
             .padding()
         }
         .navigationBarTitle("FitHub Pro", displayMode: .inline)
-        .background(Color(.systemGray6))
+        //.background(Color(.systemGray6))
         .task {
             if ctx.store.products.isEmpty { await ctx.store.configure() }
             maybeSelectDefault()
@@ -88,45 +88,43 @@ struct SubscriptionView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Choose your plan").font(.headline)
 
-            if orderedProducts.isEmpty {
-                // Placeholder while loading
-                VStack(spacing: 10) {
-                    ForEach(0..<3) { _ in
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.secondary.opacity(0.15))
-                            .frame(height: 56)
+            VStack {
+                if orderedProducts.isEmpty {
+                    // Placeholder while loading
+                    VStack(spacing: 10) {
+                        ForEach(0..<3) { _ in
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.secondary.opacity(0.15))
+                                .frame(height: 56)
+                        }
                     }
-                }
-                .redacted(reason: .placeholder)
-            } else {
-                VStack(spacing: 10) {
-                    ForEach(orderedProducts, id: \.id) { p in
-                        PlanCard(
-                            title: displayTitle(for: p.id),
-                            priceTrailing: trailingPriceText(for: p),
-                            badge: badge(for: p.id),
-                            selected: selectedProductID == p.id,
-                            isCurrent: currentProductID == p.id,
-                            onTap: { selectedProductID = p.id }
-                        )
+                    .redacted(reason: .placeholder)
+                } else {
+                    VStack(spacing: 10) {
+                        ForEach(orderedProducts, id: \.id) { p in
+                            PlanCard(
+                                title: displayTitle(for: p.id),
+                                priceTrailing: trailingPriceText(for: p),
+                                badge: badge(for: p.id),
+                                selected: selectedProductID == p.id,
+                                isCurrent: currentProductID == p.id,
+                                onTap: { selectedProductID = p.id }
+                            )
+                        }
                     }
-                }
-
-                // ⤵️ Auto-renew footnote for Monthly / Annual
-                if let note = autoRenewFootnote {
-                    Text(note)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                        .padding(.top, 4)
-                        .transition(.opacity)
                 }
             }
+            .cardContainer()
+
+            // ⤵️ Auto-renew footnote for Monthly / Annual
+            if let note = autoRenewFootnote {
+                Text(note)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .padding(.top, 4)
+                    .transition(.opacity)
+            }
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color(.secondarySystemBackground))
-        )
     }
 
     // MARK: - Helpers
@@ -182,7 +180,7 @@ struct SubscriptionView: View {
         default: return "Plan"
         }
     }
-
+    
     private func badge(for id: String) -> String? {
         switch id {
         case PremiumStore.ID.yearly:   return "Best Value"

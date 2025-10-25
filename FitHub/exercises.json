@@ -670,31 +670,6 @@
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
-		"name": "Incline Push-Up",
-		"id": "50994FD9-9FBC-4CB9-838D-0233F5C14B3A",
-		"image": "incline_push_up",
-		"url": "incline-push-up",
-		"aliases": ["Elevated Push-Up", "Incline Chest Push-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
-			] },
-			{ "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
 		"name": "Pec Deck Fly",
 		"id": "C339B93F-9BE1-475D-93A4-BC7222112F6D",
 		"image": "pec_deck_fly",
@@ -824,31 +799,6 @@
 		"resistance": "Machine"
 	},
 	{
-		"name": "Push-Up",
-		"id": "D314DC2A-60C4-4C25-A2CB-F46023462D2E",
-		"image": "push_up",
-		"url": "push-ups",
-		"aliases": ["Standard Push-Up", "Chest Push-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
-			] },
-			{ "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
 		"name": "Cable Chest Fly",
 		"id": "8717D2A8-022C-4B4A-B710-B92B6B58AF6A",
 		"image": "cable_chest_fly",
@@ -866,56 +816,6 @@
 		"limbMovementType": "Bilateral Independent",
 		"resistance": "Machine",
 		"weightInstruction" : "Per Stack"
-	},
-	{
-		"name": "Decline Push-Up",
-		"id": "6BF22765-CCFA-405F-A1CE-5F4F86FF6A4F",
-		"image": "decline_push_up",
-		"url": "decline-push-up",
-		"aliases": ["Feet Elevated Push-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Diamond Push-Up",
-		"id": "BA99D6F4-0DAF-4397-80F8-B06C9AB0F17F",
-		"image": "diamond_push_up",
-		"url": "diamond-push-ups",
-		"aliases": ["Close-Hand Push-Up", "Triceps Push-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
-			] },
-			{ "engagementPercentage": 45, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
 	},
 	{
 		"name": "Low to High Cable Chest Fly",
@@ -953,6 +853,290 @@
 		"resistance": "Machine",
         "weightInstruction" : "Per Dumbbell"
 	},
+    {
+        "name": "Incline Push-Up",
+        "id": "50994FD9-9FBC-4CB9-838D-0233F5C14B3A",
+        "image": "incline_push_up",
+        "url": "incline-push-up",
+        "aliases": ["Elevated Push-Up", "Incline Chest Push-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
+            ] },
+            { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Push-Up",
+        "id": "D314DC2A-60C4-4C25-A2CB-F46023462D2E",
+        "image": "push_up",
+        "url": "push-ups",
+        "aliases": ["Standard Push-Up", "Chest Push-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
+            ] },
+            { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Decline Push-Up",
+        "id": "6BF22765-CCFA-405F-A1CE-5F4F86FF6A4F",
+        "image": "decline_push_up",
+        "url": "decline-push-up",
+        "aliases": ["Feet Elevated Push-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Handstand Push-Up",
+        "id": "A4DB516D-ECA8-4518-8487-CE48BB00185E",
+        "image": "handstand_push_up",
+        "url": "handstand-push-ups",
+        "aliases": ["Inverted Push-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
+                { "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
+            ] }
+        ],
+        "difficulty": "Adv.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Pike Push-Up",
+        "id": "3AE6B370-A3E7-4686-927B-AAA8D8DE54F7",
+        "image": "pike_push_up",
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 50, "submuscleWorked": "Front Delt" },
+                { "engagementPercentage": 50, "submuscleWorked": "Side Delt" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Archer Push-Up",
+        "id": "8672F1E4-9F7F-449A-B245-687C67281B7F",
+        "image": "archer_push_up",
+        "url": "archer-push-ups",
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
+                { "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction" : "Per Side"
+    },
+    {
+        "name": "Wide-Grip Push-Up",
+        "id": "35FFE1C1-5BCA-499A-A6B7-3068EDB80A60",
+        "image": "wide_grip_push_up",
+        "aliases": ["Wide Push-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Triceps Lateral Head" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Close-Grip Push-Up",
+        "id": "D4311DC8-1855-44EA-BEDC-69FE8068484F",
+        "image": "close_grip_push_up",
+        "url": "close-grip-push-up",
+        "aliases": ["Narrow Push-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Close-Grip Push-Up (Knees)",
+        "id": "E29B0B81-7CF8-4231-AA55-9B5E273B222F",
+        "image": "close_grip_knee_push_up",
+        "aliases": ["Modified Narrow Push-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Diamond Cutter Push-Up",
+        "id": "992875B1-8A2A-4DAB-B78C-F933416B9FCA",
+        "image": "diamond_cutter_push_up",
+        "aliases": ["Heart Push-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
+            ] },
+            { "engagementPercentage": 45, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
+            ] },
+            { "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Tate Push-Up",
+        "id": "F895AC05-24F3-46F7-B6C6-3B8DB94F6B67",
+        "image": "tate_push_up",
+        "aliases": ["Elbows-Out Push-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Diamond Push-Up",
+        "id": "BA99D6F4-0DAF-4397-80F8-B06C9AB0F17F",
+        "image": "diamond_push_up",
+        "url": "diamond-push-ups",
+        "aliases": ["Close-Hand Push-Up", "Triceps Push-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
+            ] },
+            { "engagementPercentage": 45, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
 	{
 		"name": "Kneeling Incline Push-Up",
 		"id": "5FB19801-1D9E-4EBE-9BB1-4D014C048FDC",
@@ -1024,29 +1208,6 @@
 			] },
 			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
-			] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Ring Push-Up",
-		"id": "FAAF4A2F-B7BA-4853-9BBC-022D9D4280C5",
-		"image": "ring_push_up",
-		"aliases": ["Suspension Push-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Rings"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Lateral Head" }
 			] },
 			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
@@ -1196,52 +1357,6 @@
 		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
-	},
-	{
-		"name": "Wide-Grip Push-Up",
-		"id": "35FFE1C1-5BCA-499A-A6B7-3068EDB80A60",
-		"image": "wide_grip_push_up",
-		"aliases": ["Wide Push-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Lateral Head" }
-			] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Medicine-Ball Push-Up",
-		"id": "EE1FB9A4-0C4A-4A9D-8437-4B34543921BD",
-		"image": "medicine_ball_push_up",
-		"aliases": ["MB Push-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Medicine Ball"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
-			] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
 	},
 	{
 		"name": "Arnold Press",
@@ -1481,7 +1596,7 @@
 		"url": "dumbbell-face-pull",
 		"aliases": ["DB Face Pull"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Bench"],
+		"equipmentRequired": ["Dumbbells"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
@@ -1845,29 +1960,6 @@
 		"resistance": "Free Weight"
 	},
 	{
-		"name": "Handstand Push-Up",
-		"id": "A4DB516D-ECA8-4518-8487-CE48BB00185E",
-		"image": "handstand_push_up",
-		"url": "handstand-push-ups",
-		"aliases": ["Inverted Push-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
-			] }
-		],
-		"difficulty": "Adv.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
 		"name": "Dumbbell Rear Delt Row",
 		"id": "26DFBB55-56B6-4BE4-92C4-323F54DA407B",
 		"image": "dumbbell_rear_delt_row",
@@ -1969,7 +2061,7 @@
 		"url": "dumbbell-external-rotation",
 		"aliases": ["Seated DB ER"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Bench"],
+		"equipmentRequired": ["Dumbbells", "Vertical Bench"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
@@ -2076,72 +2168,6 @@
 		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
 		"weightInstruction" : "Per Dumbbell"
-	},
-	{
-		"name": "Snatch-Grip BTN Press",
-		"id": "7DF9AECD-EBEF-40E8-B387-076246D8B052",
-		"image": "snatch_grip_btn_press",
-		"aliases": ["Wide-Grip Behind-Neck Press"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell"],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 50, "submuscleWorked": "Side Delt" },
-				{ "engagementPercentage": 50, "submuscleWorked": "Rear Delt" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
-			] }
-		],
-		"difficulty": "Adv.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
-	},
-	{
-		"name": "Pike Push-Up",
-		"id": "3AE6B370-A3E7-4686-927B-AAA8D8DE54F7",
-		"image": "pike_push_up",
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 50, "submuscleWorked": "Front Delt" },
-				{ "engagementPercentage": 50, "submuscleWorked": "Side Delt" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Archer Push-Up",
-		"id": "8672F1E4-9F7F-449A-B245-687C67281B7F",
-		"image": "archer_push_up",
-		"url": "archer-push-ups",
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Unilateral",
-		"resistance": "Bodyweight",
-		"repsInstruction" : "Per Side"
 	},
 	{
 		"name": "KB Bottoms-Up Press",
@@ -2358,25 +2384,6 @@
 		"repsInstruction" : "Per Arm"
 	},
 	{
-		"name": "Alternating DB Front Raise",
-		"id": "B24FEB1B-4C3C-4080-AE5F-DD8663B47773",
-		"image": "alternating_db_front_raise",
-		"aliases": ["Alt Dumbbell Front Raise"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Unilateral",
-		"resistance": "Free Weight",
-		"weightInstruction" : "Per Dumbbell",
-		"repsInstruction" : "Per Arm"
-	},
-	{
 		"name": "Reverse Cable Crossover",
 		"id": "045A699A-1652-4EEC-B0A6-923E9FC3463C",
 		"image": "reverse_cable_crossover",
@@ -2478,6 +2485,81 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight"
 	},
+    {
+        "name": "One Arm Dumbbell Preacher Curl",
+        "id": "E7819274-5395-4603-85EC-90CB1495C926",
+        "image": "one_arm_dumbbell_preacher_curl",
+        "url": "one-arm-dumbbell-preacher-curl",
+        "aliases": ["Single Arm Preacher Curl"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dumbbells", "Preacher Curl Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Free Weight",
+        "repsInstruction" : "Per Arm"
+    },
+    {
+        "name": "EZ-Bar Preacher Curl",
+        "id": "BA68B573-5258-434C-A6B2-799181D90B39",
+        "image": "ez_bar_preacher_curl",
+        "aliases": ["EZ Preacher Curl"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["EZ Bar", "Preacher Curl Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight"
+    },
+    {
+        "name": "Reverse-Grip Preacher Curl",
+        "id": "1C1B9A49-7655-47E9-A344-C4284EE392F3",
+        "image": "reverse_grip_preacher_curl",
+        "aliases": ["Pronated Preacher Curl"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["EZ Bar", "Preacher Curl Bench"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Short Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Long Head" }
+            ] },
+            { "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Forearm Extensors" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight"
+    },
+    {
+        "name": "Machine Preacher Curl",
+        "id": "12A445B6-6E78-4ABC-9AFA-C92801F9C7E3",
+        "image": "placeholder_ex_img",
+        "aliases": ["preacher curl machine"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Preacher Curl"],
+        "muscles": [
+            { "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine"
+    },
 	{
 		"name": "Cable Curl With Bar",
 		"id": "9A908821-1F6B-4B6B-A1E1-3E6E17607CC5",
@@ -2664,26 +2746,6 @@
 		"effort": "Isolation",
 		"limbMovementType": "Unilateral",
 		"resistance": "Machine",
-		"repsInstruction" : "Per Arm"
-	},
-	{
-		"name": "One Arm Dumbbell Preacher Curl",
-		"id": "E7819274-5395-4603-85EC-90CB1495C926",
-		"image": "one_arm_dumbbell_preacher_curl",
-		"url": "one-arm-dumbbell-preacher-curl",
-		"aliases": ["Single Arm Preacher Curl"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Preacher Curl Bench"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Unilateral",
-		"resistance": "Free Weight",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -2939,24 +3001,6 @@
 		"resistance": "Free Weight"
 	},
 	{
-		"name": "EZ-Bar Preacher Curl",
-		"id": "BA68B573-5258-434C-A6B2-799181D90B39",
-		"image": "ez_bar_preacher_curl",
-		"aliases": ["EZ Preacher Curl"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["EZ Bar", "Preacher Curl Bench"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
-	},
-	{
 		"name": "21s Curl",
 		"id": "2447A9AF-C4A8-410A-AA64-47B2E509CC95",
 		"image": "21s_curl",
@@ -2970,27 +3014,6 @@
 			] },
 			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Forearm Flexors" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
-	},
-	{
-		"name": "Reverse-Grip Preacher Curl",
-		"id": "1C1B9A49-7655-47E9-A344-C4284EE392F3",
-		"image": "reverse_grip_preacher_curl",
-		"aliases": ["Pronated Preacher Curl"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["EZ Bar", "Preacher Curl Bench"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Short Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Long Head" }
-			] },
-			{ "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Forearm Extensors" }
 			] }
 		],
 		"difficulty": "Nov.",
@@ -3097,24 +3120,6 @@
 		"resistance": "Bodyweight"
 	},
 	{
-		"name": "Barbell Lying Triceps Extension",
-		"id": "2F425484-9061-47AF-B46B-58BB687BAB21",
-		"image": "barbell_lying_triceps_extension",
-		"url": "lying-tricep-extension",
-		"aliases": ["Skull Crushers", "Lying Tricep Barbell Extension"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell", "Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Medial Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
-	},
-	{
 		"name": "Bench Dips",
 		"id": "136398DC-0BC9-4EB6-9F19-A25B7FCFD4B4",
 		"image": "bench_dip",
@@ -3132,119 +3137,31 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Bodyweight"
 	},
-	{
-		"name": "Close-Grip Push-Up",
-		"id": "D4311DC8-1855-44EA-BEDC-69FE8068484F",
-		"image": "close_grip_push_up",
-		"url": "close-grip-push-up",
-		"aliases": ["Narrow Push-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Lying Dumbbell Triceps Extension",
-		"id": "FD3153C2-98E2-4B40-B2E8-206D19DDD9ED",
-		"image": "dumbbell_lying_triceps_extension",
-		"url": "lying-dumbbell-tricep-extension",
-		"aliases": ["Dumbbell Skull Crushers"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Medial Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
-	},
-	{
-		"name": "Standing Dumbbell Triceps Extension",
-		"id": "72B9E470-78B3-4F93-9C2A-31081CD7C999",
-		"image": "dumbbell_standing_triceps_extension",
-		"url": "dumbbell-tricep-extension",
-		"aliases": ["Overhead Dumbbell Tricep Extension"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-        "repsInstruction" : "Per Arm"
-	},
-	{
-		"name": "Cable Overhead Triceps Extension",
-		"id": "AE91F80A-A058-4492-BCD2-E3404457D6C3",
-		"image": "overhead_cable_triceps_extension",
-		"url": "cable-overhead-tricep-extension",
-		"aliases": ["Overhead Rope Tricep Extension"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Machine"
-	},
-	{
-		"name": "Dumbbell Tricep Kickback",
-		"id": "F5ED93CC-7DD3-4B14-8A1C-D045606CB452",
-		"image": "dumbbell_tricep_kickback",
-		"url": "dumbbell-tricep-kickback",
-		"aliases": ["Tricep Kickback"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Flat Bench", "Dumbbells"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Lateral Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Unilateral",
-		"resistance": "Free Weight",
-		"repsInstruction" : "Per Arm"
-	},
-	{
-		"name": "Standing Barbell Triceps Extension",
-		"id": "616B4DD0-C379-4637-ADA1-C89E5B9439E0",
-		"image": "barbell_standing_triceps_extension",
-		"url": "tricep-extension",
-		"aliases": ["Overhead Barbell Triceps Extension"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
-	},
+    {
+        "name": "Bench Dips (Feet Elevated)",
+        "id": "08C383EA-6997-46E5-9031-587174BE9F7D",
+        "image": "bench_dip_feet_elevated",
+        "aliases": ["Elevated Bench Dip"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
+                { "engagementPercentage": 20, "submuscleWorked": "Triceps Lateral Head" },
+                { "engagementPercentage": 20, "submuscleWorked": "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
 	{
 		"name": "Machine Seated Dip",
 		"id": "9ABB8EEC-9827-40B7-B92D-D0AA67C8A428",
@@ -3309,6 +3226,135 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight"
 	},
+    {
+        "name": "Lying EZ-Bar Triceps Extension",
+        "id": "5FCF8E42-AD0B-44E6-A214-478F8AD23386",
+        "image": "ez_bar_skull_crusher",
+        "url": "lying-tricep-extension",
+        "aliases": ["EZ-Bar Skull Crusher", "Lying Triceps Extension"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["EZ Bar", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Medial Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight"
+    },
+    {
+        "name": "Lying Barbell Triceps Extension",
+        "id": "2F425484-9061-47AF-B46B-58BB687BAB21",
+        "image": "barbell_lying_triceps_extension",
+        "url": "lying-tricep-extension",
+        "aliases": ["Skull Crushers", "Lying Tricep Barbell Extension"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Triceps Medial Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight"
+    },
+    {
+        "name": "Lying Dumbbell Triceps Extension",
+        "id": "FD3153C2-98E2-4B40-B2E8-206D19DDD9ED",
+        "image": "dumbbell_lying_triceps_extension",
+        "url": "lying-dumbbell-tricep-extension",
+        "aliases": ["Dumbbell Skull Crushers"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dumbbells", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Triceps Medial Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight"
+    },
+    {
+        "name": "Standing Dumbbell Triceps Extension",
+        "id": "72B9E470-78B3-4F93-9C2A-31081CD7C999",
+        "image": "dumbbell_standing_triceps_extension",
+        "url": "dumbbell-tricep-extension",
+        "aliases": ["Overhead Dumbbell Tricep Extension"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dumbbells"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "repsInstruction" : "Per Arm"
+    },
+    {
+        "name": "Overhead Cable Triceps Extension",
+        "id": "AE91F80A-A058-4492-BCD2-E3404457D6C3",
+        "image": "overhead_cable_triceps_extension",
+        "url": "cable-overhead-tricep-extension",
+        "aliases": ["Overhead Rope Tricep Extension"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Hi-Lo Pulley"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine"
+    },
+    {
+        "name": "Dumbbell Tricep Kickback",
+        "id": "F5ED93CC-7DD3-4B14-8A1C-D045606CB452",
+        "image": "dumbbell_tricep_kickback",
+        "url": "dumbbell-tricep-kickback",
+        "aliases": ["Tricep Kickback"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Flat Bench", "Dumbbells"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Triceps Lateral Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Free Weight",
+        "repsInstruction" : "Per Arm"
+    },
+    {
+        "name": "Standing Barbell Triceps Extension",
+        "id": "616B4DD0-C379-4637-ADA1-C89E5B9439E0",
+        "image": "barbell_standing_triceps_extension",
+        "url": "tricep-extension",
+        "aliases": ["Overhead Barbell Triceps Extension"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight"
+    },
 	{
 		"name": "Tricep Pushdown With Bar",
 		"id": "E64A151C-EC4E-4FFD-983C-DA71E5361485",
@@ -3404,44 +3450,6 @@
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
-		"name": "Ring Dips",
-		"id": "1CF63AAA-73AA-4917-94B5-46F92CE01393",
-		"image": "ring_dips",
-		"url": "ring-dips",
-		"aliases": ["Gymnastic Ring Dips"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Rings"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
-				{ "engagementPercentage": 20, "submuscleWorked": "Triceps Lateral Head" },
-				{ "engagementPercentage": 20, "submuscleWorked": "Triceps Medial Head" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Skull Crusher (EZ-Bar)",
-		"id": "5FCF8E42-AD0B-44E6-A214-478F8AD23386",
-		"image": "ez_bar_skull_crusher",
-		"aliases": ["EZ-Bar Skull Crusher", "Lying EZ Triceps Extension"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["EZ Bar", "Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Medial Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
-	},
-	{
 		"name": "Overhead Rope Triceps Extension",
 		"id": "4B047321-6A66-4CB2-B189-5465624ECDF5",
 		"image": "overhead_rope_triceps_extension",
@@ -3475,26 +3483,6 @@
 		"effort": "Isolation",
 		"limbMovementType": "Unilateral",
 		"resistance": "Machine",
-		"repsInstruction" : "Per Arm"
-	},
-	{
-		"name": "Single-Arm DB Skull Crusher",
-		"id": "D4E78BAC-685F-4EA8-BFCA-3A3B3EF1D8EE",
-		"image": "single_arm_db_skull_crusher",
-		"aliases": ["Unilateral Dumbbell Skull Crusher"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Medial Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Unilateral",
-		"resistance": "Free Weight",
-		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Arm"
 	},
 	{
@@ -3535,124 +3523,10 @@
 		"repsInstruction" : "Per Arm"
 	},
 	{
-		"name": "Close-Grip Push-Up (Knees)",
-		"id": "E29B0B81-7CF8-4231-AA55-9B5E273B222F",
-		"image": "close_grip_knee_push_up",
-		"aliases": ["Modified Narrow Push-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
-			] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Diamond Cutter Push-Up",
-		"id": "992875B1-8A2A-4DAB-B78C-F933416B9FCA",
-		"image": "diamond_cutter_push_up",
-		"aliases": ["Heart Push-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
-			] },
-			{ "engagementPercentage": 45, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
-			] },
-			{ "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Body-Weight Triceps Extension (Rack)",
-		"id": "A7AD9831-0678-4408-8F8C-95673430F4D4",
-		"image": "bodyweight_triceps_extension",
-		"aliases": ["Rack Triceps Extension"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Smith Machine", "Squat Rack"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 50, "submuscleWorked": "Triceps Medial Head" },
-				{ "engagementPercentage": 50, "submuscleWorked": "Triceps Lateral Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Tate Push-Up",
-		"id": "F895AC05-24F3-46F7-B6C6-3B8DB94F6B67",
-		"image": "tate_push_up",
-		"aliases": ["Elbows-Out Push-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
-			] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Bench Dip (Feet Elevated)",
-		"id": "08C383EA-6997-46E5-9031-587174BE9F7D",
-		"image": "bench_dip_feet_elevated",
-		"aliases": ["Elevated Bench Dip"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
-				{ "engagementPercentage": 20, "submuscleWorked": "Triceps Lateral Head" },
-				{ "engagementPercentage": 20, "submuscleWorked": "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
-			] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
 		"name": "Weighted Dip",
 		"id": "B69BFF63-2547-40D8-A5C0-02D72816C5AD",
 		"image": "weighted_parallel_bar_dip",
+        "url": "weighted-dips",
 		"aliases": ["Weighted Parallel Dip", "Weighted Bar Dip"],
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": ["Dip Bar", "Dip Belt", "Weight Plate"],
@@ -3917,6 +3791,51 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight"
 	},
+    {
+        "name": "Leg Press",
+        "id": "B177B3F0-9F9D-4488-B70D-838660DBB72F",
+        "image": "leg_press1",
+        "url": "sled-leg-press",
+        "aliases": ["Sled Press"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Leg Press"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine"
+    },
+    {
+        "name": "Single-Leg Press",
+        "id": "D4F7A6C2-8B1E-4A3D-9F0B-7C6E5D4A3B2F",
+        "image": "single_leg_press",
+        "url": "single-leg-press",
+        "aliases": ["Unilateral Leg Press"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Leg Press"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Compound",
+        "limbMovementType": "Unilateral",
+        "resistance": "Machine",
+        "repsInstruction" : "Per Leg"
+    },
 	{
 		"name": "Vertical Leg Press",
 		"id": "F52AF3B8-D669-49CD-9CCE-85454B33BE8D",
@@ -4073,51 +3992,6 @@
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight"
-	},
-	{
-		"name": "Single-Leg Press",
-		"id": "D4F7A6C2-8B1E-4A3D-9F0B-7C6E5D4A3B2F",
-		"image": "single_leg_press",
-		"url": "single-leg-press",
-		"aliases": ["Unilateral Leg Press"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Leg Press"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Compound",
-		"limbMovementType": "Unilateral",
-		"resistance": "Machine",
-		"repsInstruction" : "Per Leg"
-	},
-	{
-		"name": "Leg Press",
-		"id": "B177B3F0-9F9D-4488-B70D-838660DBB72F",
-		"image": "leg_press1",
-		"url": "sled-leg-press",
-		"aliases": ["Sled Press"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Leg Press"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Machine"
 	},
 	{
 		"name": "Reverse Lunge",
@@ -5146,7 +5020,7 @@
 				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
 			] }
 		],
-		"difficulty": "Adv.",
+		"difficulty": "Int.",
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Bodyweight"
@@ -5633,6 +5507,29 @@
 		"resistance": "Free Weight",
 		"repsInstruction" : "Per Leg"
 	},
+    {
+        "name": "Single-Leg Glute Bridge",
+        "id": "76CD81D8-5042-4858-91E5-D2CEB217BE85",
+        "image": "single_leg_glute_bridge",
+        "aliases": ["Unilateral Glute Bridge"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction" : "Per Leg"
+    },
 	{
 		"name": "Glute Bridge",
 		"id": "44B25D0F-9B7D-4CBD-B4DF-D2FF9C4E6309",
@@ -5817,54 +5714,6 @@
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Single-Leg Glute Bridge",
-		"id": "76CD81D8-5042-4858-91E5-D2CEB217BE85",
-		"image": "single_leg_glute_bridge",
-		"aliases": ["Unilateral Glute Bridge"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Unilateral",
-		"resistance": "Bodyweight",
-		"repsInstruction" : "Per Leg"
-	},
-	{
-		"name": "Barbell Hip Thrust",
-		"id": "0098FE0E-20FD-487B-AC9D-A29BD542B892",
-		"image": "barbell_hip_thrust",
-		"aliases": ["Weighted Hip Thrust"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Flat Bench", "Barbell"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Rectus Femoris" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
 	},
 	{
 		"name": "Hip Airplane",
@@ -6657,6 +6506,7 @@
 		"name": "Weighted Chin-Up",
 		"id": "14C6C0D7-8251-45E9-A91E-0F0C2ED3D38D",
 		"image": "weighted_chin_up",
+        "url": "weighted-chin-ups",
 		"aliases": ["Underhand Pull-Up"],
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
@@ -6715,6 +6565,7 @@
 		"name": "Weighted Pull-Up",
 		"id": "45B2C4C6-FF43-4085-A09C-5CCC8F6EB2B7",
 		"image": "weighted_pull_up",
+        "url": "weighted-pull-ups",
 		"aliases": ["Overhand Pull-Up"],
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
@@ -6812,6 +6663,7 @@
 		"name": "Weighted Muscle-Up",
 		"id": "ED5C0418-8113-483A-B183-D60F04DC6A0D",
 		"image": "weighted_muscle_up",
+        "url": "weighted-muscle-ups",
 		"aliases": ["Bar Muscle-Up"],
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
@@ -6961,6 +6813,23 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Bodyweight"
 	},
+    {
+        "name": "Towel Row",
+        "id": "07F5F61A-1D17-4BB1-9E9D-CB047A994F5A",
+        "image": "placeholder_ex_img",
+        "aliases": ["Towel Inverted Row"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Towel"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
 	{
 		"name": "Pendlay Row",
 		"id": "3DCCB5FE-ECAA-41CE-B7FE-70D6518641EF",
@@ -7010,34 +6879,6 @@
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Machine"
-	},
-	{
-		"name": "One-Arm Pulldown",
-		"id": "5D3A2C1B-9E8F-4A7B-C6D5-E4F3A2B1C0D9",
-		"image": "one_arm_pulldown",
-		"url": "one-arm-pulldown",
-		"aliases": ["Unilateral Lat Pulldown"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Lat Pulldown"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
-			{ "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Upper Traps" }
-			] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Brachioradialis" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Forearm Extensors" }
-			] },
-			{ "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Compound",
-		"limbMovementType": "Unilateral",
-		"resistance": "Machine",
-		"repsInstruction" : "Per Arm"
 	},
 	{
 		"name": "Close-Grip Lat Pulldown",
@@ -7090,30 +6931,34 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Machine"
 	},
-	{
-		"name": "One-Arm Lat Pulldown",
-		"id": "E50F88EA-065C-4D53-ABC6-B5CB976EAC5A",
-		"image": "one_arm_lat_pulldown",
-		"url": "one-arm-lat-pulldown",
-		"aliases": ["Unilateral Pulldown"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Lat Pulldown"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Upper Traps" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Compound",
-		"limbMovementType": "Unilateral",
-		"resistance": "Machine",
-		"repsInstruction" : "Per Arm"
-	},
+    {
+        "name": "One-Arm Lat Pulldown",
+        "id": "5D3A2C1B-9E8F-4A7B-C6D5-E4F3A2B1C0D9",
+        "image": "one_arm_lat_pulldown",
+        "url": "one-arm-pulldown",
+        "aliases": ["Unilateral Lat Pulldown"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Lat Pulldown"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Upper Traps" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Brachioradialis" },
+                { "engagementPercentage": 40, "submuscleWorked": "Forearm Extensors" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Unilateral",
+        "resistance": "Machine",
+        "repsInstruction" : "Per Arm"
+    },
 	{
 		"name": "Straight Arm Lat Pulldown",
 		"id": "A242FF2A-91E2-416F-A249-264AF87B1EF2",
@@ -7201,7 +7046,7 @@
 			] }
 		],
 		"difficulty": "Int.",
-		"effort": "Isolation",
+		"effort": "Isometric",
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight"
 	},
@@ -8091,21 +7936,6 @@
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
-		"name": "One-Handed Bar Hang",
-		"id": "2582781C-F587-4455-8DD1-15DDB8A62BEB",
-		"image": "one_handed_bar_hang",
-		"aliases": ["Single-Arm Dead Hang"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [] }
-		],
-		"difficulty": "Int.",
-		"effort": "Isolation",
-		"limbMovementType": "Unilateral",
-		"resistance": "Bodyweight"
-	},
-	{
 		"name": "Plate Pinch",
 		"id": "A8AF845D-6B0A-4077-AC49-AF052C716641",
 		"image": "plate_pinch",
@@ -8732,22 +8562,6 @@
 		"resistance": "Machine"
 	},
 	{
-		"name": "Machine Preacher Curl",
-		"id": "12A445B6-6E78-4ABC-9AFA-C92801F9C7E3",
-		"image": "placeholder_ex_img",
-		"aliases": ["preacher curl machine"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Preacher Curl"],
-		"muscles": [
-			{ "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Machine"
-	},
-	{
 		"name": "Rotary Torso Twist",
 		"id": "7D2882B7-988E-4910-92F6-144F84027811",
 		"image": "placeholder_ex_img",
@@ -8762,40 +8576,6 @@
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Machine"
-	},
-	{
-		"name": "Parallel Bar Dip",
-		"id": "FA635339-A1C5-43C3-BD93-14B4E8E43E79",
-		"image": "placeholder_ex_img",
-		"aliases": ["Triceps Dip"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Tricep Dip"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Towel Row",
-		"id": "07F5F61A-1D17-4BB1-9E9D-CB047A994F5A",
-		"image": "placeholder_ex_img",
-		"aliases": ["Towel Inverted Row"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Towel"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
 	},
 	{
 		"name": "Neck Extension",
@@ -8834,7 +8614,7 @@
 		"id": "7A1B2C3D-4E5F-6A7B-8C9D-0E1F2A3B4C5D",
 		"image": "squat_thrust",
 		"url": "squat-thrust",
-		"aliases": ["Burpee (No Push-Up/Jump)"],
+		"aliases": ["Burpee (No Push/Jump)"],
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": [],
 		"muscles": [
@@ -9409,6 +9189,21 @@
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight"
+    },
+    {
+        "name": "Single-Arm Dead Hang",
+        "id": "2582781C-F587-4455-8DD1-15DDB8A62BEB",
+        "image": "single-arm_dead_hang",
+        "aliases": ["One-Handed Bar Hang"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Pull-Up Bar"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Isometric",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight"
     },
     {
       "name": "Dead Hang",

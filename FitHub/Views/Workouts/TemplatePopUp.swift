@@ -45,7 +45,7 @@ struct TemplatePopup: View {
                             .listRowBackground(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground))
                         }
                     } header: {
-                        Text(Format.exerciseCountText(template.exercises.count))
+                        Text(Format.countText(template.exercises.count))
                             .font(.caption)
                     }
                 }

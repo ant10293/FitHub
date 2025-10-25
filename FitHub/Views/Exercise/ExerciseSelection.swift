@@ -76,7 +76,7 @@ struct ExerciseSelection: View {
                                 )
                             }
                         } footer: {
-                            Text(Format.exerciseCountText(filteredExercises.count))
+                            Text(Format.countText(filteredExercises.count))
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .padding(.vertical, 8)
                         }

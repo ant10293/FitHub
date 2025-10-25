@@ -200,6 +200,7 @@ struct UserProfileView: View {
     // MARK: — Handle Logout/Login Button
     
     private func handleSignOut() {
+        kbd.dismiss()
         AuthService.shared.signOut(userData: ctx.userData) { result in
             switch result {
             case .success:

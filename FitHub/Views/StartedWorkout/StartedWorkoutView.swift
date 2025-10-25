@@ -118,7 +118,8 @@ struct StartedWorkoutView: View {
                         customRest: ctx.userData.workoutPrefs.customRestPeriods,
                         goal: ctx.userData.physical.goal
                     ),
-                    disableRPE: ctx.userData.settings.hideRpeSlider
+                    hideRPE: ctx.userData.settings.hideRpeSlider,
+                    hideCompleted: ctx.userData.settings.hideCompletedInput
                 ),
                 goToNextSetOrExercise: {
                     viewModel.goToNextSetOrExercise(for: selectedExerciseIdx, selectedExerciseIndex: &selectedExerciseIndex)

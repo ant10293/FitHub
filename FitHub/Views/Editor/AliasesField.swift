@@ -123,12 +123,14 @@ private struct AliasesEditorSheet: View {
     }
     
     private func addAlias() {
+        kbd.dismiss()
         guard isNewValid else { return }
         aliases.append(trimmed)
         newAlias = ""
     }
     
     private func deleteIndex(_ i: Int) {
+        kbd.dismiss()
         guard aliases.indices.contains(i) else { return }
         aliases.remove(at: i)
     }

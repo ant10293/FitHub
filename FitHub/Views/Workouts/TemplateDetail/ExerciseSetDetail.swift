@@ -226,14 +226,14 @@ struct ExerciseSetDetail: View {
     private func deleteLastSet() {
         guard !exercise.setDetails.isEmpty else { return }
         // Unfocus the text field first
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        KeyboardManager.dismissKeyboard()
         perform(.deleteSet)
         if exercise.setDetails.isEmpty { tosInputKey = nil }
     }
 
     private func moveSet(from source: IndexSet, to destination: Int) {
         // Unfocus the text field first
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        KeyboardManager.dismissKeyboard()
         exercise.setDetails.move(fromOffsets: source, toOffset: destination)
         perform(.saveTemplate)
     }

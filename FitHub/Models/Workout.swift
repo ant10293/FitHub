@@ -65,14 +65,15 @@ struct WorkoutTemplate: Identifiable, Hashable, Codable, Equatable {
         self.notificationIDs = notificationIDs
         self.estimatedCompletionTime = estimatedCompletionTime
         if let rest = restPeriods {
-            let sec = estimateCompletionTime(rest: rest)
-            self.estimatedCompletionTime = TimeSpan(seconds: sec)
+            let (ts, _) = estimateCompletionTime(rest: rest)
+            self.estimatedCompletionTime = ts
         }
     }
 }
 
 extension WorkoutTemplate {
-    private func estimateCompletionTime(rest: RestPeriods) -> Int {
+    /*
+    private func estimateCompletionTime(rest: RestPeriods) -> TimeSpan {
         let secondsPerRep = SetDetail.secPerRep
         let avgSetup = SetDetail.secPerSetup
         let extraPerDifficulty = SetDetail.extraSecPerDiff
@@ -107,14 +108,71 @@ extension WorkoutTemplate {
             total += movement + rest + difficulty + avgSetup
         }
 
-        print("Estimated seconds: \(total)")
-        return total
-    }
-    /*
-    mutating func setEstimatedCompletionTime(rest: RestPeriods) {
-        estimatedCompletionTime = .init(seconds: estimateCompletionTime(rest: rest))
+        return TimeSpan(seconds: total)
     }
     */
+    
+    func estimateCompletionTime(
+        rest: RestPeriods,
+        includePerExercise: Bool = false
+    ) -> (total: TimeSpan, perExercise: [(id: Exercise.ID, seconds: Int)]?) {
+        let avgSetup = SetDetail.secPerSetup
+
+        var perExercise: [(id: Exercise.ID, seconds: Int)] = []
+        var totalSeconds = 0
+
+        for (exIdx, ex) in exercises.enumerated() {
+            let warmupSets   = ex.warmUpDetails
+            let workingSets  = ex.setDetails
+            let limbMovement = ex.limbMovementType ?? .bilateralDependent
+            let isLastExercise = (exIdx == exercises.indices.last)
+            
+            var movement = 0
+            var restTime = 0
+
+            func parseSets(_ sets: [SetDetail], isWarm: Bool) {
+                guard !sets.isEmpty else { return }
+                let restSec = ex.getRestPeriod(isWarm: isWarm, rest: rest)
+                
+                for set in sets {
+                    switch set.planned {
+                    case .reps(let r):
+                        let secPerRep = SetDetail.secPerRep(for: r, isWarm: isWarm)
+                        movement += (max(0, r) * secPerRep) * limbMovement.repsMultiplier
+                    case .hold(let span):
+                        movement += max(0, span.inSeconds)
+                    case .cardio(let ts):
+                        movement += max(0, ts.time.inSeconds)
+                    }
+                    
+                    let noRest = isLastExercise && set.setNumber == ex.totalSets
+                    if !noRest {
+                        restTime += restSec
+                    }
+                }
+            }
+
+            parseSets(warmupSets, isWarm: true)
+            parseSets(workingSets, isWarm: false)
+
+            let exerciseSeconds = movement + restTime + avgSetup
+            if includePerExercise {
+                perExercise.append((id: ex.id, seconds: exerciseSeconds))
+            }
+            totalSeconds += exerciseSeconds
+        }
+
+        return (
+            total: TimeSpan(seconds: totalSeconds),
+            perExercise: includePerExercise ? perExercise : nil
+        )
+    }
+    
+    mutating func setEstimatedCompletionTime(rest: RestPeriods) {
+        let (total, _) = estimateCompletionTime(rest: rest)
+        estimatedCompletionTime = total
+    }
+    
     static func uniqueTemplateName(initialName: String, from templates: [WorkoutTemplate]) -> String {
         let existing = Set(templates.map { $0.name })
 
@@ -232,7 +290,8 @@ struct TemplateProgress {
 struct UserParams {
     let restTimerEnabled: Bool
     let restPeriods: RestPeriods
-    let disableRPE: Bool
+    let hideRPE: Bool
+    let hideCompleted: Bool
 }
 
 struct WorkoutSummaryData {

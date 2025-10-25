@@ -189,6 +189,15 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
         case .cardio: return 5
         }
     }
+    
+    var recommenedPct: ClosedRange<Int>? {
+        switch self {
+        case .compound: return 30...100
+        case .isolation: return 0...70
+        case .isometric, .plyometric: return 0...50
+        case .cardio: return nil
+        }
+    }
 }
 
 struct CurrentExerciseState: Codable, Equatable {

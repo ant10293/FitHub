@@ -55,6 +55,7 @@ struct ExerciseWarmUpDetail: View {
     // ───────── body ─────────
     var body: some View {
         NavigationStack {
+            // FIXME: list causes publishing issues without use of WarmUpRowVM
             List {
                 warmUpSection
                 buttonSection
@@ -166,6 +167,7 @@ struct ExerciseWarmUpDetail: View {
     
     // MARK: Row mutators
     private func addRow() {
+        kbd.dismiss()
         let next = rows.count + 1
         let defaultMetric: SetMetric = exercise.plannedMetric
         let defaultLoad: SetLoad = exercise.loadMetric
@@ -175,6 +177,7 @@ struct ExerciseWarmUpDetail: View {
     private func deleteRow() { if !rows.isEmpty { rows.removeLast() } }
 
     private func autofill() {
+        kbd.dismiss()
         exercise.createWarmupDetails(equipmentData: ctx.equipment, userData: ctx.userData)
         rows = exercise.warmUpDetails.map(WarmUpRowVM.init)
     }

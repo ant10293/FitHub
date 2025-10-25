@@ -29,8 +29,11 @@ final class UserData: ObservableObject, Codable {
     @Published var showingChangelog: Bool = false
     @Published var currentChangelog: WorkoutChangelog?
     
-    @Published var workoutReductions: WorkoutReductions?
+    @Published var workoutChanges: WorkoutChanges?
     @Published var showingGenerationWarning: Bool = false
+    
+    @Published var allowDisliked: Bool = false
+    @Published var allowDifficult: Bool = false
     
     init(){}
 
@@ -353,9 +356,6 @@ extension UserData {
                 self.workoutPlans.workoutsStartDate = output.workoutsStartDate
                 self.workoutPlans.workoutsCreationDate = output.workoutsCreationDate
 
-                if let old = self.workoutPlans.logFileName { _ = Logger.deleteLog(named: old) }
-                self.workoutPlans.logFileName = output.logFileName
-
                 exerciseData.applyPerformanceUpdates(updates: output.updatedMax, csvEstimate: true)
          
                 self.isGeneratingWorkout = false
@@ -366,8 +366,8 @@ extension UserData {
                     self.showingChangelog = true
                 }
                 
-                if !nextWeek, let reductions = output.reductions {
-                    self.workoutReductions = reductions
+                if !nextWeek, let changes = output.changes {
+                    self.workoutChanges = changes
                     self.showingGenerationWarning = true
                 }
                                 

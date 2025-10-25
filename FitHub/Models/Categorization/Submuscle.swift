@@ -56,7 +56,7 @@ enum SubMuscles: String, CaseIterable, Identifiable, Codable {
     case brachioradialis = "Brachioradialis"
     case forearmFlexors = "Forearm Flexors"
     case forearmExtensors = "Forearm Extensors"
-    case forearmRotators = "Forarm Rotators" // Pronator Teres & Supinator
+    case forearmRotators = "Forearm Rotators" // Pronator Teres & Supinator
     
     // MARK: - Quads
     case rectusFemoris = "Rectus Femoris"
