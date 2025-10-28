@@ -13,7 +13,6 @@ import SwiftUI
 struct PoolChanges: Equatable, Hashable {
     var reasons: [ReasoningCount]
     var relaxedFilters: [RelaxedFilter] = []
-    //var relaxedFilters: Set<RelaxedFilter> = []
     
     init() {
         self.reasons = ReductionReason.allCases.map { ReasoningCount(reason: $0) }
@@ -31,6 +30,14 @@ struct PoolChanges: Equatable, Hashable {
             case .repCap:     return 3
             case .split:      return 4
             }
+        }
+        
+        static func ordered(excluding delayed: Set<RelaxedFilter>) -> [RelaxedFilter] {
+            let base = Self.defaultOrder
+            // Partition so that delayed types are moved last
+            let (priority, postponed) = base.partitioned { !delayed.contains($0) }
+            
+            return priority + postponed
         }
         
         var label: String {
@@ -182,6 +189,11 @@ struct PoolChanges: Equatable, Hashable {
 
 struct WorkoutChanges: Equatable, Hashable {
     private(set) var pool: [WorkoutTemplate.ID: PoolChanges] = [:]
+    
+    /// True if ANY template relaxed at least one filter
+    var didRelaxFilters: Bool {
+        pool.values.contains { !$0.relaxedFilters.isEmpty }
+    }
     
     func pool(for id: WorkoutTemplate.ID) -> PoolChanges? {
         pool[id]

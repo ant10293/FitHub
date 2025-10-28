@@ -108,6 +108,11 @@ extension Muscle {
     
     var splitCategory: SplitCategory? { SplitCategory.muscles.first { _, muscles in muscles.contains(self) }?.key }
     
-    var groupCategory: SplitCategory? { SplitCategory.groups.first { _, muscles in muscles.contains(self) }?.key }
+    /// Returns the parent SplitCategory for this muscle.
+    /// - Parameter forGeneration: If true, uses the generation map (no calves/forearms).
+    func groupCategory(forGeneration: Bool = false) -> SplitCategory? {
+        let map = SplitCategory.groups(forGeneration: forGeneration)
+        return map.first(where: { $0.value.contains(self) })?.key
+    }
 }
 

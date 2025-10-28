@@ -37,6 +37,15 @@ final class PremiumStore: ObservableObject {
     @Published private(set) var membershipType: MembershipType = .free
     @Published var errorMessage: String?
 
+    // Optional: tie to your signed-in user to link server events
+    private let appAccountToken: UUID?
+    var currentMembershipType: MembershipType { membershipType }
+    
+    init(appAccountToken: UUID? = nil) {
+        self.appAccountToken = appAccountToken
+        listenForTransactionChanges()
+    }
+    
     // Map product IDs — keep these in sync with App Store Connect
     enum ID {
         static let monthly  = "com.FitHub.premium.monthly"
@@ -60,15 +69,6 @@ final class PremiumStore: ObservableObject {
             lhs.rank < rhs.rank
         }
     }
-    // Optional: tie to your signed-in user to link server events
-    private let appAccountToken: UUID?
-
-    init(appAccountToken: UUID? = nil) {
-        self.appAccountToken = appAccountToken
-        listenForTransactionChanges()
-    }
-
-    var currentMembershipType: MembershipType { membershipType }
 
     // Load product data + refresh entitlement
     func configure() async {

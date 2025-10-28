@@ -50,6 +50,7 @@ final class WorkoutGenerator {
         var categoriesPerDay: [[SplitCategory]]
         var overloadFactor: Double
         var overloadStyle: ProgressiveOverloadStyle
+        var nonDefaultParameters: Set<PoolChanges.RelaxedFilter>
     }
 
     // MARK: – Public façade
@@ -58,12 +59,13 @@ final class WorkoutGenerator {
   
         //  Derive all knobs the old method used
         let params = deriveParameters(input: input)
-    
+        
         let selector = ExerciseSelector(
             exerciseData: input.exerciseData,
             equipmentData: input.equipmentData,
             userData: input.user,
             days: params.days,
+            nonDefaultParams: params.nonDefaultParameters,
             policy: .init(minCount: 1, maxCount: 20),
             seed: UInt64(max(1, Int(creationDate.timeIntervalSince1970))) // deterministic per run
         )
@@ -124,9 +126,12 @@ extension WorkoutGenerator {
         let freq = input.user.workoutPrefs.workoutDaysPerWeek
         let lvl = input.user.evaluation.strengthLevel
         let daysPerWeek = max(2, input.user.workoutPrefs.workoutDaysPerWeek) // clamp min days per week
+        let customSplit = input.user.workoutPrefs.customWorkoutSplit
+        let customDist = input.user.workoutPrefs.customDistribution
+        let resistance = input.user.workoutPrefs.resistance
 
         let workoutWeek = WorkoutWeek.determineSplit(
-            customSplit: input.user.workoutPrefs.customWorkoutSplit,
+            customSplit: customSplit,
             daysPerWeek: daysPerWeek
         )
         let repsAndSets = RepsAndSets.determineRepsAndSets(
@@ -134,7 +139,7 @@ extension WorkoutGenerator {
             customRestPeriod: input.user.workoutPrefs.customRestPeriods,
             customRepsRange: input.user.workoutPrefs.customRepsRange,
             customSets: input.user.workoutPrefs.customSets,
-            customDistribution: input.user.workoutPrefs.customDistribution,
+            customDistribution: customDist,
         )
         let overloadStyle = ProgressiveOverloadStyle.determineStyle(
             overloadStyle: input.user.settings.progressiveOverloadStyle,
@@ -157,6 +162,11 @@ extension WorkoutGenerator {
             customWorkoutDays: input.user.workoutPrefs.customWorkoutDays,
             workoutDaysPerWeek: daysPerWeek
         )
+        
+        var customParms: Set<PoolChanges.RelaxedFilter> = []
+        if let customDist, customDist != repsAndSets.distribution { customParms.insert(.effort) }
+        if let customSplit, customSplit != workoutWeek { customParms.insert(.split) }
+        if resistance != .any { customParms.insert(.resistance) }
   
         let categoriesPerDay = (0..<dayIndices.count).map { workoutWeek.categoryForDay(index: $0) }
         
@@ -189,7 +199,8 @@ extension WorkoutGenerator {
             startDate: start,
             categoriesPerDay: categoriesPerDay,
             overloadFactor: overloadFactor,
-            overloadStyle: overloadStyle
+            overloadStyle: overloadStyle,
+            nonDefaultParameters: customParms
         )
     }
     
@@ -208,8 +219,8 @@ extension WorkoutGenerator {
         else { return nil }
         
         let dayName = day.rawValue
-        let dayHasExercises: Bool = dayIndex < input.saved.count
         let savedDay: OldTemplate = input.saved[safe: dayIndex] ?? OldTemplate()
+        let dayHasExercises: Bool = dayIndex < input.saved.count && !savedDay.exercises.isEmpty
         let testCompleted: CompletedWorkout? = input.user.workoutPlans.completedWorkouts.first(where: { $0.template.id == savedDay.id })
         let wasCompleted: Bool = testCompleted != nil
         let completed: CompletedWorkout = testCompleted ?? CompletedWorkout()
@@ -234,18 +245,23 @@ extension WorkoutGenerator {
             date: workoutDate,
         )
         
-        func getExercisesForTemplate(
-            exerciseCount: Int,
-            relaxed: [PoolChanges.RelaxedFilter]? = nil
-        ) -> ([Exercise], [PoolChanges.RelaxedFilter]?){
+        func getExercisesForTemplate(exerciseCount: Int, existingPicked: [Exercise]? = nil) -> ([Exercise], [PoolChanges.RelaxedFilter]?) {
             let (exercises, dayChanges): ([Exercise], PoolChanges?) = {
                 // Reuse existing?
-                let existing: [Exercise]? = (input.keepCurrentExercises && dayHasExercises) ? savedDay.exercises : nil
-                if let existing, existing.count >= params.exercisesPerWorkout {
-                    // no new selection happened → reductions empty
-                    return (existing, nil)
+                let existing: [Exercise]? = {
+                    if let existingPicked {
+                        return existingPicked
+                    } else {
+                        return (input.keepCurrentExercises && dayHasExercises) ? savedDay.exercises : nil
+                    }
+                }()
+                
+                // already have enough, trim and skip selection
+                if let existing, existing.count >= exerciseCount {
+                    let trimmed = intelligentlyTrim(existing, to: exerciseCount, mustHit: categoriesForDay)
+                    return (trimmed, nil)
                 }
-
+                
                 // Selector enforces exact `exercisesPerWorkout` when the pool allows.
                 let (picked, dayChanges) = selector.select(
                     dayIndex: dayIndex,
@@ -253,14 +269,12 @@ extension WorkoutGenerator {
                     categories: categoriesForDay,
                     total: exerciseCount,
                     rAndS: params.repsAndSets,
-                    existing: existing,
-                    relaxed: relaxed ?? []
+                    existing: existing
                 )
                 return (picked, dayChanges)
             }()
           
             if let dayChanges { changes.record(templateID: tpl.id, newPool: dayChanges) }
-            
             if exercises.isEmpty { return ([], dayChanges?.relaxedFilters) }
             
             // [2] Detail each exercise (aggregate timing, plus per-ex timing with threshold)
@@ -287,26 +301,17 @@ extension WorkoutGenerator {
             return (detailedExercises, dayChanges?.relaxedFilters)
         }
         
-        let (exercises, relaxed) = getExercisesForTemplate(exerciseCount: params.exercisesPerWorkout)
-        
+        let (exercises, _) = getExercisesForTemplate(exerciseCount: params.exercisesPerWorkout)
         tpl.exercises = exercises
         
-        let (est, perExercise) = tpl.estimateCompletionTime(
-            rest: params.repsAndSets.rest,
-            includePerExercise: true
-        )
-        
-        if let perExercise {
-            let newCount = targetExerciseCount(
-                perExercise: perExercise,
-                target: params.duration
-            )
+        let (est, perExercise) = tpl.estimateCompletionTime(rest: params.repsAndSets.rest)
+        let newCount = targetExerciseCount(perExercise: perExercise, target: params.duration)
             
-            if newCount < params.exercisesPerWorkout {
-                let (exercises, _) = getExercisesForTemplate(exerciseCount: newCount, relaxed: relaxed)
-                tpl.exercises = exercises
-                tpl.setEstimatedCompletionTime(rest: params.repsAndSets.rest)
-            }
+        if !est.isWithin(params.duration) {
+            let (exercises, relaxed) = getExercisesForTemplate(exerciseCount: newCount, existingPicked: tpl.exercises)
+            tpl.exercises = exercises
+            tpl.setEstimatedCompletionTime(rest: params.repsAndSets.rest)
+            if let relaxed, relaxed.contains(.split) { tpl.setCategories() }
         } else {
             tpl.estimatedCompletionTime = est
         }
@@ -520,5 +525,52 @@ extension WorkoutGenerator {
         let totalSeconds = max(60, duration.inMinutes * 60)
         let numExercises = max(1, Int((Double(totalSeconds) / Double(perExercise)).rounded()))
         return numExercises
+    }
+    
+    /// Trim `existing` to `target` while trying to keep coverage of `mustHit` categories.
+    /// - Keeps original order.
+    /// - Guarantees at most one seed per category (if available), then fills with preferred matches, then anything.
+    private func intelligentlyTrim(
+        _ existing: [Exercise],
+        to target: Int,
+        mustHit: [SplitCategory]
+    ) -> [Exercise] {
+        guard existing.count > target, target > 0 else {
+            return Array(existing.prefix(max(0, target)))
+        }
+
+        @inline(__always)
+        func matches(_ ex: Exercise, _ cat: SplitCategory) -> Bool {
+            ex.splitCategory == cat || ex.groupCategory == cat
+        }
+
+        var pickedIdx: [Int] = []
+        pickedIdx.reserveCapacity(target)
+        var used = Set<Int>()
+
+        // 1) Seed: first occurrence for each must-hit category (in order)
+        for cat in mustHit where pickedIdx.count < target {
+            if let idx = existing.firstIndex(where: { matches($0, cat) }) {
+                if used.insert(idx).inserted { pickedIdx.append(idx) }
+            }
+        }
+
+        // 2) Prefer remaining items that match ANY must-hit category
+        let mustHitSet = Set(mustHit)
+        for (i, ex) in existing.enumerated() where pickedIdx.count < target {
+            if used.contains(i) { continue }
+            let preferred = (ex.splitCategory.map { mustHitSet.contains($0) } ?? false)
+                         || (ex.groupCategory.map { mustHitSet.contains($0) } ?? false)
+            if preferred, used.insert(i).inserted { pickedIdx.append(i) }
+        }
+
+        // 3) Fill with whatever’s left in order
+        for i in 0..<existing.count where pickedIdx.count < target {
+            if used.insert(i).inserted { pickedIdx.append(i) }
+        }
+
+        // Return in original order
+        pickedIdx.sort()
+        return pickedIdx.map { existing[$0] }
     }
 }

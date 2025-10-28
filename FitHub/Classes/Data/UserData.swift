@@ -366,7 +366,7 @@ extension UserData {
                     self.showingChangelog = true
                 }
                 
-                if !nextWeek, let changes = output.changes {
+                if !nextWeek, let changes = output.changes, changes.didRelaxFilters {
                     self.workoutChanges = changes
                     self.showingGenerationWarning = true
                 }

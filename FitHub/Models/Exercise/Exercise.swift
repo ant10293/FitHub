@@ -565,15 +565,21 @@ extension Exercise {
     private var topPrimaryMuscle: Muscle? { muscles.topPrimaryMuscle }
     
     /// Auto-derived split category from dominant prime mover
-    var splitCategory: SplitCategory { topPrimaryMuscle?.splitCategory ?? .all }
+    var splitCategory: SplitCategory? { topPrimaryMuscle?.splitCategory }
     
+    /// Legacy no-arg property (uses non-generation mapping).
+    var groupCategory: SplitCategory? {
+        groupCategory(forGeneration: false)
+    }
     /// Higher-level group category if you have that mapping
-    var groupCategory: SplitCategory? { topPrimaryMuscle?.groupCategory }
+    func groupCategory(forGeneration: Bool = false) -> SplitCategory? {
+        topPrimaryMuscle?.groupCategory(forGeneration: forGeneration)
+    }
 }
 
 extension Exercise {
     /// Prefer groupCategory if available; otherwise fall back to splitCategory
-    private var bucketCategory: SplitCategory { groupCategory ?? splitCategory }
+    private var bucketCategory: SplitCategory { groupCategory ?? splitCategory ?? .all }
 
     var isUpperBody: Bool { SplitCategory.upperBody.contains(bucketCategory) }
     var isLowerBody: Bool { SplitCategory.lowerBody.contains(bucketCategory) }

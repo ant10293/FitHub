@@ -99,3 +99,13 @@ extension TimeSpan {
         return TimeSpan(seconds: seconds)
     }
 }
+
+extension TimeSpan {
+    func isWithin(_ other: TimeSpan, tolerancePercent: Double = 0.10) -> Bool {
+        let selfMin  = Double(inMinutes)
+        let otherMin = Double(other.inMinutes)
+        guard otherMin > 0 else { return true }
+        let ratio = abs(selfMin - otherMin) / otherMin
+        return ratio <= tolerancePercent
+    }
+}

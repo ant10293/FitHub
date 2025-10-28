@@ -52,12 +52,22 @@ extension SplitCategory {
         .glutes: [.gluteus],
         .calves: [.calves]
     ]
-     
-    static let groups: [SplitCategory: [Muscle]] = [
-        .back: [.trapezius, .latissimusDorsi, .erectorSpinae],
-        .legs: [.quadriceps, .hamstrings, .gluteus, .abductors, .adductors],
-        .arms: [.biceps, .triceps]
-    ]
+    
+    static func groups(forGeneration: Bool) -> [SplitCategory: [Muscle]] {
+        var map: [SplitCategory: [Muscle]] = [
+            .back: [.trapezius, .latissimusDorsi, .erectorSpinae],
+            .legs: [.quadriceps, .hamstrings, .gluteus, .abductors, .adductors, .calves],
+            .arms: [.biceps, .triceps, .forearms]
+        ]
+
+        // If generating workout templates, remove calves and forearms
+        if forGeneration {
+            map[.legs]?.removeAll { $0 == .calves }
+            map[.arms]?.removeAll { $0 == .forearms }
+        }
+
+        return map
+    }
     
     static var columnGroups: [[SplitCategory]] {
         [

@@ -464,10 +464,10 @@ extension ExerciseData {
                 
                 // -------- Split selections ---------------------------------------
             case .split(let splitCat):
-                let cat        = ex.splitCategory
+                let cat = ex.splitCategory ?? ex.groupCategory ?? .all
                 let usingTempl = templateFilter
                 let templates  = templateCategories ?? []
-                
+                             
                 if splitCat == .all {
                     return usingTempl ? templates.contains(cat) : true
                 }

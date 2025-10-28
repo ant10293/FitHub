@@ -72,50 +72,9 @@ struct WorkoutTemplate: Identifiable, Hashable, Codable, Equatable {
 }
 
 extension WorkoutTemplate {
-    /*
-    private func estimateCompletionTime(rest: RestPeriods) -> TimeSpan {
-        let secondsPerRep = SetDetail.secPerRep
-        let avgSetup = SetDetail.secPerSetup
-        let extraPerDifficulty = SetDetail.extraSecPerDiff
-
-        var total = 0
-
-        for ex in exercises {
-            let sets = ex.setDetails
-            let limbMovement = ex.limbMovementType ?? .bilateralDependent
-
-            // movement time: reps → reps*sec/rep; hold → seconds directly
-            var movement = 0
-            for set in sets {
-                let metric = set.planned       // or: set.completed ?? set.planned
-                switch metric {
-                case .reps(let r): movement += (max(0, r) * secondsPerRep) * limbMovement.repsMultiplier
-                case .hold(let span): movement += max(0, span.inSeconds)
-                case .cardio(let ts): movement += max(0, ts.time.inSeconds)
-                }
-            }
-
-            // rest time: after each set except the last; use per-set rest if present
-            let workingRest = rest.rest(for: .working)
-            var rest = 0
-            if sets.count > 1 {
-                for i in 0..<(sets.count - 1) {
-                    rest += max(0, sets[i].restPeriod ?? workingRest)
-                }
-            }
-
-            let difficulty = extraPerDifficulty * ex.difficulty.strengthValue
-            total += movement + rest + difficulty + avgSetup
-        }
-
-        return TimeSpan(seconds: total)
-    }
-    */
-    
     func estimateCompletionTime(
-        rest: RestPeriods,
-        includePerExercise: Bool = false
-    ) -> (total: TimeSpan, perExercise: [(id: Exercise.ID, seconds: Int)]?) {
+        rest: RestPeriods
+    ) -> (total: TimeSpan, perExercise: [(id: Exercise.ID, seconds: Int)]) {
         let avgSetup = SetDetail.secPerSetup
 
         var perExercise: [(id: Exercise.ID, seconds: Int)] = []
@@ -156,26 +115,66 @@ extension WorkoutTemplate {
             parseSets(workingSets, isWarm: false)
 
             let exerciseSeconds = movement + restTime + avgSetup
-            if includePerExercise {
-                perExercise.append((id: ex.id, seconds: exerciseSeconds))
-            }
+            perExercise.append((id: ex.id, seconds: exerciseSeconds))
             totalSeconds += exerciseSeconds
         }
 
-        return (
-            total: TimeSpan(seconds: totalSeconds),
-            perExercise: includePerExercise ? perExercise : nil
-        )
+        return (total: TimeSpan(seconds: totalSeconds), perExercise: perExercise)
     }
     
     mutating func setEstimatedCompletionTime(rest: RestPeriods) {
         let (total, _) = estimateCompletionTime(rest: rest)
-        estimatedCompletionTime = total
+        self.estimatedCompletionTime = total
+    }
+    
+    private func deriveCategories() -> [SplitCategory] {
+        let CAP = 4
+        var ordered: [SplitCategory] = []
+        var seen: Set<SplitCategory> = []
+        var parentToChildren: [SplitCategory: Set<SplitCategory>] = [:]
+
+        @inline(__always)
+        func tryAppendGroup(_ gc: SplitCategory) {
+            guard ordered.count < CAP, !seen.contains(gc) else { return }
+            if let kids = parentToChildren[gc], !kids.isDisjoint(with: seen) {
+                seen.subtract(kids)
+                ordered.removeAll { kids.contains($0) }
+            }
+            seen.insert(gc)
+            ordered.append(gc)
+        }
+
+        @inline(__always)
+        func tryAppendSplit(_ sc: SplitCategory) {
+            guard ordered.count < CAP, !seen.contains(sc) else { return }
+            // Block if any present parent group owns this split
+            let blocked = parentToChildren.contains { parent, kids in
+                seen.contains(parent) && kids.contains(sc)
+            }
+            if !blocked {
+                seen.insert(sc)
+                ordered.append(sc)
+            }
+        }
+
+        for ex in exercises {
+            if let gc = ex.groupCategory, let sc = ex.splitCategory {
+                parentToChildren[gc, default: []].insert(sc)
+            }
+            if let gc = ex.groupCategory { tryAppendGroup(gc) }
+            if let sc = ex.splitCategory { tryAppendSplit(sc) }
+            if ordered.count >= CAP { break }
+        }
+
+        return ordered
+    }
+    
+    mutating func setCategories() {
+        self.categories = deriveCategories()
     }
     
     static func uniqueTemplateName(initialName: String, from templates: [WorkoutTemplate]) -> String {
         let existing = Set(templates.map { $0.name })
-
         // 1️⃣  If the candidate is free, keep it
         guard existing.contains(initialName) else { return initialName }
 

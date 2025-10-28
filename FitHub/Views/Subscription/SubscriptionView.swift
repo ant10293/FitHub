@@ -6,13 +6,11 @@ struct SubscriptionView: View {
     @EnvironmentObject var ctx: AppContext
     @Environment(\.openURL) private var openURL
     @Environment(\.colorScheme) private var colorScheme
-
     @State private var selectedProductID: String?
 
     var body: some View {
         ScrollView {
             VStack(alignment: .center, spacing: 20) {
-                //ctx.store.statusLabel
                 Spacer()
                 
                 plansSection     // ← combined Monthly / Annual / Lifetime with selection + footnote
@@ -47,7 +45,6 @@ struct SubscriptionView: View {
             .padding()
         }
         .navigationBarTitle("FitHub Pro", displayMode: .inline)
-        //.background(Color(.systemGray6))
         .task {
             if ctx.store.products.isEmpty { await ctx.store.configure() }
             maybeSelectDefault()
@@ -88,7 +85,7 @@ struct SubscriptionView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Choose your plan").font(.headline)
 
-            VStack {
+            Group {
                 if orderedProducts.isEmpty {
                     // Placeholder while loading
                     VStack(spacing: 10) {
@@ -115,7 +112,7 @@ struct SubscriptionView: View {
                 }
             }
             .cardContainer()
-
+            
             // ⤵️ Auto-renew footnote for Monthly / Annual
             if let note = autoRenewFootnote {
                 Text(note)
@@ -180,7 +177,7 @@ struct SubscriptionView: View {
         default: return "Plan"
         }
     }
-    
+
     private func badge(for id: String) -> String? {
         switch id {
         case PremiumStore.ID.yearly:   return "Best Value"

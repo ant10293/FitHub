@@ -18,10 +18,10 @@ final class ExerciseSelector {
     private let resistance: ResistanceType
     private let allowDisliked: Bool
     private let allowDifficult: Bool
+    private let nonDefaultParams: Set<PoolChanges.RelaxedFilter>
     private let policy: Policy
     private let baseSeed: UInt64
     private var changes: DayChanges
-    //private var relaxed: [PoolChanges.RelaxedFilter]
     
     // MARK: Init
     init(
@@ -29,6 +29,7 @@ final class ExerciseSelector {
         equipmentData: EquipmentData,
         userData: UserData,
         days: [DaysOfWeek],
+        nonDefaultParams: Set<PoolChanges.RelaxedFilter>,
         policy: Policy = Policy(),
         seed: UInt64 = 0
     ) {
@@ -43,10 +44,10 @@ final class ExerciseSelector {
         self.resistance = userData.workoutPrefs.resistance
         self.allowDisliked = userData.allowDisliked
         self.allowDifficult = userData.allowDifficult
+        self.nonDefaultParams = nonDefaultParams
         self.policy = policy
         self.baseSeed = seed
         self.changes = .init(preseed: days)
-        //self.relaxed = []
     }
     
     // MARK: Policy
@@ -81,8 +82,8 @@ final class ExerciseSelector {
             perf.reserveCapacity(exercises.count)
             
             for (i, ex) in exercises.enumerated() {
-                split[ex.splitCategory, default: []].append(i)
-                if let g = ex.groupCategory { group[g, default: []].append(i) }
+                if let s = ex.splitCategory { split[s, default: []].append(i) }
+                if let g = ex.groupCategory(forGeneration: true) { group[g, default: []].append(i) }
                 perf.append(ex.canPerform(equipmentData: equipment, equipmentSelected: selection))
             }
             
@@ -116,16 +117,15 @@ final class ExerciseSelector {
         categories: [SplitCategory],
         total: Int,
         rAndS: RepsAndSets,
-        existing: [Exercise]? = nil,
-        relaxed: [PoolChanges.RelaxedFilter] = []   // seed with any pre-relaxed filters
+        existing: [Exercise]? = nil
     ) -> ([Exercise], PoolChanges?) {
-
         let clampedTotal = max(policy.minCount, min(policy.maxCount, total))
         guard clampedTotal > 0 else { return ([], nil) }
 
         var rng = seededRNG(for: dayIndex)
         let baseExisting = existing ?? []
 
+        let relaxed = changes.pool(for: dayLabel)?.relaxedFilters ?? []
         var currentRelaxed = Set(relaxed)
         // Attempt once with currentRelaxed
         var finalSelection = attemptSelection(
@@ -137,13 +137,13 @@ final class ExerciseSelector {
             rng: &rng,
             relaxed: currentRelaxed
         )
-
+        
         // If short, progressively relax one filter at a time and retry
-        for f in PoolChanges.RelaxedFilter.defaultOrder where finalSelection.count < clampedTotal && !currentRelaxed.contains(f) {
-            print("\(dayLabel): relaxing \(f)")
+        for f in PoolChanges.RelaxedFilter.ordered(excluding: nonDefaultParams) where finalSelection.count < clampedTotal && !currentRelaxed.contains(f) {
+            print("relaxing \(f), finalSelection count: \(finalSelection.count)")
             currentRelaxed.insert(f)
             changes.record(dayRaw: dayLabel, relaxed: f)
-            changes.clear(dayRaw: dayLabel, reasons: [f.correspondingReduction])
+            //changes.clear(dayRaw: dayLabel, reasons: [f.correspondingReduction])
             finalSelection = attemptSelection(
                 dayLabel: dayLabel,
                 categories: categories,
@@ -198,35 +198,35 @@ final class ExerciseSelector {
                 dayLabel: dayLabel
             )
         }()
-
+        
         // 3) Distribution selection
         let countByEffort = rAndS.distribution.allocateCountsPerEffort(targetCount: clampedTotal)
         let withExisting  = neededCounts(initialCounts: countByEffort, subtractingSelected: baseExisting)
 
-        var selected = applyDistributionLogic(
+        let newSelection = applyDistributionLogic(
             pool: eligibleFiltered,
             existing: baseExisting,
             targetCount: clampedTotal,
             countByEffort: withExisting,
             rng: &rng
         )
-
-        // If short, top up from the broader eligible pool
-        if selected.count < clampedTotal {
-            let missing = clampedTotal - selected.count
-            let remaining = neededCounts(initialCounts: withExisting, subtractingSelected: selected)
+        
+        var selection = newSelection + baseExisting
+        if selection.count < clampedTotal {
+            let missing = clampedTotal - selection.count
+            let remaining = neededCounts(initialCounts: withExisting, subtractingSelected: newSelection)
 
             let extras = applyDistributionLogic(
                 pool: eligible,
-                existing: baseExisting + selected,
+                existing: selection,
                 targetCount: missing,
                 countByEffort: remaining,
                 rng: &rng
             )
-            selected.append(contentsOf: extras)
+            selection.append(contentsOf: extras)
         }
-
-        return selected
+  
+        return selection
     }
 
     private func filterEligibleExercises(
@@ -264,20 +264,16 @@ final class ExerciseSelector {
             if rAndS.sets.sets(for: ex.effort) < 1 {
                 invalidSets.insert(ex.id); continue
             }
-            // Rep-cap is enforced unless .repCap is relaxed
-            if !relaxed.contains(.repCap),
-               ex.unitType == .repsOnly,
-               let max = ex.draftMax?.actualValue
-            {
+            if ex.unitType == .repsOnly, let max = ex.draftMax?.actualValue {
                 let repRange = rAndS.reps.reps(for: ex.effort)
-                if Double(repRange.upperBound) * 2 < max {
-                    exceedsRepCap.insert(ex.id); continue
-                }
                 if Double(repRange.lowerBound) > max {
                     missesRepMin.insert(ex.id); continue
                 }
+                if !relaxed.contains(.repCap), Double(repRange.upperBound) * 2 < max {
+                    exceedsRepCap.insert(ex.id); continue
+                }
             }
-
+            
             result.append(ex)
         }
 
@@ -291,188 +287,6 @@ final class ExerciseSelector {
 
         return result
     }
-
-
-    /*
-    func select(
-        dayIndex: Int,
-        dayLabel: String,
-        categories: [SplitCategory],
-        total: Int,
-        rAndS: RepsAndSets,
-        existing: [Exercise]? = nil,
-        splitOverload: Bool = false
-    ) -> ([Exercise], PoolChanges?) {
-        
-        let clampedTotal = max(policy.minCount, min(policy.maxCount, total))
-        guard clampedTotal > 0 else { return ([], nil) }
-        
-        var rng = seededRNG(for: dayIndex)
-        //let unionIdxs = idx.union(for: categories)
-        let unionIdxs: [Int] = {
-              if splitOverload {
-                  // TODO: template categories should be redetermined if split is relaxed
-                  changes.record(dayRaw: dayLabel, relaxed: .split)
-                  // widen selection pool (e.g., across the entire split)
-                  return idx.union(for: [.all])
-              } else {
-                  return idx.union(for: categories)
-              }
-          }()
-        
-        let ewd = idx.getExercisesWithDataCount()
-        changes.record(dayRaw: dayLabel, reason: .init(reason: .split, beforeCount: ewd, afterCount: unionIdxs.count))
-        
-        // 1. Filter exercises based on basic criteria
-        let eligibleExercises = filterEligibleExercises(
-            from: unionIdxs,
-            rAndS: rAndS,
-            dayLabel: dayLabel
-        )
-        
-        // 2) Difficulty AND too-easy-reps, favorites bypass
-        let eligibleFiltered: [Exercise] = {
-            if splitOverload {
-                return eligibleExercises
-            } else {
-                let eligibleFiltered = additionalFiltering(
-                    eligibleExercises: eligibleExercises,
-                    rAndS: rAndS,
-                    dayLabel: dayLabel
-                )
-                return eligibleFiltered
-            }
-        }()
-        
-        // 2. Apply distribution logic - removes exercises with effortType of 0% or setCount of 0
-        let baseExisting = existing ?? []
-        let countByEffort = rAndS.distribution.allocateCountsPerEffort(targetCount: clampedTotal)
-        let countByEffortWithExisting = neededCounts(initialCounts: countByEffort, subtractingSelected: baseExisting)
-        
-        let selectedExercises = applyDistributionLogic(
-            pool: eligibleFiltered,
-            existing: baseExisting,
-            targetCount: clampedTotal,
-            countByEffort: countByEffortWithExisting,
-            rng: &rng
-        )
-        //print("[\(dayLabel)] Selected: \(selectedExercises.map(\.name).joined(separator: ", "))")
-        
-        let selectedWithExisting = selectedExercises + baseExisting
-        
-        // TODO: remove reduction reasons for difficulty and repCap if we use this
-        // 3. Apply balancing and return
-        // TODO: if still not enough exercises after relaxing the muscle requirements, use the unfiltered eligibleExercises
-        var finalSelection = selectedWithExisting
-        if finalSelection.count < clampedTotal {
-            changes.clear(dayRaw: dayLabel, reasons: [.tooDifficult])
-            changes.record(dayRaw: dayLabel, relaxed: .difficulty)
-
-            let missingCount = clampedTotal - finalSelection.count
-            let remainingCountByEffort = neededCounts(
-                initialCounts: countByEffortWithExisting,
-                subtractingSelected: selectedExercises
-            )
-            let extraExercises = applyDistributionLogic(
-                pool: eligibleExercises,
-                existing: selectedWithExisting, // include both existing + already picked
-                targetCount: missingCount,
-                countByEffort: remainingCountByEffort,
-                rng: &rng
-            )
-            finalSelection.append(contentsOf: extraExercises)
-        }
-        
-        if finalSelection.count < clampedTotal, splitOverload == false {
-            changes.clear(dayRaw: dayLabel, reasons: [.split])
-            changes.record(dayRaw: dayLabel, relaxed: .split)   // or create a .splitOverload reason if you want
-                let (retrySelection, _) = select(
-                    dayIndex: dayIndex,
-                    dayLabel: dayLabel,
-                    categories: categories,          // keep original categories param; widening happens inside via splitOverload
-                    total: clampedTotal,
-                    rAndS: rAndS,
-                    existing: finalSelection,        // carry forward what we already picked
-                    splitOverload: true
-                )
-                finalSelection = retrySelection
-            }
-  
-        // TODO: free weight compound should go before machine
-        let sortedSelection = finalSelection.sorted { $0.effort.order < $1.effort.order }
-        
-        let pool = changes.pool(for: dayLabel)
-        return (sortedSelection, pool)
-    }
-    
-    // MARK: - Simplified Filtering
-    private func filterEligibleExercises(
-        from indices: [Int],
-        rAndS: RepsAndSets,
-        dayLabel: String
-    ) -> [Exercise] {
-        var result: [Exercise] = []
-        
-        var isDisliked: Set<Exercise.ID> = []
-        var invalidResistance: Set<Exercise.ID> = []
-        var cannotPerform: Set<Exercise.ID> = []
-        var invalidEffort: Set<Exercise.ID> = []
-        var invalidSets: Set<Exercise.ID> = []
-        var exceedsRepCap: Set<Exercise.ID> = []
-        var missesRepMin: Set<Exercise.ID> = []
-        
-        for idx in indices {
-            guard idx < self.idx.exercises.count else { continue }
-            let ex = self.idx.exercises[idx]
-            
-            if !allowDisliked, disliked.contains(ex.id) {
-                isDisliked.insert(ex.id)
-                continue
-            }
-            if !ex.resistanceOK(resistance) {
-                invalidResistance.insert(ex.id)
-                continue
-            }
-            if !self.idx.canPerform[idx] {
-                cannotPerform.insert(ex.id)
-                continue
-            }
-            if !ex.effortOK(rAndS) {
-                invalidEffort.insert(ex.id)
-                continue
-            }
-            if rAndS.sets.sets(for: ex.effort) < 1 {
-                invalidSets.insert(ex.id)
-                continue
-            }
-            // MARK: non-negotiable. keeps selection reasonable.
-            // the user should be able to relax this or modify the min and max cap
-            if ex.unitType == .repsOnly, let max = ex.draftMax?.actualValue {
-                let repRange = rAndS.reps.reps(for: ex.effort)
-                if Double(repRange.upperBound) * 2 < max {
-                    exceedsRepCap.insert(ex.id)
-                    continue
-                }
-                if Double(repRange.lowerBound) > max {
-                    missesRepMin.insert(ex.id)
-                    continue
-                }
-            }
-            
-            result.append(ex)
-        }
-        
-        if !isDisliked.isEmpty { changes.record(dayRaw: dayLabel, reason: .init(reason: .disliked, exerciseIDs: isDisliked)) }
-        if !invalidResistance.isEmpty { changes.record(dayRaw: dayLabel, reason: .init(reason: .resistance, exerciseIDs: invalidResistance)) }
-        if !cannotPerform.isEmpty { changes.record(dayRaw: dayLabel, reason: .init(reason: .cannotPerform, exerciseIDs: cannotPerform)) }
-        if !invalidEffort.isEmpty { changes.record(dayRaw: dayLabel, reason: .init(reason: .effort, exerciseIDs: invalidEffort)) }
-        if !invalidSets.isEmpty { changes.record(dayRaw: dayLabel, reason: .init(reason: .sets, exerciseIDs: invalidSets)) }
-        if !exceedsRepCap.isEmpty { changes.record(dayRaw: dayLabel, reason: .init(reason: .repCap, exerciseIDs: exceedsRepCap)) }
-        if !missesRepMin.isEmpty { changes.record(dayRaw: dayLabel, reason: .init(reason: .repMin, exerciseIDs: missesRepMin)) }
-        
-        return result
-    }
-    */
     
     // MARK: - Advanced Filtering (for difficulty & rep cap)
     // FIXME: should use indices like other filter func
@@ -600,6 +414,7 @@ extension ExerciseSelector {
 }
 
 extension ExerciseSelector {
+    /*
     private func deriveTargetMuscles(from categories: [SplitCategory]) -> (target: [Muscle], group: [Muscle]) {
         var targetMuscles: Set<Muscle> = []
         var groupMuscles: Set<Muscle> = []
@@ -621,5 +436,6 @@ extension ExerciseSelector {
         
         return Array(targetSubmuscles)
     }
+    */
 }
 

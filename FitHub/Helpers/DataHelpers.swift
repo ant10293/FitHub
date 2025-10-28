@@ -107,6 +107,19 @@ extension Array {
         }
         return array
     }
+    
+    func partitioned(by predicate: (Element) -> Bool) -> ([Element], [Element]) {
+        var matching: [Element] = []
+        var nonMatching: [Element] = []
+        for el in self {
+            if predicate(el) {
+                matching.append(el)
+            } else {
+                nonMatching.append(el)
+            }
+        }
+        return (matching, nonMatching)
+    }
 }
 
 
