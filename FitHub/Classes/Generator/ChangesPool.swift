@@ -113,6 +113,7 @@ struct PoolChanges: Equatable, Hashable {
             }
         }
         */
+        
         var icon: String {
             switch self {
             case .cannotPerform: return "wrench.and.screwdriver"

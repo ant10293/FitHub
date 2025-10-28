@@ -140,7 +140,6 @@ final class ExerciseSelector {
         
         // If short, progressively relax one filter at a time and retry
         for f in PoolChanges.RelaxedFilter.ordered(excluding: nonDefaultParams) where finalSelection.count < clampedTotal && !currentRelaxed.contains(f) {
-            print("relaxing \(f), finalSelection count: \(finalSelection.count)")
             currentRelaxed.insert(f)
             changes.record(dayRaw: dayLabel, relaxed: f)
             //changes.clear(dayRaw: dayLabel, reasons: [f.correspondingReduction])
@@ -199,6 +198,16 @@ final class ExerciseSelector {
             )
         }()
         
+        /*
+        print("day: \(dayLabel)")
+        let weights = buildCoverageWeights(categories: categories)
+        let missing = clampedTotal - baseExisting.count
+        print("missing: \(missing) (\(clampedTotal) - \(baseExisting.count))")
+        print("baseExisting: \(baseExisting.map(\.name))")
+        let muscleTargets = coverageTargetCountsFromWeights(weights: weights, existing: baseExisting, targetCount: missing)
+        print("targets", muscleTargets)
+        */
+        
         // 3) Distribution selection
         let countByEffort = rAndS.distribution.allocateCountsPerEffort(targetCount: clampedTotal)
         let withExisting  = neededCounts(initialCounts: countByEffort, subtractingSelected: baseExisting)
@@ -233,7 +242,7 @@ final class ExerciseSelector {
         from indices: [Int],
         rAndS: RepsAndSets,
         dayLabel: String,
-        relaxed: Set<PoolChanges.RelaxedFilter>    // NEW PARAM
+        relaxed: Set<PoolChanges.RelaxedFilter>    
     ) -> [Exercise] {
         var result: [Exercise] = []
 
@@ -279,7 +288,7 @@ final class ExerciseSelector {
 
         if !isDisliked.isEmpty        { changes.record(dayRaw: dayLabel, reason: .init(reason: .disliked,    exerciseIDs: isDisliked)) }
         if !invalidResistance.isEmpty { changes.record(dayRaw: dayLabel, reason: .init(reason: .resistance,  exerciseIDs: invalidResistance)) }
-        if !cannotPerform.isEmpty     { changes.record(dayRaw: dayLabel, reason: .init(reason: .cannotPerform,exerciseIDs: cannotPerform)) }
+        if !cannotPerform.isEmpty     { changes.record(dayRaw: dayLabel, reason: .init(reason: .cannotPerform, exerciseIDs: cannotPerform)) }
         if !invalidEffort.isEmpty     { changes.record(dayRaw: dayLabel, reason: .init(reason: .effort,      exerciseIDs: invalidEffort)) }
         if !invalidSets.isEmpty       { changes.record(dayRaw: dayLabel, reason: .init(reason: .sets,        exerciseIDs: invalidSets)) }
         if !exceedsRepCap.isEmpty     { changes.record(dayRaw: dayLabel, reason: .init(reason: .repCap,      exerciseIDs: exceedsRepCap)) }
@@ -414,14 +423,13 @@ extension ExerciseSelector {
 }
 
 extension ExerciseSelector {
-    /*
     private func deriveTargetMuscles(from categories: [SplitCategory]) -> (target: [Muscle], group: [Muscle]) {
         var targetMuscles: Set<Muscle> = []
         var groupMuscles: Set<Muscle> = []
         
         for category in categories {
             if let muscles = SplitCategory.muscles[category] { targetMuscles.formUnion(muscles) }
-            if let groups = SplitCategory.groups[category] { groupMuscles.formUnion(groups) }
+            if let groups = SplitCategory.groups(forGeneration: true)[category] { groupMuscles.formUnion(groups) }
         }
         
         return (Array(targetMuscles), Array(groupMuscles))
@@ -436,6 +444,105 @@ extension ExerciseSelector {
         
         return Array(targetSubmuscles)
     }
-    */
+    
+    enum CoverageUnit: Hashable {
+        case sub(SubMuscles)
+        case muscle(Muscle)
+    }
+  
+    func buildCoverageWeights(
+        categories: [SplitCategory],
+        primaryWeight: Double = 2.0,
+        groupWeight: Double = 1.0
+    ) -> [CoverageUnit: Double] {
+        // 1) Resolve primary & group muscles using your helpers
+        let (primaryMuscles, groupMusclesAll) = deriveTargetMuscles(from: categories) // primary + group
+        // (these are defined in your file) :contentReference[oaicite:0]{index=0}
+
+        // 2) Remove any primary muscles from the group set
+        var groupMuscles = Set(groupMusclesAll)
+        for m in primaryMuscles { groupMuscles.remove(m) }
+
+        // 3) Assign weights
+        var weights: [CoverageUnit: Double] = [:]
+        weights.reserveCapacity(primaryMuscles.count + groupMuscles.count)
+
+        // Primaries → weight 2.0
+        for m in primaryMuscles {
+            weights[.muscle(m)] = primaryWeight
+        }
+
+        // Groups (post-dedup) → weight 1.0 (don’t downgrade if somehow present)
+        for m in groupMuscles {
+            if weights[.muscle(m)] == nil {
+                weights[.muscle(m)] = groupWeight
+            }
+        }
+
+        return weights
+    }
+    
+    /// Allocate EXACTLY `targetCount` NEW slots across MUSCLE weights.
+    /// - Only `.muscle` keys are considered.
+    /// - Proportional by weight, floor, then remainder by largest fractional part (stable).
+    /// - Returns only positive counts and sums exactly to `targetCount`.
+    func coverageTargetCountsFromWeights(
+        weights: [CoverageUnit: Double],
+        existing: [Exercise],        // not used here on purpose (see note above)
+        targetCount: Int
+    ) -> [CoverageUnit: Int] {
+        guard targetCount > 0 else { return [:] }
+
+        // 1) Keep only positive muscle weights and establish a stable order
+        var entries: [(unit: CoverageUnit, w: Double, key: String)] = []
+        entries.reserveCapacity(weights.count)
+        for (k, v) in weights where v > 0 {
+            if case .muscle = k {
+                entries.append((k, v, String(describing: k)))
+            }
+        }
+        guard !entries.isEmpty else { return [:] }
+        entries.sort { $0.key < $1.key }
+
+        // 2) Proportional shares
+        let sumW = entries.reduce(0.0) { $0 + $1.w }
+        guard sumW > 0 else { return [:] }
+
+        struct Piece { let unit: CoverageUnit; var base: Int; let frac: Double; let key: String }
+        var pieces: [Piece] = []
+        pieces.reserveCapacity(entries.count)
+
+        var baseSum = 0
+        for e in entries {
+            let raw = (e.w / sumW) * Double(targetCount)
+            let b = Int(raw.rounded(.down))
+            let f = raw - Double(b)
+            if b > 0 || f > 0 {
+                pieces.append(.init(unit: e.unit, base: b, frac: f, key: e.key))
+                baseSum += b
+            }
+        }
+
+        // 3) Distribute remainder by largest fractional part (stable by key)
+        var remaining = targetCount - baseSum
+        if remaining > 0, !pieces.isEmpty {
+            pieces.sort { (a, b) in
+                if a.frac != b.frac { return a.frac > b.frac }
+                return a.key < b.key
+            }
+            var i = 0
+            while remaining > 0 {
+                pieces[i].base += 1
+                remaining -= 1
+                i = (i + 1) % pieces.count
+            }
+        }
+
+        // 4) Emit only positive counts
+        var out: [CoverageUnit: Int] = [:]
+        out.reserveCapacity(pieces.count)
+        for p in pieces where p.base > 0 { out[p.unit] = p.base }
+        return out
+    }
 }
 

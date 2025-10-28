@@ -1,7 +1,6 @@
 import SwiftUI
 import AuthenticationServices
 
-
 struct UserProfileView: View {
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var authService = AuthService.shared

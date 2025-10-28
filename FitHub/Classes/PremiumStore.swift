@@ -9,10 +9,10 @@ import Foundation
 import StoreKit
 import Combine
 import SwiftUI
+
 // Disambiguate StoreKit symbols in case another `Transaction` exists in the project
 private typealias SKTransaction = StoreKit.Transaction
 private typealias SKVerificationResult<T> = StoreKit.VerificationResult<T>
-
 
 // Keep IDs as UInt64 to match Transaction.id
 enum PremiumSource: Equatable {
@@ -25,11 +25,9 @@ struct PremiumEntitlement: Equatable {
     var source: PremiumSource?
 }
 
-// free < monthly < annual < lifetime
-// keep track of purchase date and show how many days until auto renewal
 @MainActor
 final class PremiumStore: ObservableObject {
-    // MARK: - Public API
+    // MARK: - Published state
     @Published private(set) var products: [Product] = []          // monthly, yearly, lifetime
     @Published private(set) var entitlement: PremiumEntitlement = .init(isPremium: false, source: nil)
     @Published private(set) var isLoading = false
@@ -37,40 +35,141 @@ final class PremiumStore: ObservableObject {
     @Published private(set) var membershipType: MembershipType = .free
     @Published var errorMessage: String?
 
-    // Optional: tie to your signed-in user to link server events
+    // Optional account token to associate purchases with an app account
     private let appAccountToken: UUID?
-    var currentMembershipType: MembershipType { membershipType }
-    
+
     init(appAccountToken: UUID? = nil) {
         self.appAccountToken = appAccountToken
         listenForTransactionChanges()
     }
-    
-    // Map product IDs — keep these in sync with App Store Connect
+
+    // MARK: - Product IDs and enum-owned helpers
     enum ID {
         static let monthly  = "com.FitHub.premium.monthly"
         static let yearly   = "com.FitHub.premium.yearly"
         static let lifetime = "com.FitHub.premium.lifetime"
+
+        /// Preferred paywall order
+        static var displayOrder: [String] { [monthly, yearly, lifetime] }
+
+        /// Map StoreKit productID -> MembershipType
+        static func membershipType(for productID: String?) -> PremiumStore.MembershipType {
+            guard let pid = productID else { return .free }
+            switch pid {
+            case monthly:  return .monthly
+            case yearly:   return .yearly
+            case lifetime: return .lifetime
+            default:       return .free
+            }
+        }
+
+        /// UI title for each product id
+        static func displayTitle(for productID: String) -> String {
+            switch productID {
+            case monthly:  return "Monthly"
+            case yearly:   return "Annual"
+            case lifetime: return "Lifetime"
+            default:       return "Plan"
+            }
+        }
+
+        /// Optional badge for each product id
+        static func badge(for productID: String) -> String? {
+            switch productID {
+            case yearly:   return "Best Value"
+            case lifetime: return "One-Time"
+            default:       return nil
+            }
+        }
+
+        /// Subscription (vs one-time)
+        static func isSubscription(_ productID: String) -> Bool {
+            productID == monthly || productID == yearly
+        }
     }
-    
+
     enum MembershipType: String, CaseIterable, Comparable {
         case free, monthly, yearly, lifetime
-        
+
         private var rank: Int {
             switch self {
             case .free:     return 0
             case .monthly:  return 1
-            case .yearly:   return 2   // aka “annual”
+            case .yearly:   return 2
             case .lifetime: return 3
             }
         }
+        static func < (lhs: MembershipType, rhs: MembershipType) -> Bool { lhs.rank < rhs.rank }
 
-        static func < (lhs: MembershipType, rhs: MembershipType) -> Bool {
-            lhs.rank < rhs.rank
+        // MARK: Identity (kept out of the view)
+        var isSubscription: Bool { self == .monthly || self == .yearly }
+
+        var productID: String? {
+            switch self {
+            case .free:     return nil
+            case .monthly:  return PremiumStore.ID.monthly
+            case .yearly:   return PremiumStore.ID.yearly
+            case .lifetime: return PremiumStore.ID.lifetime
+            }
+        }
+
+        var displayName: String {
+            switch self {
+            case .free:     return "Free"
+            case .monthly:  return "Monthly"
+            case .yearly:   return "Annual"
+            case .lifetime: return "Lifetime"
+            }
+        }
+
+        var badge: String? {
+            switch self {
+            case .yearly:   return "Best Value"
+            case .lifetime: return "One-Time"
+            default:        return nil
+            }
+        }
+
+        static func from(productID: String?) -> Self {
+            PremiumStore.ID.membershipType(for: productID)
+        }
+
+        // MARK: Price + footnote formatting (single mapping; no redundancy)
+        /// Single source of truth for both the price suffix and cycle text.
+        private static func priceTokens(for unit: StoreKit.Product.SubscriptionPeriod.Unit) -> (suffix: String, cycle: String) {
+            switch unit {
+            case .week:  return ("/wk", "wk")
+            case .month: return ("/mo", "mo")
+            case .year:  return ("/yr", "yr")
+            default:     return ("", "period")
+            }
+        }
+
+        /// Card price text (e.g. "$4.99 /mo" or "$79.99" or "Free")
+        func trailingPriceText(for product: StoreKit.Product) -> String {
+            switch self {
+            case .lifetime:
+                return product.displayPrice
+            case .monthly, .yearly:
+                if let sub = product.subscription {
+                    let tok = Self.priceTokens(for: sub.subscriptionPeriod.unit)
+                    return product.displayPrice + " " + tok.suffix
+                }
+                return product.displayPrice
+            case .free:
+                return "Free"
+            }
+        }
+
+        /// Auto-renew footnote (nil for lifetime/free)
+        func autoRenewFootnote(for product: StoreKit.Product) -> String? {
+            guard isSubscription, let sub = product.subscription else { return nil }
+            let cycle = Self.priceTokens(for: sub.subscriptionPeriod.unit).cycle
+            return "Plan auto-renews for \(product.displayPrice)/\(cycle) until canceled."
         }
     }
 
-    // Load product data + refresh entitlement
+    // MARK: - Public API
     func configure() async {
         isLoading = true
         defer { isLoading = false }
@@ -94,7 +193,6 @@ final class PremiumStore: ObservableObject {
                 let transaction = try verify(verification)
                 await transaction.finish()
                 await refreshEntitlement()
-
             case .userCancelled, .pending:
                 break
             @unknown default:
@@ -106,7 +204,7 @@ final class PremiumStore: ObservableObject {
     }
 
     func restore() async {
-        // With StoreKit 2, entitlement refresh is enough
+        // With StoreKit 2, entitlement refresh generally suffices
         await refreshEntitlement()
     }
 
@@ -115,14 +213,13 @@ final class PremiumStore: ObservableObject {
         do {
             let ids = [ID.monthly, ID.yearly, ID.lifetime]
             let fetched = try await Product.products(for: ids)
-            print("Fetched products:", fetched.map(\.id))
-            products = ids.compactMap { id in fetched.first(where: { $0.id == id }) }
+            // Centralized ordering
+            products = ID.displayOrder.compactMap { id in fetched.first(where: { $0.id == id }) }
         } catch {
             errorMessage = "Failed to load products: \(error.localizedDescription)"
-            print("Product load error:", error)
         }
     }
-    
+
     @MainActor
     private func refreshEntitlement() async {
         var best = PremiumEntitlement(isPremium: false, source: nil)
@@ -137,8 +234,8 @@ final class PremiumStore: ObservableObject {
                 best  = .init(isPremium: true, source: .lifetime(transactionID: t.id))
                 kind  = .lifetime
                 entitlement     = best
-                membershipType  = kind   // lifetime trumps everything
-                return
+                membershipType  = kind
+                return  // lifetime trumps everything
 
             case ID.monthly, ID.yearly:
                 let isActive = t.expirationDate.map { $0 > Date() } ?? true
@@ -153,7 +250,7 @@ final class PremiumStore: ObservableObject {
                         )
                     )
                     kind = (t.productID == ID.yearly) ? .yearly : .monthly
-                    // keep scanning in case we encounter lifetime later
+                    // keep scanning in case lifetime appears later
                 }
 
             default:
@@ -164,7 +261,7 @@ final class PremiumStore: ObservableObject {
         entitlement    = best
         membershipType = kind
     }
-    
+
     @MainActor
     private func willAutoRenew(for transaction: SKTransaction) async -> Bool? {
         guard let product = products.first(where: { $0.id == transaction.productID }),
@@ -178,7 +275,6 @@ final class PremiumStore: ObservableObject {
             }) ?? statuses.first
 
             guard let status = matched else { return nil }
-
             if case .verified(let info) = status.renewalInfo {
                 return info.willAutoRenew
             }

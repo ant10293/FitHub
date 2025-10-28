@@ -568,15 +568,13 @@
 			path = ForUnit;
 			sourceTree = "<group>";
 		};
-		653136192E53EF9900EECCA5 /* ChangeLog */ = {
+		653136192E53EF9900EECCA5 /* Generation */ = {
 			isa = PBXGroup;
 			children = (
-				653136172E519DDA00EECCA5 /* WorkoutChangeLogView.swift */,
-				6531361A2E53EFEE00EECCA5 /* TemplateChangeLogCard.swift */,
-				6531361C2E53F04900EECCA5 /* SetChangeRow.swift */,
-				6531361E2E53F07000EECCA5 /* ExerciseChangeRow.swift */,
+				65F5EF782EB14234005557F1 /* ChangeLog */,
+				65AB47F82EA6E008001BEAFE /* GenerationWarning.swift */,
 			);
-			path = ChangeLog;
+			path = Generation;
 			sourceTree = "<group>";
 		};
 		6531362A2E53FA9100EECCA5 /* Exercise */ = {
@@ -1118,11 +1116,10 @@
 				65CD3C192DD3C84F00C2B671 /* HomeView.swift */,
 				65CD3C1C2DD3C84F00C2B671 /* StatsView.swift */,
 				65CD3C1E2DD3C84F00C2B671 /* UserProfileView.swift */,
-				65AB47F82EA6E008001BEAFE /* GenerationWarning.swift */,
 				653BF8AB2E5AC732005A07EA /* PlateVisualization */,
 				6531362C2E53FB7600EECCA5 /* Editor */,
 				6531362B2E53FB2500EECCA5 /* Subscription */,
-				653136192E53EF9900EECCA5 /* ChangeLog */,
+				653136192E53EF9900EECCA5 /* Generation */,
 				65CD3BFA2DD3C84F00C2B671 /* Setup */,
 				65CD3BBA2DD3C84F00C2B671 /* Adjustments */,
 				65CD3C172DD3C84F00C2B671 /* Workouts */,
@@ -1201,6 +1198,17 @@
 				65D48DEB2DF97BEE0032F815 /* User.swift */,
 			);
 			path = User;
+			sourceTree = "<group>";
+		};
+		65F5EF782EB14234005557F1 /* ChangeLog */ = {
+			isa = PBXGroup;
+			children = (
+				653136172E519DDA00EECCA5 /* WorkoutChangeLogView.swift */,
+				6531361A2E53EFEE00EECCA5 /* TemplateChangeLogCard.swift */,
+				6531361C2E53F04900EECCA5 /* SetChangeRow.swift */,
+				6531361E2E53F07000EECCA5 /* ExerciseChangeRow.swift */,
+			);
+			path = ChangeLog;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
