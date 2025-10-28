@@ -251,6 +251,9 @@
 		65ECFF122E25A4D60091032A /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ECFF112E25A4D60091032A /* InputField.swift */; };
 		65ECFF162E25E28A0091032A /* exercises.json in Resources */ = {isa = PBXBuildFile; fileRef = 65ECFF152E25E28A0091032A /* exercises.json */; };
 		65ECFF182E2609190091032A /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ECFF172E2609190091032A /* SearchBar.swift */; };
+		65F5EF832EB1676E005557F1 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 65F5EF822EB1676E005557F1 /* FirebaseFunctions */; };
+		65F5EF8A2EB16A5D005557F1 /* ReferralAttributor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F5EF882EB16A5D005557F1 /* ReferralAttributor.swift */; };
+		65F5EF8D2EB16A60005557F1 /* ReferralURLHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F5EF8B2EB16A60005557F1 /* ReferralURLHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -496,6 +499,8 @@
 		65ECFF112E25A4D60091032A /* InputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputField.swift; sourceTree = "<group>"; };
 		65ECFF152E25E28A0091032A /* exercises.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = exercises.json; sourceTree = "<group>"; };
 		65ECFF172E2609190091032A /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		65F5EF882EB16A5D005557F1 /* ReferralAttributor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralAttributor.swift; sourceTree = "<group>"; };
+		65F5EF8B2EB16A60005557F1 /* ReferralURLHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralURLHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -504,6 +509,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6584B0B22C30BF4700447EC1 /* FirebaseFirestoreSwift in Frameworks */,
+				65F5EF832EB1676E005557F1 /* FirebaseFunctions in Frameworks */,
 				6584B0B02C30BF4700447EC1 /* FirebaseDatabaseSwift in Frameworks */,
 				6584B0AE2C30BF4700447EC1 /* FirebaseCrashlytics in Frameworks */,
 				6584B0A92C30BF1300447EC1 /* SwiftCSV in Frameworks */,
@@ -1144,6 +1150,8 @@
 			children = (
 				65CD3C952DD3CB8E00C2B671 /* FitHubAssets */,
 				65CD3BB72DD3C84F00C2B671 /* Firebase */,
+				65F5EF892EB16A5D005557F1 /* Services */,
+				65F5EF8C2EB16A60005557F1 /* URLRouting */,
 				65CD3C222DD3C84F00C2B671 /* FitHub.entitlements */,
 				65CD3C252DD3C84F00C2B671 /* Info.plist */,
 				65CD3C242DD3C84F00C2B671 /* FitHubApp.swift */,
@@ -1211,6 +1219,22 @@
 			path = ChangeLog;
 			sourceTree = "<group>";
 		};
+		65F5EF892EB16A5D005557F1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				65F5EF882EB16A5D005557F1 /* ReferralAttributor.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		65F5EF8C2EB16A60005557F1 /* URLRouting */ = {
+			isa = PBXGroup;
+			children = (
+				65F5EF8B2EB16A60005557F1 /* ReferralURLHandler.swift */,
+			);
+			path = URLRouting;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1234,6 +1258,7 @@
 				6584B0AF2C30BF4700447EC1 /* FirebaseDatabaseSwift */,
 				6584B0B12C30BF4700447EC1 /* FirebaseFirestoreSwift */,
 				6584B0B32C30BF4700447EC1 /* FirebaseStorage */,
+				65F5EF822EB1676E005557F1 /* FirebaseFunctions */,
 			);
 			productName = FitHub;
 			productReference = 6584B0632C30BC2000447EC1 /* FitHub.app */;
@@ -1419,6 +1444,7 @@
 				6548AB8B2DDAFB0200BD9DAD /* SortSettings.swift in Sources */,
 				65CD3C6A2DD3C84F00C2B671 /* HealthKitRequestView.swift in Sources */,
 				65C5DC5D2DEFB65000B09AD2 /* Exercise.swift in Sources */,
+				65F5EF8D2EB16A60005557F1 /* ReferralURLHandler.swift in Sources */,
 				65CD3C6B2DD3C84F00C2B671 /* WelcomeView.swift in Sources */,
 				65CFBF992E1719F300CD521E /* NewExercise.swift in Sources */,
 				65C5DC552DEFB46400B09AD2 /* Core.swift in Sources */,
@@ -1464,6 +1490,7 @@
 				65CD3C772DD3C84F00C2B671 /* TrainerView.swift in Sources */,
 				65CD3C782DD3C84F00C2B671 /* WeekWorkout.swift in Sources */,
 				65CD3C792DD3C84F00C2B671 /* WorkoutGeneration.swift in Sources */,
+				65F5EF8A2EB16A5D005557F1 /* ReferralAttributor.swift in Sources */,
 				65C5DC592DEFB5AE00B09AD2 /* Split.swift in Sources */,
 				65E199D32E99CF9300682415 /* RectangularLabel.swift in Sources */,
 				653BF89F2E595AFB005A07EA /* EquipmentRow.swift in Sources */,
@@ -1796,6 +1823,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6584B0AA2C30BF4700447EC1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		65F5EF822EB1676E005557F1 /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6584B0AA2C30BF4700447EC1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
 		};
 /* End XCSwiftPackageProductDependency section */
 

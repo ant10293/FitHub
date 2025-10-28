@@ -211,7 +211,6 @@ final class ExerciseSelector {
         // 3) Distribution selection
         let countByEffort = rAndS.distribution.allocateCountsPerEffort(targetCount: clampedTotal)
         let withExisting  = neededCounts(initialCounts: countByEffort, subtractingSelected: baseExisting)
-
         let newSelection = applyDistributionLogic(
             pool: eligibleFiltered,
             existing: baseExisting,
