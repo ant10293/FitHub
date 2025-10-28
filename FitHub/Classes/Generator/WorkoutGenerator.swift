@@ -41,7 +41,7 @@ final class WorkoutGenerator {
     
     struct GenerationParameters {
         var duration: TimeSpan
-        var exercisesPerWorkout: Int
+       // var exercisesPerWorkout: Int
         var repsAndSets: RepsAndSets
         var days: [DaysOfWeek]
         var dates: [Date]
@@ -154,10 +154,12 @@ extension WorkoutGenerator {
             customDuration: input.user.workoutPrefs.customDuration
         )
         let overloadFactor = input.user.settings.customOverloadFactor ?? 1.0
+        /*
         let exPerWorkout = estimateExercises(
             duration: duration,
             repsAndSets: repsAndSets
         )
+        */
         let dayIndices = DaysOfWeek.calculateWorkoutDayIndexes(
             customWorkoutDays: input.user.workoutPrefs.customWorkoutDays,
             workoutDaysPerWeek: daysPerWeek
@@ -191,7 +193,7 @@ extension WorkoutGenerator {
 
         return GenerationParameters(
             duration: duration,
-            exercisesPerWorkout: exPerWorkout,
+         //   exercisesPerWorkout: exPerWorkout,
             repsAndSets: repsAndSets,
             days: days,
             dates: dates,
@@ -221,6 +223,7 @@ extension WorkoutGenerator {
         let dayName = day.rawValue
         let savedDay: OldTemplate = input.saved[safe: dayIndex] ?? OldTemplate()
         let dayHasExercises: Bool = dayIndex < input.saved.count && !savedDay.exercises.isEmpty
+        let initialExercises: [Exercise] = (input.keepCurrentExercises && dayHasExercises) ? savedDay.exercises : []
         let testCompleted: CompletedWorkout? = input.user.workoutPlans.completedWorkouts.first(where: { $0.template.id == savedDay.id })
         let wasCompleted: Bool = testCompleted != nil
         let completed: CompletedWorkout = testCompleted ?? CompletedWorkout()
@@ -239,12 +242,14 @@ extension WorkoutGenerator {
         
         var tpl = WorkoutTemplate(
             name: "\(dayName) Workout",
-            exercises: [],
+            //exercises: [],
+            exercises: initialExercises,
             categories: categoriesForDay,
             dayIndex: dayIndex,
             date: workoutDate,
+            restPeriods: params.repsAndSets.rest
         )
-        
+        /*
         func getExercisesForTemplate(exerciseCount: Int, existingPicked: [Exercise]? = nil) -> ([Exercise], [PoolChanges.RelaxedFilter]?) {
             let (exercises, dayChanges): ([Exercise], PoolChanges?) = {
                 // Reuse existing?
@@ -314,6 +319,87 @@ extension WorkoutGenerator {
             if let relaxed, relaxed.contains(.split) { tpl.setCategories() }
         } else {
             tpl.estimatedCompletionTime = est
+        }
+        */
+        
+        func getExercisesForTemplate(status: TimeSpan.Fit? = nil, existingPicked: [Exercise]? = nil) -> ([Exercise], [PoolChanges.RelaxedFilter]?) {
+            let (exercises, dayChanges): ([Exercise], PoolChanges?) = {
+                let existing = (existingPicked?.count ?? 0)
+                let newCount: Int = {
+                    if let status {
+                        switch status {
+                        case .over: return existing - 1
+                        case .under: return existing + 1
+                        case .within: return existing
+                        }
+                    } else {
+                        return existing
+                    }
+                }()
+                
+                if let existingPicked, newCount < existing {
+                    let trimmed = intelligentlyTrim(existingPicked, to: newCount, mustHit: categoriesForDay)
+                    return (trimmed, nil)
+                }
+                
+                // Selector enforces exact `exercisesPerWorkout` when the pool allows.
+                let (picked, dayChanges) = selector.select(
+                    dayIndex: dayIndex,
+                    dayLabel: day.rawValue,
+                    categories: categoriesForDay,
+                    total: newCount,
+                    rAndS: params.repsAndSets,
+                    existing: existingPicked
+                )
+                return (picked, dayChanges)
+            }()
+          
+            if let dayChanges { changes.record(templateID: tpl.id, newPool: dayChanges) }
+            if exercises.isEmpty { return ([], dayChanges?.relaxedFilters) }
+            
+            // [2] Detail each exercise (aggregate timing, plus per-ex timing with threshold)
+            let detailedExercises: [Exercise] = exercises.map { ex in
+                let newEx = calculateDetailedExercise(
+                    input: input,
+                    exercise: ex,
+                    repsAndSets: params.repsAndSets,
+                    maxUpdated: { update in
+                        maxUpdated(update)
+                    }
+                )
+                // —— Overload/deload progression ——————————————
+                return handleExerciseProgression(
+                    input: input,
+                    exercise: newEx,
+                    completedExercise: completed.byID[ex.id],
+                    overloadFactor: params.overloadFactor,
+                    overloadStyle: params.overloadStyle,
+                    templateCompleted: wasCompleted
+                )
+            }
+            
+            return (detailedExercises, dayChanges?.relaxedFilters)
+        }
+        
+        let initialEst = tpl.estimatedCompletionTime ?? TimeSpan(seconds: 0)
+        var est: TimeSpan = initialEst
+        var attempt: Int = 1
+        while !est.isWithin(params.duration) {
+            let fit = est.fit(against: params.duration)
+            
+            let existing = tpl.exercises
+            print("\(dayName) selection attempt \(attempt)")
+            let (exercises, relaxed) = getExercisesForTemplate(status: fit, existingPicked: existing)
+            tpl.exercises = exercises
+            
+            print("\(exercises.count - existing.count) exercises picked - before: \(existing.count), after: \(exercises.count)")
+            if let relaxed, relaxed.contains(.split) { tpl.setCategories() }
+            
+            let (newEst, _) = tpl.estimateCompletionTime(rest: params.repsAndSets.rest)
+            tpl.estimatedCompletionTime = newEst
+            est = newEst
+            
+            attempt += 1
         }
         
         return tpl
@@ -468,6 +554,7 @@ extension WorkoutGenerator {
 }
 
 extension WorkoutGenerator {
+    /*
     private func targetExerciseCount(
         perExercise: [(id: Exercise.ID, seconds: Int)],
         target: TimeSpan,
@@ -526,7 +613,7 @@ extension WorkoutGenerator {
         let numExercises = max(1, Int((Double(totalSeconds) / Double(perExercise)).rounded()))
         return numExercises
     }
-    
+    */
     /// Trim `existing` to `target` while trying to keep coverage of `mustHit` categories.
     /// - Keeps original order.
     /// - Guarantees at most one seed per category (if available), then fills with preferred matches, then anything.

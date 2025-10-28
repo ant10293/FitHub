@@ -101,11 +101,42 @@ extension TimeSpan {
 }
 
 extension TimeSpan {
+    struct Delta {
+        let seconds: Int
+        var minutesRounded: Int { Int((Double(seconds) / 60.0).rounded()) }
+    }
+
+    enum Fit {
+        case under(by: Delta)
+        case within
+        case over(by:  Delta)
+
+        var isWithin: Bool { if case .within = self { return true } else { return false } }
+        var isUnder:  Bool { if case .under = self  { return true } else { return false } }
+        var isOver:   Bool { if case .over  = self  { return true } else { return false } }
+    }
+
+    /// Compare `self` to `target` with a relative tolerance.
+    /// - Parameter tolerancePercent: e.g. 0.10 = ±10% window around `target`.
+    func fit(against target: TimeSpan, tolerancePercent: Double = 0.10) -> Fit {
+        let selfSec   = self.inSeconds
+        let targetSec = target.inSeconds
+        guard targetSec > 0 else { return .within }
+
+        let diff = selfSec - targetSec              // + = over, − = under
+        let tol  = Int((Double(targetSec) * tolerancePercent).rounded())
+
+        if abs(diff) <= tol {
+            return .within
+        } else if diff < 0 {
+            return .under(by: .init(seconds: -diff))
+        } else {
+            return .over(by:  .init(seconds:  diff))
+        }
+    }
+
+    /// Convenience: preserve your old signature (now powered by `fit`).
     func isWithin(_ other: TimeSpan, tolerancePercent: Double = 0.10) -> Bool {
-        let selfMin  = Double(inMinutes)
-        let otherMin = Double(other.inMinutes)
-        guard otherMin > 0 else { return true }
-        let ratio = abs(selfMin - otherMin) / otherMin
-        return ratio <= tolerancePercent
+        fit(against: other, tolerancePercent: tolerancePercent).isWithin
     }
 }
