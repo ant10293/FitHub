@@ -590,12 +590,19 @@ extension Exercise {
 extension Exercise {
     // MARK: – Public computed properties
     var musclesTextFormatted: Text { formattedMuscles(from: primaryMuscleEngagements + secondaryMuscleEngagements) }
-    var primaryMusclesFormatted: Text { formattedMuscles(from: primaryMuscleEngagements) }
-    var secondaryMusclesFormatted: Text { formattedMuscles(from: secondaryMuscleEngagements) }
-    
-    // MARK: – Shared formatter
-    
-    private func formattedMuscles(from engagements: [MuscleEngagement]) -> Text {
+    var primaryMusclesFormatted: Text {
+        formattedMuscles(from: primaryMuscleEngagements, showHeader: true, header: "Primary Muscles:")
+    }
+
+    var secondaryMusclesFormatted: Text {
+        formattedMuscles(from: secondaryMuscleEngagements, showHeader: true, header: "Secondary Muscles:")
+    }
+
+    private func formattedMuscles(
+        from engagements: [MuscleEngagement],
+        showHeader: Bool = false,
+        header: String = ""
+    ) -> Text {
         // Build a bullet-point line for every engagement
         let lines: [Text] = engagements.map { e in
             let name = Text("• \(e.muscleWorked.rawValue): ").bold()
@@ -607,8 +614,21 @@ extension Exercise {
             return subs.isEmpty ? name : name + Text(subs)
         }
 
-        guard let first = lines.first else { return Text("• None") }
-        return lines.dropFirst().reduce(first) { $0 + Text("\n") + $1 }
+        // no muscles
+        guard let first = lines.first else {
+            let body = Text("• None")
+            return showHeader ? Text(header).bold() + Text("\n") + body : body
+        }
+
+        let body = lines.dropFirst().reduce(first) { $0 + Text("\n") + $1 }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+
+        if showHeader {
+            return Text(header).bold() + Text("\n") + body
+        } else {
+            return body
+        }
     }
 }
 

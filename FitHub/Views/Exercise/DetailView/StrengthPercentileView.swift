@@ -65,9 +65,10 @@ struct StrengthPercentileView: View {
             title: "Based on Body Weight",
             key: .bodyweight,
             detail:
-                Text(" (").foregroundStyle(.gray)
-                + bodyweight.formattedText(asInteger: true).foregroundStyle(.gray)
-                + Text(")").foregroundStyle(.gray)
+                (Text(" (")
+                + bodyweight.formattedText(asInteger: true)
+                + Text(")"))
+                .foregroundStyle(.gray)
         )
     }
     
@@ -76,9 +77,10 @@ struct StrengthPercentileView: View {
             title: "Based on Age",
             key: .age,
             detail:
-                Text(" (\(age) ").foregroundStyle(.gray)
-                + Text("years").foregroundStyle(.gray).fontWeight(.light)
-                + Text(")").foregroundStyle(.gray)
+                (Text(" (\(age) ")
+                + Text("years").fontWeight(.light)
+                + Text(")"))
+                .foregroundStyle(.gray)
         )
     }
     

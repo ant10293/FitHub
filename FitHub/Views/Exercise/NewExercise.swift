@@ -55,59 +55,57 @@ struct NewExercise: View {
     // ────────── View
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
-                        NameField(title: "Name", placeholder: "Exercise Name", text: $draft.name, error: nameError)
-                        AliasesField(aliases: $draft.aliases, readOnly: isReadOnly)
-                        muscleField
-                        equipmentSection
-                                  
-                        if !equipmentRequired.isEmpty, ctx.equipment.hasEquipmentAdjustments(for: equipmentRequired) {
-                            adjustmentsField
-                        }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    NameField(title: "Name", placeholder: "Exercise Name", text: $draft.name, error: nameError)
+                    AliasesField(aliases: $draft.aliases, readOnly: isReadOnly)
+                    muscleField
+                    equipmentSection
+                              
+                    if !equipmentRequired.isEmpty, ctx.equipment.hasEquipmentAdjustments(for: equipmentRequired) {
+                        adjustmentsField
+                    }
+                    
+                    instructionsSection
+                              
+                    if !isReadOnly {
+                        ImageField(initialFilename: draft.image, onImageUpdate: { name in
+                            draft.image = name
+                        })
+                    }
+                    
+                    difficultySection
+                    classificationPickers
+                }
+                .padding()
+                .disabled(isReadOnly)
+                                
+                if !kbd.isVisible && !isReadOnly {
+                    RectangularButton(
+                        title: isEditing ? "Save Changes" : "Create Exercise",
+                        enabled: isInputValid,
+                        bgColor: isInputValid ? .blue : .gray
+                    ) {
+                        exerciseCreated = true
+                        draft.name = InputLimiter.trimmed(draft.name)
                         
-                        instructionsSection
-                                  
                         if !isReadOnly {
-                            ImageField(initialFilename: draft.image, onImageUpdate: { name in
-                                draft.image = name
-                            })
+                            if let orig = original {
+                                ctx.exercises.replace(orig, with: exercise)
+                            } else {
+                                ctx.exercises.addExercise(exercise)
+                            }
                         }
                         
-                        difficultySection
-                        classificationPickers
+                        dismiss()
                     }
                     .padding()
-                    .disabled(isReadOnly)
                     
-                    if !kbd.isVisible && !isReadOnly {
-                        RectangularButton(
-                            title: isEditing ? "Save Changes" : "Create Exercise",
-                            enabled: isInputValid,
-                            bgColor: isInputValid ? .blue : .gray
-                        ) {
-                            exerciseCreated = true
-                            draft.name = InputLimiter.trimmed(draft.name)
-                            
-                            if !isReadOnly {
-                                if let orig = original {
-                                    ctx.exercises.replace(orig, with: exercise)
-                                } else {
-                                    ctx.exercises.addExercise(exercise)
-                                }
-                            }
-                            
-                            dismiss()
-                        }
+                    if isEditing {
+                        RectangularButton(title: "Delete Exercise", systemImage: "trash", bgColor: .red, action: {
+                            showDeleteAlert = true
+                        })
                         .padding()
-                        
-                        if isEditing {
-                            RectangularButton(title: "Delete Exercise", systemImage: "trash", bgColor: .red, action: {
-                                showDeleteAlert = true
-                            })
-                            .padding()
-                        }
                     }
                 }
             }
@@ -310,10 +308,10 @@ struct NewExercise: View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Classification")
                 .font(.headline)
-            
+    
             VStack(spacing: 0) {
                 // Resistance Type (exclude .weighted)
-                MenuPickerRow(title: "Resistance Type", selection: $draft.resistance) {
+                MenuPickerRow(title: "Resistance Type", selection: $draft.resistance, showDivider: false) {
                     ForEach(ResistanceType.forExercises, id: \.self) {
                         Text($0.rawValue).tag($0)
                     }
@@ -346,7 +344,7 @@ struct NewExercise: View {
 
                 // Weight Instruction (Optional, conditional)
                 if exercise.usesWeight {
-                    MenuPickerRow(title: "Weight Instruction", selection: $draft.weightInstruction, showDivider: false) {
+                    MenuPickerRow(title: "Weight Instruction", selection: $draft.weightInstruction) {
                         Text("None").tag(nil as WeightInstruction?)
                         ForEach(WeightInstruction.allCases, id: \.self) {
                             Text($0.rawValue).tag(Optional($0))

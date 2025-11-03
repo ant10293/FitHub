@@ -237,6 +237,9 @@
 		65D48DEC2DF97BEE0032F815 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D48DEB2DF97BEE0032F815 /* User.swift */; };
 		65D48DEE2DFA22350032F815 /* WorkoutCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D48DED2DFA22350032F815 /* WorkoutCustomization.swift */; };
 		65DC3C542DEA200A00B3D128 /* ExerciseRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DC3C532DEA200A00B3D128 /* ExerciseRow.swift */; };
+		65DD05062EB9584E000D159C /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05052EB9584E000D159C /* AboutView.swift */; };
+		65DD05082EB95877000D159C /* PercentileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05072EB95877000D159C /* PercentileView.swift */; };
+		65DD050A2EB95888000D159C /* PRsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05092EB95888000D159C /* PRsView.swift */; };
 		65E05D0F2E7B81F900E39CC2 /* Rounding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D0E2E7B81F900E39CC2 /* Rounding.swift */; };
 		65E05D112E7B88FC00E39CC2 /* WeightPlates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */; };
 		65E05D132E7B894900E39CC2 /* InitEquipment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D122E7B894900E39CC2 /* InitEquipment.swift */; };
@@ -486,6 +489,9 @@
 		65D48DEB2DF97BEE0032F815 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		65D48DED2DFA22350032F815 /* WorkoutCustomization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutCustomization.swift; sourceTree = "<group>"; };
 		65DC3C532DEA200A00B3D128 /* ExerciseRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseRow.swift; sourceTree = "<group>"; };
+		65DD05052EB9584E000D159C /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		65DD05072EB95877000D159C /* PercentileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentileView.swift; sourceTree = "<group>"; };
+		65DD05092EB95888000D159C /* PRsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PRsView.swift; sourceTree = "<group>"; };
 		65E05D0E2E7B81F900E39CC2 /* Rounding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rounding.swift; sourceTree = "<group>"; };
 		65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightPlates.swift; sourceTree = "<group>"; };
 		65E05D122E7B894900E39CC2 /* InitEquipment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitEquipment.swift; sourceTree = "<group>"; };
@@ -960,18 +966,14 @@
 		65CD3BCE2DD3C84F00C2B671 /* Exercise */ = {
 			isa = PBXGroup;
 			children = (
+				65DD05042EB95819000D159C /* DetailView */,
 				65039B682E7E2EF1007A31E1 /* Sorting */,
 				6550ADD52E74D74B002072C1 /* DetailOptions */,
 				6550ADD42E74D2A4002072C1 /* Options */,
-				65CD3BC72DD3C84F00C2B671 /* ExerciseDetailView.swift */,
-				65CD3BC82DD3C84F00C2B671 /* ExercisePerformanceView.swift */,
 				65CD3BC92DD3C84F00C2B671 /* ExerciseSelection.swift */,
 				65CD3BCA2DD3C84F00C2B671 /* ExerciseView.swift */,
 				65CD3BCB2DD3C84F00C2B671 /* FavoriteExercisesView.swift */,
-				65CD3BCC2DD3C84F00C2B671 /* StrengthPercentileView.swift */,
-				65CD3BCD2DD3C84F00C2B671 /* UpdateMaxEditor.swift */,
 				65CFBF982E1719F300CD521E /* NewExercise.swift */,
-				65AB47F62EA342B4001BEAFE /* ExerciseHistory.swift */,
 			);
 			path = Exercise;
 			sourceTree = "<group>";
@@ -1182,6 +1184,21 @@
 			path = Image;
 			sourceTree = "<group>";
 		};
+		65DD05042EB95819000D159C /* DetailView */ = {
+			isa = PBXGroup;
+			children = (
+				65CD3BC72DD3C84F00C2B671 /* ExerciseDetailView.swift */,
+				65AB47F62EA342B4001BEAFE /* ExerciseHistory.swift */,
+				65DD05052EB9584E000D159C /* AboutView.swift */,
+				65DD05072EB95877000D159C /* PercentileView.swift */,
+				65DD05092EB95888000D159C /* PRsView.swift */,
+				65CD3BCC2DD3C84F00C2B671 /* StrengthPercentileView.swift */,
+				65CD3BCD2DD3C84F00C2B671 /* UpdateMaxEditor.swift */,
+				65CD3BC82DD3C84F00C2B671 /* ExercisePerformanceView.swift */,
+			);
+			path = DetailView;
+			sourceTree = "<group>";
+		};
 		65E05D0D2E7B81A800E39CC2 /* Equipment */ = {
 			isa = PBXGroup;
 			children = (
@@ -1335,6 +1352,7 @@
 				653BF8B12E6618E2005A07EA /* GenericEditor.swift in Sources */,
 				653BF89B2E595AA3005A07EA /* EquipmentManagement.swift in Sources */,
 				65E05D132E7B894900E39CC2 /* InitEquipment.swift in Sources */,
+				65DD050A2EB95888000D159C /* PRsView.swift in Sources */,
 				65CD3C2C2DD3C84F00C2B671 /* CSVLoader.swift in Sources */,
 				65CD3C2D2DD3C84F00C2B671 /* EquipmentData.swift in Sources */,
 				65CD3C2E2DD3C84F00C2B671 /* ExerciseData.swift in Sources */,
@@ -1459,6 +1477,7 @@
 				65C5DC692DEFBBA300B09AD2 /* Week.swift in Sources */,
 				65D48DEA2DF96A640032F815 /* UserData.swift in Sources */,
 				653136142E51521D00EECCA5 /* SetCountEditor.swift in Sources */,
+				65DD05082EB95877000D159C /* PercentileView.swift in Sources */,
 				65CD3C6C2DD3C84F00C2B671 /* ExerciseSetDisplay.swift in Sources */,
 				65D48DEE2DFA22350032F815 /* WorkoutCustomization.swift in Sources */,
 				6550ADCB2E71169A002072C1 /* ChangeLog.swift in Sources */,
@@ -1511,6 +1530,7 @@
 				653BF8B32E661BD6005A07EA /* BaseWeightEditor.swift in Sources */,
 				65CD3C7D2DD3C84F00C2B671 /* ExerciseDetailOptions.swift in Sources */,
 				6531362E2E542E1700EECCA5 /* InitExercise.swift in Sources */,
+				65DD05062EB9584E000D159C /* AboutView.swift in Sources */,
 				65C5DC6B2DEFBC8200B09AD2 /* Workout.swift in Sources */,
 				65A0D1CC2E2F39D5008466D8 /* CustomToolBar.swift in Sources */,
 				65E05D112E7B88FC00E39CC2 /* WeightPlates.swift in Sources */,
@@ -1701,8 +1721,10 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FitHub/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "FitHub lets you take new photos using your camera to use as images for custom equipment, exercises, and adjustments.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "FitHub reads profile fields you approve (e.g., height, weight, date of birth, biological sex) from the Health app to prefill your account and calculations. Data stays on your device, and we don’t use it for ads or sell it. FitHub does not write data to Health.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FitHub lets you choose photos from your library to use as images for custom equipment, exercises, and adjustments.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FitHub can save images you create or adjust back to your photo library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "FitHub lets you choose photos from your library to use as images for custom equipment, exercises, and adjustments.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1735,8 +1757,10 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FitHub/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "FitHub lets you take new photos using your camera to use as images for custom equipment, exercises, and adjustments.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "FitHub reads profile fields you approve (e.g., height, weight, date of birth, biological sex) from the Health app to prefill your account and calculations. Data stays on your device, and we don’t use it for ads or sell it. FitHub does not write data to Health.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FitHub lets you choose photos from your library to use as images for custom equipment, exercises, and adjustments.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FitHub can save images you create or adjust back to your photo library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "FitHub lets you choose photos from your library to use as images for custom equipment, exercises, and adjustments.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
