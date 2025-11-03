@@ -13,10 +13,10 @@ struct Profile: Codable, Equatable {
     var lastName: String = ""
     var email: String = ""
     var userId: String = ""
-    var accountCreationDate: Date?
     var userName: String = ""
     var age: Int = 0
     var dob: Date = Date()
+    var accountCreationDate: Date?
 }
 
 // physical         = PhysicalStats()
@@ -43,14 +43,17 @@ struct WorkoutPreferences: Codable, Equatable {
     var customRestPeriods: RestPeriods?
     var workoutDaysPerWeek: Int = 3 // days per week user wants to work out
     var keepCurrentExercises: Bool = false
+    var paramsBeforeSwitch: ParamsBeforeSwitch?
     //var withPerformanceData: Bool = true // only use exercises with performance data when creating workouts
     var resistance: ResistanceType = .any
     var setStructure: SetStructures = .pyramid
-    var customDuration: Int? /// minutes
+    var customDuration: TimeSpan?
     var customDistribution: ExerciseDistribution?
     //var supersetSettings: SupersetSettings = SupersetSettings()
     //var minBwRepsMultiplier: Double = 0.5
     //var maxBwRepsMultiplier: Double = 2.0
+    //var minHoldTime: TimeSpan = .init(seconds: 30)
+    //var maxHoldTime: TimeSpan = .init(minutes: 5)
 }
 
 // setup            = Setup()
@@ -78,6 +81,7 @@ struct Settings: Codable, Equatable {
     var progressiveOverloadStyle: ProgressiveOverloadStyle = .dynamic // Default style
     var muscleRestDuration: Int = 48 // Default to 48 hours
     var deloadIntensity: Int = 85
+    //var relativeSetIntensity: Int = 100 // relative to max
     var customOverloadFactor: Double?
     var periodUntilDeload: Int = 4
     var useDateOnly: Bool = true // If true, only the date is considered

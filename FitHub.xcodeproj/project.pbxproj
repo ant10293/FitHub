@@ -254,6 +254,7 @@
 		65F5EF832EB1676E005557F1 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 65F5EF822EB1676E005557F1 /* FirebaseFunctions */; };
 		65F5EF8A2EB16A5D005557F1 /* ReferralAttributor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F5EF882EB16A5D005557F1 /* ReferralAttributor.swift */; };
 		65F5EF8D2EB16A60005557F1 /* ReferralURLHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F5EF8B2EB16A60005557F1 /* ReferralURLHandler.swift */; };
+		65F5EF8F2EB19CBE005557F1 /* CoverageState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F5EF8E2EB19CBE005557F1 /* CoverageState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -501,6 +502,7 @@
 		65ECFF172E2609190091032A /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		65F5EF882EB16A5D005557F1 /* ReferralAttributor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralAttributor.swift; sourceTree = "<group>"; };
 		65F5EF8B2EB16A60005557F1 /* ReferralURLHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralURLHandler.swift; sourceTree = "<group>"; };
+		65F5EF8E2EB19CBE005557F1 /* CoverageState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverageState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -888,6 +890,7 @@
 				6531362F2E550E2900EECCA5 /* WorkoutParams.swift */,
 				653136362E552FCA00EECCA5 /* Distribution.swift */,
 				653136382E552FF000EECCA5 /* Notification.swift */,
+				65F5EF8E2EB19CBE005557F1 /* CoverageState.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1448,6 +1451,7 @@
 				65CD3C6B2DD3C84F00C2B671 /* WelcomeView.swift in Sources */,
 				65CFBF992E1719F300CD521E /* NewExercise.swift in Sources */,
 				65C5DC552DEFB46400B09AD2 /* Core.swift in Sources */,
+				65F5EF8F2EB19CBE005557F1 /* CoverageState.swift in Sources */,
 				6531363C2E59106500EECCA5 /* TimesEditor.swift in Sources */,
 				65CFBFAD2E1F978700CD521E /* ImageField.swift in Sources */,
 				65C5DC5F2DEFB70800B09AD2 /* Settings.swift in Sources */,

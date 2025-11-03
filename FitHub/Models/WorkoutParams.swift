@@ -7,16 +7,39 @@
 
 import Foundation
 
+/// if keepCurrentExercises, create after generating a workout plan
+struct ParamsBeforeSwitch: Codable, Equatable {
+    var resistance: ResistanceType
+    var distribution: ExerciseDistribution?
+    
+    init(
+        resistance: ResistanceType,
+        customDistribution: ExerciseDistribution?
+    ) {
+        self.resistance = resistance
+        self.distribution = customDistribution
+    }
+    
+    enum ParamsChanged: String { case resistance, distribution }
+    
+    func getChanges(resistance: ResistanceType, distribution: ExerciseDistribution?) -> Set<ParamsChanged> {
+        var changed: Set<ParamsChanged> = []
+        if self.resistance != resistance { changed.insert(.resistance) }
+        if self.distribution != distribution { changed.insert(.distribution) }
+        return changed
+    }
+}
+
 enum WorkoutParams {
     static func determineWorkoutDuration(
         age: Int,
         frequency: Int,
         strengthLevel: StrengthLevel,
         goal: FitnessGoal,
-        customDuration: Int?
+        customDuration: TimeSpan?
     ) -> TimeSpan {
-        if let customDuration {
-            return TimeSpan.fromMinutes(customDuration)
+        if let customDuration, customDuration.inMinutes > 15 {
+            return customDuration
         } else {
             return defaultWorkoutDuration(age: age, frequency: frequency, strengthLevel: strengthLevel, goal: goal)
         }
@@ -92,6 +115,6 @@ enum WorkoutParams {
             minutes -= remainder          // round down
         }
         
-        return TimeSpan.fromMinutes(minutes)
+        return TimeSpan(minutes: minutes)
     }
 }

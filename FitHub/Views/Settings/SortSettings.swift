@@ -64,7 +64,7 @@ struct SortSettings: View {
                 // ── Hide Difficult ─────────────────────────────
                 VStack(alignment: .leading, spacing: 2) {
                     Toggle("Hide Difficult Exercises", isOn: $userData.settings.hideDifficultExercises)
-                    Text("Filters out exercises that exceed your current strength level of '\(userData.evaluation.strengthLevel.fullName)'.")
+                    Text("Hides exercises that exceed your current strength level of '\(userData.evaluation.strengthLevel.fullName)'.")
                         .font(.caption)
                         .foregroundStyle(Color.secondary)
                 }
@@ -72,7 +72,7 @@ struct SortSettings: View {
                 // ── Hide Disliked ──────────────────────────────
                 VStack(alignment: .leading, spacing: 2) {
                     Toggle("Hide Disliked Exercises", isOn: $userData.settings.hideDislikedExercises)
-                    Text("Hides any exercise you’ve marked as “disliked.”")
+                    Text("Hides any exercise you’ve marked as disliked.")
                         .font(.caption)
                         .foregroundStyle(Color.secondary)
                 }

@@ -13,15 +13,14 @@ struct ExerciseDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
-    @State private var showingAdjustmentsView: Bool = false
     @State private var showingUpdate1RMView: Bool = false
     @State private var showingSortPicker: Bool = false
     @State private var showingList: Bool = false
     @State private var editingExercise: Bool = false
     @State private var selectedOption: String = "Standards"
     @State private var selectedView: Views = .about
-    var viewingDuringWorkout: Bool
-    var exercise: Exercise
+    let viewingDuringWorkout: Bool
+    let exercise: Exercise
     
     var body: some View {
         VStack {
@@ -40,7 +39,7 @@ struct ExerciseDetailView: View {
             Group {
                 switch selectedView {
                 case .about:
-                    aboutView
+                    AboutView(exercise: exercise)
                 case .history:
                     ExerciseHistory(
                         completedWorkouts: ctx.userData.workoutPlans.completedWorkouts,
@@ -58,9 +57,6 @@ struct ExerciseDetailView: View {
         }
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .navigationTitle(exercise.name).multilineTextAlignment(.center)
-        .sheet(isPresented: $showingAdjustmentsView) {
-            AdjustmentsView(exercise: exercise)
-        }
         .sheet(isPresented: $editingExercise) { NewExercise(original: exercise) }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -99,69 +95,6 @@ struct ExerciseDetailView: View {
                 )
         }
         .padding(.vertical)
-    }
-    
-    private var aboutView: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 10) {
-                ExEquipImage(image: exercise.fullImage, button: .expand)
-                    .centerHorizontally()
-
-                Text("How to perform: ").bold() // Placeholder text
-                Group {
-                    if let printedInstructions = exercise.instructions.formattedString() {
-                        Text(printedInstructions)
-                    } else {
-                        Text("No instructions available.")
-                            .foregroundStyle(Color.secondary)
-                    }
-                }
-                .padding(.bottom)
-                
-                if let limbMovementType = exercise.limbMovementType {
-                    limbMovementType.displayInfoText
-                        .padding(.bottom)
-                }
-                
-                (Text("Difficulty: ").bold() + Text(exercise.difficulty.fullName))
-                    .padding(.bottom)
-                
-                if !exercise.primaryMuscleEngagements.isEmpty {
-                    Text("Primary Muscles: ").bold()
-                    exercise.primaryMusclesFormatted
-                        .multilineTextAlignment(.leading)
-                        .font(.caption)
-                        .foregroundStyle(Color.secondary)
-                }
-                
-                if !exercise.secondaryMuscleEngagements.isEmpty {
-                    Text("Secondary Muscles: ").bold()
-                    exercise.secondaryMusclesFormatted
-                        .multilineTextAlignment(.leading)
-                        .font(.caption)
-                        .foregroundStyle(Color.secondary)
-                }
-                
-                if !exercise.equipmentRequired.isEmpty {
-                    let equipment = ctx.equipment.equipmentForExercise(exercise)
-                    EquipmentScrollRow(equipment: equipment, title: "Equipment Required")
-                        .padding(.vertical)
-                }
-                
-                if ctx.equipment.hasEquipmentAdjustments(for: exercise) {
-                    LabelButton(
-                        title: "Equipment Adjustments",
-                        systemImage: "slider.horizontal.3",
-                        tint: .green,
-                        controlSize: .large,
-                        action: { showingAdjustmentsView.toggle() }
-                    )
-                    .padding(.horizontal)
-                }
-                
-                Spacer()
-            }
-        }
     }
     
     private var percentileView: some View {
@@ -269,6 +202,92 @@ struct ExerciseDetailView: View {
                     }
                 )
             }
+        }
+    }
+}
+
+private struct AboutView: View {
+    @EnvironmentObject private var ctx: AppContext
+    @State private var showingAdjustmentsView: Bool = false
+    private let modifier = ExerciseModifier()
+    let exercise: Exercise
+    
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 10) {
+                ExEquipImage(image: exercise.fullImage, button: .expand)
+                    .centerHorizontally()
+                
+                RatingIcon(
+                    exercise: exercise,
+                    favState: FavoriteState.getState(for: exercise, userData: ctx.userData),
+                    size: .large,
+                    onFavorite: {
+                        modifier.toggleFavorite(for: exercise.id, userData: ctx.userData)
+                    },
+                    onDislike: {
+                        modifier.toggleDislike(for: exercise.id, userData: ctx.userData)
+                    }
+                )
+                .centerHorizontally()
+
+                Text("How to perform: ").bold() // Placeholder text
+                Group {
+                    if let printedInstructions = exercise.instructions.formattedString() {
+                        Text(printedInstructions)
+                    } else {
+                        Text("No instructions available.")
+                            .foregroundStyle(Color.secondary)
+                    }
+                }
+                .padding(.bottom)
+                
+                if let limbMovementType = exercise.limbMovementType {
+                    limbMovementType.displayInfoText
+                        .padding(.bottom)
+                }
+                
+                (Text("Difficulty: ").bold() + Text(exercise.difficulty.fullName))
+                    .padding(.bottom)
+                
+                if !exercise.primaryMuscleEngagements.isEmpty {
+                    Text("Primary Muscles: ").bold()
+                    exercise.primaryMusclesFormatted
+                        .multilineTextAlignment(.leading)
+                        .font(.caption)
+                        .foregroundStyle(Color.secondary)
+                }
+                
+                if !exercise.secondaryMuscleEngagements.isEmpty {
+                    Text("Secondary Muscles: ").bold()
+                    exercise.secondaryMusclesFormatted
+                        .multilineTextAlignment(.leading)
+                        .font(.caption)
+                        .foregroundStyle(Color.secondary)
+                }
+                
+                if !exercise.equipmentRequired.isEmpty {
+                    let equipment = ctx.equipment.equipmentForExercise(exercise)
+                    EquipmentScrollRow(equipment: equipment, title: "Equipment Required")
+                        .padding(.vertical)
+                }
+                
+                if ctx.equipment.hasEquipmentAdjustments(for: exercise) {
+                    LabelButton(
+                        title: "Equipment Adjustments",
+                        systemImage: "slider.horizontal.3",
+                        tint: .green,
+                        controlSize: .large,
+                        action: { showingAdjustmentsView.toggle() }
+                    )
+                    .padding(.horizontal)
+                }
+                
+                Spacer()
+            }
+        }
+        .sheet(isPresented: $showingAdjustmentsView) {
+            AdjustmentsView(exercise: exercise)
         }
     }
 }

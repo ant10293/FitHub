@@ -17,8 +17,12 @@ struct MuscleEngagement: Hashable, Codable {
     var engagementPercentage: Double
     var mover: MoverType
     var submusclesWorked: [SubMuscleEngagement]?
-    
+}
+extension MuscleEngagement {
     var allSubMuscles: [SubMuscles] { submusclesWorked?.map { $0.submuscleWorked } ?? [] }
+    var topSubMuscle: SubMuscles? {
+        submusclesWorked?.max { $0.engagementPercentage < $1.engagementPercentage }?.submuscleWorked
+    }
 }
 
 extension Sequence where Element == MuscleEngagement {

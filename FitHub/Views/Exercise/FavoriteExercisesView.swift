@@ -34,7 +34,22 @@ struct FavoriteExercisesView: View {
                     } else {
                         Section {
                             ForEach(filteredExercises, id: \.id) { exercise in
-                                ExerciseRow(exercise, accessory: { ratingIcons(for: exercise) }) {
+                                ExerciseRow(
+                                    exercise,
+                                    accessory: {
+                                        RatingIcon(
+                                            exercise: exercise,
+                                            favState: FavoriteState.getState(for: exercise, userData: ctx.userData),
+                                            selectedFilter: selectedFilter,
+                                            onFavorite: {
+                                                modifier.toggleFavorite(for: exercise.id, userData: ctx.userData)
+                                            },
+                                            onDislike: {
+                                                modifier.toggleDislike(for: exercise.id, userData: ctx.userData)
+                                            }
+                                        )
+                                    }
+                                ) {
                                     EmptyView()
                                 }
                             }
@@ -76,36 +91,12 @@ struct FavoriteExercisesView: View {
         }
     }
     
-    private enum ExerciseFilter: String, CaseIterable, Identifiable {
+    enum ExerciseFilter: String, CaseIterable, Identifiable {
         case favorites = "Favorites"
         case disliked = "Disliked"
         case all = "All Exercises"
         
         var id: String { self.rawValue }
-    }
-    
-    @ViewBuilder
-    private func ratingIcons(for exercise: Exercise) -> some View {
-        HStack(spacing: 12) {
-            let favState = FavoriteState.getState(for: exercise, userData: ctx.userData)
-            
-            if selectedFilter != .favorites {
-                let isDisliked = favState == .disliked
-                Image(systemName: isDisliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
-                    .foregroundStyle(isDisliked ? .blue : .gray)
-                    .onTapGesture {
-                        modifier.toggleDislike(for: exercise.id, userData: ctx.userData)
-                    }
-            }
-            if selectedFilter != .disliked {
-                let isFavorite = favState == .favorite
-                Image(systemName: isFavorite ? "heart.fill" : "heart")
-                    .foregroundStyle(isFavorite ? .red : .gray)
-                    .onTapGesture {
-                        modifier.toggleFavorite(for: exercise.id, userData: ctx.userData)
-                    }
-            }
-        }
     }
     
     private func emptyLists() -> Bool {
@@ -129,3 +120,46 @@ struct FavoriteExercisesView: View {
     }
 }
 
+
+struct RatingIcon: View {
+    let exercise: Exercise
+    let favState: FavoriteState
+    let selectedFilter: FavoriteExercisesView.ExerciseFilter
+    let size: Image.Scale
+    let onFavorite: () -> Void
+    let onDislike: () -> Void
+    
+    init(
+        exercise: Exercise,
+        favState: FavoriteState,
+        selectedFilter: FavoriteExercisesView.ExerciseFilter = .all,
+        size: Image.Scale = .medium,
+        onFavorite: @escaping () -> Void,
+        onDislike: @escaping () -> Void
+    ) {
+        self.exercise = exercise
+        self.favState = favState
+        self.selectedFilter = selectedFilter
+        self.size = size
+        self.onFavorite = onFavorite
+        self.onDislike = onDislike
+    }
+    var body: some View {
+        HStack(spacing: 12) {
+            if selectedFilter != .favorites {
+                let isDisliked = favState == .disliked
+                Image(systemName: isDisliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
+                    .foregroundStyle(isDisliked ? .blue : .gray)
+                    .imageScale(size)
+                    .onTapGesture(perform: onDislike)
+            }
+            if selectedFilter != .disliked {
+                let isFavorite = favState == .favorite
+                Image(systemName: isFavorite ? "heart.fill" : "heart")
+                    .foregroundStyle(isFavorite ? .red : .gray)
+                    .imageScale(size)
+                    .onTapGesture(perform: onFavorite)
+            }
+        }
+    }
+}

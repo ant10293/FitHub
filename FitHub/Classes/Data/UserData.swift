@@ -32,9 +32,7 @@ final class UserData: ObservableObject, Codable {
     @Published var workoutChanges: WorkoutChanges?
     @Published var showingGenerationWarning: Bool = false
     
-    @Published var allowDisliked: Bool = false
-    @Published var allowDifficult: Bool = false
-    
+    @Published var allowDisliked: Bool = false    
     init(){}
 
     // MARK: – Persistence Logic
@@ -370,6 +368,11 @@ extension UserData {
                     self.workoutChanges = changes
                     self.showingGenerationWarning = true
                 }
+                
+                self.workoutPrefs.paramsBeforeSwitch = .init(
+                    resistance: self.workoutPrefs.resistance,
+                    customDistribution: self.workoutPrefs.customDistribution
+                )
                                 
                 onDone()
             }

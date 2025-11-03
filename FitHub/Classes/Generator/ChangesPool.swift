@@ -10,8 +10,9 @@ import SwiftUI
 // TODO: should have a var for overall exercises with no data.
 // should warn the user when the difficulty and repCap filters are relaxed
 // if noData is the primary reduction, prompt the user to try again (warn that setDetails will not be autofilled)
-struct PoolChanges: Equatable, Hashable {
+struct PoolChanges  {
     var reasons: [ReasoningCount]
+    var coverage: CoverageState?
     var relaxedFilters: [RelaxedFilter] = []
     
     init() {
@@ -59,7 +60,7 @@ struct PoolChanges: Equatable, Hashable {
             case .split: return .split
             }
         }
-
+        
         /// Convenience: canonical ordered list
         static var defaultOrder: [RelaxedFilter] {
             Self.allCases.sorted { $0.order < $1.order }
@@ -70,10 +71,10 @@ struct PoolChanges: Equatable, Hashable {
         }
     }
     
-    enum ReductionReason: Equatable, Hashable, CaseIterable {
+    enum ReductionReason: String, CaseIterable {
         // Filtering / eligibility removals
         case cannotPerform, disliked, resistance, effort, sets, repCap, repMin, split, noData, tooDifficult
-                
+        
         var description: String {
             switch self {
             case .cannotPerform: return "Missing Required Equipment"
@@ -99,20 +100,20 @@ struct PoolChanges: Equatable, Hashable {
         }
         
         /*
-        var recommenedAction: String {
-            switch self {
-            case .cannotPerform: return "Check Available Equipment"
-            case .disliked: return "Disable Disliked Filtering"
-            case .resistance: return "Change Resistance Type"
-            case .effort: return "Modify Effort Distribution"
-            case .sets: return "Modify Set Distribution"
-            case .repCap: return "Modify Rep Cap" // recommend before change resistance type
-            case .split: return "Modify Split"
-            case .noData: return "Allow Creation without Data"
-            case .tooDifficult: return "Disable Difficulty Filtering"
-            }
-        }
-        */
+         var recommenedAction: String {
+         switch self {
+         case .cannotPerform: return "Check Available Equipment"
+         case .disliked: return "Disable Disliked Filtering"
+         case .resistance: return "Change Resistance Type"
+         case .effort: return "Modify Effort Distribution"
+         case .sets: return "Modify Set Distribution"
+         case .repCap: return "Modify Rep Cap" // recommend before change resistance type
+         case .split: return "Modify Split"
+         case .noData: return "Allow Creation without Data"
+         case .tooDifficult: return "Disable Difficulty Filtering"
+         }
+         }
+         */
         
         var icon: String {
             switch self {
@@ -145,7 +146,7 @@ struct PoolChanges: Equatable, Hashable {
         }
     }
     
-    struct ReasoningCount: Equatable, Hashable {
+    struct ReasoningCount {
         let reason: ReductionReason
         var exerciseIDs: Set<Exercise.ID> = []
         var beforeCount: Int?
@@ -155,6 +156,10 @@ struct PoolChanges: Equatable, Hashable {
             guard let beforeCount, let afterCount else { return nil }
             return beforeCount - afterCount
         }
+    }
+    
+    mutating func updateCoverage(coverage: CoverageState) {
+        self.coverage = coverage
     }
     
     // NEW: bulk record
@@ -188,7 +193,7 @@ struct PoolChanges: Equatable, Hashable {
     }
 }
 
-struct WorkoutChanges: Equatable, Hashable {
+struct WorkoutChanges {
     private(set) var pool: [WorkoutTemplate.ID: PoolChanges] = [:]
     
     /// True if ANY template relaxed at least one filter
@@ -208,7 +213,7 @@ struct WorkoutChanges: Equatable, Hashable {
     }
 }
 
-struct DayChanges: Equatable, Hashable {
+struct DayChanges {
     private(set) var pool: [DaysOfWeek: PoolChanges] = [:]
 
     init(preseed days: [DaysOfWeek]) {
@@ -225,6 +230,23 @@ struct DayChanges: Equatable, Hashable {
     /// Read-only view without creating
     func pool(for day: DaysOfWeek) -> PoolChanges? {
         pool[day]
+    }
+    
+    mutating func updateCoverage(
+        dayRaw: DaysOfWeek.RawValue,
+        coverage: CoverageState
+    ) {
+        guard let day = DaysOfWeek(rawValue: dayRaw) else { return }
+        updateCoverage(day: day, coverage: coverage)
+    }
+    
+    mutating func updateCoverage(
+        day: DaysOfWeek,
+        coverage: CoverageState
+    ) {
+        var reduction = pool[day] ?? PoolChanges()
+        reduction.updateCoverage(coverage: coverage)
+        pool[day] = reduction
     }
     
     // MARK: - Record by enum

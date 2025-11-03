@@ -14,6 +14,10 @@ struct TimeSpan: Codable, Equatable, Hashable {
 
     // MARK: init() {}
     init(seconds: Int) { self.seconds = seconds }
+    init(minutes: Int) {
+        self.seconds = 0
+        self.seconds = TimeSpan.fromMinutes(minutes).inSeconds
+    }
     init() { self.seconds = 0 }
     
     // MARK: – Convenience accessors
@@ -56,10 +60,7 @@ extension TimeSpan {
         TimeSpan(seconds: (m * 60) + s)
     }
     
-    static func fromMinutes(_ m: Int) -> TimeSpan { TimeSpan(seconds: m * 60) }
-    
-    static func fromSeconds(_ s: Int) -> TimeSpan { TimeSpan(seconds: s) }
-    
+    private static func fromMinutes(_ m: Int) -> TimeSpan { TimeSpan(seconds: m * 60) }
     
     /// Parse "mm:ss" or "ss" (and "h:mm:ss") into seconds.
     static func seconds(from text: String) -> TimeSpan {

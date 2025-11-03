@@ -101,6 +101,7 @@ struct ExerciseView: View {
                                 }
                             },
                             onTap: {
+                                kbd.dismiss()
                                 selectedExerciseId = exercise.id
                                 viewDetail = true
                             }

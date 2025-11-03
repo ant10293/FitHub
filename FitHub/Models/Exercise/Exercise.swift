@@ -562,7 +562,7 @@ extension Exercise {
     var allSubMuscles: [SubMuscles]?       { muscles.allSubMuscles.nilIfEmpty }
     
     /// Highest-engagement primary muscle (nil if none)
-    private var topPrimaryMuscle: Muscle? { muscles.topPrimaryMuscle }
+    var topPrimaryMuscle: Muscle? { muscles.topPrimaryMuscle }
     
     /// Auto-derived split category from dominant prime mover
     var splitCategory: SplitCategory? { topPrimaryMuscle?.splitCategory }

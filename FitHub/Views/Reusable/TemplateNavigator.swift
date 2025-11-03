@@ -114,11 +114,7 @@ struct TemplateNavigator<Content: View>: View {
                 isArchived: sel.location == .archived
             )
         } else {
-            Color.clear.onAppear {
-                navigateToTemplateDetail = false
-                selectedTemplate = nil
-                currentTemplate = nil
-            }
+            exitView
         }
     }
     
@@ -141,7 +137,7 @@ struct TemplateNavigator<Content: View>: View {
     // MARK: - Popup Overlay
     @ViewBuilder
     private var templatePopupOverlay: some View {
-        if let sel = currentTemplate, let tpl = templateBinding(for: sel)?.wrappedValue {
+        if let sel = selectedTemplate, let tpl = templateBinding(for: sel)?.wrappedValue {
             let newSel = SelectedTemplate(template: tpl, location: sel.location, mode: sel.mode)
             VStack {
                 Spacer()
@@ -169,6 +165,16 @@ struct TemplateNavigator<Content: View>: View {
                 
                 Spacer()
             }
+        } else {
+            exitView
+        }
+    }
+    
+    private var exitView: some View {
+        Color.clear.onAppear {
+            navigateToTemplateDetail = false
+            selectedTemplate = nil
+            currentTemplate = nil
         }
     }
 }

@@ -17,7 +17,6 @@ final class ExerciseSelector {
     private let strengthCeiling: Int
     private let resistance: ResistanceType
     private let allowDisliked: Bool
-    private let allowDifficult: Bool
     private let nonDefaultParams: Set<PoolChanges.RelaxedFilter>
     private let policy: Policy
     private let baseSeed: UInt64
@@ -43,7 +42,6 @@ final class ExerciseSelector {
         self.strengthCeiling = userData.evaluation.strengthLevel.strengthValue
         self.resistance = userData.workoutPrefs.resistance
         self.allowDisliked = userData.allowDisliked
-        self.allowDifficult = userData.allowDifficult
         self.nonDefaultParams = nonDefaultParams
         self.policy = policy
         self.baseSeed = seed
@@ -117,14 +115,12 @@ final class ExerciseSelector {
         categories: [SplitCategory],
         total: Int,
         rAndS: RepsAndSets,
-        existing: [Exercise]? = nil
+        existing: [Exercise]
     ) -> ([Exercise], PoolChanges?) {
         let clampedTotal = max(policy.minCount, min(policy.maxCount, total))
-        guard clampedTotal > 0 else { return ([], nil) }
-
+        guard clampedTotal > 0 else { return (existing, nil) }
+        
         var rng = seededRNG(for: dayIndex)
-        let baseExisting = existing ?? []
-
         let relaxed = changes.pool(for: dayLabel)?.relaxedFilters ?? []
         var currentRelaxed = Set(relaxed)
         // Attempt once with currentRelaxed
@@ -133,13 +129,14 @@ final class ExerciseSelector {
             categories: categories,
             clampedTotal: clampedTotal,
             rAndS: rAndS,
-            baseExisting: baseExisting,
+            baseExisting: existing,
             rng: &rng,
             relaxed: currentRelaxed
         )
         
         // If short, progressively relax one filter at a time and retry
-        for f in PoolChanges.RelaxedFilter.ordered(excluding: nonDefaultParams) where finalSelection.count < clampedTotal && !currentRelaxed.contains(f) {
+        for f in PoolChanges.RelaxedFilter.ordered(excluding: nonDefaultParams)
+        where finalSelection.count < clampedTotal && !currentRelaxed.contains(f) {
             currentRelaxed.insert(f)
             changes.record(dayRaw: dayLabel, relaxed: f)
             //changes.clear(dayRaw: dayLabel, reasons: [f.correspondingReduction])
@@ -148,7 +145,7 @@ final class ExerciseSelector {
                 categories: categories,
                 clampedTotal: clampedTotal,
                 rAndS: rAndS,
-                baseExisting: baseExisting,
+                baseExisting: existing,
                 rng: &rng,
                 relaxed: currentRelaxed
             )
@@ -167,7 +164,20 @@ final class ExerciseSelector {
         rng: inout SeededRNG,
         relaxed: Set<PoolChanges.RelaxedFilter>
     ) -> [Exercise] {
-
+    
+        var coverage: CoverageState = {
+            if let coverage = changes.pool(for: dayLabel)?.coverage {
+                return coverage
+            } else {
+                var initCoverage: CoverageState = .init(categories: categories)
+                for ex in baseExisting {
+                    initCoverage.apply(exercise: ex)
+                }
+                //print("Coverage: \(initCoverage)")
+                return initCoverage
+            }
+        }()
+        
         // Pool width (split vs .all)
         let unionIdxs: [Int] = {
             if relaxed.contains(.split) {
@@ -188,56 +198,62 @@ final class ExerciseSelector {
             relaxed: relaxed
         )
 
-        // 2) Difficulty filtering (skipped if .difficulty relaxed)
-        let eligibleFiltered: [Exercise] = {
-            if relaxed.contains(.difficulty) { return eligible }
-            return additionalFiltering(
-                eligibleExercises: eligible,
-                rAndS: rAndS,
-                dayLabel: dayLabel
-            )
-        }()
-        
-        /*
-        print("day: \(dayLabel)")
-        let weights = buildCoverageWeights(categories: categories)
-        let missing = clampedTotal - baseExisting.count
-        print("missing: \(missing) (\(clampedTotal) - \(baseExisting.count))")
-        print("baseExisting: \(baseExisting.map(\.name))")
-        let muscleTargets = coverageTargetCountsFromWeights(weights: weights, existing: baseExisting, targetCount: missing)
-        print("targets", muscleTargets)
-        */
-        
+        let targets = coverage.orderedTargetSpecs()
+
         // 3) Distribution selection
         let countByEffort = rAndS.distribution.allocateCountsPerEffort(targetCount: clampedTotal)
         let withExisting  = neededCounts(initialCounts: countByEffort, subtractingSelected: baseExisting)
-        print("needed: \(withExisting)")
-        let newSelection = applyDistributionLogic(
-            pool: eligibleFiltered,
+        let selection = applyDistributionLogic(
+            pool: eligible,
             existing: baseExisting,
-            targetCount: clampedTotal,
+            targets: targets,
             countByEffort: withExisting,
             rng: &rng
         )
-        
-        var selection = newSelection + baseExisting
-        if selection.count < clampedTotal {
-            let missing = clampedTotal - selection.count
-            let remaining = neededCounts(initialCounts: withExisting, subtractingSelected: newSelection)
-
-            let extras = applyDistributionLogic(
-                pool: eligible,
-                existing: selection,
-                targetCount: missing,
-                countByEffort: remaining,
-                rng: &rng
-            )
-            selection.append(contentsOf: extras)
+       // print("new selection: \(selection.map(\.name))")
+        for ex in selection {
+            coverage.apply(exercise: ex)
         }
+        
+        // place at the end of func
+        changes.updateCoverage(dayRaw: dayLabel, coverage: coverage)
   
-        return selection
+        return selection + baseExisting
     }
-
+    
+    // TODO: we need to select using SubMuscle, but if the Muscle has no submucles, we use Muscle
+    // MARK: - Simplified Distribution Logic
+    private func applyDistributionLogic(
+        pool: [Exercise],
+        existing: [Exercise]? = nil,
+        targets: [TargetSpec],
+        countByEffort: [EffortType: Int],
+        rng: inout SeededRNG
+    ) -> [Exercise] {
+        var selectedExercises: [Exercise] = []
+        var remainingExercises = getExercisePool(pool: pool, existing: existing)
+        
+        // For each effort type, select exercises according to distribution
+        for (effort, needed) in countByEffort where needed > 0 {
+            let matchingExercises = remainingExercises.filter { $0.effort == effort }
+            let take = min(needed, matchingExercises.count) // cap by availability
+                        
+            let selected: [Exercise]
+            if let best = selectBestForTargets(from: matchingExercises, targets: targets, count: take, rng: &rng) {
+                selected = best
+            } else {
+                selected = selectRandomExercises(from: matchingExercises, count: take, rng: &rng)
+            }
+            selectedExercises.append(contentsOf: selected)
+            
+            // Remove selected exercises from remaining pool to avoid duplicates
+            let selectedIds = Set(selected.map(\.id))
+            remainingExercises = remainingExercises.filter { !selectedIds.contains($0.id) }
+        }
+        
+        return selectedExercises
+    }
+    
     private func filterEligibleExercises(
         from indices: [Int],
         rAndS: RepsAndSets,
@@ -253,6 +269,7 @@ final class ExerciseSelector {
         var invalidSets: Set<Exercise.ID> = []
         var exceedsRepCap: Set<Exercise.ID> = []
         var missesRepMin: Set<Exercise.ID> = []
+        var tooDifficult: Set<Exercise.ID> = []
 
         for i in indices {
             guard i < self.idx.exercises.count else { continue }
@@ -282,6 +299,11 @@ final class ExerciseSelector {
                     exceedsRepCap.insert(ex.id); continue
                 }
             }
+            if !favorites.contains(ex.id) {
+                if !relaxed.contains(.difficulty), !ex.difficultyOK(strengthCeiling) {
+                    tooDifficult.insert(ex.id); continue
+                }
+            }
             
             result.append(ex)
         }
@@ -293,63 +315,9 @@ final class ExerciseSelector {
         if !invalidSets.isEmpty       { changes.record(dayRaw: dayLabel, reason: .init(reason: .sets,        exerciseIDs: invalidSets)) }
         if !exceedsRepCap.isEmpty     { changes.record(dayRaw: dayLabel, reason: .init(reason: .repCap,      exerciseIDs: exceedsRepCap)) }
         if !missesRepMin.isEmpty      { changes.record(dayRaw: dayLabel, reason: .init(reason: .repMin,      exerciseIDs: missesRepMin)) }
+        if !tooDifficult.isEmpty      { changes.record(dayRaw: dayLabel, reason: .init(reason: .tooDifficult, exerciseIDs: tooDifficult)) }
 
         return result
-    }
-    
-    // MARK: - Advanced Filtering (for difficulty & rep cap)
-    // FIXME: should use indices like other filter func
-    private func additionalFiltering(
-        eligibleExercises: [Exercise],
-        rAndS: RepsAndSets,
-        dayLabel: String
-    ) -> [Exercise] {
-        var tooDifficult: Set<Exercise.ID> = []
-        
-        let eligibleFiltered = eligibleExercises.filter { ex in
-            if favorites.contains(ex.id) { return true }
-            // cheap early checks
-            guard !allowDifficult, ex.difficultyOK(strengthCeiling) else {
-                tooDifficult.insert(ex.id)
-                return false
-            }
- 
-            return true
-        }
-        
-        if !tooDifficult.isEmpty { changes.record(dayRaw: dayLabel, reason: .init(reason: .tooDifficult, exerciseIDs: tooDifficult)) }
-        
-        return eligibleFiltered
-    }
-    
-    // TODO: we need to select using SubMuscle, but if the Muscle has no submucles, we use Muscle
-    // MARK: - Simplified Distribution Logic
-    private func applyDistributionLogic(
-        pool: [Exercise],
-        existing: [Exercise]? = nil,
-        targetCount: Int,
-        countByEffort: [EffortType: Int],
-        rng: inout SeededRNG
-    ) -> [Exercise] {
-        var selectedExercises: [Exercise] = []
-        var remainingExercises = getExercisePool(pool: pool, existing: existing)
-        
-        // For each effort type, select exercises according to distribution
-        for (effort, needed) in countByEffort {
-            let matchingExercises = remainingExercises.filter { $0.effort == effort }
-            let take = min(needed, matchingExercises.count) // cap by availability
-            
-            // TODO: this should take parameters for the SplitCategory/Muscle
-            let selected = selectRandomExercises(from: matchingExercises, count: take, rng: &rng)
-            
-            selectedExercises.append(contentsOf: selected)
-            
-            // Remove selected exercises from remaining pool to avoid duplicates
-            let selectedIds = Set(selected.map(\.id))
-            remainingExercises = remainingExercises.filter { !selectedIds.contains($0.id) }
-        }
-        
-        return selectedExercises
     }
 }
 
@@ -423,126 +391,116 @@ extension ExerciseSelector {
 }
 
 extension ExerciseSelector {
-    private func deriveTargetMuscles(from categories: [SplitCategory]) -> (target: [Muscle], group: [Muscle]) {
-        var targetMuscles: Set<Muscle> = []
-        var groupMuscles: Set<Muscle> = []
-        
-        for category in categories {
-            if let muscles = SplitCategory.muscles[category] { targetMuscles.formUnion(muscles) }
-            if let groups = SplitCategory.groups(forGeneration: true)[category] { groupMuscles.formUnion(groups) }
+    private func score(_ ex: Exercise,
+                       target: TargetSpec,
+                       primaryWeight: Double = 1.0,
+                       secondaryWeight: Double = 0.55,
+                       nonTargetPenaltyPerSub: Double = 0.25) -> Double
+    {
+        // Sum engagement on the target muscle.
+        // If a specific submuscle is provided, sum only that sub.
+        // Otherwise (nil), sum ALL submuscles for that muscle (muscle-level scoring).
+        func sumEngagement(_ entries: [MuscleEngagement]) -> Double {
+            let onMuscle = entries.filter { $0.muscleWorked == target.muscle }
+            let subs = onMuscle.flatMap { $0.submusclesWorked ?? [] }
+            if let sub = target.submuscle {
+                return subs.filter { $0.submuscleWorked == sub }
+                           .reduce(0.0) { $0 + $1.engagementPercentage }
+            } else {
+                return subs.reduce(0.0) { $0 + $1.engagementPercentage }
+            }
         }
-        
-        return (Array(targetMuscles), Array(groupMuscles))
+
+        let pTarget = sumEngagement(ex.primaryMuscleEngagements)
+        let sTarget = sumEngagement(ex.secondaryMuscleEngagements)
+
+        // Only penalize “other subs” if we’re targeting a specific submuscle.
+        let penalty: Double = {
+            guard let sub = target.submuscle else { return 0.0 }
+            let others = (ex.allSubMuscles ?? []).filter { $0 != sub }.count
+            return Double(others) * nonTargetPenaltyPerSub
+        }()
+
+        let primeBonus = (ex.topPrimaryMuscle == target.muscle) ? 0.10 : 0.0
+
+        return primaryWeight * pTarget + secondaryWeight * sTarget + primeBonus - penalty
     }
 
-    private func deriveTargetSubmuscles(from muscles: [Muscle]) -> [SubMuscles] {
-        var targetSubmuscles: Set<SubMuscles> = []
-        
-        for muscle in muscles {
-            if let submuscles = Muscle.SubMuscles[muscle] { targetSubmuscles.formUnion(submuscles) }
+    private func selectBestForSubmuscles(
+        from pool: [Exercise],
+        target: TargetSpec,
+        count: Int,
+        rng: inout SeededRNG
+    ) -> [Exercise]? {
+        guard count > 0 else { return nil }
+
+        // must at least train the muscle
+        let candidates = pool.filter { $0.allMuscles.contains(target.muscle) }
+        guard !candidates.isEmpty else { return nil }
+
+        // score & sort
+        let scored = candidates
+            .map { (ex: $0, s: score($0, target: target)) }
+            .sorted { $0.s > $1.s }
+
+        let bestScore = scored.first?.s ?? .leastNonzeroMagnitude
+        let epsilon: Double = max(0.05, abs(bestScore) * 0.05)
+
+        // relative band
+        let relBand = scored.prefix { $0.s >= bestScore - epsilon }
+
+        // fallback band size if relative band is tiny
+        let topK = 4
+        var band: [Exercise]
+        if relBand.count >= 2 {
+            band = relBand.map(\.ex)
+        } else {
+            band = Array(scored.prefix(topK)).map(\.ex)
         }
-        
-        return Array(targetSubmuscles)
+
+        // randomize inside the good band
+        band.shuffle(using: &rng)
+
+        var picks: [Exercise] = []
+        while picks.count < count, !band.isEmpty {
+            picks.append(band.removeFirst())
+        }
+
+        // fill from the rest (also shuffled) if needed
+        if picks.count < count {
+            var rest = Array(scored.dropFirst(band.count)).map(\.ex)
+            rest.shuffle(using: &rng)
+            while picks.count < count, !rest.isEmpty {
+                picks.append(rest.removeFirst())
+            }
+        }
+
+        return picks.isEmpty ? nil : picks
     }
-    
-    enum CoverageUnit: Hashable {
-        case sub(SubMuscles)
-        case muscle(Muscle)
-    }
-  
-    func buildCoverageWeights(
-        categories: [SplitCategory],
-        primaryWeight: Double = 2.0,
-        groupWeight: Double = 1.0
-    ) -> [CoverageUnit: Double] {
-        // 1) Resolve primary & group muscles using your helpers
-        let (primaryMuscles, groupMusclesAll) = deriveTargetMuscles(from: categories) // primary + group
-        // (these are defined in your file) :contentReference[oaicite:0]{index=0}
 
-        // 2) Remove any primary muscles from the group set
-        var groupMuscles = Set(groupMusclesAll)
-        for m in primaryMuscles { groupMuscles.remove(m) }
+    private func selectBestForTargets(
+        from pool: [Exercise],
+        targets: [TargetSpec],
+        count: Int,
+        rng: inout SeededRNG
+    ) -> [Exercise]? {
+        for (idx, t) in targets.enumerated() {
+            // lightly stir RNG per target so we don't always pick same item
+            var localRng = rng
+            for _ in 0..<idx { _ = localRng.next() }
 
-        // 3) Assign weights
-        var weights: [CoverageUnit: Double] = [:]
-        weights.reserveCapacity(primaryMuscles.count + groupMuscles.count)
+            print("  🔍 trying target: \(t.muscle) sub: \(t.submuscle?.rawValue ?? "nil")")
 
-        // Primaries → weight 2.0
-        for m in primaryMuscles {
-            weights[.muscle(m)] = primaryWeight
-        }
-
-        // Groups (post-dedup) → weight 1.0 (don’t downgrade if somehow present)
-        for m in groupMuscles {
-            if weights[.muscle(m)] == nil {
-                weights[.muscle(m)] = groupWeight
+            if let picked = selectBestForSubmuscles(from: pool, target: t, count: count, rng: &localRng),
+               !picked.isEmpty {
+                if let ex = picked.first {
+                    print("  ✅ target matched: \(t.muscle) sub: \(t.submuscle?.rawValue ?? "nil") → \(ex.name)")
+                }
+                return picked
+            } else {
+                print("  ❌ no match for: \(t.muscle) sub: \(t.submuscle?.rawValue ?? "nil") in current pool")
             }
         }
-
-        return weights
-    }
-    
-    /// Allocate EXACTLY `targetCount` NEW slots across MUSCLE weights.
-    /// - Only `.muscle` keys are considered.
-    /// - Proportional by weight, floor, then remainder by largest fractional part (stable).
-    /// - Returns only positive counts and sums exactly to `targetCount`.
-    func coverageTargetCountsFromWeights(
-        weights: [CoverageUnit: Double],
-        existing: [Exercise],        // not used here on purpose (see note above)
-        targetCount: Int
-    ) -> [CoverageUnit: Int] {
-        guard targetCount > 0 else { return [:] }
-
-        // 1) Keep only positive muscle weights and establish a stable order
-        var entries: [(unit: CoverageUnit, w: Double, key: String)] = []
-        entries.reserveCapacity(weights.count)
-        for (k, v) in weights where v > 0 {
-            if case .muscle = k {
-                entries.append((k, v, String(describing: k)))
-            }
-        }
-        guard !entries.isEmpty else { return [:] }
-        entries.sort { $0.key < $1.key }
-
-        // 2) Proportional shares
-        let sumW = entries.reduce(0.0) { $0 + $1.w }
-        guard sumW > 0 else { return [:] }
-
-        struct Piece { let unit: CoverageUnit; var base: Int; let frac: Double; let key: String }
-        var pieces: [Piece] = []
-        pieces.reserveCapacity(entries.count)
-
-        var baseSum = 0
-        for e in entries {
-            let raw = (e.w / sumW) * Double(targetCount)
-            let b = Int(raw.rounded(.down))
-            let f = raw - Double(b)
-            if b > 0 || f > 0 {
-                pieces.append(.init(unit: e.unit, base: b, frac: f, key: e.key))
-                baseSum += b
-            }
-        }
-
-        // 3) Distribute remainder by largest fractional part (stable by key)
-        var remaining = targetCount - baseSum
-        if remaining > 0, !pieces.isEmpty {
-            pieces.sort { (a, b) in
-                if a.frac != b.frac { return a.frac > b.frac }
-                return a.key < b.key
-            }
-            var i = 0
-            while remaining > 0 {
-                pieces[i].base += 1
-                remaining -= 1
-                i = (i + 1) % pieces.count
-            }
-        }
-
-        // 4) Emit only positive counts
-        var out: [CoverageUnit: Int] = [:]
-        out.reserveCapacity(pieces.count)
-        for p in pieces where p.base > 0 { out[p.unit] = p.base }
-        return out
+        return nil
     }
 }
-

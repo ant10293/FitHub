@@ -20,12 +20,13 @@ final class ExerciseData: ObservableObject {
        
     @Published var allExercisePerformance: [UUID: ExercisePerformance] = [:]
     
+    // FIXME: this is only getting the seeded estimates
     var exercisesWithData: [Exercise] {
         allExercises.compactMap { ex in
             hasPerformanceData(exercise: ex)
         }
     }
-    
+   
     init() {
         bundledExercises = ExerciseData.loadBundledExercises()
         userExercises = ExerciseData.loadUserExercises(from: ExerciseData.userExercisesFileName)
@@ -130,7 +131,6 @@ extension ExerciseData {
         guard let max = peak else { return }
         updateExercisePerformance(for: exercise.id, newValue: max, csvEstimate: true)
     }
-    
     
     func testCSVs(userData: UserData) {
         var skipped: [Exercise] = []

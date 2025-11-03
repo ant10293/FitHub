@@ -17,10 +17,8 @@ struct WorkoutWeek: Identifiable, Codable, Equatable {
         var workoutWeek = WorkoutWeek(categories: [])
         
         switch days {
-        case 2:
-            workoutWeek.categories = Array(repeating: [.all], count: 2)
-        case 3: // Full body workouts
-            workoutWeek.categories = Array(repeating: [.all], count: 3)
+        case 1...3:
+            workoutWeek.categories = Array(repeating: [.all], count: days)
         case 4: // Upper/Lower split
             workoutWeek.categories = [
                 [.chest, .triceps, .shoulders], // Index 0
@@ -103,6 +101,8 @@ enum DaysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
     
     static func defaultDays(for workoutDaysPerWeek: Int) -> [DaysOfWeek] {
         switch workoutDaysPerWeek {
+        case 1:
+            return [.wednesday]
         case 2:
             return [.monday, .friday]
         case 3:
@@ -122,6 +122,8 @@ enum DaysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
     static func getWorkoutDayIndexes(for frequency: Int) -> [Int] {
         // Default days calculation based on frequency
         switch frequency {
+        case 1:
+            return [2]
         case 2:
             return [0, 4]
         case 3:

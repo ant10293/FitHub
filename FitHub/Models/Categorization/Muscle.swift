@@ -64,7 +64,7 @@ extension Muscle {
 }
 
 extension Muscle {
-    static let SubMuscles: [Muscle: [SubMuscles]] = [
+    static let subMuscles: [Muscle: [SubMuscles]] = [
         .abdominals: [.upperAbs, .lowerAbs, .obliques, .externalObliques, .transverseAbdominis],
         .pectorals: [.clavicularHead, .sternocostalHead, .costalHead],
         .deltoids: [.frontDelt, .sideDelt, .rearDelt],
@@ -82,7 +82,7 @@ extension Muscle {
     ]
     
     static func getSubMuscles(for category: Muscle) -> [SubMuscles] {
-        return SubMuscles[category] ?? []
+        return subMuscles[category] ?? []
     }
 }
 

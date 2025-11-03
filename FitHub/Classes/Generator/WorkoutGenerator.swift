@@ -41,7 +41,6 @@ final class WorkoutGenerator {
     
     struct GenerationParameters {
         var duration: TimeSpan
-       // var exercisesPerWorkout: Int
         var repsAndSets: RepsAndSets
         var days: [DaysOfWeek]
         var dates: [Date]
@@ -125,7 +124,7 @@ extension WorkoutGenerator {
         let age = input.user.profile.age
         let freq = input.user.workoutPrefs.workoutDaysPerWeek
         let lvl = input.user.evaluation.strengthLevel
-        let daysPerWeek = max(2, input.user.workoutPrefs.workoutDaysPerWeek) // clamp min days per week
+        let daysPerWeek = max(1, input.user.workoutPrefs.workoutDaysPerWeek) // clamp min days per week
         let customSplit = input.user.workoutPrefs.customWorkoutSplit
         let customDist = input.user.workoutPrefs.customDistribution
         let resistance = input.user.workoutPrefs.resistance
@@ -154,12 +153,6 @@ extension WorkoutGenerator {
             customDuration: input.user.workoutPrefs.customDuration
         )
         let overloadFactor = input.user.settings.customOverloadFactor ?? 1.0
-        /*
-        let exPerWorkout = estimateExercises(
-            duration: duration,
-            repsAndSets: repsAndSets
-        )
-        */
         let dayIndices = DaysOfWeek.calculateWorkoutDayIndexes(
             customWorkoutDays: input.user.workoutPrefs.customWorkoutDays,
             workoutDaysPerWeek: daysPerWeek
@@ -193,7 +186,6 @@ extension WorkoutGenerator {
 
         return GenerationParameters(
             duration: duration,
-         //   exercisesPerWorkout: exPerWorkout,
             repsAndSets: repsAndSets,
             days: days,
             dates: dates,
@@ -227,6 +219,7 @@ extension WorkoutGenerator {
         let testCompleted: CompletedWorkout? = input.user.workoutPlans.completedWorkouts.first(where: { $0.template.id == savedDay.id })
         let wasCompleted: Bool = testCompleted != nil
         let completed: CompletedWorkout = testCompleted ?? CompletedWorkout()
+        let restPeriods: RestPeriods = params.repsAndSets.rest
      
         if !input.user.settings.useDateOnly {
             // Prefer per-day custom time → then user default → then 11:00
@@ -242,115 +235,42 @@ extension WorkoutGenerator {
         
         var tpl = WorkoutTemplate(
             name: "\(dayName) Workout",
-            //exercises: [],
             exercises: initialExercises,
             categories: categoriesForDay,
             dayIndex: dayIndex,
             date: workoutDate,
-            restPeriods: params.repsAndSets.rest
+            restPeriods: restPeriods
         )
-        /*
-        func getExercisesForTemplate(exerciseCount: Int, existingPicked: [Exercise]? = nil) -> ([Exercise], [PoolChanges.RelaxedFilter]?) {
+        
+        func getExercisesForTemplate(status: TimeSpan.Fit, existingPicked: [Exercise]) -> ([Exercise], [PoolChanges.RelaxedFilter]?) {
             let (exercises, dayChanges): ([Exercise], PoolChanges?) = {
-                // Reuse existing?
-                let existing: [Exercise]? = {
-                    if let existingPicked {
-                        return existingPicked
-                    } else {
-                        return (input.keepCurrentExercises && dayHasExercises) ? savedDay.exercises : nil
+                let existingCount = existingPicked.count
+                let rawCount: Int = {
+                    switch status {
+                    case .over: return existingCount - 1
+                    case .under: return existingCount + 1
+                    case .within: return existingCount
                     }
                 }()
                 
-                // already have enough, trim and skip selection
-                if let existing, existing.count >= exerciseCount {
-                    let trimmed = intelligentlyTrim(existing, to: exerciseCount, mustHit: categoriesForDay)
+                let targetCount = max(0, rawCount)
+                if targetCount == existingCount { return (existingPicked, nil) }
+                if targetCount < existingCount {
+                    // TODO: add a warning if the effort distribution gets messed up
+                    let trimmed = intelligentlyTrim(existingPicked, to: targetCount, mustHit: categoriesForDay)
                     return (trimmed, nil)
                 }
                 
                 // Selector enforces exact `exercisesPerWorkout` when the pool allows.
                 let (picked, dayChanges) = selector.select(
                     dayIndex: dayIndex,
-                    dayLabel: day.rawValue,
+                    dayLabel: dayName,
                     categories: categoriesForDay,
-                    total: exerciseCount,
-                    rAndS: params.repsAndSets,
-                    existing: existing
-                )
-                return (picked, dayChanges)
-            }()
-          
-            if let dayChanges { changes.record(templateID: tpl.id, newPool: dayChanges) }
-            if exercises.isEmpty { return ([], dayChanges?.relaxedFilters) }
-            
-            // [2] Detail each exercise (aggregate timing, plus per-ex timing with threshold)
-            let detailedExercises: [Exercise] = exercises.map { ex in
-                let newEx = calculateDetailedExercise(
-                    input: input,
-                    exercise: ex,
-                    repsAndSets: params.repsAndSets,
-                    maxUpdated: { update in
-                        maxUpdated(update)
-                    }
-                )
-                // —— Overload/deload progression ——————————————
-                return handleExerciseProgression(
-                    input: input,
-                    exercise: newEx,
-                    completedExercise: completed.byID[ex.id],
-                    overloadFactor: params.overloadFactor,
-                    overloadStyle: params.overloadStyle,
-                    templateCompleted: wasCompleted
-                )
-            }
-            
-            return (detailedExercises, dayChanges?.relaxedFilters)
-        }
-        
-        let (exercises, _) = getExercisesForTemplate(exerciseCount: params.exercisesPerWorkout)
-        tpl.exercises = exercises
-        
-        let (est, perExercise) = tpl.estimateCompletionTime(rest: params.repsAndSets.rest)
-        let newCount = targetExerciseCount(perExercise: perExercise, target: params.duration)
-            
-        if !est.isWithin(params.duration) {
-            let (exercises, relaxed) = getExercisesForTemplate(exerciseCount: newCount, existingPicked: tpl.exercises)
-            tpl.exercises = exercises
-            tpl.setEstimatedCompletionTime(rest: params.repsAndSets.rest)
-            if let relaxed, relaxed.contains(.split) { tpl.setCategories() }
-        } else {
-            tpl.estimatedCompletionTime = est
-        }
-        */
-        
-        func getExercisesForTemplate(status: TimeSpan.Fit? = nil, existingPicked: [Exercise]? = nil) -> ([Exercise], [PoolChanges.RelaxedFilter]?) {
-            let (exercises, dayChanges): ([Exercise], PoolChanges?) = {
-                let existing = (existingPicked?.count ?? 0)
-                let newCount: Int = {
-                    if let status {
-                        switch status {
-                        case .over: return existing - 1
-                        case .under: return existing + 1
-                        case .within: return existing
-                        }
-                    } else {
-                        return existing
-                    }
-                }()
-                
-                if let existingPicked, newCount < existing {
-                    let trimmed = intelligentlyTrim(existingPicked, to: newCount, mustHit: categoriesForDay)
-                    return (trimmed, nil)
-                }
-                
-                // Selector enforces exact `exercisesPerWorkout` when the pool allows.
-                let (picked, dayChanges) = selector.select(
-                    dayIndex: dayIndex,
-                    dayLabel: day.rawValue,
-                    categories: categoriesForDay,
-                    total: newCount,
+                    total: targetCount,
                     rAndS: params.repsAndSets,
                     existing: existingPicked
                 )
+                
                 return (picked, dayChanges)
             }()
           
@@ -380,28 +300,28 @@ extension WorkoutGenerator {
             
             return (detailedExercises, dayChanges?.relaxedFilters)
         }
-        
-        let initialEst = tpl.estimatedCompletionTime ?? TimeSpan(seconds: 0)
-        var est: TimeSpan = initialEst
-        var attempt: Int = 1
-        while !est.isWithin(params.duration) {
-            let fit = est.fit(against: params.duration)
-            
+                
+        let maxAttempts: Int = 20
+        let step: () -> Bool = {
+            let status = (tpl.estimatedCompletionTime ?? .init(seconds: 0)).fit(against: params.duration)
+
             let existing = tpl.exercises
-            print("\(dayName) selection attempt \(attempt)")
-            let (exercises, relaxed) = getExercisesForTemplate(status: fit, existingPicked: existing)
+            let (exercises, relaxed) = getExercisesForTemplate(status: status, existingPicked: existing)
             tpl.exercises = exercises
-            
-            print("\(exercises.count - existing.count) exercises picked - before: \(existing.count), after: \(exercises.count)")
+
             if let relaxed, relaxed.contains(.split) { tpl.setCategories() }
-            
-            let (newEst, _) = tpl.estimateCompletionTime(rest: params.repsAndSets.rest)
+
+            let (newEst, _) = tpl.estimateCompletionTime(rest: restPeriods)
             tpl.estimatedCompletionTime = newEst
-            est = newEst
-            
-            attempt += 1
+
+            return newEst.fit(against: params.duration).isWithin
         }
-        
+
+        // Run at least once, up to maxAttempts
+        for _ in 0..<maxAttempts {
+            if step() { break }
+        }
+      
         return tpl
     }
     
@@ -413,16 +333,13 @@ extension WorkoutGenerator {
     ) -> Exercise {
         var ex  = exercise
         
-        // Only try to fetch/compute if we don't already have a valid draftMax
-        if ex.draftMax.valid == nil {
-            if let max = input.exerciseData.peakMetric(for: ex.id), max.actualValue > 0 {
-                ex.draftMax = max
-            } else if let estMax = input.exerciseData.estimatedPeakMetric(for: ex.id), estMax.actualValue > 0 {
-                ex.draftMax = estMax
-            } else if let calcMax = ex.calculateCSVMax(userData: input.user) {
-                ex.draftMax = calcMax
-                maxUpdated(PerformanceUpdate(exerciseId: ex.id, value: calcMax))
-            }
+        if let max = input.exerciseData.peakMetric(for: ex.id), max.actualValue > 0 {
+            ex.draftMax = max
+        } else if let estMax = input.exerciseData.estimatedPeakMetric(for: ex.id), estMax.actualValue > 0 {
+            ex.draftMax = estMax
+        } else if let calcMax = ex.calculateCSVMax(userData: input.user) {
+            ex.draftMax = calcMax
+            maxUpdated(PerformanceUpdate(exerciseId: ex.id, value: calcMax))
         }
 
         // —— Set details ————————————————————————————
@@ -431,10 +348,6 @@ extension WorkoutGenerator {
         return ex
     }
     
-    /*
-    FIXME: should use exercise.isCompleted and ensure that planned metric is equal to completed metric
-     will probably have to get exercises from completedWorkouts, not OldTemplate
-    */
     func handleExerciseProgression(
         input: Input,
         exercise: Exercise,
@@ -554,66 +467,6 @@ extension WorkoutGenerator {
 }
 
 extension WorkoutGenerator {
-    /*
-    private func targetExerciseCount(
-        perExercise: [(id: Exercise.ID, seconds: Int)],
-        target: TimeSpan,
-        // minimal asymmetry knobs
-        underTolerancePct: Double = 0.05,  // tighter under
-        overTolerancePct:  Double = 0.12,  // looser over
-        underMinSlackSec:  Int    = 45,
-        overMinSlackSec:   Int    = 120
-    ) -> Int {
-        let targetSec = max(0, target.inSeconds)
-        let count     = max(1, perExercise.count)
-        let totalSec  = perExercise.reduce(0) { $0 + max(0, $1.seconds) }
-        let avgSec    = max(1, totalSec / count)
-
-        // Asymmetric tolerance
-        let allowedUnder = max(Int(Double(targetSec) * underTolerancePct), underMinSlackSec)
-        let allowedOver  = max(Int(Double(targetSec) * overTolerancePct),  overMinSlackSec)
-
-        // Already “close enough”?
-        if totalSec <= targetSec {
-            if (targetSec - totalSec) <= allowedUnder { return count }
-        } else {
-            if (totalSec - targetSec) <= allowedOver { return count }
-        }
-
-        // Ideal by average; clamp to [1, count]
-        let ideal = max(1, min(count, Int(round(Double(targetSec) / Double(avgSec)))))
-
-        // Evaluate close-by options to avoid big swings
-        let candidates = Set([ideal - 1, ideal, ideal + 1].filter { (1...count).contains($0) })
-        let pick = candidates.min { a, b in
-            let errA = abs(a * avgSec - targetSec)
-            let errB = abs(b * avgSec - targetSec)
-            if errA != errB { return errA < errB }
-            // tie-breaker: prefer slightly *more* work if both are equally close
-            return a > b
-        } ?? ideal
-
-        return pick
-    }
-    
-    private func estimateExercises(duration: TimeSpan, repsAndSets: RepsAndSets) -> Int {
-        // Weighted by distribution **and** per-type set counts
-        let setsAvg = max(1.0, repsAndSets.averageSetsPerExercise)
-        let repsAvg = max(1.0, repsAndSets.averageRepsPerSetWeighted)
-        let restPer = max(0, repsAndSets.getRest(for: .working))
-        
-        let secondsPerRep = SetDetail.secPerRep(for: Int(repsAvg), isWarm: false)
-        let avgSetup      = SetDetail.secPerSetup
-
-        let workSeconds = setsAvg * repsAvg * Double(secondsPerRep)
-        let restSeconds = Double(restPer) * max(0.0, setsAvg - 1.0)
-        let perExercise = max(1, Int(workSeconds) + Int(restSeconds) + avgSetup)
-
-        let totalSeconds = max(60, duration.inMinutes * 60)
-        let numExercises = max(1, Int((Double(totalSeconds) / Double(perExercise)).rounded()))
-        return numExercises
-    }
-    */
     /// Trim `existing` to `target` while trying to keep coverage of `mustHit` categories.
     /// - Keeps original order.
     /// - Guarantees at most one seed per category (if available), then fills with preferred matches, then anything.
@@ -661,3 +514,4 @@ extension WorkoutGenerator {
         return pickedIdx.map { existing[$0] }
     }
 }
+

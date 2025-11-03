@@ -29,11 +29,11 @@ struct WorkoutCustomization: View {
             
             Form {
                 Section {
-                    DaysOfWeekSelector
+                    daysOfWeekSelector
                     setsSelector
                     repsSelector
                     setStructureSelector
-                    ResistanceTypeSelector
+                    resistanceTypeSelector
                     distributionSelector
                     workoutDurationSelector
                     keepCurrentExercisesToggle
@@ -61,15 +61,14 @@ struct WorkoutCustomization: View {
         }}
     }
     
-    private var DaysOfWeekSelector: some View {
+    private var daysOfWeekSelector: some View {
         Picker("Workout Days per Week", selection: $daysPerWeek) {
-            ForEach(2...6, id: \.self) {
-                Text("\($0) days")
+            ForEach(1...6, id: \.self) {
+                Text(Format.countText($0, base: "day"))
             }
         }
         .onChange(of: daysPerWeek) { oldValue, newValue in
             if oldValue != newValue {
-                //print("workoutDaysPerWeek changed")
                 ctx.userData.workoutPrefs.workoutDaysPerWeek = newValue
                 selectedDays = DaysOfWeek.resolvedWorkoutDays(customWorkoutDays: ctx.userData.workoutPrefs.customWorkoutDays, workoutDaysPerWeek: daysPerWeek)
             }
@@ -84,8 +83,7 @@ struct WorkoutCustomization: View {
                 ctx.userData.workoutPrefs.customSets = (newVal == defaultRange) ? nil : newVal
             }
         )
-        
-        let summary = (ctx.userData.workoutPrefs.customSets ?? defaultRange).formattedTotalRange(filteredBy: distribution)
+        let summary = binding.wrappedValue.formattedTotalRange(filteredBy: distribution)
 
         return DisclosureGroup {
             SetCountEditor(sets: binding, effort: distribution)
@@ -111,8 +109,7 @@ struct WorkoutCustomization: View {
                 ctx.userData.workoutPrefs.customRepsRange = (newVal == defaultRange) ? nil : newVal
             }
         )
-        
-        let summary = (ctx.userData.workoutPrefs.customRepsRange ?? defaultRange).formattedTotalRange(filteredBy: distribution)
+        let summary = binding.wrappedValue.formattedTotalRange(filteredBy: distribution)
 
         return DisclosureGroup {
             RepRangeEditor(reps: binding, effort: distribution)
@@ -143,29 +140,38 @@ struct WorkoutCustomization: View {
         }
         .onChange(of: selectedSetStructure) { oldValue, newValue in
             if oldValue != newValue {
-                //print("setStructure changed")
                 ctx.userData.workoutPrefs.setStructure = newValue
             }
         }
     }
-    
-    private var ResistanceTypeSelector: some View {
-        Picker("Resistance Type", selection: $selectedResistanceType) {
-            ForEach(ResistanceType.allCases.filter { $0 != .banded }) { type in
-                Text(type.rawValue).tag(type)
+        
+    private var resistanceTypeSelector: some View {
+        let showDistWarn = (paramsBeforeSwitch?.contains(.resistance) == true)
+
+        return HStack {
+            if showDistWarn {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .imageScale(.medium)
+                    .foregroundStyle(.orange)
+            }
+            Picker("Resistance Type", selection: $selectedResistanceType) {
+                ForEach(ResistanceType.allCases.filter { $0 != .banded }) { type in
+                    Text(type.rawValue).tag(type)
+                }
             }
         }
         .onChange(of: selectedResistanceType) { oldValue, newValue in
-            if oldValue != newValue {
-                //print("ResistanceType changed")
+            if oldValue != newValue, newValue != .banded {
                 ctx.userData.workoutPrefs.resistance = newValue
             }
         }
     }
     
     private var distributionSelector: some View {
-        DisclosureGroup("Effort Distribution") {
-            let defaultDist = ctx.userData.physical.goal.defaultDistribution
+        let defaultDist = ctx.userData.physical.goal.defaultDistribution
+        let showDistWarn = (paramsBeforeSwitch?.contains(.distribution) == true)
+
+        return DisclosureGroup {
             DistributionEditor(
                 distribution: Binding(
                     get: { ctx.userData.workoutPrefs.customDistribution ?? defaultDist },
@@ -175,18 +181,40 @@ struct WorkoutCustomization: View {
                 )
             )
             .listRowSeparator(.hidden, edges: .top)
+        } label: {
+            HStack {
+                if showDistWarn {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .imageScale(.medium)
+                        .foregroundStyle(.orange)
+                }
+                Text("Effort Distribution")
+            }
         }
         .tint(.gray)
     }
-        
+
     private var workoutDurationSelector: some View {
-        DisclosureGroup(isExpanded: $isDurationExpanded) {
-            DurationPicker(time: $duration, hourRange: 0...2, minuteStep: 15)
+        let defaultDuration = WorkoutParams.defaultWorkoutDuration(
+            age: ctx.userData.profile.age,
+            frequency: daysPerWeek,
+            strengthLevel: ctx.userData.evaluation.strengthLevel,
+            goal: ctx.userData.physical.goal
+        )
+        let binding = Binding<TimeSpan>(
+            get: { ctx.userData.workoutPrefs.customDuration ?? defaultDuration },
+            set: { newDuration in
+                ctx.userData.workoutPrefs.customDuration = newDuration
+            }
+        )
+        
+        return DisclosureGroup(isExpanded: $isDurationExpanded) {
+            DurationPicker(time: binding, hourRange: 0...2, minuteStep: 15)
                 .listRowSeparator(.hidden, edges: .top)
                 .padding(.trailing)
                 .overlay(alignment: .top, content: {
-                    if duration.inMinutes < 15 {
-                        Text("Invalid Duration (< 15 min) will not be used.")
+                    if binding.wrappedValue.inMinutes <= 15 {
+                        Text("Invalid Duration (≤ 15 min) will not be used")
                             .font(.footnote)
                             .foregroundStyle(.red)
                             .lineLimit(1)
@@ -196,33 +224,29 @@ struct WorkoutCustomization: View {
             HStack {
                 Text("Workout Duration")
                 Spacer()
-                Text(duration.inMinutes < 15 ? defaultDuration.displayString : duration.displayString)
+                Text(binding.wrappedValue.inMinutes > 15 ? binding.wrappedValue.displayString : defaultDuration.displayString)
                     .font(.callout)
                     .foregroundStyle(.secondary)
             }
             .contentShape(Rectangle()) // makes the whole row tappable
         }
         .tint(.gray) // makes the disclosure arrow gray
-        .onChange(of: duration.inMinutes) { oldValue, newValue in
-            if oldValue != newValue {
-                if newValue == defaultDuration.inMinutes || newValue < 15 {
-                    ctx.userData.workoutPrefs.customDuration = nil
-                } else {
-                    ctx.userData.workoutPrefs.customDuration = newValue
-                }
-            }
-        }
     }
     
     private var keepCurrentExercisesToggle: some View {
-        Toggle("Keep current Exercises", isOn: $keepCurrentExercises) // Add this line
-            .disabled(ctx.userData.workoutPlans.trainerTemplates.isEmpty)
-            .onChange(of: keepCurrentExercises) { oldValue, newValue in
-                if oldValue != newValue {
-                    //print("keepCurrentExercises changed")
-                    ctx.userData.workoutPrefs.keepCurrentExercises = newValue
-                }
+        VStack {
+            Toggle("Keep current Exercises", isOn: $keepCurrentExercises) // Add this line
+                .disabled(ctx.userData.workoutPlans.trainerTemplates.isEmpty)
+            
+            if let params = paramsBeforeSwitch, !params.isEmpty {
+                WarningFooter(message: "Changes made since last generation. Toggle off to implement parameter changes.")
             }
+        }
+        .onChange(of: keepCurrentExercises) { oldValue, newValue in
+            if oldValue != newValue {
+                ctx.userData.workoutPrefs.keepCurrentExercises = newValue
+            }
+        }
     }
     
     private var splitSelector: some View {
@@ -244,19 +268,6 @@ struct WorkoutCustomization: View {
         }
     }
     
-    private var splitWarning: String? {
-        let split = WorkoutWeek.determineSplit(customSplit: ctx.userData.workoutPrefs.customWorkoutSplit, daysPerWeek: daysPerWeek)
-        if let customSplit = ctx.userData.workoutPrefs.customWorkoutSplit, customSplit != split {
-            let base = "Custom split will not be used. "
-            if customSplit.categories.count != daysPerWeek {
-                return base + "Does not match selected number of days."
-            } else {
-                return base + "Check for day(s) without categories."
-            }
-        }
-        return nil
-    }
-    
     private var workoutDaysSelector: some View {
         VStack(alignment: .leading) {
             Button(action: { showingDayPicker = true }) {
@@ -273,7 +284,6 @@ struct WorkoutCustomization: View {
         }
         .onChange(of: selectedDays) { oldValue, newValue in
             if oldValue != newValue {
-                //print("selectedDays changed")
                 if !newValue.isEmpty, newValue != DaysOfWeek.defaultDays(for: ctx.userData.workoutPrefs.workoutDaysPerWeek) {
                     ctx.userData.workoutPrefs.customWorkoutDays = newValue
                     if newValue.count != daysPerWeek { daysPerWeek = newValue.count }
@@ -298,28 +308,36 @@ struct WorkoutCustomization: View {
         }
     }
     
+    private var splitWarning: String? {
+        let split = WorkoutWeek.determineSplit(customSplit: ctx.userData.workoutPrefs.customWorkoutSplit, daysPerWeek: daysPerWeek)
+        if let customSplit = ctx.userData.workoutPrefs.customWorkoutSplit, customSplit != split {
+            let base = "Custom split will not be used. "
+            if customSplit.categories.count != daysPerWeek {
+                return base + "Does not match selected number of days."
+            } else {
+                return base + "Check for day(s) without categories."
+            }
+        }
+        return nil
+    }
+    
+    private var paramsBeforeSwitch: Set<ParamsBeforeSwitch.ParamsChanged>? {
+        guard keepCurrentExercises, let params = ctx.userData.workoutPrefs.paramsBeforeSwitch else { return nil }
+        return params.getChanges(resistance: selectedResistanceType, distribution: ctx.userData.workoutPrefs.customDistribution)
+    }
+    
     private var distribution: ExerciseDistribution {
         ctx.userData.workoutPrefs.customDistribution ?? defaultRepsAndSets.distribution
     }
     
     private var defaultRepsAndSets: RepsAndSets { RepsAndSets.defaultRepsAndSets(for: ctx.userData.physical.goal) }
-    
-    private var defaultDuration: TimeSpan {
-        WorkoutParams.defaultWorkoutDuration(
-            age: ctx.userData.profile.age,
-            frequency: ctx.userData.workoutPrefs.workoutDaysPerWeek,
-            strengthLevel: ctx.userData.evaluation.strengthLevel,
-            goal: ctx.userData.physical.goal
-        )
-    }
-    
+
     private func initializeVariables() {
         daysPerWeek = ctx.userData.workoutPrefs.workoutDaysPerWeek
         selectedDays = ctx.userData.workoutPrefs.customWorkoutDays ?? DaysOfWeek.defaultDays(for: ctx.userData.workoutPrefs.workoutDaysPerWeek)
         keepCurrentExercises = (ctx.userData.workoutPlans.trainerTemplates.isEmpty ? false : ctx.userData.workoutPrefs.keepCurrentExercises)
         selectedResistanceType = ctx.userData.workoutPrefs.resistance
         selectedSetStructure = ctx.userData.workoutPrefs.setStructure
-        duration.setMin(minutes: ctx.userData.workoutPrefs.customDuration ?? defaultDuration.inMinutes)
     }
     
     private func resetToDefaults() {

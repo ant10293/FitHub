@@ -42,7 +42,7 @@ struct WorkoutGeneration: View {
                             title: "Edit",
                             systemImage: "square.and.pencil",
                             action: {
-                                if let template = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] {
+                                if let template = templates[safe: currentTemplateIndex] {
                                     selectedTemplate = .init(template: template, location: .trainer, mode: .directToDetail)
                                 }
                             },
@@ -91,20 +91,20 @@ struct WorkoutGeneration: View {
                 Image(systemName: "arrow.left").bold()
                     .contentShape(Rectangle())
             }
+            .disabled(templates[safe: currentTemplateIndex - 1] == nil)
             
-            HStack {
-                VStack(spacing: 4) {
-                    Text(ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex]?.name ?? "No Template")
-                    
-                    if let categories = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex]?.categories {
-                        Text(SplitCategory.concatenateCategories(for: categories))
-                            .font(.subheadline)
-                            .lineLimit(2)
-                            .minimumScaleFactor(0.7)
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(.gray)
-                            .zIndex(1)  // Ensures is above all other content
-                    }
+            VStack(spacing: 4) {
+                let template = templates[safe: currentTemplateIndex]
+                Text(template?.name ?? "No Template")
+
+                if let template {
+                    Text(SplitCategory.concatenateCategories(for: template.categories))
+                        .font(.subheadline)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.7)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.gray)
+                        .zIndex(1)  // Ensures is above all other content
                 }
             }
             .frame(alignment: .center)
@@ -114,6 +114,7 @@ struct WorkoutGeneration: View {
                 Image(systemName: "arrow.right").bold()
                     .contentShape(Rectangle())
             }
+            .disabled(templates[safe: currentTemplateIndex + 1] == nil)
             Spacer()
         }
     }
@@ -121,7 +122,7 @@ struct WorkoutGeneration: View {
     // TODO: should shrink and display a message that no template(s) exist
     private var exerciseList: some View {
         List {
-            if let template = ctx.userData.workoutPlans.trainerTemplates[safe: currentTemplateIndex] {
+            if let template = templates[safe: currentTemplateIndex] {
                 Section {
                     if template.exercises.isEmpty {
                         Text("No exercises defined for this template.")
@@ -193,6 +194,10 @@ struct WorkoutGeneration: View {
                     .multilineTextAlignment(.center)
             }
         }
+    }
+    
+    private var templates: [WorkoutTemplate] {
+        ctx.userData.workoutPlans.trainerTemplates
     }
     
     private func previousTemplate() {
