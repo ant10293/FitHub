@@ -240,6 +240,10 @@
 		65DD05062EB9584E000D159C /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05052EB9584E000D159C /* AboutView.swift */; };
 		65DD05082EB95877000D159C /* PercentileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05072EB95877000D159C /* PercentileView.swift */; };
 		65DD050A2EB95888000D159C /* PRsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05092EB95888000D159C /* PRsView.swift */; };
+		65DD05112EB979F7000D159C /* ReferralCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD050E2EB979F7000D159C /* ReferralCodeGenerator.swift */; };
+		65DD05122EB979F7000D159C /* ReferralPurchaseTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD050F2EB979F7000D159C /* ReferralPurchaseTracker.swift */; };
+		65DD05132EB979F7000D159C /* AdminScript_GenerateCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD050D2EB979F7000D159C /* AdminScript_GenerateCodes.swift */; };
+		65DD051A2EB97C86000D159C /* InfluencerRegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05182EB97C86000D159C /* InfluencerRegistrationView.swift */; };
 		65E05D0F2E7B81F900E39CC2 /* Rounding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D0E2E7B81F900E39CC2 /* Rounding.swift */; };
 		65E05D112E7B88FC00E39CC2 /* WeightPlates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */; };
 		65E05D132E7B894900E39CC2 /* InitEquipment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D122E7B894900E39CC2 /* InitEquipment.swift */; };
@@ -492,6 +496,10 @@
 		65DD05052EB9584E000D159C /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		65DD05072EB95877000D159C /* PercentileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentileView.swift; sourceTree = "<group>"; };
 		65DD05092EB95888000D159C /* PRsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PRsView.swift; sourceTree = "<group>"; };
+		65DD050D2EB979F7000D159C /* AdminScript_GenerateCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminScript_GenerateCodes.swift; sourceTree = "<group>"; };
+		65DD050E2EB979F7000D159C /* ReferralCodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralCodeGenerator.swift; sourceTree = "<group>"; };
+		65DD050F2EB979F7000D159C /* ReferralPurchaseTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralPurchaseTracker.swift; sourceTree = "<group>"; };
+		65DD05182EB97C86000D159C /* InfluencerRegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfluencerRegistrationView.swift; sourceTree = "<group>"; };
 		65E05D0E2E7B81F900E39CC2 /* Rounding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rounding.swift; sourceTree = "<group>"; };
 		65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightPlates.swift; sourceTree = "<group>"; };
 		65E05D122E7B894900E39CC2 /* InitEquipment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitEquipment.swift; sourceTree = "<group>"; };
@@ -1124,6 +1132,7 @@
 				65CD3C182DD3C84F00C2B671 /* ContentView.swift */,
 				65CD3C1A2DD3C84F00C2B671 /* MainAppView.swift */,
 				65CD3C1B2DD3C84F00C2B671 /* MenuView.swift */,
+				65DD05192EB97C86000D159C /* Influencer */,
 				65CD3C192DD3C84F00C2B671 /* HomeView.swift */,
 				65CD3C1C2DD3C84F00C2B671 /* StatsView.swift */,
 				65CD3C1E2DD3C84F00C2B671 /* UserProfileView.swift */,
@@ -1199,6 +1208,14 @@
 			path = DetailView;
 			sourceTree = "<group>";
 		};
+		65DD05192EB97C86000D159C /* Influencer */ = {
+			isa = PBXGroup;
+			children = (
+				65DD05182EB97C86000D159C /* InfluencerRegistrationView.swift */,
+			);
+			path = Influencer;
+			sourceTree = "<group>";
+		};
 		65E05D0D2E7B81A800E39CC2 /* Equipment */ = {
 			isa = PBXGroup;
 			children = (
@@ -1243,6 +1260,9 @@
 			isa = PBXGroup;
 			children = (
 				65F5EF882EB16A5D005557F1 /* ReferralAttributor.swift */,
+				65DD050D2EB979F7000D159C /* AdminScript_GenerateCodes.swift */,
+				65DD050E2EB979F7000D159C /* ReferralCodeGenerator.swift */,
+				65DD050F2EB979F7000D159C /* ReferralPurchaseTracker.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1462,6 +1482,7 @@
 				65CD3C682DD3C84F00C2B671 /* DetailsView.swift in Sources */,
 				65AB47F72EA342B4001BEAFE /* ExerciseHistory.swift in Sources */,
 				65CD3C692DD3C84F00C2B671 /* GoalSelectionView.swift in Sources */,
+				65DD051A2EB97C86000D159C /* InfluencerRegistrationView.swift in Sources */,
 				6548AB8B2DDAFB0200BD9DAD /* SortSettings.swift in Sources */,
 				65CD3C6A2DD3C84F00C2B671 /* HealthKitRequestView.swift in Sources */,
 				65C5DC5D2DEFB65000B09AD2 /* Exercise.swift in Sources */,
@@ -1573,6 +1594,9 @@
 				65C5DC612DEFB7A400B09AD2 /* Sorting.swift in Sources */,
 				6550ADBA2E6BAC12002072C1 /* TemplateNavigator.swift in Sources */,
 				65A0D1D72E3AF28A008466D8 /* ExerciseSelector.swift in Sources */,
+				65DD05112EB979F7000D159C /* ReferralCodeGenerator.swift in Sources */,
+				65DD05122EB979F7000D159C /* ReferralPurchaseTracker.swift in Sources */,
+				65DD05132EB979F7000D159C /* AdminScript_GenerateCodes.swift in Sources */,
 				65CD3C8C2DD3C84F00C2B671 /* UserProfileView.swift in Sources */,
 				65CD3C8E2DD3C84F00C2B671 /* FitHub.xcdatamodeld in Sources */,
 				65CD3C8F2DD3C84F00C2B671 /* FitHubApp.swift in Sources */,

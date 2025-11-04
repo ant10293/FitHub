@@ -10,10 +10,12 @@ import SwiftUI
 struct DescriptionField: View {
     @Environment(\.colorScheme) var colorScheme
     @Binding var text: String
+    var placeholder: String = "Description"
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Description").font(.headline)
+            Text(placeholder)
+                .font(.headline)
             TextEditor(text: $text)
                 .frame(minHeight: 60)
                 .padding(4)

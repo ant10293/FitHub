@@ -11,9 +11,7 @@ struct StatsView: View {
             let carbs = userData.physical.carbs
             let fats = userData.physical.fats
             let proteins = userData.physical.proteins
-        
-            Text("Strength Level: \(userData.evaluation.strengthLevel)")
-            
+                    
             metricRow(
                 label: "BMI",
                 value: bmi,

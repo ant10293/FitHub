@@ -113,14 +113,15 @@ struct WorkoutSummary: View {
 
         var body: some View {
             HStack {
-                Text(title).font(.subheadline).fontWeight(.semibold)
+                Text(title).fontWeight(.semibold)
                 Spacer()
                 if let value = value {
-                    Text(value).font(.subheadline)
+                    Text(value)
                 } else if let text = text {
-                    text.font(.subheadline)
+                    text
                 }
             }
+            .font(.subheadline)
             .padding(.horizontal)
         }
     }

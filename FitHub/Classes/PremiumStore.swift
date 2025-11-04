@@ -191,6 +191,15 @@ final class PremiumStore: ObservableObject {
             switch result {
             case .success(let verification):
                 let transaction = try verify(verification)
+                
+                // Track referral purchase if user has a referral code
+                Task {
+                    await ReferralPurchaseTracker().trackPurchase(
+                        productID: product.id,
+                        transactionID: transaction.id
+                    )
+                }
+                
                 await transaction.finish()
                 await refreshEntitlement()
             case .userCancelled, .pending:

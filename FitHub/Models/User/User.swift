@@ -17,6 +17,7 @@ struct Profile: Codable, Equatable {
     var age: Int = 0
     var dob: Date = Date()
     var accountCreationDate: Date?
+    var referralCode: String?
 }
 
 // physical         = PhysicalStats()

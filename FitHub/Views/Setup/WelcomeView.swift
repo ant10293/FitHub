@@ -36,6 +36,10 @@ struct WelcomeView: View {
                         authService.signIn(with: result, into: userData) { res in
                             switch res {
                             case .success:
+                                // Claim referral code if user came from referral link
+                                Task {
+                                    await ReferralAttributor().claimIfNeeded(source: "sign_in")
+                                }
                                 handleNavigation()
                             case .failure(let err):
                                 print("Sign-in failed:", err)

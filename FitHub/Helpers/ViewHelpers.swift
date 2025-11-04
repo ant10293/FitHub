@@ -109,3 +109,32 @@ func calculateTextWidth(text: String, minWidth: CGFloat, maxWidth: CGFloat) -> C
     let measured = (text as NSString).size(withAttributes: [.font: font]).width + 20 // padding
     return min(max(measured, minWidth), maxWidth)
 }
+
+private struct InputFieldStyle: ViewModifier {
+    var padding: CGFloat
+    var background: Color
+    var cornerRadius: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .padding(padding)
+            .background(background)
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+    }
+}
+
+extension View {
+    func inputStyle(
+        padding: CGFloat = 10,
+        background: Color = Color(.secondarySystemBackground),
+        cornerRadius: CGFloat = 10
+    ) -> some View {
+        self.modifier(
+            InputFieldStyle(
+                padding: padding,
+                background: background,
+                cornerRadius: cornerRadius
+            )
+        )
+    }
+}

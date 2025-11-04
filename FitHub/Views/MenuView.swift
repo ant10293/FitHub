@@ -52,6 +52,14 @@ struct MenuView: View {
                     Label("FitHub Pro", systemImage: "crown")
                 }
             }
+            
+            Section(header: Text("Partner")) {
+                NavigationLink(destination: LazyDestination {
+                    InfluencerRegistrationView()
+                }) {
+                    Label("Become an Influencer", systemImage: "person.2")
+                }
+            }
         }
         .listStyle(InsetGroupedListStyle())
         .navigationTitle("Menu")

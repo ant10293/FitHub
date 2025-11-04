@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitHub - Download Now</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 500px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: scale(1.05);
+        }
+        .code-info {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+    </style>
+    <script>
+        // Extract referral code from URL
+        function getReferralCode() {
+            const path = window.location.pathname;
+            const params = new URLSearchParams(window.location.search);
+            
+            // Try path-based: /r/CODE
+            if (path.startsWith('/r/')) {
+                const code = path.split('/r/')[1];
+                if (code) return code;
+            }
+            
+            // Try query-based: ?ref=CODE
+            const ref = params.get('ref');
+            if (ref) return ref;
+            
+            return null;
+        }
+        
+        // Store referral code in localStorage for when app opens
+        const code = getReferralCode();
+        if (code) {
+            localStorage.setItem('referralCode', code);
+            console.log('Referral code stored:', code);
+        }
+        
+        // Redirect to App Store when ready
+        // Replace [YOUR_APP_STORE_ID] with your actual App Store ID
+        function redirectToAppStore() {
+            // TODO: Replace with your actual App Store ID
+            // You can find this in App Store Connect after your app is submitted
+            const appStoreId = '[YOUR_APP_STORE_ID]';
+            
+            if (appStoreId !== '[YOUR_APP_STORE_ID]') {
+                window.location.href = `https://apps.apple.com/app/id${appStoreId}`;
+            }
+        }
+        
+        // Try to open the app (if installed)
+        // If app is installed, it will open automatically via universal link
+        // If not, show the download page
+        window.addEventListener('load', function() {
+            // Universal links should handle opening the app automatically
+            // If we're still here after 500ms, app probably isn't installed
+            setTimeout(function() {
+                // You can add App Store redirect here if needed
+                // redirectToAppStore();
+            }, 500);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>🏋️ FitHub</h1>
+        <p>Your Personal Fitness Companion</p>
+        <a href="#" class="button" onclick="redirectToAppStore()">Download on the App Store</a>
+        <div class="code-info" id="codeInfo" style="display: none;">
+            <p>Referral code detected. It will be applied when you download and sign in.</p>
+        </div>
+    </div>
+    <script>
+        if (code) {
+            document.getElementById('codeInfo').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+

@@ -1,8 +1,9 @@
 //
-//  ReferralAttributor.swift
+//  ReferralAttributor_Updated.swift
 //  FitHub
 //
-//  UPDATED VERSION - Writes directly to Firestore
+//  UPDATED VERSION - Replace your existing ReferralAttributor.swift with this
+//  This version writes directly to Firestore instead of calling a cloud function
 //
 
 import Foundation
@@ -13,18 +14,18 @@ import FirebaseFirestore
 /// It reads "pendingReferralCode" (if any) and claims it in Firestore.
 final class ReferralAttributor {
     private let db = Firestore.firestore()
-
+    
     /// Attempts to claim a referral code once; safe to call multiple times (idempotent).
     func claimIfNeeded(source: String = "universal_link") async {
         // Must be signed in
         guard let user = Auth.auth().currentUser else { return }
         let userId = user.uid
-
+        
         // Pending code saved by the URL handler
         guard let raw = UserDefaults.standard.string(forKey: "pendingReferralCode") else { return }
         let code = raw.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         guard !code.isEmpty else { return }
-
+        
         // Validate code format
         guard ReferralCodeGenerator.isValidCode(code) else {
             print("⚠️ Invalid referral code format: \(code)")
@@ -107,3 +108,4 @@ final class ReferralAttributor {
         }
     }
 }
+
