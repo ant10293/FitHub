@@ -5,44 +5,53 @@ struct SubscriptionView: View {
     @EnvironmentObject var ctx: AppContext
     @Environment(\.openURL) private var openURL
     @State private var selectedProductID: String?
+    @State private var referralCode: String = ""
+    @State private var hasClaimedCode: Bool = false
 
     var body: some View {
-        VStack(spacing: 20) {
-            plansSection
-
-            if let note = autoRenewFootnote {
-                Text(note)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.top, -8)
-            }
-
-            VStack(spacing: 12) {
-                if isCurrentSelection {
-                    Text("You’re already on this plan.")
+        ScrollView {
+            VStack(spacing: 20) {
+                Spacer()
+                
+                referralCodeSection
+                
+                plansSection
+                
+                if let note = autoRenewFootnote {
+                    Text(note)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
                 }
-
-                RectangularButton(
-                    title: "Continue",
-                    systemImage: "arrow.forward.circle.fill",
-                    enabled: isCheckoutEnabled,
-                    action: purchaseSelected
-                )
-
-                HStack(spacing: 12) {
-                    Button("Restore Purchases") { Task { await ctx.store.restore() } }
-                        .buttonStyle(.bordered)
-
-                    if showsManageButton {
-                        Button("Manage") { manageSubscriptions(openURL: openURL) }
+                
+                VStack(spacing: 12) {
+                    if isCurrentSelection {
+                        Text("You’re already on this plan.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    RectangularButton(
+                        title: "Continue",
+                        systemImage: "arrow.forward.circle.fill",
+                        enabled: isCheckoutEnabled,
+                        action: purchaseSelected
+                    )
+                    
+                    HStack(spacing: 12) {
+                        // FIXME: this doesnt even do anything. this is likely because we're working with a dev version
+                        Button("Restore") { Task { await ctx.store.restore() } }
                             .buttonStyle(.bordered)
+                        
+                        if showsManageButton {
+                            Button("Manage") { manageSubscriptions(openURL: openURL) }
+                                .buttonStyle(.bordered)
+                        }
                     }
                 }
+                
+                Spacer()
             }
-            .padding(.top, 6)
         }
         .padding()
         .navigationBarTitle("FitHub Pro", displayMode: .inline)
@@ -67,6 +76,47 @@ struct SubscriptionView: View {
     }
 
     // MARK: - Sections
+    
+    private var referralCodeSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Referral Code")
+                .font(.headline)
+            
+            TextField("Referral Code (Optional)", text: $referralCode)
+                .textContentType(.none)
+                .autocapitalization(.allCharacters)
+                .autocorrectionDisabled()
+                .inputStyle()
+                .disabled(hasClaimedCode)
+                .overlay(alignment: .trailing) {
+                    if hasClaimedCode {
+                        Image(systemName: "lock.fill")
+                            .foregroundStyle(.secondary)
+                            .padding(.trailing, 12)
+                    }
+                }
+                .task {
+                    if let claimed = await ReferralCodeRetriever.getClaimedReferralCode() {
+                        referralCode = claimed
+                        hasClaimedCode = true
+                    } else {
+                        hasClaimedCode = false
+                    }
+                }
+                .onChange(of: referralCode) { _, newValue in
+                    guard !hasClaimedCode else { return }
+                    let trimmed = newValue.trimmed.uppercased()
+                    if trimmed.isEmpty {
+                        UserDefaults.standard.removeObject(forKey: "pendingReferralCode")
+                    } else if ReferralCodeGenerator.isValidCode(trimmed) {
+                        UserDefaults.standard.set(trimmed, forKey: "pendingReferralCode")
+                        Task {
+                            await ReferralAttributor().claimIfNeeded(source: .manualEntry)
+                        }
+                    }
+                }
+        }
+    }
 
     private var plansSection: some View {
         VStack(alignment: .leading, spacing: 14) {

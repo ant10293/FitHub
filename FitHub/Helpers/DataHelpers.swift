@@ -46,7 +46,6 @@ extension Collection {
     }
 }
 
-
 extension UIApplication {
     func endEditing() {
         sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -122,4 +121,41 @@ extension Array {
     }
 }
 
-
+extension String {
+    /// Returns a trimmed version of the string (whitespace removed)
+    var trimmed: String { trimmingCharacters(in: .whitespaces) }
+    /// Returns `true` if the string is empty after trimming whitespace
+    var isEmptyAfterTrim: Bool { trimmed.isEmpty }
+    
+    func formatName() -> String {
+        return (self.prefix(1).uppercased()
+        + self.dropFirst().lowercased())
+        .trimmingCharacters(in: .whitespaces)
+    }
+    
+    func trimmingTrailingSpaces() -> String {
+        guard let range = range(of: "\\s+$", options: .regularExpression) else { return self }
+        return replacingCharacters(in: range, with: "")
+    }
+    
+    @inline(__always)
+    func normalize() -> String {
+        self.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    }
+    
+    @inline(__always)
+    func normalized(removing: CharacterSet) -> String {
+        unicodeScalars
+            .filter { !removing.contains($0) }
+            .reduce(into: "") { $0.append(Character($1)) }
+            .lowercased()
+    }
+    
+    func capitalizeFirstLetter() -> String {
+        guard let idx = self.firstIndex(where: { $0.isLetter }) else { return self }
+        var result = self
+        let upper = String(result[idx]).uppercased()
+        result.replaceSubrange(idx...idx, with: upper)
+        return result
+    }
+}

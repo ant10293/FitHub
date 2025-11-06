@@ -8,7 +8,6 @@
 
 import Foundation
 import FirebaseFirestore
-import FirebaseAuth
 import Combine
 
 /// Admin utility to create referral codes in Firestore
@@ -28,15 +27,16 @@ final class ReferralCodeAdmin: ObservableObject {
         influencerEmail: String? = nil,
         notes: String? = nil
     ) async throws {
+        // Check if user already has a referral code
+        if let existingCode = try await ReferralCodeRetriever.getCreatedReferralCode(), !existingCode.isEmpty {
+            throw ReferralError.uidHasCodeAlready
+        }
+        
         let uppercasedCode = code.uppercased()
         
         // Validate code
         guard ReferralCodeGenerator.isValidCode(uppercasedCode) else {
-            throw NSError(
-                domain: "ReferralCodeAdmin",
-                code: -1,
-                userInfo: [NSLocalizedDescriptionKey: "Invalid code format: \(code)"]
-            )
+            throw ReferralError.invalidCodeFormat
         }
         
         let codeRef = db.collection("referralCodes").document(uppercasedCode)
@@ -44,15 +44,11 @@ final class ReferralCodeAdmin: ObservableObject {
         // Check if code already exists
         let existingDoc = try await codeRef.getDocument()
         if existingDoc.exists {
-            throw NSError(
-                domain: "ReferralCodeAdmin",
-                code: -2,
-                userInfo: [NSLocalizedDescriptionKey: "Code already exists: \(uppercasedCode)"]
-            )
+            throw ReferralError.codeAlreadyTaken
         }
         
         // Get current user ID if authenticated
-        let userId = Auth.auth().currentUser?.uid ?? "self_service"
+        guard let userId = AuthService.getUid() else { return }
         
         // Create the code document
         try await codeRef.setData([
@@ -78,15 +74,16 @@ final class ReferralCodeAdmin: ObservableObject {
         influencerEmail: String? = nil,
         notes: String? = nil
     ) async throws -> String {
+        // Check if user already has a referral code
+        if let existingCode = try await ReferralCodeRetriever.getCreatedReferralCode(), !existingCode.isEmpty {
+            throw ReferralError.uidHasCodeAlready
+        }
+        
         // Check if email is already used BEFORE attempting to generate code
         if let email = influencerEmail, !email.isEmpty {
             let emailUsed = try await checkEmailExists(email)
             if emailUsed {
-                throw NSError(
-                    domain: "ReferralCodeAdmin",
-                    code: -4,
-                    userInfo: [NSLocalizedDescriptionKey: "Email is already registered with another referral code"]
-                )
+                throw ReferralError.emailHasCodeAlready
             }
         }
         
@@ -120,7 +117,7 @@ final class ReferralCodeAdmin: ObservableObject {
                 return code
             } catch {
                 // If code exists, try again with different random number
-                if let nsError = error as NSError?, nsError.code == -2 {
+                if case ReferralError.codeAlreadyTaken = error {
                     if attempts < maxAttempts - 1 {
                         attempts += 1
                         continue
@@ -131,11 +128,7 @@ final class ReferralCodeAdmin: ObservableObject {
             }
         }
         
-        throw NSError(
-            domain: "ReferralCodeAdmin",
-            code: -3,
-            userInfo: [NSLocalizedDescriptionKey: "Failed to generate unique code after \(maxAttempts) attempts"]
-        )
+        throw ReferralError.unableToGenerateUniqueCode
     }
     
     /// Deactivates a referral code
@@ -172,6 +165,62 @@ final class ReferralCodeAdmin: ObservableObject {
             .getDocuments()
         
         return !snapshot.documents.isEmpty
+    }
+    
+    /// Updates the email address for a referral code
+    func updateCreatedReferralCodeEmail(code: String, newEmail: String) async throws {
+        guard let userId = AuthService.getUid() else {
+            throw NSError(
+                domain: "ReferralCodeAdmin",
+                code: -5,
+                userInfo: [NSLocalizedDescriptionKey: "User not authenticated"]
+            )
+        }
+        
+        let codeRef = db.collection("referralCodes").document(code.uppercased())
+        let codeDoc = try await codeRef.getDocument()
+        
+        guard codeDoc.exists else {
+            throw NSError(
+                domain: "ReferralCodeAdmin",
+                code: -2,
+                userInfo: [NSLocalizedDescriptionKey: "Referral code not found"]
+            )
+        }
+        
+        // Verify the code was created by the current user
+        if let createdBy = codeDoc.data()?["createdBy"] as? String,
+           createdBy != userId {
+            throw NSError(
+                domain: "ReferralCodeAdmin",
+                code: -6,
+                userInfo: [NSLocalizedDescriptionKey: "You can only update your own referral code"]
+            )
+        }
+        
+        // Check if new email is already used by another code
+        if !newEmail.isEmpty {
+            let emailUsed = try await checkEmailExists(newEmail)
+            if emailUsed {
+                // Check if it's the same code
+                let existingCodeSnapshot = try await db.collection("referralCodes")
+                    .whereField("influencerEmail", isEqualTo: newEmail)
+                    .limit(to: 1)
+                    .getDocuments()
+                
+                if let existingCodeId = existingCodeSnapshot.documents.first?.documentID,
+                   existingCodeId.uppercased() != code.uppercased() {
+                    throw ReferralError.emailHasCodeAlready
+                }
+            }
+        }
+        
+        // Update the email
+        try await codeRef.updateData([
+            "influencerEmail": newEmail
+        ])
+        
+        print("✅ Updated email for referral code: \(code.uppercased())")
     }
 }
 

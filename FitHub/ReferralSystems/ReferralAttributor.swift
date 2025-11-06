@@ -6,19 +6,22 @@
 //
 
 import Foundation
-import FirebaseAuth
 import FirebaseFirestore
 
 /// Call right after a successful sign-in.
 /// It reads "pendingReferralCode" (if any) and claims it in Firestore.
 final class ReferralAttributor {
     private let db = Firestore.firestore()
+    
+    enum ClaimSource: String {
+        case universalLink = "universal_link"
+        case manualEntry = "manual_entry"
+    }
 
     /// Attempts to claim a referral code once; safe to call multiple times (idempotent).
-    func claimIfNeeded(source: String = "universal_link") async {
+    func claimIfNeeded(source: ClaimSource = .universalLink) async {
         // Must be signed in
-        guard let user = Auth.auth().currentUser else { return }
-        let userId = user.uid
+        guard let userId = AuthService.getUid() else { return }
 
         // Pending code saved by the URL handler
         guard let raw = UserDefaults.standard.string(forKey: "pendingReferralCode") else { return }
@@ -32,6 +35,7 @@ final class ReferralAttributor {
             return
         }
         
+        // Removes pending code from UserDefaults if user already has a referral code
         do {
             // Check if code exists in Firestore
             let codeRef = db.collection("referralCodes").document(code)
@@ -55,15 +59,7 @@ final class ReferralAttributor {
             let userDoc = try await userRef.getDocument()
             
             if let existingReferralCode = userDoc.data()?["referralCode"] as? String {
-                print("ℹ️ User already has referral code: \(existingReferralCode)")
-                UserDefaults.standard.removeObject(forKey: "pendingReferralCode")
-                return
-            }
-            
-            // Check if user already claimed this specific code (prevents duplicate claims)
-            if let claimedCodes = userDoc.data()?["claimedReferralCodes"] as? [String],
-               claimedCodes.contains(code) {
-                print("ℹ️ User already claimed this code: \(code)")
+                print("ℹ️ User already claimed referral code: \(existingReferralCode)")
                 UserDefaults.standard.removeObject(forKey: "pendingReferralCode")
                 return
             }
@@ -75,8 +71,7 @@ final class ReferralAttributor {
             batch.setData([
                 "referralCode": code,
                 "referralCodeClaimedAt": FieldValue.serverTimestamp(),
-                "referralSource": source,
-                "claimedReferralCodes": FieldValue.arrayUnion([code])
+                "referralSource": source.rawValue,
             ], forDocument: userRef, merge: true)
             
             // 2. Update referral code document - add user to sign-ups
@@ -84,16 +79,6 @@ final class ReferralAttributor {
                 "lastUsedAt": FieldValue.serverTimestamp(),
                 "usedBy": FieldValue.arrayUnion([userId])
             ], forDocument: codeRef)
-            
-            // 3. Create a referral claim record for analytics
-            let claimRef = db.collection("referralClaims").document()
-            batch.setData([
-                "code": code,
-                "userId": userId,
-                "source": source,
-                "claimedAt": FieldValue.serverTimestamp(),
-                "influencerName": codeData["influencerName"] as? String ?? "Unknown"
-            ], forDocument: claimRef)
             
             try await batch.commit()
             

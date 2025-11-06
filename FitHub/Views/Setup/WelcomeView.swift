@@ -36,10 +36,7 @@ struct WelcomeView: View {
                         authService.signIn(with: result, into: userData) { res in
                             switch res {
                             case .success:
-                                // Claim referral code if user came from referral link
-                                Task {
-                                    await ReferralAttributor().claimIfNeeded(source: "sign_in")
-                                }
+                                // Referral code handling is done in AuthService
                                 handleNavigation()
                             case .failure(let err):
                                 print("Sign-in failed:", err)
@@ -75,5 +72,16 @@ struct WelcomeView: View {
     // MARK: – Navigation / persistence
     private func handleNavigation() {
         userData.setup.setupState = .healthKitView
+        
+        Task {
+            // 1. Check if user has created a referral code and set it in profile
+            if let referralCode = try? await ReferralCodeRetriever.getCreatedReferralCode() {
+                await MainActor.run {
+                    userData.profile.referralCode = referralCode
+                }
+            }
+            // 2. Claim pending referral code if user came from referral link
+            await ReferralAttributor().claimIfNeeded()
+        }
     }
 }

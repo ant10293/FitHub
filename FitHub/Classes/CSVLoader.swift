@@ -185,7 +185,7 @@ extension CSVLoader {
         // Return the last known value if the input is greater than any data point
         return filteredData.last?.1 ?? 0
     }
-    
+    // TODO: tweak these to better accomodate older people
     static func calculateFinal1RM(userData: UserData, exercise: String) -> PeakMetric {
         let (dataAge, dataBW) = getExerciseData(exercise: exercise, gender: userData.physical.gender)
         
@@ -195,7 +195,7 @@ extension CSVLoader {
         let predictedCombined = predicted1RM_BW + predicted1RM_Age
         guard predictedCombined > 0 else { return .oneRepMax(Mass(kg: 0)) }
         
-        let final1RM = (2 * predictedCombined) / 3.0
+        let final1RM = predictedCombined / 2
         //print("Predicted 1RM for \(exercise) - BW: \(predicted1RM_BW), Age: \(predicted1RM_Age), Final: \(final1RM)")
         return .oneRepMax(Mass(kg: final1RM))
     }
@@ -209,7 +209,7 @@ extension CSVLoader {
         let predictedCombined = predictedReps_BW + predictedReps_Age
         guard predictedCombined > 0 else { return .maxReps(0) }
         
-        let finalReps = (2 * predictedCombined) / 3
+        let finalReps = predictedCombined / 2
         //print("Predicted Reps for \(exercise) - BW: \(predictedReps_BW), Age: \(predictedReps_Age), Final: \(finalReps)")
         return .maxReps(finalReps)
     }

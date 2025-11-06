@@ -244,6 +244,10 @@
 		65DD05122EB979F7000D159C /* ReferralPurchaseTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD050F2EB979F7000D159C /* ReferralPurchaseTracker.swift */; };
 		65DD05132EB979F7000D159C /* AdminScript_GenerateCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD050D2EB979F7000D159C /* AdminScript_GenerateCodes.swift */; };
 		65DD051A2EB97C86000D159C /* InfluencerRegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05182EB97C86000D159C /* InfluencerRegistrationView.swift */; };
+		65DD051C2EB9BB8A000D159C /* ReferralCodeRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051B2EB9BB8A000D159C /* ReferralCodeRetriever.swift */; };
+		65DD051F2EBBED1D000D159C /* InfluencerInfoForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051D2EBBED1D000D159C /* InfluencerInfoForm.swift */; };
+		65DD05202EBBED1D000D159C /* InfluencerSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051E2EBBED1D000D159C /* InfluencerSettingsView.swift */; };
+		65DD05222EBC06B6000D159C /* ReferralValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05212EBC06B6000D159C /* ReferralValidation.swift */; };
 		65E05D0F2E7B81F900E39CC2 /* Rounding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D0E2E7B81F900E39CC2 /* Rounding.swift */; };
 		65E05D112E7B88FC00E39CC2 /* WeightPlates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */; };
 		65E05D132E7B894900E39CC2 /* InitEquipment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D122E7B894900E39CC2 /* InitEquipment.swift */; };
@@ -500,6 +504,10 @@
 		65DD050E2EB979F7000D159C /* ReferralCodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralCodeGenerator.swift; sourceTree = "<group>"; };
 		65DD050F2EB979F7000D159C /* ReferralPurchaseTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralPurchaseTracker.swift; sourceTree = "<group>"; };
 		65DD05182EB97C86000D159C /* InfluencerRegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfluencerRegistrationView.swift; sourceTree = "<group>"; };
+		65DD051B2EB9BB8A000D159C /* ReferralCodeRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralCodeRetriever.swift; sourceTree = "<group>"; };
+		65DD051D2EBBED1D000D159C /* InfluencerInfoForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfluencerInfoForm.swift; sourceTree = "<group>"; };
+		65DD051E2EBBED1D000D159C /* InfluencerSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfluencerSettingsView.swift; sourceTree = "<group>"; };
+		65DD05212EBC06B6000D159C /* ReferralValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralValidation.swift; sourceTree = "<group>"; };
 		65E05D0E2E7B81F900E39CC2 /* Rounding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rounding.swift; sourceTree = "<group>"; };
 		65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightPlates.swift; sourceTree = "<group>"; };
 		65E05D122E7B894900E39CC2 /* InitEquipment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitEquipment.swift; sourceTree = "<group>"; };
@@ -905,6 +913,7 @@
 				653136362E552FCA00EECCA5 /* Distribution.swift */,
 				653136382E552FF000EECCA5 /* Notification.swift */,
 				65F5EF8E2EB19CBE005557F1 /* CoverageState.swift */,
+				65DD05212EBC06B6000D159C /* ReferralValidation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1164,7 +1173,7 @@
 			children = (
 				65CD3C952DD3CB8E00C2B671 /* FitHubAssets */,
 				65CD3BB72DD3C84F00C2B671 /* Firebase */,
-				65F5EF892EB16A5D005557F1 /* Services */,
+				65F5EF892EB16A5D005557F1 /* ReferralSystems */,
 				65F5EF8C2EB16A60005557F1 /* URLRouting */,
 				65CD3C222DD3C84F00C2B671 /* FitHub.entitlements */,
 				65CD3C252DD3C84F00C2B671 /* Info.plist */,
@@ -1211,6 +1220,8 @@
 		65DD05192EB97C86000D159C /* Influencer */ = {
 			isa = PBXGroup;
 			children = (
+				65DD051D2EBBED1D000D159C /* InfluencerInfoForm.swift */,
+				65DD051E2EBBED1D000D159C /* InfluencerSettingsView.swift */,
 				65DD05182EB97C86000D159C /* InfluencerRegistrationView.swift */,
 			);
 			path = Influencer;
@@ -1256,15 +1267,16 @@
 			path = ChangeLog;
 			sourceTree = "<group>";
 		};
-		65F5EF892EB16A5D005557F1 /* Services */ = {
+		65F5EF892EB16A5D005557F1 /* ReferralSystems */ = {
 			isa = PBXGroup;
 			children = (
+				65DD051B2EB9BB8A000D159C /* ReferralCodeRetriever.swift */,
 				65F5EF882EB16A5D005557F1 /* ReferralAttributor.swift */,
 				65DD050D2EB979F7000D159C /* AdminScript_GenerateCodes.swift */,
 				65DD050E2EB979F7000D159C /* ReferralCodeGenerator.swift */,
 				65DD050F2EB979F7000D159C /* ReferralPurchaseTracker.swift */,
 			);
-			path = Services;
+			path = ReferralSystems;
 			sourceTree = "<group>";
 		};
 		65F5EF8C2EB16A60005557F1 /* URLRouting */ = {
@@ -1365,6 +1377,7 @@
 				65CD3C2A2DD3C84F00C2B671 /* AdjustmentsData.swift in Sources */,
 				65CD3C2B2DD3C84F00C2B671 /* AuthService.swift in Sources */,
 				65CFBFB32E1F9B4500CD521E /* AliasesField.swift in Sources */,
+				65DD05222EBC06B6000D159C /* ReferralValidation.swift in Sources */,
 				65039B762E81D98B007A31E1 /* Distance.swift in Sources */,
 				65E05D0F2E7B81F900E39CC2 /* Rounding.swift in Sources */,
 				65AB47F12EA043B9001BEAFE /* LabelButton.swift in Sources */,
@@ -1429,6 +1442,7 @@
 				65CD3C492DD3C84F00C2B671 /* CalendarView.swift in Sources */,
 				65CD3C4A2DD3C84F00C2B671 /* HistoryView.swift in Sources */,
 				65039B932E9869E9007A31E1 /* MenuPickerRow.swift in Sources */,
+				65DD051C2EB9BB8A000D159C /* ReferralCodeRetriever.swift in Sources */,
 				6550ADBE2E6BBEAA002072C1 /* TemplateRow.swift in Sources */,
 				65CD3C4B2DD3C84F00C2B671 /* ConsistencyGraph.swift in Sources */,
 				65C5DC712DF01FD500B09AD2 /* BMICategoryTable.swift in Sources */,
@@ -1463,6 +1477,8 @@
 				65CD3C5E2DD3C84F00C2B671 /* MuscleRest.swift in Sources */,
 				65CD3C5F2DD3C84F00C2B671 /* OverloadSettings.swift in Sources */,
 				653BF8AA2E5AB284005A07EA /* DataHelpers.swift in Sources */,
+				65DD051F2EBBED1D000D159C /* InfluencerInfoForm.swift in Sources */,
+				65DD05202EBBED1D000D159C /* InfluencerSettingsView.swift in Sources */,
 				65817F3E2E49B9E900437560 /* PremiumStore.swift in Sources */,
 				65CD3C602DD3C84F00C2B671 /* PlannedWorkoutTime.swift in Sources */,
 				65DC3C542DEA200A00B3D128 /* ExerciseRow.swift in Sources */,
@@ -1742,6 +1758,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = L26773524X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FitHub/Info.plist;
@@ -1778,6 +1795,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = L26773524X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FitHub/Info.plist;

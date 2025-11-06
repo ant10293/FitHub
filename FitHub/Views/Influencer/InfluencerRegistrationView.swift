@@ -18,7 +18,8 @@ struct InfluencerRegistrationView: View {
     @State private var notes: String = ""
     @State private var isGenerating: Bool = false
     @State private var generatedCode: String?
-    @State private var errorMessage: String?
+    @State private var customCode: String = ""
+    @State private var errorMessage: ReferralError?
     @State private var showSuccess: Bool = false
     @State private var codeStats: CodeStats?
     @State private var isLoadingStats: Bool = false
@@ -36,28 +37,31 @@ struct InfluencerRegistrationView: View {
                             Text("Your Referral Code")
                                 .font(.headline)
                             
-                            // big code
-                            Text(code)
-                                 .font(.system(size: 30, weight: .bold, design: .monospaced))
-                                 .foregroundStyle(.blue)
-                                 .frame(maxWidth: .infinity)
-                                 .padding()
-                                 .background(Color.blue.opacity(0.08))
-                                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                            
-                            Button {
-                                UIPasteboard.general.string = code
-                                codeCopied = true
-                                // Reset after 2 seconds
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                    codeCopied = false
-                                }
-                            } label: {
-                                Label(codeCopied ? "Copied!" : "Copy Code", systemImage: codeCopied ? "checkmark" : "doc.on.doc")
-                                    .frame(maxWidth: .infinity)
+                            ZStack {
+                                Text(code)
+                                    .font(.system(size: 30, weight: .bold, design: .monospaced))
+                                    .foregroundStyle(.blue)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .padding()
+                                    .background(Color.blue.opacity(0.08))
+                                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                             }
-                            .buttonStyle(.borderedProminent)
-                            .animation(.easeInOut(duration: 0.2), value: codeCopied)
+                            .overlay(alignment: .trailing) {
+                                Button {
+                                    UIPasteboard.general.string = code
+                                    codeCopied = true
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                        codeCopied = false
+                                    }
+                                } label: {
+                                    Image(systemName: codeCopied ? "checkmark.circle.fill" : "doc.on.doc")
+                                        .font(.title3)
+                                        .foregroundStyle(codeCopied ? .green : .blue)
+                                        .padding()   // system padding, not fixed
+                                }
+                                .buttonStyle(.plain)
+                                .animation(.easeInOut(duration: 0.2), value: codeCopied)
+                            }
                             
                             Button {
                                 UIPasteboard.general.string = generateAppStoreLink(with: code)
@@ -70,7 +74,7 @@ struct InfluencerRegistrationView: View {
                                 Label(linkCopied ? "Link Copied!" : "Copy App Link", systemImage: linkCopied ? "checkmark" : "link")
                                     .frame(maxWidth: .infinity)
                             }
-                            .buttonStyle(.bordered)
+                            .buttonStyle(.borderedProminent)
                             .animation(.easeInOut(duration: 0.2), value: linkCopied)
                             
                             ShareLink(item: generateShareText(code: code)) {
@@ -78,7 +82,6 @@ struct InfluencerRegistrationView: View {
                                     .frame(maxWidth: .infinity)
                             }
                             .buttonStyle(.bordered)
-                            
                             
                             // Statistics
                             if isLoadingStats {
@@ -105,33 +108,45 @@ struct InfluencerRegistrationView: View {
                                 .cardContainer(cornerRadius: 12, backgroundColor: Color(UIColor.secondarySystemBackground))
                             }
                         }
-                        
                     } else {
                         // INPUT STATE
-                        Text("Enter Information")
+                        InfluencerInfoForm(
+                            fullName: $fullName,
+                            email: $email,
+                            notes: $notes,
+                            allowEditFullName: true,
+                            allowEditEmail: true,
+                            allowEditNotes: true,
+                            emailErrorMessage: emailValidationError(email)
+                        )
+                        
+                        Text("Create Custom Code")
                             .font(.headline)
                         
-                        TextField("Full Name", text: $fullName)
-                              .textContentType(.name)
-                              .autocapitalization(.words)
-                              .inputStyle()
-
-                          TextField("Email (Optional)", text: $email)
-                              .textContentType(.emailAddress)
-                              .keyboardType(.emailAddress)
-                              .autocapitalization(.none)
-                              .autocorrectionDisabled()
-                              .inputStyle()
-
-                          TextField("Notes (Optional)", text: $notes, axis: .vertical)
-                              .lineLimit(3...6)
-                              .inputStyle()
+                        VStack(alignment: .leading, spacing: 4) {
+                            TextField("Custom code", text: $customCode)
+                                .textInputAutocapitalization(.characters)
+                                .autocorrectionDisabled(true)
+                                .inputStyle()
+                                .onChange(of: customCode) { _, _ in
+                                    if errorMessage?.forCustomCode == true {
+                                        errorMessage = nil
+                                    }
+                                }
+                            
+                            if let customCodeError = customCodeValidationError(customCode) {
+                                Text(customCodeError)
+                                    .font(.caption)
+                                    .foregroundStyle(.red)
+                                    .padding(.leading, 4)
+                            }
+                        }
                         
                         Spacer()
                         
                         Group {
                             if let error = errorMessage {
-                                Text(error)
+                                Text(error.localizedDescription)
                                     .font(.caption)
                                     .foregroundStyle(.red)
                             }
@@ -141,8 +156,8 @@ struct InfluencerRegistrationView: View {
                         .centerHorizontally()
                         
                         RectangularButton(
-                            title: isGenerating ? "Generating…" : "Generate My Referral Code",
-                            enabled: !isGenerating && !fullName.trimmingCharacters(in: .whitespaces).isEmpty,
+                            title: buttonTitle,
+                            enabled: isButtonEnabled,
                             bold: true,
                             action: generateCode
                         )
@@ -157,6 +172,22 @@ struct InfluencerRegistrationView: View {
                 .padding()
             }
             .navigationBarTitle("Influencer Registration", displayMode: .inline)
+            .toolbar {
+                if let code = generatedCode {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        NavigationLink(destination: LazyDestination {
+                            InfluencerSettingsView(
+                                fullName: $fullName,
+                                email: $email,
+                                notes: $notes,
+                                referralCode: code
+                            )
+                        }) {
+                            Image(systemName: "gearshape")
+                        }
+                    }
+                }
+            }
             .onAppear(perform: initializeFromUserData)
             .alert("Code Generated!", isPresented: $showSuccess) {
                 Button("OK") { }
@@ -167,88 +198,115 @@ struct InfluencerRegistrationView: View {
     }
     
     private func initializeFromUserData() {
-        // Initialize full name: use userName if not empty, else firstName + lastName
         if !ctx.userData.profile.userName.isEmpty {
             fullName = ctx.userData.profile.userName
         } else {
             let firstName = ctx.userData.profile.firstName
             let lastName = ctx.userData.profile.lastName
-            fullName = (firstName + " " + lastName).trimmingCharacters(in: .whitespaces)
+            fullName = (firstName + " " + lastName).trimmed
         }
-        
-        // Initialize email
         email = ctx.userData.profile.email
         
-        // Initialize generated code if user already has one
+        // Load referral code from profile (already loaded after sign-in)
         if let existingCode = ctx.userData.profile.referralCode, !existingCode.isEmpty {
             generatedCode = existingCode
+            // Load email from Firestore for this code
+            loadEmailForCode(existingCode)
             loadCodeStats()
         }
     }
     
+    private func loadEmailForCode(_ code: String) {
+        Task {
+            do {
+                let stats = try await admin.getCodeStats(code)
+                if let emailValue = stats?["influencerEmail"] as? String {
+                    await MainActor.run {
+                        email = emailValue
+                    }
+                }
+                // Also load notes if available
+                if let notesValue = stats?["notes"] as? String {
+                    await MainActor.run {
+                        notes = notesValue
+                    }
+                }
+            } catch {
+                print("Failed to load email for code: \(error)")
+            }
+        }
+    }
+    
+    // MARK: - Computed Properties
+    
+    private var buttonTitle: String {
+        if isGenerating { return "Generating…" }
+        return customCode.trimmed.isEmpty ? "Generate My Referral Code" : "Create Referral Code"
+    }
+    
+    private var isButtonEnabled: Bool {
+        guard !isGenerating else { return false }
+        guard !fullName.trimmed.isEmpty else { return false }
+        guard isEmailValidForSubmission(email) else { return false }
+        
+        if !customCode.trimmed.isEmpty {
+            return customCodeValidationError(customCode) == nil
+        }
+        return true
+    }
+    
     private func generateCode() {
-        guard !fullName.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        let emailResult = validateAndTrimEmail(email)
+        guard let trimmedEmail = emailResult.email else {
+            errorMessage = ReferralError.invalidEmailFormat
+            return
+        }
+        
+        let trimmedCustomCode = customCode.trimmed
+        let trimmedName = fullName.trimmed
+        let trimmedNotes = notes.trimmed.isEmpty ? nil : notes.trimmed
         
         isGenerating = true
         errorMessage = nil
         
         Task {
             do {
-                // Auto-generate code from name (will check email and automatically retry with random numbers if code exists)
-                let code = try await admin.createAutoGeneratedCode(
-                    influencerName: fullName.trimmingCharacters(in: .whitespaces),
-                    influencerEmail: email.isEmpty ? nil : email.trimmingCharacters(in: .whitespaces),
-                    notes: notes.isEmpty ? nil : notes.trimmingCharacters(in: .whitespaces)
-                )
+                let code: String
+                
+                if !trimmedCustomCode.isEmpty {
+                    try await admin.createReferralCode(
+                        code: trimmedCustomCode,
+                        influencerName: trimmedName,
+                        influencerEmail: trimmedEmail,
+                        notes: trimmedNotes
+                    )
+                    code = trimmedCustomCode.uppercased()
+                } else {
+                    code = try await admin.createAutoGeneratedCode(
+                        influencerName: trimmedName,
+                        influencerEmail: trimmedEmail,
+                        notes: trimmedNotes
+                    )
+                }
                 
                 await MainActor.run {
                     generatedCode = code
-                    // Save to userData
                     ctx.userData.profile.referralCode = code
                     loadCodeStats()
                     isGenerating = false
                     showSuccess = true
                 }
             } catch {
-                isGenerating = false
-                await handleError(error)
+                await MainActor.run {
+                    isGenerating = false
+                    errorMessage = referralError(from: error)
+                }
             }
         }
     }
     
     // MARK: - Helper Methods
-    
-    private func setEmailUsedError() {
-        errorMessage = "This email is already registered with another referral code. Please use a different email or contact support."
-    }
-    
-    private func handleError(_ error: Error) async {
-        await MainActor.run {
-            if let nsError = error as NSError? {
-                // Check for email already used error
-                if nsError.code == -4 {
-                    setEmailUsedError()
-                    return
-                }
-                errorMessage = "Failed to generate code: \(getErrorMessage(for: nsError))"
-            } else {
-                errorMessage = "Failed to generate code: \(error.localizedDescription)"
-            }
-        }
-    }
-    
-    private func getErrorMessage(for nsError: NSError) -> String {
-        switch nsError.code {
-        case -2:
-            return "Code generation failed. Please try again."
-        case -3:
-            return "Unable to generate unique code. Please try again."
-        case -4:
-            return "Email is already registered with another referral code."
-        default:
-            return nsError.localizedDescription
-        }
-    }
+
     
     private func loadCodeStats() {
         guard let code = generatedCode else { return }
@@ -260,11 +318,17 @@ struct InfluencerRegistrationView: View {
                 
                 await MainActor.run {
                     if let data = stats {
+                        // Filter out empty strings before counting
+                        let usedBy = (data["usedBy"] as? [String] ?? []).filter { !$0.isEmpty }
+                        let monthlyPurchasedBy = (data["monthlyPurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
+                        let annualPurchasedBy = (data["annualPurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
+                        let lifetimePurchasedBy = (data["lifetimePurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
+                        
                         codeStats = CodeStats(
-                            signUps: (data["usedBy"] as? [String] ?? []).count,
-                            monthlyPurchases: (data["monthlyPurchasedBy"] as? [String] ?? []).count,
-                            annualPurchases: (data["annualPurchasedBy"] as? [String] ?? []).count,
-                            lifetimePurchases: (data["lifetimePurchasedBy"] as? [String] ?? []).count,
+                            signUps: usedBy.count,
+                            monthlyPurchases: monthlyPurchasedBy.count,
+                            annualPurchases: annualPurchasedBy.count,
+                            lifetimePurchases: lifetimePurchasedBy.count,
                             lastUsedAt: (data["lastUsedAt"] as? Timestamp)?.dateValue(),
                             lastPurchaseAt: (data["lastPurchaseAt"] as? Timestamp)?.dateValue()
                         )
@@ -296,10 +360,10 @@ struct InfluencerRegistrationView: View {
     /// - If app not installed: Opens App Store (you may want to set up a landing page that stores the code and redirects)
     private func generateAppStoreLink(with code: String) -> String {
         // Use universal link format that works with ReferralURLHandler
-        // Format: https://fithub.web.app/r/CODE
+        // Format: https://fithubv1-d3c91.web.app/r/CODE
         // The ReferralURLHandler will extract the code and store it in UserDefaults
         // When the user signs in, ReferralAttributor will claim the code (like in WelcomeView)
-        return "https://fithub.web.app/r/\(code)"
+        return "https://fithubv1-d3c91.web.app/r/\(code)"
     }
 }
 

@@ -8,7 +8,7 @@
 	</array>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>FitHub.web.app</string>
+		<string>applinks:fithubv1-d3c91.web.app</string>
 	</array>
 	<key>com.apple.developer.healthkit</key>
 	<true/>

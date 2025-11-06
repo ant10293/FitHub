@@ -13,6 +13,10 @@ enum ReferralURLHandler {
         if let code = extractCode(from: url) {
             UserDefaults.standard.set(code, forKey: "pendingReferralCode")
             UserDefaults.standard.synchronize()
+            print("✅ Successfully handled referral URL: \(url.absoluteString)")
+            print("📝 Pending Referral code stored: \(code)")
+        } else {
+            print("⚠️ No referral code found in URL: \(url.absoluteString)")
         }
     }
 

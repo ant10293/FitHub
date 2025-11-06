@@ -90,7 +90,7 @@ final class PremiumStore: ObservableObject {
 
     enum MembershipType: String, CaseIterable, Comparable {
         case free, monthly, yearly, lifetime
-
+        
         private var rank: Int {
             switch self {
             case .free:     return 0

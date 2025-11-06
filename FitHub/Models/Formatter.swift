@@ -234,31 +234,3 @@ enum TextFormatter {
     }()
 }
 
-extension String {
-    func trimmingTrailingSpaces() -> String {
-        guard let range = range(of: "\\s+$", options: .regularExpression) else { return self }
-        return replacingCharacters(in: range, with: "")
-    }
-    
-    @inline(__always)
-    func normalize() -> String {
-        self.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-    }
-    
-    @inline(__always)
-    func normalized(removing: CharacterSet) -> String {
-        unicodeScalars
-            .filter { !removing.contains($0) }
-            .reduce(into: "") { $0.append(Character($1)) }
-            .lowercased()
-    }
-    
-    func capitalizeFirstLetter() -> String {
-        guard let idx = self.firstIndex(where: { $0.isLetter }) else { return self }
-        var result = self
-        let upper = String(result[idx]).uppercased()
-        result.replaceSubrange(idx...idx, with: upper)
-        return result
-    }
-}
-

@@ -12,7 +12,6 @@ struct ContentView: View {
         Group {
             if ctx.userData.setup.setupState == .finished {
                 MainAppView(userData: ctx.userData, showResumeWorkoutOverlay: $showResumeWorkoutOverlay)
-                    //.onReceive(notifications.$isAuthorized) { ctx.userData.settings.allowedNotifications = $0 }
                     // should also clear passed planned dates and notis
                     // need to do this on a background thread
                     .onAppear {
