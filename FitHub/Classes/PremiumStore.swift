@@ -161,8 +161,8 @@ final class PremiumStore: ObservableObject {
             }
         }
 
-        /// Auto-renew footnote (nil for lifetime/free)
-        func autoRenewFootnote(for product: StoreKit.Product) -> String? {
+        /// Default auto-renew footnote (nil for lifetime/free)
+        func defaultAutoRenewFootnote(for product: StoreKit.Product) -> String? {
             guard isSubscription, let sub = product.subscription else { return nil }
             let cycle = Self.priceTokens(for: sub.subscriptionPeriod.unit).cycle
             return "Plan auto-renews for \(product.displayPrice)/\(cycle) until canceled."
@@ -196,7 +196,9 @@ final class PremiumStore: ObservableObject {
                 Task {
                     await ReferralPurchaseTracker().trackPurchase(
                         productID: product.id,
-                        transactionID: transaction.id
+                        transactionID: transaction.id,
+                        originalTransactionID: transaction.originalID,
+                        environment: transaction.environment.rawValue
                     )
                 }
                 
@@ -217,6 +219,25 @@ final class PremiumStore: ObservableObject {
         await refreshEntitlement()
     }
 
+    func autoRenewFootnote(for product: Product) -> String? {
+        let membership = MembershipType.from(productID: product.id)
+        guard membership.isSubscription else { return nil }
+
+        let defaultFootnote = membership.defaultAutoRenewFootnote(for: product)
+
+        guard membership == membershipType else { return defaultFootnote }
+        guard case let .subscription(expiration, willAutoRenew, _) = entitlement.source else {
+            return defaultFootnote
+        }
+
+        if let willAutoRenew = willAutoRenew, !willAutoRenew {
+            let formatted = Format.formatDate(expiration, dateStyle: .medium, timeStyle: .short)
+            return "Auto-renew is turned off. Access ends on \(formatted)."
+        }
+
+        return defaultFootnote
+    }
+
     // MARK: - Private
     private func loadProducts() async {
         do {
@@ -235,6 +256,7 @@ final class PremiumStore: ObservableObject {
         var kind: MembershipType = .free
 
         for await result in SKTransaction.currentEntitlements {
+            print(result)
             guard case .verified(let t) = result else { continue }
             guard t.revocationDate == nil else { continue }
 

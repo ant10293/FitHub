@@ -28,7 +28,7 @@ final class ReferralCodeAdmin: ObservableObject {
         notes: String? = nil
     ) async throws {
         // Check if user already has a referral code
-        if let existingCode = try await ReferralCodeRetriever.getCreatedReferralCode(), !existingCode.isEmpty {
+        if let existingCode = try await ReferralRetriever.getCreatedCode(), !existingCode.isEmpty {
             throw ReferralError.uidHasCodeAlready
         }
         
@@ -75,7 +75,7 @@ final class ReferralCodeAdmin: ObservableObject {
         notes: String? = nil
     ) async throws -> String {
         // Check if user already has a referral code
-        if let existingCode = try await ReferralCodeRetriever.getCreatedReferralCode(), !existingCode.isEmpty {
+        if let existingCode = try await ReferralRetriever.getCreatedCode(), !existingCode.isEmpty {
             throw ReferralError.uidHasCodeAlready
         }
         

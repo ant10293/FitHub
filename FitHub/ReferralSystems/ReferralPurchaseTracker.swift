@@ -18,7 +18,9 @@ final class ReferralPurchaseTracker {
     /// - Parameters:
     ///   - productID: The product ID that was purchased (monthly, yearly, lifetime)
     ///   - transactionID: The StoreKit transaction ID
-    func trackPurchase(productID: String, transactionID: UInt64) async {
+    ///   - originalTransactionID: The original transaction ID (used to link Apple webhooks to users)
+    ///   - environment: The transaction environment ("Production" or "Sandbox")
+    func trackPurchase(productID: String, transactionID: UInt64, originalTransactionID: UInt64, environment: String) async {
         // Must be signed in        
         guard let userId = AuthService.getUid() else {
             print("⚠️ Cannot track referral purchase: user not authenticated")
@@ -26,7 +28,7 @@ final class ReferralPurchaseTracker {
         }
         
         // Get referral code (from UserDefaults or Firestore)
-        guard let code = await ReferralCodeRetriever.getClaimedReferralCode() else {
+        guard let code = await ReferralRetriever.getClaimedCode() else {
             print("ℹ️ No referral code claimed, skipping purchase tracking")
             return
         }
@@ -44,6 +46,8 @@ final class ReferralPurchaseTracker {
             // Determine subscription type for compensation tracking
             let subscriptionType = PremiumStore.ID.membershipType(for: productID)
             
+            guard subscriptionType != .free else { return }
+            
             // Check if this purchase was already tracked
             let userRef = db.collection("users").document(userId)
             let userDoc = try await userRef.getDocument()
@@ -54,36 +58,59 @@ final class ReferralPurchaseTracker {
                 return
             }
             
+            // Get the user's current subscription type (if any) to remove from old active array
+            let currentSubscriptionType = PremiumStore.ID.membershipType(for: userDoc.data()?["referralPurchaseProductID"] as? String)
+            
             // Perform the tracking in a batch
             let batch = db.batch()
             
             // 1. Update referral code document - track purchases by type
-            var updateData: [String: Any] = [
-                "lastPurchaseAt": FieldValue.serverTimestamp()
-            ]
+            var updateData: [String: Any] = ["lastPurchaseAt": FieldValue.serverTimestamp()]
+            
+            // Remove user from old active subscription array (if they had a different subscription)
+            if currentSubscriptionType != .free && currentSubscriptionType != subscriptionType {
+                switch currentSubscriptionType {
+                case .monthly:
+                    updateData["activeMonthlySubscriptions"] = FieldValue.arrayRemove([userId])
+                case .yearly:
+                    updateData["activeAnnualSubscriptions"] = FieldValue.arrayRemove([userId])
+                case .free, .lifetime:
+                    break
+                }
+            }
             
             // Add to the appropriate array based on subscription type
-            
+            // Also add to active subscriptions (assumed active on purchase)
             switch subscriptionType {
             case .monthly:
                 updateData["monthlyPurchasedBy"] = FieldValue.arrayUnion([userId])
+                updateData["activeMonthlySubscriptions"] = FieldValue.arrayUnion([userId])
             case .yearly:
                 updateData["annualPurchasedBy"] = FieldValue.arrayUnion([userId])
+                updateData["activeAnnualSubscriptions"] = FieldValue.arrayUnion([userId])
             case .lifetime:
                 updateData["lifetimePurchasedBy"] = FieldValue.arrayUnion([userId])
+                updateData["activeLifetimeSubscriptions"] = FieldValue.arrayUnion([userId])
             case .free:
                 break
             }
             
-            guard subscriptionType != .free else { return }
-            
             batch.updateData(updateData, forDocument: codeRef)
             
             // 2. Update user document to mark that they purchased
+            // CRITICAL: Store originalTransactionID so webhooks can link back to user
             batch.updateData([
                 "referralCodeUsedForPurchase": true,
                 "referralPurchaseDate": FieldValue.serverTimestamp(),
-                "referralPurchaseProductID": productID
+                "referralPurchaseProductID": productID,
+                "subscriptionStatus": [
+                    "originalTransactionID": String(originalTransactionID),
+                    "transactionID": String(transactionID),
+                    "productID": productID,
+                    "isActive": true,  // Assume active on purchase
+                    "lastValidatedAt": FieldValue.serverTimestamp(),
+                    "environment": environment  // "Production", "Sandbox", or "XCODE" (XCODE won't receive webhooks)
+                ]
             ], forDocument: userRef)
             
             try await batch.commit()

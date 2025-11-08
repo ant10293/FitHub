@@ -96,7 +96,7 @@ struct SubscriptionView: View {
                     }
                 }
                 .task {
-                    if let claimed = await ReferralCodeRetriever.getClaimedReferralCode() {
+                    if let claimed = await ReferralRetriever.getClaimedCode() {
                         referralCode = claimed
                         hasClaimedCode = true
                     } else {
@@ -125,7 +125,7 @@ struct SubscriptionView: View {
             
             ForEach(orderedProducts, id: \.id) { p in
                 let mt = PremiumStore.MembershipType.from(productID: p.id)
-
+                
                 PlanCard(
                     title: PremiumStore.ID.displayTitle(for: p.id),
                     priceTrailing: mt.trailingPriceText(for: p),
@@ -163,9 +163,8 @@ struct SubscriptionView: View {
     private var showsManageButton: Bool { currentMembership.isSubscription }
 
     private var autoRenewFootnote: String? {
-        guard let p = selectedProduct else { return nil }
-        let mt = PremiumStore.MembershipType.from(productID: p.id)
-        return mt.autoRenewFootnote(for: p)
+        guard let product = selectedProduct else { return nil }
+        return ctx.store.autoRenewFootnote(for: product)
     }
 
     private var isCheckoutEnabled: Bool {

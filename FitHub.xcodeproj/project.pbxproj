@@ -248,6 +248,7 @@
 		65DD051F2EBBED1D000D159C /* InfluencerInfoForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051D2EBBED1D000D159C /* InfluencerInfoForm.swift */; };
 		65DD05202EBBED1D000D159C /* InfluencerSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051E2EBBED1D000D159C /* InfluencerSettingsView.swift */; };
 		65DD05222EBC06B6000D159C /* ReferralValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05212EBC06B6000D159C /* ReferralValidation.swift */; };
+		65DD05282EBC6C53000D159C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65DD05272EBC6C53000D159C /* StoreKit.framework */; };
 		65E05D0F2E7B81F900E39CC2 /* Rounding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D0E2E7B81F900E39CC2 /* Rounding.swift */; };
 		65E05D112E7B88FC00E39CC2 /* WeightPlates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */; };
 		65E05D132E7B894900E39CC2 /* InitEquipment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D122E7B894900E39CC2 /* InitEquipment.swift */; };
@@ -473,7 +474,6 @@
 		65CD3C202DD3C84F00C2B671 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		65CD3C222DD3C84F00C2B671 /* FitHub.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FitHub.entitlements; sourceTree = "<group>"; };
 		65CD3C242DD3C84F00C2B671 /* FitHubApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitHubApp.swift; sourceTree = "<group>"; };
-		65CD3C252DD3C84F00C2B671 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65CD3C262DD3C84F00C2B671 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		65CD3C292DD3C84F00C2B671 /* FitHub.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FitHub.xcdatamodel; sourceTree = "<group>"; };
 		65CD3C952DD3CB8E00C2B671 /* FitHubAssets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FitHubAssets; sourceTree = "<group>"; };
@@ -508,6 +508,7 @@
 		65DD051D2EBBED1D000D159C /* InfluencerInfoForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfluencerInfoForm.swift; sourceTree = "<group>"; };
 		65DD051E2EBBED1D000D159C /* InfluencerSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfluencerSettingsView.swift; sourceTree = "<group>"; };
 		65DD05212EBC06B6000D159C /* ReferralValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralValidation.swift; sourceTree = "<group>"; };
+		65DD05272EBC6C53000D159C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		65E05D0E2E7B81F900E39CC2 /* Rounding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rounding.swift; sourceTree = "<group>"; };
 		65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightPlates.swift; sourceTree = "<group>"; };
 		65E05D122E7B894900E39CC2 /* InitEquipment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitEquipment.swift; sourceTree = "<group>"; };
@@ -535,6 +536,7 @@
 				6584B0B22C30BF4700447EC1 /* FirebaseFirestoreSwift in Frameworks */,
 				65F5EF832EB1676E005557F1 /* FirebaseFunctions in Frameworks */,
 				6584B0B02C30BF4700447EC1 /* FirebaseDatabaseSwift in Frameworks */,
+				65DD05282EBC6C53000D159C /* StoreKit.framework in Frameworks */,
 				6584B0AE2C30BF4700447EC1 /* FirebaseCrashlytics in Frameworks */,
 				6584B0A92C30BF1300447EC1 /* SwiftCSV in Frameworks */,
 				6584B0AC2C30BF4700447EC1 /* FirebaseAuth in Frameworks */,
@@ -867,6 +869,7 @@
 			children = (
 				653136062E4C3A6C00EECCA5 /* Premium.storekit */,
 				65CD3C282DD3C84F00C2B671 /* FitHub */,
+				65DD05262EBC6C53000D159C /* Frameworks */,
 				6584B0642C30BC2000447EC1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -1176,7 +1179,6 @@
 				65F5EF892EB16A5D005557F1 /* ReferralSystems */,
 				65F5EF8C2EB16A60005557F1 /* URLRouting */,
 				65CD3C222DD3C84F00C2B671 /* FitHub.entitlements */,
-				65CD3C252DD3C84F00C2B671 /* Info.plist */,
 				65CD3C242DD3C84F00C2B671 /* FitHubApp.swift */,
 				65C5DC472DEFB00600B09AD2 /* Models */,
 				65CD3BB52DD3C84F00C2B671 /* Classes */,
@@ -1225,6 +1227,14 @@
 				65DD05182EB97C86000D159C /* InfluencerRegistrationView.swift */,
 			);
 			path = Influencer;
+			sourceTree = "<group>";
+		};
+		65DD05262EBC6C53000D159C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				65DD05272EBC6C53000D159C /* StoreKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		65E05D0D2E7B81A800E39CC2 /* Equipment */ = {
@@ -1660,7 +1670,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = L26773524X;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1756,14 +1766,15 @@
 				CODE_SIGN_ENTITLEMENTS = FitHub/FitHub.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = L26773524X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = FitHub/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "FitHub lets you take new photos using your camera to use as images for custom equipment, exercises, and adjustments.";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "FitHub reads profile fields you approve (e.g., height, weight, date of birth, biological sex) from the Health app to prefill your account and calculations. Data stays on your device, and we don’t use it for ads or sell it. FitHub does not write data to Health.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "FitHub reads profile fields you approve (e.g., height, weight, date of birth, biological sex) from the Health app to prefill your account and calculations. Data stays on your device, and we don't use it for ads or sell it. FitHub does not write data to Health.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "FitHub does not write data to Health. This permission may be required by external libraries used in the app.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FitHub can save images you create or adjust back to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "FitHub lets you choose photos from your library to use as images for custom equipment, exercises, and adjustments.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1775,7 +1786,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.AnthonyC.FitHub;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1793,14 +1804,15 @@
 				CODE_SIGN_ENTITLEMENTS = FitHub/FitHub.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = L26773524X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = FitHub/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "FitHub lets you take new photos using your camera to use as images for custom equipment, exercises, and adjustments.";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "FitHub reads profile fields you approve (e.g., height, weight, date of birth, biological sex) from the Health app to prefill your account and calculations. Data stays on your device, and we don’t use it for ads or sell it. FitHub does not write data to Health.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "FitHub reads profile fields you approve (e.g., height, weight, date of birth, biological sex) from the Health app to prefill your account and calculations. Data stays on your device, and we don't use it for ads or sell it. FitHub does not write data to Health.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "FitHub does not write data to Health. This permission may be required by external libraries used in the app.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FitHub can save images you create or adjust back to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "FitHub lets you choose photos from your library to use as images for custom equipment, exercises, and adjustments.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1812,7 +1824,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.AnthonyC.FitHub;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

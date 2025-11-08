@@ -75,7 +75,7 @@ struct WelcomeView: View {
         
         Task {
             // 1. Check if user has created a referral code and set it in profile
-            if let referralCode = try? await ReferralCodeRetriever.getCreatedReferralCode() {
+            if let referralCode = try? await ReferralRetriever.getCreatedCode() {
                 await MainActor.run {
                     userData.profile.referralCode = referralCode
                 }

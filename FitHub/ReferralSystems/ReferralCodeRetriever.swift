@@ -9,8 +9,8 @@ import Foundation
 import FirebaseFirestore
 
 /// Utility to retrieve referral codes from various sources
-enum ReferralCodeRetriever {
-    static func getCreatedReferralCode() async throws -> String? {
+enum ReferralRetriever {
+    static func getCreatedCode() async throws -> String? {
         guard let userId = AuthService.getUid() else { return nil }
 
         let db = Firestore.firestore()
@@ -24,7 +24,7 @@ enum ReferralCodeRetriever {
         return code.trimmed.uppercased()
     }
     
-    static func getClaimedReferralCode() async -> String? {
+    static func getClaimedCode() async -> String? {
         guard let userId = AuthService.getUid() else { return nil }
         
         do {
