@@ -39,11 +39,8 @@ struct PlateVisualizer: View {
             (Text("Total: ") + spec.displayTotal.formattedText().bold())
                 .font(.largeTitle)
             
-            //Text("Exercise: \(exercise.name)")
-
             Text("Equipment: \(equip.name)")
             
-                        
             Spacer()
 
             // Implement visualization
@@ -92,12 +89,14 @@ struct PlateVisualizer: View {
                     exercise: exercise,
                     gymEquip: equip,
                     onSave: { newValue in
+                        KeyboardManager.dismissKeyboard()
                         var mutableEquip = equip
                         mutableEquip.baseWeight?.setWeight(newValue)
                         ctx.equipment.updateEquipment(equipment: mutableEquip)
                         showBaseWeightEditor = false
                     },
                     onExit: {
+                        KeyboardManager.dismissKeyboard()
                         showBaseWeightEditor = false
                     }
                 )
@@ -110,36 +109,71 @@ struct PlateVisualizer: View {
         let movement = exercise.limbMovementType ?? .bilateralDependent
         let gear = ctx.equipment.equipmentForExercise(exercise, includeAlternatives: true)
 
-        var bestBase = Mass(kg: 0)
-        var bestEquip: GymEquipment = GymEquipment.defaultEquipment
+        var bestBase = Mass(kg: -1)
+        var bestEquip: GymEquipment = .defaultEquipment
         var bestCount = 0
         var bestImplementsCount = 1
-        var bestPegCount: PegCountOption? = nil
         var bestWeight = weight
+        var bestMovementPegMultiplier: Double = 1.0
 
         for g in gear {
             guard let bw = g.baseWeight else { continue }
+            guard let impl = g.implementation else { continue }
+
             let mass = bw.resolvedMass
-            
-            guard let implement = g.implementation else { continue }
-            let movementCount = implement.getMovementCount(for: movement)
+            let movementCount = impl.getMovementCount(for: movement)
             let weightMultiplier = movementCount.baseWeightMultiplier
-            
             let totalBaseWeight = mass.inKg * Double(weightMultiplier)
-            let pegCount = Double(g.pegCount?.count ?? 0) * movementCount.pegMultiplier.count
-            
             let totalWeight: Mass = .init(kg: weight.inKg * Double(weightMultiplier))
-            
+
             if totalBaseWeight > bestBase.inKg {
                 bestBase = mass
                 bestEquip = g
                 bestCount = weightMultiplier
                 bestImplementsCount = movementCount.implementsUsed
-                bestPegCount = PegCountOption.getOption(for: Int(pegCount))
                 bestWeight = totalWeight
+                bestMovementPegMultiplier = movementCount.pegMultiplier.count
             }
         }
-        return (bestBase, bestWeight, bestEquip, bestCount, bestImplementsCount, bestPegCount)
+
+        // now compute peg count for the WHOLE gear set, not just bestEquip
+        let effectivePegCount = resolvedPegCountForGear(gear, movementPegMultiplier: bestMovementPegMultiplier)
+
+        return (bestBase, bestWeight, bestEquip, bestCount, bestImplementsCount, effectivePegCount)
+    }
+
+    /// Looks at the entire set of equipment used for this exercise and
+    /// resolves landmine-style `.uses` + “real pegs” combos.
+    ///
+    /// Rules:
+    /// - if we have an item with `.uses` (-1) and another with positive pegs (e.g. barbell=2),
+    ///   we combine: 2 + (-1) = 1
+    /// - if we only have an item with pegs, use that
+    /// - if multiple peg items exist, take the highest (then apply uses)
+    /// - finally apply movement multiplier
+    private func resolvedPegCountForGear(_ gear: [GymEquipment], movementPegMultiplier: Double) -> PegCountOption {
+        // all gear peg counts as plain ints
+        let pegCounts: [(name: String, count: Int)] = gear.map { ($0.name, $0.pegCount?.count ?? 0) }
+        // detect if anything "uses" a peg (landmine)
+        let hasUses = pegCounts.contains(where: { $0.count == PegCountOption.uses.count })
+        // find the strongest host (max positive pegs)
+        let host = pegCounts
+            .filter { $0.count > 0 }
+            .max(by: { $0.count < $1.count })
+
+        var combined = 0
+        if let host {
+            combined = host.count
+            if hasUses {
+                combined += PegCountOption.uses.count   // add -1 → 2 + (-1) = 1
+            }
+        } else {
+            // no host with pegs
+            combined = hasUses ? 0 : 0
+        }
+
+        let final = Int(Double(combined) * movementPegMultiplier)
+        return PegCountOption.getOption(for: final)
     }
     
     private func computePlateSpec(for exercise: Exercise, input: Mass, base: Mass, baseCount: Int, implementsCount: Int, pegCount: PegCountOption?) -> PlateSpec {
@@ -155,7 +189,7 @@ struct PlateVisualizer: View {
                 perSideTargetKg = totalPlatesNeededKg / Double(2 * replicates)
             case .single:
                 perSideTargetKg = totalPlatesNeededKg / Double(replicates)
-            case .none:
+            case .uses, .none:
                 perSideTargetKg = 0
             }
         } else {
@@ -200,7 +234,7 @@ struct PlateVisualizer: View {
             case .single:
                 achievedTotalKg = (Double(replicates) * perSideAchievedKg) + (base.inKg * Double(baseCount))
                 displayTotalKg = (Double(replicates) * perSideTarget.inKg) + (base.inKg * Double(baseCount))
-            case .none:
+            case .uses, .none:
                 achievedTotalKg = base.inKg * Double(baseCount)
                 displayTotalKg = base.inKg * Double(baseCount)
             }
@@ -248,6 +282,3 @@ struct Plan {
     let baseCount: Int
     var delta: Mass { Mass(kg: displayTotal.inKg - achievedTotal.inKg) }
 }
-
-
-

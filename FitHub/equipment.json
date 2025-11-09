@@ -92,7 +92,7 @@
         "description" : "A floor‑mounted sleeve that lets a barbell arc through an angled path for presses, rows, and rotational core drills.",
         "equCategory" : "Bars & Plates",
         "baseWeight" : { "lb": 45, "kg": 20 },
-        "pegCount" : 1,
+        "pegCount" : -1,
         "implementation" : "Unified"
     },
     {

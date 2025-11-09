@@ -229,7 +229,6 @@
 		65CFBFA92E1F5B2B00CD521E /* AdjustmentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CFBFA82E1F5B2B00CD521E /* AdjustmentPicker.swift */; };
 		65CFBFAB2E1F747A00CD521E /* UploadImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CFBFAA2E1F747A00CD521E /* UploadImage.swift */; };
 		65CFBFAD2E1F978700CD521E /* ImageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CFBFAC2E1F978700CD521E /* ImageField.swift */; };
-		65CFBFAF2E1F979300CD521E /* DescriptionField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CFBFAE2E1F979300CD521E /* DescriptionField.swift */; };
 		65CFBFB32E1F9B4500CD521E /* AliasesField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CFBFB22E1F9B4500CD521E /* AliasesField.swift */; };
 		65CFBFB52E1FA03800CD521E /* NameField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CFBFB42E1FA03800CD521E /* NameField.swift */; };
 		65D273B62EA9790100D09602 /* AdvancedGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D273B52EA9790100D09602 /* AdvancedGeneration.swift */; };
@@ -493,7 +492,6 @@
 		65CFBFA82E1F5B2B00CD521E /* AdjustmentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustmentPicker.swift; sourceTree = "<group>"; };
 		65CFBFAA2E1F747A00CD521E /* UploadImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadImage.swift; sourceTree = "<group>"; };
 		65CFBFAC2E1F978700CD521E /* ImageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageField.swift; sourceTree = "<group>"; };
-		65CFBFAE2E1F979300CD521E /* DescriptionField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionField.swift; sourceTree = "<group>"; };
 		65CFBFB22E1F9B4500CD521E /* AliasesField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasesField.swift; sourceTree = "<group>"; };
 		65CFBFB42E1FA03800CD521E /* NameField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameField.swift; sourceTree = "<group>"; };
 		65D273B52EA9790100D09602 /* AdvancedGeneration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedGeneration.swift; sourceTree = "<group>"; };
@@ -643,7 +641,6 @@
 				65039B872E84749F007A31E1 /* SetMetricEditor.swift */,
 				65039B892E8474BC007A31E1 /* SetLoadEditor.swift */,
 				65E199DA2E9C68B200682415 /* ExInstructionsEditor.swift */,
-				65CFBFAE2E1F979300CD521E /* DescriptionField.swift */,
 				65CFBFB22E1F9B4500CD521E /* AliasesField.swift */,
 				65CFBFB42E1FA03800CD521E /* NameField.swift */,
 				65ECFF112E25A4D60091032A /* InputField.swift */,
@@ -1505,7 +1502,6 @@
 				65CD3C532DD3C84F00C2B671 /* SplitSelection.swift in Sources */,
 				65ECFF182E2609190091032A /* SearchBar.swift in Sources */,
 				65362BE82E0244A60044AF72 /* DeloadSettings.swift in Sources */,
-				65CFBFAF2E1F979300CD521E /* DescriptionField.swift in Sources */,
 				65CD3C582DD3C84F00C2B671 /* MinSecPicker.swift in Sources */,
 				65CD3C592DD3C84F00C2B671 /* SplitCategoryPicker.swift in Sources */,
 				65CD3C5A2DD3C84F00C2B671 /* WeightSelectorView.swift in Sources */,

@@ -67,7 +67,7 @@ struct NewEquipment: View {
                                 draft.image = name
                             })
                             
-                            DescriptionField(text: $draft.description)
+                            descriptionField
                         }
                     }
                     .padding()
@@ -193,13 +193,7 @@ struct NewEquipment: View {
                 }
             ))
             .keyboardType(.numberPad)
-            .padding(8)
-            .background(
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(colorScheme == .dark
-                          ? .black.opacity(0.2)
-                          : Color(UIColor.secondarySystemBackground))
-            )
+            .inputStyle()
         }
     }
     
@@ -244,6 +238,20 @@ struct NewEquipment: View {
             Text(implementation.wrappedValue.helpText)
                 .font(.footnote)
                 .foregroundStyle(.secondary)
+        }
+    }
+    
+    private var descriptionField: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Description").font(.headline)
+            TextEditor(text: $draft.description)
+                .frame(minHeight: 60)
+                .inputStyle(cornerRadius: 6)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(Color.secondary.opacity(0.25))
+                )
+                .scrollContentBackground(.hidden)
         }
     }
     

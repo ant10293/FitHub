@@ -14,9 +14,6 @@ final class EquipmentData: ObservableObject {
     private static let bundledEquipmentFilename: String = "equipment.json"
     private static let bundledOverridesFilename: String = "equipment_overrides.json"
 
-    // MARK: – Single shared instance
-    static let shared = EquipmentData()
-
     // MARK: – Private storage
     /// Read-only “seed” gear that ships inside the bundle
     private var bundledEquipment: [GymEquipment]
@@ -27,7 +24,6 @@ final class EquipmentData: ObservableObject {
 
     // MARK: – Public unified view
     var allEquipment: [GymEquipment] { bundledEquipment + userEquipment }
-    
     
     // MARK: – Init
     init() {

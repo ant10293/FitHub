@@ -98,21 +98,21 @@ struct Settings: Codable, Equatable {
     var hiddenExercises: Set<UUID> = []
     var hideRpeSlider: Bool = false // TODO: Implement
     var hideCompletedInput: Bool = false
-    //var monthlyStrengthUpdate: Bool = true
+    // var monthlyStrengthUpdate: Bool = true
 }
 
 // evaluation       = Evaluation()
 struct Evaluation: Codable {
-    var fitnessScore: Int = 0
+    // var fitnessScore: Int = 0
+    // var strengthPercentile: Int = 0
     var strengthLevel: StrengthLevel = .beginner
     var determineStrengthLevelDate: Date?
-    var strengthPercentile: Int = 0
     var isFamiliarWithGym: Bool = false // change this after certain number of completed workouts, or allow manual change
     var strengths: [Muscle: StrengthLevel]?
     var weaknesses: [Muscle: StrengthLevel]?
     var equipmentSelected: [UUID] = []
-    var favoriteExercises: Set<UUID> = []
-    var dislikedExercises: Set<UUID> = []
+    var favoriteExercises: Set<Exercise.ID> = []
+    var dislikedExercises: Set<Exercise.ID> = []
     var availablePlates: WeightPlates = WeightPlates()
     var askedRPEprompt: Bool = false
 }

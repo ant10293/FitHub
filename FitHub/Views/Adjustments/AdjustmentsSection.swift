@@ -40,8 +40,8 @@ struct AdjustmentsSection: View {
                                 ForEach(sorted, id: \.category) { adjustment in
                                     (Text("\(adjustment.category.rawValue): ")
                                      + Text(adjustment.value.displayValue).bold())
-                                    .font(.caption)
-                                    .foregroundStyle(Color.secondary)
+                                        .font(.caption)
+                                        .foregroundStyle(Color.secondary)
                                 }
                             }
                         } else {

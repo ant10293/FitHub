@@ -236,37 +236,6 @@ extension CSVLoader {
         return percentile
     }
     
-    static private func calculateStrengthPercentile(userData: UserData, exercises: inout [ExCat]) -> Int {
-        var percentiles: [Int] = []
-
-        for i in 0..<exercises.count {
-            if let maxValue = exercises[i].maxValue {
-                let percentile = calculatePercentile(
-                    userData: userData,
-                    basePathAge: exercises[i].agePath,
-                    basePathBW: exercises[i].bwPath,
-                    maxValue: maxValue
-                )
-                exercises[i].percentile = percentile
-                percentiles.append(percentile)
-            }
-        }
-
-        guard !percentiles.isEmpty else { return 0 }
-
-        let average = percentiles.reduce(0, +) / percentiles.count
-        print("Strength percentiles: \(percentiles), Average: \(average)")
-        return average
-    }
-    
-    static private func calculatePercentile(userData: UserData, basePathAge: String, basePathBW: String, maxValue: Double) -> Int {
-        let dataAge = loadCSV(fileName: basePathAge)
-        let dataBW = loadCSV(fileName: basePathBW)
-        
-        let percentile = derivePercentile(userData: userData, maxValue: maxValue, dataAge: dataAge, dataBW: dataBW)
-        return percentile
-    }
-    
     private static func derivePercentile(userData: UserData, maxValue: Double, dataAge: [[String: String]], dataBW: [[String: String]]) -> Int {
         let agePercentile = findPercentile(data: dataAge, key: .age, value: Double(userData.profile.age), maxValue: maxValue)
         let bwPercentile = findPercentile(data: dataBW, key: .bodyweight, value: userData.currentMeasurementValue(for: .weight).actualValue, maxValue: maxValue)
@@ -276,7 +245,7 @@ extension CSVLoader {
         return (agePercentile + bwPercentile) / 2
     }
     
-    static func estimateStrengthCategories(userData: UserData, exerciseData: ExerciseData) {
+    static func estimateStrengthCategories(userData: UserData, exerciseData: ExerciseData) -> StrengthLevel {
         let (basePathAge, basePathBW) = getBasePaths(gender: userData.physical.gender)
         var categories = [StrengthLevel]()
         let exerciseNames: [String] = ["Bench Press", "Back Squat", "Deadlift", "Push-Up", "Sit-Up", "Bodyweight Squat"]
@@ -304,11 +273,6 @@ extension CSVLoader {
                 categories.append(category)
             }
         }
-        
-        // Calculate strength percentile
-        let strengthPercentile = calculateStrengthPercentile(userData: userData, exercises: &exercises)
-        print("Strength percentile: \(strengthPercentile)")
-        
         // Dictionary to count occurrences
         var categoryCounts = [StrengthLevel.RawValue: Int]()
         categories.forEach { categoryCounts[$0.rawValue, default: 0] += 1 }
@@ -329,11 +293,8 @@ extension CSVLoader {
         }
         print("Selected fitness category: \(selectedCategory)")
         
-        if let selectedCategory = StrengthLevel(rawValue: selectedCategory) {
-            userData.evaluation.strengthLevel = selectedCategory
-        }
+        return StrengthLevel(rawValue: selectedCategory) ?? .beginner
         
-        userData.evaluation.strengthPercentile = strengthPercentile // Save the strength percentile
     }
     
     static func calculateFitnessCategory(userData: UserData, basePathAge: String, basePathBW: String, maxValue: Double) -> StrengthLevel {

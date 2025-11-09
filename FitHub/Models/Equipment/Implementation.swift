@@ -52,7 +52,6 @@ struct MovementCount: Codable, Equatable, Hashable {
     var pegMultiplier: PegModifier
 }
 
-
 enum PegModifier: Double, Codable, CaseIterable {
     case none = 1
     case half = 0.5
@@ -74,21 +73,28 @@ struct BaseWeight: Codable, Equatable, Hashable {
     
     mutating func setWeight(_ weight: Double) {
         switch UnitSystem.current {
-        case .imperial: lb = weight
-        case .metric: kg = weight
+        case .imperial:
+            lb = weight
+            kg = UnitSystem.LBtoKG(weight)
+        case .metric:
+            kg = weight
+            lb = UnitSystem.KGtoLB(weight)
+            
         }
     }
 }
 
 enum PegCountOption: Int, Codable, CaseIterable {
+    case uses  = -1   // equipment uses a peg/receiver, doesn't "load" plates on it
     case none = 0      // No plates loaded
     case single = 1    // Plates loaded on one side
     case both = 2      // Plates loaded on both sides
 
     var count: Int { rawValue }
-
+    
     static func getOption(for count: Int) -> PegCountOption {
         switch count {
+        case -1: return .uses
         case 0: return .none
         case 1: return .single
         case 2: return .both
@@ -98,6 +104,7 @@ enum PegCountOption: Int, Codable, CaseIterable {
     
     var label: String {
         switch self {
+        case .uses:   return "Uses peg"
         case .none:   return "No plates"
         case .single: return "One side"
         case .both:   return "Both sides"
@@ -106,6 +113,8 @@ enum PegCountOption: Int, Codable, CaseIterable {
     
     var helpText: String {
         switch self {
+        case .uses:
+            return "This equipment uses a peg or receiver (e.g. landmine/t-bar base). You insert the bar into it."
         case .none:
             return "No plates are loaded. Use this for pin-stack or non-plated equipment."
         case .single:

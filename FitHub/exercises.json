@@ -285,7 +285,7 @@
         ],
         "difficulty": "Nov.",
         "effort": "Compound",
-        "limbMovementType": "Bilateral Dependent",
+        "limbMovementType": "Bilateral Independent",
         "resistance": "Machine"
     },
     {
@@ -309,7 +309,7 @@
         ],
         "difficulty": "Nov.",
         "effort": "Compound",
-        "limbMovementType": "Bilateral Dependent",
+        "limbMovementType": "Bilateral Independent",
         "resistance": "Machine"
     },
     {
@@ -333,7 +333,7 @@
         ],
         "difficulty": "Nov.",
         "effort": "Compound",
-        "limbMovementType": "Bilateral Dependent",
+        "limbMovementType": "Bilateral Independent",
         "resistance": "Machine"
     },
     {
@@ -1296,7 +1296,7 @@
 		"id": "4E0EB3EF-52BD-42DB-A7A6-F0674D34F931",
 		"image": "landmine_floor_press",
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Landmine"],
+		"equipmentRequired": ["Landmine", "Barbell"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
@@ -1873,7 +1873,7 @@
 		"url": "landmine-press",
 		"aliases": ["Angled Barbell Press"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Landmine"],
+		"equipmentRequired": ["Landmine", "Barbell"],
 		"muscles": [
 			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
@@ -1896,7 +1896,7 @@
 		"url": "one-arm-landmine-press",
 		"aliases": ["Single Arm Landmine Press"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Landmine"],
+		"equipmentRequired": ["Landmine", "Barbell"],
 		"muscles": [
 			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
@@ -2367,7 +2367,7 @@
 		"id": "AC78E281-EFF2-40BA-9399-25B75BBCD9DF",
 		"image": "half_kneeling_landmine_press",
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Landmine"],
+		"equipmentRequired": ["Landmine", "Barbell"],
 		"muscles": [
 			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
@@ -2424,7 +2424,7 @@
 		],
 		"difficulty": "Nov.",
 		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
+		"limbMovementType": "Bilateral Independent",
 		"resistance": "Machine"
 	},
 	{
@@ -4358,7 +4358,7 @@
 		"url": "landmine-squat",
 		"aliases": ["Lever Squat"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Landmine"],
+		"equipmentRequired": ["Landmine", "Barbell"],
 		"muscles": [
 			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
 				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
@@ -6127,7 +6127,7 @@
 		"url": "meadows-row",
 		"aliases": ["Landmine Meadows Row"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Landmine"],
+		"equipmentRequired": ["Landmine", "Barbell"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
 			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
@@ -6244,7 +6244,7 @@
 		"image": "landmine_row",
 		"aliases": ["Parallel-Grip Landmine Row"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Landmine"],
+		"equipmentRequired": ["Landmine", "Barbell"],
 		"muscles": [
 			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [] },
 			{ "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
@@ -7768,7 +7768,7 @@
 		"image": "landmine_anti_rotation",
 		"aliases": ["Landmine Rainbow"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Landmine"],
+		"equipmentRequired": ["Landmine", "Barbell"],
 		"muscles": [
 			{ "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Obliques" }

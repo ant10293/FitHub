@@ -83,12 +83,25 @@ struct AssessmentView: View {
     
     private func handleCompletion() {
         ctx.userData.setup.infoCollected = true
-        if !needsEstimate {
-            CSVLoader.estimateStrengthCategories(userData: ctx.userData, exerciseData: ctx.exercises)
-        } else {
-            calculateFitnessLevel()
+        let shouldEstimate = needsEstimate
+        let userData = ctx.userData
+        let exerciseData = ctx.exercises
+
+        Task.detached(priority: .userInitiated) {
+            let level: StrengthLevel = if !shouldEstimate {
+                CSVLoader.estimateStrengthCategories(
+                    userData: userData,
+                    exerciseData: exerciseData
+                )
+            } else {
+                await calculateFitnessLevel(for: userData)
+            }
+
+            await MainActor.run {
+                userData.evaluation.strengthLevel = level
+                exerciseData.seedEstimatedMaxes(userData: userData)
+            }
         }
-        ctx.exercises.seedEstimatedMaxes(userData: ctx.userData)
     }
     
     private func checkCompletion() {
@@ -97,11 +110,11 @@ struct AssessmentView: View {
         }
     }
     
-    func calculateFitnessLevel() {
-        let bmi = ctx.userData.currentMeasurementValue(for: .bmi).displayValue
-        let bfPct = ctx.userData.currentMeasurementValue(for: .bodyFatPercentage).displayValue
-        let gender = ctx.userData.physical.gender
-        let questionAnswers = ctx.userData.setup.questionAnswers
+    func calculateFitnessLevel(for userData: UserData) -> StrengthLevel {
+        let bmi = userData.currentMeasurementValue(for: .bmi).displayValue
+        let bfPct = userData.currentMeasurementValue(for: .bodyFatPercentage).displayValue
+        let gender = userData.physical.gender
+        let questionAnswers = userData.setup.questionAnswers
         
         // Reset fitness level score
         var score = 0
@@ -161,7 +174,6 @@ struct AssessmentView: View {
         default: strengthLvl = .elite
         }
         
-        ctx.userData.evaluation.fitnessScore = score
-        ctx.userData.evaluation.strengthLevel = strengthLvl
+        return strengthLvl
     }
 }
