@@ -36,13 +36,12 @@ struct AdjustmentsSection: View {
                             if nonEmpty.isEmpty {
                                 addAdjustmentPlaceholder
                             } else {
-                                ForEach(nonEmpty.keys.sorted(), id: \.self) { cat in
-                                    if let val = nonEmpty[cat]?.displayValue {
-                                        (Text("\(cat.rawValue): ")
-                                         + Text(val).bold())
-                                        .font(.caption)
-                                        .foregroundStyle(Color.secondary)
-                                    }
+                                let sorted = nonEmpty.sorted { $0.category.rawValue < $1.category.rawValue }
+                                ForEach(sorted, id: \.category) { adjustment in
+                                    (Text("\(adjustment.category.rawValue): ")
+                                     + Text(adjustment.value.displayValue).bold())
+                                    .font(.caption)
+                                    .foregroundStyle(Color.secondary)
                                 }
                             }
                         } else {

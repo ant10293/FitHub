@@ -21,105 +21,44 @@ struct WeightIncrementation: View {
         VStack(spacing: 30) {
             if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Preferences Saved Successfully!") }
             
-            Section {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("Plated Equipment")
-                            .font(.headline)
-                            .padding(.leading)
-                        Image(systemName: "info.circle")
-                        
-                    }
-                    .onTapGesture {
-                        equipSheet = EquipSheet(category: .plated, categories: [.barsPlates, .platedMachines])
-                    }
-                    
-                    TextField("Rounding Increment", value: $platedRounding, formatter: decimalFormatter)
-                        .keyboardType(.decimalPad)
-                        .padding()
-                        .background(Color(UIColor.secondarySystemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .padding(.horizontal)
+            EquipmentRoundingRow(
+                value: $platedRounding,
+                title: "Plated Equipment",
+                onInfoTap: {
+                    equipSheet = EquipSheet(category: .plated, categories: [.barsPlates, .platedMachines])
                 }
-            }
-            
-            Section {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("Independent Peg Plated Equipment")
-                            .font(.headline)
-                            .padding(.leading)
-                        Image(systemName: "info.circle")
-                        
-                    }
-                    .onTapGesture {
-                        equipSheet = EquipSheet(category: .platedIndependentPeg, categories: [.barsPlates, .platedMachines])
-                    }
-                    
-                    TextField("Rounding Increment", value: $independentPlatedRounding, formatter: decimalFormatter)
-                        .keyboardType(.decimalPad)
-                        .padding()
-                        .background(Color(UIColor.secondarySystemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .padding(.horizontal)
+            )
+
+            EquipmentRoundingRow(
+                value: $independentPlatedRounding,
+                title: "Independent Peg Plated Equipment",
+                onInfoTap: {
+                    equipSheet = EquipSheet(category: .platedIndependentPeg, categories: [.barsPlates, .platedMachines])
                 }
-            }
-            
-            Section {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("Pin-loaded Equipment")
-                            .font(.headline)
-                            .padding(.leading)
-                        Image(systemName: "info.circle")
-                    }
-                    .onTapGesture {
-                        equipSheet = EquipSheet(category: .pinLoaded, categories: [.weightMachines, .cableMachines])
-                    }
-                    
-                    TextField("Rounding Increment", value: $pinLoadedRounding, formatter: decimalFormatter)
-                        .keyboardType(.decimalPad)
-                        .padding()
-                        .background(Color(UIColor.secondarySystemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .padding(.horizontal)
+            )
+
+            EquipmentRoundingRow(
+                value: $pinLoadedRounding,
+                title: "Pin-loaded Equipment",
+                onInfoTap: {
+                    equipSheet = EquipSheet(category: .pinLoaded, categories: [.weightMachines, .cableMachines])
                 }
-            }
-            
-            Section {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("Small Weights")
-                            .font(.headline)
-                            .padding(.leading)
-                        Image(systemName: "info.circle")
-                    }
-                    .onTapGesture {
-                        equipSheet = EquipSheet(category: .smallWeights, categories: [.smallWeights])
-                    }
-                    
-                    TextField("Rounding Increment", value: $smallWeightsRounding, formatter: decimalFormatter)
-                        .keyboardType(.decimalPad)
-                        .padding()
-                        .background(Color(UIColor.secondarySystemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .padding(.horizontal)
+            )
+
+            EquipmentRoundingRow(
+                value: $smallWeightsRounding,
+                title: "Small Weights",
+                onInfoTap: {
+                    equipSheet = EquipSheet(category: .smallWeights, categories: [.smallWeights])
                 }
-            }
+            )
             
             if !ctx.toast.showingSaveConfirmation && !kbd.isVisible {
-                Button(action: saveChanges) {
-                    Text("Save")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .padding(.vertical)
-                }
-                .padding(.horizontal)
+                RectangularButton(title: "Save", action: saveChanges)
+                    .padding(.top)
             }
         }
+        .padding(.horizontal)
         .onAppear(perform: initializeVariables)
         .navigationBarTitle("Rounding Preferences", displayMode: .inline)
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
@@ -149,19 +88,9 @@ struct WeightIncrementation: View {
         let category: RoundingCategory
         let categories: [EquipmentCategory]
     }
-    
-    private var decimalFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 1
-        formatter.maximumFractionDigits = 2
-        return formatter
-    }
-    
-    private var isImperial: Bool { UnitSystem.current == .imperial }
-    
+        
     private var isDefault: Bool {
-        if isImperial {
+        if UnitSystem.current == .imperial {
             platedRounding == 5 && independentPlatedRounding == 2.5 && smallWeightsRounding == 5 && pinLoadedRounding == 2.5
         } else {
             platedRounding == 2.5 && independentPlatedRounding == 1.25 && smallWeightsRounding == 2.5 && pinLoadedRounding == 1.25
@@ -176,17 +105,11 @@ struct WeightIncrementation: View {
     }
     
     private func reset() {
-        if isImperial {
-            platedRounding = 5
-            independentPlatedRounding = 2.5
-            pinLoadedRounding = 2.5
-            smallWeightsRounding = 5
-        } else {
-            platedRounding = 2.5
-            independentPlatedRounding = 1.25
-            pinLoadedRounding = 1.25
-            smallWeightsRounding = 2.5
-        }
+        let defaultRounding = RoundingPreference()
+        platedRounding = defaultRounding.getRounding(for: .plated)
+        independentPlatedRounding = defaultRounding.getRounding(for: .platedIndependentPeg)
+        pinLoadedRounding = defaultRounding.getRounding(for: .pinLoaded)
+        smallWeightsRounding = defaultRounding.getRounding(for: .smallWeights)
         saveChanges()
     }
     
@@ -198,4 +121,34 @@ struct WeightIncrementation: View {
         
         ctx.toast.showSaveConfirmation()  // Trigger the notification
     }
+    
+    struct EquipmentRoundingRow: View {
+        @Binding var value: Double
+        let title: String
+        let onInfoTap: () -> Void
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text(title)
+                        .font(.headline)
+                    Image(systemName: "info.circle")
+                }
+                .onTapGesture(perform: onInfoTap)
+
+                TextField("Rounding Increment", value: $value, formatter: formatter)
+                    .keyboardType(.decimalPad)
+                    .inputStyle()
+            }
+        }
+        
+        private var formatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.minimumFractionDigits = 1
+            formatter.maximumFractionDigits = 2
+            return formatter
+        }
+    }
 }
+

@@ -18,9 +18,11 @@ struct CompletedDetails: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(categories)
-                        .multilineTextAlignment(.leading)
-                        .padding(.top)
+                    if !categories.isEmpty {
+                        Text(categories)
+                            .multilineTextAlignment(.leading)
+                            .padding(.top)
+                    }
 
                     Text("Date: \(Format.formatDate(workout.date, dateStyle: .full, timeStyle: .short))")
                         .font(.subheadline)
@@ -39,8 +41,8 @@ struct CompletedDetails: View {
                                 .padding(.top, 10)
                                 .multilineTextAlignment(.leading)
                             
-                            if let supersettedWith = exercise.isSupersettedWith {
-                                Text("(Supersetted with \(supersettedWith))")
+                            if let ex = workout.template.supersetFor(exercise: exercise) {
+                                Text("(Supersetted with \(ex.name))")
                                     .font(.caption)
                                     .foregroundStyle(.orange)
                                     .multilineTextAlignment(.leading)

@@ -4,6 +4,7 @@
 //
 //  Created by Anthony Cantu on 5/3/25.
 //
+
 import SwiftUI
 
 struct KcalCalculator: View {
@@ -20,6 +21,7 @@ struct KcalCalculator: View {
     // UI
     @State private var showingResult = false
     @State private var resultCalories: Double?
+    @State private var activeCard: ActiveCard = .none
 
     // MARK: - Init
     init(userData: UserData) {
@@ -34,64 +36,43 @@ struct KcalCalculator: View {
     }
 
     var body: some View {
-        Form {
-            // Age
-            Section {
-                TextField("Age in years", text: $ageText)
-                    .keyboardType(.numberPad)
-            } header: {
-                Text("Enter Age")
-            }
+        let height = UIScreen.main.bounds.height * 0.1
 
-            // Weight
-            Section {
-                WeightSelectorRow(weight: $weight)
-            } header: {
-                Text("Enter Weight")
-            }
-
-            // Height
-            Section {
-                HeightSelectorRow(height: $height)
-            } header: {
-                Text("Enter your Height")
-            }
-
-            // Steps
-            Section {
-                TextField("Avg Steps per Day", text: $stepsText)
-                    .keyboardType(.numberPad)
-            } header: {
-                Text("Enter Steps per Day")
-            }
-
-            // Calculate
-            Section {
-                EmptyView()
-            } footer: {
+        VStack {
+            ScrollView {
+                ageCard
+                    .padding(.top)
+                weightCard
+                heightCard
+                stepsCard
+                
+                
                 if !kbd.isVisible {
+                    Spacer(minLength: height)
+                    
                     RectangularButton(
                         title: "Calculate Daily Caloric Intake",
                         enabled: isCalculateEnabled,
                         action: calculateAndShow
                     )
-                    .padding(.top, 6)
-                    .padding(.bottom, 16)
+                    .padding(.horizontal)
+                    
+                    Spacer(minLength: height)
                 }
             }
         }
         .disabled(showingResult)
         .blur(radius: showingResult ? 10 : 0)
-        .background(Color(UIColor.systemGroupedBackground))
+        .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-        .navigationBarTitle("Daily Caloric Intake Calculator", displayMode: .inline)
+        .navigationBarTitle("Daily Kcal Calculator", displayMode: .inline)
         .overlay {
             if showingResult, let calories = resultCalories {
-                ResultView(calories: calories) {
+                CalcResultView(title: "Daily Caloric Intake", singleResult: "\(Int(calories)) Calories", dismissAction: {
                     persistInputs()
                     showingResult = false
                     dismiss()
-                }
+                }) 
             }
         }
     }
@@ -138,31 +119,105 @@ struct KcalCalculator: View {
         userData.profile.age       = Int(ageText) ?? 0
     }
 
-    // MARK: - Result view
+    // MARK: - Cards
 
-    struct ResultView: View {
-        @Environment(\.colorScheme) var colorScheme
-        let calories: Double
-        var dismissAction: () -> Void
+    private var ageCard: some View {
+        MeasurementCard(
+            title: "Age",
+            isActive: activeCard == .age,
+            onTap: { toggle(.age) },
+            valueView: {
+                Text(ageText.isEmpty ? "—" : "\(ageText) yrs")
+            },
+            content: {
+                TextField("Age in years", text: $ageText)
+                    .keyboardType(.numberPad)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.top)
 
-        var body: some View {
-            VStack {
-                Text("Daily Caloric Intake").font(.headline)
-                Text("\(Int(calories)) Calories").font(.title2)
-
-                RectangularButton(title: "Close", action: dismissAction)
-                    .padding(.horizontal)
+                floatingDoneButton
             }
-            .frame(width: UIScreen.main.bounds.width * 0.8,
-                   height: UIScreen.main.bounds.height * 0.25)
-            .background(colorScheme == .dark
-                        ? Color(UIColor.secondarySystemBackground)
-                        : Color.white)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .shadow(radius: 10)
+        )
+    }
+
+    private var weightCard: some View {
+        MeasurementCard(
+            title: "Weight",
+            isActive: activeCard == .weight,
+            onTap: { toggle(.weight) },
+            valueView: {
+                Text(summary(for: weight, unit: UnitSystem.current.weightUnit))
+            },
+            content: {
+                WeightSelectorRow(weight: $weight)
+                    .padding(.top)
+
+                floatingDoneButton
+                    .padding(.top, 6)
+            }
+        )
+    }
+
+    private var heightCard: some View {
+        MeasurementCard(
+            title: "Height",
+            isActive: activeCard == .height,
+            onTap: { toggle(.height) },
+            valueView: {
+                height.heightFormatted.foregroundStyle(.gray)
+            },
+            content: {
+                HeightSelectorRow(height: $height)
+                    .padding(.top)
+
+                floatingDoneButton
+                    .padding(.top, 6)
+            }
+        )
+    }
+
+    private var stepsCard: some View {
+        MeasurementCard(
+            title: "Average Daily Steps",
+            isActive: activeCard == .steps,
+            onTap: { toggle(.steps) },
+            valueView: {
+                Text(stepsText.isEmpty ? "—" : stepsText)
+            },
+            content: {
+                TextField("Avg Steps per Day", text: $stepsText)
+                    .keyboardType(.numberPad)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.top)
+
+                floatingDoneButton
+            }
+        )
+    }
+
+    // MARK: - Helpers
+
+    private func summary(for mass: Mass, unit: String) -> String {
+        let value = mass.displayString
+        return value.isEmpty ? "—" : "\(value) \(unit)"
+    }
+
+    private func toggle(_ card: ActiveCard) {
+        activeCard = activeCard == card ? .none : card
+    }
+
+    private var floatingDoneButton: some View {
+        HStack {
+            Spacer()
+            FloatingButton(image: "checkmark") {
+                kbd.dismiss()
+                activeCard = .none
+            }
+            .padding(.horizontal)
         }
     }
+
+    private enum ActiveCard {
+        case none, age, weight, height, steps
+    }
 }
-
-
-

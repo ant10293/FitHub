@@ -10,45 +10,45 @@ struct SubscriptionView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
+        VStack(spacing: 20) {
                 Spacer()
                 
-                referralCodeSection
-                
-                plansSection
-                
-                if let note = autoRenewFootnote {
-                    Text(note)
+            referralCodeSection
+
+            plansSection
+            
+            if let note = autoRenewFootnote {
+                Text(note)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+
+            VStack(spacing: 12) {
+                if isCurrentSelection {
+                    Text("You’re already on this plan.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
                 }
-                
-                VStack(spacing: 12) {
-                    if isCurrentSelection {
-                        Text("You’re already on this plan.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-                    
-                    RectangularButton(
-                        title: "Continue",
-                        systemImage: "arrow.forward.circle.fill",
-                        enabled: isCheckoutEnabled,
-                        action: purchaseSelected
-                    )
-                    
-                    HStack(spacing: 12) {
-                        // FIXME: this doesnt even do anything. this is likely because we're working with a dev version
-                        Button("Restore") { Task { await ctx.store.restore() } }
+
+                RectangularButton(
+                    title: "Continue",
+                    systemImage: "arrow.forward.circle.fill",
+                    enabled: isCheckoutEnabled,
+                    action: purchaseSelected
+                )
+
+                HStack(spacing: 12) {
+                    // FIXME: this doesnt even do anything. this is likely because we're working with a dev version
+                    Button("Restore") { Task { await ctx.store.restore() } }
+                        .buttonStyle(.bordered)
+
+                    if showsManageButton {
+                        Button("Manage") { manageSubscriptions(openURL: openURL) }
                             .buttonStyle(.bordered)
-                        
-                        if showsManageButton {
-                            Button("Manage") { manageSubscriptions(openURL: openURL) }
-                                .buttonStyle(.bordered)
-                        }
                     }
                 }
+            }
                 
                 Spacer()
             }
@@ -82,11 +82,11 @@ struct SubscriptionView: View {
             Text("Referral Code")
                 .font(.headline)
             
-            TextField("Referral Code (Optional)", text: $referralCode)
-                .textContentType(.none)
-                .autocapitalization(.allCharacters)
-                .autocorrectionDisabled()
-                .inputStyle()
+        TextField("Referral Code (Optional)", text: $referralCode)
+            .textContentType(.none)
+            .autocapitalization(.allCharacters)
+            .autocorrectionDisabled()
+            .inputStyle()
                 .disabled(hasClaimedCode)
                 .overlay(alignment: .trailing) {
                     if hasClaimedCode {
@@ -101,9 +101,9 @@ struct SubscriptionView: View {
                         hasClaimedCode = true
                     } else {
                         hasClaimedCode = false
-                    }
                 }
-                .onChange(of: referralCode) { _, newValue in
+            }
+            .onChange(of: referralCode) { _, newValue in
                     guard !hasClaimedCode else { return }
                     let trimmed = newValue.trimmed.uppercased()
                     if trimmed.isEmpty {
@@ -115,7 +115,7 @@ struct SubscriptionView: View {
                         }
                     }
                 }
-        }
+            }
     }
 
     private var plansSection: some View {
@@ -125,7 +125,7 @@ struct SubscriptionView: View {
             
             ForEach(orderedProducts, id: \.id) { p in
                 let mt = PremiumStore.MembershipType.from(productID: p.id)
-                
+
                 PlanCard(
                     title: PremiumStore.ID.displayTitle(for: p.id),
                     priceTrailing: mt.trailingPriceText(for: p),

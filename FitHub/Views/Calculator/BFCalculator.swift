@@ -18,6 +18,7 @@ struct BFCalculator: View {
     @State private var hip:   Length    // only used for female
     @State private var height: Length
 
+    @State private var activeCard: ActiveCard = .none
     @State private var showingResult = false
     @State private var computedBF: Double = 0
 
@@ -37,58 +38,44 @@ struct BFCalculator: View {
     }
 
     var body: some View {
-        Form {
-            // ───────────────── Waist / Neck / Hip
-            Section {
-                let unit = UnitSystem.current.sizeUnit
-                TextField("Waist (\(unit))", text: $waist.asText())
-                    .keyboardType(.decimalPad)
+        let height = UIScreen.main.bounds.height * 0.1
 
-                TextField("Neck (\(unit))", text: $neck.asText())
-                    .keyboardType(.decimalPad)
-
+        VStack {
+            ScrollView {
+                waistCard
+                    .padding(.top)
+                neckCard
                 if userData.physical.gender == .female {
-                    TextField("Hip (\(unit))", text: $hip.asText())
-                        .keyboardType(.decimalPad)
+                    hipCard
                 }
-            } header: {
-                Text("Enter Waist and Neck Measurements")
-            }
-
-            // ───────────────── Height
-            Section {
-                HeightSelectorRow(height: $height)
-            } header: {
-                Text("Enter your Height")
-            }
-
-            // ───────────────── Action
-            Section {
-                EmptyView()
-            } footer: {
+                heightCard
+                
                 if !kbd.isVisible {
+                    Spacer(minLength: height)
+                    
                     RectangularButton(
                         title: "Calculate Body Fat %",
                         enabled: isCalculateEnabled,
                         action: calculateAndShow
                     )
-                    .padding(.top, 6)
-                    .padding(.bottom, 16)
+                    .padding(.horizontal)
+                    
+                    Spacer(minLength: height)
                 }
             }
         }
         .disabled(showingResult)
         .blur(radius: showingResult ? 10 : 0)
-        .background(Color(UIColor.systemGroupedBackground))
+        .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .navigationBarTitle("Body Fat % Calculator", displayMode: .inline)
         .overlay(
             Group {
                 if showingResult {
-                    BodyFatResultView(bodyFat: computedBF) {
+                    CalcResultView(title: "Body Fat Percentage", singleResult: "\(String(format: "%.2f", computedBF)) %", dismissAction: {
                         showingResult = false
                         dismiss()
-                    }
+                    }) 
                 }
             }
         )
@@ -132,30 +119,104 @@ struct BFCalculator: View {
         showingResult = true
     }
 
-    // MARK: - Result Overlay
+    // MARK: - Cards
+    private var waistCard: some View {
+        MeasurementCard(
+            title: "Waist",
+            isActive: activeCard == .waist,
+            onTap: { toggle(.waist) },
+            valueView: {
+                Text(summary(for: waist, unit: UnitSystem.current.sizeUnit))
+            },
+            content: {
+                TextField("Waist (\(UnitSystem.current.sizeUnit))", text: $waist.asText())
+                    .keyboardType(.decimalPad)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.top)
 
-    struct BodyFatResultView: View {
-        @Environment(\.colorScheme) var colorScheme
-        let bodyFat: Double
-        var dismissAction: () -> Void
-
-        var body: some View {
-            VStack {
-                Text("Body Fat Percentage")
-                    .font(.headline)
-                Text("\(bodyFat, specifier: "%.2f") %")
-                    .font(.title2)
-
-                RectangularButton(title: "Close", action: dismissAction)
-                    .padding()
+                floatingDoneButton
             }
-            .frame(width: UIScreen.main.bounds.width * 0.8,
-                   height: UIScreen.main.bounds.height * 0.25)
-            .background(colorScheme == .dark
-                        ? Color(UIColor.secondarySystemBackground)
-                        : Color.white)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .shadow(radius: 10)
+        )
+    }
+
+    private var neckCard: some View {
+        MeasurementCard(
+            title: "Neck",
+            isActive: activeCard == .neck,
+            onTap: { toggle(.neck) },
+            valueView: {
+                Text(summary(for: neck, unit: UnitSystem.current.sizeUnit))
+            },
+            content: {
+                TextField("Neck (\(UnitSystem.current.sizeUnit))", text: $neck.asText())
+                    .keyboardType(.decimalPad)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.top)
+
+                floatingDoneButton
+            }
+        )
+    }
+
+    private var hipCard: some View {
+        MeasurementCard(
+            title: "Hip",
+            isActive: activeCard == .hip,
+            onTap: { toggle(.hip) },
+            valueView: {
+                Text(summary(for: hip, unit: UnitSystem.current.sizeUnit))
+            },
+            content: {
+                TextField("Hip (\(UnitSystem.current.sizeUnit))", text: $hip.asText())
+                    .keyboardType(.decimalPad)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.top)
+
+                floatingDoneButton
+            }
+        )
+    }
+
+    private var heightCard: some View {
+        MeasurementCard(
+            title: "Height",
+            isActive: activeCard == .height,
+            onTap: { toggle(.height) },
+            valueView: {
+                height.heightFormatted.foregroundStyle(.gray)
+            },
+            content: {
+                HeightSelectorRow(height: $height)
+                    .padding(.top)
+
+                floatingDoneButton
+                    .padding(.top, 6)
+            }
+        )
+    }
+
+    // MARK: - Helpers
+    private func summary(for length: Length, unit: String) -> String {
+        let value = length.displayString
+        return value.isEmpty ? "—" : "\(value) \(unit)"
+    }
+
+    private func toggle(_ card: ActiveCard) {
+        activeCard = activeCard == card ? .none : card
+    }
+
+    private var floatingDoneButton: some View {
+        HStack {
+            Spacer()
+            FloatingButton(image: "checkmark") {
+                kbd.dismiss()
+                activeCard = .none
+            }
+            .padding(.horizontal)
         }
+    }
+
+    private enum ActiveCard {
+        case none, waist, neck, hip, height
     }
 }

@@ -26,13 +26,12 @@ struct DetailsView: View {
     
     var body: some View {
         VStack {
-            heightSection
+            heightCard
                 .padding(.top)
-            weightSection
-            
-            dobSection
+            weightCard
+            dobCard
             genderSection
-            
+                
             Spacer()
             continueButton
             Spacer()
@@ -58,107 +57,70 @@ struct DetailsView: View {
     }
     
     // MARK: - Height
-    private var heightSection: some View {
-        VStack(spacing: 0) {
-            // Header
-            Button {
-                activePicker = .height
-            } label: {
-                HStack {
-                    Text("Select Height").font(.headline)
-                    Spacer()
-
-                    height.heightFormatted
-                        .foregroundStyle(.gray)
-
-                    Image(systemName: "chevron.right")
-                        .rotationEffect(.degrees(activePicker == .height ? 90 : 0))
-                }
-                .padding()
-            }
-            .contentShape(Rectangle())
-            
-            // Picker
-            if activePicker == .height {
+    private var heightCard: some View {
+        MeasurementCard(
+            title: "Select Height",
+            isActive: activePicker == .height,
+            onTap: { toggle(.height) },
+            valueView: {
+                height.heightFormatted.foregroundStyle(.gray)
+            },
+            content: {
                 HeightSelectorRow(height: $height)
-                
+                    .padding(.top)
+
                 floatingDoneButton
                     .padding(.top, 6)
-                
+
                 unitPicker
             }
-        }
-        .roundedBackground(cornerRadius: 10, color: Color(UIColor.secondarySystemBackground))
-        .padding(.horizontal)
+        )
     }
 
     // MARK: – Body-weight
-    private var weightSection: some View {
-        VStack(spacing: 0) {
-            Button {
-                activePicker = .weight
-            } label: {
-                HStack {
-                    Text("Select Weight").font(.headline)
-                    Spacer()
-                    
-                    weight.formattedText(asInteger: true)
-                        .foregroundStyle(.gray)
-
-                    Image(systemName: "chevron.right")
-                        .rotationEffect(.degrees(activePicker == .weight ? 90 : 0))
-                }
-                .padding()
-            }
-            .contentShape(Rectangle())
-            
-            if activePicker == .weight {
+    private var weightCard: some View {
+        MeasurementCard(
+            title: "Select Weight",
+            isActive: activePicker == .weight,
+            onTap: { toggle(.weight) },
+            valueView: {
+                weight.formattedText(asInteger: true)
+                    .foregroundStyle(.gray)
+            },
+            content: {
                 WeightSelectorRow(weight: $weight)
-                .padding(.top)
+                    .padding(.top)
 
                 floatingDoneButton
                     .padding(.top, 6)
-                
+
                 unitPicker
             }
-        }
-        .roundedBackground(cornerRadius: 10, color: Color(UIColor.secondarySystemBackground))
-        .padding(.horizontal)
+        )
     }
-    
+
     // MARK: - Date of Birth
-    private var dobSection: some View {
-        VStack(spacing: 0) {
-            Button {
-                activePicker = .dob
-            } label: {
-                HStack {
-                    Text("Select DOB").font(.headline)
-                    Spacer()
-                    Text(Format.formatDate(dob, dateStyle: .long, timeStyle: .none))
-                        .foregroundStyle(.gray)
-                    Image(systemName: "chevron.right")
-                        .rotationEffect(.degrees(activePicker == .dob ? 90 : 0))
-                }
-                .padding()
-            }
-            .contentShape(Rectangle())
-            
-            if activePicker == .dob {
+    private var dobCard: some View {
+        MeasurementCard(
+            title: "Select DOB",
+            isActive: activePicker == .dob,
+            onTap: { toggle(.dob) },
+            valueView: {
+                Text(Format.formatDate(dob, dateStyle: .long, timeStyle: .none))
+            },
+            content: {
                 DatePicker("", selection: $dob, displayedComponents: .date)
                     .datePickerStyle(.wheel)
                     .labelsHidden()
                     .frame(height: UIScreen.main.bounds.height * 0.2)
                     .padding(.top)
-                
+
                 floatingDoneButton
                     .padding(.vertical, 6)
             }
-        }
-        .roundedBackground(cornerRadius: 10, color: Color(UIColor.secondarySystemBackground))
-        .padding(.horizontal)
+        )
     }
-    
+
     private var genderSection: some View {
         VStack {
             if activePicker == .none {
@@ -214,6 +176,10 @@ struct DetailsView: View {
                     .fill(Color.blue.opacity(0.4))
             }
         }
+    }
+
+    private func toggle(_ picker: ActivePicker) {
+        activePicker = activePicker == picker ? .none : picker
     }
     
     private enum ActivePicker { case none, height, dob, weight }

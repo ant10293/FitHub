@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-// FIXME: CRITICAL ERRORS when moving exercises. It's because of TimeEntryField
-// cannot allow set deletion if keyboard is open
-// FIXME: 0.5 cannot be typed without later converting to 5, using 0.** causes issues with time speed conversion (sync issue?)
-
 // MARK: - ExerciseSetDetail (SetMetric-aware)
 struct ExerciseSetDetail: View {
     @Environment(\.colorScheme) var colorScheme
@@ -149,38 +145,47 @@ struct ExerciseSetDetail: View {
         }
         .padding(.top, 5)
     }
-
+    
     // MARK: - Superset
-    @ViewBuilder private var superSetOptions: some View {
+    @ViewBuilder
+    private var superSetOptions: some View {
         if showSupersetOptions {
-            Picker("Superset With", selection: Binding(
-                get: {
-                    if let partnerID = exercise.isSupersettedWith,
-                       template.exercises.contains(where: {
-                           $0.id.uuidString == partnerID &&
-                           ($0.isSupersettedWith == nil || $0.isSupersettedWith == exercise.id.uuidString)
-                       }) {
-                        return partnerID
+            let selectedSuperset = template.supersetFor(exercise: exercise)
+            let selectedID = selectedSuperset?.id.uuidString ?? "None"
+
+            // 1) Build a single list of choices
+            let options: [(id: String, name: String)] = [("None", "None")] + template.exercises
+                .filter {
+                    $0.id != exercise.id &&
+                    ($0.isSupersettedWith == nil || $0.isSupersettedWith == exercise.id.uuidString)
+                }
+                .map { ($0.id.uuidString, $0.name) }
+
+            Menu {
+                ForEach(options, id: \.id) { option in
+                    Button {
+                        onSuperset(option.id)
+                    } label: {
+                        HStack {
+                            Text(option.name)
+                            if option.id == selectedID {
+                                Image(systemName: "checkmark")
+                            }
+                        }
                     }
-                    return "None"
-                },
-                set: { onSuperset($0) }
-            )) {
-                Text("None").tag("None")
-                ForEach(
-                    template.exercises.filter {
-                        $0.id != exercise.id &&
-                        ($0.isSupersettedWith == nil || $0.isSupersettedWith == exercise.id.uuidString)
-                    }, id: \.id
-                ) { ex in
-                    Text(ex.name).tag(ex.id.uuidString)
+                }
+            } label: {
+                HStack {
+                    Text("Superset With")
+                        .foregroundColor(.primary)
+                    Spacer()
+                    ExercisePickerLabel(exerciseName: selectedSuperset?.name, defaultLabel: "None")
                 }
             }
-            .pickerStyle(.menu)
-            .padding(.top, -15)
+            .padding(.top, -10)
         }
     }
-
+    
     // MARK: - Options overlay
     @ViewBuilder private var exerciseDetailOptions: some View {
         ZStack {

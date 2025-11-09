@@ -23,20 +23,25 @@ struct UploadImage: View {
     @State private var showCamera = false
 
     var body: some View {
+        let height = UIScreen.main.bounds.height
+        
         VStack(spacing: 20) {
             if let uiImage = selectedImage {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFit()
-                    .frame(maxHeight: 250)
+                    .frame(maxHeight: height * 0.25)
             } else {
-                Text("No image selected")
-                    .foregroundStyle(Color.secondary)
-
-                Button("Add Photo") {
-                    showingSourceChooser = true
+                VStack {
+                    Text("No image selected")
+                        .foregroundStyle(Color.secondary)
+                    
+                    Button("Add Photo") {
+                        showingSourceChooser = true
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
-                .buttonStyle(.borderedProminent)
+                .padding()
             }
 
             if selectedImage != nil {
@@ -46,25 +51,16 @@ struct UploadImage: View {
             }
         }
         .confirmationDialog("Choose Photo Source", isPresented: $showingSourceChooser, titleVisibility: .visible) {
-            Button("Take Photo") {
-                showCamera = true
-            }
-            Button("Choose from Library") {
-                showPhotoLibrary = true
-            }
+            Button("Take Photo") { showCamera = true }
+            Button("Choose from Library") { showPhotoLibrary = true }
             Button("Cancel", role: .cancel) { }
         }
-        .sheet(isPresented: $showPhotoLibrary) {
-            PhotoPicker(image: $selectedImage)
-        }
-        .sheet(isPresented: $showCamera) {
-            CameraPicker(image: $selectedImage)
-        }
+        .sheet(isPresented: $showPhotoLibrary) { PhotoPicker(image: $selectedImage) }
+        .sheet(isPresented: $showCamera) { CameraPicker(image: $selectedImage) }
         .onAppear(perform: loadInitialImage)
         .onChange(of: selectedImage) { _, newImage in
             saveOnChange(newImage)
         }
-        .padding()
     }
 
     // MARK: – Initial load

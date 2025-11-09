@@ -245,6 +245,11 @@ extension WorkoutTemplate {
     var exerciseIDs: Set<Exercise.ID> { Set(exercises.map { $0.id }) }
     
     var numExercises: Int { exercises.count }
+    
+    func supersetFor(exercise: Exercise) -> Exercise? {
+        guard let supersettedWith = exercise.isSupersettedWith else { return nil }
+        return exercises.first(where: { $0.id.uuidString == supersettedWith })
+    }
 }
 
 struct CompletedWorkout: Identifiable, Hashable, Codable {

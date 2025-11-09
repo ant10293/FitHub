@@ -1,6 +1,5 @@
 import SwiftUI
 
-
 struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject private var ctx: AppContext
@@ -115,9 +114,9 @@ struct HomeView: View {
                 Spacer()
                 
                 Button(action: { showingExerciseSelection = true }) {
-                    pickerLabel
-                    .padding(.trailing)
-                    .contentShape(Rectangle()) // Ensure tap area is tightly bound
+                    ExercisePickerLabel(exerciseName: unwrappedExercise?.name)
+                        .padding(.trailing)
+                        .contentShape(Rectangle()) // Ensure tap area is tightly bound
                 }
                 .buttonStyle(PlainButtonStyle()) // Prevents full-row tap behavior
             }
@@ -130,7 +129,6 @@ struct HomeView: View {
                     ExercisePerformanceGraph(exercise: ex, performance: perf)
                 }
             }
-            
         }
         .onChange(of: selectedExercise) { oldValue, newValue in
             if oldValue != newValue { // Only perform side effects if the value has truly changed
@@ -180,22 +178,6 @@ struct HomeView: View {
             if old != new {
                 ctx.userData.sessionTracking.selectedMeasurement = new
             }
-        }
-    }
-    
-    private var pickerLabel: some View {
-        HStack(spacing: 5) {
-            if let exercise = unwrappedExercise {
-                Text(exercise.name)
-                    .foregroundStyle(.blue)
-            } else {
-                Text("Select Exercise")
-                    .foregroundStyle(.blue)
-            }
-            Image(systemName: "chevron.up.chevron.down")
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundStyle(.blue)
         }
     }
 }

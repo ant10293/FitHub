@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct EquipmentRow: View {
-    var gymEquip: GymEquipment
-    var equipmentSelected: Bool
-    var viewDetail: () -> Void
-    var toggleSelection: () -> Void
+    let gymEquip: GymEquipment
+    let equipmentSelected: Bool
+    let viewDetail: () -> Void
+    let toggleSelection: () -> Void
 
     var body: some View {
         HStack {
@@ -50,3 +50,5 @@ struct EquipmentRow: View {
         .padding(.vertical, 4)
     }
 }
+
+

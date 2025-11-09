@@ -8,7 +8,9 @@
 import Foundation
 
 
-enum Gender: Hashable, Codable { case male, female, notSet }
+enum Gender: Hashable, Codable {
+    case male, female, notSet
+}
 
 enum Languages: String, Codable, CaseIterable  {
     case english = "English"

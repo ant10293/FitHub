@@ -11,10 +11,14 @@ struct InfluencerInfoForm: View {
     @Binding var fullName: String
     @Binding var email: String
     @Binding var notes: String
+    @Binding var payoutMethod: String
+    @Binding var payoutFrequency: PaymentFrequency
     
     let allowEditFullName: Bool
     let allowEditEmail: Bool
     let allowEditNotes: Bool
+    let allowEditPayoutMethod: Bool
+    let allowEditPayoutFrequency: Bool
     
     var emailErrorMessage: String? = nil
     
@@ -68,6 +72,36 @@ struct InfluencerInfoForm: View {
                             .padding(.trailing, 12)
                     }
                 }
+            
+            // Payout Method
+            TextField("Payout Method (e.g., Stripe, PayPal)", text: $payoutMethod, axis: .vertical)
+                .lineLimit(1...2)
+                .inputStyle()
+                .disabled(!allowEditPayoutMethod)
+                .overlay(alignment: .trailing) {
+                    if !allowEditPayoutMethod {
+                        Image(systemName: "lock.fill")
+                            .foregroundStyle(.secondary)
+                            .font(.caption)
+                            .padding(.trailing, 12)
+                    }
+                }
+            
+            // Payout Frequency
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Payout Frequency")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                
+                Picker("Payout Frequency", selection: $payoutFrequency) {
+                    ForEach(PaymentFrequency.allCases) { frequency in
+                        Text(frequency.displayName).tag(frequency)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .disabled(!allowEditPayoutFrequency)
+                .opacity(allowEditPayoutFrequency ? 1.0 : 0.5)
+            }
         }
     }
 }

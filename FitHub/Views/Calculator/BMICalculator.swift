@@ -16,6 +16,7 @@ struct BMICalculator: View {
     @State private var bmi: Double = 0.0
     @State private var showingResult: Bool = false
     @State private var isButtonPressed: Bool = false
+    @State private var activeCard: ActiveCard = .none
     
     init(userData: UserData) {
         _userData = ObservedObject(wrappedValue: userData)
@@ -26,24 +27,18 @@ struct BMICalculator: View {
     }
     
     var body: some View {
-        Form {
-            Section {
-                WeightSelectorRow(weight: $weight)
-            } header: {
-                Text("Enter your Weight")
-            }
-            
-            Section {
-                HeightSelectorRow(height: $height)
-            } header: {
-                Text("Enter your Height")
-            }
-            
-            Section {
-                // No rows in this section—just a footer
-                EmptyView()
-            } footer: {
+        let height = UIScreen.main.bounds.height * 0.1
+
+        VStack {
+            ScrollView {
+                weightCard
+                    .padding(.top)
+                heightCard
+                
+                
                 if !kbd.isVisible {
+                    Spacer(minLength: height)
+
                     RectangularButton(
                         title: "Calculate BMI",
                         enabled: isCalculateEnabled,
@@ -52,21 +47,26 @@ struct BMICalculator: View {
                             showingResult = true
                         }
                     )
-                    .padding(.top, 6)
-                    .padding(.bottom, 16)
+                    .padding(.horizontal)
+                    
+                    Spacer(minLength: height)
                 }
             }
         }
         .disabled(showingResult)
         .blur(radius: showingResult ? 10 : 0)
-        .background(Color(UIColor.systemGroupedBackground)) // make button background color match list
+        .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .overlay(
             Group {
                 if showingResult {
-                    BMIResultView(bmi: bmi) {
+                    CalcResultView(title: "Your BMI", singleResult: String(format: "%.2f", bmi), dismissAction: {
                         showingResult = false
                         dismiss()
+                    }) {
+                            BMICategoryTable(userBMI: bmi)
+                                .padding(.bottom)
+                                .frame(height: UIScreen.main.bounds.height * 0.1)
                     }
                 }
             }
@@ -85,27 +85,65 @@ struct BMICalculator: View {
         userData.physical.height = height
     }
     
-    struct BMIResultView: View {
-        @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
-        let bmi: Double
-        var dismissAction: () -> Void
-        
-        var body: some View {
-            VStack(spacing: 10) {
-                Text("Your BMI").font(.headline).padding(.top)
-                Text(String(format: "%.2f", bmi)).font(.title)
-                
-                BMICategoryTable(userBMI: bmi)
-                    .frame(height: UIScreen.main.bounds.height * 0.1)
+    // MARK: - Cards
+    
+    private var weightCard: some View {
+        MeasurementCard(
+            title: "Weight",
+            isActive: activeCard == .weight,
+            onTap: { toggle(.weight) },
+            valueView: {
+                Text(summary(for: weight, unit: UnitSystem.current.weightUnit))
+            },
+            content: {
+                WeightSelectorRow(weight: $weight)
+                    .padding(.top)
 
-                RectangularButton(title: "Close", action: { dismissAction() })
-                    .padding(.vertical)
+                floatingDoneButton
+                    .padding(.top, 6)
             }
-            .padding()
-            .frame(width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.4)
-            .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .shadow(radius: 10)
+        )
+    }
+
+    private var heightCard: some View {
+        MeasurementCard(
+            title: "Height",
+            isActive: activeCard == .height,
+            onTap: { toggle(.height) },
+            valueView: {
+                height.heightFormatted.foregroundStyle(.gray)
+            },
+            content: {
+                HeightSelectorRow(height: $height)
+                    .padding(.top)
+
+                floatingDoneButton
+                    .padding(.top, 6)
+            }
+        )
+    }
+
+    // MARK: - Helpers
+    private func summary(for mass: Mass, unit: String) -> String {
+        let value = mass.displayString
+        return value.isEmpty ? "—" : "\(value) \(unit)"
+    }
+    
+    private func toggle(_ card: ActiveCard) {
+        activeCard = activeCard == card ? .none : card
+    }
+    
+    private var floatingDoneButton: some View {
+        HStack {
+            Spacer()
+            FloatingButton(image: "checkmark") {
+                activeCard = .none
+            }
+            .padding(.horizontal)
         }
+    }
+    
+    private enum ActiveCard {
+        case none, weight, height
     }
 }

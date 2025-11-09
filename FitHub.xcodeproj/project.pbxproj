@@ -249,6 +249,10 @@
 		65DD05202EBBED1D000D159C /* InfluencerSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051E2EBBED1D000D159C /* InfluencerSettingsView.swift */; };
 		65DD05222EBC06B6000D159C /* ReferralValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05212EBC06B6000D159C /* ReferralValidation.swift */; };
 		65DD05282EBC6C53000D159C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65DD05272EBC6C53000D159C /* StoreKit.framework */; };
+		65DD052A2EBEF0CC000D159C /* PaymentFrequency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05292EBEF0CC000D159C /* PaymentFrequency.swift */; };
+		65DD052C2EBFE857000D159C /* ExercisePickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD052B2EBFE857000D159C /* ExercisePickerLabel.swift */; };
+		65DD05322EC021D1000D159C /* CalcResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05312EC021D1000D159C /* CalcResultView.swift */; };
+		65DD05352EC02A20000D159C /* MeasurementCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05332EC02A20000D159C /* MeasurementCard.swift */; };
 		65E05D0F2E7B81F900E39CC2 /* Rounding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D0E2E7B81F900E39CC2 /* Rounding.swift */; };
 		65E05D112E7B88FC00E39CC2 /* WeightPlates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */; };
 		65E05D132E7B894900E39CC2 /* InitEquipment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D122E7B894900E39CC2 /* InitEquipment.swift */; };
@@ -509,6 +513,10 @@
 		65DD051E2EBBED1D000D159C /* InfluencerSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfluencerSettingsView.swift; sourceTree = "<group>"; };
 		65DD05212EBC06B6000D159C /* ReferralValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralValidation.swift; sourceTree = "<group>"; };
 		65DD05272EBC6C53000D159C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		65DD05292EBEF0CC000D159C /* PaymentFrequency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFrequency.swift; sourceTree = "<group>"; };
+		65DD052B2EBFE857000D159C /* ExercisePickerLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisePickerLabel.swift; sourceTree = "<group>"; };
+		65DD05312EC021D1000D159C /* CalcResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcResultView.swift; sourceTree = "<group>"; };
+		65DD05332EC02A20000D159C /* MeasurementCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementCard.swift; sourceTree = "<group>"; };
 		65E05D0E2E7B81F900E39CC2 /* Rounding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rounding.swift; sourceTree = "<group>"; };
 		65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightPlates.swift; sourceTree = "<group>"; };
 		65E05D122E7B894900E39CC2 /* InitEquipment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitEquipment.swift; sourceTree = "<group>"; };
@@ -917,6 +925,7 @@
 				653136382E552FF000EECCA5 /* Notification.swift */,
 				65F5EF8E2EB19CBE005557F1 /* CoverageState.swift */,
 				65DD05212EBC06B6000D159C /* ReferralValidation.swift */,
+				65DD05292EBEF0CC000D159C /* PaymentFrequency.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -966,6 +975,7 @@
 				65CD3BBE2DD3C84F00C2B671 /* KcalCalculator.swift */,
 				65CD3BBF2DD3C84F00C2B671 /* MacroCalculator.swift */,
 				65CD3BC12DD3C84F00C2B671 /* OneRMCalculator.swift */,
+				65DD05312EC021D1000D159C /* CalcResultView.swift */,
 			);
 			path = Calculator;
 			sourceTree = "<group>";
@@ -1038,6 +1048,8 @@
 		65CD3BE72DD3C84F00C2B671 /* Reusable */ = {
 			isa = PBXGroup;
 			children = (
+				65DD05342EC02A20000D159C /* Card */,
+				65DD052D2EBFE881000D159C /* Label */,
 				65E199D42E99D78200682415 /* Background */,
 				6550ADAA2E6A2B60002072C1 /* Row */,
 				6550ADA92E6A2B2B002072C1 /* Button */,
@@ -1053,7 +1065,6 @@
 				653BF8B02E6618E2005A07EA /* GenericEditor.swift */,
 				653136202E53F11A00EECCA5 /* TappableDisclosure.swift */,
 				6550ADB92E6BAC12002072C1 /* TemplateNavigator.swift */,
-				65E199D22E99CF9300682415 /* RectangularLabel.swift */,
 				65AB47F42EA31362001BEAFE /* WarningFooter.swift */,
 			);
 			path = Reusable;
@@ -1235,6 +1246,23 @@
 				65DD05272EBC6C53000D159C /* StoreKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		65DD052D2EBFE881000D159C /* Label */ = {
+			isa = PBXGroup;
+			children = (
+				65E199D22E99CF9300682415 /* RectangularLabel.swift */,
+				65DD052B2EBFE857000D159C /* ExercisePickerLabel.swift */,
+			);
+			path = Label;
+			sourceTree = "<group>";
+		};
+		65DD05342EC02A20000D159C /* Card */ = {
+			isa = PBXGroup;
+			children = (
+				65DD05332EC02A20000D159C /* MeasurementCard.swift */,
+			);
+			path = Card;
 			sourceTree = "<group>";
 		};
 		65E05D0D2E7B81A800E39CC2 /* Equipment */ = {
@@ -1432,6 +1460,7 @@
 				65CD3C3E2DD3C84F00C2B671 /* EquipmentPopUp.swift in Sources */,
 				65CD3C3F2DD3C84F00C2B671 /* EquipmentSelection.swift in Sources */,
 				65CD3C402DD3C84F00C2B671 /* ExerciseDetailView.swift in Sources */,
+				65DD052A2EBEF0CC000D159C /* PaymentFrequency.swift in Sources */,
 				65CD3C412DD3C84F00C2B671 /* ExercisePerformanceView.swift in Sources */,
 				65CD3C422DD3C84F00C2B671 /* ExerciseSelection.swift in Sources */,
 				652131722E3D9C3900FDFB9C /* DurationPicker.swift in Sources */,
@@ -1482,9 +1511,12 @@
 				65CD3C5A2DD3C84F00C2B671 /* WeightSelectorView.swift in Sources */,
 				65CD3C5B2DD3C84F00C2B671 /* ChangeLanguage.swift in Sources */,
 				65CD3C5C2DD3C84F00C2B671 /* ChangeTheme.swift in Sources */,
+				65DD05322EC021D1000D159C /* CalcResultView.swift in Sources */,
+				65DD052C2EBFE857000D159C /* ExercisePickerLabel.swift in Sources */,
 				65039B862E837BB0007A31E1 /* TimeOrSpeed.swift in Sources */,
 				65CD3C5D2DD3C84F00C2B671 /* HealthKitSettings.swift in Sources */,
 				65CD3C5E2DD3C84F00C2B671 /* MuscleRest.swift in Sources */,
+				65DD05352EC02A20000D159C /* MeasurementCard.swift in Sources */,
 				65CD3C5F2DD3C84F00C2B671 /* OverloadSettings.swift in Sources */,
 				653BF8AA2E5AB284005A07EA /* DataHelpers.swift in Sources */,
 				65DD051F2EBBED1D000D159C /* InfluencerInfoForm.swift in Sources */,

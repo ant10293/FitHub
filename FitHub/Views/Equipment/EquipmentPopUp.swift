@@ -36,8 +36,10 @@ struct EquipmentPopupView: View {
                         Image(systemName: "xmark")
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Edit") { onEdit() }
+                if !showingCategories {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Edit") { onEdit() }
+                    }
                 }
             }
         }
