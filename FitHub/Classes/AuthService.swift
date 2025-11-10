@@ -96,20 +96,19 @@ final class AuthService: ObservableObject {
                 }
 
                 // 1. Grab the creation date
-                if let created = user.metadata.creationDate {
-                    userData.profile.accountCreationDate = created
-                }
+                userData.profile.accountCreationDate = user.metadata.creationDate ?? Date()
 
                 userData.profile.userId = user.uid
                 userData.profile.email = appleIDCredential.email ?? user.email ?? ""
 
                 // 2. Handle name parsing and setting
-                let userName = parseAndSetName(
+                let (userName, firstName, lastName) = parseAndSetName(
                     appleIDCredential: appleIDCredential,
-                    firebaseUser: user,
-                    userData: userData
+                    firebaseUser: user
                 )
                 userData.profile.userName = userName
+                userData.profile.firstName = firstName
+                userData.profile.lastName = lastName
                 
                 completion(.success(()))
             }
@@ -120,38 +119,27 @@ final class AuthService: ObservableObject {
     /// Returns the formatted userName string
     private func parseAndSetName(
         appleIDCredential: ASAuthorizationAppleIDCredential,
-        firebaseUser: User,
-        userData: UserData
-    ) -> String {
-        var firstName: String = ""
-        var lastName: String = ""
-        
-        if let fullName = appleIDCredential.fullName?.givenName ?? firebaseUser.displayName {
-            let nameComponents = fullName.description.split(separator: " ")
-            let first = nameComponents.first.map(String.init) ?? ""
-            let last = nameComponents.dropFirst().joined(separator: "")
+        firebaseUser: User
+    ) -> (userName: String, firstName: String, lastName: String) {
+        // pick a source name: Apple → Firebase → empty
+        let rawName = appleIDCredential.fullName?.givenName
+            ?? firebaseUser.displayName
+            ?? ""
 
-            firstName = first.formatName()
-            lastName = last.formatName()
+        // split into parts
+        let parts = rawName.split(separator: " ")
+        let first = parts.first.map(String.init) ?? ""
+        let last  = parts.dropFirst().joined(separator: "")
 
-            userData.profile.firstName = firstName
-            userData.profile.lastName = lastName
-        } else {
-            firstName = firebaseUser.displayName ?? ""
-            userData.profile.firstName = firstName
-            userData.profile.lastName = lastName
-        }
+        // format
+        let firstName = first.formatName()
+        let lastName  = last.formatName()
+        let userName = lastName.isEmpty ? firstName : "\(firstName) \(lastName)"
 
-        let userName: String
-        if lastName.isEmpty {
-            userName = firstName
-        } else {
-            userName = firstName + " " + lastName
-        }
-        
-        return userName
+        // final display
+        return (userName, firstName, lastName)
     }
-    
+
     // MARK: — Update only the Firebase displayName
     
     /// Updates the current Firebase user's displayName to the given `newName`.

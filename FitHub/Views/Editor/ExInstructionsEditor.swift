@@ -10,10 +10,10 @@ import SwiftUI
 
 // FIXME: potential error - Publishing changes from within view updates is not allowed, this will cause undefined behavior.
 struct ExInstructionsEditor: View {
+    @State private var isEditing: Bool = false
     @Binding var instructions: ExerciseInstructions
     @FocusState private var focusedIndex: Int?
     @StateObject private var kbd = KeyboardManager.shared
-    @State private var isEditing: Bool = false
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -21,13 +21,15 @@ struct ExInstructionsEditor: View {
             List {
                 ForEach(0..<instructions.count, id: \.self) { i in
                     HStack(spacing: 8) {
+                        InlineDeletion(isEditing: isEditing, delete: {
+                            deleteIndex(i)
+                        })
                         Text("\(i + 1).").foregroundStyle(.secondary)
                         TextField("Step \(i + 1)", text: binding(for: i))
                             .textInputAutocapitalization(.sentences)
                             .focused($focusedIndex, equals: i)
                     }
                 }
-                .onDelete(perform: delete)
                 .onMove(perform: move)
 
                 Button {
@@ -50,7 +52,6 @@ struct ExInstructionsEditor: View {
                 }
             }
         }
-        // ✅ If list becomes empty while editing, exit edit mode
         .onChange(of: instructions.count) { _, newCount in
             if newCount == 0 { isEditing = false }
         }
@@ -70,10 +71,10 @@ struct ExInstructionsEditor: View {
         instructions.add("")
         focusedIndex = newIndex
     }
-
-    private func delete(at offsets: IndexSet) {
+    
+    private func deleteIndex(_ i: Int) {
         kbd.dismiss()
-        for i in offsets.sorted(by: >) { instructions.remove(at: i) }
+        instructions.remove(at: i)
     }
 
     private func move(from source: IndexSet, to destination: Int) {

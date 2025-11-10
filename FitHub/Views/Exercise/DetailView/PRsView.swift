@@ -16,8 +16,9 @@ struct PRsView: View {
     let exercise: Exercise
 
     var body: some View {
+        let perf = ctx.exercises.allExercisePerformance[exercise.id]
+
         VStack {
-            let perf = ctx.exercises.allExercisePerformance[exercise.id]
             if !showingList {
                 ExercisePerformanceGraph(exercise: exercise, performance: perf)
             } else {
@@ -52,14 +53,14 @@ struct PRsView: View {
                 UpdateMaxEditor(
                     exercise: exercise,
                     onSave: { newMax in
+                        kbd.dismiss()
                         ctx.exercises.updateExercisePerformance(for: exercise, newValue: newMax)
                         ctx.exercises.savePerformanceData()
                         showingUpdate1RMView = false
-                        kbd.dismiss()
                     },
                     onCancel: {
-                        showingUpdate1RMView = false
                         kbd.dismiss()
+                        showingUpdate1RMView = false
                     }
                 )
             }

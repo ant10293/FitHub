@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 // TODO: certain vars must be reactive to other
 // must modify to: determine if alias is the same name as an exercise or its alias then we should alert the user
 // also, must create interface for adding muscle and submuscle engagement
@@ -28,6 +27,7 @@ struct NewExercise: View {
     @State private var showingAdjustmentsView: Bool = false
     @State private var showingInstructionEditor: Bool = false
     @State private var showDeleteAlert: Bool = false
+    @State private var showRestoreAlert: Bool = false
     @State private var equipmentRequired: [GymEquipment] = []
     @State private var draft: InitExercise
     let original: Exercise?
@@ -58,6 +58,8 @@ struct NewExercise: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     NameField(title: "Name", placeholder: "Exercise Name", text: $draft.name, error: nameError)
+                        .disabled(isReadOnly)
+
                     AliasesField(aliases: $draft.aliases, readOnly: isReadOnly)
                     muscleField
                     equipmentSection
@@ -77,10 +79,9 @@ struct NewExercise: View {
                     difficultySection
                     classificationPickers
                 }
-                .padding()
-                .disabled(isReadOnly)
-                                
-                if !kbd.isVisible && !isReadOnly {
+                .padding(.bottom)
+                                                
+                if !kbd.isVisible {
                     RectangularButton(
                         title: isEditing ? "Save Changes" : "Create Exercise",
                         enabled: isInputValid,
@@ -88,27 +89,30 @@ struct NewExercise: View {
                     ) {
                         exerciseCreated = true
                         draft.name = InputLimiter.trimmed(draft.name)
-                        
-                        if !isReadOnly {
-                            if let orig = original {
-                                ctx.exercises.replace(orig, with: exercise)
-                            } else {
-                                ctx.exercises.addExercise(exercise)
-                            }
-                        }
+        
+                        ctx.exercises.updateExercise(exercise)
                         
                         dismiss()
                     }
-                    .padding()
+                    .padding(.vertical)
                     
                     if isEditing {
-                        RectangularButton(title: "Delete Exercise", systemImage: "trash", bgColor: .red, action: {
-                            showDeleteAlert = true
-                        })
-                        .padding()
-                    }
+                        switch ctx.exercises.getExerciseLocation(exercise) {
+                        case .user:
+                            RectangularButton(title: "Delete Exercise", systemImage: "trash", bgColor: .red, action: {
+                                showDeleteAlert = true
+                            })
+                        case .bundled:
+                            RectangularButton(title: "Restore Exercise", systemImage: "arrow.2.circlepath", bgColor: .red, action: {
+                                showRestoreAlert = true
+                            })
+                        case .none:
+                            EmptyView()
+                        }
+                    } 
                 }
             }
+            .padding()
             .navigationBarTitle(isEditing ? "Edit Exercise" : "New Exercise", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -142,6 +146,16 @@ struct NewExercise: View {
             }
         } message: {
             Text("This action can’t be undone.")
+        }
+        .alert("Restore bundled version?", isPresented: $showRestoreAlert) {
+            Button("Cancel", role: .cancel) {}
+            Button("Restore", role: .destructive) {
+                if let restored = ctx.exercises.restoreBundledExercise(exercise) {
+                    draft = .init(from: restored)
+                }
+            }
+        } message: {
+            Text("This will discard your changes and reload the original exercise.")
         }
         .onChange(of: draft.limbMovementType) {
             if draft.weightInstruction == nil {
@@ -194,86 +208,44 @@ struct NewExercise: View {
         return nil
     }
     
-    // ────────── Sub-views
     private var muscleField: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            (
-                Text("Muscles Worked: ")
-                    .font(.headline)
-                +
-                Text(
-                    draft.muscles.isEmpty ? "None" :
-                        draft.muscles.map { "\($0.muscleWorked.rawValue) (\(Int($0.engagementPercentage))%)" }.joined(separator: ", ")
-                )
-                .foregroundStyle(draft.muscles.isEmpty ? .secondary : .primary)
-            )
-            .multilineTextAlignment(.leading)
-            
-            if !isReadOnly {
-                Button {
-                    showingMuscleEditor = true
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "plus")
-                        Text("Edit Muscles")
-                    }
-                }
-                .foregroundStyle(.blue)
-                .buttonStyle(.plain)
-            }
-        }
+        FieldEditor(
+            title: "Muscles Worked",
+            valueText: draft.muscles.isEmpty
+                ? "None"
+                : draft.muscles
+                    .map { "\($0.muscleWorked.rawValue) (\(Int($0.engagementPercentage))%)" }
+                    .joined(separator: ", "),
+            isEmpty: draft.muscles.isEmpty,
+            isReadOnly: isReadOnly,
+            buttonLabel: "Edit Muscles",
+            onEdit: { showingMuscleEditor = true }
+        )
     }
-    
+
     private var equipmentSection: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            (
-                Text("Equipment Required: ")
-                    .font(.headline)
-                +
-                Text(draft.equipmentRequired.isEmpty ? "None" : draft.equipmentRequired.joined(separator: ", "))
-                    .foregroundStyle(draft.equipmentRequired.isEmpty ? .secondary : .primary)
-            )
-            .multilineTextAlignment(.leading)
-   
-            if !isReadOnly {
-                Button {
-                    selectingEquipment = true
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "plus")
-                        Text("Select Equipment")
-                    }
-                }
-                .foregroundStyle(.blue)
-                .buttonStyle(.plain)
-            }
-        }
+        FieldEditor(
+            title: "Equipment Required",
+            valueText: draft.equipmentRequired.isEmpty
+                ? "None"
+                : draft.equipmentRequired.joined(separator: ", "),
+            isEmpty: draft.equipmentRequired.isEmpty,
+            isReadOnly: isReadOnly,
+            buttonLabel: "Select Equipment",
+            onEdit: { selectingEquipment = true }
+        )
     }
-    
+
     private var instructionsSection: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            (
-                Text("Instructions: ")
-                    .font(.headline)
-                +
-                Text(draft.instructions.formattedString(leadingNewline: true) ?? "None")
-                    .foregroundStyle(draft.instructions.steps.isEmpty ? .secondary : .primary)
-            )
-            .multilineTextAlignment(.leading)
-   
-            if !isReadOnly {
-                Button {
-                    showingInstructionEditor = true
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "plus")
-                        Text("Edit Instructions")
-                    }
-                }
-                .foregroundStyle(.blue)
-                .buttonStyle(.plain)
-            }
-        }
+        let text = draft.instructions.formattedString(leadingNewline: true) ?? "None"
+        return FieldEditor(
+            title: "Instructions",
+            valueText: text,
+            isEmpty: draft.instructions.steps.isEmpty,
+            isReadOnly: isReadOnly,
+            buttonLabel: "Edit Instructions",
+            onEdit: { showingInstructionEditor = true }
+        )
     }
     
     private var adjustmentsField: some View {
@@ -310,27 +282,30 @@ struct NewExercise: View {
                 .font(.headline)
     
             VStack(spacing: 0) {
-                // Resistance Type (exclude .weighted)
-                MenuPickerRow(title: "Resistance Type", selection: $draft.resistance, showDivider: false) {
-                    ForEach(ResistanceType.forExercises, id: \.self) {
-                        Text($0.rawValue).tag($0)
+                Group {
+                    // Resistance Type (exclude .weighted)
+                    MenuPickerRow(title: "Resistance Type", selection: $draft.resistance, showDivider: false) {
+                        ForEach(ResistanceType.forExercises, id: \.self) {
+                            Text($0.rawValue).tag($0)
+                        }
+                    }
+                    
+                    // Effort Type
+                    MenuPickerRow(title: "Effort Type", selection: $draft.effort) {
+                        ForEach(EffortType.allCases, id: \.self) {
+                            Text($0.rawValue).tag($0)
+                        }
+                    }
+                    
+                    // Limb Movement (Optional)
+                    MenuPickerRow(title: "Limb Movement", selection: $draft.limbMovementType) {
+                        Text("None").tag(nil as LimbMovementType?)
+                        ForEach(LimbMovementType.allCases, id: \.self) {
+                            Text($0.rawValue).tag(Optional($0))
+                        }
                     }
                 }
-
-                // Effort Type
-                MenuPickerRow(title: "Effort Type", selection: $draft.effort) {
-                    ForEach(EffortType.allCases, id: \.self) {
-                        Text($0.rawValue).tag($0)
-                    }
-                }
-
-                // Limb Movement (Optional)
-                MenuPickerRow(title: "Limb Movement", selection: $draft.limbMovementType) {
-                    Text("None").tag(nil as LimbMovementType?)
-                    ForEach(LimbMovementType.allCases, id: \.self) {
-                        Text($0.rawValue).tag(Optional($0))
-                    }
-                }
+                .disabled(isReadOnly)
 
                 // Reps Instruction (Optional, conditional)
                 if exercise.effort.usesReps {

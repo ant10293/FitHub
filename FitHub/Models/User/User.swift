@@ -11,9 +11,9 @@ import Foundation
 struct Profile: Codable, Equatable {
     var firstName: String = ""
     var lastName: String = ""
+    var userName: String = ""
     var email: String = ""
     var userId: String = ""
-    var userName: String = ""
     var age: Int = 0
     var dob: Date = Date()
     var accountCreationDate: Date?

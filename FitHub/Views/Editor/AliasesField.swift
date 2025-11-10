@@ -13,24 +13,15 @@ struct AliasesField: View {
     let readOnly: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            let label = aliases ?? []
-            (
-                Text("Aliases: ").font(.headline)
-                + Text(label.isEmpty ? "None" : label.joined(separator: ", "))
-                    .foregroundStyle(label.isEmpty ? .secondary : .primary)
-            )
-
-            if !readOnly {
-                Button {
-                    showSheet = true
-                } label: {
-                    Label("Add Alias", systemImage: "plus")
-                }
-                .foregroundStyle(.blue)
-                .buttonStyle(.plain)
-            }
-        }
+        let list = aliases ?? []
+        return FieldEditor(
+            title: "Aliases",
+            valueText: list.isEmpty ? "None" : list.joined(separator: ", "),
+            isEmpty: list.isEmpty,
+            isReadOnly: readOnly,
+            buttonLabel: "Add Alias",
+            onEdit: { showSheet = true }
+        )
         .sheet(isPresented: $showSheet) {
             AliasesEditorSheet(
                 aliases: Binding(
@@ -76,15 +67,9 @@ private struct AliasesEditorSheet: View {
                     } else {
                         ForEach(Array(aliases.enumerated()), id: \.offset) { i, alias in
                             HStack(spacing: 10) {
-                                if isEditing {
-                                    Button(role: .destructive) {
-                                        withAnimation { deleteIndex(i) }
-                                    } label: {
-                                        Image(systemName: "minus.circle.fill")
-                                            .foregroundStyle(.red)
-                                    }
-                                    .buttonStyle(.plain)
-                                }
+                                InlineDeletion(isEditing: isEditing, delete: {
+                                    deleteIndex(i)
+                                })
                                 Text(alias)
                                 Spacer()
                             }

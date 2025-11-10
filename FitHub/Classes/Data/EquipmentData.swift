@@ -41,9 +41,8 @@ final class EquipmentData: ObservableObject {
         do {
             let seed: [InitEquipment] = try Bundle.main.decode(bundledEquipmentFilename)
             let mapping = seed.map { item -> GymEquipment in
-                let eq = GymEquipment(from: item)
-                if let override = overrides[eq.id] { return override }
-                else { return eq }
+                let equipment = GymEquipment(from: item)
+                return overrides[equipment.id] ?? equipment
             }
             print("✅ Successfully loaded \(mapping.count) equipment items from \(bundledEquipmentFilename)")
             return mapping
@@ -55,9 +54,8 @@ final class EquipmentData: ObservableObject {
                 decoder: { jsonDict in
                     let equipmentData = try JSONSerialization.data(withJSONObject: jsonDict)
                     let initEquipment = try JSONDecoder().decode(InitEquipment.self, from: equipmentData)
-                    let eq = GymEquipment(from: initEquipment)
-                    if let override = overrides[eq.id] { return override }
-                    else { return eq }
+                    let equipment = GymEquipment(from: initEquipment)
+                    return overrides[equipment.id] ?? equipment
                 },
                 validator: { equipment in
                     !equipment.name.isEmpty && !equipment.image.isEmpty
@@ -77,7 +75,7 @@ final class EquipmentData: ObservableObject {
     }
     
     private static func loadBundledOverrides() -> [UUID: GymEquipment] {
-        return JSONFileManager.shared.loadBundledOverrides(from: EquipmentData.bundledOverridesFilename) ?? [:]
+        return JSONFileManager.shared.loadEquipmentOverrides(from: EquipmentData.bundledOverridesFilename) ?? [:]
     }
     
     private func persistOverrides() {
@@ -87,16 +85,29 @@ final class EquipmentData: ObservableObject {
 }
 
 extension EquipmentData {
+    // MARK: – Helpers
+    func isUserEquipment(_ equipment: GymEquipment) -> Bool {
+        userEquipment.contains(where: { $0.id == equipment.id })
+    }
+    
+    func isBundledEquipment(_ equipment: GymEquipment) -> Bool {
+        bundledEquipment.contains(where: { $0.id == equipment.id })
+    }
+    
+    func getEquipmentLocation(_ equipment: GymEquipment) -> ExEquipLocation {
+        if isUserEquipment(equipment) {
+            return .user
+        } else if isBundledEquipment(equipment) {
+            return .bundled
+        } else {
+            return .none
+        }
+    }
+    
     // MARK: – Mutations
     func addEquipment(_ newEquipment: GymEquipment) {
         guard !allEquipment.contains(where: { $0.id == newEquipment.id }) else { return }
         userEquipment.append(newEquipment)
-        persistUserEquipment()
-    }
-
-    func replace(at id: UUID, with updated: GymEquipment) {
-        userEquipment.removeAll { $0.id == id }
-        userEquipment.append(updated)
         persistUserEquipment()
     }
     
@@ -105,12 +116,24 @@ extension EquipmentData {
         persistUserEquipment()
     }
     
-    // MARK: – Helpers
-    func isUserEquipment(_ equipment: GymEquipment) -> Bool {
-        userEquipment.contains(where: { $0.id == equipment.id })
+    func updateEquipment(equipment: GymEquipment) {
+        switch getEquipmentLocation(equipment) {
+        case .user:
+            updateUserEquipment(equipment)
+        case .bundled:
+            updateBundledEquipment(equipment)
+        case .none:
+            addEquipment(equipment)
+        }
     }
     
-    private func updateBundledEquipment(equipment: GymEquipment) {
+    private func updateUserEquipment(_ equipment: GymEquipment) {
+        userEquipment.removeAll { $0.id == equipment.id }
+        userEquipment.append(equipment)
+        persistUserEquipment()
+    }
+
+    private func updateBundledEquipment(_ equipment: GymEquipment) {
         bundledOverrides[equipment.id] = equipment
         if let index = bundledEquipment.firstIndex(where: { $0.id == equipment.id }) {
             bundledEquipment[index] = equipment
@@ -118,12 +141,17 @@ extension EquipmentData {
         }
     }
     
-    func updateEquipment(equipment: GymEquipment) {
-        if isUserEquipment(equipment) {
-            replace(at: equipment.id, with: equipment)
-        } else {
-            updateBundledEquipment(equipment: equipment)
-        }
+    private func deleteBundledOverride(_ equipment: GymEquipment) {
+        guard bundledOverrides[equipment.id] != nil else { return }
+        bundledOverrides.removeValue(forKey: equipment.id)
+        persistOverrides()
+    }
+    
+    func restoreBundledEquipment(_ equipment: GymEquipment) -> GymEquipment? {
+        deleteBundledOverride(equipment)
+        // rebuild bundledExercises from disk using the reduced override map
+        bundledEquipment = EquipmentData.loadBundledEquipment(overrides: bundledOverrides)
+        return bundledEquipment.first(where: { $0.id == equipment.id })
     }
 }
 

@@ -7,13 +7,25 @@
 
 import Foundation
 
+enum ExEquipLocation: String {
+    case user, bundled, none
+}
+
+struct ExerciseOverride: Identifiable, Codable {
+    var id: UUID { original.id }
+    var override: Exercise
+    let original: Exercise
+}
+
 final class ExerciseData: ObservableObject {
     private static let bundledExercisesFileName: String = "exercises.json"
+    private static let bundledOverridesFilename: String = "exercise_overrides.json"
     private static let userExercisesFileName: String = "user_exercises.json"
     private static let performanceFileName: String = "performance.json"
     
-    private let bundledExercises: [Exercise]          // read-only
+    private var bundledExercises: [Exercise]
     @Published private(set) var userExercises: [Exercise]  // can mutate & save
+    @Published var bundledOverrides: [UUID: Exercise]
    
     // MARK: - Public unified view
     var allExercises: [Exercise] { bundledExercises + userExercises }
@@ -28,16 +40,21 @@ final class ExerciseData: ObservableObject {
     }
    
     init() {
-        bundledExercises = ExerciseData.loadBundledExercises()
+        let overrides = ExerciseData.loadBundledOverrides()
+        bundledExercises = ExerciseData.loadBundledExercises(overrides: overrides)
         userExercises = ExerciseData.loadUserExercises(from: ExerciseData.userExercisesFileName)
+        bundledOverrides = overrides
         loadPerformanceData(from: ExerciseData.performanceFileName)
     }
     
     // MARK: – Persistence Logic
-    private static func loadBundledExercises() -> [Exercise] {
+    private static func loadBundledExercises(overrides: [UUID: Exercise]) -> [Exercise] {
         do {
             let seed: [InitExercise] = try Bundle.main.decode(ExerciseData.bundledExercisesFileName)
-            let mapping = seed.map { Exercise(from: $0) }
+            let mapping = seed.map { initEx -> Exercise in
+                let exercise = Exercise(from: initEx)
+                return overrides[exercise.id] ?? exercise
+            }
             print("✅ Successfully loaded \(mapping.count) exercises from \(ExerciseData.bundledExercisesFileName)")
             return mapping
         } catch {
@@ -48,17 +65,14 @@ final class ExerciseData: ObservableObject {
                 decoder: { jsonDict in
                     let exerciseData = try JSONSerialization.data(withJSONObject: jsonDict)
                     let initExercise = try JSONDecoder().decode(InitExercise.self, from: exerciseData)
-                    return Exercise(from: initExercise)
+                    let exercise = Exercise(from: initExercise)
+                    return overrides[exercise.id] ?? exercise
                 },
                 validator: { exercise in
                     !exercise.name.isEmpty && !exercise.image.isEmpty
                 }
             )
         }
-    }
-    
-    private static func loadUserExercises(from file: String) -> [Exercise] {
-        return JSONFileManager.shared.loadUserExercises(from: file) ?? []
     }
     
     private func loadPerformanceData(from fileName: String) {
@@ -70,33 +84,93 @@ final class ExerciseData: ObservableObject {
         JSONFileManager.shared.save(Array(allExercisePerformance.values), to: ExerciseData.performanceFileName, dateEncoding: true)
     }
     
+    private static func loadUserExercises(from file: String) -> [Exercise] {
+        return JSONFileManager.shared.loadUserExercises(from: file) ?? []
+    }
+    
     private func persistUserExercises() {
         let snapshot = userExercises                 // value copy, thread-safe
         JSONFileManager.shared.save(snapshot, to: ExerciseData.userExercisesFileName)
     }
+    
+    private static func loadBundledOverrides() -> [UUID: Exercise] {
+        return JSONFileManager.shared.loadExerciseOverrides(from: ExerciseData.bundledOverridesFilename) ?? [:]
+    }
+    
+    private func persistOverrides() {
+        let snapshot = bundledOverrides
+        JSONFileManager.shared.save(snapshot, to: ExerciseData.bundledOverridesFilename)
+    }
 }
 
 extension ExerciseData {
+    // MARK: – Helpers
+    func isUserExercise(_ exercise: Exercise) -> Bool {
+        return userExercises.contains(where: { $0.id == exercise.id })
+    }
+    
+    func isBundledExercise(_ exercise: Exercise) -> Bool {
+        return bundledExercises.contains(where: { $0.id == exercise.id })
+    }
+    
+    func getExerciseLocation(_ exercise: Exercise) -> ExEquipLocation {
+        if isUserExercise(exercise) {
+            return .user
+        } else if isBundledExercise(exercise) {
+            return .bundled
+        } else {
+            return .none
+        }
+    }
+    
     // MARK: – Mutations
     func addExercise(_ newExercise: Exercise) {
         guard !allExercises.contains(where: { $0.id == newExercise.id }) else { return }
         userExercises.append(newExercise)
         persistUserExercises()
     }
-
-    func replace(_ old: Exercise, with updated: Exercise) {
-        userExercises.removeAll { $0.id == old.id }
-        userExercises.append(updated)
-        persistUserExercises()
-    }
-
+    
     func removeExercise(_ exercise: Exercise) {
         userExercises.removeAll { $0.id == exercise.id }
         persistUserExercises()
     }
+
+    func updateExercise(_ exercise: Exercise) {
+        switch getExerciseLocation(exercise) {
+        case .user:
+            updateUserExercise(exercise)
+        case .bundled:
+            updateBundledExercise(exercise)
+        case .none:
+            addExercise(exercise)
+        }
+    }
     
-    func isUserExercise(_ exercise: Exercise) -> Bool {
-        return userExercises.contains(where: { $0.id == exercise.id })
+    private func updateUserExercise(_ exercise: Exercise) {
+        userExercises.removeAll { $0.id == exercise.id }
+        userExercises.append(exercise)
+        persistUserExercises()
+    }
+    
+    private func updateBundledExercise(_ exercise: Exercise) {
+        bundledOverrides[exercise.id] = exercise
+        if let index = bundledExercises.firstIndex(where: { $0.id == exercise.id }) {
+            bundledExercises[index] = exercise
+            persistOverrides()
+        }
+    }
+    
+    private func deleteBundledOverride(_ exercise: Exercise) {
+        guard bundledOverrides[exercise.id] != nil else { return }
+        bundledOverrides.removeValue(forKey: exercise.id)
+        persistOverrides()
+    }
+    
+    func restoreBundledExercise(_ exercise: Exercise) -> Exercise? {
+        deleteBundledOverride(exercise)
+        // rebuild bundledExercises from disk using the reduced override map
+        bundledExercises = ExerciseData.loadBundledExercises(overrides: bundledOverrides)
+        return bundledExercises.first(where: { $0.id == exercise.id })
     }
 }
 

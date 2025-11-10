@@ -121,6 +121,28 @@ extension Array {
     }
 }
 
+extension Profile {
+    enum NameStyle {
+        case title   // e.g. "Anthony"
+        case full    // e.g. "Anthony Smith"
+    }
+
+    func displayName(_ style: NameStyle) -> String {
+        switch style {
+        case .title:
+            if !firstName.isEmpty { return firstName }
+            // fall back to first part of userName
+            let parts = userName.split(separator: " ")
+            return parts.first.map(String.init) ?? userName
+
+        case .full:
+            if !userName.isEmpty { return userName }
+            let combined = (firstName + " " + lastName).trimmed
+            return combined
+        }
+    }
+}
+
 extension String {
     /// Returns a trimmed version of the string (whitespace removed)
     var trimmed: String { trimmingCharacters(in: .whitespaces) }

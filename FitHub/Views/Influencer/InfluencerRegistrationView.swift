@@ -208,13 +208,7 @@ struct InfluencerRegistrationView: View {
     }
     
     private func initializeFromUserData() {
-        if !ctx.userData.profile.userName.isEmpty {
-            fullName = ctx.userData.profile.userName
-        } else {
-            let firstName = ctx.userData.profile.firstName
-            let lastName = ctx.userData.profile.lastName
-            fullName = (firstName + " " + lastName).trimmed
-        }
+        fullName = ctx.userData.profile.displayName(.full)
         email = ctx.userData.profile.email
         
         // Load referral code from profile (already loaded after sign-in)

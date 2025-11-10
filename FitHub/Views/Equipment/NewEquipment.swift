@@ -19,6 +19,7 @@ struct NewEquipment: View {
     @State private var equipmentCreated: Bool = false
     @State private var selectingEquipment: Bool = false
     @State private var showDeleteAlert: Bool = false
+    @State private var showRestoreAlert: Bool = false
     @State private var alternativeEquipment: [GymEquipment] = []
     @State private var draft: InitEquipment
     let original: GymEquipment? 
@@ -47,9 +48,12 @@ struct NewEquipment: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
                         NameField(title: "Name", placeholder: "Equipment Name", text: $draft.name, error: nameError)
+                            .disabled(isReadOnly)
+
                         AliasesField(aliases: $draft.aliases, readOnly: isReadOnly)
                         alternativeSection
                         categoryPicker
+                            .disabled(isReadOnly)
                         
                         if EquipmentCategory.platedCats.contains(draft.equCategory) {
                             pegCountPicker
@@ -70,10 +74,9 @@ struct NewEquipment: View {
                             descriptionField
                         }
                     }
-                    .padding()
-                    .disabled(isReadOnly)
+                    .padding(.bottom)
                     
-                    if !kbd.isVisible && !isReadOnly {
+                    if !kbd.isVisible {
                         RectangularButton(
                             title: isEditing ? "Save Changes" : "Create Equipment",
                             enabled: isInputValid,
@@ -82,27 +85,30 @@ struct NewEquipment: View {
                             equipmentCreated = true
                             draft.name = InputLimiter.trimmed(draft.name)
                             
-                            if !isReadOnly {
-                                if let orig = original {
-                                    ctx.equipment.replace(at: orig.id, with: equipment)
-                                } else {
-                                    ctx.equipment.addEquipment(equipment)
-                                }
-                            }
+                            ctx.equipment.updateEquipment(equipment: equipment)
                             
                             dismiss()
                         }
-                        .padding()
-                        
+                        .padding(.vertical)
+                
                         if isEditing {
-                            RectangularButton(title: "Delete Equipment", systemImage: "trash", bgColor: .red, action: {
-                                showDeleteAlert = true
-                            })
-                            .padding()
+                            switch ctx.equipment.getEquipmentLocation(equipment) {
+                            case .user:
+                                RectangularButton(title: "Delete Equipment", systemImage: "trash", bgColor: .red, action: {
+                                    showDeleteAlert = true
+                                })
+                            case .bundled:
+                                RectangularButton(title: "Restore Equipment", systemImage: "arrow.2.circlepath", bgColor: .red, action: {
+                                    showRestoreAlert = true
+                                })
+                            case .none:
+                                EmptyView()
+                            }
                         }
                     }
                 }
             }
+            .padding()
             .navigationTitle(isEditing ? "Edit Equipment" : "New Equipment").navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -127,6 +133,16 @@ struct NewEquipment: View {
         } message: {
             Text("This action can’t be undone.")
         }
+        .alert("Restore bundled version?", isPresented: $showRestoreAlert) {
+            Button("Cancel", role: .cancel) {}
+            Button("Restore", role: .destructive) {
+                if let restored = ctx.equipment.restoreBundledEquipment(equipment) {
+                    draft = .init(from: restored)
+                }
+            }
+        } message: {
+            Text("This will discard your changes and reload the original equipment.")
+        }
     }
     
     private var isEditing: Bool { original != nil }
@@ -140,32 +156,17 @@ struct NewEquipment: View {
         
     // ────────── Sub-views ------------------------------------------------
     private var alternativeSection: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            let alt = draft.alternativeEquipment ?? []  // Always show the label
-            (
-                Text("Alternative Equipment: ")
-                    .font(.headline)
-                +
-                Text(alt.isEmpty ? "None" : alt.joined(separator: ", "))
-                    .foregroundStyle(alt.isEmpty ? .secondary : .primary)
-            )
-            .multilineTextAlignment(.leading)
-
-            if !isReadOnly {
-                Button {
-                    selectingEquipment = true
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "plus")
-                        Text("Select Equipment")
-                    }
-                }
-                .foregroundStyle(.blue)
-                .buttonStyle(.plain)
-            }
-        }
+        let alt = draft.alternativeEquipment ?? []
+        return FieldEditor(
+            title: "Alternative Equipment",
+            valueText: alt.isEmpty ? "None" : alt.joined(separator: ", "),
+            isEmpty: alt.isEmpty,
+            isReadOnly: isReadOnly,
+            buttonLabel: "Select Equipment",
+            onEdit: { selectingEquipment = true }
+        )
     }
-    
+
     private var categoryPicker: some View {
         HStack {
             Text("Category").font(.headline)

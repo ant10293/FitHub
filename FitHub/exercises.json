@@ -286,7 +286,8 @@
         "difficulty": "Nov.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Independent",
-        "resistance": "Machine"
+        "resistance": "Machine",
+        "weightInstruction" : "Per Peg"
     },
     {
         "name": "Converging Smith Incline Bench Press",
@@ -310,7 +311,8 @@
         "difficulty": "Nov.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Independent",
-        "resistance": "Machine"
+        "resistance": "Machine",
+        "weightInstruction" : "Per Peg"
     },
     {
         "name": "Converging Smith Decline Bench Press",
@@ -334,7 +336,8 @@
         "difficulty": "Nov.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Independent",
-        "resistance": "Machine"
+        "resistance": "Machine",
+        "weightInstruction" : "Per Peg"
     },
     {
         "name": "Guillotine Press",
@@ -2425,7 +2428,8 @@
 		"difficulty": "Nov.",
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Independent",
-		"resistance": "Machine"
+		"resistance": "Machine",
+        "weightInstruction" : "Per Peg"
 	},
 	{
 		"name": "Plate-Loaded Shoulder Press",

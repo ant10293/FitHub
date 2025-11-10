@@ -14,10 +14,10 @@ struct StrengthPercentileView: View {
         VStack {
             Text("Strength Standards")
                 .font(.title2)
-                .padding(.bottom, 10)
+                .padding(.vertical)
             
             // dont have any strength standards for isometric or cardio exercises
-            maxView(usesWeight: exercise.usesWeight)
+            maxView
 
             Text(exercise.performanceTitle(includeInstruction: true))
                 .font(.headline)
@@ -30,10 +30,11 @@ struct StrengthPercentileView: View {
     }
     
     // MARK: - Subviews
-    private func maxView(usesWeight: Bool) -> some View {
+    private var maxView: some View {
+        let performanceTitle = exercise.performanceTitle(includeInstruction: false)
         if maxValue.actualValue <= 0 {
             return AnyView(
-                Text("No \(exercise.performanceTitle(includeInstruction: false)) available for this exercise.")
+                Text("No \(performanceTitle) available for this exercise.")
                     .font(.subheadline)
                     .foregroundStyle(.gray)
                     .padding(.bottom)
@@ -42,7 +43,7 @@ struct StrengthPercentileView: View {
             return AnyView(
                 VStack {
                     if let percentile = percentile {
-                        (Text(usesWeight ? "Your one rep max of " : "Your max of ")
+                        (Text("Your \(performanceTitle) of ")
                          + maxValue.labeledText.bold()
                          + Text(" makes you stronger than ")
                          + Text("\(percentile)%").bold()
@@ -113,11 +114,11 @@ struct StrengthPercentileView: View {
     private func get1RMValues(key: CSVKey) -> [(key: String, value: PeakMetric)]? {
         var values: [String: PeakMetric] = [:]
         
-        if key == .age {
-            values = maxValuesAge
-        } else if key == .bodyweight {
-            values = maxValuesBW
+        switch key {
+        case .age: values = maxValuesAge
+        case .bodyweight: values = maxValuesBW
         }
+        
         if values.isEmpty { return nil }
 
         // Only include strength categories (no "Age"/"BW" cells in the table)

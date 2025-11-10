@@ -144,8 +144,12 @@ final class JSONFileManager {
         return loadFromDocuments([UUID: ExerciseEquipmentAdjustments].self, from: filename, itemType: "adjustments")
     }
     
-    func loadBundledOverrides(from filename: String) -> [UUID: GymEquipment]? {
-        return loadFromDocuments([UUID: GymEquipment].self, from: filename, itemType: "bundled overrides")
+    func loadEquipmentOverrides(from filename: String) -> [UUID: GymEquipment]? {
+        return loadFromDocuments([UUID: GymEquipment].self, from: filename, itemType: "equipment overrides")
+    }
+    
+    func loadExerciseOverrides(from filename: String) -> [UUID: Exercise]? {
+        return loadFromDocuments([UUID: Exercise].self, from: filename, itemType: "exercise overrides")
     }
     
     func loadUserEquipment(from filename: String) -> [GymEquipment]? {

@@ -252,6 +252,8 @@
 		65DD052C2EBFE857000D159C /* ExercisePickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD052B2EBFE857000D159C /* ExercisePickerLabel.swift */; };
 		65DD05322EC021D1000D159C /* CalcResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05312EC021D1000D159C /* CalcResultView.swift */; };
 		65DD05352EC02A20000D159C /* MeasurementCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05332EC02A20000D159C /* MeasurementCard.swift */; };
+		65DD05372EC28A7D000D159C /* FieldEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05362EC28A7D000D159C /* FieldEditor.swift */; };
+		65DD05392EC28E73000D159C /* InlineDeletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05382EC28E73000D159C /* InlineDeletion.swift */; };
 		65E05D0F2E7B81F900E39CC2 /* Rounding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D0E2E7B81F900E39CC2 /* Rounding.swift */; };
 		65E05D112E7B88FC00E39CC2 /* WeightPlates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */; };
 		65E05D132E7B894900E39CC2 /* InitEquipment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D122E7B894900E39CC2 /* InitEquipment.swift */; };
@@ -515,6 +517,8 @@
 		65DD052B2EBFE857000D159C /* ExercisePickerLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisePickerLabel.swift; sourceTree = "<group>"; };
 		65DD05312EC021D1000D159C /* CalcResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcResultView.swift; sourceTree = "<group>"; };
 		65DD05332EC02A20000D159C /* MeasurementCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementCard.swift; sourceTree = "<group>"; };
+		65DD05362EC28A7D000D159C /* FieldEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldEditor.swift; sourceTree = "<group>"; };
+		65DD05382EC28E73000D159C /* InlineDeletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineDeletion.swift; sourceTree = "<group>"; };
 		65E05D0E2E7B81F900E39CC2 /* Rounding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rounding.swift; sourceTree = "<group>"; };
 		65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightPlates.swift; sourceTree = "<group>"; };
 		65E05D122E7B894900E39CC2 /* InitEquipment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitEquipment.swift; sourceTree = "<group>"; };
@@ -642,6 +646,7 @@
 				65039B892E8474BC007A31E1 /* SetLoadEditor.swift */,
 				65E199DA2E9C68B200682415 /* ExInstructionsEditor.swift */,
 				65CFBFB22E1F9B4500CD521E /* AliasesField.swift */,
+				65DD05362EC28A7D000D159C /* FieldEditor.swift */,
 				65CFBFB42E1FA03800CD521E /* NameField.swift */,
 				65ECFF112E25A4D60091032A /* InputField.swift */,
 				657067A32E49729A0063090C /* TemplateEditor.swift */,
@@ -1063,6 +1068,7 @@
 				653136202E53F11A00EECCA5 /* TappableDisclosure.swift */,
 				6550ADB92E6BAC12002072C1 /* TemplateNavigator.swift */,
 				65AB47F42EA31362001BEAFE /* WarningFooter.swift */,
+				65DD05382EC28E73000D159C /* InlineDeletion.swift */,
 			);
 			path = Reusable;
 			sourceTree = "<group>";
@@ -1478,6 +1484,7 @@
 				65CD3C492DD3C84F00C2B671 /* CalendarView.swift in Sources */,
 				65CD3C4A2DD3C84F00C2B671 /* HistoryView.swift in Sources */,
 				65039B932E9869E9007A31E1 /* MenuPickerRow.swift in Sources */,
+				65DD05372EC28A7D000D159C /* FieldEditor.swift in Sources */,
 				65DD051C2EB9BB8A000D159C /* ReferralCodeRetriever.swift in Sources */,
 				6550ADBE2E6BBEAA002072C1 /* TemplateRow.swift in Sources */,
 				65CD3C4B2DD3C84F00C2B671 /* ConsistencyGraph.swift in Sources */,
@@ -1637,6 +1644,7 @@
 				6548AB832DD824F500BD9DAD /* WeekWorkoutVM.swift in Sources */,
 				65CD3C872DD3C84F00C2B671 /* HomeView.swift in Sources */,
 				65CFBFA72E1F48F200CD521E /* NewEquipment.swift in Sources */,
+				65DD05392EC28E73000D159C /* InlineDeletion.swift in Sources */,
 				65CD3C882DD3C84F00C2B671 /* MainAppView.swift in Sources */,
 				65C5DC6D2DEFBD0A00B09AD2 /* Asset.swift in Sources */,
 				65A0D1CE2E304FCF008466D8 /* Unit.swift in Sources */,
