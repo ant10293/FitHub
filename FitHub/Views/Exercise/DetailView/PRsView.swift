@@ -52,10 +52,9 @@ struct PRsView: View {
             if showingUpdate1RMView {
                 UpdateMaxEditor(
                     exercise: exercise,
-                    onSave: { newMax in
+                    onSave: { newMax, date in
                         kbd.dismiss()
-                        ctx.exercises.updateExercisePerformance(for: exercise, newValue: newMax)
-                        ctx.exercises.savePerformanceData()
+                        ctx.exercises.updateExercisePerformance(for: exercise, newValue: newMax, setOn: date, shouldSave: true)
                         showingUpdate1RMView = false
                     },
                     onCancel: {

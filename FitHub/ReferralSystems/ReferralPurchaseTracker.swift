@@ -21,7 +21,9 @@ final class ReferralPurchaseTracker {
     ///   - originalTransactionID: The original transaction ID (used to link Apple webhooks to users)
     ///   - environment: The transaction environment ("Production" or "Sandbox")
     func trackPurchase(productID: String, transactionID: UInt64, originalTransactionID: UInt64, environment: String) async {
-        // Must be signed in        
+        await ReferralAttributor().claimIfNeeded()
+        
+        // Must be signed in
         guard let userId = AuthService.getUid() else {
             print("⚠️ Cannot track referral purchase: user not authenticated")
             return

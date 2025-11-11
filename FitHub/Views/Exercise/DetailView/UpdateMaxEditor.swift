@@ -10,11 +10,12 @@ import SwiftUI
 struct UpdateMaxEditor: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var peak: PeakMetric
+    @State private var plannedDate: Date?
     let exercise: Exercise
-    let onSave: (PeakMetric) -> Void
+    let onSave: (PeakMetric, Date?) -> Void
     let onCancel: () -> Void
     
-    init(exercise: Exercise, onSave: @escaping (PeakMetric) -> Void, onCancel: @escaping () -> Void) {
+    init(exercise: Exercise, onSave: @escaping (PeakMetric, Date?) -> Void, onCancel: @escaping () -> Void) {
         self.exercise = exercise
         self.peak = exercise.getPeakMetric(metricValue: 0)
         self.onSave = onSave
@@ -25,13 +26,25 @@ struct UpdateMaxEditor: View {
         GenericEditWrapper(
             title: "Update \(exercise.performanceTitle(includeInstruction: false))",
             onSave: {
-                onSave(peak)
+                onSave(peak, plannedDate)
             },
             onCancel: {
                 onCancel()
             },
             content: { focus in
                 NewPeakEntry(newPeak: $peak, focus: focus)
+            },
+            additionalContent: {
+                DatePicker(
+                    "",
+                    selection: Binding(
+                        get: { plannedDate ?? Date() },
+                        set: { plannedDate = $0 }
+                    ),
+                    displayedComponents: .date
+                )
+                .datePickerStyle(CompactDatePickerStyle())
+                .padding(.horizontal)
             }
         )
     }

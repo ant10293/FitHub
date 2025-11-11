@@ -4,56 +4,58 @@ import StoreKit
 struct SubscriptionView: View {
     @EnvironmentObject var ctx: AppContext
     @Environment(\.openURL) private var openURL
+    @StateObject private var kbd = KeyboardManager.shared
     @State private var selectedProductID: String?
     @State private var referralCode: String = ""
     @State private var hasClaimedCode: Bool = false
 
     var body: some View {
         ScrollView {
-        VStack(spacing: 20) {
+            VStack(spacing: 20) {
                 Spacer()
+                    
+                referralCodeSection
+
+                plansSection
                 
-            referralCodeSection
-
-            plansSection
-            
-            if let note = autoRenewFootnote {
-                Text(note)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-
-            VStack(spacing: 12) {
-                if isCurrentSelection {
-                    Text("You’re already on this plan.")
+                if let note = autoRenewFootnote {
+                    Text(note)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
                 }
 
-                RectangularButton(
-                    title: "Continue",
-                    systemImage: "arrow.forward.circle.fill",
-                    enabled: isCheckoutEnabled,
-                    action: purchaseSelected
-                )
+                VStack(spacing: 12) {
+                    if isCurrentSelection {
+                        Text("You’re already on this plan.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
 
-                HStack(spacing: 12) {
-                    // FIXME: this doesnt even do anything. this is likely because we're working with a dev version
-                    Button("Restore") { Task { await ctx.store.restore() } }
-                        .buttonStyle(.bordered)
+                    RectangularButton(
+                        title: "Continue",
+                        systemImage: "arrow.forward.circle.fill",
+                        enabled: isCheckoutEnabled,
+                        action: purchaseSelected
+                    )
 
-                    if showsManageButton {
-                        Button("Manage") { manageSubscriptions(openURL: openURL) }
+                    HStack(spacing: 12) {
+                        // FIXME: this doesnt even do anything. this is likely because we're working with a dev version
+                        Button("Restore") { Task { await ctx.store.restore() } }
                             .buttonStyle(.bordered)
+
+                        if showsManageButton {
+                            Button("Manage") { manageSubscriptions(openURL: openURL) }
+                                .buttonStyle(.bordered)
+                        }
                     }
                 }
-            }
-                
+                    
                 Spacer()
             }
         }
         .padding()
+        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .navigationBarTitle("FitHub Pro", displayMode: .inline)
         .task {
             if ctx.store.products.isEmpty { await ctx.store.configure() }
@@ -87,35 +89,32 @@ struct SubscriptionView: View {
             .autocapitalization(.allCharacters)
             .autocorrectionDisabled()
             .inputStyle()
-                .disabled(hasClaimedCode)
-                .overlay(alignment: .trailing) {
-                    if hasClaimedCode {
-                        Image(systemName: "lock.fill")
-                            .foregroundStyle(.secondary)
-                            .padding(.trailing, 12)
-                    }
+            .disabled(hasClaimedCode)
+            .overlay(alignment: .trailing) {
+                if hasClaimedCode {
+                    Image(systemName: "lock.fill")
+                        .foregroundStyle(.secondary)
+                        .padding(.trailing, 12)
                 }
-                .task {
-                    if let claimed = await ReferralRetriever.getClaimedCode() {
-                        referralCode = claimed
-                        hasClaimedCode = true
-                    } else {
-                        hasClaimedCode = false
+            }
+            .task {
+                if let claimed = await ReferralRetriever.getClaimedCode() {
+                    referralCode = claimed
+                    hasClaimedCode = true
+                } else {
+                    hasClaimedCode = false
                 }
             }
             .onChange(of: referralCode) { _, newValue in
-                    guard !hasClaimedCode else { return }
-                    let trimmed = newValue.trimmed.uppercased()
-                    if trimmed.isEmpty {
-                        UserDefaults.standard.removeObject(forKey: "pendingReferralCode")
-                    } else if ReferralCodeGenerator.isValidCode(trimmed) {
-                        UserDefaults.standard.set(trimmed, forKey: "pendingReferralCode")
-                        Task {
-                            await ReferralAttributor().claimIfNeeded(source: .manualEntry)
-                        }
-                    }
+                guard !hasClaimedCode else { return }
+                let trimmed = newValue.trimmed.uppercased()
+                if trimmed.isEmpty {
+                    UserDefaults.standard.removeObject(forKey: "pendingReferralCode")
+                } else if ReferralCodeGenerator.isValidCode(trimmed) {
+                    UserDefaults.standard.set(trimmed, forKey: "pendingReferralCode")
                 }
             }
+        }
     }
 
     private var plansSection: some View {

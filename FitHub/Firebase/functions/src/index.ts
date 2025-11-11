@@ -1,9 +1,44 @@
-import * as functions from "firebase-functions";
+import * as functions from "firebase-functions/v1";
 import * as admin from "firebase-admin";
 import { AppStoreServerAPIClient, Environment, SignedDataVerifier } from "@apple/app-store-server-library";
+import Stripe from "stripe";
+import type { Response } from "express";
 
 // Initialize Firebase Admin
 admin.initializeApp();
+
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+const stripeApiVersion = process.env.STRIPE_API_VERSION as Stripe.StripeConfig["apiVersion"];
+const stripeClient = stripeSecretKey
+  ? new Stripe(stripeSecretKey, { apiVersion: stripeApiVersion })
+  : null;
+
+const STRIPE_ONBOARDING_RETURN_URL = process.env.STRIPE_ONBOARDING_RETURN_URL;
+const STRIPE_ONBOARDING_REFRESH_URL = process.env.STRIPE_ONBOARDING_REFRESH_URL;
+const STRIPE_DASHBOARD_REDIRECT_URL = process.env.STRIPE_DASHBOARD_REDIRECT_URL;
+
+class HttpError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+  }
+}
+
+const requireEnv = (value: string | undefined, name: string): string => {
+  if (!value) {
+    throw new HttpError(500, `${name} is not configured.`);
+  }
+  return value;
+};
+
+const getStripeClient = (): Stripe => {
+  if (!stripeClient) {
+    throw new HttpError(500, "Stripe is not configured. Missing STRIPE_SECRET_KEY.");
+  }
+  return stripeClient;
+};
 
 type AppStoreConfig = {
   privateKey: string;
@@ -339,7 +374,7 @@ async function updateReferralCodeSubscriptions(userId: string): Promise<void> {
 export const validateAllSubscriptions = functions.pubsub
   .schedule("0 2 * * *")
   .timeZone("UTC")
-  .onRun(async (context) => {
+  .onRun(async () => {
     console.log("Starting daily subscription validation...");
     
     const codesSnapshot = await admin.firestore()
@@ -433,3 +468,315 @@ async function validateUserSubscription(userId: string): Promise<void> {
     throw error;
   }
 }
+
+/**
+ * Stripe Connect integration for affiliate payouts
+ */
+export const createAffiliateOnboardingLink = functions.https.onRequest(async (req, res) => {
+  if (req.method !== "POST") {
+    res.status(405).json({ error: { status: 405, message: "Method not allowed." } });
+    return;
+  }
+
+  try {
+    const decodedToken = await authenticateRequest(req);
+    const payload = extractDataPayload(req.body);
+    const referralCode = normalizeReferralCode(payload.referralCode);
+    const requestedCountry = typeof payload.country === "string" ? payload.country : undefined;
+
+    const { codeRef, codeData } = await getReferralCodeRecord(referralCode);
+    assertUserOwnsReferralCode(codeData, decodedToken.uid);
+
+    const account = await ensureStripeAccountForAffiliate({
+      codeRef,
+      codeData,
+      user: decodedToken,
+      requestedCountry,
+    });
+
+    const stripe = getStripeClient();
+    const accountLink = await stripe.accountLinks.create({
+      account: account.id,
+      refresh_url: requireEnv(STRIPE_ONBOARDING_REFRESH_URL, "STRIPE_ONBOARDING_REFRESH_URL"),
+      return_url: requireEnv(STRIPE_ONBOARDING_RETURN_URL, "STRIPE_ONBOARDING_RETURN_URL"),
+      type: "account_onboarding",
+    });
+
+    await codeRef.update({
+      stripeLastOnboardingAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    respondSuccess(res, {
+      accountId: account.id,
+      url: accountLink.url,
+      expiresAt: accountLink.expires_at ?? null,
+      createdAt: accountLink.created ?? null,
+      detailsSubmitted: account.details_submitted ?? false,
+      payoutsEnabled: account.payouts_enabled ?? false,
+    });
+  } catch (error) {
+    handleFunctionError(res, error);
+  }
+});
+
+export const getAffiliateDashboardLink = functions.https.onRequest(async (req, res) => {
+  if (req.method !== "POST") {
+    res.status(405).json({ error: { status: 405, message: "Method not allowed." } });
+    return;
+  }
+
+  try {
+    const decodedToken = await authenticateRequest(req);
+    const payload = extractDataPayload(req.body);
+    const referralCode = normalizeReferralCode(payload.referralCode);
+
+    const { codeRef, codeData } = await getReferralCodeRecord(referralCode);
+    assertUserOwnsReferralCode(codeData, decodedToken.uid);
+
+    const accountId =
+      typeof codeData.stripeAccountId === "string" && codeData.stripeAccountId.trim().length > 0
+        ? codeData.stripeAccountId.trim()
+        : undefined;
+
+    if (!accountId) {
+      throw new HttpError(400, "Stripe account not connected. Please connect your Stripe account first.");
+    }
+
+    const stripe = getStripeClient();
+    let account: Stripe.Account;
+
+    try {
+      account = await stripe.accounts.retrieve(accountId);
+    } catch (error) {
+      if (isStripeResourceMissing(error)) {
+        await clearStripeAccountFields(codeRef);
+        throw new HttpError(410, "Stripe account no longer exists. Please reconnect your Stripe account.");
+      }
+      throw error;
+    }
+
+    await syncStripeAccountFields(codeRef, account);
+
+    const loginLinkResponse = await stripe.accounts.createLoginLink(account.id);
+    const loginUrl = new URL(loginLinkResponse.url);
+
+    if (typeof STRIPE_DASHBOARD_REDIRECT_URL === "string" && STRIPE_DASHBOARD_REDIRECT_URL.trim().length > 0) {
+      loginUrl.searchParams.set("redirect_url", STRIPE_DASHBOARD_REDIRECT_URL.trim());
+    }
+
+    await codeRef.update({
+      stripeLastDashboardLinkAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    respondSuccess(res, {
+      accountId: account.id,
+      url: loginUrl.toString(),
+      expiresAt: null,
+      createdAt: loginLinkResponse.created ?? null,
+      payoutsEnabled: account.payouts_enabled ?? false,
+    });
+  } catch (error) {
+    handleFunctionError(res, error);
+  }
+});
+
+type DataPayload = Record<string, unknown>;
+
+const authenticateRequest = async (req: functions.https.Request): Promise<admin.auth.DecodedIdToken> => {
+  const authHeader = req.get("Authorization") ?? req.get("authorization");
+  if (!authHeader) {
+    throw new HttpError(401, "Missing Authorization header.");
+  }
+
+  const match = authHeader.match(/^Bearer (.+)$/i);
+  if (!match) {
+    throw new HttpError(401, "Invalid Authorization token.");
+  }
+
+  try {
+    return await admin.auth().verifyIdToken(match[1]);
+  } catch (error) {
+    console.error("Failed to verify auth token", error);
+    throw new HttpError(401, "Invalid auth token.");
+  }
+};
+
+const extractDataPayload = (body: unknown): DataPayload => {
+  if (!body || typeof body !== "object") {
+    throw new HttpError(400, "Invalid request body.");
+  }
+
+  const payload = (body as { data?: unknown }).data;
+  if (!payload || typeof payload !== "object") {
+    throw new HttpError(400, "Missing data payload.");
+  }
+
+  return payload as DataPayload;
+};
+
+const normalizeReferralCode = (value: unknown): string => {
+  const code = typeof value === "string" ? value.trim() : "";
+  if (!code) {
+    throw new HttpError(400, "referralCode is required.");
+  }
+  return code.toUpperCase();
+};
+
+const getReferralCodeRecord = async (
+  referralCode: string
+): Promise<{
+  codeRef: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>;
+  codeData: FirebaseFirestore.DocumentData;
+}> => {
+  const codeRef = admin.firestore().collection("referralCodes").doc(referralCode);
+  const snapshot = await codeRef.get();
+
+  if (!snapshot.exists) {
+    throw new HttpError(404, "Referral code not found.");
+  }
+
+  return {
+    codeRef,
+    codeData: snapshot.data() ?? {},
+  };
+};
+
+const assertUserOwnsReferralCode = (codeData: FirebaseFirestore.DocumentData, uid: string): void => {
+  const createdBy = typeof codeData.createdBy === "string" ? codeData.createdBy : undefined;
+  if (createdBy && createdBy !== uid) {
+    throw new HttpError(403, "You do not have permission to manage this referral code.");
+  }
+};
+
+interface EnsureStripeAccountOptions {
+  codeRef: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>;
+  codeData: FirebaseFirestore.DocumentData;
+  user: admin.auth.DecodedIdToken;
+  requestedCountry?: string;
+}
+
+const ensureStripeAccountForAffiliate = async (
+  options: EnsureStripeAccountOptions
+): Promise<Stripe.Account> => {
+  const stripe = getStripeClient();
+  const { codeRef, codeData, user, requestedCountry } = options;
+
+  const existingAccountId =
+    typeof codeData.stripeAccountId === "string" && codeData.stripeAccountId.trim().length > 0
+      ? codeData.stripeAccountId.trim()
+      : undefined;
+
+  let account: Stripe.Account | null = null;
+
+  if (existingAccountId) {
+    try {
+      account = await stripe.accounts.retrieve(existingAccountId);
+    } catch (error) {
+      if (isStripeResourceMissing(error)) {
+        await clearStripeAccountFields(codeRef);
+        account = null;
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  if (!account) {
+    let normalizedCountry: string | undefined;
+    if (typeof requestedCountry === "string" && requestedCountry.trim().length === 2) {
+      normalizedCountry = requestedCountry.trim().toUpperCase();
+    } else if (
+      typeof codeData.stripeAccountCountry === "string" &&
+      codeData.stripeAccountCountry.trim().length === 2
+    ) {
+      normalizedCountry = codeData.stripeAccountCountry.trim().toUpperCase();
+    }
+
+    if (!normalizedCountry || !/^[A-Z]{2}$/.test(normalizedCountry)) {
+      normalizedCountry = "US";
+    }
+
+    const emailFromDoc =
+      typeof codeData.influencerEmail === "string" && codeData.influencerEmail.trim().length > 0
+        ? codeData.influencerEmail.trim()
+        : undefined;
+
+    account = await stripe.accounts.create({
+      type: "express",
+      country: normalizedCountry,
+      email: emailFromDoc ?? user.email ?? undefined,
+      metadata: {
+        referral_code: codeRef.id,
+        owner_uid: user.uid,
+      },
+      business_profile: {
+        product_description: "FitHub affiliate payouts",
+      },
+      capabilities: {
+        transfers: { requested: true },
+      },
+    });
+  }
+
+  await syncStripeAccountFields(codeRef, account);
+  return account;
+};
+
+const syncStripeAccountFields = async (
+  codeRef: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,
+  account: Stripe.Account
+): Promise<void> => {
+  const requirements = account.requirements ?? null;
+
+  await codeRef.update({
+    stripeAccountId: account.id,
+    stripeAccountCountry: account.country ?? null,
+    stripeDetailsSubmitted: account.details_submitted ?? false,
+    stripePayoutsEnabled: account.payouts_enabled ?? false,
+    stripeRequirementsDue: requirements?.currently_due ?? [],
+    stripeLastStripeSyncAt: admin.firestore.FieldValue.serverTimestamp(),
+  });
+};
+
+const clearStripeAccountFields = async (
+  codeRef: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>
+): Promise<void> => {
+  await codeRef.update({
+    stripeAccountId: null,
+    stripeAccountCountry: null,
+    stripeDetailsSubmitted: false,
+    stripePayoutsEnabled: false,
+    stripeRequirementsDue: [],
+    stripeLastStripeSyncAt: admin.firestore.FieldValue.serverTimestamp(),
+  });
+};
+
+const isStripeResourceMissing = (error: unknown): boolean => {
+  return error instanceof Stripe.errors.StripeError && error.code === "resource_missing";
+};
+
+const respondSuccess = (res: Response, result: unknown, status = 200): void => {
+  res.status(status).json({ result });
+};
+
+const handleFunctionError = (res: Response, error: unknown): void => {
+  if (error instanceof HttpError) {
+    res.status(error.status).json({ error: { status: error.status, message: error.message } });
+    return;
+  }
+
+  if (error instanceof Stripe.errors.StripeError) {
+    const status = error.statusCode ?? 500;
+    res.status(status).json({ error: { status, message: error.message } });
+    return;
+  }
+
+  if (error instanceof Error) {
+    console.error("Unhandled error during Stripe affiliate request:", error);
+    res.status(500).json({ error: { status: 500, message: "An unexpected error occurred." } });
+    return;
+  }
+
+  console.error("Unknown error during Stripe affiliate request:", error);
+  res.status(500).json({ error: { status: 500, message: "An unexpected error occurred." } });
+};

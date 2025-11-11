@@ -147,10 +147,77 @@ final class ReferralCodeAdmin: ObservableObject {
     }
     
     /// Gets statistics for a referral code
-    func getCodeStats(_ code: String) async throws -> [String: Any]? {
+    func getCodeData(_ code: String) async throws -> [String: Any]? {
         let codeRef = db.collection("referralCodes").document(code.uppercased())
         let doc = try await codeRef.getDocument()
         return doc.data()
+    }
+    
+    func getData(_ code: String) async throws -> (email: String, pMethod: String, pFreq: PaymentFrequency, notes: String, stats: CodeStats, stripe: StripeAffiliateStatus) {
+        let codeData = try await getCodeData(code)
+        let (email, pMethod, pFreq, notes) = loadAffiliateInfo(from: codeData)
+        let stats    = try await loadReferralInfo(codeData: codeData)
+        let stripe   = loadStripeStatus(from: codeData)
+        return (email, pMethod, pFreq, notes, stats, stripe)
+    }
+    
+    private func loadAffiliateInfo(from codeData: [String: Any]?) -> (email: String, pMethod: String, pFreq: PaymentFrequency, notes: String) {
+        guard let data = codeData else { return ("", "", .monthly, "") }
+
+        let email   = data["influencerEmail"] as? String ?? ""
+        let pMethod = data["payoutMethod"] as? String ?? ""
+        let notes   = data["notes"] as? String ?? ""
+
+        let pFreq: PaymentFrequency = {
+            if let raw = data["payoutFrequency"] as? String,
+               let freq = PaymentFrequency(rawValue: raw) {
+                return freq
+            } else {
+                return .monthly
+            }
+        }()
+
+        return (email, pMethod, pFreq, notes)
+    }
+
+    private func loadStripeStatus(from codeData: [String: Any]?) -> StripeAffiliateStatus {
+        guard let data = codeData else { return .empty }
+
+        let accountId = data["stripeAccountId"] as? String
+        let detailsSubmitted = data["stripeDetailsSubmitted"] as? Bool ?? false
+        let payoutsEnabled = data["stripePayoutsEnabled"] as? Bool ?? false
+        let requirementsDue = data["stripeRequirementsDue"] as? [String] ?? []
+        let lastStripeSyncAt = (data["stripeLastStripeSyncAt"] as? Timestamp)?.dateValue()
+        let lastOnboardingAt = (data["stripeLastOnboardingAt"] as? Timestamp)?.dateValue()
+        let lastDashboardLinkAt = (data["stripeLastDashboardLinkAt"] as? Timestamp)?.dateValue()
+
+        return StripeAffiliateStatus(
+            accountId: accountId,
+            detailsSubmitted: detailsSubmitted,
+            payoutsEnabled: payoutsEnabled,
+            requirementsDue: requirementsDue,
+            lastStripeSyncAt: lastStripeSyncAt,
+            lastOnboardingAt: lastOnboardingAt,
+            lastDashboardLinkAt: lastDashboardLinkAt
+        )
+    }
+
+    func loadReferralInfo(codeData: [String: Any]?) async throws -> CodeStats {
+        guard let data = codeData else { return CodeStats.blankStats }
+        // parse arrays, ignoring empty strings
+        let usedBy = (data["usedBy"] as? [String] ?? []).filter { !$0.isEmpty }
+        let monthlyPurchasedBy = (data["monthlyPurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
+        let annualPurchasedBy = (data["annualPurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
+        let lifetimePurchasedBy = (data["lifetimePurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
+        
+        return CodeStats(
+            signUps: usedBy.count,
+            monthlyPurchases: monthlyPurchasedBy.count,
+            annualPurchases: annualPurchasedBy.count,
+            lifetimePurchases: lifetimePurchasedBy.count,
+            lastUsedAt: (data["lastUsedAt"] as? Timestamp)?.dateValue(),
+            lastPurchaseAt: (data["lastPurchaseAt"] as? Timestamp)?.dateValue()
+        )
     }
     
     /// Lists all referral codes

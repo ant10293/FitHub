@@ -256,7 +256,6 @@ final class PremiumStore: ObservableObject {
         var kind: MembershipType = .free
 
         for await result in SKTransaction.currentEntitlements {
-            print(result)
             guard case .verified(let t) = result else { continue }
             guard t.revocationDate == nil else { continue }
 

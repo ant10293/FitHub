@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>FitHub · Stripe Connected</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0d1117;
+        --panel: rgba(13, 17, 23, 0.85);
+        --text: #f5f6f7;
+        --accent: #2f81f7;
+        --accent-hover: #1b62d0;
+        --success: #34c759;
+        --muted: rgba(245, 246, 247, 0.7);
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f6f8fb;
+          --panel: rgba(255, 255, 255, 0.95);
+          --text: #1f2328;
+          --accent: #2563eb;
+          --accent-hover: #1d4ed8;
+          --success: #16a34a;
+          --muted: rgba(31, 35, 40, 0.65);
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: radial-gradient(circle at top left, rgba(47, 129, 247, 0.18), transparent),
+          radial-gradient(circle at bottom right, rgba(52, 199, 89, 0.18), transparent), var(--bg);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "Segoe UI", sans-serif;
+        color: var(--text);
+      }
+
+      main {
+        width: min(520px, 100%);
+        background: var(--panel);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: clamp(24px, 4vw, 40px);
+        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.28);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(28px, 5vw, 34px);
+        letter-spacing: -0.015em;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      h1 span.badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.6em;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(52, 199, 89, 0.16);
+        color: var(--success);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      p {
+        margin: 16px 0;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+
+      section.actions {
+        margin: 26px 0 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      a.button {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 18px;
+        border-radius: 14px;
+        background: var(--accent);
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25);
+      }
+
+      a.button:hover {
+        background: var(--accent-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 16px 30px rgba(29, 78, 216, 0.25);
+      }
+
+      .disclaimer {
+        font-size: 0.85em;
+        color: var(--muted);
+        margin-top: 24px;
+      }
+
+      footer {
+        margin-top: 32px;
+        font-size: 0.8em;
+        color: rgba(245, 246, 247, 0.4);
+      }
+
+      @media (prefers-color-scheme: light) {
+        footer {
+          color: rgba(31, 35, 40, 0.45);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>
+        Stripe Linked
+        <span class="badge">Connected</span>
+      </h1>
+      <p>
+        Your Stripe Express account is now connected to FitHub. You can close this page and return to
+        the app, or jump into Stripe to review your payout settings.
+      </p>
+
+      <section class="actions">
+        <a class="button" href="https://connect.stripe.com/express_login" target="_blank" rel="noopener">
+          Manage Stripe Payouts
+        </a>
+      </section>
+
+      <p class="disclaimer">
+        Didn’t mean to end up here? You can safely close this tab. We’ll keep your progress ready in
+        FitHub.
+      </p>
+
+      <footer>Need help? Reach out to support@fithub.app.</footer>
+    </main>
+  </body>
+</html>
+
+
+
+

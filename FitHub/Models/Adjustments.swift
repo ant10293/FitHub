@@ -171,8 +171,7 @@ struct ExerciseEquipmentAdjustments: Codable, Identifiable, Equatable, Hashable 
     }
 }
 
-struct EquipmentAdjustment: Codable, Identifiable, Equatable, Hashable {
-    var id: AdjustmentCategory { category }
+struct EquipmentAdjustment: Codable, Equatable, Hashable {
     let category: AdjustmentCategory
     var value: AdjustmentValue
     /// Optional custom image stored on disk. Falls back to `category.image` when nil or empty.

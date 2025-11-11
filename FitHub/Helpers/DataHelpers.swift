@@ -151,7 +151,7 @@ extension String {
     
     func formatName() -> String {
         return (self.prefix(1).uppercased()
-        + self.dropFirst().lowercased())
+                + self.dropFirst().lowercased())
         .trimmingCharacters(in: .whitespaces)
     }
     
@@ -179,5 +179,9 @@ extension String {
         let upper = String(result[idx]).uppercased()
         result.replaceSubrange(idx...idx, with: upper)
         return result
+    }
+    
+    var formattedRequirement: String {
+        self.replacingOccurrences(of: "_", with: " ").capitalized
     }
 }

@@ -1,0 +1,5 @@
+"""
+FitHub payout analytics package.
+"""
+
+

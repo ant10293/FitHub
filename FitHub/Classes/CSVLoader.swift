@@ -105,23 +105,23 @@ extension CSVLoader {
         guard !sortedRows.isEmpty else { return [:] }
 
         // Pick the user's bracket row
-                let chosen: [String: Double] = {
-                    for i in 0..<(sortedRows.count - 1) {
-                        let a = sortedRows[i].0
-                        let b = sortedRows[i + 1].0
-                        if roundedValue >= a && roundedValue < b {
-                            return sortedRows[i].1
-                        }
-                    }
-                    return sortedRows.last?.1 ?? [:]
-                }()
-
-                // Wrap doubles into PeakMetric using exercise.getPeakMetric(for:)
-                var out: [String: PeakMetric] = [:]
-                for (k, v) in chosen {
-                    out[k] = exercise.getPeakMetric(metricValue: v)
+        let chosen: [String: Double] = {
+            for i in 0..<(sortedRows.count - 1) {
+                let a = sortedRows[i].0
+                let b = sortedRows[i + 1].0
+                if roundedValue >= a && roundedValue < b {
+                    return sortedRows[i].1
                 }
-                return out
+            }
+            return sortedRows.last?.1 ?? [:]
+        }()
+
+        // Wrap doubles into PeakMetric using exercise.getPeakMetric(for:)
+        var out: [String: PeakMetric] = [:]
+        for (k, v) in chosen {
+            out[k] = exercise.getPeakMetric(metricValue: v)
+        }
+        return out
     }
 
     static func predict1RM(using data: [[String: String]], key: CSVKey, value: Double, fitnessLevel: StrengthLevel) -> Double {
@@ -215,7 +215,7 @@ extension CSVLoader {
     }
     
     static func calculateMaxValue(for exercise: Exercise, userData: UserData) -> PeakMetric? {
-        guard let url = exercise.url else { return nil }
+        guard let url = exercise.url, !url.isEmpty else { return nil }
         
         switch exercise.getPeakMetric(metricValue: 0) {
         case .oneRepMax:

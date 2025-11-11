@@ -15,15 +15,12 @@ struct InfluencerSettingsView: View {
     @Binding var fullName: String
     @Binding var email: String
     @Binding var notes: String
-    @Binding var payoutMethod: String
     @Binding var payoutFrequency: PaymentFrequency
     
     let referralCode: String
     
     @State private var originalEmail: String = ""
     @State private var editedEmail: String = ""
-    @State private var originalPayoutMethod: String = ""
-    @State private var editedPayoutMethod: String = ""
     @State private var originalPayoutFrequency: PaymentFrequency = .monthly
     @State private var editedPayoutFrequency: PaymentFrequency = .monthly
     @State private var isUpdatingEmail: Bool = false
@@ -40,12 +37,10 @@ struct InfluencerSettingsView: View {
                     fullName: $fullName,
                     email: $editedEmail,
                     notes: $notes,
-                    payoutMethod: $editedPayoutMethod,
                     payoutFrequency: $editedPayoutFrequency,
                     allowEditFullName: false,
                     allowEditEmail: true,
                     allowEditNotes: false,
-                    allowEditPayoutMethod: true,
                     allowEditPayoutFrequency: true,
                     emailErrorMessage: emailValidationError(editedEmail)
                 )
@@ -67,18 +62,6 @@ struct InfluencerSettingsView: View {
                         enabled: editedEmail != originalEmail && isEmailValidForSubmission(editedEmail),
                         bold: true,
                         action: updateEmail
-                    )
-                } else {
-                    ProgressView()
-                        .centerHorizontally()
-                }
-                
-                if !isUpdatingPayout {
-                    RectangularButton(
-                        title: "Update Payout Method",
-                        enabled: editedPayoutMethod != originalPayoutMethod,
-                        bold: true,
-                        action: updatePayoutMethod
                     )
                 } else {
                     ProgressView()
@@ -117,8 +100,6 @@ struct InfluencerSettingsView: View {
         // Store original email when view appears
         originalEmail = email
         editedEmail = email
-        originalPayoutMethod = payoutMethod
-        editedPayoutMethod = payoutMethod
         originalPayoutFrequency = payoutFrequency
         editedPayoutFrequency = payoutFrequency
     }
@@ -145,29 +126,6 @@ struct InfluencerSettingsView: View {
             } catch {
                 await MainActor.run {
                     isUpdatingEmail = false
-                    errorMessage = referralError(from: error)
-                }
-            }
-        }
-    }
-    
-    private func updatePayoutMethod() {
-        let trimmed = editedPayoutMethod.trimmed
-        
-        isUpdatingPayout = true
-        errorMessage = nil
-        
-        Task {
-            do {
-                try await admin.updateCreatedReferralCodePayoutMethod(code: referralCode, newPayoutMethod: trimmed)
-                await MainActor.run {
-                    payoutMethod = trimmed
-                    originalPayoutMethod = trimmed
-                    isUpdatingPayout = false
-                }
-            } catch {
-                await MainActor.run {
-                    isUpdatingPayout = false
                     errorMessage = referralError(from: error)
                 }
             }

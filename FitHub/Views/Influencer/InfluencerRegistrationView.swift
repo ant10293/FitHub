@@ -10,6 +10,7 @@ import FirebaseAuth
 import FirebaseFirestore
 
 struct InfluencerRegistrationView: View {
+    @Environment(\.openURL) private var openURL
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
     @StateObject private var admin = ReferralCodeAdmin()
@@ -17,7 +18,6 @@ struct InfluencerRegistrationView: View {
     @State private var fullName: String = ""
     @State private var email: String = ""
     @State private var notes: String = ""
-    @State private var payoutMethod: String = ""
     @State private var payoutFrequency: PaymentFrequency = .monthly
     @State private var isGenerating: Bool = false
     @State private var generatedCode: String?
@@ -28,6 +28,10 @@ struct InfluencerRegistrationView: View {
     @State private var isLoadingStats: Bool = false
     @State private var linkCopied: Bool = false
     @State private var codeCopied: Bool = false
+    @State private var stripeStatus: StripeAffiliateStatus = .empty
+    @State private var isRequestingStripeOnboardingLink: Bool = false
+    @State private var isRequestingStripeDashboardLink: Bool = false
+    @State private var stripeErrorMessage: String?
     
     var body: some View {
         NavigationStack {
@@ -48,6 +52,10 @@ struct InfluencerRegistrationView: View {
                                     .padding()
                                     .background(Color.blue.opacity(0.08))
                                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                            .stroke(Color.blue, lineWidth: 1)
+                                    )
                             }
                             .overlay(alignment: .trailing) {
                                 Button {
@@ -86,6 +94,8 @@ struct InfluencerRegistrationView: View {
                             }
                             .buttonStyle(.bordered)
                             
+                            stripeSection(for: code)
+                            
                             // Statistics
                             if isLoadingStats {
                                 ProgressView()
@@ -117,12 +127,10 @@ struct InfluencerRegistrationView: View {
                             fullName: $fullName,
                             email: $email,
                             notes: $notes,
-                            payoutMethod: $payoutMethod,
                             payoutFrequency: $payoutFrequency,
                             allowEditFullName: true,
                             allowEditEmail: true,
                             allowEditNotes: true,
-                            allowEditPayoutMethod: true,
                             allowEditPayoutFrequency: true,
                             emailErrorMessage: emailValidationError(email)
                         )
@@ -188,7 +196,6 @@ struct InfluencerRegistrationView: View {
                                 fullName: $fullName,
                                 email: $email,
                                 notes: $notes,
-                                payoutMethod: $payoutMethod,
                                 payoutFrequency: $payoutFrequency,
                                 referralCode: code
                             )
@@ -215,39 +222,39 @@ struct InfluencerRegistrationView: View {
         if let existingCode = ctx.userData.profile.referralCode, !existingCode.isEmpty {
             generatedCode = existingCode
             // Load email from Firestore for this code
-            loadEmailForCode(existingCode)
-            loadCodeStats()
+            loadAffiliateAndStats()
         }
     }
     
-    private func loadEmailForCode(_ code: String) {
+    private func loadAffiliateAndStats(showStatsLoader: Bool = true) {
+        guard let code = generatedCode else { return }
+
+        if showStatsLoader { isLoadingStats = true }
+        stripeErrorMessage = nil
+
         Task {
             do {
-                let stats = try await admin.getCodeStats(code)
-                if let emailValue = stats?["influencerEmail"] as? String {
-                    await MainActor.run {
-                        email = emailValue
-                    }
-                }
-                if let payoutValue = stats?["payoutMethod"] as? String {
-                    await MainActor.run {
-                        payoutMethod = payoutValue
-                    }
-                }
-                if let frequencyValue = stats?["payoutFrequency"] as? String,
-                   let frequency = PaymentFrequency(rawValue: frequencyValue) {
-                    await MainActor.run {
-                        payoutFrequency = frequency
-                    }
-                }
-                // Also load notes if available
-                if let notesValue = stats?["notes"] as? String {
-                    await MainActor.run {
-                        notes = notesValue
-                    }
+                // one Firestore hit → everything
+                let result = try await admin.getData(code)
+
+                await MainActor.run {
+                    // affiliate fields
+                    self.email = result.email
+                    self.payoutFrequency = result.pFreq
+                    self.notes = result.notes
+
+                    // stats
+                    self.codeStats = result.stats
+                    self.stripeStatus = result.stripe
+
+                    self.isLoadingStats = false
                 }
             } catch {
-                print("Failed to load email for code: \(error)")
+                await MainActor.run {
+                    self.isLoadingStats = false
+                    self.stripeStatus = .empty
+                    print("Failed to load affiliate/stats for code \(code): \(error)")
+                }
             }
         }
     }
@@ -270,6 +277,151 @@ struct InfluencerRegistrationView: View {
         return true
     }
     
+    // MARK: - Stripe Management
+
+    @ViewBuilder
+    private func stripeSection(for code: String) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Stripe Payouts")
+                .font(.headline)
+
+            Text(stripeStatus.statusDescription)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            if stripeStatus.needsAction {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Action Needed")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+
+                    ForEach(stripeStatus.requirementsDue, id: \.self) { requirement in
+                        Text("• \(requirement.formattedRequirement)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+
+            if let errorMessage = stripeErrorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            }
+
+            if isRequestingStripeOnboardingLink {
+                ProgressView()
+                    .centerHorizontally()
+            } else {
+                RectangularButton(
+                    title: stripeStatus.primaryButtonTitle,
+                    enabled: true,
+                    bold: true,
+                    action: { connectStripe(for: code) }
+                )
+            }
+
+            if stripeStatus.isConnected {
+                if isRequestingStripeDashboardLink {
+                    ProgressView()
+                        .centerHorizontally()
+                } else {
+                    RectangularButton(
+                        title: "Open Stripe Dashboard",
+                        enabled: true,
+                        bold: false,
+                        action: { openStripeDashboard(for: code) }
+                    )
+                }
+            }
+
+            Button {
+                refreshStripeStatus()
+            } label: {
+                Text("Refresh Stripe Status")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+            }
+            .buttonStyle(.plain)
+            .tint(.blue)
+        }
+        .cardContainer(cornerRadius: 12, backgroundColor: Color(UIColor.secondarySystemBackground))
+    }
+
+    private func connectStripe(for code: String) {
+        guard !isRequestingStripeOnboardingLink else { return }
+        isRequestingStripeOnboardingLink = true
+        stripeErrorMessage = nil
+
+        Task {
+            do {
+                let onboardingLink = try await StripeAffiliateService.shared.createOnboardingLink(referralCode: code)
+                await MainActor.run {
+                    isRequestingStripeOnboardingLink = false
+                    stripeStatus.accountId = onboardingLink.accountId
+                    if let detailsSubmitted = onboardingLink.detailsSubmitted {
+                        stripeStatus.detailsSubmitted = detailsSubmitted
+                    }
+                    if let payoutsEnabled = onboardingLink.payoutsEnabled {
+                        stripeStatus.payoutsEnabled = payoutsEnabled
+                    }
+
+                    guard let linkURL = URL(string: onboardingLink.url) else {
+                        stripeErrorMessage = "Received an invalid onboarding link."
+                        return
+                    }
+
+                    openURL(linkURL)
+                }
+            } catch {
+                await MainActor.run {
+                    isRequestingStripeOnboardingLink = false
+                    stripeErrorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+
+    private func openStripeDashboard(for code: String) {
+        guard stripeStatus.isConnected else {
+            stripeErrorMessage = "Connect your Stripe account before opening the dashboard."
+            return
+        }
+        guard !isRequestingStripeDashboardLink else { return }
+
+        isRequestingStripeDashboardLink = true
+        stripeErrorMessage = nil
+
+        Task {
+            do {
+                let dashboardLink = try await StripeAffiliateService.shared.createDashboardLink(referralCode: code)
+                await MainActor.run {
+                    isRequestingStripeDashboardLink = false
+                    stripeStatus.accountId = dashboardLink.accountId
+                    if let payoutsEnabled = dashboardLink.payoutsEnabled {
+                        stripeStatus.payoutsEnabled = payoutsEnabled
+                    }
+
+                    guard let linkURL = URL(string: dashboardLink.url) else {
+                        stripeErrorMessage = "Received an invalid dashboard link."
+                        return
+                    }
+
+                    openURL(linkURL)
+                }
+            } catch {
+                await MainActor.run {
+                    isRequestingStripeDashboardLink = false
+                    stripeErrorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+
+    private func refreshStripeStatus() {
+        loadAffiliateAndStats(showStatsLoader: false)
+    }
+
     private func generateCode() {
         let emailResult = validateAndTrimEmail(email)
         guard let trimmedEmail = emailResult.email else {
@@ -280,11 +432,14 @@ struct InfluencerRegistrationView: View {
         let trimmedCustomCode = customCode.trimmed
         let trimmedName = fullName.trimmed
         let trimmedNotes = notes.trimmed.isEmpty ? nil : notes.trimmed
-        let trimmedPayoutMethod = payoutMethod.trimmed.isEmpty ? nil : payoutMethod.trimmed
         let payoutFrequencyValue = payoutFrequency.rawValue
         
         isGenerating = true
         errorMessage = nil
+        stripeStatus = .empty
+        stripeErrorMessage = nil
+        isRequestingStripeOnboardingLink = false
+        isRequestingStripeDashboardLink = false
         
         Task {
             do {
@@ -296,7 +451,6 @@ struct InfluencerRegistrationView: View {
                         influencerName: trimmedName,
                         influencerEmail: trimmedEmail,
                         notes: trimmedNotes,
-                        payoutMethod: trimmedPayoutMethod,
                         payoutFrequency: payoutFrequencyValue
                     )
                     code = trimmedCustomCode.uppercased()
@@ -305,7 +459,6 @@ struct InfluencerRegistrationView: View {
                         influencerName: trimmedName,
                         influencerEmail: trimmedEmail,
                         notes: trimmedNotes,
-                        payoutMethod: trimmedPayoutMethod,
                         payoutFrequency: payoutFrequencyValue
                     )
                 }
@@ -313,7 +466,7 @@ struct InfluencerRegistrationView: View {
                 await MainActor.run {
                     generatedCode = code
                     ctx.userData.profile.referralCode = code
-                    loadCodeStats()
+                    loadAffiliateAndStats()
                     isGenerating = false
                     showSuccess = true
                 }
@@ -327,43 +480,6 @@ struct InfluencerRegistrationView: View {
     }
     
     // MARK: - Helper Methods
-
-    
-    private func loadCodeStats() {
-        guard let code = generatedCode else { return }
-        
-        isLoadingStats = true
-        Task {
-            do {
-                let stats = try await admin.getCodeStats(code)
-                
-                await MainActor.run {
-                    if let data = stats {
-                        // Filter out empty strings before counting
-                        let usedBy = (data["usedBy"] as? [String] ?? []).filter { !$0.isEmpty }
-                        let monthlyPurchasedBy = (data["monthlyPurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
-                        let annualPurchasedBy = (data["annualPurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
-                        let lifetimePurchasedBy = (data["lifetimePurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
-                        
-                        codeStats = CodeStats(
-                            signUps: usedBy.count,
-                            monthlyPurchases: monthlyPurchasedBy.count,
-                            annualPurchases: annualPurchasedBy.count,
-                            lifetimePurchases: lifetimePurchasedBy.count,
-                            lastUsedAt: (data["lastUsedAt"] as? Timestamp)?.dateValue(),
-                            lastPurchaseAt: (data["lastPurchaseAt"] as? Timestamp)?.dateValue()
-                        )
-                    }
-                    isLoadingStats = false
-                }
-            } catch {
-                await MainActor.run {
-                    isLoadingStats = false
-                    print("Failed to load stats: \(error)")
-                }
-            }
-        }
-    }
     
     private func generateShareText(code: String) -> String {
         let appStoreLink = generateAppStoreLink(with: code)
@@ -389,7 +505,6 @@ struct InfluencerRegistrationView: View {
 }
 
 // MARK: - Supporting Types
-
 struct CodeStats {
     let signUps: Int
     let monthlyPurchases: Int
@@ -397,6 +512,15 @@ struct CodeStats {
     let lifetimePurchases: Int
     let lastUsedAt: Date?
     let lastPurchaseAt: Date?
+    
+    static var blankStats: CodeStats = .init(
+        signUps: 0,
+        monthlyPurchases: 0,
+        annualPurchases: 0,
+        lifetimePurchases: 0,
+        lastUsedAt: nil,
+        lastPurchaseAt: nil
+    )
 }
 
 struct StatRow: View {

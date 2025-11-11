@@ -3,7 +3,7 @@
     "rules": "firestore.rules"
   },
   "hosting": {
-    "public": "../public",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -23,3 +23,9 @@
     "source": "functions"
   }
 }
+
+
+
+
+
+

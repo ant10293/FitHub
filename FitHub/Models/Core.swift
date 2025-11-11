@@ -104,6 +104,10 @@ enum SetupState: Codable {
 
 enum inOut { case input, output }
 
+enum ExEquipLocation: String {
+    case user, bundled, none
+}
+
 // landers unused
 enum OneRMFormula {
     case epleys, landers, brzycki, oconnor

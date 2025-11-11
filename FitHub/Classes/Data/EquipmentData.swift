@@ -103,7 +103,9 @@ extension EquipmentData {
             return .none
         }
     }
-    
+}
+
+extension EquipmentData {
     // MARK: – Mutations
     func addEquipment(_ newEquipment: GymEquipment) {
         guard !allEquipment.contains(where: { $0.id == newEquipment.id }) else { return }

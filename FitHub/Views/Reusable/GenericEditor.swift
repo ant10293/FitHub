@@ -55,7 +55,7 @@ struct GenericEditor: View {
     }
 }
 
-struct GenericEditWrapper<Content: View>: View {
+struct GenericEditWrapper<Content: View, Extra: View>: View {
     @Environment(\.colorScheme) private var colorScheme
     @FocusState private var isFocused: Bool
 
@@ -65,19 +65,22 @@ struct GenericEditWrapper<Content: View>: View {
     let autoFocus: Bool
     // content receives a FocusState<Bool>.Binding
     let content: (_ focus: FocusState<Bool>.Binding) -> Content
+    let additionalContent: () -> Extra
 
     init(
         title: String,
         autoFocus: Bool = true,
         onSave: @escaping () -> Void,
         onCancel: @escaping () -> Void,
-        @ViewBuilder content: @escaping (_ focus: FocusState<Bool>.Binding) -> Content
+        @ViewBuilder content: @escaping (_ focus: FocusState<Bool>.Binding) -> Content,
+        @ViewBuilder additionalContent: @escaping () -> Extra = { EmptyView() }
     ) {
         self.title = title
         self.onSave = onSave
         self.onCancel = onCancel
         self.autoFocus = autoFocus
         self.content = content
+        self.additionalContent = additionalContent
     }
 
     var body: some View {
@@ -90,6 +93,8 @@ struct GenericEditWrapper<Content: View>: View {
                 .padding(8)
                 .roundedBackground()
                 .padding(.horizontal)
+            
+            additionalContent()
             
             HStack(spacing: 20) {
                 Spacer()

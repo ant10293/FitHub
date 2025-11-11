@@ -11,13 +11,11 @@ struct InfluencerInfoForm: View {
     @Binding var fullName: String
     @Binding var email: String
     @Binding var notes: String
-    @Binding var payoutMethod: String
     @Binding var payoutFrequency: PaymentFrequency
     
     let allowEditFullName: Bool
     let allowEditEmail: Bool
     let allowEditNotes: Bool
-    let allowEditPayoutMethod: Bool
     let allowEditPayoutFrequency: Bool
     
     var emailErrorMessage: String? = nil
@@ -66,20 +64,6 @@ struct InfluencerInfoForm: View {
                 .disabled(!allowEditNotes)
                 .overlay(alignment: .trailing) {
                     if !allowEditNotes {
-                        Image(systemName: "lock.fill")
-                            .foregroundStyle(.secondary)
-                            .font(.caption)
-                            .padding(.trailing, 12)
-                    }
-                }
-            
-            // Payout Method
-            TextField("Payout Method (e.g., Stripe, PayPal)", text: $payoutMethod, axis: .vertical)
-                .lineLimit(1...2)
-                .inputStyle()
-                .disabled(!allowEditPayoutMethod)
-                .overlay(alignment: .trailing) {
-                    if !allowEditPayoutMethod {
                         Image(systemName: "lock.fill")
                             .foregroundStyle(.secondary)
                             .font(.caption)

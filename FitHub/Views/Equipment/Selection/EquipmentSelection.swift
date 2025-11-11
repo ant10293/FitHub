@@ -35,7 +35,7 @@ struct EquipmentSelection: View {
             }
             .navigationDestination(isPresented: $viewDetail) {
                 if let id = selectedEquipmentId,
-                   let equipment = ctx.equipment.equipment(for: id) {
+                    let equipment = ctx.equipment.equipment(for: id) {
                     EquipmentDetail(
                         equipment: equipment,
                         allExercises: ctx.exercises.allExercises,

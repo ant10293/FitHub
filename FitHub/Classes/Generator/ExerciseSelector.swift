@@ -394,7 +394,7 @@ extension ExerciseSelector {
     private func score(_ ex: Exercise,
                        target: TargetSpec,
                        primaryWeight: Double = 1.0,
-                       secondaryWeight: Double = 0.55,
+                       secondaryWeight: Double = 0.50,
                        nonTargetPenaltyPerSub: Double = 0.25) -> Double
     {
         // Sum engagement on the target muscle.

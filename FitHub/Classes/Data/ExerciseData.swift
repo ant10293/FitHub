@@ -7,16 +7,6 @@
 
 import Foundation
 
-enum ExEquipLocation: String {
-    case user, bundled, none
-}
-
-struct ExerciseOverride: Identifiable, Codable {
-    var id: UUID { original.id }
-    var override: Exercise
-    let original: Exercise
-}
-
 final class ExerciseData: ObservableObject {
     private static let bundledExercisesFileName: String = "exercises.json"
     private static let bundledOverridesFilename: String = "exercise_overrides.json"
@@ -122,7 +112,9 @@ extension ExerciseData {
             return .none
         }
     }
-    
+}
+
+extension ExerciseData {
     // MARK: – Mutations
     func addExercise(_ newExercise: Exercise) {
         guard !allExercises.contains(where: { $0.id == newExercise.id }) else { return }
@@ -279,14 +271,18 @@ extension ExerciseData {
          for exerciseId: UUID,
          newValue: PeakMetric,
          loadXmetric: LoadXMetric? = nil,
-         csvEstimate: Bool = false
+         setOn: Date? = nil,
+         csvEstimate: Bool = false,
+         shouldSave: Bool = false
      ) {
          if let exercise = exercise(for: exerciseId) {
              updateExercisePerformance(
                 for: exercise,
                 newValue: newValue,
                 loadXmetric: loadXmetric,
-                csvEstimate: csvEstimate
+                setOn: setOn,
+                csvEstimate: csvEstimate,
+                shouldSave: shouldSave
              )
          }
     }
@@ -295,9 +291,11 @@ extension ExerciseData {
         for exercise: Exercise,
         newValue: PeakMetric,
         loadXmetric: LoadXMetric? = nil,
-        csvEstimate: Bool = false
+        setOn: Date? = nil,
+        csvEstimate: Bool = false,
+        shouldSave: Bool = false
     ) {
-        let roundedDate = CalendarUtility.shared.startOfDay(for: Date())
+        let roundedDate = CalendarUtility.shared.startOfDay(for: setOn ?? Date())
 
         // Pull or create a performance record (struct – value copy)
         var perf = allExercisePerformance[exercise.id] ?? ExercisePerformance(exerciseId: exercise.id)
@@ -370,6 +368,7 @@ extension ExerciseData {
         // Persist in the dictionary
         allExercisePerformance[exercise.id] = perf
         print("Performance data for \(exercise.name) saved.")
+        if shouldSave { savePerformanceData() }
     }
     
     func applyPerformanceUpdates(updates: [PerformanceUpdate]?, csvEstimate: Bool) {
