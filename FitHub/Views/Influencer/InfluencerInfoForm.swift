@@ -11,12 +11,10 @@ struct InfluencerInfoForm: View {
     @Binding var fullName: String
     @Binding var email: String
     @Binding var notes: String
-    @Binding var payoutFrequency: PaymentFrequency
     
     let allowEditFullName: Bool
     let allowEditEmail: Bool
     let allowEditNotes: Bool
-    let allowEditPayoutFrequency: Bool
     
     var emailErrorMessage: String? = nil
     
@@ -70,22 +68,6 @@ struct InfluencerInfoForm: View {
                             .padding(.trailing, 12)
                     }
                 }
-            
-            // Payout Frequency
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Payout Frequency")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                
-                Picker("Payout Frequency", selection: $payoutFrequency) {
-                    ForEach(PaymentFrequency.allCases) { frequency in
-                        Text(frequency.displayName).tag(frequency)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .disabled(!allowEditPayoutFrequency)
-                .opacity(allowEditPayoutFrequency ? 1.0 : 0.5)
-            }
         }
     }
 }

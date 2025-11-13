@@ -15,17 +15,13 @@ struct InfluencerSettingsView: View {
     @Binding var fullName: String
     @Binding var email: String
     @Binding var notes: String
-    @Binding var payoutFrequency: PaymentFrequency
     
     let referralCode: String
     
     @State private var originalEmail: String = ""
     @State private var editedEmail: String = ""
-    @State private var originalPayoutFrequency: PaymentFrequency = .monthly
-    @State private var editedPayoutFrequency: PaymentFrequency = .monthly
     @State private var isUpdatingEmail: Bool = false
     @State private var isUpdatingPayout: Bool = false
-    @State private var isUpdatingFrequency: Bool = false
     @State private var errorMessage: ReferralError?
     @State private var showSuccess: Bool = false
     
@@ -37,11 +33,9 @@ struct InfluencerSettingsView: View {
                     fullName: $fullName,
                     email: $editedEmail,
                     notes: $notes,
-                    payoutFrequency: $editedPayoutFrequency,
                     allowEditFullName: false,
                     allowEditEmail: true,
                     allowEditNotes: false,
-                    allowEditPayoutFrequency: true,
                     emailErrorMessage: emailValidationError(editedEmail)
                 )
                 
@@ -67,19 +61,7 @@ struct InfluencerSettingsView: View {
                     ProgressView()
                         .centerHorizontally()
                 }
-                
-                if !isUpdatingFrequency {
-                    RectangularButton(
-                        title: "Update Payout Frequency",
-                        enabled: editedPayoutFrequency != originalPayoutFrequency,
-                        bold: true,
-                        action: updatePayoutFrequency
-                    )
-                } else {
-                    ProgressView()
-                        .centerHorizontally()
-                }
-                
+            
                 // Info text
                 Text("Full name and notes cannot be changed after code generation.")
                     .font(.caption)
@@ -100,8 +82,6 @@ struct InfluencerSettingsView: View {
         // Store original email when view appears
         originalEmail = email
         editedEmail = email
-        originalPayoutFrequency = payoutFrequency
-        editedPayoutFrequency = payoutFrequency
     }
     
     private func updateEmail() {
@@ -126,30 +106,6 @@ struct InfluencerSettingsView: View {
             } catch {
                 await MainActor.run {
                     isUpdatingEmail = false
-                    errorMessage = referralError(from: error)
-                }
-            }
-        }
-    }
-    
-    private func updatePayoutFrequency() {
-        isUpdatingFrequency = true
-        errorMessage = nil
-        
-        Task {
-            do {
-                try await admin.updateCreatedReferralCodePayoutFrequency(
-                    code: referralCode,
-                    newPayoutFrequency: editedPayoutFrequency.rawValue
-                )
-                await MainActor.run {
-                    payoutFrequency = editedPayoutFrequency
-                    originalPayoutFrequency = editedPayoutFrequency
-                    isUpdatingFrequency = false
-                }
-            } catch {
-                await MainActor.run {
-                    isUpdatingFrequency = false
                     errorMessage = referralError(from: error)
                 }
             }

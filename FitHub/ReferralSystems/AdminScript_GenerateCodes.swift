@@ -26,8 +26,7 @@ final class ReferralCodeAdmin: ObservableObject {
         influencerName: String,
         influencerEmail: String? = nil,
         notes: String? = nil,
-        payoutMethod: String? = nil,
-        payoutFrequency: String = PaymentFrequency.monthly.rawValue
+        payoutMethod: String? = nil
     ) async throws {
         // Check if user already has a referral code
         if let existingCode = try await ReferralRetriever.getCreatedCode(), !existingCode.isEmpty {
@@ -59,7 +58,6 @@ final class ReferralCodeAdmin: ObservableObject {
             "influencerEmail": influencerEmail ?? "",
             "notes": notes ?? "",
             "payoutMethod": payoutMethod ?? "",
-            "payoutFrequency": payoutFrequency,
             "isActive": true,
             "createdAt": FieldValue.serverTimestamp(),
             "createdBy": userId, // Track who created it
@@ -77,8 +75,7 @@ final class ReferralCodeAdmin: ObservableObject {
         influencerName: String,
         influencerEmail: String? = nil,
         notes: String? = nil,
-        payoutMethod: String? = nil,
-        payoutFrequency: String = PaymentFrequency.monthly.rawValue
+        payoutMethod: String? = nil
     ) async throws -> String {
         // Check if user already has a referral code
         if let existingCode = try await ReferralRetriever.getCreatedCode(), !existingCode.isEmpty {
@@ -119,8 +116,7 @@ final class ReferralCodeAdmin: ObservableObject {
                     influencerName: influencerName,
                     influencerEmail: influencerEmail,
                     notes: notes,
-                    payoutMethod: payoutMethod,
-                    payoutFrequency: payoutFrequency
+                    payoutMethod: payoutMethod
                 )
                 return code
             } catch {
@@ -296,88 +292,6 @@ final class ReferralCodeAdmin: ObservableObject {
         ])
         
         print("✅ Updated email for referral code: \(code.uppercased())")
-    }
-    
-    /// Updates the payout method for a referral code
-    func updateCreatedReferralCodePayoutMethod(code: String, newPayoutMethod: String) async throws {
-        guard let userId = AuthService.getUid() else {
-            throw NSError(
-                domain: "ReferralCodeAdmin",
-                code: -5,
-                userInfo: [NSLocalizedDescriptionKey: "User not authenticated"]
-            )
-        }
-        
-        let codeRef = db.collection("referralCodes").document(code.uppercased())
-        let codeDoc = try await codeRef.getDocument()
-        
-        guard codeDoc.exists else {
-            throw NSError(
-                domain: "ReferralCodeAdmin",
-                code: -2,
-                userInfo: [NSLocalizedDescriptionKey: "Referral code not found"]
-            )
-        }
-        
-        if let createdBy = codeDoc.data()?["createdBy"] as? String,
-           createdBy != userId {
-            throw NSError(
-                domain: "ReferralCodeAdmin",
-                code: -6,
-                userInfo: [NSLocalizedDescriptionKey: "You can only update your own referral code"]
-            )
-        }
-        
-        try await codeRef.updateData([
-            "payoutMethod": newPayoutMethod
-        ])
-        
-        print("✅ Updated payout method for referral code: \(code.uppercased())")
-    }
-    
-    /// Updates the payout frequency for a referral code
-    func updateCreatedReferralCodePayoutFrequency(code: String, newPayoutFrequency: String) async throws {
-        guard let userId = AuthService.getUid() else {
-            throw NSError(
-                domain: "ReferralCodeAdmin",
-                code: -5,
-                userInfo: [NSLocalizedDescriptionKey: "User not authenticated"]
-            )
-        }
-        
-        guard PaymentFrequency(rawValue: newPayoutFrequency) != nil else {
-            throw NSError(
-                domain: "ReferralCodeAdmin",
-                code: -7,
-                userInfo: [NSLocalizedDescriptionKey: "Invalid payout frequency"]
-            )
-        }
-        
-        let codeRef = db.collection("referralCodes").document(code.uppercased())
-        let codeDoc = try await codeRef.getDocument()
-        
-        guard codeDoc.exists else {
-            throw NSError(
-                domain: "ReferralCodeAdmin",
-                code: -2,
-                userInfo: [NSLocalizedDescriptionKey: "Referral code not found"]
-            )
-        }
-        
-        if let createdBy = codeDoc.data()?["createdBy"] as? String,
-           createdBy != userId {
-            throw NSError(
-                domain: "ReferralCodeAdmin",
-                code: -6,
-                userInfo: [NSLocalizedDescriptionKey: "You can only update your own referral code"]
-            )
-        }
-        
-        try await codeRef.updateData([
-            "payoutFrequency": newPayoutFrequency
-        ])
-        
-        print("✅ Updated payout frequency for referral code: \(code.uppercased())")
     }
 }
 

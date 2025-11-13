@@ -13,6 +13,12 @@ struct SubscriptionView: View {
         ScrollView {
             VStack(spacing: 20) {
                 Spacer()
+                
+                if let banner = lifetimeCancellationBannerConfig {
+                    SubscriptionWarningBanner(message: banner.message) {
+                        manageSubscriptions(openURL: openURL)
+                    }
+                }
                     
                 referralCodeSection
 
@@ -53,8 +59,8 @@ struct SubscriptionView: View {
                     
                 Spacer()
             }
+            .padding()
         }
-        .padding()
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .navigationBarTitle("FitHub Pro", displayMode: .inline)
         .task {
@@ -164,6 +170,23 @@ struct SubscriptionView: View {
     private var autoRenewFootnote: String? {
         guard let product = selectedProduct else { return nil }
         return ctx.store.autoRenewFootnote(for: product)
+    }
+
+    private var lifetimeCancellationBannerConfig: LifetimeCancellationBannerConfig? {
+        guard ctx.store.membershipType == .lifetime,
+              let overlap = ctx.store.overlappingSubscriptionInfo else { return nil }
+       
+        guard let willRenew = overlap.willAutoRenew, willRenew else { return nil }
+
+        let planName = overlap.type.displayName
+        let message: String
+        if let expiration = overlap.expiration {
+            let formatted = Format.formatDate(expiration, dateStyle: .medium, timeStyle: .short)
+            message = "Your \(planName) subscription is still scheduled to renew on \(formatted). Tap Manage to cancel it and avoid future charges."
+        } else {
+            message = "Your \(planName) subscription is still set to auto-renew. Tap Manage to cancel it and avoid future charges."
+        }
+        return LifetimeCancellationBannerConfig(message: message)
     }
 
     private var isCheckoutEnabled: Bool {
@@ -281,6 +304,45 @@ private struct PlanCard: View {
         }
         .buttonStyle(.plain)
         .animation(.easeInOut(duration: 0.15), value: selected)
+    }
+}
+
+private struct LifetimeCancellationBannerConfig {
+    let message: String
+}
+
+private struct SubscriptionWarningBanner: View {
+    let message: String
+    let manageAction: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundStyle(Color.orange)
+                    .imageScale(.large)
+                Text(message)
+                    .font(.subheadline)
+                    .foregroundStyle(.primary)
+            }
+
+            Button {
+                manageAction()
+            } label: {
+                Label("Manage Subscription", systemImage: "arrow.up.right.square")
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.orange)
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(Color.orange.opacity(0.12))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Color.orange.opacity(0.35), lineWidth: 1)
+        )
     }
 }
 

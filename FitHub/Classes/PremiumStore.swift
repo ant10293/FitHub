@@ -25,6 +25,12 @@ struct PremiumEntitlement: Equatable {
     var source: PremiumSource?
 }
 
+struct OverlappingSubscriptionInfo: Equatable {
+    let type: PremiumStore.MembershipType
+    let expiration: Date?
+    let willAutoRenew: Bool?
+}
+
 @MainActor
 final class PremiumStore: ObservableObject {
     // MARK: - Published state
@@ -34,6 +40,7 @@ final class PremiumStore: ObservableObject {
     @Published private(set) var purchaseInFlight = false
     @Published private(set) var membershipType: MembershipType = .free
     @Published var errorMessage: String?
+    @Published private(set) var overlappingSubscriptionInfo: OverlappingSubscriptionInfo?
 
     // Optional account token to associate purchases with an app account
     private let appAccountToken: UUID?
@@ -252,8 +259,12 @@ final class PremiumStore: ObservableObject {
 
     @MainActor
     private func refreshEntitlement() async {
-        var best = PremiumEntitlement(isPremium: false, source: nil)
-        var kind: MembershipType = .free
+        overlappingSubscriptionInfo = nil
+
+        var lifetimeTransactionID: UInt64?
+        var bestEntitlement = PremiumEntitlement(isPremium: false, source: nil)
+        var bestMembership: MembershipType = .free
+        var overlapCandidate: OverlappingSubscriptionInfo?
 
         for await result in SKTransaction.currentEntitlements {
             guard case .verified(let t) = result else { continue }
@@ -261,26 +272,42 @@ final class PremiumStore: ObservableObject {
 
             switch t.productID {
             case ID.lifetime:
-                best  = .init(isPremium: true, source: .lifetime(transactionID: t.id))
-                kind  = .lifetime
-                entitlement     = best
-                membershipType  = kind
-                return  // lifetime trumps everything
+                lifetimeTransactionID = t.id
 
             case ID.monthly, ID.yearly:
+                let membership: MembershipType = (t.productID == ID.yearly) ? .yearly : .monthly
                 let isActive = t.expirationDate.map { $0 > Date() } ?? true
-                if isActive {
-                    let auto = await willAutoRenew(for: t)
-                    best = .init(
-                        isPremium: true,
-                        source: .subscription(
-                            expiration: t.expirationDate ?? .distantFuture,
-                            willAutoRenew: auto,
-                            transactionID: t.id
-                        )
+                guard isActive else { continue }
+
+                let auto = await willAutoRenew(for: t)
+                let expiration = t.expirationDate ?? .distantFuture
+                let source = PremiumSource.subscription(
+                    expiration: expiration,
+                    willAutoRenew: auto,
+                    transactionID: t.id
+                )
+
+                if membership > bestMembership {
+                    bestEntitlement = .init(isPremium: true, source: source)
+                    bestMembership = membership
+                }
+
+                let willRenew = auto ?? true
+                if willRenew {
+                    let candidate = OverlappingSubscriptionInfo(
+                        type: membership,
+                        expiration: t.expirationDate,
+                        willAutoRenew: auto
                     )
-                    kind = (t.productID == ID.yearly) ? .yearly : .monthly
-                    // keep scanning in case lifetime appears later
+                    if let current = overlapCandidate {
+                        let currentExpiration = current.expiration ?? .distantPast
+                        let candidateExpiration = candidate.expiration ?? .distantFuture
+                        if candidateExpiration > currentExpiration {
+                            overlapCandidate = candidate
+                        }
+                    } else {
+                        overlapCandidate = candidate
+                    }
                 }
 
             default:
@@ -288,8 +315,16 @@ final class PremiumStore: ObservableObject {
             }
         }
 
-        entitlement    = best
-        membershipType = kind
+        if let lifetimeID = lifetimeTransactionID {
+            entitlement = .init(isPremium: true, source: .lifetime(transactionID: lifetimeID))
+            membershipType = .lifetime
+            overlappingSubscriptionInfo = overlapCandidate
+            return
+        }
+
+        overlappingSubscriptionInfo = nil
+        entitlement = bestEntitlement
+        membershipType = bestMembership
     }
 
     @MainActor

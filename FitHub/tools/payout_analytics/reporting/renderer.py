@@ -53,9 +53,7 @@ def render_csv(
         writer.writerow(["Report", "Generated at", generated_at])
         writer.writerow(["Report", "Stripe mode", payout_mode])
         writer.writerow(["Report", "Total Revenue", _format_currency(total_revenue, currency)])
-        writer.writerow(
-            ["Report", "Total Affiliate Share", _format_currency(total_affiliate_payout, currency)]
-        )
+        writer.writerow(["Report", "Total Affiliate Share", _format_currency(total_affiliate_payout, currency)])
         writer.writerow(["Report", "Influencers with activity", len(influencer_payouts)])
         writer.writerow([])
 
@@ -66,12 +64,8 @@ def render_csv(
         writer.writerow(["New users in window", user_metrics["new_users"]])
         writer.writerow(["Total referred users", user_metrics["total_referred_users"]])
         writer.writerow(["New referred users", user_metrics["new_referred_users"]])
-        writer.writerow(
-            ["Share of new users referred", f"{user_metrics['new_referred_ratio']*100:.1f}%"]
-        )
-        writer.writerow(
-            ["Share of total users referred", f"{user_metrics['total_referred_ratio']*100:.1f}%"]
-        )
+        writer.writerow(["Share of new users referred", f"{user_metrics['new_referred_ratio']*100:.1f}%"])
+        writer.writerow(["Share of total users referred", f"{user_metrics['total_referred_ratio']*100:.1f}%"])
         writer.writerow([])
 
         # Subscription metrics
@@ -82,11 +76,22 @@ def render_csv(
         writer.writerow(["New Yearly Subscribers", subscription_metrics.new_yearly_subscribers])
         writer.writerow(["Total Yearly Subscribers", subscription_metrics.total_yearly_subscribers])
         writer.writerow(["New Lifetime Purchasers", subscription_metrics.new_lifetime_purchasers])
-        writer.writerow(
-            ["Total Lifetime Purchasers", subscription_metrics.total_lifetime_purchasers]
-        )
+        writer.writerow(["Total Lifetime Purchasers", subscription_metrics.total_lifetime_purchasers])
         writer.writerow([])
 
+        # Influencer payouts
+        writer.writerow(["Influencer Payouts"])
+        writer.writerow(
+            [
+                "Referral Code",
+                "Influencer",
+                "Transactions",
+                "Revenue",
+                "Payout",
+                "Transfer",
+                "Notes",
+            ]
+        )
         # Influencer payouts
         writer.writerow(["Influencer Payouts"])
         writer.writerow(

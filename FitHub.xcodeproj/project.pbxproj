@@ -256,6 +256,7 @@
 		65DD05392EC28E73000D159C /* InlineDeletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05382EC28E73000D159C /* InlineDeletion.swift */; };
 		65DD053B2EC2A6B2000D159C /* StripeAffiliateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD053A2EC2A6B2000D159C /* StripeAffiliateService.swift */; };
 		65DD053F2EC2C689000D159C /* StripeAffiliateStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD053E2EC2C689000D159C /* StripeAffiliateStatus.swift */; };
+		65DD05422EC681A7000D159C /* SafariDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05412EC681A7000D159C /* SafariDocumentView.swift */; };
 		65E05D0F2E7B81F900E39CC2 /* Rounding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D0E2E7B81F900E39CC2 /* Rounding.swift */; };
 		65E05D112E7B88FC00E39CC2 /* WeightPlates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */; };
 		65E05D132E7B894900E39CC2 /* InitEquipment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D122E7B894900E39CC2 /* InitEquipment.swift */; };
@@ -523,6 +524,7 @@
 		65DD05382EC28E73000D159C /* InlineDeletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineDeletion.swift; sourceTree = "<group>"; };
 		65DD053A2EC2A6B2000D159C /* StripeAffiliateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAffiliateService.swift; sourceTree = "<group>"; };
 		65DD053E2EC2C689000D159C /* StripeAffiliateStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAffiliateStatus.swift; sourceTree = "<group>"; };
+		65DD05412EC681A7000D159C /* SafariDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariDocumentView.swift; sourceTree = "<group>"; };
 		65E05D0E2E7B81F900E39CC2 /* Rounding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rounding.swift; sourceTree = "<group>"; };
 		65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightPlates.swift; sourceTree = "<group>"; };
 		65E05D122E7B894900E39CC2 /* InitEquipment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitEquipment.swift; sourceTree = "<group>"; };
@@ -1073,6 +1075,7 @@
 				6550ADB92E6BAC12002072C1 /* TemplateNavigator.swift */,
 				65AB47F42EA31362001BEAFE /* WarningFooter.swift */,
 				65DD05382EC28E73000D159C /* InlineDeletion.swift */,
+				65DD05412EC681A7000D159C /* SafariDocumentView.swift */,
 			);
 			path = Reusable;
 			sourceTree = "<group>";
@@ -1572,6 +1575,7 @@
 				65C5DC5F2DEFB70800B09AD2 /* Settings.swift in Sources */,
 				653136372E552FCA00EECCA5 /* Distribution.swift in Sources */,
 				65C5DC692DEFBBA300B09AD2 /* Week.swift in Sources */,
+				65DD05422EC681A7000D159C /* SafariDocumentView.swift in Sources */,
 				65D48DEA2DF96A640032F815 /* UserData.swift in Sources */,
 				653136142E51521D00EECCA5 /* SetCountEditor.swift in Sources */,
 				65DD05082EB95877000D159C /* PercentileView.swift in Sources */,

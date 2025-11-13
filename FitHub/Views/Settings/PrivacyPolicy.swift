@@ -8,7 +8,14 @@
 import SwiftUI
 
 struct PrivacyPolicy: View {
+    private let policyURLString = "privacy/"
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
-        Text("Privacy Policy")
+        LegalSheetDisplay(
+            title: "Privacy Policy",
+            URLString: policyURLString,
+            dismiss: { dismiss() }
+        )
     }
 }
