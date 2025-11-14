@@ -63,5 +63,53 @@ final class AppContext: ObservableObject {
             .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &sinks)
     }
+
+    func resetForSignOut() {
+        let blankUserData = UserData()
+        blankUserData.setup.setupState = .welcomeView
+        let blankAdjustments = AdjustmentsData()
+        let blankExercises = ExerciseData()
+        let blankEquipment = EquipmentData()
+        replaceData(
+            userData: blankUserData,
+            adjustments: blankAdjustments,
+            exercises: blankExercises,
+            equipment: blankEquipment
+        )
+    }
+
+    func reloadDataFromDisk() {
+        let loadedUserData = UserData.loadFromFile() ?? .init()
+        let loadedAdjustments = AdjustmentsData.loadAdjustmentsFromFile() ?? .init()
+        let loadedExercises = ExerciseData()
+        let loadedEquipment = EquipmentData()
+        replaceData(
+            userData: loadedUserData,
+            adjustments: loadedAdjustments,
+            exercises: loadedExercises,
+            equipment: loadedEquipment
+        )
+    }
+
+    private func replaceData(
+        userData newUserData: UserData,
+        adjustments newAdjustments: AdjustmentsData,
+        exercises newExercises: ExerciseData,
+        equipment newEquipment: EquipmentData
+    ) {
+        sinks.removeAll()
+
+        self.userData = newUserData
+        self.adjustments = newAdjustments
+        self.exercises = newExercises
+        self.equipment = newEquipment
+
+        stitch(userData)
+        stitch(adjustments)
+        stitch(exercises)
+        stitch(equipment)
+        stitch(toast)
+        stitch(store)
+    }
 }
 

@@ -14,8 +14,9 @@ struct RectangularButton: View {
     let bgColor: Color
     let fgColor: Color
     let width: WidthStyle
-    let bold: Bool
+    let fontWeight: Font.Weight
     let iconPosition: RectangularLabel.IconPosition
+    let cornerRadius: CGFloat
     let action: () -> Void
 
     init(
@@ -25,8 +26,9 @@ struct RectangularButton: View {
         bgColor: Color = .blue,
         fgColor: Color = .primary,
         width: WidthStyle = .fill,
-        bold: Bool = false,
+        fontWeight: Font.Weight = .regular,
         iconPosition: RectangularLabel.IconPosition = .leading,
+        cornerRadius: CGFloat = 10,
         action: @escaping () -> Void
     ) {
         self.title = title
@@ -35,8 +37,9 @@ struct RectangularButton: View {
         self.bgColor = bgColor
         self.fgColor = fgColor
         self.width = width
-        self.bold = bold
+        self.fontWeight = fontWeight
         self.iconPosition = iconPosition
+        self.cornerRadius = cornerRadius
         self.action = action
     }
 
@@ -49,8 +52,9 @@ struct RectangularButton: View {
                 bgColor: bgColor,
                 fgColor: fgColor,
                 width: width,
-                bold: bold,
-                iconPosition: iconPosition
+                fontWeight: fontWeight,
+                iconPosition: iconPosition,
+                cornerRadius: cornerRadius
             )
         }
         .disabled(!enabled)

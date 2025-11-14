@@ -25,13 +25,13 @@ struct AssessmentView: View {
                 VStack(spacing: 16) {
                     if !ctx.userData.setup.maxRepsEntered {
                         NavigationLink(value: ViewOption.enterMaxReps) {
-                            RectangularLabel(title: "Enter Max Reps", systemImage: "flame.fill", bgColor: .red, fgColor: .white, bold: true)
+                            RectangularLabel(title: "Enter Max Reps", systemImage: "flame.fill", bgColor: .red, fgColor: .white, fontWeight: .bold)
                         }
                     }
                     
                     if !ctx.userData.setup.oneRepMaxesEntered {
                         NavigationLink(value: ViewOption.enterOneRepMaxes) {
-                            RectangularLabel(title: "Enter One Rep Maxes", systemImage: "dumbbell", bgColor: .blue, fgColor: .white, bold: true)
+                            RectangularLabel(title: "Enter One Rep Maxes", systemImage: "dumbbell", bgColor: .blue, fgColor: .white, fontWeight: .bold)
                         }
                     }
                 }

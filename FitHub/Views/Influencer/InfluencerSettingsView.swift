@@ -54,7 +54,7 @@ struct InfluencerSettingsView: View {
                     RectangularButton(
                         title: "Update Email",
                         enabled: editedEmail != originalEmail && isEmailValidForSubmission(editedEmail),
-                        bold: true,
+                        fontWeight: .bold,
                         action: updateEmail
                     )
                 } else {

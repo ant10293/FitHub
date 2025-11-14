@@ -77,7 +77,9 @@ struct SubscriptionView: View {
         )
         .overlay {
             if ctx.store.isLoading || ctx.store.purchaseInFlight {
-                ProgressView().padding()
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .padding()
                     .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
             }
         }

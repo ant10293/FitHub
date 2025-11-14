@@ -24,12 +24,12 @@ struct ContentView: View {
                         if ctx.userData.sessionTracking.activeWorkout != nil { showResumeWorkoutOverlay = true }
                         if ctx.userData.setup.infoCollected { determineStrengthAndSeedMaxes() }
                         ctx.userData.checkAndUpdateAge()
-                        generateTemplate()
+                        generateTemplates()
                     }
             } else {
                 NavigationStack {
                     if ctx.userData.setup.setupState == .welcomeView {
-                        WelcomeView(userData: ctx.userData)
+                        WelcomeView()
                     } else if ctx.userData.setup.setupState == .healthKitView {
                         HealthKitRequestView(userData: ctx.userData)
                     } else if ctx.userData.setup.setupState == .detailsView {
@@ -48,7 +48,7 @@ struct ContentView: View {
         }
     }
     
-    private func generateTemplate() {
+    private func generateTemplates() {
         let plannedWorkoutDates = ctx.userData.getAllPlannedWorkoutDates()
         if checkAndResetWorkoutStreak(plannedWorkoutDates: plannedWorkoutDates), ctx.userData.settings.progressiveOverload {
             generateNewWorkoutTemplates(plannedWorkoutDates: plannedWorkoutDates)

@@ -1,11 +1,14 @@
 import SwiftUI
 import AuthenticationServices
+import FirebaseAuth
 
+// FIXME: sign-in success closes this view
 struct UserProfileView: View {
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var authService = AuthService.shared
     @StateObject private var kbd = KeyboardManager.shared
     @State private var alertMessage: String = ""
+    @State private var showingDeleteConfirmation: Bool = false
 
     // MARK: – Local draft state for each editable field
     @State private var draftUserName: String = ""
@@ -17,7 +20,7 @@ struct UserProfileView: View {
     
     var body: some View {
         ZStack {
-            Color(authService.isAuthenticated
+            Color(isAuthenticated
                   ? UIColor.clear
                   : UIColor.secondarySystemBackground
             )
@@ -34,7 +37,7 @@ struct UserProfileView: View {
                     )
                 }
                 
-                if authService.isAuthenticated  {
+                if isAuthenticated  {
                     Form {
                         // MARK: — Username Section
                         Section {
@@ -97,14 +100,11 @@ struct UserProfileView: View {
                                         .font(.caption)
                                         .foregroundStyle(Color.secondary)
                                 }
-                                Button(action: handleSignOut) {
-                                    Text("Logout")
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.red)
-                                        .foregroundStyle(.white)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                }
+                                
+                                RectangularButton(title: "Logout", bgColor: .blue, action: handleSignOut)
+                                RectangularButton(title: "Delete Account", bgColor: .red, action: {
+                                    showingDeleteConfirmation = true
+                                })
                             }
                             .padding(.top, 8)
                         }
@@ -117,30 +117,40 @@ struct UserProfileView: View {
                             .font(.title)
                             .padding()
                         
-                        SignInWithAppleButton(.signIn) { req in
-                            req.requestedScopes = [.email, .fullName]
-                        } onCompletion: { result in
-                            authService.signIn(with: result, into: ctx.userData) { res in
-                                switch res {
-                                case .success:
-                                    // After successful sign-in, Auth listener will fire
-                                    alertMessage = "Sign in successful"
-                                    ctx.toast.showSaveConfirmation(duration: 2.0)
-                                    break
-                                case .failure(let err):
-                                    alertMessage = "Sign in failed: \(err)"
-                                    ctx.toast.showSaveConfirmation(duration: 2.0)
-                                }
+                        AuthProviderButtons(
+                            userData: ctx.userData,
+                            buttonHeight: UIScreen.main.bounds.height * 0.08,
+                            onSuccess: {
+                                alertMessage = "Sign in successful"
+                                ctx.toast.showSaveConfirmation(duration: 2.0)
+                            },
+                            onFailure: { error in
+                                alertMessage = "Sign in failed: \(error.localizedDescription)"
+                                ctx.toast.showSaveConfirmation(duration: 2.0)
                             }
-                        }
-                        .frame(height: UIScreen.main.bounds.height * 0.08)
-                        .padding()
+                        )
+                        .padding(.horizontal)
                     }
                 }
             }
         }
         .navigationTitle("Profile")
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+        .alert(
+            "Delete Account?",
+            isPresented: $showingDeleteConfirmation
+        ) {
+            Button("Delete", role: .destructive) {
+                handleDeletion()
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("This will permanently remove all of your data from FitHub and log you out on this device. This action cannot be undone.")
+        }
+    }
+    
+    private var isAuthenticated: Bool {
+        authService.isAuthenticated && !AuthService.isAnonymous()
     }
     
     private enum Field: Hashable { case userName, firstName, lastName }
@@ -200,12 +210,45 @@ struct UserProfileView: View {
     
     private func handleSignOut() {
         kbd.dismiss()
+        let accountID = Auth.auth().currentUser?.uid ?? "guest"
+        
+        do {
+            try AccountDataStore.shared.backupActiveData(for: accountID)
+            try AccountDataStore.shared.clearActiveData()
+        } catch {
+            alertMessage = "Failed to back up data: \(error.localizedDescription)"
+            ctx.toast.showSaveConfirmation(duration: 2.0)
+            return
+        }
+        
         AuthService.shared.signOut(userData: ctx.userData) { result in
             switch result {
             case .success:
-                alertMessage = "Logged out successfully"
+                Task { @MainActor in
+                    ctx.resetForSignOut()
+                    alertMessage = "Logged out successfully"
+                }
             case .failure(let error):
                 alertMessage = "Failed to log out: \(error.localizedDescription)"
+            }
+            ctx.toast.showSaveConfirmation(duration: 2.0)
+        }
+    }
+    
+    private func handleDeletion() {
+        kbd.dismiss()
+        let accountID = Auth.auth().currentUser?.uid ?? "guest"
+        AuthService.shared.deleteCurrentAccount(userData: ctx.userData) { result in
+            switch result {
+            case .success:
+                Task { @MainActor in
+                    try? AccountDataStore.shared.clearActiveData()
+                    try? AccountDataStore.shared.deleteBackup(for: accountID)
+                    ctx.resetForSignOut()
+                    alertMessage = "Account deleted successfully"
+                }
+            case .failure(let error):
+                alertMessage = "Failed to delete account: \(error.localizedDescription)"
             }
             ctx.toast.showSaveConfirmation(duration: 2.0)
         }

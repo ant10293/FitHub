@@ -55,7 +55,7 @@ struct GenerationWarning: View {
                     RectangularButton(
                         title: "Regenerate Templates",
                         systemImage: "arrow.clockwise",
-                        bold: true,
+                        fontWeight: .bold,
                         action: {
                             dismiss()
                             ctx.userData.generateWorkoutPlan(

@@ -69,3 +69,4 @@ Email: [legal@fithub.app](mailto:legal@fithub.app)
 Address: \[Insert business mailing address]
 
 
+

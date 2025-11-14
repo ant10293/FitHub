@@ -170,7 +170,7 @@ struct InfluencerRegistrationView: View {
                         RectangularButton(
                             title: buttonTitle,
                             enabled: isButtonEnabled,
-                            bold: true,
+                            fontWeight: .bold,
                             action: generateCode
                         )
                         
@@ -311,7 +311,7 @@ struct InfluencerRegistrationView: View {
                 RectangularButton(
                     title: stripeStatus.primaryButtonTitle,
                     enabled: true,
-                    bold: true,
+                    fontWeight: .bold,
                     action: { connectStripe(for: code) }
                 )
             }
@@ -324,7 +324,6 @@ struct InfluencerRegistrationView: View {
                     RectangularButton(
                         title: "Open Stripe Dashboard",
                         enabled: true,
-                        bold: false,
                         action: { openStripeDashboard(for: code) }
                     )
                 }

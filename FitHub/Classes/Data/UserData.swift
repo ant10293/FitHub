@@ -11,7 +11,7 @@ import Foundation
 import Combine
 
 final class UserData: ObservableObject, Codable {
-    static private let jsonKey: String = "UserData.json"
+    static let jsonKey: String = "UserData.json"
     @Published var profile          = Profile()
     @Published var physical         = PhysicalStats()
     @Published var workoutPrefs     = WorkoutPreferences()

@@ -9,9 +9,9 @@ import Foundation
 
 final class ExerciseData: ObservableObject {
     private static let bundledExercisesFileName: String = "exercises.json"
-    private static let bundledOverridesFilename: String = "exercise_overrides.json"
-    private static let userExercisesFileName: String = "user_exercises.json"
-    private static let performanceFileName: String = "performance.json"
+    static let bundledOverridesFilename: String = "exercise_overrides.json"
+    static let userExercisesFileName: String = "user_exercises.json"
+    static let performanceFileName: String = "performance.json"
     
     private var bundledExercises: [Exercise]
     @Published private(set) var userExercises: [Exercise]  // can mutate & save

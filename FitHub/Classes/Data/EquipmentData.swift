@@ -10,9 +10,9 @@ import Foundation
 
 /// One global instance you inject where needed
 final class EquipmentData: ObservableObject {
-    private static let userEquipmentFilename: String = "user_equipment.json"
-    private static let bundledEquipmentFilename: String = "equipment.json"
-    private static let bundledOverridesFilename: String = "equipment_overrides.json"
+    static let userEquipmentFilename: String = "user_equipment.json"
+    static let bundledEquipmentFilename: String = "equipment.json"
+    static let bundledOverridesFilename: String = "equipment_overrides.json"
 
     // MARK: – Private storage
     /// Read-only “seed” gear that ships inside the bundle

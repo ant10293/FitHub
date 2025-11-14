@@ -8,7 +8,7 @@
 import Foundation
 
 final class AdjustmentsData: ObservableObject {
-    private static let jsonKey: String = "adjustments.json"
+    static let jsonKey: String = "adjustments.json"
     @Published var adjustments: [UUID: ExerciseEquipmentAdjustments] = [:] // Store adjustments using a dictionary for fast lookups
     
     // MARK: – Persistence Logic

@@ -6,6 +6,24 @@ import type { Response } from "express";
 
 // Initialize Firebase Admin
 admin.initializeApp();
+export const checkUserExists = functions.https.onCall(async (data) => {
+  const email = typeof data?.email === "string" ? data.email.trim().toLowerCase() : "";
+  if (!email) {
+    throw new functions.https.HttpsError("invalid-argument", "Email is required.");
+  }
+
+  try {
+    await admin.auth().getUserByEmail(email);
+    return { exists: true };
+  } catch (error: any) {
+    if (error.code === "auth/user-not-found") {
+      return { exists: false };
+    }
+    console.error("checkUserExists error:", error);
+    throw new functions.https.HttpsError("internal", "Unable to check account status.");
+  }
+});
+
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const stripeApiVersion = process.env.STRIPE_API_VERSION as Stripe.StripeConfig["apiVersion"];

@@ -257,6 +257,9 @@
 		65DD053B2EC2A6B2000D159C /* StripeAffiliateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD053A2EC2A6B2000D159C /* StripeAffiliateService.swift */; };
 		65DD053F2EC2C689000D159C /* StripeAffiliateStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD053E2EC2C689000D159C /* StripeAffiliateStatus.swift */; };
 		65DD05422EC681A7000D159C /* SafariDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05412EC681A7000D159C /* SafariDocumentView.swift */; };
+		65DD05442EC6932B000D159C /* AuthProviderButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05432EC6932B000D159C /* AuthProviderButtons.swift */; };
+		65DD05462EC69339000D159C /* EmailAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05452EC69339000D159C /* EmailAuthView.swift */; };
+		65DD05492EC6E842000D159C /* AccountDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05482EC6E842000D159C /* AccountDataStore.swift */; };
 		65E05D0F2E7B81F900E39CC2 /* Rounding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D0E2E7B81F900E39CC2 /* Rounding.swift */; };
 		65E05D112E7B88FC00E39CC2 /* WeightPlates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */; };
 		65E05D132E7B894900E39CC2 /* InitEquipment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E05D122E7B894900E39CC2 /* InitEquipment.swift */; };
@@ -525,6 +528,9 @@
 		65DD053A2EC2A6B2000D159C /* StripeAffiliateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAffiliateService.swift; sourceTree = "<group>"; };
 		65DD053E2EC2C689000D159C /* StripeAffiliateStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAffiliateStatus.swift; sourceTree = "<group>"; };
 		65DD05412EC681A7000D159C /* SafariDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariDocumentView.swift; sourceTree = "<group>"; };
+		65DD05432EC6932B000D159C /* AuthProviderButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthProviderButtons.swift; sourceTree = "<group>"; };
+		65DD05452EC69339000D159C /* EmailAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthView.swift; sourceTree = "<group>"; };
+		65DD05482EC6E842000D159C /* AccountDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDataStore.swift; sourceTree = "<group>"; };
 		65E05D0E2E7B81F900E39CC2 /* Rounding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rounding.swift; sourceTree = "<group>"; };
 		65E05D102E7B88FC00E39CC2 /* WeightPlates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightPlates.swift; sourceTree = "<group>"; };
 		65E05D122E7B894900E39CC2 /* InitEquipment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitEquipment.swift; sourceTree = "<group>"; };
@@ -836,6 +842,7 @@
 				65CD3BB22DD3C84F00C2B671 /* ToastManager.swift */,
 				65ECFF0F2E221FB80091032A /* KeyboardManager.swift */,
 				653BF8A42E597251005A07EA /* JSONFileManager.swift */,
+				65DD05482EC6E842000D159C /* AccountDataStore.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -1056,6 +1063,7 @@
 		65CD3BE72DD3C84F00C2B671 /* Reusable */ = {
 			isa = PBXGroup;
 			children = (
+				65DD05472EC6940D000D159C /* Authentication */,
 				65DD05342EC02A20000D159C /* Card */,
 				65DD052D2EBFE881000D159C /* Label */,
 				65E199D42E99D78200682415 /* Background */,
@@ -1168,12 +1176,12 @@
 				65CD3C192DD3C84F00C2B671 /* HomeView.swift */,
 				65CD3C1C2DD3C84F00C2B671 /* StatsView.swift */,
 				65CD3C1E2DD3C84F00C2B671 /* UserProfileView.swift */,
+				65CD3BFA2DD3C84F00C2B671 /* Setup */,
 				65DD05192EB97C86000D159C /* Influencer */,
 				653BF8AB2E5AC732005A07EA /* PlateVisualization */,
 				6531362C2E53FB7600EECCA5 /* Editor */,
 				6531362B2E53FB2500EECCA5 /* Subscription */,
 				653136192E53EF9900EECCA5 /* Generation */,
-				65CD3BFA2DD3C84F00C2B671 /* Setup */,
 				65CD3BBA2DD3C84F00C2B671 /* Adjustments */,
 				65CD3C172DD3C84F00C2B671 /* Workouts */,
 				65CD3BC22DD3C84F00C2B671 /* Calculator */,
@@ -1283,6 +1291,15 @@
 				65DD05292EBEF0CC000D159C /* PaymentFrequency.swift */,
 			);
 			path = Stripe;
+			sourceTree = "<group>";
+		};
+		65DD05472EC6940D000D159C /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				65DD05432EC6932B000D159C /* AuthProviderButtons.swift */,
+				65DD05452EC69339000D159C /* EmailAuthView.swift */,
+			);
+			path = Authentication;
 			sourceTree = "<group>";
 		};
 		65E05D0D2E7B81A800E39CC2 /* Equipment */ = {
@@ -1495,6 +1512,7 @@
 				653136102E50381400EECCA5 /* TimerRing.swift in Sources */,
 				65C5DC6F2DEFBF0C00B09AD2 /* Formatter.swift in Sources */,
 				65ECFF0E2E21F1BA0091032A /* FloatingButton.swift in Sources */,
+				65DD05442EC6932B000D159C /* AuthProviderButtons.swift in Sources */,
 				65CD3C472DD3C84F00C2B671 /* ExercisePerformanceGraph.swift in Sources */,
 				65CD3C9A2DD6DF8500C2B671 /* NotificationManager.swift in Sources */,
 				65CD3C482DD3C84F00C2B671 /* MeasurementsGraph.swift in Sources */,
@@ -1597,6 +1615,7 @@
 				65CD3C6F2DD3C84F00C2B671 /* StartedWorkoutView.swift in Sources */,
 				6531361D2E53F04900EECCA5 /* SetChangeRow.swift in Sources */,
 				653BF8A52E597251005A07EA /* JSONFileManager.swift in Sources */,
+				65DD05462EC69339000D159C /* EmailAuthView.swift in Sources */,
 				65CD3C702DD3C84F00C2B671 /* WorkoutSummary.swift in Sources */,
 				65CD3C712DD3C84F00C2B671 /* AssessmentView.swift in Sources */,
 				65CD3C722DD3C84F00C2B671 /* DaysEditor.swift in Sources */,
@@ -1626,6 +1645,7 @@
 				65CD3C7B2DD3C84F00C2B671 /* CompletedDetails.swift in Sources */,
 				653136232E53F7EB00EECCA5 /* RepsAndSets.swift in Sources */,
 				65CD3C7C2DD3C84F00C2B671 /* CompletedWorkouts.swift in Sources */,
+				65DD05492EC6E842000D159C /* AccountDataStore.swift in Sources */,
 				65CD3C9C2DD7C43E00C2B671 /* WorkoutGenerator.swift in Sources */,
 				653136352E552B7A00EECCA5 /* TemplateOverload.swift in Sources */,
 				653BF8B32E661BD6005A07EA /* BaseWeightEditor.swift in Sources */,
