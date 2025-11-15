@@ -83,7 +83,7 @@ struct NewEquipment: View {
                             bgColor: isInputValid ? .blue : .gray
                         ) {
                             equipmentCreated = true
-                            draft.name = InputLimiter.trimmed(draft.name)
+                            draft.name = draft.name.trimmed
                             
                             ctx.equipment.updateEquipment(equipment: equipment)
                             

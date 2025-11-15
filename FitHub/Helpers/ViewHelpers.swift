@@ -138,3 +138,43 @@ extension View {
         )
     }
 }
+
+struct TrailingIconButtonModifier: ViewModifier {
+    let systemName: String
+    let isShowing: Bool
+    let action: () -> Void
+    
+    init(
+        systemName: String,
+        isShowing: Bool = true,
+        action: @escaping () -> Void = {}
+    ) {
+        self.systemName = systemName
+        self.isShowing = isShowing
+        self.action = action
+    }
+
+    func body(content: Content) -> some View {
+        HStack {
+            content
+            Spacer()
+            Button(action: action) {
+                Image(systemName: systemName)
+                    .foregroundStyle(.secondary)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+        }
+    }
+}
+
+extension View {
+    func trailingIconButton(
+        systemName: String,
+        isShowing: Bool = true,
+        action: @escaping () -> Void = {}
+    ) -> some View {
+        modifier(TrailingIconButtonModifier(systemName: systemName, isShowing: isShowing, action: action))
+    }
+}
+

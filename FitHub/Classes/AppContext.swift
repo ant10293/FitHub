@@ -65,11 +65,13 @@ final class AppContext: ObservableObject {
     }
 
     func resetForSignOut() {
+        NotificationManager.removeAllPending()
+
         let blankUserData = UserData()
-        blankUserData.setup.setupState = .welcomeView
         let blankAdjustments = AdjustmentsData()
         let blankExercises = ExerciseData()
         let blankEquipment = EquipmentData()
+        
         replaceData(
             userData: blankUserData,
             adjustments: blankAdjustments,
@@ -83,12 +85,15 @@ final class AppContext: ObservableObject {
         let loadedAdjustments = AdjustmentsData.loadAdjustmentsFromFile() ?? .init()
         let loadedExercises = ExerciseData()
         let loadedEquipment = EquipmentData()
+        
         replaceData(
             userData: loadedUserData,
             adjustments: loadedAdjustments,
             exercises: loadedExercises,
             equipment: loadedEquipment
         )
+        
+        replaceNotifications()
     }
 
     private func replaceData(
@@ -110,6 +115,15 @@ final class AppContext: ObservableObject {
         stitch(equipment)
         stitch(toast)
         stitch(store)
+    }
+    
+    private func replaceNotifications() {
+        for template in userData.workoutPlans.allTemplates {
+            var template = template
+            let ids = NotificationManager.scheduleNotification(for: template, user: userData)
+            template.notificationIDs = ids
+            userData.updateTemplate(template: template)
+        }
     }
 }
 

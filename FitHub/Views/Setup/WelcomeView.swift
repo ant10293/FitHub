@@ -43,24 +43,6 @@ struct WelcomeView: View {
                         }
                     )
 
-                    /*
-                    // ───────── OR divider ───────
-                    HStack { Line(); Text("or").bold(); Line() }
-                        .frame(maxWidth: btnW)
-                        .padding(.vertical, 4)
-
-                    // ───── Guest button ─────────
-                    Button("Continue without Account") {
-                    ctx.userData.settings.allowedCredentials = false
-                    handleNavigation(accountOverride: "guest")
-                    }
-                    .bold()
-                    .frame(width: btnW, height: btnH)
-                    .foregroundStyle(.white)
-                    .background(Color.black)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    */
-
                     Spacer(minLength: 40)
                 }
                 .padding(.horizontal)
@@ -75,8 +57,8 @@ struct WelcomeView: View {
     }
 
     // MARK: – Navigation / persistence
-    private func handleNavigation(accountOverride: String? = nil) {
-        let accountID = accountOverride ?? Auth.auth().currentUser?.uid ?? "guest"
+    private func handleNavigation() {
+        let accountID = AuthService.getUid() ?? ""
 
         Task {
             do {

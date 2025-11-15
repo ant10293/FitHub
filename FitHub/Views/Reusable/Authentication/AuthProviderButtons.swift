@@ -15,50 +15,64 @@ struct AuthProviderButtons: View {
     @State private var isProcessing = false
     
     var body: some View {
-        VStack(spacing: 12) {
-            appleButton
-            
-            #if canImport(GoogleSignIn)
-            googleButton
-            #endif
-            
-            emailButton
-            
-            // ───────── OR divider ───────
-            HStack { Line(); Text("or").bold(); Line() }
-                .frame(maxWidth: buttonWidth)
-                .padding(.vertical, 4)
-            
-            guestButton
-        }
-        .disabled(isProcessing)
-        .overlay {
-            if isProcessing {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .padding()
-                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        NavigationStack {
+            VStack(spacing: 12) {
+                appleButton
+                
+                emailButton
+                
+                if showGuestButton {
+                    // ───────── OR divider ───────
+                    HStack { Line(); Text("or").bold(); Line() }
+                        .frame(maxWidth: buttonWidth)
+                        .padding(.vertical, 4)
+                    
+                    guestButton
+                }
+            }
+            .disabled(isProcessing)
+            .overlay {
+                if isProcessing {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .padding()
+                        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                }
+            }
+            .navigationDestination(isPresented: $showEmailFlow) {
+                EmailAuthView(
+                    userData: userData,
+                    onSuccess: {
+                        showEmailFlow = false
+                        onSuccess()
+                    },
+                    onFailure: { error in
+                        showEmailFlow = false
+                        onFailure(error)
+                    }
+                )
+            }
+            .navigationDestination(isPresented: $showGuestFlow) {
+                GuestAuthView(
+                    userData: userData,
+                    onSuccess: {
+                        showGuestFlow = false
+                        onSuccess()
+                    },
+                    onFailure: { error in
+                        showGuestFlow = false
+                        onFailure(error)
+                    }
+                )
             }
         }
-        .navigationDestination(isPresented: $showEmailFlow) {
-            EmailAuthView(
-                userData: userData,
-                onSuccess: {
-                    showEmailFlow = false
-                    onSuccess()
-                },
-                onFailure: { error in
-                    showEmailFlow = false
-                    onFailure(error)
-                }
-            )
+    }
+    
+    private var showGuestButton: Bool {
+        if userData.setup.setupState == .welcomeView {
+            return true
         }
-        .navigationDestination(isPresented: $showGuestFlow) {
-            GuestAuthView(userData: userData, onSuccess: {
-                showGuestFlow = false
-                onSuccess()
-            })
-        }
+        return !AuthService.isAnonymous()
     }
     
     private var appleButton: some View {
@@ -85,126 +99,84 @@ struct AuthProviderButtons: View {
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
     
-    #if canImport(GoogleSignIn)
-    private var googleButton: some View {
-        Button {
-            guard !isProcessing else { return }
-            guard let presenter = AuthProviderButtons.presentingViewController() else {
-                let error = NSError(
-                    domain: "AuthProviderButtons",
-                    code: -1,
-                    userInfo: [NSLocalizedDescriptionKey: "Unable to find a view controller to present Google Sign-In."]
-                )
-                onFailure(error)
-                return
-            }
-            isProcessing = true
-            AuthService.shared.signInWithGoogle(presenting: presenter, into: userData) { result in
-                DispatchQueue.main.async {
-                    isProcessing = false
-                    switch result {
-                    case .success:
-                        onSuccess()
-                    case .failure(let error):
-                        onFailure(error)
-                    }
-                }
-            }
-        } label: {
-            HStack {
-                Image(systemName: "globe")
-                Text("Sign in with Google")
-                    .fontWeight(.semibold)
-            }
-            .foregroundStyle(colorScheme == .dark ? Color.black : Color.white)
-            .frame(maxWidth: .infinity)
-        }
-        .frame(width: buttonWidth, height: buttonHeight)
-        .frame(maxWidth: buttonWidth == nil ? .infinity : nil)
-        .background(colorScheme == .dark ? Color.white : Color.black)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-    }
-    #endif
-    
     private var emailButton: some View {
-        let fontSize = buttonHeight * 0.38
-
-        return Button {
-            showEmailFlow = true
-        } label: {
-            HStack {
-                Image(systemName: "envelope.fill")
-                    .font(.system(size: max(fontSize, 1)))  // never request size 0
-                Text("Sign in with Email")
-                    .font(.system(size: fontSize))
-                    .lineLimit(1)                 // single line
-                    .minimumScaleFactor(0.6)      // allow shrink like Apple’s
-                    .allowsTightening(true)       // tighter kerning when compressed
+        AppleButton(
+            title: "Sign in with Email",
+            imageName: "envelope.fill",
+            buttonWidth: buttonWidth,
+            buttonHeight: buttonHeight,
+            bgColor: .blue,
+            buttonAction: {
+                showEmailFlow = true
             }
-            .contentShape(Rectangle())            // keep tap target full width
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .frame(width: buttonWidth, height: buttonHeight)
-        .frame(maxWidth: buttonWidth == nil ? .infinity : nil)
-        .background(.blue)
-        .foregroundStyle(Color.primary) // keep contrast on blue background
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .dynamicTypeSize(.medium ... .accessibility3) // respects Dynamic Type like Apple’s
+        )
     }
     
     private var guestButton: some View {
-        Button("Continue without Account") {
-            showGuestFlow = true
-        }
-        .frame(width: buttonWidth, height: buttonHeight)
-        .frame(maxWidth: buttonWidth == nil ? .infinity : nil)
-        .background(.black)
-        .foregroundStyle(Color.primary) // keep contrast on blue background
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        AppleButton(
+            title: "Continue without Account",
+            buttonWidth: buttonWidth,
+            buttonHeight: buttonHeight,
+            bgColor: colorScheme == .dark ? .black : .white,
+            buttonAction: {
+                showGuestFlow = true
+            }
+        )
     }
 }
 
-struct GuestAuthView: View {
-    @Environment(\.dismiss) private var dismiss
-    @ObservedObject var userData: UserData
-    @State private var firstName: String = ""
-    @State private var lastName: String = ""
-    @State private var isProcessing = false
-    let onSuccess: () -> Void
-
-    var body: some View {
-        Form {
-            Section {
-                Text("Profile (optional)")
-                    .font(.headline)
-                
-                TextField("First Name", text: $firstName)
-                    .textContentType(.givenName)
-                    .textFieldStyle(.roundedBorder)
-                
-                TextField("Last Name", text: $lastName)
-                    .textContentType(.familyName)
-                    .textFieldStyle(.roundedBorder)
-            } footer: {
-                RectangularButton(title: "Continue", action: {
-                    signIn(firstName: firstName.trimmed, lastName: lastName.trimmed)
-                })
-            }
-        }
-        .overlay { if isProcessing { ProgressView() } }
+private struct AppleButton: View {
+    let title: String
+    let imageName: String?
+    let buttonWidth: CGFloat?
+    let buttonHeight: CGFloat
+    let bgColor: Color
+    let fgColor: Color
+    let buttonAction: () -> Void
+    
+    init(
+        title: String,
+        imageName: String? = nil,
+        buttonWidth: CGFloat? = nil,
+        buttonHeight: CGFloat,
+        bgColor: Color,
+        fgColor: Color = Color.primary,
+        buttonAction: @escaping () -> Void
+    ) {
+        self.title = title
+        self.imageName = imageName
+        self.buttonWidth = buttonWidth
+        self.buttonHeight = buttonHeight
+        self.bgColor = bgColor
+        self.fgColor = fgColor
+        self.buttonAction = buttonAction
     }
     
-    private func signIn(firstName: String, lastName: String) {
-        isProcessing = true
-        AuthService.shared.signInAnonymously(into: userData, firstName: firstName, lastName: lastName, completion: { result in
-            isProcessing = false
-            switch result {
-            case .success:
-                onSuccess()
-                dismiss()
-            case .failure(let error):
-                print(error)
-            }
-        })
+    var body: some View {
+        let fontSize = buttonHeight * 0.38
+
+         return Button {
+             buttonAction()
+         } label: {
+             HStack {
+                 if let imageName {
+                     Image(systemName: imageName)
+                         .font(.system(size: max(fontSize, 1)))  // never request size 0
+                 }
+                 Text(title)
+                     .font(.system(size: fontSize))
+                     .lineLimit(1)                 // single line
+                     .minimumScaleFactor(0.6)      // allow shrink like Apple’s
+                     .allowsTightening(true)       // tighter kerning when compressed
+             }
+             .contentShape(Rectangle())            // keep tap target full width
+             .frame(maxWidth: .infinity, maxHeight: .infinity)
+         }
+         .frame(width: buttonWidth, height: buttonHeight)
+         .frame(maxWidth: buttonWidth == nil ? .infinity : nil)
+         .background(bgColor)
+         .foregroundStyle(fgColor) // keep contrast on blue background
+         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+         .dynamicTypeSize(.medium ... .accessibility3) // respects Dynamic Type like Apple’s
     }
 }

@@ -9,15 +9,6 @@ import Foundation
 
 
 enum InputLimiter {
-    static func trimmed(_ text: String) -> String {
-        return text.trimmingTrailingSpaces()
-    }
-    /// removes all leading “0” chars (except when the entire string *is* “0”)
-    private static func trimLeadingZeros(_ text: String) -> String {
-        var s = text
-        while s.hasPrefix("0") && s.count > 1 { s.removeFirst() }
-        return s
-    }
     /// digits-only, max: (4 chars before decimal, 2 chars after decimal) **no leading zeros**
     static func filteredWeight(old: String, new raw: String) -> String {
         // 1) keep digits + at most one dot (regex will reject extra dots anyway)
@@ -34,7 +25,7 @@ enum InputLimiter {
         let rawInt = parts.isEmpty ? "" : String(parts.first ?? "")
 
         // 3a) normalize integer: collapse leading zeros, but keep a single "0"
-        let intPart = trimLeadingZeros(rawInt)
+        let intPart = rawInt.trimLeadingZeros()
 
         // 4) rebuild with optional fractional section (already <= 2 digits via regex)
         if parts.count == 2 {
@@ -52,14 +43,14 @@ enum InputLimiter {
       /// digits-only, max 3 chars, **no leading zeros**
     static func filteredReps(_ raw: String) -> String {
         let digits = raw.filter { "0123456789".contains($0) }
-        let trimmed = trimLeadingZeros(digits)
+        let trimmed = digits.trimLeadingZeros()
         return String(trimmed.prefix(3))
     }
     
     static func isValidInput(_ input: String) -> Bool {
         // first trim trailing whitespaces
         // Check if the name is empty or contains only whitespace
-        guard !input.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
+        guard !input.isEmptyAfterTrim else { return false }
         
         // Define a character set of valid characters (letters, numbers, spaces)
         let allowedCharacters = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789- ")
@@ -93,37 +84,6 @@ enum Format {
         if s.last == "." { s.removeLast() }
 
         return s
-    }
-    
-    // MARK: - Date & Time Formatting
-    static func monthDay(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "M/d"
-        return formatter.string(from: date)
-    }
-    
-    static func shortDate(from date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d"
-        return formatter.string(from: date)
-    }
-    
-    static func fullDate(from date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM d, yyyy"
-        return formatter.string(from: date)
-    }
-     
-    static func dayOfWeek(from date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE"
-        return formatter.string(from: date)
-    }
-    
-    static func monthName(from date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM"
-        return dateFormatter.string(from: date)
     }
     
     /// Formats a `Date` into a localized string (e.g., “Jun 3, 2025 at 2:30 PM”).
@@ -233,4 +193,3 @@ enum TextFormatter {
         CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
     }()
 }
-

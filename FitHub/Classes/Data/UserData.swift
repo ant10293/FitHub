@@ -218,9 +218,9 @@ extension UserData {
     
     func getWorkoutDates() -> [Date] { workoutPlans.completedWorkouts.map(\.date) }
 
-    func getPlannedWorkoutDates() -> [Date] { (workoutPlans.trainerTemplates + workoutPlans.userTemplates).compactMap(\.date) }
+    func getPlannedWorkoutDates() -> [Date] { (workoutPlans.allTemplates).compactMap(\.date) }
 
-    func getAllPlannedWorkoutDates() -> [Date] { datesForTemplates(workoutPlans.trainerTemplates + workoutPlans.userTemplates) }
+    func getAllPlannedWorkoutDates() -> [Date] { datesForTemplates(workoutPlans.allTemplates) }
 
     private func datesForTemplates(_ templates: [WorkoutTemplate]) -> [Date] {
         var unique = Set<Date>()   // avoids double-marking the same day

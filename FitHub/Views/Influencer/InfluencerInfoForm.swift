@@ -27,16 +27,9 @@ struct InfluencerInfoForm: View {
             TextField("Full Name", text: $fullName)
                 .textContentType(.name)
                 .textInputAutocapitalization(.words)
+                .trailingIconButton(systemName: "lock.fill", isShowing: !allowEditFullName)
                 .inputStyle()
                 .disabled(!allowEditFullName)
-                .overlay(alignment: .trailing) {
-                    if !allowEditFullName {
-                        Image(systemName: "lock.fill")
-                            .foregroundStyle(.secondary)
-                            .font(.caption)
-                            .padding(.trailing, 12)
-                    }
-                }
             
             // Email
             VStack(alignment: .leading, spacing: 4) {
@@ -58,16 +51,9 @@ struct InfluencerInfoForm: View {
             // Notes
             TextField("Notes (Optional)", text: $notes, axis: .vertical)
                 .lineLimit(3...6)
+                .trailingIconButton(systemName: "lock.fill", isShowing: !allowEditNotes)
                 .inputStyle()
                 .disabled(!allowEditNotes)
-                .overlay(alignment: .trailing) {
-                    if !allowEditNotes {
-                        Image(systemName: "lock.fill")
-                            .foregroundStyle(.secondary)
-                            .font(.caption)
-                            .padding(.trailing, 12)
-                    }
-                }
         }
     }
 }

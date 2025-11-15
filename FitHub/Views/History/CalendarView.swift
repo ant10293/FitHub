@@ -33,7 +33,7 @@ struct CalendarView: View {
 
                 Spacer()
 
-                Text("\(Format.monthName(from: currentMonth)) \(String(year(from: currentMonth)))")
+                Text("\(currentMonth.monthName) \(String(year(from: currentMonth)))")
                     .font(.headline)
 
                 Spacer()

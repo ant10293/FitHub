@@ -112,12 +112,12 @@ struct TimeEntryField: UIViewRepresentable {
             }
             if digits.count <= 4 {
                 let mins = String(digits.dropLast(2))
-                let mStr = mins.isEmpty ? "0" : mins.trimLeadingZeros()
+                let mStr = mins.isEmpty ? "0" : mins.trimLeadingZeros(emptyAsZero: true)
                 return "\(mStr):\(sec2)"             // MMS S -> M:SS
             }
 
             let hours = String(digits.dropLast(4))
-            let hStr  = hours.isEmpty ? "0" : hours.trimLeadingZeros()
+            let hStr  = hours.isEmpty ? "0" : hours.trimLeadingZeros(emptyAsZero: true)
             let min2  = String(digits.dropLast(2).suffix(2)).leftPad2()
             return "\(hStr):\(min2):\(sec2)"         // HHMMSS -> H:MM:SS
         }
@@ -144,10 +144,6 @@ struct TimeEntryField: UIViewRepresentable {
 // MARK: - Helpers
 private extension String {
     func leftPad2() -> String { count >= 2 ? self : String(repeating: "0", count: 2 - count) + self }
-    func trimLeadingZeros() -> String {
-        let result = self.drop { $0 == "0" }
-        return result.isEmpty ? "0" : String(result)
-    }
 }
 
 enum TextFieldVisualStyle { case plain, rounded }

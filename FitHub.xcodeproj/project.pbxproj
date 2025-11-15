@@ -90,6 +90,8 @@
 		6584B0B02C30BF4700447EC1 /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6584B0AF2C30BF4700447EC1 /* FirebaseDatabaseSwift */; };
 		6584B0B22C30BF4700447EC1 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6584B0B12C30BF4700447EC1 /* FirebaseFirestoreSwift */; };
 		6584B0B42C30BF4700447EC1 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 6584B0B32C30BF4700447EC1 /* FirebaseStorage */; };
+		6592279E2EC80DDF00EEDF42 /* GuestAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */; };
+		659227A02EC820E100EEDF42 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592279F2EC820E100EEDF42 /* Name.swift */; };
 		65A0D1CC2E2F39D5008466D8 /* CustomToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */; };
 		65A0D1CE2E304FCF008466D8 /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1CD2E304FCF008466D8 /* Unit.swift */; };
 		65A0D1D02E318D21008466D8 /* RectangularBG.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1CF2E318D21008466D8 /* RectangularBG.swift */; };
@@ -360,6 +362,8 @@
 		657067A32E49729A0063090C /* TemplateEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditor.swift; sourceTree = "<group>"; };
 		65817F3D2E49B9E900437560 /* PremiumStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumStore.swift; sourceTree = "<group>"; };
 		6584B0632C30BC2000447EC1 /* FitHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestAuthView.swift; sourceTree = "<group>"; };
+		6592279F2EC820E100EEDF42 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToolBar.swift; sourceTree = "<group>"; };
 		65A0D1CD2E304FCF008466D8 /* Unit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unit.swift; sourceTree = "<group>"; };
 		65A0D1CF2E318D21008466D8 /* RectangularBG.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularBG.swift; sourceTree = "<group>"; };
@@ -941,6 +945,7 @@
 				653136382E552FF000EECCA5 /* Notification.swift */,
 				65F5EF8E2EB19CBE005557F1 /* CoverageState.swift */,
 				65DD05212EBC06B6000D159C /* ReferralValidation.swift */,
+				6592279F2EC820E100EEDF42 /* Name.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1298,6 +1303,7 @@
 			children = (
 				65DD05432EC6932B000D159C /* AuthProviderButtons.swift */,
 				65DD05452EC69339000D159C /* EmailAuthView.swift */,
+				6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -1576,6 +1582,7 @@
 				65D48DEC2DF97BEE0032F815 /* User.swift in Sources */,
 				65039B8A2E8474BC007A31E1 /* SetLoadEditor.swift in Sources */,
 				65CD3C672DD3C84F00C2B671 /* WeightIncrementation.swift in Sources */,
+				6592279E2EC80DDF00EEDF42 /* GuestAuthView.swift in Sources */,
 				65CD3C682DD3C84F00C2B671 /* DetailsView.swift in Sources */,
 				65AB47F72EA342B4001BEAFE /* ExerciseHistory.swift in Sources */,
 				65CD3C692DD3C84F00C2B671 /* GoalSelectionView.swift in Sources */,
@@ -1641,6 +1648,7 @@
 				65039B912E970D12007A31E1 /* SetDetailSettings.swift in Sources */,
 				6550ADD72E775A72002072C1 /* Submuscle.swift in Sources */,
 				65CD3C7A2DD3C84F00C2B671 /* WorkoutPlan.swift in Sources */,
+				659227A02EC820E100EEDF42 /* Name.swift in Sources */,
 				65AB47FD2EA73AF4001BEAFE /* UnitCategory.swift in Sources */,
 				65CD3C7B2DD3C84F00C2B671 /* CompletedDetails.swift in Sources */,
 				653136232E53F7EB00EECCA5 /* RepsAndSets.swift in Sources */,

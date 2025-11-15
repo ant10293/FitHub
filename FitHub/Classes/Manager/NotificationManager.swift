@@ -8,6 +8,9 @@ final class NotificationManager: ObservableObject {
     static let shared = NotificationManager()          // ← no @MainActor
 
     private var bag = Set<AnyCancellable>()
+    
+    // published so UI toggles can bind to it
+    @Published private(set) var isAuthorized: Bool = false
 
     private init() {
         refreshStatus()
@@ -16,9 +19,6 @@ final class NotificationManager: ObservableObject {
             .sink { [weak self] _ in self?.refreshStatus() }
             .store(in: &bag)
     }
-    
-    // published so UI toggles can bind to it
-    @Published private(set) var isAuthorized: Bool = false
 
     // MARK: – Public API – schedule templates
     static func scheduleNotification(for workoutTemplate: WorkoutTemplate, user: UserData) -> [String] {

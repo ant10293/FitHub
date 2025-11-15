@@ -5,9 +5,6 @@ import FirebaseFunctions
 struct EmailAuthView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var userData: UserData
-    var onSuccess: () -> Void
-    var onFailure: (Error) -> Void
-    
     @State private var email = ""
     @State private var password = ""
     @State private var confirmPassword = ""
@@ -16,151 +13,135 @@ struct EmailAuthView: View {
     @State private var isProcessing = false
     @State private var errorMessage: String?
     @State private var isPasswordVisible = false
-    
-    private enum FlowStep {
-        case emailEntry
-        case existingAccount
-        case newAccount
-        
-        var buttonTitle: String {
-            switch self {
-            case .emailEntry: return "Continue"
-            case .existingAccount: return "Sign In"
-            case .newAccount: return "Create Account"
-            }
-        }
-        
-        var showsAlternateEmailOption: Bool {
-            self != .emailEntry
-        }
-    }
-    
     @State private var flowStep: FlowStep = .emailEntry
-    
     @FocusState private var focusedField: Field?
-    
-    private enum Field {
-        case email, password, confirmPassword, firstName, lastName
-    }
+    let onSuccess: () -> Void
+    let onFailure: (Error) -> Void
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                switch flowStep {
-                case .emailEntry:
-                    emailEntrySection
-                case .existingAccount:
-                    existingAccountSection
-                case .newAccount:
-                    newAccountSection
-                }
-                
-                Spacer()
-                
-                if let errorMessage {
-                    Text(errorMessage)
-                        .foregroundStyle(.red)
-                        .font(.footnote)
-                }
-                
-                RectangularButton(
-                    title: flowStep.buttonTitle,
-                    enabled: !isProcessing,
-                    action: handlePrimaryAction
-                )
-                
-                if flowStep.showsAlternateEmailOption {
-                    Button("Use a different email") {
-                        resetToEmailEntry()
-                    }
-                    .padding(.top, 8)
-                    .font(.footnote)
-                    .foregroundStyle(Color.secondary)
-                }
+        Form {
+            switch flowStep {
+            case .emailEntry:
+                emailEntrySection
+            case .existingAccount:
+                existingAccountSection
+            case .newAccount:
+                newAccountSection
             }
-            .padding()
         }
-        .background(Color(.secondarySystemBackground).ignoresSafeArea())
+        .navigationTitle(flowStep.navBarTitle)
+        .disabled(isProcessing)
         .overlay { if isProcessing { ProgressView() } }
-        .navigationTitle(navigationTitle)
     }
     
-    private var navigationTitle: String {
-        switch flowStep {
-        case .emailEntry, .existingAccount:
-            return "Sign In"
-        case .newAccount:
-            return "Create Account"
+    // MARK: - Shared footer
+    
+    private var footerContent: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if let errorMessage {
+                Text(errorMessage)
+                    .foregroundStyle(.red)
+                    .font(.footnote)
+            }
+            
+            RectangularButton(
+                title: flowStep.buttonTitle,
+                enabled: !isProcessing,
+                action: handlePrimaryAction
+            )
+            
+            if flowStep.showsAlternateEmailOption {
+                Button("Use a different email") {
+                    resetToEmailEntry()
+                }
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .padding(.top, 8)
+            }
         }
+        .padding(.top)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
+    
+    // MARK: - Sections
     
     private var emailEntrySection: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            fieldLabel("Email")
+        Section {
             TextField("Email", text: $email)
                 .keyboardType(.emailAddress)
                 .textContentType(.emailAddress)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled(true)
                 .focused($focusedField, equals: .email)
-                .textFieldStyle(.roundedBorder)
+        } header: {
+            Text("EMAIL")
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+        } footer: {
+            footerContent
         }
     }
     
     private var existingAccountSection: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            VStack(alignment: .leading, spacing: 6) {
-                fieldLabel("Email")
-                Text(email)
-                    .font(.headline)
-            }
+        Group {
+            emailSection
             
-            passwordField
-            
-            Button("Forgot password?") {
-                sendPasswordReset()
+            Section {
+                passwordField
+                
+                Button("Forgot password?") {
+                    sendPasswordReset()
+                }
+                .font(.footnote)
+                .foregroundStyle(Color.accentColor)
+            } header: {
+                Text("PASSWORD")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+            } footer: {
+                footerContent
             }
-            .font(.footnote)
-            .foregroundStyle(Color.accentColor)
         }
     }
     
     private var newAccountSection: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            VStack(alignment: .leading, spacing: 6) {
-                fieldLabel("Email")
-                Text(email)
-                    .font(.headline)
-            }
+        Group {
+            emailSection
             
-            passwordField
-            
-            VStack(alignment: .leading, spacing: 6) {
-                fieldLabel("Confirm Password")
+            Section {
+                passwordField
                 SecureField("Confirm Password", text: $confirmPassword)
                     .textContentType(.password)
                     .focused($focusedField, equals: .confirmPassword)
-                    .textFieldStyle(.roundedBorder)
+            } header: {
+                Text("PASSWORD")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
             }
             
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Profile (optional)")
-                    .font(.headline)
-                
-                fieldLabel("First Name")
+            Section {
                 TextField("First Name", text: $firstName)
                     .textContentType(.givenName)
                     .focused($focusedField, equals: .firstName)
-                    .textFieldStyle(.roundedBorder)
                 
-                fieldLabel("Last Name")
                 TextField("Last Name", text: $lastName)
                     .textContentType(.familyName)
                     .focused($focusedField, equals: .lastName)
-                    .textFieldStyle(.roundedBorder)
+            } header: {
+                Text("PROFILE (OPTIONAL)")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+            } footer: {
+                footerContent
             }
         }
     }
+    
+    // MARK: - Actions (unchanged)
     
     private func handlePrimaryAction() {
         switch flowStep {
@@ -361,40 +342,70 @@ struct EmailAuthView: View {
         }
     }
     
-    @ViewBuilder
-    private func fieldLabel(_ title: String) -> some View {
-        Text(title.uppercased())
-            .font(.caption)
-            .fontWeight(.semibold)
-            .foregroundStyle(Color.secondary)
-    }
-    
-    private var passwordField: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            fieldLabel("Password")
-            ZStack {
-                if isPasswordVisible {
-                    TextField("Password", text: $password)
-                        .textContentType(.password)
-                        .focused($focusedField, equals: .password)
-                        .textFieldStyle(.roundedBorder)
-                } else {
-                    SecureField("Password", text: $password)
-                        .textContentType(.password)
-                        .focused($focusedField, equals: .password)
-                        .textFieldStyle(.roundedBorder)
-                }
-            }
-            .overlay(alignment: .trailing) {
-                Button {
-                    isPasswordVisible.toggle()
-                } label: {
-                    Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
-                        .foregroundStyle(Color.secondary)
-                }
-                .padding(.trailing, 12)
-            }
+    private var emailSection: some View {
+        Section {
+            Text(email)
+                .font(.headline)
+                .textSelection(.disabled)
+                .trailingIconButton(
+                    systemName: "lock.fill",
+                    action: { isPasswordVisible.toggle() }
+                )
+        } header: {
+            Text("EMAIL")
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
         }
     }
+    
+    // MARK: - Password field (no label now; label is Section header)
+    
+    private var passwordField: some View {
+        Group {
+            if isPasswordVisible {
+                TextField("Password", text: $password)
+                    .textContentType(.password)
+                    .focused($focusedField, equals: .password)
+            } else {
+                SecureField("Password", text: $password)
+                    .textContentType(.password)
+                    .focused($focusedField, equals: .password)
+            }
+        }
+        .trailingIconButton(
+            systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill"
+        )
+    }
+    
+    // MARK: - Types
+    
+    private enum FlowStep {
+        case emailEntry, existingAccount, newAccount
+        
+        var buttonTitle: String {
+            switch self {
+            case .emailEntry: return "Continue"
+            case .existingAccount: return "Sign In"
+            case .newAccount: return "Create Account"
+            }
+        }
+        
+        var navBarTitle: String {
+            switch self {
+            case .emailEntry, .existingAccount:
+                return "Sign In"
+            case .newAccount:
+                return "Create Account"
+            }
+        }
+        
+        var showsAlternateEmailOption: Bool {
+            self != .emailEntry
+        }
+    }
+    
+    private enum Field {
+        case email, password, confirmPassword, firstName, lastName
+    }
 }
-

@@ -88,7 +88,7 @@ struct NewExercise: View {
                         bgColor: isInputValid ? .blue : .gray
                     ) {
                         exerciseCreated = true
-                        draft.name = InputLimiter.trimmed(draft.name)
+                        draft.name = draft.name.trimmed
         
                         ctx.exercises.updateExercise(exercise)
                         

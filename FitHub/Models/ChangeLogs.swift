@@ -89,7 +89,7 @@ struct MaxRecordInfo: Codable {
     
     var displayText: Text {
         if let currentMax = currentMax {
-            return Text("Current \(currentMax.value.formattedText) (set \(Format.shortDate(from: currentMax.date)))")
+            return Text("Current \(currentMax.value.formattedText) (set \(currentMax.date.shortDate))")
         } else if let csvEstimate = csvEstimate {
             return Text("Estimated \(csvEstimate.formattedText) (from CSV data)")
         } else {

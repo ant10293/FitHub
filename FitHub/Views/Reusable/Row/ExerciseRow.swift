@@ -44,8 +44,8 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
          lineLimit: Int = 2,
          @ViewBuilder accessory: @escaping () -> Accessory,
          @ViewBuilder detail:    @escaping () -> Detail,
-         onTap: @escaping () -> Void = {}) {
-        
+         onTap: @escaping () -> Void = {}
+    ) {
         self.exercise  = exercise
         self.secondary = secondary
         self.heartOverlay = heartOverlay

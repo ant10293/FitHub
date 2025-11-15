@@ -23,11 +23,6 @@ final class AuthService: ObservableObject {
     
     private var authListenerHandle: AuthStateDidChangeListenerHandle?
     
-    enum FlowKind {
-            case signInExisting      // user is logging into an existing account
-            case createAccount       // user is creating a new account / upgrading guest
-    }
-    
     private init() {
         // Start listening right away
         authListenerHandle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
@@ -167,7 +162,6 @@ final class AuthService: ObservableObject {
             completion(.success(user))
         }
     }
-
     
     private func updateUserData(
         for user: User,
@@ -176,7 +170,7 @@ final class AuthService: ObservableObject {
         nameComponents: PersonNameComponents?,
         displayName: String?
     ) {
-        let names = parseName(
+        let names = Name.parseName(
             preferredFirstName: nameComponents?.givenName,
             preferredLastName: nameComponents?.familyName,
             fallbackDisplayName: displayName,
@@ -263,7 +257,6 @@ final class AuthService: ObservableObject {
     /// Updates the current Firebase user's displayName to the given `newName`.
     /// Calls `completion(Result<Void,Error>)` when done.
     func updateDisplayName(to newName: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        UIApplication.shared.endEditing()
         guard let user = Auth.auth().currentUser else {
             let err = NSError(
                 domain: "AuthService",
@@ -328,11 +321,21 @@ final class AuthService: ObservableObject {
     }
 }
 
+// MARK: — Anonymous Sign-in
 extension AuthService {
     /// Signs in the user with Firebase Anonymous Auth.
     /// This creates a guest account with a stable uid that can later be upgraded
     /// to a real account (Apple, Google, email/password) via `link(with:)`.
     func signInAnonymously(into userData: UserData, firstName: String, lastName: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        // Already signed into anonymous account → reuse it
+        if let current = Auth.auth().currentUser, current.isAnonymous {
+            print("ℹ️ signInAnonymously: reusing existing anonymous user uid=\(current.uid)")
+            applyData(for: current)
+            return
+        }
+        
+        // Otherwise, "sign in as normal" (this will fail if Firebase doesn’t allow anon sign-in
+        // while a real user is signed in, but that’s exactly what you’re requesting)
         Auth.auth().signInAnonymously { authResult, error in
             if let error = error {
                 print("❌ Anonymous sign-in failed: \(error.localizedDescription)")
@@ -347,14 +350,15 @@ extension AuthService {
             }
             
             print("✅ Anonymous sign-in successful. uid=\(user.uid)")
-            
-            // Minimal userData wiring for a guest/anonymous user
+            applyData(for: user)
+        }
+        
+        func applyData(for user: User) {
             Task { @MainActor in
-                // Guest – credentials not yet set up
                 userData.settings.allowedCredentials = false
                 userData.profile.firstName = firstName
                 userData.profile.lastName = lastName
-                if let displayName = getDisplayName(firstName: firstName, lastName: lastName) {
+                if let displayName = Name.getDisplayName(firstName: firstName, lastName: lastName) {
                     userData.profile.userName = displayName
                 }
                 userData.profile.accountCreationDate = user.metadata.creationDate ?? Date()
@@ -367,6 +371,7 @@ extension AuthService {
     }
 }
 
+// MARK: — Apple Sign-in
 extension AuthService {
     func signInWithApple(with result: Result<ASAuthorization, Error>, into userData: UserData, completion: @escaping (Result<Void, Error>) -> Void) {
         switch result {
@@ -408,32 +413,7 @@ extension AuthService {
 
             // Firebase Authentication
             let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: tokenString, rawNonce: nil)
-            /*
-            Auth.auth().signIn(with: credential) { [self] (authResult, error) in
-                if let error = error {
-                    print("❌ Firebase Authentication error: \(error.localizedDescription)")
-                    completion(.failure(AuthServiceError.firebaseSignInFailed(error.localizedDescription)))
-                    return
-                }
-                
-                guard let user = authResult?.user else {
-                    print("❌ Firebase returned no user")
-                    completion(.failure(AuthServiceError.firebaseSignInFailed("No user in auth result")))
-                    return
-                }
-                             
-                updateUserData(
-                    for: user,
-                    userData: userData,
-                    emailFallback: appleIDCredential.email ?? user.email,
-                    nameComponents: appleIDCredential.fullName,
-                    displayName: appleIDCredential.fullName?.formatted() ?? user.displayName
-                )
-                
-                completion(.success(()))
-            }
-            */
-            
+
             // If anonymous → upgrade guest; otherwise → normal sign-in.
             upgradeAnonymousUser(
                 with: credential,
@@ -446,14 +426,13 @@ extension AuthService {
                         completion(.failure(AuthServiceError.firebaseSignInFailed(error.localizedDescription)))
                         
                     case .success(let user):
-                        self.updateUserData(
+                        updateUserData(
                             for: user,
                             userData: userData,
                             emailFallback: appleIDCredential.email ?? user.email,
                             nameComponents: appleIDCredential.fullName,
                             displayName: appleIDCredential.fullName?.formatted() ?? user.displayName
                         )
-                        
                         completion(.success(()))
                     }
                 }
@@ -462,74 +441,8 @@ extension AuthService {
     }
 }
 
+// MARK: — Email Sign-in
 extension AuthService {
-    /*
-    func signInWithEmail(email: String, password: String, into userData: UserData, completion: @escaping (Result<Void, Error>) -> Void) {
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-
-            guard let self = self, let user = authResult?.user else {
-                completion(.failure(AuthServiceError.firebaseSignInFailed("No user in auth result")))
-                return
-            }
-            
-            updateUserData(
-                for: user,
-                userData: userData,
-                emailFallback: email,
-                nameComponents: nil,
-                displayName: user.displayName
-            )
-
-            completion(.success(()))
-        }
-    }
-
-    func registerWithEmail(
-        email: String,
-        password: String,
-        firstName: String?,
-        lastName: String?,
-        into userData: UserData,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-
-            guard let self = self, let user = authResult?.user else {
-                completion(.failure(AuthServiceError.firebaseSignInFailed("No user in auth result")))
-                return
-            }
-
-            if let displayName = getDisplayName(firstName: firstName, lastName: lastName) {
-                self.setDisplayName(for: user, to: displayName) { error in
-                    if let error = error {
-                        print("⚠️ Failed to set displayName during registration: \(error.localizedDescription)")
-                    }
-                }
-            }
-
-            updateUserData(
-                for: user,
-                userData: userData,
-                emailFallback: email,
-                nameComponents: nil,
-                displayName: user.displayName
-            )
-
-            user.sendEmailVerification(completion: nil)
-
-            completion(.success(()))
-        }
-    }
-    */
-    
     func signInWithEmail(
         email: String,
         password: String,
@@ -578,7 +491,7 @@ extension AuthService {
                     completion(.failure(error))
                     
                 case .success(let user):
-                    if let displayName = getDisplayName(firstName: firstName, lastName: lastName) {
+                    if let displayName = Name.getDisplayName(firstName: firstName, lastName: lastName) {
                         self.setDisplayName(for: user, to: displayName) { error in
                             if let error = error {
                                 print("⚠️ Failed to set displayName during registration: \(error.localizedDescription)")
@@ -586,14 +499,13 @@ extension AuthService {
                         }
                     }
                     
-                   updateUserData(
+                    updateUserData(
                         for: user,
                         userData: userData,
                         emailFallback: email,
                         nameComponents: nil,
                         displayName: user.displayName
                     )
-                    
                     user.sendEmailVerification(completion: nil)
                     completion(.success(()))
                 }

@@ -168,7 +168,7 @@ private extension TemplateEditor {
         }
     }
     
-    var trimmedName: String { InputLimiter.trimmed(template.name) }
+    var trimmedName: String { template.name.trimmed }
 
     var isDuplicateName: Bool {
         if mode == .create { return checkDuplicate(trimmedName) }

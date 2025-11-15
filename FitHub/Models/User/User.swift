@@ -133,6 +133,7 @@ struct SessionTracking: Codable, Equatable {
 struct WorkoutPlans: Codable, Equatable {
     var userTemplates: [WorkoutTemplate] = []
     var trainerTemplates: [WorkoutTemplate] = []
+    var allTemplates: [WorkoutTemplate] { userTemplates + trainerTemplates }
     var archivedTemplates: [WorkoutTemplate] = []
     var workoutsCreationDate: Date?
     var workoutsStartDate: Date?

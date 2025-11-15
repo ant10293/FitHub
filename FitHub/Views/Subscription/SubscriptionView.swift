@@ -96,15 +96,9 @@ struct SubscriptionView: View {
             .textContentType(.none)
             .autocapitalization(.allCharacters)
             .autocorrectionDisabled()
+            .trailingIconButton(systemName: "lock.fill", isShowing: !hasClaimedCode)
             .inputStyle()
             .disabled(hasClaimedCode)
-            .overlay(alignment: .trailing) {
-                if hasClaimedCode {
-                    Image(systemName: "lock.fill")
-                        .foregroundStyle(.secondary)
-                        .padding(.trailing, 12)
-                }
-            }
             .task {
                 if let claimed = await ReferralRetriever.getClaimedCode() {
                     referralCode = claimed

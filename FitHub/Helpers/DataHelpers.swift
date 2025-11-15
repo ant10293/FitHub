@@ -143,43 +143,16 @@ extension Profile {
     }
 }
 
-func getDisplayName(firstName: String?, lastName: String?) -> String? {
-    let formattedFirst = firstName?.formatName() ?? ""
-    let formattedLast = lastName?.formatName() ?? ""
-    let displayName = [formattedFirst, formattedLast]
-        .filter { !$0.isEmpty }
-        .joined(separator: " ")
-    
-    return displayName.isEmpty ? nil : displayName
-}
-
-func parseName(
-    preferredFirstName: String?,
-    preferredLastName: String?,
-    fallbackDisplayName: String?,
-    firebaseDisplayName: String?
-) -> (userName: String, firstName: String, lastName: String) {
-    let trimmedFirst = (preferredFirstName?.trimmed ?? "")
-    let trimmedLast = (preferredLastName?.trimmed ?? "")
-
-    if !trimmedFirst.isEmpty || !trimmedLast.isEmpty {
-        let first = trimmedFirst.formatName()
-        let last = trimmedLast.formatName()
-        let userName = last.isEmpty ? first : "\(first) \(last)"
-        return (userName, first, last)
-    }
-
-    let bestDisplay = [fallbackDisplayName, firebaseDisplayName]
-        .compactMap { $0?.trimmed }
-        .first(where: { !$0.isEmpty }) ?? ""
-    let parts = bestDisplay.split(separator: " ")
-    let first = parts.first.map(String.init)?.formatName() ?? ""
-    let last = parts.dropFirst().joined(separator: " ").formatName()
-    let userName = last.isEmpty ? first : "\(first) \(last)"
-    return (userName, first, last)
-}
-
 extension String {
+    /// Trims leading "0" characters.
+    /// - Parameter emptyAsZero: If true, "" and all-zero strings become "0".
+    ///                          If false, "" stays "" and "000" becomes "0".
+    func trimLeadingZeros(emptyAsZero: Bool = false) -> String {
+        let result = self.drop { $0 == "0" }
+        if result.isEmpty { return emptyAsZero ? "0" : "" }
+        return String(result)
+    }
+    
     /// Returns a trimmed version of the string (whitespace removed)
     var trimmed: String { trimmingCharacters(in: .whitespaces) }
     /// Returns `true` if the string is empty after trimming whitespace
@@ -189,14 +162,9 @@ extension String {
         return (self.prefix(1).uppercased() + self.dropFirst().lowercased()).trimmed
     }
     
-    func trimmingTrailingSpaces() -> String {
-        guard let range = range(of: "\\s+$", options: .regularExpression) else { return self }
-        return replacingCharacters(in: range, with: "")
-    }
-    
     @inline(__always)
     func normalize() -> String {
-        self.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        self.trimmed.lowercased()
     }
     
     @inline(__always)
@@ -217,5 +185,38 @@ extension String {
     
     var formattedRequirement: String {
         self.replacingOccurrences(of: "_", with: " ").capitalized
+    }
+}
+
+// MARK: - Date & Time Formatting
+extension Date {
+    var monthDay: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M/d"
+        return formatter.string(from: self)
+    }
+    
+    var shortDate: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d"
+        return formatter.string(from: self)
+    }
+    
+    var fullDate: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM d, yyyy"
+        return formatter.string(from: self)
+    }
+     
+    var dayOfWeek: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE"
+        return formatter.string(from: self)
+    }
+    
+    var monthName: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM"
+        return dateFormatter.string(from: self)
     }
 }

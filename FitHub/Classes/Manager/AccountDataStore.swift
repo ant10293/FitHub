@@ -89,7 +89,7 @@ struct AccountDataStore {
         }
     }
     
-    func hasBackup(for accountID: String) -> Bool {
+    private func hasBackup(for accountID: String) -> Bool {
         let accountDir = directory(for: accountID)
         return fileManager.fileExists(atPath: accountDir.path)
     }
@@ -106,5 +106,6 @@ struct AccountDataStore {
         }
     }
 }
+
 
 

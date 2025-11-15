@@ -43,7 +43,7 @@ struct WorkoutChangelogView: View {
                         .font(.title2)
                         .fontWeight(.bold)
                     
-                    Text("Week starting \(Format.shortDate(from: changelog.weekStartDate))")
+                    Text("Week starting \(changelog.weekStartDate.shortDate)")
                         .foregroundStyle(.secondary)
                 }
                 

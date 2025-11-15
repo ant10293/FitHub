@@ -45,6 +45,6 @@ final class KeyboardManager: ObservableObject {
     }
     
     static func dismissKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        UIApplication.shared.endEditing()
     }
 }

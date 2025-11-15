@@ -78,13 +78,10 @@ struct UserProfileView: View {
                         
                         if ctx.userData.settings.allowedCredentials {
                             Section {
-                                HStack {
-                                    Text(ctx.userData.profile.email)
-                                    Spacer()
-                                    Image(systemName: "lock.fill")
-                                }
-                                .foregroundStyle(Color.secondary)
-                                .textSelection(.disabled)
+                                Text(ctx.userData.profile.email)
+                                    .foregroundStyle(Color.secondary)
+                                    .textSelection(.disabled)
+                                    .trailingIconButton(systemName: "lock.fill")
                             } header: {
                                 Text("Email")
                             }
@@ -166,7 +163,7 @@ struct UserProfileView: View {
     
     /// Commit username both locally and to Firebase displayName, then show a success/failure banner.
     private func commitUserName() {
-        let trimmed = draftUserName.trimmingTrailingSpaces()
+        let trimmed = draftUserName.trimmed
         guard trimmed != ctx.userData.profile.userName else { return }
         
         // 1) Update local userData
@@ -186,7 +183,7 @@ struct UserProfileView: View {
     
     /// Commit firstName locally only, then show a banner.
     private func commitFirstName() {
-        let trimmed = draftFirstName.trimmingTrailingSpaces()
+        let trimmed = draftFirstName.trimmed
         guard trimmed != ctx.userData.profile.firstName else { return }
         
         ctx.userData.profile.firstName = trimmed
@@ -197,7 +194,7 @@ struct UserProfileView: View {
     
     /// Commit lastName locally only, then show a banner.
     private func commitLastName() {
-        let trimmed = draftLastName.trimmingTrailingSpaces()
+        let trimmed = draftLastName.trimmed
         guard trimmed != ctx.userData.profile.lastName else { return }
         
         ctx.userData.profile.lastName = trimmed
@@ -210,7 +207,7 @@ struct UserProfileView: View {
     
     private func handleSignOut() {
         kbd.dismiss()
-        let accountID = Auth.auth().currentUser?.uid ?? "guest"
+        let accountID = AuthService.getUid() ?? ""
         
         do {
             try AccountDataStore.shared.backupActiveData(for: accountID)
@@ -237,7 +234,8 @@ struct UserProfileView: View {
     
     private func handleDeletion() {
         kbd.dismiss()
-        let accountID = Auth.auth().currentUser?.uid ?? "guest"
+        let accountID = AuthService.getUid() ?? ""
+        
         AuthService.shared.deleteCurrentAccount(userData: ctx.userData) { result in
             switch result {
             case .success:
