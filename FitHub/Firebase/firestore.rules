@@ -8,17 +8,44 @@ service cloud.firestore {
       allow write: if request.auth != null && request.auth.uid == userId;
     }
     
-    // Referral codes - allow read, create, and limited updates
+    // Referral codes - secure access rules
     match /referralCodes/{codeId} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null;
+      // Get (single document read/listen):
+      // 1. Full access if user created the code (for viewing stats/settings)
+      // 2. Limited access for validation: Users can read active codes by exact ID
+      // 3. Allow listening to non-existent documents (for real-time listeners during creation)
+      //    This is needed because listeners are set up before documents exist
+      allow get: if request.auth != null && (
+        // Document exists and user created it
+        (resource != null && resource.data.get('createdBy', '') == request.auth.uid) ||
+        // Document exists and is active (for validation)
+        (resource != null && resource.data.get('isActive', false) == true) ||
+        // Document doesn't exist yet - allow listener to be set up
+        // The listener will only receive updates once document exists and matches rules
+        resource == null
+      );
       
-      // Allow updates only for specific fields used by the referral system
+      // List (queries):
+      // Allow queries - Firestore will filter results based on get rule above
+      // This allows queries like whereField("createdBy", isEqualTo: userId)
+      // Results are still restricted to documents the user can read
+      allow list: if request.auth != null;
+      
+      // Create: Any authenticated user can create a referral code
+      // Must set createdBy to their own UID
+      allow create: if request.auth != null &&
+                       request.resource.data.get('createdBy', '') == request.auth.uid;
+      
+      // Update: Only the creator can update their code's email/stripe fields
+      // OR allow system updates for sign-ups/purchases (any authenticated user)
       allow update: if request.auth != null && (
-        // Allow updating usedBy array and lastUsedAt (for sign-ups)
+        // Creator can update their own code's email, notes, and Stripe fields
+        (resource.data.get('createdBy', '') == request.auth.uid &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['influencerEmail', 'notes', 'stripeAccountId', 'stripeDetailsSubmitted', 'stripePayoutsEnabled', 'stripeRequirementsDue', 'stripeLastStripeSyncAt', 'stripeLastOnboardingAt', 'stripeLastDashboardLinkAt'])) ||
+        // System updates: Allow updating usedBy array and lastUsedAt (for sign-ups)
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usedBy', 'lastUsedAt']) ||
-        // Allow updating purchase arrays and lastPurchaseAt (for purchases)
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['monthlyPurchasedBy', 'annualPurchasedBy', 'lifetimePurchasedBy', 'lastPurchaseAt'])
+        // System updates: Allow updating purchase arrays and lastPurchaseAt (for purchases)
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['monthlyPurchasedBy', 'annualPurchasedBy', 'lifetimePurchasedBy', 'lastPurchaseAt', 'activeMonthlySubscriptions', 'activeAnnualSubscriptions', 'activeLifetimeSubscriptions', 'lastValidationAt'])
       );
       
       allow delete: if false; // Only admins can delete

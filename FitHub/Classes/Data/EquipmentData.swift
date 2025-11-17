@@ -70,8 +70,7 @@ final class EquipmentData: ObservableObject {
     
     // MARK: saving logic
     private func persistUserEquipment() {
-        let snapshot = userEquipment                  // value copy, thread-safe
-        JSONFileManager.shared.save(snapshot, to: EquipmentData.userEquipmentFilename)
+        JSONFileManager.shared.save(userEquipment, to: EquipmentData.userEquipmentFilename)
     }
     
     private static func loadBundledOverrides() -> [UUID: GymEquipment] {
@@ -79,8 +78,7 @@ final class EquipmentData: ObservableObject {
     }
     
     private func persistOverrides() {
-        let snapshot = bundledOverrides
-        JSONFileManager.shared.save(snapshot, to: EquipmentData.bundledOverridesFilename)
+        JSONFileManager.shared.save(bundledOverrides, to: EquipmentData.bundledOverridesFilename)
     }
 }
 

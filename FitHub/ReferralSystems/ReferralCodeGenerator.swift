@@ -10,36 +10,46 @@ import Foundation
 
 /// Utility to generate and manage referral codes
 struct ReferralCodeGenerator {
-    
     /// Generates a unique referral code (uppercase alphanumeric, 6-8 characters)
     /// Format: [A-Z0-9]{6,8}
     static func generateCode() -> String {
-        let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        let characters = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
         let length = Int.random(in: 6...8)
         
-        return String((0..<length).map { _ in
-            characters.randomElement()!
-        })
+        guard !characters.isEmpty else { return "" }
+        
+        let result = (0..<length).compactMap { _ in
+            characters.randomElement()
+        }
+        
+        return String(result)
     }
     
     /// Generates a custom code from influencer name
     /// Example: "ANTHONY" -> "ANTHONY" (if available) or "ANTHONY1"
     static func generateCodeFromName(_ name: String) -> String {
-        let sanitized = name.uppercased()
+        let allowedScalars = name.uppercased()
             .replacingOccurrences(of: " ", with: "")
-            .unicodeScalars.filter { c in
-                (c.value >= 48 && c.value <= 57) || (c.value >= 65 && c.value <= 90)
+            .unicodeScalars
+            .filter { c in
+                // 0–9 or A–Z
+                (48...57).contains(c.value) || (65...90).contains(c.value)
             }
-        let base = String(sanitized)
         
-        // Ensure minimum length
+        let base = String(allowedScalars)
+        let charset = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+        
+        // If base is too short, pad it with random chars (no force unwrap)
         if base.count < 4 {
-            return base + String((0..<(4 - base.count)).map { _ in
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".randomElement()!
-            })
+            let paddingCount = 4 - base.count
+            let padding = (0..<paddingCount).compactMap { _ in
+                charset.randomElement()
+            }
+            return base + String(padding)
         }
         
-        return base.prefix(8).uppercased() // Max 8 chars
+        // Max 8 chars
+        return String(base.prefix(8)).uppercased()
     }
     
     /// Validates a referral code format

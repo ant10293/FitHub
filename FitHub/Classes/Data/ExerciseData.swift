@@ -79,8 +79,7 @@ final class ExerciseData: ObservableObject {
     }
     
     private func persistUserExercises() {
-        let snapshot = userExercises                 // value copy, thread-safe
-        JSONFileManager.shared.save(snapshot, to: ExerciseData.userExercisesFileName)
+        JSONFileManager.shared.save(userExercises, to: ExerciseData.userExercisesFileName)
     }
     
     private static func loadBundledOverrides() -> [UUID: Exercise] {
@@ -88,8 +87,7 @@ final class ExerciseData: ObservableObject {
     }
     
     private func persistOverrides() {
-        let snapshot = bundledOverrides
-        JSONFileManager.shared.save(snapshot, to: ExerciseData.bundledOverridesFilename)
+        JSONFileManager.shared.save(bundledOverrides, to: ExerciseData.bundledOverridesFilename)
     }
 }
 

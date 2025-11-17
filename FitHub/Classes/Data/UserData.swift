@@ -12,6 +12,10 @@ import Combine
 
 final class UserData: ObservableObject, Codable {
     static let jsonKey: String = "UserData.json"
+    
+    /// Last JSON blob that was actually written to disk
+    private var lastSavedData: Data?
+    
     @Published var profile          = Profile()
     @Published var physical         = PhysicalStats()
     @Published var workoutPrefs     = WorkoutPreferences()
@@ -32,7 +36,8 @@ final class UserData: ObservableObject, Codable {
     @Published var workoutChanges: WorkoutChanges?
     @Published var showingGenerationWarning: Bool = false
     
-    @Published var allowDisliked: Bool = false    
+    @Published var allowDisliked: Bool = false
+    
     init(){}
 
     // MARK: – Persistence Logic
@@ -80,14 +85,6 @@ final class UserData: ObservableObject, Codable {
     func saveToFileImmediate() {
         JSONFileManager.shared.save(self, to: UserData.jsonKey)
     }
-    
-    /*
-    /// Save a single stored struct (debounced).
-    func saveSingleStructToFile<T: Encodable>(_ keyPath: KeyPath<UserData, T>, for key: CodingKeys, delay: TimeInterval = 0.4) {
-        let value = self[keyPath: keyPath]
-        JSONFileManager.shared.debouncedSingleFieldSave(value, for: key.stringValue, in: UserData.jsonKey, delay: delay)
-    }
-    */
 }
 
 extension UserData {
@@ -321,6 +318,7 @@ extension UserData {
         equipmentData: EquipmentData,
         keepCurrentExercises: Bool,
         nextWeek: Bool,
+        shouldSave: Bool = true,
         onDone: @escaping () -> Void = {}
     ) {
         isGeneratingWorkout = true
@@ -373,6 +371,8 @@ extension UserData {
                     resistance: self.workoutPrefs.resistance,
                     customDistribution: self.workoutPrefs.customDistribution
                 )
+                
+                if shouldSave { self.saveToFile() }
                                 
                 onDone()
             }

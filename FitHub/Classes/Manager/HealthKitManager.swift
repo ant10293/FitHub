@@ -89,6 +89,7 @@ final class HealthKitManager: ObservableObject {
                 DispatchQueue.main.async { self.pollForData(userData: userData) }
             } else {
                 userData.setup.setupState = .detailsView
+                userData.saveToFile()
             }
         })
     }

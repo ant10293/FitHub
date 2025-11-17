@@ -119,14 +119,22 @@ struct ExerciseSetOverlay: View {
     }
     
     private var adjustmentsSection: some View {
-        HStack {
-            AdjustmentsSection(
-                showingAdjustmentsView: $showAdjustmentsView,
-                showingPlateVisualizer: $showPlateVisualizer,
-                hidePlateVisualizer: false,
-                exercise: exercise
-            )
-            ExEquipImage(image: exercise.fullImage, button: .info, onTap: { viewDetail() })
+        VStack {
+            if params.hideImage {
+                TextButton(title: "View Exercise Details", systemImage: "info.circle", action: viewDetail, color: .blue)
+                    .padding(.bottom)
+            }
+            HStack {
+                AdjustmentsSection(
+                    showingAdjustmentsView: $showAdjustmentsView,
+                    showingPlateVisualizer: $showPlateVisualizer,
+                    hidePlateVisualizer: false,
+                    exercise: exercise
+                )
+                if !params.hideImage {
+                    ExEquipImage(image: exercise.fullImage, button: .info, onTap: viewDetail)
+                }
+            }
         }
     }
     

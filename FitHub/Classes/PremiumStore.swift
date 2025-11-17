@@ -44,10 +44,30 @@ final class PremiumStore: ObservableObject {
 
     // Optional account token to associate purchases with an app account
     private let appAccountToken: UUID?
+    
+    // MARK: - Error Recovery
+    private var lastKnownEntitlement: PremiumEntitlement?
+    private var lastKnownMembershipType: MembershipType = .free
+    private var retryCount: Int = 0
+    private let maxRetries: Int = 3
+    private var retryTask: Task<Void, Never>?
+    private let userDefaults = UserDefaults.standard
+    private let entitlementCacheKey = "FitHub.lastKnownEntitlement"
+    private let membershipCacheKey = "FitHub.lastKnownMembershipType"
+    private let lastValidationKey = "FitHub.lastEntitlementValidation"
+    private var foregroundObserver: NSObjectProtocol?
 
     init(appAccountToken: UUID? = nil) {
         self.appAccountToken = appAccountToken
+        loadCachedEntitlement()
         listenForTransactionChanges()
+        setupAppLifecycleObservers()
+    }
+    
+    deinit {
+        if let observer = foregroundObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     // MARK: - Product IDs and enum-owned helpers
@@ -181,7 +201,7 @@ final class PremiumStore: ObservableObject {
         isLoading = true
         defer { isLoading = false }
         await loadProducts()
-        await refreshEntitlement()
+        await refreshEntitlementWithRetry()
     }
 
     func buy(product: Product) async {
@@ -210,7 +230,7 @@ final class PremiumStore: ObservableObject {
                 }
                 
                 await transaction.finish()
-                await refreshEntitlement()
+                await refreshEntitlementWithRetry()
             case .userCancelled, .pending:
                 break
             @unknown default:
@@ -218,12 +238,14 @@ final class PremiumStore: ObservableObject {
             }
         } catch {
             errorMessage = error.localizedDescription
+            // Retry entitlement refresh on purchase error
+            await refreshEntitlementWithRetry()
         }
     }
 
     func restore() async {
         // With StoreKit 2, entitlement refresh generally suffices
-        await refreshEntitlement()
+        await refreshEntitlementWithRetry()
     }
 
     func autoRenewFootnote(for product: Product) -> String? {
@@ -257,8 +279,42 @@ final class PremiumStore: ObservableObject {
         }
     }
 
+    // MARK: - Error Recovery Methods
+    
+    /// Refreshes entitlement with retry logic and fallback to cached state
+    private func refreshEntitlementWithRetry() async {
+        retryCount = 0
+        await refreshEntitlementWithRetryInternal()
+    }
+    
+    private func refreshEntitlementWithRetryInternal() async {
+        do {
+            try await refreshEntitlement()
+            // Success - reset retry count and cache the result
+            retryCount = 0
+            cacheEntitlement()
+        } catch {
+            print("⚠️ [PremiumStore] Entitlement refresh failed (attempt \(retryCount + 1)/\(maxRetries)): \(error.localizedDescription)")
+            
+            if retryCount < maxRetries {
+                // Retry with exponential backoff
+                retryCount += 1
+                let delay = min(Double(retryCount) * 2.0, 10.0) // Max 10 seconds
+                
+                try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                await refreshEntitlementWithRetryInternal()
+            } else {
+                // Max retries reached - fallback to cached state
+                print("⚠️ [PremiumStore] Max retries reached, falling back to cached entitlement")
+                fallbackToCachedEntitlement()
+                errorMessage = "Unable to verify subscription. Using last known status. Please check your connection and try again."
+            }
+        }
+    }
+    
+    /// Refreshes entitlement - can throw errors
     @MainActor
-    private func refreshEntitlement() async {
+    private func refreshEntitlement() async throws {
         overlappingSubscriptionInfo = nil
 
         var lifetimeTransactionID: UInt64?
@@ -266,54 +322,97 @@ final class PremiumStore: ObservableObject {
         var bestMembership: MembershipType = .free
         var overlapCandidate: OverlappingSubscriptionInfo?
 
-        for await result in SKTransaction.currentEntitlements {
-            guard case .verified(let t) = result else { continue }
-            guard t.revocationDate == nil else { continue }
+        // Process entitlements with timeout protection
+        // currentEntitlements should complete after enumerating all current entitlements
+        // We add a timeout as a safety net in case StoreKit hangs
+        typealias EntitlementResult = (lifetimeID: UInt64?, bestEntitlement: PremiumEntitlement, bestMembership: MembershipType, overlap: OverlappingSubscriptionInfo?)
+        
+        let entitlementTask = Task<EntitlementResult, Error> {
+            var localLifetimeID: UInt64?
+            var localBestEntitlement = PremiumEntitlement(isPremium: false, source: nil)
+            var localBestMembership: MembershipType = .free
+            var localOverlap: OverlappingSubscriptionInfo?
+            
+            for await result in SKTransaction.currentEntitlements {
+                try Task.checkCancellation()
+                
+                guard case .verified(let t) = result else { continue }
+                guard t.revocationDate == nil else { continue }
 
-            switch t.productID {
-            case ID.lifetime:
-                lifetimeTransactionID = t.id
+                switch t.productID {
+                case ID.lifetime:
+                    localLifetimeID = t.id
 
-            case ID.monthly, ID.yearly:
-                let membership: MembershipType = (t.productID == ID.yearly) ? .yearly : .monthly
-                let isActive = t.expirationDate.map { $0 > Date() } ?? true
-                guard isActive else { continue }
+                case ID.monthly, ID.yearly:
+                    let membership: MembershipType = (t.productID == ID.yearly) ? .yearly : .monthly
+                    let isActive = t.expirationDate.map { $0 > Date() } ?? true
+                    guard isActive else { continue }
 
-                let auto = await willAutoRenew(for: t)
-                let expiration = t.expirationDate ?? .distantFuture
-                let source = PremiumSource.subscription(
-                    expiration: expiration,
-                    willAutoRenew: auto,
-                    transactionID: t.id
-                )
-
-                if membership > bestMembership {
-                    bestEntitlement = .init(isPremium: true, source: source)
-                    bestMembership = membership
-                }
-
-                let willRenew = auto ?? true
-                if willRenew {
-                    let candidate = OverlappingSubscriptionInfo(
-                        type: membership,
-                        expiration: t.expirationDate,
-                        willAutoRenew: auto
+                    let auto = await self.willAutoRenew(for: t)
+                    let expiration = t.expirationDate ?? .distantFuture
+                    let source = PremiumSource.subscription(
+                        expiration: expiration,
+                        willAutoRenew: auto,
+                        transactionID: t.id
                     )
-                    if let current = overlapCandidate {
-                        let currentExpiration = current.expiration ?? .distantPast
-                        let candidateExpiration = candidate.expiration ?? .distantFuture
-                        if candidateExpiration > currentExpiration {
-                            overlapCandidate = candidate
-                        }
-                    } else {
-                        overlapCandidate = candidate
-                    }
-                }
 
-            default:
-                break
+                    if membership > localBestMembership {
+                        localBestEntitlement = .init(isPremium: true, source: source)
+                        localBestMembership = membership
+                    }
+
+                    let willRenew = auto ?? true
+                    if willRenew {
+                        let candidate = OverlappingSubscriptionInfo(
+                            type: membership,
+                            expiration: t.expirationDate,
+                            willAutoRenew: auto
+                        )
+                        if let current = localOverlap {
+                            let currentExpiration = current.expiration ?? .distantPast
+                            let candidateExpiration = candidate.expiration ?? .distantFuture
+                            if candidateExpiration > currentExpiration {
+                                localOverlap = candidate
+                            }
+                        } else {
+                            localOverlap = candidate
+                        }
+                    }
+
+                default:
+                    break
+                }
+            }
+            
+            return (localLifetimeID, localBestEntitlement, localBestMembership, localOverlap)
+        }
+        
+        // Timeout safety net (30 seconds)
+        let timeoutTask = Task {
+            try await Task.sleep(nanoseconds: 30_000_000_000)
+            entitlementTask.cancel()
+        }
+        
+        // Wait for entitlement processing or timeout
+        let result: EntitlementResult
+        do {
+            result = try await entitlementTask.value
+            timeoutTask.cancel()
+        } catch {
+            timeoutTask.cancel()
+            if error is CancellationError {
+                // Timeout occurred - fallback to cached state
+                print("⚠️ [PremiumStore] Entitlement refresh timed out")
+                throw error
+            } else {
+                throw error
             }
         }
+        
+        lifetimeTransactionID = result.lifetimeID
+        bestEntitlement = result.bestEntitlement
+        bestMembership = result.bestMembership
+        overlapCandidate = result.overlap
 
         if let lifetimeID = lifetimeTransactionID {
             entitlement = .init(isPremium: true, source: .lifetime(transactionID: lifetimeID))
@@ -326,6 +425,70 @@ final class PremiumStore: ObservableObject {
         entitlement = bestEntitlement
         membershipType = bestMembership
     }
+    
+    /// Falls back to cached entitlement when validation fails
+    private func fallbackToCachedEntitlement() {
+        if let cached = lastKnownEntitlement {
+            entitlement = cached
+            membershipType = lastKnownMembershipType
+            print("✅ [PremiumStore] Restored cached entitlement: \(membershipType)")
+        } else {
+            // No cache available - check if we should be more conservative
+            // If user was premium recently, keep them premium for grace period
+            if let lastValidation = userDefaults.object(forKey: lastValidationKey) as? Date,
+               Date().timeIntervalSince(lastValidation) < 3600 { // 1 hour grace period
+                // Keep last known state if validation was recent
+                if membershipType != .free {
+                    print("⚠️ [PremiumStore] Using grace period - keeping premium status")
+                    return
+                }
+            }
+            // No cache and grace period expired - set to free
+            entitlement = .init(isPremium: false, source: nil)
+            membershipType = .free
+        }
+    }
+    
+    /// Caches current entitlement state
+    private func cacheEntitlement() {
+        lastKnownEntitlement = entitlement
+        lastKnownMembershipType = membershipType
+        userDefaults.set(Date(), forKey: lastValidationKey)
+        
+        // Cache membership type as string
+        userDefaults.set(membershipType.rawValue, forKey: membershipCacheKey)
+        
+        // Note: We don't cache full entitlement as it contains dates/IDs that may change
+        // The membership type is sufficient for fallback
+    }
+    
+    /// Loads cached entitlement on startup
+    private func loadCachedEntitlement() {
+        if let cachedTypeString = userDefaults.string(forKey: membershipCacheKey),
+           let cachedType = MembershipType(rawValue: cachedTypeString) {
+            lastKnownMembershipType = cachedType
+            // Set initial state from cache (will be refreshed on configure)
+            if cachedType != .free {
+                membershipType = cachedType
+                entitlement = .init(isPremium: true, source: nil) // Source will be refreshed
+                print("✅ [PremiumStore] Loaded cached membership type: \(cachedType)")
+            }
+        }
+    }
+    
+    /// Sets up observers for app lifecycle events to retry validation
+    private func setupAppLifecycleObservers() {
+        foregroundObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.willEnterForegroundNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                // Retry validation when app comes to foreground
+                await self?.refreshEntitlementWithRetry()
+            }
+        }
+    }
 
     @MainActor
     private func willAutoRenew(for transaction: SKTransaction) async -> Bool? {
@@ -333,7 +496,11 @@ final class PremiumStore: ObservableObject {
               let sub = product.subscription else { return nil }
 
         do {
-            let statuses = try await sub.status  // [Product.SubscriptionInfo.Status]
+            // Add timeout to prevent hanging
+            let statuses = try await withTimeout(seconds: 10) {
+                try await sub.status
+            }
+            
             let matched = statuses.first(where: { status in
                 if case .verified(let tx) = status.transaction { return tx.id == transaction.id }
                 return false
@@ -345,7 +512,27 @@ final class PremiumStore: ObservableObject {
             }
             return nil
         } catch {
+            print("⚠️ [PremiumStore] Failed to get auto-renew status: \(error.localizedDescription)")
+            // Return nil on error - will default to assuming auto-renew is on
             return nil
+        }
+    }
+    
+    /// Helper to add timeout to async operations
+    private func withTimeout<T>(seconds: Double, operation: @escaping () async throws -> T) async throws -> T {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask {
+                try await operation()
+            }
+            
+            group.addTask {
+                try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+                throw NSError(domain: "PremiumStore", code: -1, userInfo: [NSLocalizedDescriptionKey: "Operation timed out"])
+            }
+            
+            let result = try await group.next()!
+            group.cancelAll()
+            return result
         }
     }
 
@@ -355,7 +542,7 @@ final class PremiumStore: ObservableObject {
             for await update in SKTransaction.updates {
                 if case .verified(let t) = update {
                     await t.finish()
-                    await self.refreshEntitlement()
+                    await self.refreshEntitlementWithRetry()
                 }
             }
         }

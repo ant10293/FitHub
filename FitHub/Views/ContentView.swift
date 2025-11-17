@@ -12,6 +12,12 @@ struct ContentView: View {
         Group {
             if ctx.userData.setup.setupState == .finished {
                 MainAppView(userData: ctx.userData, showResumeWorkoutOverlay: $showResumeWorkoutOverlay)
+                    .onChange(of: scenePhase) { oldPhase, newPhase in
+                        guard !ctx.userData.isWorkingOut else { return }
+                        if oldPhase == .active, newPhase == .inactive {
+                            ctx.userData.saveToFile()
+                        }
+                    }
                     // should also clear passed planned dates and notis
                     // need to do this on a background thread
                     .onAppear {
@@ -25,6 +31,7 @@ struct ContentView: View {
                         if ctx.userData.setup.infoCollected { determineStrengthAndSeedMaxes() }
                         ctx.userData.checkAndUpdateAge()
                         generateTemplates()
+                        ctx.userData.saveToFile()
                     }
             } else {
                 NavigationStack {
@@ -40,19 +47,6 @@ struct ContentView: View {
                 }
             }
         }
-        .onChange(of: scenePhase) { oldPhase, newPhase in
-            guard !ctx.userData.isWorkingOut else { return }
-            if oldPhase == .active, newPhase == .inactive {
-                ctx.userData.saveToFile()
-            }
-        }
-    }
-    
-    private func generateTemplates() {
-        let plannedWorkoutDates = ctx.userData.getAllPlannedWorkoutDates()
-        if checkAndResetWorkoutStreak(plannedWorkoutDates: plannedWorkoutDates), ctx.userData.settings.progressiveOverload {
-            generateNewWorkoutTemplates(plannedWorkoutDates: plannedWorkoutDates)
-       }
     }
     
     private func determineStrengthAndSeedMaxes() {
@@ -141,6 +135,13 @@ struct ContentView: View {
         return (skippedIDs, ogLvl)
     }
     
+    private func generateTemplates() {
+        let plannedWorkoutDates = ctx.userData.getAllPlannedWorkoutDates()
+        if checkAndResetWorkoutStreak(plannedWorkoutDates: plannedWorkoutDates), ctx.userData.settings.progressiveOverload {
+            generateNewWorkoutTemplates(plannedWorkoutDates: plannedWorkoutDates)
+       }
+    }
+    
     private func generateNewWorkoutTemplates(plannedWorkoutDates: [Date]) {
         let currentDate = Date()
 
@@ -155,7 +156,13 @@ struct ContentView: View {
         if allDatesArePast {
             // only generate if we are updating existing templates
             if !ctx.userData.workoutPlans.trainerTemplates.isEmpty {
-                ctx.userData.generateWorkoutPlan(exerciseData: ctx.exercises, equipmentData: ctx.equipment, keepCurrentExercises: true, nextWeek: true)
+                ctx.userData.generateWorkoutPlan(
+                    exerciseData: ctx.exercises,
+                    equipmentData: ctx.equipment,
+                    keepCurrentExercises: true,
+                    nextWeek: true,
+                    shouldSave: false
+                )
             }
         } else {
             print("No past dates found. No need to generate a new workout plan.")

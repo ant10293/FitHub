@@ -237,6 +237,7 @@ struct InfluencerRegistrationView: View {
                     // affiliate fields
                     self.email = result.email
                     self.notes = result.notes
+                    //self.generatedCode = result.code
 
                     // stats
                     self.codeStats = result.stats

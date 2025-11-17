@@ -149,31 +149,23 @@ final class ReferralCodeAdmin: ObservableObject {
         return doc.data()
     }
     
-    func getData(_ code: String) async throws -> (email: String, pMethod: String, pFreq: PaymentFrequency, notes: String, stats: CodeStats, stripe: StripeAffiliateStatus) {
+    func getData(_ code: String) async throws -> (code: String, email: String, pMethod: String, notes: String, stats: CodeStats, stripe: StripeAffiliateStatus) {
         let codeData = try await getCodeData(code)
-        let (email, pMethod, pFreq, notes) = loadAffiliateInfo(from: codeData)
+        let (code, email, pMethod, notes) = loadAffiliateInfo(from: codeData)
         let stats    = try await loadReferralInfo(codeData: codeData)
         let stripe   = loadStripeStatus(from: codeData)
-        return (email, pMethod, pFreq, notes, stats, stripe)
+        return (code, email, pMethod, notes, stats, stripe)
     }
     
-    private func loadAffiliateInfo(from codeData: [String: Any]?) -> (email: String, pMethod: String, pFreq: PaymentFrequency, notes: String) {
-        guard let data = codeData else { return ("", "", .monthly, "") }
+    private func loadAffiliateInfo(from codeData: [String: Any]?) -> (code: String, email: String, pMethod: String, notes: String) {
+        guard let data = codeData else { return ("", "", "", "") }
 
+        let code    = data["code"] as? String ?? ""
         let email   = data["influencerEmail"] as? String ?? ""
         let pMethod = data["payoutMethod"] as? String ?? ""
         let notes   = data["notes"] as? String ?? ""
 
-        let pFreq: PaymentFrequency = {
-            if let raw = data["payoutFrequency"] as? String,
-               let freq = PaymentFrequency(rawValue: raw) {
-                return freq
-            } else {
-                return .monthly
-            }
-        }()
-
-        return (email, pMethod, pFreq, notes)
+        return (code, email, pMethod, notes)
     }
 
     private func loadStripeStatus(from codeData: [String: Any]?) -> StripeAffiliateStatus {

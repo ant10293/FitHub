@@ -193,6 +193,8 @@ struct DetailsView: View {
         userData.profile.dob      = dob
         userData.physical.height  = height
         userData.physical.gender  = gender
+        
+        userData.saveToFile()
     }
      
     private var canContinue: Bool {

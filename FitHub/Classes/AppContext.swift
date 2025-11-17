@@ -24,9 +24,7 @@ final class AppContext: ObservableObject {
     @Published var adjustments: AdjustmentsData       // Progressive‑overload prefs
     @Published var exercises = ExerciseData()      // Exercise catalogue & stats
     @Published var equipment = EquipmentData()
-    
     @Published var store: PremiumStore
-    
 
     // MARK: –  Private
     private var sinks = Set<AnyCancellable>()

@@ -16,27 +16,10 @@ final class JSONFileManager {
     
     // MARK: - Debouncing support
     private let debounceQueue = DispatchQueue(label: "com.FitHubApp.JSONFileManager.debounce")
-    private var pendingSingleSaves: [String: DispatchWorkItem] = [:]
     private var pendingFullSaves: [String: DispatchWorkItem] = [:]
+    private var lastSavedData: [String: Data] = [:]   // <- per file
     
     private init() {}
-    
-    // MARK: - Generic Save Method (ONE method for everything)
-    
-    func save<T: Encodable>(_ data: T, to filename: String, dateEncoding: Bool = false) {
-        saveQueue.async {
-            do {
-                let url = getDocumentsDirectory().appendingPathComponent(filename)
-                let encoder = JSONEncoder()
-                if dateEncoding { encoder.dateEncodingStrategy = .iso8601 }
-                let jsonData = try encoder.encode(data)
-                try jsonData.write(to: url, options: [.atomicWrite, .completeFileProtection])
-                print("✅ Saved \(filename) successfully")
-            } catch {
-                print("❌ Failed to save \(filename): \(error)")
-            }
-        }
-    }
     
     private static func parseJSONArray<T>(
         from data: Data,
@@ -170,16 +153,19 @@ final class JSONFileManager {
         
         return Dictionary(uniqueKeysWithValues: array.map { ($0.id, $0) })
     }
-    
+
     // MARK: - Debounced Save Methods
-    
-    func debouncedSave<T: Encodable>(_ data: T, to filename: String, delay: TimeInterval = 0.8) {
-        // Cancel previous save for this file
+    func debouncedSave<T: Encodable>(
+        _ data: T,
+        to filename: String,
+        delay: TimeInterval = 0.8,
+        dateEncoding: Bool = false
+    ) {
         pendingFullSaves[filename]?.cancel()
         
         let work = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
-            self.save(data, to: filename)
+            self.save(data, to: filename, dateEncoding: dateEncoding)
             self.pendingFullSaves[filename] = nil
         }
         
@@ -187,47 +173,32 @@ final class JSONFileManager {
         debounceQueue.asyncAfter(deadline: .now() + delay, execute: work)
     }
     
-    /*
-    func debouncedSingleFieldSave<T: Encodable>(_ value: T, for key: String, in filename: String, delay: TimeInterval = 0.4) {
-        let saveKey = "\(filename)-\(key)"
-        
-        // Cancel previous save for this key
-        pendingSingleSaves[saveKey]?.cancel()
-        
-        let work = DispatchWorkItem { [weak self] in
-            guard let self = self else { return }
-            self.saveQueue.async {
+    // MARK: - Generic Save Method (ONE method for everything)
+    func save<T: Encodable>(_ data: T, to filename: String, dateEncoding: Bool = false) {
+        do {
+            let encoder = JSONEncoder()
+            if dateEncoding { encoder.dateEncodingStrategy = .iso8601 }
+            encoder.outputFormatting.insert(.sortedKeys)   // <- make dicts deterministic
+            let jsonData = try encoder.encode(data)
+
+            if let last = lastSavedData[filename], last == jsonData {
+                print("⚪️ No changes for \(filename), skipping save")
+                return
+            }
+
+            lastSavedData[filename] = jsonData
+
+            saveQueue.async {
                 do {
                     let url = getDocumentsDirectory().appendingPathComponent(filename)
-                    
-                    // Read existing JSON
-                    var jsonObject: [String: Any] = [:]
-                    if self.fileManager.fileExists(atPath: url.path),
-                       let data = try? Data(contentsOf: url),
-                       let existing = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                        jsonObject = existing
-                    }
-                    
-                    // Encode new value
-                    let encoded = try JSONEncoder().encode([key: value])
-                    if let partial = try JSONSerialization.jsonObject(with: encoded) as? [String: Any],
-                       let updated = partial[key] {
-                        jsonObject[key] = updated
-                    }
-                    
-                    // Write back
-                    let updatedData = try JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted])
-                    try updatedData.write(to: url, options: [.atomicWrite, .completeFileProtection])
-                    print("✅ Debounced single field save successful for \(key) in \(filename)")
+                    try jsonData.write(to: url, options: [.atomicWrite, .completeFileProtection])
+                    print("✅ Saved \(filename) successfully")
                 } catch {
-                    print("❌ Debounced single field save failed for \(key) in \(filename): \(error)")
+                    print("❌ Failed to save \(filename): \(error)")
                 }
             }
-            self.pendingSingleSaves[saveKey] = nil
+        } catch {
+            print("❌ Failed to encode \(filename): \(error)")
         }
-        
-        pendingSingleSaves[saveKey] = work
-        debounceQueue.asyncAfter(deadline: .now() + delay, execute: work)
     }
-    */
 }

@@ -96,7 +96,7 @@ struct SubscriptionView: View {
             .textContentType(.none)
             .autocapitalization(.allCharacters)
             .autocorrectionDisabled()
-            .trailingIconButton(systemName: "lock.fill", isShowing: !hasClaimedCode)
+            .trailingIconButton(systemName: "lock.fill", isShowing: hasClaimedCode)
             .inputStyle()
             .disabled(hasClaimedCode)
             .task {

@@ -148,7 +148,6 @@ struct TemplateDetail: View {
                     Text("Undo").font(.caption)
                     Image(systemName: "arrow.uturn.backward").imageScale(.large)
                 }
-                .padding(.leading, 15)
                 .padding(.trailing)
                 .foregroundStyle(undoStack.isEmpty ? .gray : .blue) // Gray out if disabled
             }
@@ -171,7 +170,6 @@ struct TemplateDetail: View {
                     Image(systemName: isCollapsed ? "rectangle.expand.vertical" : "rectangle.compress.vertical")
                         .imageScale(.large)
                 }
-                .padding(.trailing, 15)
             }
         }
         .padding()

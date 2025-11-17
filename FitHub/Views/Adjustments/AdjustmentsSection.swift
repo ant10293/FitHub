@@ -24,30 +24,16 @@ struct AdjustmentsSection: View {
         VStack {
             if ctx.equipment.hasEquipmentAdjustments(for: exercise) {
                 Button(action: { showingAdjustmentsView.toggle() }) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Equipment Adjustments")
-                            .font(titleFont)
-                            .bold()
-                            .foregroundStyle(titleColor)
-                            .minimumScaleFactor(0.8)
-                        
-                        if let adjustments = ctx.adjustments.getEquipmentAdjustments(for: exercise), !adjustments.isEmpty {
-                            let nonEmpty = adjustments.filter { !$0.value.displayValue.isEmpty }
-                            if nonEmpty.isEmpty {
-                                addAdjustmentPlaceholder
-                            } else {
-                                let sorted = nonEmpty.sorted { $0.category.rawValue < $1.category.rawValue }
-                                ForEach(sorted, id: \.category) { adjustment in
-                                    (Text("\(adjustment.category.rawValue): ")
-                                     + Text(adjustment.value.displayValue).bold())
-                                        .font(.caption)
-                                        .foregroundStyle(Color.secondary)
-                                }
-                            }
+                    Group {
+                        if let adjustmentsText {
+                            (titleText + adjustmentsText)
+                                .lineLimit(6)
                         } else {
-                            addAdjustmentPlaceholder
+                            (titleText + addAdjustmentPlaceholder)
+                                .lineLimit(2)
                         }
                     }
+                    .minimumScaleFactor(0.8)
                 }
             }
             
@@ -60,19 +46,48 @@ struct AdjustmentsSection: View {
                         .minimumScaleFactor(0.8)
                         .multilineTextAlignment(.center)
                 }
-                .padding(.top)
-                .padding(.horizontal)
+                .padding([.top, .horizontal])
             }
         }
     }
     
-    private var addAdjustmentPlaceholder: some View {
-        HStack(spacing: 4) {
-            Image(systemName: "plus")
-            Text("Add Adjustment")
-        }
+    private var titleText: Text {
+        Text("Equipment Adjustments\n")
+            .font(titleFont)
+            .bold()
+            .foregroundStyle(titleColor)
+    }
+    
+    private var addAdjustmentPlaceholder: Text {
+        (Text(Image(systemName: "plus"))
+        + Text("Add Adjustment"))
         .font(bodyFont)
         .foregroundStyle(bodyColor)
+    }
+    
+    private var adjustmentsText: Text? {
+        guard let adjustments = ctx.adjustments.getEquipmentAdjustments(for: exercise) else {
+            return nil
+        }
+
+        let nonEmpty = adjustments
+            .filter { !$0.value.displayValue.isEmpty }
+            .sorted { $0.category.rawValue < $1.category.rawValue }
+
+        guard let first = nonEmpty.first else { return nil }
+
+        func line(for adjustment: EquipmentAdjustment) -> Text {
+            (Text("\(adjustment.category.rawValue): ")
+            + Text(adjustment.value.displayValue).bold())
+            .font(.caption)
+            .foregroundStyle(Color.secondary)
+        }
+
+        let initial = line(for: first)
+
+        return nonEmpty.dropFirst().reduce(initial) { partial, adjustment in
+            partial + Text("\n") + line(for: adjustment)
+        }
     }
 }
 

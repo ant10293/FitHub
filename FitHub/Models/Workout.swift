@@ -296,6 +296,7 @@ struct UserParams {
     let restPeriods: RestPeriods
     let hideRPE: Bool
     let hideCompleted: Bool
+    let hideImage: Bool
 }
 
 struct WorkoutSummaryData {

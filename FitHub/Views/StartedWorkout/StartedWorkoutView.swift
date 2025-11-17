@@ -119,7 +119,8 @@ struct StartedWorkoutView: View {
                         goal: ctx.userData.physical.goal
                     ),
                     hideRPE: ctx.userData.settings.hideRpeSlider,
-                    hideCompleted: ctx.userData.settings.hideCompletedInput
+                    hideCompleted: ctx.userData.settings.hideCompletedInput,
+                    hideImage: ctx.userData.settings.hideExerciseImage
                 ),
                 goToNextSetOrExercise: {
                     viewModel.goToNextSetOrExercise(for: selectedExerciseIdx, selectedExerciseIndex: &selectedExerciseIndex)

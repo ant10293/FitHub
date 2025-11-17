@@ -87,5 +87,7 @@ struct WelcomeView: View {
             // 2. Claim pending referral code if user came from referral link
             await ReferralAttributor().claimIfNeeded()
         }
+        
+        ctx.userData.saveToFile()
     }
 }

@@ -23,6 +23,12 @@ struct SetDetailSettings: View {
             } footer: {
                 Text("Hides the “Completed” fields (reps, time). When a set is marked finished, its completed values will automatically match the planned ones.")
             }
+            
+            Section {
+                Toggle("Hide Exercise Image", isOn: $userData.settings.hideExerciseImage)
+            } footer: {
+                Text("Hides the exercise image in the set card while you’re doing a workout.")
+            }
         }
         .listStyle(InsetGroupedListStyle())
         .navigationBarTitle("SetDetail Settings", displayMode: .inline)
@@ -38,11 +44,13 @@ struct SetDetailSettings: View {
     var isDefault: Bool {
         userData.settings.hideRpeSlider == false
         && userData.settings.hideCompletedInput == false
+        && userData.settings.hideExerciseImage == false
     }
     
     func resetAll() {
         userData.settings.hideRpeSlider = false
         userData.settings.hideCompletedInput = false
+        userData.settings.hideExerciseImage = false
     }
 }
 

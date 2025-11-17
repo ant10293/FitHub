@@ -54,8 +54,8 @@ struct EmailAuthView: View {
                 Button("Use a different email") {
                     resetToEmailEntry()
                 }
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+                .font(.system(.footnote, weight: .bold))
+                .foregroundStyle(Color.secondary)
                 .padding(.top, 8)
             }
         }

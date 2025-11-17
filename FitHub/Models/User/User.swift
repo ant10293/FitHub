@@ -98,6 +98,7 @@ struct Settings: Codable, Equatable {
     var hiddenExercises: Set<UUID> = []
     var hideRpeSlider: Bool = false // TODO: Implement
     var hideCompletedInput: Bool = false
+    var hideExerciseImage: Bool = false
     // var monthlyStrengthUpdate: Bool = true
 }
 

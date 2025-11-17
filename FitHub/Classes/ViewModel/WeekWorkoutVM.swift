@@ -95,7 +95,7 @@ final class WeekWorkoutVM: ObservableObject {
             return DayInfo(
                 id: midnight,
                 dayName: midnight.dayOfWeek,
-                shortDate: midnight.dayOfWeek,
+                shortDate: midnight.shortDate,
                 isToday: CalendarUtility.shared.isDateInToday(midnight),
                 status: status,
                 workouts: rows

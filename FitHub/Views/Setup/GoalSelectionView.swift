@@ -112,10 +112,11 @@ struct GoalSelectionView: View {
     
     private func updateUserGoal() {
         if let goal = userGoal {
-            userData.updateMeasurementValue(for: .bmi, with: bmi)
-            userData.setup.setupState = .finished
             userData.physical.goal = goal
         }
+        userData.updateMeasurementValue(for: .bmi, with: bmi)
+        userData.setup.setupState = .finished
+        userData.saveToFile()
     }
     
     private var recommendedGoal: FitnessGoal { BMI.recommendGoalBasedOnBMI(bmi: bmi) }

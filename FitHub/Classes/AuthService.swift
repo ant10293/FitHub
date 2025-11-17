@@ -214,11 +214,6 @@ final class AuthService: ObservableObject {
                     completion(.failure(error))
                     return
                 }
-                
-                DispatchQueue.main.async {
-                    userData.profile = Profile()
-                    userData.settings.allowedCredentials = false
-                }
                 completion(.success(()))
             }
         }
@@ -294,11 +289,6 @@ final class AuthService: ObservableObject {
     func signOut(userData: UserData, completion: @escaping (Result<Void, Error>) -> Void) {
         do {
             try Auth.auth().signOut()
-            // Clear out local userData
-            userData.profile.accountCreationDate = nil
-            userData.profile.firstName = ""
-            userData.profile.lastName = ""
-            userData.profile.email = ""
             completion(.success(()))
         } catch {
             completion(.failure(error))
