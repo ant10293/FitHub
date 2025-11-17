@@ -530,7 +530,10 @@ final class PremiumStore: ObservableObject {
                 throw NSError(domain: "PremiumStore", code: -1, userInfo: [NSLocalizedDescriptionKey: "Operation timed out"])
             }
             
-            let result = try await group.next()!
+            guard let result = try await group.next() else {
+                group.cancelAll()
+                throw NSError(domain: "PremiumStore", code: -1, userInfo: [NSLocalizedDescriptionKey: "Task group returned no result"])
+            }
             group.cancelAll()
             return result
         }

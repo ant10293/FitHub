@@ -151,3 +151,4 @@ Log messages to watch for:
    - Show subscription status more prominently
 
 
+
