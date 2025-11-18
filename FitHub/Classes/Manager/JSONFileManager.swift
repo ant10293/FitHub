@@ -123,8 +123,12 @@ final class JSONFileManager {
         return loadFromDocuments([Exercise].self, from: filename, itemType: "user exercises")
     }
         
-    func loadAdjustments(from filename: String) -> [UUID: ExerciseEquipmentAdjustments]? {
-        return loadFromDocuments([UUID: ExerciseEquipmentAdjustments].self, from: filename, itemType: "adjustments")
+    func loadAdjustments(from filename: String) -> [UUID: ExerciseAdjustments]? {
+        return loadFromDocuments([UUID: ExerciseAdjustments].self, from: filename, itemType: "exercise adjustments")
+    }
+    
+    func loadEquipmentAdjustments(from filename: String) -> [GymEquipment.ID: [EquipmentAdjustment]]? {
+        return loadFromDocuments([GymEquipment.ID: [EquipmentAdjustment]].self, from: filename, itemType: "equipment adjustments")
     }
     
     func loadEquipmentOverrides(from filename: String) -> [UUID: GymEquipment]? {

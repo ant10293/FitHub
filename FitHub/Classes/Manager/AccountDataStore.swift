@@ -20,7 +20,8 @@ final class AccountDataStore {
         ExerciseData.performanceFileName,
         EquipmentData.bundledOverridesFilename,
         EquipmentData.userEquipmentFilename,
-        AdjustmentsData.jsonKey
+        AdjustmentsData.exerciseAdjustmentsKey,
+        AdjustmentsData.equipmentAdjustmentsKey
     ]
     
     // Serial queue for all file operations to prevent race conditions

@@ -636,69 +636,89 @@ extension ExerciseData {
         to exercise: Exercise,
         equipmentData: EquipmentData,
         availableEquipmentIDs: [UUID],
-        existing: [Exercise],
-        replaced: Set<String> = [],
-        searchText: String = ""
+        needPerformanceData: Bool = true,
+        canPerformRequirement: Bool = true,
+        existing: [Exercise] = [],
+        replaced: Set<String> = []
     ) -> [Exercise] {
-        
-        let q = normalizedSearch(searchText)  // <— shared
+
         let existingNames = Set(existing.map(\.name))
-        
-        // Common pool: not the current exercise, not already present
+
+        // Base: not the same exercise, not already in the list
         let basePool = allExercises.filter {
-            $0.id != exercise.id && !existingNames.contains($0.name)
+            $0.id != exercise.id &&
+            !existingNames.contains($0.name)
         }
-        
-        // --- Search mode: global, not constrained by similarity buckets ---
-        if !q.isEmpty {
-            var results = basePool.filter {
-                $0.canPerform(equipmentData: equipmentData, equipmentSelected: availableEquipmentIDs)
-            }.filter { ex in
-                matchesQuery(ex, normalizedQuery: q) // <— shared
-            }
-            
-            sortByPrefix(&results, normalizedQuery: q) // <— shared
-            return results
-        }
-        
-        // --- No search: your original similarity tiers ---
-        let targetPrimSet    = Set(exercise.primaryMuscles)
+
+        let minCount = 5
+        let maxCount = 15
+
+        // --- Similarity mode (no search) ---
+
         let targetEffort     = exercise.effort
         let targetUsesWeight = exercise.usesWeight
-        
-        var strict:    [Exercise] = []; strict.reserveCapacity(8)
-        var relaxed:   [Exercise] = []; relaxed.reserveCapacity(8)
-        var strictFB:  [Exercise] = []; strictFB.reserveCapacity(8)
-        var relaxedFB: [Exercise] = []; relaxedFB.reserveCapacity(8)
-        
+        let targetUsesReps   = exercise.usesReps
+
+        // We'll accumulate (exercise, score) pairs directly,
+        // instead of building filtered arrays and then recomputing scores.
+        var strictScored: [(exercise: Exercise, score: Double)] = []
+        var relaxedScored: [(exercise: Exercise, score: Double)] = []
+
+        strictScored.reserveCapacity(16)
+        relaxedScored.reserveCapacity(32)
+
         for cand in basePool {
-            if hasPerformanceData(exercise: cand) == nil { continue }
-            
-            let candSet = Set(cand.primaryMuscles)
-            let isStrictMuscle  = (candSet == targetPrimSet) && (cand.effort == targetEffort)
-            let isRelaxedMuscle = !isStrictMuscle && !candSet.isDisjoint(with: targetPrimSet)
-            if !(isStrictMuscle || isRelaxedMuscle) { continue }
-            
-            let goesToRelaxed = isRelaxedMuscle || (cand.usesWeight != targetUsesWeight)
-            
-            guard cand.canPerform(
-                equipmentData: equipmentData,
-                equipmentSelected: availableEquipmentIDs
-            ) else { continue }
-            
-            let wasReplaced = replaced.contains(cand.name)
-            
-            switch (goesToRelaxed, wasReplaced) {
-            case (true,  true):  relaxedFB.append(cand)
-            case (true,  false): relaxed.append(cand)
-            case (false, true):  strictFB.append(cand)
-            case (false, false): strict.append(cand)
+            // Optional performance data requirement
+            if needPerformanceData && hasPerformanceData(exercise: cand) == nil {
+                continue
+            }
+
+            // Optional equipment requirement
+            if canPerformRequirement &&
+                !cand.canPerform(
+                    equipmentData: equipmentData,
+                    equipmentSelected: availableEquipmentIDs
+                ) {
+                continue
+            }
+
+            // Skip exercises we've explicitly replaced
+            if replaced.contains(cand.name) { continue }
+
+            // Compute similarity once
+            let score = cand.similarityPct(to: exercise)
+
+            // Check "strict" criteria
+            let isStrict =
+                cand.effort == targetEffort &&
+                cand.usesWeight == targetUsesWeight &&
+                cand.usesReps == targetUsesReps
+
+            if isStrict {
+                strictScored.append((cand, score))
+            } else {
+                relaxedScored.append((cand, score))
             }
         }
-        
-        if !strict.isEmpty   { return strict }
-        if !relaxed.isEmpty  { return relaxed }
-        if !strictFB.isEmpty { return strictFB }
-        return relaxedFB
+
+        // Decide which pool to use:
+        // - If we have enough strict matches, only use those.
+        // - Otherwise, fall back to ALL valid candidates (strict + relaxed).
+        let chosen: [(exercise: Exercise, score: Double)]
+
+        if strictScored.count >= minCount {
+            chosen = strictScored
+        } else {
+            chosen = strictScored + relaxedScored
+        }
+
+        // Sort only the chosen pool once, by score desc
+        let sorted = chosen.sorted { $0.score > $1.score }
+                           .map { $0.exercise }
+
+        // Single cap point
+        return sorted.count > maxCount
+            ? Array(sorted.prefix(maxCount))
+            : sorted
     }
 }

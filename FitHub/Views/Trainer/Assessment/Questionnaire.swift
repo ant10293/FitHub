@@ -99,7 +99,7 @@ struct Questionnaire: View {
                     } else {
                         // Last question answered, proceed to equipment selection or final processing
                         updateSelectedEquipment()
-                        processAnswers()
+                        ctx.userData.setup.questionAnswers = answers
                         showingPopup = true
                     }
                 }) {
@@ -153,10 +153,7 @@ struct Questionnaire: View {
     
     private func handleNavigation() {
         ctx.userData.setup.questionsAnswered = true
-    }
-    
-    private func processAnswers() {
-        ctx.userData.setup.questionAnswers = answers
+        ctx.userData.saveToFile()
     }
 }
 

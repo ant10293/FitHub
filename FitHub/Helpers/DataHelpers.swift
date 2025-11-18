@@ -220,3 +220,8 @@ extension Date {
         return dateFormatter.string(from: self)
     }
 }
+
+extension Double {
+    /// Clamp to [0, 1]
+    var clamped01: Double { max(0.0, min(1.0, self)) }
+}

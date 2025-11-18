@@ -55,6 +55,7 @@ struct EquipmentManagement: View {
                     FloatingButton(image: "checkmark") {
                         // First-time setup: persist and mark complete
                         ctx.userData.setup.isEquipmentSelected = true
+                        ctx.userData.saveToFile()
                     }
                 } else if actionVisible {
                     FloatingButton(image: "plus") {

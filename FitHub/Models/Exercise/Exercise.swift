@@ -21,7 +21,6 @@ struct Exercise: Identifiable, Hashable, Codable {
     let resistance: ResistanceType
     let url: String?
     let difficulty: StrengthLevel
-    let equipmentAdjustments: ExerciseEquipmentAdjustments?
     let limbMovementType: LimbMovementType? // no longer optional
     let repsInstruction: RepsInstruction?
     let weightInstruction: WeightInstruction?
@@ -58,7 +57,6 @@ extension Exercise {
         self.effort               = initEx.effort
         self.resistance           = initEx.resistance
         self.url                  = initEx.url
-        self.equipmentAdjustments = initEx.equipmentAdjustments
         self.difficulty           = initEx.difficulty
         self.limbMovementType     = initEx.limbMovementType
         self.repsInstruction      = initEx.repsInstruction
@@ -158,15 +156,15 @@ extension Exercise {
         case .any: return false
         }
     }
+    
+    var usesReps: Bool { effort.usesReps }
         
     var unitType: ExerciseUnit {
         switch effort {
         case .cardio:
             return .distanceXtimeOrSpeed
-
         case .isometric:
             return usesWeight ? .weightXtime : .timeOnly
-
         // compound / isolation / plyometric (anything reps-driven)
         default:
             return usesWeight ? .weightXreps : .repsOnly
@@ -283,6 +281,10 @@ extension Exercise {
         }
         
         return true
+    }
+    
+    func similarityPct(to other: Exercise) -> Double {
+        muscles.similarityPct(to: other.muscles)
     }
 }
 

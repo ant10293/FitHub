@@ -44,7 +44,7 @@ final class PremiumStore: ObservableObject {
 
     // Optional account token to associate purchases with an app account
     private let appAccountToken: UUID?
-    
+
     // MARK: - Error Recovery
     private var lastKnownEntitlement: PremiumEntitlement?
     private var lastKnownMembershipType: MembershipType = .free
@@ -332,57 +332,57 @@ final class PremiumStore: ObservableObject {
             var localBestEntitlement = PremiumEntitlement(isPremium: false, source: nil)
             var localBestMembership: MembershipType = .free
             var localOverlap: OverlappingSubscriptionInfo?
-            
-            for await result in SKTransaction.currentEntitlements {
+
+        for await result in SKTransaction.currentEntitlements {
                 try Task.checkCancellation()
                 
-                guard case .verified(let t) = result else { continue }
-                guard t.revocationDate == nil else { continue }
+            guard case .verified(let t) = result else { continue }
+            guard t.revocationDate == nil else { continue }
 
-                switch t.productID {
-                case ID.lifetime:
+            switch t.productID {
+            case ID.lifetime:
                     localLifetimeID = t.id
 
-                case ID.monthly, ID.yearly:
-                    let membership: MembershipType = (t.productID == ID.yearly) ? .yearly : .monthly
-                    let isActive = t.expirationDate.map { $0 > Date() } ?? true
-                    guard isActive else { continue }
+            case ID.monthly, ID.yearly:
+                let membership: MembershipType = (t.productID == ID.yearly) ? .yearly : .monthly
+                let isActive = t.expirationDate.map { $0 > Date() } ?? true
+                guard isActive else { continue }
 
                     let auto = await self.willAutoRenew(for: t)
-                    let expiration = t.expirationDate ?? .distantFuture
-                    let source = PremiumSource.subscription(
-                        expiration: expiration,
-                        willAutoRenew: auto,
-                        transactionID: t.id
-                    )
+                let expiration = t.expirationDate ?? .distantFuture
+                let source = PremiumSource.subscription(
+                    expiration: expiration,
+                    willAutoRenew: auto,
+                    transactionID: t.id
+                )
 
                     if membership > localBestMembership {
                         localBestEntitlement = .init(isPremium: true, source: source)
                         localBestMembership = membership
-                    }
-
-                    let willRenew = auto ?? true
-                    if willRenew {
-                        let candidate = OverlappingSubscriptionInfo(
-                            type: membership,
-                            expiration: t.expirationDate,
-                            willAutoRenew: auto
-                        )
-                        if let current = localOverlap {
-                            let currentExpiration = current.expiration ?? .distantPast
-                            let candidateExpiration = candidate.expiration ?? .distantFuture
-                            if candidateExpiration > currentExpiration {
-                                localOverlap = candidate
-                            }
-                        } else {
-                            localOverlap = candidate
-                        }
-                    }
-
-                default:
-                    break
                 }
+
+                let willRenew = auto ?? true
+                if willRenew {
+                    let candidate = OverlappingSubscriptionInfo(
+                        type: membership,
+                        expiration: t.expirationDate,
+                        willAutoRenew: auto
+                    )
+                        if let current = localOverlap {
+                        let currentExpiration = current.expiration ?? .distantPast
+                        let candidateExpiration = candidate.expiration ?? .distantFuture
+                        if candidateExpiration > currentExpiration {
+                                localOverlap = candidate
+                        }
+                    } else {
+                            localOverlap = candidate
+                    }
+                }
+
+            default:
+                break
             }
+        }
             
             return (localLifetimeID, localBestEntitlement, localBestMembership, localOverlap)
         }

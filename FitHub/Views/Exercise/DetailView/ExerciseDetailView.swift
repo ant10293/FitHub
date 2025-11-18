@@ -12,6 +12,7 @@ struct ExerciseDetailView: View {
     @EnvironmentObject private var ctx: AppContext
     @State private var editingExercise: Bool = false
     @State private var selectedView: Views = .about
+    @State private var loadedExercises: [Exercise]? = nil
     let viewingDuringWorkout: Bool
     let exercise: Exercise
     
@@ -24,13 +25,13 @@ struct ExerciseDetailView: View {
                     Text(v.rawValue).tag(v)
                 }
             }
-            .padding(.horizontal)
             .pickerStyle(SegmentedPickerStyle())
+            .padding(.horizontal)
             
             Group {
                 switch selectedView {
                 case .about:
-                    AboutView(exercise: exercise)
+                    AboutView(loadedExercises: $loadedExercises, exercise: exercise)
                 case .history:
                     ExerciseHistory(
                         completedWorkouts: ctx.userData.workoutPlans.completedWorkouts,

@@ -99,6 +99,8 @@ struct AssessmentView: View {
                 exerciseData.seedEstimatedMaxes(userData: userData)
             }
         }
+        
+        ctx.userData.saveToFile()
     }
     
     private func checkCompletion() {

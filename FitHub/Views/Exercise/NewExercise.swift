@@ -308,7 +308,7 @@ struct NewExercise: View {
                 .disabled(isReadOnly)
 
                 // Reps Instruction (Optional, conditional)
-                if exercise.effort.usesReps {
+                if exercise.usesReps {
                     MenuPickerRow(title: "Reps Instruction", selection: $draft.repsInstruction) {
                         Text("None").tag(nil as RepsInstruction?)
                         ForEach(RepsInstruction.allCases, id: \.self) {

@@ -20,7 +20,6 @@ struct InitExercise: Identifiable, Hashable, Codable {
     var resistance: ResistanceType
     var url: String?
     var difficulty: StrengthLevel
-    var equipmentAdjustments: ExerciseEquipmentAdjustments?
     var limbMovementType: LimbMovementType?
     var repsInstruction: RepsInstruction?
     var weightInstruction: WeightInstruction?

@@ -12,6 +12,7 @@ struct WarningFooter: View {
     let font: Font
     let color: Color
     let image: String
+    let showImage: Bool
     let width: CGFloat?
 
     init(
@@ -19,18 +20,22 @@ struct WarningFooter: View {
         font: Font = .footnote,
         color: Color = .orange,
         image: String = "exclamationmark.triangle.fill",
+        showImage: Bool = true,
         width: CGFloat? = nil
     ) {
         self.message = message
         self.font = font
         self.color = color
         self.image = image
+        self.showImage = showImage
         self.width = width
     }
 
     var body: some View {
         HStack(spacing: 6) {
-            Image(systemName: image)
+            if showImage {
+                Image(systemName: image)
+            }
             Text(message)
                 .multilineTextAlignment(.center)
         }

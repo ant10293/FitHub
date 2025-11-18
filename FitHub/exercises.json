@@ -5389,25 +5389,6 @@
 		"resistance": "Machine"
 	},
 	{
-		"name": "Standing Dumbbell Calf Raise",
-        "id": "B4C7C24E-4A60-4599-A4B7-3CE78958B945",
-		"image": "standing_dumbbell_calf_raise",
-		"aliases": ["DB Standing Calf Raise"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
-				{ "engagementPercentage": 70, "submuscleWorked": "Gastrocnemius" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Soleus" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Free Weight",
-		"weightInstruction" : "Per Dumbbell"
-	},
-	{
 		"name": "Tibialis Raise",
 		"id": "19EC6510-2F7A-4B36-B756-0FA09E35ADC5",
 		"image": "tibialis_raise",

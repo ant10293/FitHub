@@ -76,7 +76,7 @@ struct AdjustmentsSection: View {
 
         guard let first = nonEmpty.first else { return nil }
 
-        func line(for adjustment: EquipmentAdjustment) -> Text {
+        func line(for adjustment: AdjustmentEntry) -> Text {
             (Text("\(adjustment.category.rawValue): ")
             + Text(adjustment.value.displayValue).bold())
             .font(.caption)

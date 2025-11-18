@@ -74,7 +74,7 @@
 		6550ADBC2E6BBCD1002072C1 /* ResumeWorkoutOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550ADBB2E6BBCD1002072C1 /* ResumeWorkoutOverlay.swift */; };
 		6550ADBE2E6BBEAA002072C1 /* TemplateRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550ADBD2E6BBEAA002072C1 /* TemplateRow.swift */; };
 		6550ADC02E6E562C002072C1 /* PlateSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550ADBF2E6E562C002072C1 /* PlateSelection.swift */; };
-		6550ADC22E6E7D9A002072C1 /* EquipmentScrollRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550ADC12E6E7D9A002072C1 /* EquipmentScrollRow.swift */; };
+		6550ADC22E6E7D9A002072C1 /* ScrollRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550ADC12E6E7D9A002072C1 /* ScrollRow.swift */; };
 		6550ADC72E70C43E002072C1 /* SubMuscleEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550ADC62E70C43E002072C1 /* SubMuscleEditor.swift */; };
 		6550ADCB2E71169A002072C1 /* ChangeLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550ADCA2E71169A002072C1 /* ChangeLog.swift */; };
 		6550ADD72E775A72002072C1 /* Submuscle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550ADD62E775A72002072C1 /* Submuscle.swift */; };
@@ -97,6 +97,8 @@
 		65A0D1D02E318D21008466D8 /* RectangularBG.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1CF2E318D21008466D8 /* RectangularBG.swift */; };
 		65A0D1D32E38639A008466D8 /* GeneratingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1D22E38639A008466D8 /* GeneratingOverlay.swift */; };
 		65A0D1D72E3AF28A008466D8 /* ExerciseSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1D62E3AF28A008466D8 /* ExerciseSelector.swift */; };
+		65A4D9672ECC0A2C0055D561 /* SimilarExercisesRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4D9662ECC0A2C0055D561 /* SimilarExercisesRow.swift */; };
+		65A4D9692ECD24D00055D561 /* AdjustmentImageUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4D9682ECD24D00055D561 /* AdjustmentImageUpload.swift */; };
 		65AB47F12EA043B9001BEAFE /* LabelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47F02EA043B9001BEAFE /* LabelButton.swift */; };
 		65AB47F52EA31362001BEAFE /* WarningFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47F42EA31362001BEAFE /* WarningFooter.swift */; };
 		65AB47F72EA342B4001BEAFE /* ExerciseHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47F62EA342B4001BEAFE /* ExerciseHistory.swift */; };
@@ -351,7 +353,7 @@
 		6550ADBB2E6BBCD1002072C1 /* ResumeWorkoutOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumeWorkoutOverlay.swift; sourceTree = "<group>"; };
 		6550ADBD2E6BBEAA002072C1 /* TemplateRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateRow.swift; sourceTree = "<group>"; };
 		6550ADBF2E6E562C002072C1 /* PlateSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateSelection.swift; sourceTree = "<group>"; };
-		6550ADC12E6E7D9A002072C1 /* EquipmentScrollRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentScrollRow.swift; sourceTree = "<group>"; };
+		6550ADC12E6E7D9A002072C1 /* ScrollRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollRow.swift; sourceTree = "<group>"; };
 		6550ADC62E70C43E002072C1 /* SubMuscleEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubMuscleEditor.swift; sourceTree = "<group>"; };
 		6550ADCA2E71169A002072C1 /* ChangeLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeLog.swift; sourceTree = "<group>"; };
 		6550ADD62E775A72002072C1 /* Submuscle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Submuscle.swift; sourceTree = "<group>"; };
@@ -369,6 +371,8 @@
 		65A0D1CF2E318D21008466D8 /* RectangularBG.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularBG.swift; sourceTree = "<group>"; };
 		65A0D1D22E38639A008466D8 /* GeneratingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratingOverlay.swift; sourceTree = "<group>"; };
 		65A0D1D62E3AF28A008466D8 /* ExerciseSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSelector.swift; sourceTree = "<group>"; };
+		65A4D9662ECC0A2C0055D561 /* SimilarExercisesRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarExercisesRow.swift; sourceTree = "<group>"; };
+		65A4D9682ECD24D00055D561 /* AdjustmentImageUpload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustmentImageUpload.swift; sourceTree = "<group>"; };
 		65AB47F02EA043B9001BEAFE /* LabelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelButton.swift; sourceTree = "<group>"; };
 		65AB47F42EA31362001BEAFE /* WarningFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningFooter.swift; sourceTree = "<group>"; };
 		65AB47F62EA342B4001BEAFE /* ExerciseHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseHistory.swift; sourceTree = "<group>"; };
@@ -764,6 +768,7 @@
 				6510A2D52E2DB5500051D002 /* WeightSelectorRow.swift */,
 				6550ADBD2E6BBEAA002072C1 /* TemplateRow.swift */,
 				65039B922E9869E9007A31E1 /* MenuPickerRow.swift */,
+				6550ADC12E6E7D9A002072C1 /* ScrollRow.swift */,
 			);
 			path = Row;
 			sourceTree = "<group>";
@@ -978,6 +983,7 @@
 		65CD3BBA2DD3C84F00C2B671 /* Adjustments */ = {
 			isa = PBXGroup;
 			children = (
+				65A4D9682ECD24D00055D561 /* AdjustmentImageUpload.swift */,
 				65CD3BB82DD3C84F00C2B671 /* AddCategoryPicker.swift */,
 				65CD3BB92DD3C84F00C2B671 /* AdjustmentsView.swift */,
 				65CFBFA02E1DEED900CD521E /* AdjustmentsSection.swift */,
@@ -1008,7 +1014,6 @@
 				65CD3BC42DD3C84F00C2B671 /* EquipmentPopUp.swift */,
 				65CFBFA62E1F48F200CD521E /* NewEquipment.swift */,
 				65CFBFA82E1F5B2B00CD521E /* AdjustmentPicker.swift */,
-				6550ADC12E6E7D9A002072C1 /* EquipmentScrollRow.swift */,
 			);
 			path = Equipment;
 			sourceTree = "<group>";
@@ -1249,6 +1254,7 @@
 				65CD3BCC2DD3C84F00C2B671 /* StrengthPercentileView.swift */,
 				65CD3BCD2DD3C84F00C2B671 /* UpdateMaxEditor.swift */,
 				65CD3BC82DD3C84F00C2B671 /* ExercisePerformanceView.swift */,
+				65A4D9662ECC0A2C0055D561 /* SimilarExercisesRow.swift */,
 			);
 			path = DetailView;
 			sourceTree = "<group>";
@@ -1539,7 +1545,7 @@
 				65CD3C4E2DD3C84F00C2B671 /* CategorySelection.swift in Sources */,
 				65039B742E81D983007A31E1 /* Speed.swift in Sources */,
 				65CFBFA92E1F5B2B00CD521E /* AdjustmentPicker.swift in Sources */,
-				6550ADC22E6E7D9A002072C1 /* EquipmentScrollRow.swift in Sources */,
+				6550ADC22E6E7D9A002072C1 /* ScrollRow.swift in Sources */,
 				653136162E519AC300EECCA5 /* ChangeLogs.swift in Sources */,
 				65CD3C502DD3C84F00C2B671 /* DirectImageView.swift in Sources */,
 				65E4E2E32DEE1ABD00AF41B8 /* AppContext.swift in Sources */,
@@ -1601,6 +1607,7 @@
 				653136372E552FCA00EECCA5 /* Distribution.swift in Sources */,
 				65C5DC692DEFBBA300B09AD2 /* Week.swift in Sources */,
 				65DD05422EC681A7000D159C /* SafariDocumentView.swift in Sources */,
+				65A4D9692ECD24D00055D561 /* AdjustmentImageUpload.swift in Sources */,
 				65D48DEA2DF96A640032F815 /* UserData.swift in Sources */,
 				653136142E51521D00EECCA5 /* SetCountEditor.swift in Sources */,
 				65DD05082EB95877000D159C /* PercentileView.swift in Sources */,
@@ -1703,6 +1710,7 @@
 				65CD3C8B2DD3C84F00C2B671 /* SubscriptionView.swift in Sources */,
 				65C5DC612DEFB7A400B09AD2 /* Sorting.swift in Sources */,
 				6550ADBA2E6BAC12002072C1 /* TemplateNavigator.swift in Sources */,
+				65A4D9672ECC0A2C0055D561 /* SimilarExercisesRow.swift in Sources */,
 				65A0D1D72E3AF28A008466D8 /* ExerciseSelector.swift in Sources */,
 				65DD05112EB979F7000D159C /* ReferralCodeGenerator.swift in Sources */,
 				65DD05122EB979F7000D159C /* ReferralPurchaseTracker.swift in Sources */,
