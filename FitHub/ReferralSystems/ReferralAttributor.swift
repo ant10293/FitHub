@@ -88,7 +88,7 @@ final class ReferralAttributor {
                     UserDefaults.standard.removeObject(forKey: "pendingReferralCode")
                 } else if errorCode == "invalid-argument" || errorMessage.contains("Invalid") || errorMessage.contains("invalid-argument") {
                     print("⚠️ Invalid referral code format: \(code)")
-                    UserDefaults.standard.removeObject(forKey: "pendingReferralCode")
+                UserDefaults.standard.removeObject(forKey: "pendingReferralCode")
                 } else if errorCode == "unauthenticated" || errorMessage.contains("authenticated") || nsError.code == 16 {
                     print("⚠️ User not authenticated")
                     // Keep code for retry after re-authentication

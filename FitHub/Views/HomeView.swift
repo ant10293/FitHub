@@ -5,7 +5,7 @@ struct HomeView: View {
     @EnvironmentObject private var ctx: AppContext
     @State private var showingFavoriteExercises: Bool = false
     @State private var showingExerciseSelection: Bool = false
-    @State private var selectedExercise: UUID?
+    @State private var selectedExercise: Exercise.ID?
     @State private var selectedMeasurement: MeasurementType = .weight
     @State private var selectedView: GraphView = .exercisePerformance
     
@@ -106,6 +106,7 @@ struct HomeView: View {
         .background(Color.clear)
     }
     
+    // FIXME: exercisePerformanceSection & measurementsGraphSection are visually not consistent and use fixed padding
     private var exercisePerformanceSection: some View {
         VStack(alignment: .leading) {
             HStack {

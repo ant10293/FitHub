@@ -142,42 +142,67 @@ final class ReferralCodeAdmin: ObservableObject {
         print("✅ Deactivated referral code: \(code.uppercased())")
     }
     
-    /// Gets statistics for a referral code
-    func getCodeData(_ code: String) async throws -> [String: Any]? {
+    private func getCodeData(_ code: String) async throws -> [String: Any] {
         let codeRef = db.collection("referralCodes").document(code.uppercased())
-        let doc = try await codeRef.getDocument()
-        return doc.data()
+        
+        do {
+            let doc = try await codeRef.getDocument()
+            guard doc.exists else { throw ReferralAdminError.codeNotFound } // Document does NOT exist → logical "not found"
+            guard let data = doc.data() else { throw ReferralAdminError.malformedDocument } // Exists but no data → bad document
+            return data
+        } catch {
+            let nsError = error as NSError
+            if nsError.domain == FirestoreErrorDomain,
+               nsError.code == FirestoreErrorCode.Code.unavailable.rawValue {
+                throw ReferralAdminError.databaseUnavailable
+            }
+            throw error
+        }
     }
-    
-    func getData(_ code: String) async throws -> (code: String, email: String, pMethod: String, notes: String, stats: CodeStats, stripe: StripeAffiliateStatus) {
-        let codeData = try await getCodeData(code)
-        let (code, email, pMethod, notes) = loadAffiliateInfo(from: codeData)
-        let stats    = try await loadReferralInfo(codeData: codeData)
-        let stripe   = loadStripeStatus(from: codeData)
-        return (code, email, pMethod, notes, stats, stripe)
-    }
-    
-    func loadAffiliateInfo(from codeData: [String: Any]?) -> (code: String, email: String, pMethod: String, notes: String) {
-        guard let data = codeData else { return ("", "", "", "") }
 
-        let code    = data["code"] as? String ?? ""
-        let email   = data["influencerEmail"] as? String ?? ""
-        let pMethod = data["payoutMethod"] as? String ?? ""
-        let notes   = data["notes"] as? String ?? ""
+    func getData(_ code: String) async throws -> (code: String, email: String, pMethod: String, notes: String, stats: CodeStats, stripe: StripeAffiliateStatus) {
+        let codeData = try await getCodeData(code)  // non-optional now
+
+        let affiliate = loadAffiliateInfo(from: codeData)
+        let stats     = loadReferralInfo(from: codeData)
+        let stripe    = loadStripeStatus(from: codeData)
+
+        return (affiliate.code, affiliate.email, affiliate.pMethod, affiliate.notes, stats, stripe)
+    }
+
+    private func loadAffiliateInfo(from codeData: [String: Any]) -> (code: String, email: String, pMethod: String, notes: String) {
+        let code    = codeData["code"] as? String ?? ""
+        let email   = codeData["influencerEmail"] as? String ?? ""
+        let pMethod = codeData["payoutMethod"] as? String ?? ""
+        let notes   = codeData["notes"] as? String ?? ""
 
         return (code, email, pMethod, notes)
     }
+    
+    private func loadReferralInfo(from codeData: [String: Any]) -> CodeStats {
+        let usedBy             = (codeData["usedBy"] as? [String] ?? []).filter { !$0.isEmpty }
+        let monthlyPurchasedBy = (codeData["monthlyPurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
+        let annualPurchasedBy  = (codeData["annualPurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
+        let lifetimePurchasedBy = (codeData["lifetimePurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
 
-    func loadStripeStatus(from codeData: [String: Any]?) -> StripeAffiliateStatus {
-        guard let data = codeData else { return .empty }
+        return CodeStats(
+            signUps: usedBy.count,
+            monthlyPurchases: monthlyPurchasedBy.count,
+            annualPurchases: annualPurchasedBy.count,
+            lifetimePurchases: lifetimePurchasedBy.count,
+            lastUsedAt: (codeData["lastUsedAt"] as? Timestamp)?.dateValue(),
+            lastPurchaseAt: (codeData["lastPurchaseAt"] as? Timestamp)?.dateValue()
+        )
+    }
 
-        let accountId = data["stripeAccountId"] as? String
-        let detailsSubmitted = data["stripeDetailsSubmitted"] as? Bool ?? false
-        let payoutsEnabled = data["stripePayoutsEnabled"] as? Bool ?? false
-        let requirementsDue = data["stripeRequirementsDue"] as? [String] ?? []
-        let lastStripeSyncAt = (data["stripeLastStripeSyncAt"] as? Timestamp)?.dateValue()
-        let lastOnboardingAt = (data["stripeLastOnboardingAt"] as? Timestamp)?.dateValue()
-        let lastDashboardLinkAt = (data["stripeLastDashboardLinkAt"] as? Timestamp)?.dateValue()
+    private func loadStripeStatus(from codeData: [String: Any]) -> StripeAffiliateStatus {
+        let accountId         = codeData["stripeAccountId"] as? String
+        let detailsSubmitted  = codeData["stripeDetailsSubmitted"] as? Bool ?? false
+        let payoutsEnabled    = codeData["stripePayoutsEnabled"] as? Bool ?? false
+        let requirementsDue   = codeData["stripeRequirementsDue"] as? [String] ?? []
+        let lastStripeSyncAt  = (codeData["stripeLastStripeSyncAt"] as? Timestamp)?.dateValue()
+        let lastOnboardingAt  = (codeData["stripeLastOnboardingAt"] as? Timestamp)?.dateValue()
+        let lastDashboardLinkAt = (codeData["stripeLastDashboardLinkAt"] as? Timestamp)?.dateValue()
 
         return StripeAffiliateStatus(
             accountId: accountId,
@@ -190,24 +215,6 @@ final class ReferralCodeAdmin: ObservableObject {
         )
     }
 
-    func loadReferralInfo(codeData: [String: Any]?) async throws -> CodeStats {
-        guard let data = codeData else { return CodeStats.blankStats }
-        // parse arrays, ignoring empty strings
-        let usedBy = (data["usedBy"] as? [String] ?? []).filter { !$0.isEmpty }
-        let monthlyPurchasedBy = (data["monthlyPurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
-        let annualPurchasedBy = (data["annualPurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
-        let lifetimePurchasedBy = (data["lifetimePurchasedBy"] as? [String] ?? []).filter { !$0.isEmpty }
-        
-        return CodeStats(
-            signUps: usedBy.count,
-            monthlyPurchases: monthlyPurchasedBy.count,
-            annualPurchases: annualPurchasedBy.count,
-            lifetimePurchases: lifetimePurchasedBy.count,
-            lastUsedAt: (data["lastUsedAt"] as? Timestamp)?.dateValue(),
-            lastPurchaseAt: (data["lastPurchaseAt"] as? Timestamp)?.dateValue()
-        )
-    }
-    
     /// Checks if an email is already used by another referral code
     func checkEmailExists(_ email: String) async throws -> Bool {
         guard !email.isEmpty else { return false }

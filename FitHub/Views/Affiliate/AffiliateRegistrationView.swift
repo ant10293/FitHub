@@ -1,5 +1,5 @@
 //
-//  InfluencerRegistrationView.swift
+//  AffiliateRegistrationView.swift
 //  FitHub
 //
 //  View for influencers to generate their own referral codes
@@ -9,8 +9,7 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
-struct InfluencerRegistrationView: View {
-    @Environment(\.openURL) private var openURL
+struct AffiliateRegistrationView: View {
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
     @StateObject private var admin = ReferralCodeAdmin()
@@ -28,16 +27,33 @@ struct InfluencerRegistrationView: View {
     @State private var linkCopied: Bool = false
     @State private var codeCopied: Bool = false
     @State private var stripeStatus: StripeAffiliateStatus = .empty
-    @State private var isRequestingStripeOnboardingLink: Bool = false
-    @State private var isRequestingStripeDashboardLink: Bool = false
-    @State private var stripeErrorMessage: String?
+    @State private var codeNotFound: Bool = false
+    @State private var stripeConnectKey: Int = 0 // Key to force StripeConnect to reset its internal state
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     
-                    if let code = generatedCode {
+                    if codeNotFound, let code = generatedCode {
+                        // CODE NOT FOUND WARNING STATE
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Code Not Found")
+                                .font(.headline)
+                            
+                            Text("Referral code '\(code)' not found in our servers. Please generate a new code or contact support.")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            
+                            RectangularButton(
+                                title: "Start Over",
+                                enabled: true,
+                                fontWeight: .bold,
+                                action: startOver
+                            )
+                        }
+                        .cardContainer(cornerRadius: 12, backgroundColor: Color(UIColor.secondarySystemBackground))
+                    } else if let code = generatedCode {
                         // SUCCESS STATE
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Your Referral Code")
@@ -93,36 +109,14 @@ struct InfluencerRegistrationView: View {
                             }
                             .buttonStyle(.bordered)
                             
-                            stripeSection(for: code)
+                            StripeConnect(stripeStatus: $stripeStatus, referralCode: code, refreshStripeStatus: refreshStripeStatus)
+                                .id(stripeConnectKey) // Force reset by changing key
                             
-                            // Statistics
-                            if isLoadingStats {
-                                ProgressView()
-                                    .centerHorizontally()
-                            } else if let stats = codeStats {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("Statistics")
-                                        .font(.headline)
-                                    
-                                    StatRow(label: "Sign-ups", value: "\(stats.signUps)")
-                                    StatRow(label: "Monthly Purchases", value: "\(stats.monthlyPurchases)")
-                                    StatRow(label: "Annual Purchases", value: "\(stats.annualPurchases)")
-                                    StatRow(label: "Lifetime Purchases", value: "\(stats.lifetimePurchases)")
-                                    
-                                    if let lastUsed = stats.lastUsedAt {
-                                        StatRow(label: "Last Sign-up", value: Format.formatDate(lastUsed, dateStyle: .medium, timeStyle: .short))
-                                    }
-                                    
-                                    if let lastPurchase = stats.lastPurchaseAt {
-                                        StatRow(label: "Last Purchase", value: Format.formatDate(lastPurchase, dateStyle: .medium, timeStyle: .short))
-                                    }
-                                }
-                                .cardContainer(cornerRadius: 12, backgroundColor: Color(UIColor.secondarySystemBackground))
-                            }
+                            ReferralStats(isLoadingStats: isLoadingStats, codeStats: codeStats)
                         }
                     } else {
                         // INPUT STATE
-                        InfluencerInfoForm(
+                        AffiliateInfoForm(
                             fullName: $fullName,
                             email: $email,
                             notes: $notes,
@@ -184,12 +178,12 @@ struct InfluencerRegistrationView: View {
                 .padding()
             }
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-            .navigationBarTitle("Influencer Registration", displayMode: .inline)
+            .navigationBarTitle("Affiliate Registration", displayMode: .inline)
             .toolbar {
-                if let code = generatedCode {
+                if let code = generatedCode, !codeNotFound {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         NavigationLink(destination: LazyDestination {
-                            InfluencerSettingsView(
+                            AffiliateSettingsView(
                                 fullName: $fullName,
                                 email: $email,
                                 notes: $notes,
@@ -220,69 +214,53 @@ struct InfluencerRegistrationView: View {
             // Load affiliate info, stats, and Stripe status
             Task {
                 await loadAffiliateInfo()
-                await loadCodeStats()
-                await loadStripeStatus()
             }
         }
     }
     
-    private func loadAffiliateInfo() async {
+    private func loadAffiliateInfo(showStatsLoader: Bool = true) async {
         guard let code = generatedCode else { return }
 
-        do {
-            let codeData = try await admin.getCodeData(code)
-            let (_, email, _, notes) = admin.loadAffiliateInfo(from: codeData)
-
-            await MainActor.run {
-                self.email = email
-                self.notes = notes
-            }
-        } catch {
-            print("Failed to load affiliate info for code \(code): \(error)")
-        }
-    }
-    
-    private func loadCodeStats() async {
-        guard let code = generatedCode else { return }
-
-        await MainActor.run {
-            isLoadingStats = true
-        }
+        if showStatsLoader { isLoadingStats = true }
+        codeNotFound = false
 
         do {
-            let codeData = try await admin.getCodeData(code)
-            let stats = try await admin.loadReferralInfo(codeData: codeData)
+            let result = try await admin.getData(code)
 
             await MainActor.run {
-                self.codeStats = stats
+                // success path
+                self.email  = result.email
+                self.notes  = result.notes
+                self.codeStats    = result.stats
+                self.stripeStatus = result.stripe
                 self.isLoadingStats = false
+                self.codeNotFound   = false
+            }
+        } catch let error as ReferralAdminError {
+            await MainActor.run {
+                switch error {
+                case .codeNotFound:
+                    self.resetStatsForError(codeNotFound: true)
+                    self.stripeConnectKey += 1
+
+                case .databaseUnavailable, .malformedDocument:
+                    self.resetStatsForError(codeNotFound: false)
+                }
             }
         } catch {
             await MainActor.run {
-                self.isLoadingStats = false
-                print("Failed to load stats: \(error)")
+                self.resetStatsForError(codeNotFound: false)
             }
         }
     }
     
-    private func loadStripeStatus() async {
-        guard let code = generatedCode else { return }
-
-        do {
-            let codeData = try await admin.getCodeData(code)
-            let stripe = admin.loadStripeStatus(from: codeData)
-
-            await MainActor.run {
-                self.stripeStatus = stripe
-            }
-        } catch {
-            await MainActor.run {
-                self.stripeStatus = .empty
-                print("Failed to load Stripe status: \(error)")
-            }
-        }
+    @MainActor
+    private func resetStatsForError(codeNotFound: Bool) {
+        isLoadingStats = false
+        codeStats      = nil
+        stripeStatus   = .empty
+        self.codeNotFound = codeNotFound
     }
-    
     
     // MARK: - Computed Properties
     
@@ -301,151 +279,25 @@ struct InfluencerRegistrationView: View {
         }
         return true
     }
-    
-    // MARK: - Stripe Management
-
-    @ViewBuilder
-    private func stripeSection(for code: String) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Stripe Payouts")
-                .font(.headline)
-
-            Text(stripeStatus.statusDescription)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-
-            if stripeStatus.needsAction {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Action Needed")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-
-                    ForEach(stripeStatus.requirementsDue, id: \.self) { requirement in
-                        Text("• \(requirement.formattedRequirement)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
-
-            if let errorMessage = stripeErrorMessage {
-                Text(errorMessage)
-                    .font(.caption)
-                    .foregroundStyle(.red)
-            }
-
-            if isRequestingStripeOnboardingLink {
-                ProgressView()
-                    .centerHorizontally()
-            } else {
-                RectangularButton(
-                    title: stripeStatus.primaryButtonTitle,
-                    enabled: true,
-                    fontWeight: .bold,
-                    action: { connectStripe(for: code) }
-                )
-            }
-
-            if stripeStatus.isConnected {
-                if isRequestingStripeDashboardLink {
-                    ProgressView()
-                        .centerHorizontally()
-                } else {
-                    RectangularButton(
-                        title: "Open Stripe Dashboard",
-                        enabled: true,
-                        action: { openStripeDashboard(for: code) }
-                    )
-                }
-            }
-
-            Button {
-                refreshStripeStatus()
-            } label: {
-                Text("Refresh Stripe Status")
-                    .font(.caption)
-                    .fontWeight(.semibold)
-            }
-            .buttonStyle(.plain)
-            .tint(.blue)
-        }
-        .cardContainer(cornerRadius: 12, backgroundColor: Color(UIColor.secondarySystemBackground))
-    }
-
-    private func connectStripe(for code: String) {
-        guard !isRequestingStripeOnboardingLink else { return }
-        isRequestingStripeOnboardingLink = true
-        stripeErrorMessage = nil
-
-        Task {
-            do {
-                let onboardingLink = try await StripeAffiliateService.shared.createOnboardingLink(referralCode: code)
-                await MainActor.run {
-                    isRequestingStripeOnboardingLink = false
-                    stripeStatus.accountId = onboardingLink.accountId
-                    if let detailsSubmitted = onboardingLink.detailsSubmitted {
-                        stripeStatus.detailsSubmitted = detailsSubmitted
-                    }
-                    if let payoutsEnabled = onboardingLink.payoutsEnabled {
-                        stripeStatus.payoutsEnabled = payoutsEnabled
-                    }
-
-                    guard let linkURL = URL(string: onboardingLink.url) else {
-                        stripeErrorMessage = "Received an invalid onboarding link."
-                        return
-                    }
-
-                    openURL(linkURL)
-                }
-            } catch {
-                await MainActor.run {
-                    isRequestingStripeOnboardingLink = false
-                    stripeErrorMessage = error.localizedDescription
-                }
-            }
-        }
-    }
-
-    private func openStripeDashboard(for code: String) {
-        guard stripeStatus.isConnected else {
-            stripeErrorMessage = "Connect your Stripe account before opening the dashboard."
-            return
-        }
-        guard !isRequestingStripeDashboardLink else { return }
-
-        isRequestingStripeDashboardLink = true
-        stripeErrorMessage = nil
-
-        Task {
-            do {
-                let dashboardLink = try await StripeAffiliateService.shared.createDashboardLink(referralCode: code)
-                await MainActor.run {
-                    isRequestingStripeDashboardLink = false
-                    stripeStatus.accountId = dashboardLink.accountId
-                    if let payoutsEnabled = dashboardLink.payoutsEnabled {
-                        stripeStatus.payoutsEnabled = payoutsEnabled
-                    }
-
-                    guard let linkURL = URL(string: dashboardLink.url) else {
-                        stripeErrorMessage = "Received an invalid dashboard link."
-                        return
-                    }
-
-                    openURL(linkURL)
-                }
-            } catch {
-                await MainActor.run {
-                    isRequestingStripeDashboardLink = false
-                    stripeErrorMessage = error.localizedDescription
-                }
-            }
-        }
-    }
 
     private func refreshStripeStatus() {
-        Task {
-            await loadStripeStatus()
-        }
+        Task { await loadAffiliateInfo(showStatsLoader: false) }
+    }
+    
+    private func startOver() {
+        // Clear referral code from user data
+        ctx.userData.profile.referralCode = nil
+        ctx.userData.saveToFile()
+        
+        // Reset state to allow access to input state
+        generatedCode = nil
+        codeNotFound = false
+        codeStats = nil
+        stripeStatus = .empty
+        isLoadingStats = false
+        
+        // Reset StripeConnect internal state by changing its key
+        stripeConnectKey += 1
     }
 
     private func generateCode() {
@@ -462,9 +314,9 @@ struct InfluencerRegistrationView: View {
         isGenerating = true
         errorMessage = nil
         stripeStatus = .empty
-        stripeErrorMessage = nil
-        isRequestingStripeOnboardingLink = false
-        isRequestingStripeDashboardLink = false
+        
+        // Reset StripeConnect internal state by changing its key
+        stripeConnectKey += 1
         
         Task {
             do {
@@ -493,12 +345,8 @@ struct InfluencerRegistrationView: View {
                     showSuccess = true
                 }
                 
-                // Load affiliate info first
-                await loadAffiliateInfo()
+                await loadAffiliateInfo(showStatsLoader: true)
                 
-                // Then load stats and Stripe status
-                await loadCodeStats()
-                await loadStripeStatus()
             } catch {
                 await MainActor.run {
                     isGenerating = false
@@ -530,40 +378,5 @@ struct InfluencerRegistrationView: View {
         // The ReferralURLHandler will extract the code and store it in UserDefaults
         // When the user signs in, ReferralAttributor will claim the code (like in WelcomeView)
         return "https://fithubv1-d3c91.web.app/r/\(code)"
-    }
-}
-
-// MARK: - Supporting Types
-struct CodeStats {
-    let signUps: Int
-    let monthlyPurchases: Int
-    let annualPurchases: Int
-    let lifetimePurchases: Int
-    let lastUsedAt: Date?
-    let lastPurchaseAt: Date?
-    
-    static var blankStats: CodeStats = .init(
-        signUps: 0,
-        monthlyPurchases: 0,
-        annualPurchases: 0,
-        lifetimePurchases: 0,
-        lastUsedAt: nil,
-        lastPurchaseAt: nil
-    )
-}
-
-struct StatRow: View {
-    let label: String
-    let value: String
-    
-    var body: some View {
-        HStack {
-            Text(label)
-                .foregroundStyle(.secondary)
-            Spacer()
-            Text(value)
-                .fontWeight(.semibold)
-        }
-        .font(.subheadline)
     }
 }

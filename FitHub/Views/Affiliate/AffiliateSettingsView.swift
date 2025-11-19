@@ -1,5 +1,5 @@
 //
-//  InfluencerSettingsView.swift
+//  AffiliateSettingsView.swift
 //  FitHub
 //
 //  Settings view for editing influencer information
@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
-struct InfluencerSettingsView: View {
+struct AffiliateSettingsView: View {
     @StateObject private var admin = ReferralCodeAdmin()
     
     @Binding var fullName: String
@@ -29,7 +29,7 @@ struct InfluencerSettingsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
                 // Use the reusable form component with limited editability
-                InfluencerInfoForm(
+                AffiliateInfoForm(
                     fullName: $fullName,
                     email: $editedEmail,
                     notes: $notes,

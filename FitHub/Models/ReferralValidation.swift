@@ -112,11 +112,11 @@ func referralError(from error: Error) -> ReferralError {
     }
     
     // Backwards compatibility: handle old NSError codes
-        if let nsError = error as NSError? {
-            switch nsError.code {
-            case -1:
+    if let nsError = error as NSError? {
+        switch nsError.code {
+        case -1:
             return .invalidCodeFormat
-            case -2:
+        case -2:
             return .codeAlreadyTaken
         case -3:
             return .unableToGenerateUniqueCode
@@ -124,7 +124,7 @@ func referralError(from error: Error) -> ReferralError {
             return .emailHasCodeAlready
         case -5:
             return .uidHasCodeAlready
-            default:
+        default:
             return .unknownError(nsError.localizedDescription)
         }
     }
@@ -133,3 +133,6 @@ func referralError(from error: Error) -> ReferralError {
     return .unknownError(error.localizedDescription)
 }
 
+enum ReferralAdminError: Error {
+    case codeNotFound, malformedDocument, databaseUnavailable
+}

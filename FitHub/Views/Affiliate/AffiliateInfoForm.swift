@@ -1,5 +1,5 @@
 //
-//  InfluencerInfoForm.swift
+//  AffiliateInfoForm.swift
 //  FitHub
 //
 //  Reusable form component for influencer registration information
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct InfluencerInfoForm: View {
+struct AffiliateInfoForm: View {
     @Binding var fullName: String
     @Binding var email: String
     @Binding var notes: String

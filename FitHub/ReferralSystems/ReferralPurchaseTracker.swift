@@ -198,7 +198,6 @@ final class ReferralPurchaseTracker {
             
             print("✅ Transaction validation passed for transaction \(transactionID)")
             return true
-            
         }
     }
 }

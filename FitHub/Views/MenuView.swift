@@ -55,9 +55,9 @@ struct MenuView: View {
             
             Section(header: Text("Partner")) {
                 NavigationLink(destination: LazyDestination {
-                    InfluencerRegistrationView()
+                    AffiliateRegistrationView()
                 }) {
-                    Label("Become an Influencer", systemImage: "person.2")
+                    Label("Become an Affiliate", systemImage: "person.2")
                 }
             }
         }

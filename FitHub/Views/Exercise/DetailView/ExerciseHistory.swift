@@ -15,16 +15,16 @@ struct ExerciseHistory: View {
     var body: some View {
         VStack {
             HStack {
-                Text("Sort by").bold()
-                    .padding(.trailing)
-                Picker("", selection: $selectedSortOption) {
+                Text("Sort by")
+                    .bold()
+                Picker("Sort by", selection: $selectedSortOption) {
                     ForEach(CompletedExerciseSortOption.allCases, id: \.self) { option in
                         Text(option.rawValue).tag(option)
                     }
                 }
                 .pickerStyle(MenuPickerStyle())
-                .padding(.trailing)
             }
+            .centerHorizontally()
             
             ScrollView {
                 if sortedExercise.isEmpty {

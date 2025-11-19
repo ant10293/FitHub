@@ -99,6 +99,8 @@
 		65A0D1D72E3AF28A008466D8 /* ExerciseSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1D62E3AF28A008466D8 /* ExerciseSelector.swift */; };
 		65A4D9672ECC0A2C0055D561 /* SimilarExercisesRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4D9662ECC0A2C0055D561 /* SimilarExercisesRow.swift */; };
 		65A4D9692ECD24D00055D561 /* AdjustmentImageUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4D9682ECD24D00055D561 /* AdjustmentImageUpload.swift */; };
+		65A4D96B2ECE59150055D561 /* ReferralStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4D96A2ECE59150055D561 /* ReferralStats.swift */; };
+		65A4D96D2ECE5A290055D561 /* StripeConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4D96C2ECE5A290055D561 /* StripeConnect.swift */; };
 		65AB47F12EA043B9001BEAFE /* LabelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47F02EA043B9001BEAFE /* LabelButton.swift */; };
 		65AB47F52EA31362001BEAFE /* WarningFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47F42EA31362001BEAFE /* WarningFooter.swift */; };
 		65AB47F72EA342B4001BEAFE /* ExerciseHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47F62EA342B4001BEAFE /* ExerciseHistory.swift */; };
@@ -246,10 +248,10 @@
 		65DD05112EB979F7000D159C /* ReferralCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD050E2EB979F7000D159C /* ReferralCodeGenerator.swift */; };
 		65DD05122EB979F7000D159C /* ReferralPurchaseTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD050F2EB979F7000D159C /* ReferralPurchaseTracker.swift */; };
 		65DD05132EB979F7000D159C /* AdminScript_GenerateCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD050D2EB979F7000D159C /* AdminScript_GenerateCodes.swift */; };
-		65DD051A2EB97C86000D159C /* InfluencerRegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05182EB97C86000D159C /* InfluencerRegistrationView.swift */; };
+		65DD051A2EB97C86000D159C /* AffiliateRegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05182EB97C86000D159C /* AffiliateRegistrationView.swift */; };
 		65DD051C2EB9BB8A000D159C /* ReferralCodeRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051B2EB9BB8A000D159C /* ReferralCodeRetriever.swift */; };
-		65DD051F2EBBED1D000D159C /* InfluencerInfoForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051D2EBBED1D000D159C /* InfluencerInfoForm.swift */; };
-		65DD05202EBBED1D000D159C /* InfluencerSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051E2EBBED1D000D159C /* InfluencerSettingsView.swift */; };
+		65DD051F2EBBED1D000D159C /* AffiliateInfoForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051D2EBBED1D000D159C /* AffiliateInfoForm.swift */; };
+		65DD05202EBBED1D000D159C /* AffiliateSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051E2EBBED1D000D159C /* AffiliateSettingsView.swift */; };
 		65DD05222EBC06B6000D159C /* ReferralValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05212EBC06B6000D159C /* ReferralValidation.swift */; };
 		65DD05282EBC6C53000D159C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65DD05272EBC6C53000D159C /* StoreKit.framework */; };
 		65DD052A2EBEF0CC000D159C /* PaymentFrequency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05292EBEF0CC000D159C /* PaymentFrequency.swift */; };
@@ -373,6 +375,8 @@
 		65A0D1D62E3AF28A008466D8 /* ExerciseSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSelector.swift; sourceTree = "<group>"; };
 		65A4D9662ECC0A2C0055D561 /* SimilarExercisesRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarExercisesRow.swift; sourceTree = "<group>"; };
 		65A4D9682ECD24D00055D561 /* AdjustmentImageUpload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustmentImageUpload.swift; sourceTree = "<group>"; };
+		65A4D96A2ECE59150055D561 /* ReferralStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralStats.swift; sourceTree = "<group>"; };
+		65A4D96C2ECE5A290055D561 /* StripeConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnect.swift; sourceTree = "<group>"; };
 		65AB47F02EA043B9001BEAFE /* LabelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelButton.swift; sourceTree = "<group>"; };
 		65AB47F42EA31362001BEAFE /* WarningFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningFooter.swift; sourceTree = "<group>"; };
 		65AB47F62EA342B4001BEAFE /* ExerciseHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseHistory.swift; sourceTree = "<group>"; };
@@ -521,10 +525,10 @@
 		65DD050D2EB979F7000D159C /* AdminScript_GenerateCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminScript_GenerateCodes.swift; sourceTree = "<group>"; };
 		65DD050E2EB979F7000D159C /* ReferralCodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralCodeGenerator.swift; sourceTree = "<group>"; };
 		65DD050F2EB979F7000D159C /* ReferralPurchaseTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralPurchaseTracker.swift; sourceTree = "<group>"; };
-		65DD05182EB97C86000D159C /* InfluencerRegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfluencerRegistrationView.swift; sourceTree = "<group>"; };
+		65DD05182EB97C86000D159C /* AffiliateRegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateRegistrationView.swift; sourceTree = "<group>"; };
 		65DD051B2EB9BB8A000D159C /* ReferralCodeRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralCodeRetriever.swift; sourceTree = "<group>"; };
-		65DD051D2EBBED1D000D159C /* InfluencerInfoForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfluencerInfoForm.swift; sourceTree = "<group>"; };
-		65DD051E2EBBED1D000D159C /* InfluencerSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfluencerSettingsView.swift; sourceTree = "<group>"; };
+		65DD051D2EBBED1D000D159C /* AffiliateInfoForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateInfoForm.swift; sourceTree = "<group>"; };
+		65DD051E2EBBED1D000D159C /* AffiliateSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateSettingsView.swift; sourceTree = "<group>"; };
 		65DD05212EBC06B6000D159C /* ReferralValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralValidation.swift; sourceTree = "<group>"; };
 		65DD05272EBC6C53000D159C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		65DD05292EBEF0CC000D159C /* PaymentFrequency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFrequency.swift; sourceTree = "<group>"; };
@@ -1073,7 +1077,6 @@
 		65CD3BE72DD3C84F00C2B671 /* Reusable */ = {
 			isa = PBXGroup;
 			children = (
-				65DD05472EC6940D000D159C /* Authentication */,
 				65DD05342EC02A20000D159C /* Card */,
 				65DD052D2EBFE881000D159C /* Label */,
 				65E199D42E99D78200682415 /* Background */,
@@ -1187,7 +1190,8 @@
 				65CD3C1C2DD3C84F00C2B671 /* StatsView.swift */,
 				65CD3C1E2DD3C84F00C2B671 /* UserProfileView.swift */,
 				65CD3BFA2DD3C84F00C2B671 /* Setup */,
-				65DD05192EB97C86000D159C /* Influencer */,
+				65DD05192EB97C86000D159C /* Affiliate */,
+				65DD05472EC6940D000D159C /* Authentication */,
 				653BF8AB2E5AC732005A07EA /* PlateVisualization */,
 				6531362C2E53FB7600EECCA5 /* Editor */,
 				6531362B2E53FB2500EECCA5 /* Subscription */,
@@ -1259,14 +1263,16 @@
 			path = DetailView;
 			sourceTree = "<group>";
 		};
-		65DD05192EB97C86000D159C /* Influencer */ = {
+		65DD05192EB97C86000D159C /* Affiliate */ = {
 			isa = PBXGroup;
 			children = (
-				65DD051D2EBBED1D000D159C /* InfluencerInfoForm.swift */,
-				65DD051E2EBBED1D000D159C /* InfluencerSettingsView.swift */,
-				65DD05182EB97C86000D159C /* InfluencerRegistrationView.swift */,
+				65DD051D2EBBED1D000D159C /* AffiliateInfoForm.swift */,
+				65DD051E2EBBED1D000D159C /* AffiliateSettingsView.swift */,
+				65DD05182EB97C86000D159C /* AffiliateRegistrationView.swift */,
+				65A4D96A2ECE59150055D561 /* ReferralStats.swift */,
+				65A4D96C2ECE5A290055D561 /* StripeConnect.swift */,
 			);
-			path = Influencer;
+			path = Affiliate;
 			sourceTree = "<group>";
 		};
 		65DD05262EBC6C53000D159C /* Frameworks */ = {
@@ -1570,8 +1576,8 @@
 				65DD05352EC02A20000D159C /* MeasurementCard.swift in Sources */,
 				65CD3C5F2DD3C84F00C2B671 /* OverloadSettings.swift in Sources */,
 				653BF8AA2E5AB284005A07EA /* DataHelpers.swift in Sources */,
-				65DD051F2EBBED1D000D159C /* InfluencerInfoForm.swift in Sources */,
-				65DD05202EBBED1D000D159C /* InfluencerSettingsView.swift in Sources */,
+				65DD051F2EBBED1D000D159C /* AffiliateInfoForm.swift in Sources */,
+				65DD05202EBBED1D000D159C /* AffiliateSettingsView.swift in Sources */,
 				65817F3E2E49B9E900437560 /* PremiumStore.swift in Sources */,
 				65CD3C602DD3C84F00C2B671 /* PlannedWorkoutTime.swift in Sources */,
 				65DC3C542DEA200A00B3D128 /* ExerciseRow.swift in Sources */,
@@ -1592,7 +1598,7 @@
 				65CD3C682DD3C84F00C2B671 /* DetailsView.swift in Sources */,
 				65AB47F72EA342B4001BEAFE /* ExerciseHistory.swift in Sources */,
 				65CD3C692DD3C84F00C2B671 /* GoalSelectionView.swift in Sources */,
-				65DD051A2EB97C86000D159C /* InfluencerRegistrationView.swift in Sources */,
+				65DD051A2EB97C86000D159C /* AffiliateRegistrationView.swift in Sources */,
 				6548AB8B2DDAFB0200BD9DAD /* SortSettings.swift in Sources */,
 				65CD3C6A2DD3C84F00C2B671 /* HealthKitRequestView.swift in Sources */,
 				65C5DC5D2DEFB65000B09AD2 /* Exercise.swift in Sources */,
@@ -1644,6 +1650,7 @@
 				65CD3C752DD3C84F00C2B671 /* Questionnaire.swift in Sources */,
 				65CD3C762DD3C84F00C2B671 /* SimilarExercisesView.swift in Sources */,
 				653136292E53F92900EECCA5 /* ExerciseInfo.swift in Sources */,
+				65A4D96B2ECE59150055D561 /* ReferralStats.swift in Sources */,
 				65CD3C772DD3C84F00C2B671 /* TrainerView.swift in Sources */,
 				65CD3C782DD3C84F00C2B671 /* WeekWorkout.swift in Sources */,
 				65CD3C792DD3C84F00C2B671 /* WorkoutGeneration.swift in Sources */,
@@ -1690,6 +1697,7 @@
 				6548AB892DDAB68A00BD9DAD /* InfoBanner.swift in Sources */,
 				65C5DC652DEFBAEC00B09AD2 /* SetDetail.swift in Sources */,
 				65039B842E837B0D007A31E1 /* SetLoad.swift in Sources */,
+				65A4D96D2ECE5A290055D561 /* StripeConnect.swift in Sources */,
 				65CFBFA12E1DEED900CD521E /* AdjustmentsSection.swift in Sources */,
 				65039B702E81D940007A31E1 /* Length.swift in Sources */,
 				65CD3C852DD3C84F00C2B671 /* WorkoutsView.swift in Sources */,

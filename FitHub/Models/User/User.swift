@@ -30,6 +30,7 @@ struct PhysicalStats: Codable {
     var fats: Double = 0.0
     var proteins: Double = 0.0
     var height: Length = .init(cm: 0)
+    // TODO: should be a single dict, not current & past
     var currentMeasurements: [MeasurementType: Measurement] = [:]
     var pastMeasurements: [MeasurementType: [Measurement]] = [:]
 }
@@ -95,11 +96,11 @@ struct Settings: Codable, Equatable {
     var hideUnequippedExercises: Bool = false // hide exercises that the user DOES NOT have equipment for in exercise selection or or exercise view
     var hideDifficultExercises: Bool = false // hide exercises that would be too difficult for the user
     var hideDislikedExercises: Bool = false // hide exercises that the user has disliked
-    var hiddenExercises: Set<UUID> = []
+    //var hiddenExercises: Set<Exercise.ID> = []
     var hideRpeSlider: Bool = false
     var hideCompletedInput: Bool = false
     var hideExerciseImage: Bool = false
-    // var monthlyStrengthUpdate: Bool = true
+    //var monthlyStrengthUpdate: Bool = true
 }
 
 // evaluation       = Evaluation()
@@ -111,7 +112,7 @@ struct Evaluation: Codable {
     var isFamiliarWithGym: Bool = false // change this after certain number of completed workouts, or allow manual change
     var strengths: [Muscle: StrengthLevel]?
     var weaknesses: [Muscle: StrengthLevel]?
-    var equipmentSelected: [UUID] = []
+    var equipmentSelected: [UUID] = [] // TODO: should be a set, not array
     var favoriteExercises: Set<Exercise.ID> = []
     var dislikedExercises: Set<Exercise.ID> = []
     var availablePlates: WeightPlates = WeightPlates()
@@ -124,7 +125,7 @@ struct SessionTracking: Codable, Equatable {
     var workoutStreak: Int = 0
     var longestWorkoutStreak: Int = 0
     var selectedView: GraphView = .exercisePerformance
-    var selectedExercise: UUID?
+    var selectedExercise: Exercise.ID?
     var selectedMeasurement: MeasurementType = .weight
     var activeWorkout: WorkoutInProgress?
     var exerciseSortOption: ExerciseSortOption = .moderate
@@ -138,6 +139,5 @@ struct WorkoutPlans: Codable, Equatable {
     var archivedTemplates: [WorkoutTemplate] = []
     var workoutsCreationDate: Date?
     var workoutsStartDate: Date?
-    var generatedWeeksWorkout: Bool = false // TODO: remove
     var completedWorkouts: [CompletedWorkout] = []
 }
