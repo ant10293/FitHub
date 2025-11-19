@@ -219,6 +219,13 @@ struct AffiliateRegistrationView: View {
     }
     
     private func loadAffiliateInfo(showStatsLoader: Bool = true) async {
+        func resetStatsForError(codeNotFound: Bool) {
+            isLoadingStats = false
+            codeStats      = nil
+            stripeStatus   = .empty
+            self.codeNotFound = codeNotFound
+        }
+        
         guard let code = generatedCode else { return }
 
         if showStatsLoader { isLoadingStats = true }
@@ -240,26 +247,18 @@ struct AffiliateRegistrationView: View {
             await MainActor.run {
                 switch error {
                 case .codeNotFound:
-                    self.resetStatsForError(codeNotFound: true)
+                    resetStatsForError(codeNotFound: true)
                     self.stripeConnectKey += 1
 
                 case .databaseUnavailable, .malformedDocument:
-                    self.resetStatsForError(codeNotFound: false)
+                    resetStatsForError(codeNotFound: false)
                 }
             }
         } catch {
             await MainActor.run {
-                self.resetStatsForError(codeNotFound: false)
+                resetStatsForError(codeNotFound: false)
             }
         }
-    }
-    
-    @MainActor
-    private func resetStatsForError(codeNotFound: Bool) {
-        isLoadingStats = false
-        codeStats      = nil
-        stripeStatus   = .empty
-        self.codeNotFound = codeNotFound
     }
     
     // MARK: - Computed Properties
