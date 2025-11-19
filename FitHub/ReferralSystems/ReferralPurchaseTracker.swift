@@ -4,16 +4,17 @@
 //
 //  Tracks when users with referral codes purchase subscriptions
 //  Call this after a successful subscription purchase
+//  Uses Cloud Function for server-side validation and atomic updates
 //
 
 import Foundation
 import FirebaseAuth
-import FirebaseFirestore
+import FirebaseFunctions
+import StoreKit
 
 /// Tracks subscription purchases for referral code attribution
+/// Uses Cloud Function for server-side validation to prevent manipulation
 final class ReferralPurchaseTracker {
-    private let db = Firestore.firestore()
-    
     /// Call this after a successful subscription purchase
     /// - Parameters:
     ///   - productID: The product ID that was purchased (monthly, yearly, lifetime)
@@ -21,106 +22,183 @@ final class ReferralPurchaseTracker {
     ///   - originalTransactionID: The original transaction ID (used to link Apple webhooks to users)
     ///   - environment: The transaction environment ("Production" or "Sandbox")
     func trackPurchase(productID: String, transactionID: UInt64, originalTransactionID: UInt64, environment: String) async {
+        // Ensure referral code is claimed first
         await ReferralAttributor().claimIfNeeded()
         
         // Must be signed in
-        guard let userId = AuthService.getUid() else {
+        guard AuthService.getUid() != nil else {
             print("⚠️ Cannot track referral purchase: user not authenticated")
             return
         }
         
-        // Get referral code (from UserDefaults or Firestore)
-        guard let code = await ReferralRetriever.getClaimedCode() else {
-            print("ℹ️ No referral code claimed, skipping purchase tracking")
+        // Validate product ID
+        let subscriptionType = PremiumStore.ID.membershipType(for: productID)
+        guard subscriptionType != .free else {
+            print("ℹ️ Not a premium product, skipping purchase tracking")
             return
         }
         
+        // Validate transaction before tracking
+        guard await validateTransaction(transactionID: transactionID, originalTransactionID: originalTransactionID, productID: productID) else {
+            print("⚠️ Transaction validation failed, skipping purchase tracking")
+            return
+        }
+        
+        // Use Cloud Function for server-side validation and atomic tracking
+        let functions = Functions.functions()
+        let trackFunction = functions.httpsCallable("trackReferralPurchase")
+        
         do {
-            // Get referral code info
-            let codeRef = db.collection("referralCodes").document(code.uppercased())
-            let codeDoc = try await codeRef.getDocument()
+            let result = try await trackFunction.call([
+                "productID": productID,
+                "transactionID": String(transactionID),
+                "originalTransactionID": String(originalTransactionID),
+                "environment": environment
+            ])
             
-            guard codeDoc.exists else {
-                print("⚠️ Referral code not found: \(code)")
-                return
+            // Parse response
+            if let data = result.data as? [String: Any],
+               let success = data["success"] as? Bool, success {
+                // Check if purchase was tracked on another account
+                if let trackedOnOtherAccount = data["trackedOnOtherAccount"] as? Bool, trackedOnOtherAccount {
+                    let originalAccountId = data["originalAccountId"] as? String ?? "unknown account"
+                    let trackedProductID = data["productID"] as? String ?? productID
+                    let message = data["message"] as? String ?? "This subscription is already associated with another account."
+                    
+                    print("ℹ️ \(message)")
+                    print("   Product: \(trackedProductID)")
+                    print("   Tracked on account: \(originalAccountId)")
+                } else {
+                    // Normal tracking success
+                    let alreadyTracked = data["alreadyTracked"] as? Bool ?? false
+                    let referralCode = data["referralCode"] as? String ?? "unknown"
+                    
+                    if alreadyTracked {
+                        print("ℹ️ Purchase already tracked for product: \(productID)")
+                    } else {
+                        print("✅ Successfully tracked \(subscriptionType.rawValue) purchase for referral code: \(referralCode)")
+                    }
+                }
+            } else {
+                print("⚠️ Unexpected response from trackReferralPurchase")
             }
             
-            // Determine subscription type for compensation tracking
-            let subscriptionType = PremiumStore.ID.membershipType(for: productID)
+        } catch {
+            // Handle Firebase Functions errors
+            let nsError = error as NSError
+            let errorMessage = nsError.localizedDescription
             
-            guard subscriptionType != .free else { return }
-            
-            // Check if this purchase was already tracked
-            let userRef = db.collection("users").document(userId)
-            let userDoc = try await userRef.getDocument()
-            
-            if let existingPurchaseProductID = userDoc.data()?["referralPurchaseProductID"] as? String,
-               existingPurchaseProductID == productID {
-                print("ℹ️ Purchase already tracked for product: \(productID)")
-                return
+            if nsError.domain.contains("Functions") || nsError.domain.contains("functions") {
+                let errorCode = nsError.userInfo["code"] as? String ?? ""
+                let errorDetails = nsError.userInfo["NSLocalizedDescription"] as? String ?? errorMessage
+                
+                if errorCode == "failed-precondition" || errorMessage.contains("no referral code") {
+                    print("ℹ️ User has no referral code, skipping purchase tracking")
+                } else if errorCode == "not-found" || errorMessage.contains("not found") {
+                    print("⚠️ Referral code not found")
+                } else if errorCode == "invalid-argument" || errorMessage.contains("Invalid") {
+                    print("⚠️ Invalid purchase data: \(errorMessage)")
+                } else if errorCode == "unauthenticated" || errorMessage.contains("authenticated") {
+                    print("⚠️ User not authenticated")
+                } else {
+                    print("❌ Failed to track referral purchase: \(errorMessage)")
+                    print("   Error code: \(nsError.code), Domain: \(nsError.domain)")
+                    print("   Details: \(errorDetails)")
+                }
+            } else {
+                print("❌ Failed to track referral purchase: \(errorMessage)")
+                print("   Error code: \(nsError.code), Domain: \(nsError.domain)")
             }
+        }
+    }
+    
+    /// Validates that a transaction exists, belongs to the current user, and hasn't been refunded
+    /// - Parameters:
+    ///   - transactionID: The StoreKit transaction ID to validate
+    ///   - originalTransactionID: The original transaction ID to validate
+    ///   - productID: The expected product ID
+    /// - Returns: true if transaction is valid, false otherwise
+    private func validateTransaction(transactionID: UInt64, originalTransactionID: UInt64, productID: String) async -> Bool {
+        do {
+            // Look up the transaction in StoreKit
+            // First check current entitlements (most common case for recent purchases)
+            var foundTransaction: StoreKit.Transaction?
             
-            // Get the user's current subscription type (if any) to remove from old active array
-            let currentSubscriptionType = PremiumStore.ID.membershipType(for: userDoc.data()?["referralPurchaseProductID"] as? String)
-            
-            // Perform the tracking in a batch
-            let batch = db.batch()
-            
-            // 1. Update referral code document - track purchases by type
-            var updateData: [String: Any] = ["lastPurchaseAt": FieldValue.serverTimestamp()]
-            
-            // Remove user from old active subscription array (if they had a different subscription)
-            if currentSubscriptionType != .free && currentSubscriptionType != subscriptionType {
-                switch currentSubscriptionType {
-                case .monthly:
-                    updateData["activeMonthlySubscriptions"] = FieldValue.arrayRemove([userId])
-                case .yearly:
-                    updateData["activeAnnualSubscriptions"] = FieldValue.arrayRemove([userId])
-                case .free, .lifetime:
+            // Search through all current entitlements
+            for await result in StoreKit.Transaction.currentEntitlements {
+                guard case .verified(let transaction) = result else { continue }
+                
+                // Check if this is the transaction we're looking for
+                if transaction.id == transactionID {
+                    foundTransaction = transaction
+                    break
+                }
+                
+                // Also check original transaction ID
+                if transaction.originalID == originalTransactionID && transaction.productID == productID {
+                    foundTransaction = transaction
                     break
                 }
             }
             
-            // Add to the appropriate array based on subscription type
-            // Also add to active subscriptions (assumed active on purchase)
-            switch subscriptionType {
-            case .monthly:
-                updateData["monthlyPurchasedBy"] = FieldValue.arrayUnion([userId])
-                updateData["activeMonthlySubscriptions"] = FieldValue.arrayUnion([userId])
-            case .yearly:
-                updateData["annualPurchasedBy"] = FieldValue.arrayUnion([userId])
-                updateData["activeAnnualSubscriptions"] = FieldValue.arrayUnion([userId])
-            case .lifetime:
-                updateData["lifetimePurchasedBy"] = FieldValue.arrayUnion([userId])
-                updateData["activeLifetimeSubscriptions"] = FieldValue.arrayUnion([userId])
-            case .free:
-                break
+            // If not found in current entitlements, check all transactions as fallback
+            if foundTransaction == nil {
+                for await result in StoreKit.Transaction.all {
+                    guard case .verified(let transaction) = result else { continue }
+                    
+                    // Check if this is the transaction we're looking for
+                    if transaction.id == transactionID {
+                        foundTransaction = transaction
+                        break
+                    }
+                    
+                    // Also check original transaction ID
+                    if transaction.originalID == originalTransactionID && transaction.productID == productID {
+                        foundTransaction = transaction
+                        break
+                    }
+                }
             }
             
-            batch.updateData(updateData, forDocument: codeRef)
+            // Validate transaction exists
+            guard let transaction = foundTransaction else {
+                print("⚠️ Transaction \(transactionID) not found in StoreKit")
+                return false
+            }
             
-            // 2. Update user document to mark that they purchased
-            // CRITICAL: Store originalTransactionID so webhooks can link back to user
-            batch.updateData([
-                "referralCodeUsedForPurchase": true,
-                "referralPurchaseDate": FieldValue.serverTimestamp(),
-                "referralPurchaseProductID": productID,
-                "subscriptionStatus": [
-                    "originalTransactionID": String(originalTransactionID),
-                    "transactionID": String(transactionID),
-                    "productID": productID,
-                    "isActive": true,  // Assume active on purchase
-                    "lastValidatedAt": FieldValue.serverTimestamp(),
-                    "environment": environment  // "Production", "Sandbox", or "XCODE" (XCODE won't receive webhooks)
-                ]
-            ], forDocument: userRef)
+            // Validate product ID matches
+            guard transaction.productID == productID else {
+                print("⚠️ Transaction product ID mismatch: expected \(productID), got \(transaction.productID)")
+                return false
+            }
             
-            try await batch.commit()
+            // Validate transaction hasn't been refunded
+            if let revocationDate = transaction.revocationDate {
+                print("⚠️ Transaction \(transactionID) was refunded on \(revocationDate)")
+                return false
+            }
             
-            print("✅ Successfully tracked \(subscriptionType.rawValue) purchase for referral code: \(code)")
+            // Validate original transaction ID matches
+            guard transaction.originalID == originalTransactionID else {
+                print("⚠️ Original transaction ID mismatch: expected \(originalTransactionID), got \(transaction.originalID)")
+                return false
+            }
             
-        } catch {
-            print("❌ Failed to track referral purchase: \(error.localizedDescription)")
+            // Additional validation: Check if transaction is still valid (not expired for subscriptions)
+            if PremiumStore.ID.isSubscription(productID) {
+                if let expirationDate = transaction.expirationDate {
+                    if expirationDate < Date() {
+                        print("⚠️ Transaction \(transactionID) has expired on \(expirationDate)")
+                        // Note: We might still want to track expired subscriptions for historical purposes
+                        // But we'll log a warning
+                        print("ℹ️ Tracking expired subscription for historical purposes")
+                    }
+                }
+            }
+            
+            print("✅ Transaction validation passed for transaction \(transactionID)")
+            return true
+            
         }
     }
 }

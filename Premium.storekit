@@ -102,7 +102,7 @@
           ],
           "displayPrice" : "29.99",
           "familyShareable" : false,
-          "groupNumber" : 2,
+          "groupNumber" : 1,
           "internalID" : "6749919859",
           "introductoryOffer" : null,
           "localizations" : [
@@ -130,7 +130,7 @@
           ],
           "displayPrice" : "3.99",
           "familyShareable" : false,
-          "groupNumber" : 1,
+          "groupNumber" : 2,
           "internalID" : "6749919881",
           "introductoryOffer" : null,
           "localizations" : [

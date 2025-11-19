@@ -71,7 +71,7 @@ struct Setup: Codable {
 // settings         = Settings()
 struct Settings: Codable, Equatable {
     var restTimerEnabled: Bool = true
-    var allowedNotifications: Bool = false
+    var allowedNotifications: Bool = true
     var allowedCredentials: Bool = false
     var progressiveOverload: Bool = true
     var allowDeloading: Bool = true
@@ -96,7 +96,7 @@ struct Settings: Codable, Equatable {
     var hideDifficultExercises: Bool = false // hide exercises that would be too difficult for the user
     var hideDislikedExercises: Bool = false // hide exercises that the user has disliked
     var hiddenExercises: Set<UUID> = []
-    var hideRpeSlider: Bool = false // TODO: Implement
+    var hideRpeSlider: Bool = false
     var hideCompletedInput: Bool = false
     var hideExerciseImage: Bool = false
     // var monthlyStrengthUpdate: Bool = true

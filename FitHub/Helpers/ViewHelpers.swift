@@ -157,13 +157,15 @@ struct TrailingIconButtonModifier: ViewModifier {
     func body(content: Content) -> some View {
         HStack {
             content
-            Spacer()
-            Button(action: action) {
-                Image(systemName: systemName)
-                    .foregroundStyle(.secondary)
-                    .contentShape(Rectangle())
+            if isShowing {
+                Spacer()
+                Button(action: action) {
+                    Image(systemName: systemName)
+                        .foregroundStyle(.secondary)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
         }
     }
 }

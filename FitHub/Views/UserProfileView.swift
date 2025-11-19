@@ -108,6 +108,11 @@ struct UserProfileView: View {
                     }
                     .onAppear(perform: populateDrafts)
                 } else {
+                    let maxW  = UIScreen.main.bounds.width
+                    let maxH  = UIScreen.main.bounds.height
+                    let btnW  = maxW * 0.75          // 75 % of screen width
+                    let btnH  = maxH * 0.075         // ≈ 7.5 % of screen height
+
                     // MARK: — Not logged in
                     VStack {
                         Text("Please sign in to continue")
@@ -116,7 +121,8 @@ struct UserProfileView: View {
                         
                         AuthProviderButtons(
                             userData: ctx.userData,
-                            buttonHeight: UIScreen.main.bounds.height * 0.08,
+                            buttonWidth: btnW,
+                            buttonHeight: btnH,
                             onSuccess: {
                                 alertMessage = "Sign in successful"
                                 ctx.toast.showSaveConfirmation(duration: 2.0)

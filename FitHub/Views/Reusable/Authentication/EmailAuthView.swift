@@ -347,10 +347,7 @@ struct EmailAuthView: View {
             Text(email)
                 .font(.headline)
                 .textSelection(.disabled)
-                .trailingIconButton(
-                    systemName: "lock.fill",
-                    action: { isPasswordVisible.toggle() }
-                )
+                .trailingIconButton(systemName: "lock.fill")
         } header: {
             Text("EMAIL")
                 .font(.caption)
@@ -374,7 +371,8 @@ struct EmailAuthView: View {
             }
         }
         .trailingIconButton(
-            systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill"
+            systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill",
+            action: { isPasswordVisible.toggle() }
         )
     }
     

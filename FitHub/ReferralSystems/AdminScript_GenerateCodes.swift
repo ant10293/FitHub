@@ -157,7 +157,7 @@ final class ReferralCodeAdmin: ObservableObject {
         return (code, email, pMethod, notes, stats, stripe)
     }
     
-    private func loadAffiliateInfo(from codeData: [String: Any]?) -> (code: String, email: String, pMethod: String, notes: String) {
+    func loadAffiliateInfo(from codeData: [String: Any]?) -> (code: String, email: String, pMethod: String, notes: String) {
         guard let data = codeData else { return ("", "", "", "") }
 
         let code    = data["code"] as? String ?? ""
@@ -168,7 +168,7 @@ final class ReferralCodeAdmin: ObservableObject {
         return (code, email, pMethod, notes)
     }
 
-    private func loadStripeStatus(from codeData: [String: Any]?) -> StripeAffiliateStatus {
+    func loadStripeStatus(from codeData: [String: Any]?) -> StripeAffiliateStatus {
         guard let data = codeData else { return .empty }
 
         let accountId = data["stripeAccountId"] as? String
@@ -206,16 +206,6 @@ final class ReferralCodeAdmin: ObservableObject {
             lastUsedAt: (data["lastUsedAt"] as? Timestamp)?.dateValue(),
             lastPurchaseAt: (data["lastPurchaseAt"] as? Timestamp)?.dateValue()
         )
-    }
-    
-    /// Lists all referral codes
-    func listAllCodes() async throws -> [[String: Any]] {
-        let snapshot = try await db.collection("referralCodes").getDocuments()
-        return snapshot.documents.map { doc in
-            var data = doc.data()
-            data["id"] = doc.documentID
-            return data
-        }
     }
     
     /// Checks if an email is already used by another referral code

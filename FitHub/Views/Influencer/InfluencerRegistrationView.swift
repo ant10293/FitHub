@@ -217,43 +217,72 @@ struct InfluencerRegistrationView: View {
         // Load referral code from profile (already loaded after sign-in)
         if let existingCode = ctx.userData.profile.referralCode, !existingCode.isEmpty {
             generatedCode = existingCode
-            // Load email from Firestore for this code
-            loadAffiliateAndStats()
-        }
-    }
-    
-    private func loadAffiliateAndStats(showStatsLoader: Bool = true) {
-        guard let code = generatedCode else { return }
-
-        if showStatsLoader { isLoadingStats = true }
-        stripeErrorMessage = nil
-
-        Task {
-            do {
-                // one Firestore hit → everything
-                let result = try await admin.getData(code)
-
-                await MainActor.run {
-                    // affiliate fields
-                    self.email = result.email
-                    self.notes = result.notes
-                    //self.generatedCode = result.code
-
-                    // stats
-                    self.codeStats = result.stats
-                    self.stripeStatus = result.stripe
-
-                    self.isLoadingStats = false
-                }
-            } catch {
-                await MainActor.run {
-                    self.isLoadingStats = false
-                    self.stripeStatus = .empty
-                    print("Failed to load affiliate/stats for code \(code): \(error)")
-                }
+            // Load affiliate info, stats, and Stripe status
+            Task {
+                await loadAffiliateInfo()
+                await loadCodeStats()
+                await loadStripeStatus()
             }
         }
     }
+    
+    private func loadAffiliateInfo() async {
+        guard let code = generatedCode else { return }
+
+        do {
+            let codeData = try await admin.getCodeData(code)
+            let (_, email, _, notes) = admin.loadAffiliateInfo(from: codeData)
+
+            await MainActor.run {
+                self.email = email
+                self.notes = notes
+            }
+        } catch {
+            print("Failed to load affiliate info for code \(code): \(error)")
+        }
+    }
+    
+    private func loadCodeStats() async {
+        guard let code = generatedCode else { return }
+
+        await MainActor.run {
+            isLoadingStats = true
+        }
+
+        do {
+            let codeData = try await admin.getCodeData(code)
+            let stats = try await admin.loadReferralInfo(codeData: codeData)
+
+            await MainActor.run {
+                self.codeStats = stats
+                self.isLoadingStats = false
+            }
+        } catch {
+            await MainActor.run {
+                self.isLoadingStats = false
+                print("Failed to load stats: \(error)")
+            }
+        }
+    }
+    
+    private func loadStripeStatus() async {
+        guard let code = generatedCode else { return }
+
+        do {
+            let codeData = try await admin.getCodeData(code)
+            let stripe = admin.loadStripeStatus(from: codeData)
+
+            await MainActor.run {
+                self.stripeStatus = stripe
+            }
+        } catch {
+            await MainActor.run {
+                self.stripeStatus = .empty
+                print("Failed to load Stripe status: \(error)")
+            }
+        }
+    }
+    
     
     // MARK: - Computed Properties
     
@@ -414,7 +443,9 @@ struct InfluencerRegistrationView: View {
     }
 
     private func refreshStripeStatus() {
-        loadAffiliateAndStats(showStatsLoader: false)
+        Task {
+            await loadStripeStatus()
+        }
     }
 
     private func generateCode() {
@@ -458,10 +489,16 @@ struct InfluencerRegistrationView: View {
                 await MainActor.run {
                     generatedCode = code
                     ctx.userData.profile.referralCode = code
-                    loadAffiliateAndStats()
                     isGenerating = false
                     showSuccess = true
                 }
+                
+                // Load affiliate info first
+                await loadAffiliateInfo()
+                
+                // Then load stats and Stripe status
+                await loadCodeStats()
+                await loadStripeStatus()
             } catch {
                 await MainActor.run {
                     isGenerating = false

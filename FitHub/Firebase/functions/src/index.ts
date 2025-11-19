@@ -24,6 +24,362 @@ export const checkUserExists = functions.https.onCall(async (data) => {
   }
 });
 
+/**
+ * Cloud Function to claim a referral code with server-side validation
+ * Validates code exists, is active, and user hasn't already claimed a code
+ * Uses Firestore transaction for atomicity
+ */
+export const claimReferralCode = functions.https.onCall(async (data, context) => {
+  // Verify authentication
+  if (!context.auth) {
+    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated");
+  }
+
+  const userId = context.auth.uid;
+  const referralCode = typeof data?.referralCode === "string" 
+    ? data.referralCode.trim().toUpperCase() 
+    : "";
+
+  if (!referralCode) {
+    throw new functions.https.HttpsError("invalid-argument", "Referral code is required");
+  }
+
+  // Validate code format (basic validation - 4-20 alphanumeric characters)
+  if (referralCode.length < 4 || referralCode.length > 20 || !/^[A-Z0-9]+$/.test(referralCode)) {
+    throw new functions.https.HttpsError("invalid-argument", "Invalid referral code format");
+  }
+
+  const db = admin.firestore();
+  const codeRef = db.collection("referralCodes").doc(referralCode);
+  const userRef = db.collection("users").doc(userId);
+
+  try {
+    // Use transaction to ensure atomicity
+    const result = await db.runTransaction(async (transaction) => {
+      // 1. Check if code exists and is active
+      const codeDoc = await transaction.get(codeRef);
+      if (!codeDoc.exists) {
+        // Throw a regular error - transaction will abort
+        throw new Error("REFERRAL_CODE_NOT_FOUND");
+      }
+
+      const codeData = codeDoc.data()!;
+      if (codeData.isActive !== true) {
+        throw new Error("REFERRAL_CODE_INACTIVE");
+      }
+
+      // 2. Check if user already has a referral code
+      const userDoc = await transaction.get(userRef);
+      const userData = userDoc.data();
+      
+      if (userData?.referralCode) {
+        // If they already have this code, return success (idempotent)
+        if (String(userData.referralCode).toUpperCase() === referralCode) {
+          return { success: true, referralCode: referralCode, alreadyClaimed: true };
+        }
+        // If they have a different code, throw error
+        throw new Error("USER_ALREADY_HAS_CODE");
+      }
+
+      // 3. Perform the claim atomically
+      // Use set with merge in case user document doesn't exist yet
+      transaction.set(userRef, {
+        referralCode: referralCode,
+        referralCodeClaimedAt: admin.firestore.FieldValue.serverTimestamp(),
+        referralSource: data.source || "manual_entry"
+      }, { merge: true });
+
+      transaction.update(codeRef, {
+        lastUsedAt: admin.firestore.FieldValue.serverTimestamp(),
+        usedBy: admin.firestore.FieldValue.arrayUnion(userId)
+      });
+
+      return { success: true, referralCode: referralCode, alreadyClaimed: false };
+    });
+
+    return result;
+  } catch (error: any) {
+    // Handle transaction errors
+    if (error.message === "REFERRAL_CODE_NOT_FOUND") {
+      throw new functions.https.HttpsError("not-found", "Referral code not found");
+    }
+    if (error.message === "REFERRAL_CODE_INACTIVE") {
+      throw new functions.https.HttpsError("failed-precondition", "Referral code is not active");
+    }
+    if (error.message === "USER_ALREADY_HAS_CODE") {
+      throw new functions.https.HttpsError("already-exists", "User already has a referral code");
+    }
+    
+    // If it's already an HttpsError, re-throw it
+    if (error instanceof functions.https.HttpsError) {
+      throw error;
+    }
+    
+    // Log the actual error for debugging
+    console.error("Error claiming referral code:", error);
+    console.error("Error stack:", error.stack);
+    console.error("Error message:", error.message);
+    
+    // Return a more descriptive internal error
+    throw new functions.https.HttpsError(
+      "internal", 
+      `Failed to claim referral code: ${error.message || String(error)}`
+    );
+  }
+});
+
+/**
+ * Cloud Function to track referral purchase with server-side validation
+ * Validates transaction, prevents duplicates, and atomically updates referral code and user documents
+ */
+export const trackReferralPurchase = functions.https.onCall(async (data, context) => {
+  // Verify authentication
+  if (!context.auth) {
+    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated");
+  }
+
+  const userId = context.auth.uid;
+  const productID = typeof data?.productID === "string" ? data.productID : "";
+  const transactionID = typeof data?.transactionID === "number" ? String(data.transactionID) : 
+                        typeof data?.transactionID === "string" ? data.transactionID : "";
+  const originalTransactionID = typeof data?.originalTransactionID === "number" ? String(data.originalTransactionID) :
+                                typeof data?.originalTransactionID === "string" ? data.originalTransactionID : "";
+  const environment = typeof data?.environment === "string" ? data.environment : "Production";
+
+  if (!productID || !originalTransactionID) {
+    throw new functions.https.HttpsError("invalid-argument", "productID and originalTransactionID are required");
+  }
+
+  // Validate product ID format
+  const validProductIDs = ["com.FitHub.premium.monthly", "com.FitHub.premium.yearly", "com.FitHub.premium.lifetime"];
+  if (!validProductIDs.includes(productID)) {
+    throw new functions.https.HttpsError("invalid-argument", "Invalid product ID");
+  }
+
+  const db = admin.firestore();
+  const userRef = db.collection("users").doc(userId);
+
+  try {
+    // CRITICAL: Check if this originalTransactionID already belongs to a different user
+    // This prevents the same transaction from being tracked on multiple accounts
+    // (which can happen when using the same Apple ID for sandbox testing)
+    // This check must be done OUTSIDE the transaction because transactions can't do queries
+    const existingUsersSnapshot = await db
+      .collection("users")
+      .where("subscriptionStatus.originalTransactionID", "==", originalTransactionID)
+      .get();
+    
+    // Check if another user already has this transaction
+    // Collect users that need cleanup (deleted accounts) vs users that should block (active accounts)
+    const usersToCleanup: Array<{ userId: string; referralCode?: string; productID?: string }> = [];
+    
+    for (const existingUserDoc of existingUsersSnapshot.docs) {
+      const existingUserId = existingUserDoc.id;
+      if (existingUserId !== userId) {
+        // Another user already has this originalTransactionID
+        // Check if the existing user's Firebase Auth account still exists
+        try {
+          await admin.auth().getUser(existingUserId);
+          // User still exists - subscription belongs to them
+          console.log(`Transaction ${originalTransactionID} already tracked for user ${existingUserId}. Purchase will be tracked on original account.`);
+          
+          // Return success with info that it was tracked on another account
+          // This is not an error - the purchase was successfully tracked, just on a different account
+          // Note: We return the productID being purchased (not the existing account's productID)
+          // because the webhook will update the existing account's subscription to this new productID
+          return {
+            success: true,
+            trackedOnOtherAccount: true,
+            originalAccountId: existingUserId,
+            productID: productID, // The product ID being purchased (will be tracked on original account)
+            message: `This subscription is already associated with another account. The referral purchase will be tracked on the original account.`
+          };
+        } catch (authError: any) {
+          // If auth error is "user not found", the original account was deleted
+          // In that case, we can allow the transfer and clean up orphaned data
+          if (authError.code === "auth/user-not-found") {
+            console.log(`Original user ${existingUserId} no longer exists. Allowing transfer to ${userId}.`);
+            const existingUserData = existingUserDoc.data();
+            usersToCleanup.push({
+              userId: existingUserId,
+              referralCode: existingUserData?.referralCode,
+              productID: existingUserData?.referralPurchaseProductID
+            });
+          } else {
+            // Some other auth error - reject to be safe
+            throw new functions.https.HttpsError(
+              "already-exists",
+              "This subscription is already associated with another account."
+            );
+          }
+        }
+      }
+    }
+
+    // Use transaction to ensure atomicity and prevent race conditions
+    const result = await db.runTransaction(async (transaction) => {
+      // Clean up orphaned data from deleted users
+      for (const cleanup of usersToCleanup) {
+        console.log(`Cleaning up orphaned subscription data from deleted user ${cleanup.userId}`);
+        
+        if (cleanup.referralCode) {
+          const existingCode = String(cleanup.referralCode).toUpperCase();
+          const existingCodeRef = db.collection("referralCodes").doc(existingCode);
+          const existingCodeDoc = await transaction.get(existingCodeRef);
+          if (existingCodeDoc.exists) {
+            // Remove from appropriate active array
+            if (cleanup.productID?.includes("monthly")) {
+              transaction.update(existingCodeRef, {
+                activeMonthlySubscriptions: admin.firestore.FieldValue.arrayRemove(cleanup.userId)
+              });
+            } else if (cleanup.productID?.includes("yearly") || cleanup.productID?.includes("annual")) {
+              transaction.update(existingCodeRef, {
+                activeAnnualSubscriptions: admin.firestore.FieldValue.arrayRemove(cleanup.userId)
+              });
+            }
+          }
+        }
+      }
+
+      // 1. Get user document to check referral code and existing purchase
+      const userDoc = await transaction.get(userRef);
+      const userData = userDoc.data();
+
+      // Check if user has a referral code
+      if (!userData?.referralCode) {
+        throw new Error("USER_NO_REFERRAL_CODE");
+      }
+
+      const referralCode = String(userData.referralCode).toUpperCase();
+      const codeRef = db.collection("referralCodes").doc(referralCode);
+
+      // Check if code exists
+      const codeDoc = await transaction.get(codeRef);
+      if (!codeDoc.exists) {
+        throw new Error("REFERRAL_CODE_NOT_FOUND");
+      }
+
+      // Check if this purchase was already tracked (prevent duplicates)
+      const existingProductID = userData.referralPurchaseProductID;
+      if (existingProductID === productID) {
+        // Already tracked for this product - return success (idempotent)
+        return { success: true, alreadyTracked: true, referralCode: referralCode };
+      }
+
+      // Determine subscription type
+      let subscriptionType: "monthly" | "yearly" | "lifetime";
+      let purchasedArray: string;
+      let activeArray: string;
+
+      if (productID.includes("monthly")) {
+        subscriptionType = "monthly";
+        purchasedArray = "monthlyPurchasedBy";
+        activeArray = "activeMonthlySubscriptions";
+      } else if (productID.includes("yearly") || productID.includes("annual")) {
+        subscriptionType = "yearly";
+        purchasedArray = "annualPurchasedBy";
+        activeArray = "activeAnnualSubscriptions";
+      } else if (productID.includes("lifetime")) {
+        subscriptionType = "lifetime";
+        purchasedArray = "lifetimePurchasedBy";
+        activeArray = "activeLifetimeSubscriptions";
+      } else {
+        throw new Error("INVALID_PRODUCT_TYPE");
+      }
+
+      // Get current subscription type to remove from old active array if switching
+      let currentSubscriptionType: "monthly" | "yearly" | "lifetime" | null = null;
+      if (existingProductID) {
+        if (existingProductID.includes("monthly")) {
+          currentSubscriptionType = "monthly";
+        } else if (existingProductID.includes("yearly") || existingProductID.includes("annual")) {
+          currentSubscriptionType = "yearly";
+        } else if (existingProductID.includes("lifetime")) {
+          currentSubscriptionType = "lifetime";
+        }
+      }
+
+      // Prepare referral code updates
+      const codeUpdates: any = {
+        lastPurchaseAt: admin.firestore.FieldValue.serverTimestamp()
+      };
+
+      // Remove from old active subscription array if switching subscriptions
+      if (currentSubscriptionType && currentSubscriptionType !== subscriptionType) {
+        switch (currentSubscriptionType) {
+          case "monthly":
+            codeUpdates.activeMonthlySubscriptions = admin.firestore.FieldValue.arrayRemove(userId);
+            break;
+          case "yearly":
+            codeUpdates.activeAnnualSubscriptions = admin.firestore.FieldValue.arrayRemove(userId);
+            break;
+          case "lifetime":
+            // Lifetime doesn't have active array updates
+            break;
+        }
+      }
+
+      // Add to appropriate arrays
+      codeUpdates[purchasedArray] = admin.firestore.FieldValue.arrayUnion(userId);
+      codeUpdates[activeArray] = admin.firestore.FieldValue.arrayUnion(userId);
+
+      // Update referral code document
+      transaction.update(codeRef, codeUpdates);
+
+      // Update user document
+      transaction.set(userRef, {
+        referralCodeUsedForPurchase: true,
+        referralPurchaseDate: admin.firestore.FieldValue.serverTimestamp(),
+        referralPurchaseProductID: productID,
+        subscriptionStatus: {
+          originalTransactionID: originalTransactionID,
+          transactionID: transactionID || originalTransactionID,
+          productID: productID,
+          isActive: true, // Assume active on purchase
+          lastValidatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          environment: environment
+        }
+      }, { merge: true });
+
+      return { 
+        success: true, 
+        alreadyTracked: false, 
+        referralCode: referralCode,
+        subscriptionType: subscriptionType
+      };
+    });
+
+    return result;
+  } catch (error: any) {
+    // Handle transaction errors
+    if (error.message === "USER_NO_REFERRAL_CODE") {
+      throw new functions.https.HttpsError("failed-precondition", "User has no referral code");
+    }
+    if (error.message === "REFERRAL_CODE_NOT_FOUND") {
+      throw new functions.https.HttpsError("not-found", "Referral code not found");
+    }
+    if (error.message === "INVALID_PRODUCT_TYPE") {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid product type");
+    }
+
+    // If it's already an HttpsError, re-throw it
+    if (error instanceof functions.https.HttpsError) {
+      throw error;
+    }
+
+    // Log the actual error for debugging
+    console.error("Error tracking referral purchase:", error);
+    console.error("Error stack:", error.stack);
+    console.error("Error message:", error.message);
+
+    // Return a more descriptive internal error
+    throw new functions.https.HttpsError(
+      "internal",
+      `Failed to track referral purchase: ${error.message || String(error)}`
+    );
+  }
+});
+
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const stripeApiVersion = process.env.STRIPE_API_VERSION as Stripe.StripeConfig["apiVersion"];
@@ -90,10 +446,6 @@ const getAppStoreConfig = (): AppStoreConfig => {
     bundleId,
     appAppleId,
   };
-};
-
-const getAppStoreAPI = (): AppStoreServerAPIClient => {
-  return getAppStoreAPIForEnvironment(Environment.PRODUCTION);
 };
 
 const getAppStoreAPIForEnvironment = (environment: Environment): AppStoreServerAPIClient => {
@@ -194,10 +546,11 @@ export const handleAppStoreNotification = functions.https.onRequest(async (req, 
     console.log(`Processing notification for transaction: ${originalTransactionId} (${detectedEnvironment})`);
 
     // Find user by matching originalTransactionID in their subscriptionStatus
+    // Note: In sandbox testing, the same Apple ID can be used by multiple Firebase accounts
+    // We'll update all matching users, but typically there should only be one
     const usersSnapshot = await admin.firestore()
       .collection("users")
       .where("subscriptionStatus.originalTransactionID", "==", String(originalTransactionId))
-      .limit(1)
       .get();
 
     if (usersSnapshot.empty) {
@@ -207,23 +560,37 @@ export const handleAppStoreNotification = functions.https.onRequest(async (req, 
       return;
     }
 
-    const userId = usersSnapshot.docs[0].id;
-    console.log(`Found user ${userId} for transaction ${originalTransactionId}`);
-
-    // Update subscription status based on notification type
-      const appStoreAPI = getAppStoreAPIForEnvironment(detectedEnvironment);
-    await updateSubscriptionStatus(
-      userId,
-      originalTransactionId,
-      notificationType,
-      appStoreAPI,
-      detectedEnvironment,
-      signedRenewalInfo,
-      transactionInfo ?? undefined
-    );
+    // Update all users with this originalTransactionID
+    // (In production, there should typically only be one, but we handle multiple for safety)
+    const appStoreAPI = getAppStoreAPIForEnvironment(detectedEnvironment);
     
-    // Update referral code active subscriptions
-    await updateReferralCodeSubscriptions(userId);
+    for (const userDoc of usersSnapshot.docs) {
+      const userId = userDoc.id;
+      console.log(`Found user ${userId} for transaction ${originalTransactionId}`);
+      
+      try {
+        // Update subscription status based on notification type
+        await updateSubscriptionStatus(
+          userId,
+          originalTransactionId,
+          notificationType,
+          appStoreAPI,
+          detectedEnvironment,
+          signedRenewalInfo,
+          transactionInfo ?? undefined
+        );
+        
+        // Update referral code active subscriptions
+        await updateReferralCodeSubscriptions(userId);
+      } catch (error) {
+        console.error(`Error updating subscription for user ${userId}:`, error);
+        // Continue with other users even if one fails
+      }
+    }
+    
+    if (usersSnapshot.size > 1) {
+      console.warn(`⚠️ Multiple users (${usersSnapshot.size}) found for transaction ${originalTransactionId}. This may indicate cross-account tracking issue.`);
+    }
 
     res.status(200).send("OK");
   } catch (error) {
@@ -328,9 +695,11 @@ async function updateSubscriptionStatus(
 
 /**
  * Updates the referral code's active subscription arrays based on user's current status
+ * Also handles subscription type changes (e.g., monthly -> annual)
  */
 async function updateReferralCodeSubscriptions(userId: string): Promise<void> {
-  const userDoc = await admin.firestore().collection("users").doc(userId).get();
+  const userRef = admin.firestore().collection("users").doc(userId);
+  const userDoc = await userRef.get();
   const userData = userDoc.data();
   
   if (!userData?.referralCode) {
@@ -347,6 +716,7 @@ async function updateReferralCodeSubscriptions(userId: string): Promise<void> {
 
   const productID = subscriptionStatus.productID;
   const isActive = subscriptionStatus.isActive;
+  const oldProductID = userData.referralPurchaseProductID;
   
   // Determine which arrays to update based on product ID
   let activeArray: string;
@@ -366,28 +736,147 @@ async function updateReferralCodeSubscriptions(userId: string): Promise<void> {
     return;
   }
   
-  const updates: any = {};
+  // Determine old arrays if subscription type changed
+  let oldActiveArray: string | null = null;
+  if (oldProductID && oldProductID !== productID) {
+    if (oldProductID.includes("monthly")) {
+      oldActiveArray = "activeMonthlySubscriptions";
+    } else if (oldProductID.includes("yearly") || oldProductID.includes("annual")) {
+      oldActiveArray = "activeAnnualSubscriptions";
+    } else if (oldProductID.includes("lifetime")) {
+      oldActiveArray = "activeLifetimeSubscriptions";
+    }
+  }
   
+  const codeUpdates: any = {};
+  const userUpdates: any = {};
+  
+  // If subscription type changed, remove from old active array
+  if (oldActiveArray && oldActiveArray !== activeArray) {
+    codeUpdates[oldActiveArray] = admin.firestore.FieldValue.arrayRemove(userId);
+    console.log(`Removing user ${userId} from ${oldActiveArray} (subscription changed from ${oldProductID} to ${productID})`);
+  }
+  
+  // Update current subscription arrays
   if (isActive) {
     // Add to active array if not already there
-    updates[activeArray] = admin.firestore.FieldValue.arrayUnion(userId);
+    codeUpdates[activeArray] = admin.firestore.FieldValue.arrayUnion(userId);
   } else {
     // Remove from active array
-    updates[activeArray] = admin.firestore.FieldValue.arrayRemove(userId);
+    codeUpdates[activeArray] = admin.firestore.FieldValue.arrayRemove(userId);
   }
   
   // Ensure user is in purchased array (they purchased at some point)
-  updates[purchasedArray] = admin.firestore.FieldValue.arrayUnion(userId);
-  updates.lastValidationAt = admin.firestore.FieldValue.serverTimestamp();
+  codeUpdates[purchasedArray] = admin.firestore.FieldValue.arrayUnion(userId);
+  codeUpdates.lastValidationAt = admin.firestore.FieldValue.serverTimestamp();
   
-  await codeRef.update(updates);
+  // Update user's referralPurchaseProductID if it changed
+  if (oldProductID !== productID) {
+    userUpdates.referralPurchaseProductID = productID;
+    userUpdates.referralPurchaseDate = admin.firestore.FieldValue.serverTimestamp();
+    console.log(`Updating user ${userId} referralPurchaseProductID from ${oldProductID} to ${productID}`);
+  }
+  
+  // Perform updates in a batch
+  const batch = admin.firestore().batch();
+  batch.update(codeRef, codeUpdates);
+  if (Object.keys(userUpdates).length > 0) {
+    batch.update(userRef, userUpdates);
+  }
+  await batch.commit();
   
   console.log(`Updated referral code ${referralCode} subscriptions for user ${userId}`);
 }
 
 /**
+ * Retry helper with exponential backoff
+ */
+async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  initialDelayMs: number = 1000
+): Promise<T> {
+  let lastError: any;
+  
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
+      
+      // Don't retry on the last attempt
+      if (attempt === maxRetries) {
+        break;
+      }
+      
+      // Calculate delay with exponential backoff
+      const delayMs = initialDelayMs * Math.pow(2, attempt);
+      console.log(`Retry attempt ${attempt + 1}/${maxRetries} after ${delayMs}ms delay`);
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+  
+  throw lastError;
+}
+
+/**
+ * Track validation failure in Firestore for monitoring
+ */
+async function trackValidationFailure(
+  userId: string,
+  error: any,
+  originalTransactionId: string
+): Promise<void> {
+  try {
+    const errorMessage = error?.message || String(error);
+    const errorCode = error?.code || "UNKNOWN";
+    
+    await admin.firestore().collection("users").doc(userId).update({
+      "subscriptionStatus.lastValidationError": errorMessage,
+      "subscriptionStatus.lastValidationErrorAt": admin.firestore.FieldValue.serverTimestamp(),
+      "subscriptionStatus.validationFailureCount": admin.firestore.FieldValue.increment(1),
+    });
+    
+    // Also log to a separate collection for monitoring
+    await admin.firestore().collection("validationFailures").add({
+      userId,
+      originalTransactionId,
+      errorMessage,
+      errorCode,
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      retryable: isRetryableError(error),
+    });
+  } catch (trackingError) {
+    // Don't fail validation if tracking fails
+    console.error("Failed to track validation failure:", trackingError);
+  }
+}
+
+/**
+ * Check if an error is retryable (network errors, rate limits, etc.)
+ */
+function isRetryableError(error: any): boolean {
+  const errorMessage = String(error?.message || error).toLowerCase();
+  const errorCode = String(error?.code || "").toLowerCase();
+  
+  // Retry on network errors, rate limits, and temporary server errors
+  return (
+    errorMessage.includes("network") ||
+    errorMessage.includes("timeout") ||
+    errorMessage.includes("rate limit") ||
+    errorMessage.includes("too many requests") ||
+    errorCode === "429" || // Too Many Requests
+    errorCode === "503" || // Service Unavailable
+    errorCode === "500" || // Internal Server Error
+    errorCode === "502" || // Bad Gateway
+    errorCode === "504"    // Gateway Timeout
+  );
+}
+
+/**
  * Daily scheduled function to validate all subscriptions
  * Runs at 2 AM UTC every day as a backup to webhooks
+ * Includes retry logic and failure tracking
  */
 export const validateAllSubscriptions = functions.pubsub
   .schedule("0 2 * * *")
@@ -403,6 +892,7 @@ export const validateAllSubscriptions = functions.pubsub
     
     let validatedCount = 0;
     let errorCount = 0;
+    const failedUserIds: string[] = [];
     
     for (const codeDoc of codesSnapshot.docs) {
       const codeData = codeDoc.data();
@@ -417,23 +907,81 @@ export const validateAllSubscriptions = functions.pubsub
       // Remove duplicates
       const uniqueUserIds = [...new Set(allUserIds)];
       
-      // Validate each user's subscription
+      // Validate each user's subscription with retry logic
       for (const userId of uniqueUserIds) {
         try {
-          await validateUserSubscription(userId);
+          await retryWithBackoff(
+            () => validateUserSubscription(userId),
+            3, // max 3 retries
+            2000 // start with 2 second delay
+          );
           validatedCount++;
+          
+          // Clear previous validation errors on success
+          try {
+            await admin.firestore().collection("users").doc(userId).update({
+              "subscriptionStatus.lastValidationError": admin.firestore.FieldValue.delete(),
+              "subscriptionStatus.validationFailureCount": admin.firestore.FieldValue.delete(),
+            });
+          } catch (clearError) {
+            // Don't fail if clearing errors fails
+            console.warn(`Failed to clear validation errors for user ${userId}:`, clearError);
+          }
         } catch (error) {
-          console.error(`Error validating subscription for user ${userId}:`, error);
           errorCount++;
+          failedUserIds.push(userId);
+          
+          const userDoc = await admin.firestore().collection("users").doc(userId).get();
+          const userData = userDoc.data();
+          const originalTransactionId = userData?.subscriptionStatus?.originalTransactionID || "unknown";
+          
+          await trackValidationFailure(userId, error, originalTransactionId);
+          
+          // Log error with context
+          console.error(`Failed to validate subscription for user ${userId} after retries:`, {
+            error: error instanceof Error ? error.message : String(error),
+            originalTransactionId,
+            retryable: isRetryableError(error),
+          });
         }
       }
     }
     
-    console.log(`Daily validation complete: ${validatedCount} validated, ${errorCount} errors`);
+    // Log summary
+    const summary = {
+      totalCodes: codesSnapshot.size,
+      validated: validatedCount,
+      errors: errorCount,
+      failedUsers: failedUserIds.length,
+    };
+    
+    console.log(`Daily validation complete:`, summary);
+    
+    // Alert if error rate is high (>10% failures)
+    const totalValidations = validatedCount + errorCount;
+    if (totalValidations > 0) {
+      const errorRate = (errorCount / totalValidations) * 100;
+      if (errorRate > 10) {
+        console.error(`⚠️ HIGH VALIDATION ERROR RATE: ${errorRate.toFixed(2)}% (${errorCount}/${totalValidations})`);
+        // In production, you might want to send an alert here (e.g., via email, Slack, etc.)
+      }
+    }
+    
+    // Store summary in Firestore for monitoring
+    try {
+      await admin.firestore().collection("validationRuns").add({
+        ...summary,
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        failedUserIds: failedUserIds.slice(0, 100), // Store up to 100 failed user IDs
+      });
+    } catch (summaryError) {
+      console.error("Failed to store validation summary:", summaryError);
+    }
   });
 
 /**
  * Validates a single user's subscription status
+ * Improved with environment detection and better error handling
  */
 async function validateUserSubscription(userId: string): Promise<void> {
   const userDoc = await admin.firestore().collection("users").doc(userId).get();
@@ -444,13 +992,29 @@ async function validateUserSubscription(userId: string): Promise<void> {
   }
   
   const originalTransactionId = userData.subscriptionStatus.originalTransactionID;
+  const environment = userData.subscriptionStatus.environment || "Production";
   
   try {
-    const appStoreAPI = getAppStoreAPI();
-    const statusResponse = await appStoreAPI.getAllSubscriptionStatuses(originalTransactionId);
+    // Detect environment from subscription status or default to Production
+    const detectedEnvironment = environment === "Sandbox" 
+      ? Environment.SANDBOX 
+      : Environment.PRODUCTION;
+    
+    const appStoreAPI = getAppStoreAPIForEnvironment(detectedEnvironment);
+    
+    // Add timeout to prevent hanging requests
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Validation timeout after 30 seconds")), 30000);
+    });
+    
+    const statusResponse = await Promise.race([
+      appStoreAPI.getAllSubscriptionStatuses(originalTransactionId),
+      timeoutPromise,
+    ]) as any;
     
     if (!statusResponse.data || statusResponse.data.length === 0) {
-      console.warn(`No subscription status found for transaction ${originalTransactionId}`);
+      console.warn(`No subscription status found for transaction ${originalTransactionId} (user ${userId})`);
+      // Don't throw - this might be a valid case (refunded subscription, etc.)
       return;
     }
     
@@ -466,23 +1030,60 @@ async function validateUserSubscription(userId: string): Promise<void> {
     }
     
     if (!matchingTransaction) {
-      console.warn(`No matching transaction found for ${originalTransactionId}`);
+      console.warn(`No matching transaction found for ${originalTransactionId} (user ${userId})`);
+      // Don't throw - transaction might have been deleted or refunded
       return;
     }
     
     const status = matchingTransaction.status;
     const isActive = status === 1;
     
+    // Get expiration date if available
+    let expiresAt: admin.firestore.Timestamp | null = null;
+    if (matchingTransaction.signedTransactionInfo) {
+      try {
+        const verifier = makeSignedDataVerifier(detectedEnvironment);
+        const transactionInfo = await verifier.verifyAndDecodeTransaction(
+          matchingTransaction.signedTransactionInfo
+        );
+        if (transactionInfo.expiresDate) {
+          expiresAt = admin.firestore.Timestamp.fromDate(new Date(transactionInfo.expiresDate));
+        }
+      } catch (decodeError) {
+        console.warn(`Could not decode transaction info for user ${userId}:`, decodeError);
+      }
+    }
+    
     // Update user's subscription status
-    await admin.firestore().collection("users").doc(userId).update({
+    const updateData: any = {
       "subscriptionStatus.isActive": isActive,
       "subscriptionStatus.lastValidatedAt": admin.firestore.FieldValue.serverTimestamp(),
-    });
+      "subscriptionStatus.environment": environment,
+    };
+    
+    if (expiresAt) {
+      updateData["subscriptionStatus.expiresAt"] = expiresAt;
+    }
+    
+    await admin.firestore().collection("users").doc(userId).update(updateData);
     
     // Update referral code active subscriptions
     await updateReferralCodeSubscriptions(userId);
+    
+    console.log(`✅ Successfully validated subscription for user ${userId}: active=${isActive}`);
   } catch (error) {
-    console.error(`Error validating subscription for user ${userId}:`, error);
+    // Categorize error for better handling
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const isRetryable = isRetryableError(error);
+    
+    console.error(`Error validating subscription for user ${userId}:`, {
+      error: errorMessage,
+      originalTransactionId,
+      environment,
+      retryable: isRetryable,
+    });
+    
+    // Re-throw to allow retry logic in caller
     throw error;
   }
 }
