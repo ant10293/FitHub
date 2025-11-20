@@ -1,12 +1,17 @@
 import * as functions from "firebase-functions/v1";
 import * as admin from "firebase-admin";
+import { rateLimitCall, RateLimits } from "./utils/rateLimiter";
 
 /**
  * Cloud Function to claim a referral code with server-side validation
  * Validates code exists, is active, and user hasn't already claimed a code
  * Uses Firestore transaction for atomicity
+ * Rate limited: 5 requests per minute per user
  */
 export const claimReferralCode = functions.https.onCall(async (data, context) => {
+  // Apply rate limiting (throws if exceeded)
+  await rateLimitCall(context, RateLimits.CLAIM_REFERRAL_CODE);
+
   // Verify authentication
   if (!context.auth) {
     throw new functions.https.HttpsError("unauthenticated", "User must be authenticated");
@@ -104,5 +109,6 @@ export const claimReferralCode = functions.https.onCall(async (data, context) =>
     );
   }
 });
+
 
 

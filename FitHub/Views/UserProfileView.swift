@@ -2,7 +2,6 @@ import SwiftUI
 import AuthenticationServices
 import FirebaseAuth
 
-// FIXME: sign-in success closes this view
 struct UserProfileView: View {
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var authService = AuthService.shared
@@ -117,7 +116,6 @@ struct UserProfileView: View {
                     VStack {
                         Text("Please sign in to continue")
                             .font(.title)
-                            .padding()
                         
                         AuthProviderButtons(
                             userData: ctx.userData,
@@ -132,7 +130,7 @@ struct UserProfileView: View {
                                 ctx.toast.showSaveConfirmation(duration: 2.0)
                             }
                         )
-                        .padding(.horizontal)
+                        .padding()
                     }
                 }
             }

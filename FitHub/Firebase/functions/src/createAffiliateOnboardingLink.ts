@@ -1,22 +1,19 @@
 import * as functions from "firebase-functions/v1";
 import * as admin from "firebase-admin";
+import { authenticateRequest, extractDataPayload } from "./utils/requestHelpers";
+import { normalizeReferralCode, getReferralCodeRecord, assertUserOwnsReferralCode } from "./utils/referralCodeHelpers";
 import {
-  authenticateRequest,
-  extractDataPayload,
-  normalizeReferralCode,
-  getReferralCodeRecord,
-  assertUserOwnsReferralCode,
   ensureStripeAccountForAffiliate,
   getStripeClient,
-  requireEnv,
-  respondSuccess,
-  handleFunctionError,
   STRIPE_ONBOARDING_RETURN_URL,
   STRIPE_ONBOARDING_REFRESH_URL,
-} from "./utils/shared";
+} from "./utils/stripeHelpers";
+import { requireEnv, respondSuccess, handleFunctionError } from "./utils/httpHelpers";
+import { rateLimitRequest, RateLimits } from "./utils/rateLimiter";
 
 /**
  * Stripe Connect integration for affiliate payouts
+ * Rate limited: 5 requests per hour per user
  */
 export const createAffiliateOnboardingLink = functions.https.onRequest(async (req, res) => {
   if (req.method !== "POST") {
@@ -25,7 +22,11 @@ export const createAffiliateOnboardingLink = functions.https.onRequest(async (re
   }
 
   try {
+    // Authenticate first (needed for user-based rate limiting)
     const decodedToken = await authenticateRequest(req);
+    
+    // Apply rate limiting (throws if exceeded)
+    await rateLimitRequest(req, RateLimits.AFFILIATE_ONBOARDING, async () => decodedToken.uid);
     const payload = extractDataPayload(req.body);
     const referralCode = normalizeReferralCode(payload.referralCode);
     const requestedCountry = typeof payload.country === "string" ? payload.country : undefined;
@@ -64,5 +65,6 @@ export const createAffiliateOnboardingLink = functions.https.onRequest(async (re
     handleFunctionError(res, error);
   }
 });
+
 
 

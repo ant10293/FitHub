@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
 import { Environment } from "@apple/app-store-server-library";
-import { getAppStoreAPIForEnvironment, makeSignedDataVerifier } from "./shared";
+import { getAppStoreAPIForEnvironment, makeSignedDataVerifier } from "./appStoreHelpers";
 import { updateReferralCodeSubscriptions } from "./subscriptionHelpers";
 
 /**
@@ -196,5 +196,6 @@ export async function validateUserSubscription(userId: string): Promise<void> {
     throw error;
   }
 }
+
 
 

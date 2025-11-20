@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
 import { AppStoreServerAPIClient, Environment, SignedDataVerifier } from "@apple/app-store-server-library";
-import { makeSignedDataVerifier } from "./shared";
+import { makeSignedDataVerifier } from "./appStoreHelpers";
 
 /**
  * Updates the user's subscription status in Firestore

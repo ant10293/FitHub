@@ -226,7 +226,10 @@ struct SubscriptionView: View {
         // Double-guard: never allow downgrades
         guard PremiumStore.MembershipType.from(productID: id) >= currentMembership else { return }
 
-        Task { await ctx.store.buy(product: product) }
+        // Ensure purchase is called on main actor with proper view context
+        Task { @MainActor in
+            await ctx.store.buy(product: product)
+        }
     }
 
     private func manageSubscriptions(openURL: OpenURLAction) {

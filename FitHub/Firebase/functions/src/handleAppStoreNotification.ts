@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions/v1";
 import * as admin from "firebase-admin";
 import { Environment } from "@apple/app-store-server-library";
-import { getAppStoreAPIForEnvironment, makeSignedDataVerifier } from "./utils/shared";
+import { getAppStoreAPIForEnvironment, makeSignedDataVerifier } from "./utils/appStoreHelpers";
 import { updateSubscriptionStatus, updateReferralCodeSubscriptions } from "./utils/subscriptionHelpers";
 
 /**
@@ -130,5 +130,6 @@ export const handleAppStoreNotification = functions.https.onRequest(async (req, 
     res.status(200).send("Error logged");
   }
 });
+
 
 

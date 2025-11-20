@@ -55,6 +55,7 @@ final class PremiumStore: ObservableObject {
     private let entitlementCacheKey = "FitHub.lastKnownEntitlement"
     private let membershipCacheKey = "FitHub.lastKnownMembershipType"
     private let lastValidationKey = "FitHub.lastEntitlementValidation"
+    private let lastExpirationKey = "FitHub.lastKnownExpiration"
     private var foregroundObserver: NSObjectProtocol?
 
     init(appAccountToken: UUID? = nil) {
@@ -217,27 +218,42 @@ final class PremiumStore: ObservableObject {
 
             switch result {
             case .success(let verification):
-                let transaction = try verify(verification)
-                
-                // Track referral purchase if user has a referral code
-                Task {
-                    await ReferralPurchaseTracker().trackPurchase(
-                        productID: product.id,
-                        transactionID: transaction.id,
-                        originalTransactionID: transaction.originalID,
-                        environment: transaction.environment.rawValue
-                    )
+                do {
+                    let transaction = try verify(verification)
+                    
+                    // Track referral purchase if user has a referral code (non-blocking)
+                    // Note: trackPurchase handles errors internally and doesn't throw
+                    Task {
+                        await ReferralPurchaseTracker().trackPurchase(
+                            productID: product.id,
+                            transactionID: transaction.id,
+                            originalTransactionID: transaction.originalID,
+                            environment: transaction.environment.rawValue
+                        )
+                    }
+                    
+                    await transaction.finish()
+                    await refreshEntitlementWithRetry()
+                } catch {
+                    // Transaction verification failed
+                    errorMessage = PurchaseErrorHandler.handleVerificationError(error)
+                    // Still try to refresh entitlement in case it works
+                    await refreshEntitlementWithRetry()
                 }
-                
-                await transaction.finish()
-                await refreshEntitlementWithRetry()
-            case .userCancelled, .pending:
+            case .userCancelled:
+                // User cancelled - no error message needed
                 break
+            case .pending:
+                // Purchase is pending (e.g., waiting for approval)
+                errorMessage = "Your purchase is pending approval. You'll be notified when it's complete."
             @unknown default:
-                break
+                errorMessage = "Purchase completed with unknown status. Please check your subscription status."
             }
         } catch {
-            errorMessage = error.localizedDescription
+            // Handle purchase errors with user-friendly messages
+            if let message = PurchaseErrorHandler.handlePurchaseError(error) {
+                errorMessage = message
+            }
             // Retry entitlement refresh on purchase error
             await refreshEntitlementWithRetry()
         }
@@ -275,7 +291,7 @@ final class PremiumStore: ObservableObject {
             // Centralized ordering
             products = ID.displayOrder.compactMap { id in fetched.first(where: { $0.id == id }) }
         } catch {
-            errorMessage = "Failed to load products: \(error.localizedDescription)"
+            errorMessage = PurchaseErrorHandler.handleProductLoadingError(error)
         }
     }
 
@@ -428,22 +444,30 @@ final class PremiumStore: ObservableObject {
     
     /// Falls back to cached entitlement when validation fails
     private func fallbackToCachedEntitlement() {
-        if let cached = lastKnownEntitlement {
+        // Helper to check if subscription expired
+        func isExpired() -> Bool {
+            if let source = lastKnownEntitlement?.source,
+               case .subscription(let expiration, _, _) = source {
+                return expiration < Date()
+            }
+            if let expiration = userDefaults.object(forKey: lastExpirationKey) as? Date {
+                return expiration < Date()
+            }
+            return false
+        }
+        
+        if let cached = lastKnownEntitlement, cached.isPremium, !isExpired() {
             entitlement = cached
             membershipType = lastKnownMembershipType
             print("✅ [PremiumStore] Restored cached entitlement: \(membershipType)")
+        } else if let lastValidation = userDefaults.object(forKey: lastValidationKey) as? Date,
+                  Date().timeIntervalSince(lastValidation) < 1800, // 30 min grace period
+                  lastKnownMembershipType != .free,
+                  !isExpired() {
+            print("⚠️ [PremiumStore] Using grace period - keeping premium status")
+            entitlement = .init(isPremium: true, source: nil)
+            membershipType = lastKnownMembershipType
         } else {
-            // No cache available - check if we should be more conservative
-            // If user was premium recently, keep them premium for grace period
-            if let lastValidation = userDefaults.object(forKey: lastValidationKey) as? Date,
-               Date().timeIntervalSince(lastValidation) < 3600 { // 1 hour grace period
-                // Keep last known state if validation was recent
-                if membershipType != .free {
-                    print("⚠️ [PremiumStore] Using grace period - keeping premium status")
-                    return
-                }
-            }
-            // No cache and grace period expired - set to free
             entitlement = .init(isPremium: false, source: nil)
             membershipType = .free
         }
@@ -458,8 +482,17 @@ final class PremiumStore: ObservableObject {
         // Cache membership type as string
         userDefaults.set(membershipType.rawValue, forKey: membershipCacheKey)
         
-        // Note: We don't cache full entitlement as it contains dates/IDs that may change
-        // The membership type is sufficient for fallback
+        // Cache expiration date if available (for grace period validation)
+        if let source = entitlement.source,
+           case .subscription(let expiration, _, _) = source {
+            userDefaults.set(expiration, forKey: lastExpirationKey)
+        } else if entitlement.isPremium && membershipType == .lifetime {
+            // Lifetime subscriptions don't expire - set a far future date
+            userDefaults.set(Date.distantFuture, forKey: lastExpirationKey)
+        } else {
+            // No expiration or free tier - remove stored expiration
+            userDefaults.removeObject(forKey: lastExpirationKey)
+        }
     }
     
     /// Loads cached entitlement on startup

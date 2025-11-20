@@ -1,11 +1,16 @@
 import * as functions from "firebase-functions/v1";
 import * as admin from "firebase-admin";
+import { rateLimitCall, RateLimits } from "./utils/rateLimiter";
 
 /**
  * Cloud Function to track referral purchase with server-side validation
  * Validates transaction, prevents duplicates, and atomically updates referral code and user documents
+ * Rate limited: 10 requests per minute per user
  */
 export const trackReferralPurchase = functions.https.onCall(async (data, context) => {
+  // Apply rate limiting (throws if exceeded)
+  await rateLimitCall(context, RateLimits.TRACK_PURCHASE);
+
   // Verify authentication
   if (!context.auth) {
     throw new functions.https.HttpsError("unauthenticated", "User must be authenticated");
@@ -252,5 +257,6 @@ export const trackReferralPurchase = functions.https.onCall(async (data, context
     );
   }
 });
+
 
 

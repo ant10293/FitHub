@@ -1,21 +1,21 @@
 import * as functions from "firebase-functions/v1";
 import * as admin from "firebase-admin";
+import { authenticateRequest, extractDataPayload } from "./utils/requestHelpers";
+import { normalizeReferralCode, getReferralCodeRecord, assertUserOwnsReferralCode } from "./utils/referralCodeHelpers";
 import {
-  authenticateRequest,
-  extractDataPayload,
-  normalizeReferralCode,
-  getReferralCodeRecord,
-  assertUserOwnsReferralCode,
   getStripeClient,
-  respondSuccess,
-  handleFunctionError,
-  HttpError,
   isStripeResourceMissing,
   syncStripeAccountFields,
   clearStripeAccountFields,
   STRIPE_DASHBOARD_REDIRECT_URL,
-} from "./utils/shared";
+} from "./utils/stripeHelpers";
+import { HttpError, respondSuccess, handleFunctionError } from "./utils/httpHelpers";
+import { rateLimitRequest, RateLimits } from "./utils/rateLimiter";
 
+/**
+ * Gets Stripe dashboard link for affiliate
+ * Rate limited: 30 requests per minute per user
+ */
 export const getAffiliateDashboardLink = functions.https.onRequest(async (req, res) => {
   if (req.method !== "POST") {
     res.status(405).json({ error: { status: 405, message: "Method not allowed." } });
@@ -23,7 +23,11 @@ export const getAffiliateDashboardLink = functions.https.onRequest(async (req, r
   }
 
   try {
+    // Authenticate first (needed for user-based rate limiting)
     const decodedToken = await authenticateRequest(req);
+    
+    // Apply rate limiting (throws if exceeded)
+    await rateLimitRequest(req, RateLimits.AFFILIATE_DASHBOARD, async () => decodedToken.uid);
     const payload = extractDataPayload(req.body);
     const referralCode = normalizeReferralCode(payload.referralCode);
 
@@ -76,5 +80,6 @@ export const getAffiliateDashboardLink = functions.https.onRequest(async (req, r
     handleFunctionError(res, error);
   }
 });
+
 
 

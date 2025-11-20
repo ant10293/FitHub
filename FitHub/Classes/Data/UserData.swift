@@ -88,7 +88,6 @@ final class UserData: ObservableObject, Codable {
 }
 
 extension UserData {
-    // FIXME: doesnt always reset
     func resetWorkoutSession() {
         sessionTracking.activeWorkout = nil // reset the active workout property
         isWorkingOut = false
