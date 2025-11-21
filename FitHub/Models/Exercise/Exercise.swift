@@ -19,12 +19,13 @@ struct Exercise: Identifiable, Hashable, Codable {
     let equipmentRequired: [String]
     let effort: EffortType
     let resistance: ResistanceType
-    let url: String?
+    let csvKey: String?
     let difficulty: StrengthLevel
     let limbMovementType: LimbMovementType? // no longer optional
     let repsInstruction: RepsInstruction?
     let weightInstruction: WeightInstruction?
-    
+    let imageUrl: String?
+
     var draftMax: PeakMetric?
     var isSupersettedWith: String?  // UUID String
 
@@ -56,11 +57,12 @@ extension Exercise {
         self.equipmentRequired    = initEx.equipmentRequired
         self.effort               = initEx.effort
         self.resistance           = initEx.resistance
-        self.url                  = initEx.url
+        self.csvKey               = initEx.csvKey
         self.difficulty           = initEx.difficulty
         self.limbMovementType     = initEx.limbMovementType
         self.repsInstruction      = initEx.repsInstruction
         self.weightInstruction    = initEx.weightInstruction
+        self.imageUrl             = initEx.imageUrl
     }
 }
 extension Exercise {
@@ -193,20 +195,7 @@ extension Exercise {
             return .cardio(TimeOrSpeed(time: TimeSpan(seconds: 0), distance: Distance(km: 0)))
         }
     }
-    
-    func calculateCSVMax(userData: UserData) -> PeakMetric? {
-        guard let url = self.url else { return nil }
-        
-        switch unitType {
-        case .weightXreps:
-            return CSVLoader.calculateFinal1RM(userData: userData, exercise: url)
-        case .repsOnly:
-            return CSVLoader.calculateFinalReps(userData: userData, exercise: url)
-        default:
-            return nil
-        }
-    }
-    
+
     func getRestPeriod(isWarm: Bool, rest: RestPeriods) -> Int {
         if isWarm {
             return rest.rest(for: .warmup)

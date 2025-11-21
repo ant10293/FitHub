@@ -185,7 +185,7 @@ extension ExerciseData {
         let lookup = Dictionary(uniqueKeysWithValues: allExercises.map { ($0.id, $0) })
 
         for id in skipped {
-            guard let ex = lookup[id], ex.url != nil else { continue }
+            guard let ex = lookup[id], ex.csvKey != nil else { continue }
             // Don’t overwrite if user already has any max saved (peak or estimate)
             if estimatedPeakMetric(for: id).valid == nil {
                 seedEstimatedMaxValue(exercise: ex, userData: userData)
@@ -196,6 +196,7 @@ extension ExerciseData {
 
     private func seedEstimatedMaxValue(exercise: Exercise, userData: UserData) {
         let peak = CSVLoader.calculateMaxValue(for: exercise, userData: userData).valid
+        //let peak = exercise.calculateCSVMax(userData: userData).valid
         guard let max = peak else { return }
         updateExercisePerformance(for: exercise.id, newValue: max, csvEstimate: true)
     }
@@ -204,6 +205,7 @@ extension ExerciseData {
         var skipped: [Exercise] = []
         for exercise in allExercises {
             let peak = CSVLoader.calculateMaxValue(for: exercise, userData: userData).valid
+            //let peak = exercise.calculateCSVMax(userData: userData)
             guard let max = peak else {
                 skipped.append(exercise)
                 continue
@@ -217,7 +219,7 @@ extension ExerciseData {
             var maxHolds: Set<Exercise> = []
             var hold30sLoads: Set<Exercise> = []
             
-            print("------------------ total: \(skipped.count)/\(allExercises.count) ------------------")
+            print("------------------ total skipped: \(skipped.count)/\(allExercises.count) ------------------")
             for exercise in skipped {
                 switch exercise.getPeakMetric(metricValue: 0) {
                 case .oneRepMax: oneRms.insert(exercise)

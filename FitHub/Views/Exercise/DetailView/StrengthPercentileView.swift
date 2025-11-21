@@ -85,7 +85,7 @@ struct StrengthPercentileView: View {
         )
     }
     
-    private func statSection(title: String, key: CSVKey, detail: Text? = nil) -> some View {
+    private func statSection(title: String, key: CSVColumn, detail: Text? = nil) -> some View {
         VStack(alignment: .leading) {
             // Header
             let header: Text = {
@@ -111,7 +111,7 @@ struct StrengthPercentileView: View {
     // MARK: - Helper Methods
     
     // Return only the *category* thresholds as PeakMetric, in display order.
-    private func get1RMValues(key: CSVKey) -> [(key: String, value: PeakMetric)]? {
+    private func get1RMValues(key: CSVColumn) -> [(key: String, value: PeakMetric)]? {
         var values: [String: PeakMetric] = [:]
         
         switch key {

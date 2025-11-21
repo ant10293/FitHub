@@ -49,7 +49,6 @@ struct NewExercise: View {
                 equipmentRequired: [],
                 effort: .compound,
                 resistance: .freeWeight,
-                url: "",
                 difficulty: .beginner
             )
             _draft = State(initialValue: initEx)

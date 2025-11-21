@@ -78,7 +78,7 @@ struct ContentView: View {
 
         var skippedIDs: Set<UUID> = []
         for ex in ctx.exercises.allExercises {
-            guard let url = ex.url else { continue }
+            guard let csvKey = ex.csvKey else { continue }
             guard let maxValue = ctx.exercises.peakMetric(for: ex.id)?.actualValue, maxValue > 0 else {
                 print("⚠️ \(ex.name) skipped – no PR recorded")
                 skippedIDs.insert(ex.id)
@@ -87,8 +87,8 @@ struct ContentView: View {
             
             let level = CSVLoader.calculateFitnessCategory(
                 userData: ctx.userData,
-                basePathAge: basePathAge + url,
-                basePathBW: basePathBW + url,
+                basePathAge: basePathAge + csvKey,
+                basePathBW: basePathBW + csvKey,
                 maxValue: maxValue
             )
 

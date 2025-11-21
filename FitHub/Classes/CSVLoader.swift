@@ -7,8 +7,10 @@
 
 import Foundation
 
-enum CSVKey: String { case age = "Age"; case bodyweight = "BW" }
-
+enum CSVColumn: String {
+    case age = "Age"
+    case bodyweight = "BW"
+}
 
 final class CSVLoader {
     static let shared = CSVLoader()      // <– universal entry point
@@ -78,12 +80,11 @@ final class CSVLoader {
     }
 }
 
-
 extension CSVLoader {
-    static func getMaxValues(for exercise: Exercise, key: CSVKey, value: Double, userData: UserData) -> [String: PeakMetric] {
-        guard let url = exercise.url else { return [:] }
+    static func getMaxValues(for exercise: Exercise, key: CSVColumn, value: Double, userData: UserData) -> [String: PeakMetric] {
+        guard let csvKey = exercise.csvKey else { return [:] }
 
-        let (pathAge, pathBW) = getExercisePaths(exercise: url, gender: userData.physical.gender)
+        let (pathAge, pathBW) = getExercisePaths(exercise: csvKey, gender: userData.physical.gender)
         let fileName = key == .age ? pathAge : pathBW
         let rows = loadCSV(fileName: fileName)
         let roundedValue = value.rounded()
@@ -124,7 +125,7 @@ extension CSVLoader {
         return out
     }
 
-    static func predict1RM(using data: [[String: String]], key: CSVKey, value: Double, fitnessLevel: StrengthLevel) -> Double {
+    static func predict1RM(using data: [[String: String]], key: CSVColumn, value: Double, fitnessLevel: StrengthLevel) -> Double {
         let fitnessLevel = fitnessLevel.rawValue
         
         let filteredData = data.compactMap { row -> (Double, Double)? in
@@ -153,7 +154,7 @@ extension CSVLoader {
         return filteredData.last?.1 ?? 0.0
     }
 
-    static func predictRepsForExercise(using data: [[String: String]], key: CSVKey, value: Double, fitnessLevel: StrengthLevel) -> Int {
+    static func predictRepsForExercise(using data: [[String: String]], key: CSVColumn, value: Double, fitnessLevel: StrengthLevel) -> Int {
         let fitnessLevel = fitnessLevel.rawValue
         
         // First, filter and transform the data to match expected types
@@ -215,22 +216,22 @@ extension CSVLoader {
     }
     
     static func calculateMaxValue(for exercise: Exercise, userData: UserData) -> PeakMetric? {
-        guard let url = exercise.url, !url.isEmpty else { return nil }
+        guard let csvKey = exercise.csvKey, !csvKey.isEmpty else { return nil }
         
         switch exercise.getPeakMetric(metricValue: 0) {
         case .oneRepMax:
-            return calculateFinal1RM(userData: userData, exercise: url)
+            return calculateFinal1RM(userData: userData, exercise: csvKey)
         case .maxReps:
-            return calculateFinalReps(userData: userData, exercise: url)
+            return calculateFinalReps(userData: userData, exercise: csvKey)
         default:
             return nil
         }
     }
     
     static func calculateExercisePercentile(for exercise: Exercise, maxValue: Double, userData: UserData) -> Int? {
-        guard let url = exercise.url else { return nil }
+        guard let csvKey = exercise.csvKey else { return nil }
 
-        let (dataAge, dataBW) = getExerciseData(exercise: url, gender: userData.physical.gender)
+        let (dataAge, dataBW) = getExerciseData(exercise: csvKey, gender: userData.physical.gender)
         
         let percentile = derivePercentile(userData: userData, maxValue: maxValue, dataAge: dataAge, dataBW: dataBW)
         return percentile
@@ -253,10 +254,10 @@ extension CSVLoader {
         
         for name in exerciseNames {
             if let exercise = exerciseData.exercise(named: name),
-                let maxValue = exerciseData.peakMetric(for: exercise.id)?.actualValue,
-                let url = exercise.url {
-                let bwPath = "\(basePathBW)\(url)"
-                let agePath = "\(basePathAge)\(url)"
+               let maxValue = exerciseData.peakMetric(for: exercise.id)?.actualValue,
+               let csvKey = exercise.csvKey {
+                let bwPath = "\(basePathBW)\(csvKey)"
+                let agePath = "\(basePathAge)\(csvKey)"
                 exercises.append(ExCat(exerciseName: name, maxValue: maxValue, bwPath: bwPath, agePath: agePath))
             }
         }
@@ -331,7 +332,7 @@ extension CSVLoader {
         return .beginner
     }
     
-    private static func makeFilteredData(from data: [[String: String]], key: CSVKey) -> [(Double, [String: Double])] {
+    private static func makeFilteredData(from data: [[String: String]], key: CSVColumn) -> [(Double, [String: Double])] {
         data.compactMap { row -> (Double, [String: Double])? in
             // Parse the key column as Double
             guard let x = Double(row[key.rawValue] ?? "") else { return nil }
@@ -348,7 +349,7 @@ extension CSVLoader {
         .sorted(by: { $0.0 < $1.0 })
     }
 
-    static func findPercentile(data: [[String: String]], key: CSVKey, value: Double, maxValue: Double) -> Int {
+    static func findPercentile(data: [[String: String]], key: CSVColumn, value: Double, maxValue: Double) -> Int {
         let maxValue = round(maxValue)
         let filteredData = makeFilteredData(from: data, key: key)
                 
@@ -374,7 +375,7 @@ extension CSVLoader {
         return 0
     }
     
-    static private func findFitnessLevel(data: [[String: String]], key: CSVKey, value: Double, maxValue: Double) -> StrengthLevel {
+    static private func findFitnessLevel(data: [[String: String]], key: CSVColumn, value: Double, maxValue: Double) -> StrengthLevel {
         let maxValue = round(maxValue)
         let filteredData = makeFilteredData(from: data, key: key)
         

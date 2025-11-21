@@ -18,11 +18,12 @@ struct InitExercise: Identifiable, Hashable, Codable {
     var equipmentRequired: [String]
     var effort: EffortType
     var resistance: ResistanceType
-    var url: String?
+    var csvKey: String?
     var difficulty: StrengthLevel
     var limbMovementType: LimbMovementType?
     var repsInstruction: RepsInstruction?
     var weightInstruction: WeightInstruction?
+    var imageUrl: String?
 }
 extension InitExercise {
    init(from ex: Exercise) {
@@ -35,10 +36,11 @@ extension InitExercise {
        self.resistance           = ex.resistance
        self.equipmentRequired    = ex.equipmentRequired
        self.effort               = ex.effort
-       self.url                  = ex.url
+       self.csvKey               = ex.csvKey
        self.difficulty           = ex.difficulty
        self.limbMovementType     = ex.limbMovementType
        self.repsInstruction      = ex.repsInstruction
        self.weightInstruction    = ex.weightInstruction
+       self.imageUrl             = ex.imageUrl
    }
 }
