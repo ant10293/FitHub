@@ -66,4 +66,3 @@ struct DurationPicker: View {
         .labelsHidden()
     }
 }
-

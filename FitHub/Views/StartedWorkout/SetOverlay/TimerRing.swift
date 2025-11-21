@@ -43,7 +43,6 @@ struct PlannedTimerRing: View {
     }
 }
 
-
 private struct TimerRing: View {
     @ObservedObject var manager: TimerManager
     let holdSeconds: Int   // e.g., 30 or whatever you want as the default

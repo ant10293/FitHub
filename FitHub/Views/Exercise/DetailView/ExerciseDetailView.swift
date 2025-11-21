@@ -34,8 +34,8 @@ struct ExerciseDetailView: View {
                     AboutView(loadedExercises: $loadedExercises, exercise: exercise)
                 case .history:
                     ExerciseHistory(
+                        exercise: exercise,
                         completedWorkouts: ctx.userData.workoutPlans.completedWorkouts,
-                        exerciseId: exercise.id
                     )
                 case .percentile:
                     PercentileView(exercise: exercise)

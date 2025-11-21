@@ -39,23 +39,6 @@ struct ConsistencyGraph: View {
                                 Text("\(workoutDaysPerWeek) days/week")
                                     .font(.caption)
                                     .foregroundStyle(.gray)
-                                    .padding(1)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 4)
-                                            .fill(Color(colorScheme == .dark ? .secondarySystemBackground : .systemBackground).opacity(0.8))
-                                    )
-                            }
-                        }
-                        .chartYAxis {
-                            AxisMarks(position: .trailing) {
-                                AxisValueLabel()
-                                AxisTick()
-                            }
-                        }
-                        .chartXAxis {
-                            AxisMarks() {
-                                AxisValueLabel()
-                                AxisTick()
                             }
                         }
                         .padding()
@@ -64,7 +47,7 @@ struct ConsistencyGraph: View {
                         .overlay(alignment: .center) {
                             if workoutData.isEmpty {
                                 Text("No workout data available")
-                                    .foregroundStyle(.red)
+                                    .foregroundStyle(.gray)
                                     .multilineTextAlignment(.center)
                             }
                         }
@@ -90,7 +73,7 @@ struct ConsistencyGraph: View {
         .padding(.horizontal)
     }
     
-    struct WorkoutData {
+    private struct WorkoutData {
         let week: Date
         let formattedWeek: String
         let workoutCount: Int

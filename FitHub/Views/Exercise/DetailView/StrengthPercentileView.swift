@@ -101,7 +101,7 @@ struct StrengthPercentileView: View {
             } else {
                 Text("No data available for \(key).")
                     .font(.subheadline)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(.gray)
                     .padding()
             }
         }

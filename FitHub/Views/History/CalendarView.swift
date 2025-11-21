@@ -24,52 +24,51 @@ struct CalendarView: View {
 
     var body: some View {
         VStack {
-            // ── Month nav bar ─────────────────────────────────────────────
-            HStack {
-                Button(action: moveToPreviousMonth) {
-                    Image(systemName: "arrow.left").bold()
-                        .contentShape(Rectangle())
-                }
-
-                Spacer()
-
-                Text("\(currentMonth.monthName) \(String(year(from: currentMonth)))")
-                    .font(.headline)
-
-                Spacer()
-
-                if !isNextMonth(currentMonth) {
-                    Button(action: moveToNextMonth) {
-                        Image(systemName: "arrow.right").bold()
+            Group {
+                // ── Month nav bar ─────────────────────────────────────────────
+                HStack {
+                    Button(action: moveToPreviousMonth) {
+                        Image(systemName: "arrow.left").bold()
                             .contentShape(Rectangle())
                     }
-                }
-            }
-            .padding()
-            .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .padding(.horizontal)
-
-            // ── Headers + Days share the SAME grid ───────────────────────
-            LazyVGrid(columns: columns, spacing: 0) {
-                // Header row
-                Group {
-                    ForEach(weekdayHeaders, id: \.self) { day in
-                        Text(day)
-                            .font(.subheadline)
-                            .foregroundStyle(.gray)
-                            .frame(maxWidth: .infinity, alignment: .center)
+                    
+                    Spacer()
+                    
+                    Text("\(currentMonth.monthName) \(String(year(from: currentMonth)))")
+                        .font(.headline)
+                    
+                    Spacer()
+                    
+                    if !isNextMonth(currentMonth) {
+                        Button(action: moveToNextMonth) {
+                            Image(systemName: "arrow.right").bold()
+                                .contentShape(Rectangle())
+                        }
                     }
                 }
-                .padding(.bottom)
-
-                // Day cells
-                ForEach(offsetDays.indices, id: \.self) { i in
-                    dayCell(for: offsetDays[i])
+                .padding()
+                
+                // ── Headers + Days share the SAME grid ───────────────────────
+                LazyVGrid(columns: columns, spacing: 0) {
+                    // Header row
+                    Group {
+                        ForEach(weekdayHeaders, id: \.self) { day in
+                            Text(day)
+                                .font(.subheadline)
+                                .foregroundStyle(.gray)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        }
+                    }
+                    .padding(.bottom)
+                    
+                    // Day cells
+                    ForEach(offsetDays.indices, id: \.self) { i in
+                        dayCell(for: offsetDays[i])
+                    }
                 }
+                .padding(.vertical)
             }
-            .padding(.horizontal)   // same horizontal padding for both rows
-            .padding(.vertical)
+            .padding(.horizontal)
         }
         .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 10))

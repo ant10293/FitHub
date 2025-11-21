@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// One global instance you inject where needed
 final class EquipmentData: ObservableObject {
     static let userEquipmentFilename: String = "user_equipment.json"
@@ -136,7 +135,7 @@ extension EquipmentData {
         userEquipment.append(equipment)
         persistUserEquipment()
     }
-
+    
     private func updateBundledEquipment(_ equipment: GymEquipment) {
         bundledOverrides[equipment.id] = equipment
         if let index = bundledEquipment.firstIndex(where: { $0.id == equipment.id }) {
@@ -144,7 +143,7 @@ extension EquipmentData {
             persistOverrides()
         }
     }
-    
+
     private func deleteBundledOverride(_ equipment: GymEquipment) {
         guard bundledOverrides[equipment.id] != nil else { return }
         bundledOverrides.removeValue(forKey: equipment.id)

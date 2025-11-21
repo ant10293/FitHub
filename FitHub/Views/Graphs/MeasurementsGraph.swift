@@ -50,25 +50,22 @@ struct MeasurementsGraph: View {
                         .overlay(alignment: .center) {                    // ← ① add overlay
                             if sortedMeasurementRecords.isEmpty {
                                 Text("No data available for \n this measurement...")
-                                    .foregroundStyle(.red)
+                                    .foregroundStyle(.gray)
                                     .multilineTextAlignment(.center)
                             }
                         }
-                        .overlay(alignment: .bottomTrailing, content: {
+                        .chartYAxisLabel(position: .trailing) {
                             if let unitLabel = selectedMeasurement.unitLabel {
                                 Text(unitLabel)
                                     .font(.caption)
                                     .foregroundStyle(Color.secondary)
                             }
-                        })
-                        .padding()
+                        }
                         
                         Color.clear.frame(width: 0.1).id("END")   // sentinel at far right
                     }
                 }
-                .onAppear {
-                    proxy.scrollTo("END", anchor: .trailing)    // jump to the end
-                }
+                .onAppear { proxy.scrollTo("END", anchor: .trailing) }
             }
             
             Picker("Select Time Range", selection: $selectedTimeRange) {

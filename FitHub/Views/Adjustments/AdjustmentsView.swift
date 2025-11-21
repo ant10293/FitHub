@@ -142,7 +142,7 @@ struct AdjustmentsView: View {
             Section {
                 if sortedAdjustments.isEmpty {
                     Text("No adjustments found for this exercise.")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(.gray)
                 } else {
                     ForEach(sortedAdjustments, id: \.category) { adjustment in
                         adjustmentRow(for: adjustment)
@@ -197,6 +197,10 @@ struct AdjustmentsView: View {
             }
             
             imagePreview(for: adjustment)
+                .overlay(alignment: .topTrailing) {
+                    imageButton(for: adjustment)
+                        .allowsHitTesting(true)
+                }
         }
     }
     
@@ -244,17 +248,22 @@ struct AdjustmentsView: View {
                 RoundedRectangle(cornerRadius: 6)
                     .stroke(Color.secondary.opacity(0.15))
             )
-            .overlay(alignment: .topTrailing) {
-                Button {
-                    handleImageButtonTap(for: adjustment.category)
-                } label: {
-                    let hasAnyCustomImage = adjustment.hasCustomImage || 
-                        (ctx.adjustments.resolvedImage(for: adjustment) != adjustment.category.image)
-                    Image(systemName: hasAnyCustomImage ? "xmark.circle.fill" : "plus.circle.fill")
-                        .font(.title2)
-                        .foregroundStyle(hasAnyCustomImage ? .red : .blue)
-                }
-            }
+            .allowsHitTesting(false)
+    }
+    
+    private func imageButton(for adjustment: AdjustmentEntry) -> some View {
+        let hasAnyCustomImage = adjustment.hasCustomImage || 
+            (ctx.adjustments.resolvedImage(for: adjustment) != adjustment.category.image)
+        
+        return Button {
+            handleImageButtonTap(for: adjustment.category)
+        } label: {
+            Image(systemName: hasAnyCustomImage ? "xmark.circle.fill" : "plus.circle.fill")
+                .font(.title2)
+                .foregroundStyle(hasAnyCustomImage ? .red : .blue)
+        }
+        .buttonStyle(.plain)
+        .contentShape(Rectangle())
     }
     
     private func displayImage(for adjustment: AdjustmentEntry) -> Image {

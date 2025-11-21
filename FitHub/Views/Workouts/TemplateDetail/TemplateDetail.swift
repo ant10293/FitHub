@@ -268,7 +268,6 @@ struct TemplateDetail: View {
     
     private func moveExercise(from source: IndexSet, to destination: Int) {
         template.exercises.move(fromOffsets: source, toOffset: destination)
-        isCollapsed = false
     }
     
     private func replaceExercise(_ exercise: Exercise) {

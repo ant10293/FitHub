@@ -92,23 +92,50 @@ struct PlannedWorkoutTime: View {
     }
     
     @ViewBuilder private var notificationSection: some View {
-        Section(
-            header: Text("Notification Settings"),
-            footer:
+        Section {
+            if userData.settings.useDateOnly {
+                pickerSection(
+                    description: "Set a reminder for a time on the day of your workout.",
+                    pickerContent: {
+                        DatePicker("", selection: $draftTime, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(.wheel)
+                            .labelsHidden()
+                    }
+                )
+            } else {
+                pickerSection(
+                    description: "Set a reminder for an amount of time before your workout.",
+                    pickerContent: {
+                        DurationPicker(time: $duration)
+                    }
+                )
+            }
+        } header: {
+            Text("Notification Settings")
+        } footer: {
+            HStack {
                 // Footer button to toggle picker visibility
                 RectangularButton(
                     title: isPickerExpanded ? "Hide Picker" : "Add Notification Time",
                     systemImage: isPickerExpanded ? "xmark" : "plus",
                     bgColor: isPickerExpanded ? .red : .blue,
+                    width: .fill,
                     action: {
                         isPickerExpanded.toggle()
                     }
                 )
-        ) {
-            if userData.settings.useDateOnly {
-                timeOfDaySection
-            } else {
-                intervalSection
+                if isPickerExpanded {
+                    RectangularButton(
+                        title: "Add",
+                        systemImage: "checkmark",
+                        enabled: !buttonDisabled,
+                        bgColor: buttonDisabled ? Color.gray : Color.green,
+                        width: .fill,
+                        action: {
+                            userData.settings.useDateOnly ? addTime() : addInterval()
+                        }
+                    )
+                }
             }
         }
         
@@ -121,115 +148,32 @@ struct PlannedWorkoutTime: View {
         }
     }
     
-    @ViewBuilder private var intervalSection: some View {
-        Text("Set a reminder for an amount of time before your workout.")
-            .multilineTextAlignment(.leading)
-            .font(.subheadline)
-        
-        if isPickerExpanded {
-            HStack {
-                DurationPicker(time: $duration)
-                Button(action: addInterval) {
-                    HStack {
-                        Text("Add")
-                        Image(systemName: "checkmark")
-                    }
-                    .padding()
-                    .background(buttonDisabled ? Color.gray : Color.green)
-                    .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
-                .disabled(buttonDisabled)
-            }
-            .padding(.vertical, 5)
-        }
-    }
-    
-    @ViewBuilder private var timeOfDaySection: some View {
-        Text("Set a reminder for a time on the day of your workout.")
-            .multilineTextAlignment(.leading)
-            .font(.subheadline)
-        
-        if isPickerExpanded {
-            ZStack {
-                HStack {
-                    DatePicker("Choose Time", selection: $draftTime, displayedComponents: .hourAndMinute)
-                        .datePickerStyle(.wheel)
-                        .labelsHidden()
-                        .padding(.leading, -50)
-                }
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        Button(action: addTime) {
-                            HStack {
-                                Text("Add")
-                                Image(systemName: "checkmark")
-                            }
-                            .padding()
-                            .background(buttonDisabled ? Color.gray : Color.green)
-                            .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                        }
-                        .disabled(buttonDisabled)
-                    }
-                    Spacer()
-                }
-            }
-        }
-    }
-    
     private var intervalList: some View {
-        Section {
-            if userData.settings.notifications.intervals.isEmpty {
-                Text("No Notification intervals set.")
-                    .padding()
+        notificationSection(
+            items: userData.settings.notifications.intervals,
+            emptyText: "No Notification intervals set.",
+            header: "Scheduled Notifications",
+            label: { interval in
+                Text(Format.formatDuration(Int(interval)))
+            },
+            onDelete: { interval in
+                removeInterval(interval)
             }
-            else {
-                ForEach(userData.settings.notifications.intervals, id: \.self) { interval in
-                    HStack {
-                        Text(Format.formatDuration(Int(interval)))
-                        Spacer()
-                        Button(action: {
-                            removeInterval(interval)
-                        }) {
-                            Image(systemName: "trash")
-                                .foregroundStyle(.red)
-                        }
-                    }
-                    .padding(.vertical, 5)
-                }
-            }
-        } header: {
-            Text("Scheduled Notifications")
-        }
+        )
     }
-    
+
     private var timeOfDayList: some View {
-        Section {
-            if userData.settings.notifications.times.isEmpty {
-                Text("No Notification times set.")
-                    .padding()
+        notificationSection(
+            items: userData.settings.notifications.times,
+            emptyText: "No Notification times set.",
+            header: "Scheduled Notifications",
+            label: { time in
+                Text(Format.formatTimeComponents(time))
+            },
+            onDelete: { time in
+                removeTime(time)
             }
-            else {
-                ForEach(userData.settings.notifications.times, id: \.self) { time in
-                    HStack {
-                        Text("\(Format.formatTimeComponents(time))")
-                        Spacer()
-                        Button(action: {
-                            removeTime(time)
-                        }) {
-                            Image(systemName: "trash")
-                                .foregroundStyle(.red)
-                        }
-                    }
-                    .padding(.vertical, 5)
-                }
-            }
-        } header: {
-            Text("Scheduled Notifications")
-        }
+        )
     }
     
     private var totalSeconds: Int { duration.inSeconds }
@@ -262,5 +206,53 @@ struct PlannedWorkoutTime: View {
 
     private func removeTime(_ comps: DateComponents) {
         _ = userData.settings.notifications.removeTime(comps)
+    }
+}
+
+private extension PlannedWorkoutTime {
+    // MARK: - Generic helpers
+    @ViewBuilder private func pickerSection<Content: View>(
+        description: String,
+        @ViewBuilder pickerContent: () -> Content
+    ) -> some View {
+        Text(description)
+            .multilineTextAlignment(.leading)
+            .font(.subheadline)
+        
+        if isPickerExpanded {
+            pickerContent()
+                .padding(.vertical, 5)
+        }
+    }
+    
+    private func notificationSection<Item: Hashable, Label: View>(
+        items: [Item],
+        emptyText: String,
+        header: String,
+        @ViewBuilder label: @escaping (Item) -> Label,
+        onDelete: @escaping (Item) -> Void
+    ) -> some View {
+        Section {
+            if items.isEmpty {
+                Text(emptyText)
+                    .padding()
+            } else {
+                ForEach(items, id: \.self) { item in
+                    HStack {
+                        label(item)
+                        Spacer()
+                        Button {
+                            onDelete(item)
+                        } label: {
+                            Image(systemName: "trash")
+                                .foregroundStyle(.red)
+                        }
+                    }
+                    .padding(.vertical, 5)
+                }
+            }
+        } header: {
+            Text(header)
+        }
     }
 }

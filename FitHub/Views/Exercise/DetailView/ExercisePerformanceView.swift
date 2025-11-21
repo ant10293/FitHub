@@ -1,6 +1,5 @@
 import SwiftUI
 
-
 struct ExercisePerformanceView: View {
     @State private var selectedTimeRange: TimeRange = .allTime
     // MARK: – Inputs
@@ -34,6 +33,24 @@ struct ExercisePerformanceView: View {
                 } else {
                     ForEach(sortedRecords, id: \.id) { record in
                         HStack {
+                            if record.id == performance?.currentMax?.id {
+                                Image(systemName: "star.fill")
+                                    .foregroundStyle(Color.gold)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Date: ").bold()
+                                + Text(Format.formatDate(record.date, dateStyle: .short, timeStyle: .none))
+                                
+                                record.value.formattedText
+
+                                if let loadXmetric = record.loadXmetric {
+                                    loadXmetric.formattedText()
+                                }
+                            }
+
+                            Spacer()
+                            
                             Menu {
                                 Button {
                                     onSetMax(record.id)
@@ -54,24 +71,6 @@ struct ExercisePerformanceView: View {
                                     .foregroundStyle(Color.blue)
                             }
                             .buttonStyle(.plain) // no row highlight on tap
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Date: ").bold()
-                                + Text(Format.formatDate(record.date, dateStyle: .short, timeStyle: .none))
-                                
-                                record.value.formattedText
-
-                                if let loadXmetric = record.loadXmetric {
-                                    loadXmetric.formattedText()
-                                }
-                            }
-
-                            Spacer()
-
-                            if record.id == performance?.currentMax?.id {
-                                Image(systemName: "star.fill")
-                                    .foregroundStyle(.yellow)
-                            }
                         }
                         .padding(.vertical, 4)
                     }

@@ -90,10 +90,16 @@ struct ExerciseSetOverlay: View {
                 .multilineTextAlignment(.center)
             
             VStack(alignment: .center) {
-                Text("\(exercise.name)")
-                    .font(.headline)
-                    .multilineTextAlignment(.center)
+                Button(action: viewDetail) {
+                    HStack(spacing: 5) {
+                        Text("\(exercise.name)")
+                            .font(.headline)
+                            .multilineTextAlignment(.center)
+                        Image(systemName: "info.circle")
+                    }
                     .frame(maxWidth: width * 0.7)
+                }
+                .buttonStyle(.plain)
      
                 Text("Sets: \(exercise.workingSets)")
                     .font(.subheadline)
@@ -120,10 +126,6 @@ struct ExerciseSetOverlay: View {
     
     private var adjustmentsSection: some View {
         VStack {
-            if params.hideImage {
-                TextButton(title: "View Exercise Details", systemImage: "info.circle", action: viewDetail, color: .blue)
-                    .padding(.bottom)
-            }
             HStack {
                 AdjustmentsSection(
                     showingAdjustmentsView: $showAdjustmentsView,
@@ -132,7 +134,7 @@ struct ExerciseSetOverlay: View {
                     exercise: exercise
                 )
                 if !params.hideImage {
-                    ExEquipImage(image: exercise.fullImage, button: .info, onTap: viewDetail)
+                    ExEquipImage(image: exercise.fullImage)
                 }
             }
         }

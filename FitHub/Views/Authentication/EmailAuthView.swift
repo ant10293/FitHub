@@ -115,6 +115,7 @@ struct EmailAuthView: View {
                 SecureField("Confirm Password", text: $confirmPassword)
                     .textContentType(.password)
                     .focused($focusedField, equals: .confirmPassword)
+                    .monospaced()
             } header: {
                 Text("PASSWORD")
                     .font(.caption)
@@ -364,10 +365,12 @@ struct EmailAuthView: View {
                 TextField("Password", text: $password)
                     .textContentType(.password)
                     .focused($focusedField, equals: .password)
+                    .monospaced()
             } else {
                 SecureField("Password", text: $password)
                     .textContentType(.password)
                     .focused($focusedField, equals: .password)
+                    .monospaced()
             }
         }
         .trailingIconButton(

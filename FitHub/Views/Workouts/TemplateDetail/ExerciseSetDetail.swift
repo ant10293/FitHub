@@ -105,7 +105,6 @@ struct ExerciseSetDetail: View {
             )
         }
         .onMove(perform: moveSet)
-        //.onDelete(perform: deleteSetDetails)
     }
 
     // MARK: - Top bar

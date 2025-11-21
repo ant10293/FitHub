@@ -22,7 +22,6 @@ struct ExercisePerformanceGraph: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
             
-            
             ScrollViewReader { proxy in
                 ScrollView(.horizontal) {
                     HStack(spacing: 0) {
@@ -59,7 +58,7 @@ struct ExercisePerformanceGraph: View {
                         .overlay(alignment: .center) {                    // ← ① add overlay
                             if sortedRecords.isEmpty {
                                 Text("No data available \n for this exercise...")
-                                    .foregroundStyle(.red)
+                                    .foregroundStyle(.gray)
                                     .multilineTextAlignment(.center)
                             }
                         }
@@ -74,9 +73,7 @@ struct ExercisePerformanceGraph: View {
                         Color.clear.frame(width: 0.1).id("END")   // sentinel at far right
                     }
                 }
-                .onAppear {
-                    proxy.scrollTo("END", anchor: .trailing)    // jump to the end
-                }
+                .onAppear { proxy.scrollTo("END", anchor: .trailing) }
             }
             
             Picker("Select Time Range", selection: $selectedTimeRange) {

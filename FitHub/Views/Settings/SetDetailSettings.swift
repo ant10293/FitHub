@@ -15,7 +15,7 @@ struct SetDetailSettings: View {
             Section {
                 Toggle("Hide RPE slider", isOn: $userData.settings.hideRpeSlider)
             } footer: {
-                Text("Removes the RPE control from Set Detail so you’re not prompted to rate effort during/after sets.")
+                Text("Removes the RPE control so you’re not prompted to rate effort during/after sets.")
             }
             
             Section {
@@ -27,11 +27,11 @@ struct SetDetailSettings: View {
             Section {
                 Toggle("Hide Exercise Image", isOn: $userData.settings.hideExerciseImage)
             } footer: {
-                Text("Hides the exercise image in the set card while you’re doing a workout.")
+                Text("Hides the exercise image from set detail view while you’re doing a workout.")
             }
         }
         .listStyle(InsetGroupedListStyle())
-        .navigationBarTitle("SetDetail Settings", displayMode: .inline)
+        .navigationBarTitle("Set Detail Settings", displayMode: .inline)
         .toolbar {
              ToolbarItem(placement: .topBarTrailing) {
                  Button("Reset") { resetAll() }

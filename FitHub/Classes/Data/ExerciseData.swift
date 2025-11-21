@@ -152,7 +152,7 @@ extension ExerciseData {
             persistOverrides()
         }
     }
-    
+
     private func deleteBundledOverride(_ exercise: Exercise) {
         guard bundledOverrides[exercise.id] != nil else { return }
         bundledOverrides.removeValue(forKey: exercise.id)
