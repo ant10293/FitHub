@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// FIXME: should use a binding template so that changes are properly reflected
 struct TemplateSelection: View {
     @State private var selectedTemplate: SelectedTemplate?
     @State private var navigateToOverload: Bool = false

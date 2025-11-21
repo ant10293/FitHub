@@ -27,7 +27,7 @@ struct StripeAffiliateStatus: Equatable {
     )
 
     var isConnected: Bool {
-        accountId != nil
+        accountId != nil 
     }
 
     var needsAction: Bool {

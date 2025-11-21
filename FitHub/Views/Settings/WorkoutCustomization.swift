@@ -326,7 +326,7 @@ struct WorkoutCustomization: View {
         return params.getChanges(resistance: selectedResistanceType, distribution: ctx.userData.workoutPrefs.customDistribution)
     }
     
-    private var distribution: ExerciseDistribution {
+    private var distribution: EffortDistribution {
         ctx.userData.workoutPrefs.customDistribution ?? defaultRepsAndSets.distribution
     }
     

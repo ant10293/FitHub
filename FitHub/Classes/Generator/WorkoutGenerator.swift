@@ -170,7 +170,6 @@ extension WorkoutGenerator {
         var start = CalendarUtility.shared.startOfWeek(for: today) ?? today
         var weekDays = CalendarUtility.shared.datesInWeek(startingFrom: start)
 
-        // FIXME: if on a saturday, the start date will be saved as the next week's start date
         if let lastDate = dayIndices.compactMap({ weekDays[$0] }).last {
             if CalendarUtility.shared.isDateInToday(lastDate) {
                 // Last relevant workout day is today → stay in current week.

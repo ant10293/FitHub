@@ -161,45 +161,45 @@ extension FitnessGoal {
         }
     }
     
-    var defaultDistribution: ExerciseDistribution {
+    var defaultDistribution: EffortDistribution {
         switch self {
         case .buildMuscle:
-            return ExerciseDistribution(distribution: [
+            return EffortDistribution(distribution: [
                 .compound   : 0.6,   // big multi-joint lifts drive mechanical tension
                 .isolation  : 0.4   // finishers for metabolic stress
             ])
         case .loseWeight: // Slightly more metabolic conditioning via plyometrics
-            return ExerciseDistribution(distribution: [
+            return EffortDistribution(distribution: [
                 .compound   : 0.55,
                 .isolation  : 0.30,
                 .plyometric : 0.15
             ])
         case .getStronger:
-            return ExerciseDistribution(distribution: [
+            return EffortDistribution(distribution: [
                 .compound   : 0.75,   // strength built around heavy compounds
                 .isolation  : 0.25   // accessory work / weak-point training
             ])
         case .buildMuscleGetStronger:
-            return ExerciseDistribution(distribution: [
+            return EffortDistribution(distribution: [
                 .compound   : 0.5,
                 .isolation  : 0.5
             ])
         case .improveEndurance:
-            return ExerciseDistribution(distribution: [
+            return EffortDistribution(distribution: [
                 .compound   : 0.50,
                 .isolation  : 0.20,
                 .plyometric : 0.20,
                 .isometric  : 0.10
             ])
         case .generalFitness:
-            return ExerciseDistribution(distribution: [
+            return EffortDistribution(distribution: [
                 .compound   : 0.55,
                 .isolation  : 0.25,
                 .plyometric : 0.10,
                 .isometric  : 0.10
             ])
         case .athleticPerformance:
-            return ExerciseDistribution(distribution: [
+            return EffortDistribution(distribution: [
                 .compound   : 0.40,
                 .plyometric : 0.35,
                 .isolation  : 0.20, // for injury reduction

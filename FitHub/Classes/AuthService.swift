@@ -179,14 +179,12 @@ final class AuthService: ObservableObject {
         let resolvedEmail = emailFallback ?? user.email
 
         Task { @MainActor in
-            userData.settings.allowedCredentials = true
             userData.profile.accountCreationDate = user.metadata.creationDate ?? Date()
             userData.profile.userId = user.uid
             let finalEmail = resolvedEmail ?? userData.profile.email
             if !finalEmail.isEmpty {
                 userData.profile.email = finalEmail
             }
-
             if !names.firstName.isEmpty {
                 userData.profile.firstName = names.firstName
             }
@@ -196,6 +194,7 @@ final class AuthService: ObservableObject {
             if !names.userName.isEmpty {
                 userData.profile.userName = names.userName
             }
+            userData.saveToFile()
         }
     }
 
@@ -345,7 +344,6 @@ extension AuthService {
         
         func applyData(for user: User) {
             Task { @MainActor in
-                userData.settings.allowedCredentials = false
                 userData.profile.firstName = firstName
                 userData.profile.lastName = lastName
                 if let displayName = Name.getDisplayName(firstName: firstName, lastName: lastName) {

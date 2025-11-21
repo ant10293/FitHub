@@ -28,6 +28,7 @@ enum ImageStorageLevel: String, CaseIterable {
 struct AdjustmentImageUpload: View {
     var initialFilename: String? = nil
     var hasExistingEquipmentImage: Bool = false
+    let showStorageLevelPicker: Bool
     var onImagePicked: (String, ImageStorageLevel) -> Void
     
     @State private var storageLevel: ImageStorageLevel = .equipment
@@ -35,26 +36,30 @@ struct AdjustmentImageUpload: View {
     var body: some View {
         VStack(spacing: 20) {
             // Storage level picker
-            VStack(alignment: .leading, spacing: 8) {
-                Picker("Storage Level", selection: $storageLevel) {
-                    ForEach(ImageStorageLevel.allCases, id: \.self) { level in
-                        Text(level.rawValue).tag(level)
+            if showStorageLevelPicker {
+                VStack(alignment: .leading, spacing: 8) {
+                    Picker("Storage Level", selection: $storageLevel) {
+                        ForEach(ImageStorageLevel.allCases, id: \.self) { level in
+                            Text(level.rawValue).tag(level)
+                        }
                     }
+                    .pickerStyle(.segmented)
+                    
+                    WarningFooter(
+                        message: storageLevel.description(hasExistingEquipmentImage: hasExistingEquipmentImage),
+                        color: isWarning ? .orange : .secondary,
+                        showImage: isWarning
+                    )
                 }
-                .pickerStyle(.segmented)
-                
-                WarningFooter(
-                    message: storageLevel.description(hasExistingEquipmentImage: hasExistingEquipmentImage),
-                    color: isWarning ? .orange : .secondary,
-                    showImage: isWarning
-                )
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
             
             // Wrapped UploadImage
             UploadImage(initialFilename: initialFilename) { filename in
+                // if we aren't showing storage level equipment, its because theres no associated equipment
+                let level = showStorageLevelPicker ? storageLevel : .exercise
                 // Pass both filename and storage level to the callback
-                onImagePicked(filename, storageLevel)
+                onImagePicked(filename, level)
             }
         }
     }

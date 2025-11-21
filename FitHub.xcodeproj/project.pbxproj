@@ -255,7 +255,6 @@
 		65DD05202EBBED1D000D159C /* AffiliateSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051E2EBBED1D000D159C /* AffiliateSettingsView.swift */; };
 		65DD05222EBC06B6000D159C /* ReferralValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05212EBC06B6000D159C /* ReferralValidation.swift */; };
 		65DD05282EBC6C53000D159C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65DD05272EBC6C53000D159C /* StoreKit.framework */; };
-		65DD052A2EBEF0CC000D159C /* PaymentFrequency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05292EBEF0CC000D159C /* PaymentFrequency.swift */; };
 		65DD052C2EBFE857000D159C /* ExercisePickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD052B2EBFE857000D159C /* ExercisePickerLabel.swift */; };
 		65DD05322EC021D1000D159C /* CalcResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05312EC021D1000D159C /* CalcResultView.swift */; };
 		65DD05352EC02A20000D159C /* MeasurementCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05332EC02A20000D159C /* MeasurementCard.swift */; };
@@ -533,7 +532,6 @@
 		65DD051E2EBBED1D000D159C /* AffiliateSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateSettingsView.swift; sourceTree = "<group>"; };
 		65DD05212EBC06B6000D159C /* ReferralValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralValidation.swift; sourceTree = "<group>"; };
 		65DD05272EBC6C53000D159C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		65DD05292EBEF0CC000D159C /* PaymentFrequency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFrequency.swift; sourceTree = "<group>"; };
 		65DD052B2EBFE857000D159C /* ExercisePickerLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisePickerLabel.swift; sourceTree = "<group>"; };
 		65DD05312EC021D1000D159C /* CalcResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcResultView.swift; sourceTree = "<group>"; };
 		65DD05332EC02A20000D159C /* MeasurementCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementCard.swift; sourceTree = "<group>"; };
@@ -1262,8 +1260,8 @@
 			isa = PBXGroup;
 			children = (
 				65CD3BC72DD3C84F00C2B671 /* ExerciseDetailView.swift */,
-				65AB47F62EA342B4001BEAFE /* ExerciseHistory.swift */,
 				65DD05052EB9584E000D159C /* AboutView.swift */,
+				65AB47F62EA342B4001BEAFE /* ExerciseHistory.swift */,
 				65DD05072EB95877000D159C /* PercentileView.swift */,
 				65DD05092EB95888000D159C /* PRsView.swift */,
 				65CD3BCC2DD3C84F00C2B671 /* StrengthPercentileView.swift */,
@@ -1316,7 +1314,6 @@
 			children = (
 				65DD053E2EC2C689000D159C /* StripeAffiliateStatus.swift */,
 				65DD053A2EC2A6B2000D159C /* StripeAffiliateService.swift */,
-				65DD05292EBEF0CC000D159C /* PaymentFrequency.swift */,
 			);
 			path = Stripe;
 			sourceTree = "<group>";
@@ -1527,7 +1524,6 @@
 				65CD3C3E2DD3C84F00C2B671 /* EquipmentPopUp.swift in Sources */,
 				65CD3C3F2DD3C84F00C2B671 /* EquipmentSelection.swift in Sources */,
 				65CD3C402DD3C84F00C2B671 /* ExerciseDetailView.swift in Sources */,
-				65DD052A2EBEF0CC000D159C /* PaymentFrequency.swift in Sources */,
 				65CD3C412DD3C84F00C2B671 /* ExercisePerformanceView.swift in Sources */,
 				65CD3C422DD3C84F00C2B671 /* ExerciseSelection.swift in Sources */,
 				652131722E3D9C3900FDFB9C /* DurationPicker.swift in Sources */,

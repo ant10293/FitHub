@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct DistributionEditor: View {
-    @Binding var distribution: ExerciseDistribution
+    @Binding var distribution: EffortDistribution
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
@@ -69,7 +69,7 @@ struct DistributionEditor: View {
         )
     }
 
-    /// Keep your original “room left” behavior, just routed through ExerciseDistribution.
+    /// Keep your original “room left” behavior, just routed through EffortDistribution.
     private func applyChange(for effort: EffortType, newPct: Double) {
         let proposed   = max(0, min(newPct, 100)) / 100            // → 0…1
         let currentVal = distribution.percentage(for: effort)

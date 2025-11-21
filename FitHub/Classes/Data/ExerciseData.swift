@@ -22,7 +22,6 @@ final class ExerciseData: ObservableObject {
        
     @Published var allExercisePerformance: [UUID: ExercisePerformance] = [:]
     
-    // FIXME: this is only getting the seeded estimates
     var exercisesWithData: [Exercise] {
         allExercises.compactMap { ex in
             hasPerformanceData(exercise: ex)

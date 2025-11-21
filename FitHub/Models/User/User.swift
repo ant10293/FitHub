@@ -50,7 +50,7 @@ struct WorkoutPreferences: Codable, Equatable {
     var resistance: ResistanceType = .any
     var setStructure: SetStructures = .pyramid
     var customDuration: TimeSpan?
-    var customDistribution: ExerciseDistribution?
+    var customDistribution: EffortDistribution?
     //var supersetSettings: SupersetSettings = SupersetSettings()
     //var minBwRepsMultiplier: Double = 0.5
     //var maxBwRepsMultiplier: Double = 2.0
@@ -73,7 +73,6 @@ struct Setup: Codable {
 struct Settings: Codable, Equatable {
     var restTimerEnabled: Bool = true
     var allowedNotifications: Bool = true
-    var allowedCredentials: Bool = false
     var progressiveOverload: Bool = true
     var allowDeloading: Bool = true
     var userLanguage: Languages = .english

@@ -3,7 +3,7 @@ import SwiftUI
 struct SetCountEditor: View {
     @Binding var sets: SetDistribution
     let allowed: ClosedRange<Int> = 1...10
-    var effort: ExerciseDistribution
+    var effort: EffortDistribution
 
     private var visibleTypes: [EffortType] {
         EffortType.strengthTypes.filter { effort.percentage(for: $0) > 0 }

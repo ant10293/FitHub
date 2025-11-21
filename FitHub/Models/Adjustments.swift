@@ -140,7 +140,7 @@ struct ExerciseAdjustments: Codable, Identifiable, Equatable, Hashable {
     mutating func clearValue(for category: AdjustmentCategory) {
         setValue(.string(""), for: category)
     }
-
+    /*
     mutating func setImage(_ image: String?, for category: AdjustmentCategory) {
         withAdjustment(for: category) { entry in
             // Update the exercise-specific image override
@@ -149,7 +149,7 @@ struct ExerciseAdjustments: Codable, Identifiable, Equatable, Hashable {
             entry = AdjustmentEntry(adjustment: updatedAdjustment, value: entry.value)
         }
     }
-
+    */
     mutating func normalize() {
         var merged: [AdjustmentCategory: AdjustmentEntry] = [:]
         for entry in entries {

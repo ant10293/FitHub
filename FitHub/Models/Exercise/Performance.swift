@@ -136,7 +136,6 @@ enum ExerciseUnit: String {
             return .maxReps(Int(metricValue))
         case .timeOnly:
             return .maxHold(TimeSpan(seconds: Int(metricValue)))
-        // FIXME: temporary - must add PeakMetric cases
         case .weightXtime:
             return .hold30sLoad(Mass(kg: metricValue))
         case .distanceXtimeOrSpeed:
@@ -163,7 +162,7 @@ struct MaxRecord: Codable, Identifiable {
 }
 
 struct ExercisePerformance: Identifiable, Codable {
-    let id: UUID // Using the exercise id as the identifier
+    let id: Exercise.ID // Using the exercise id as the identifier
     var estimatedValue: PeakMetric?     // csv
     var currentMax: MaxRecord?     // curent
     var pastMaxes: [MaxRecord]?     // past
@@ -196,10 +195,10 @@ struct PerformanceUpdates: Codable, Hashable {
 }
 
 struct PerformanceUpdate: Codable, Hashable {
-    var exerciseId: UUID
+    var exerciseId: Exercise.ID
     var value: PeakMetric
     var loadXmetric: LoadXMetric?
-    var setId: UUID?
+    var setId: SetDetail.ID?
 }
 
 struct LoadXMetric: Codable, Hashable {

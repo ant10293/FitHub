@@ -12,7 +12,7 @@ struct RepsAndSets {
     var reps: RepDistribution
     var sets: SetDistribution
     var rest: RestPeriods
-    var distribution: ExerciseDistribution
+    var distribution: EffortDistribution
 }
 
 extension RepsAndSets {
@@ -25,14 +25,14 @@ extension RepsAndSets {
         customRestPeriod: RestPeriods?,
         customRepsRange: RepDistribution?,
         customSets: SetDistribution?,
-        customDistribution: ExerciseDistribution?
+        customDistribution: EffortDistribution?
     ) -> RepsAndSets {
         let rest = customRestPeriod ?? goal.defaultRest
         let sets = customSets ?? goal.defaultSets
         let reps = customRepsRange ?? goal.defaultReps
         
         let rawDist = customDistribution ?? goal.defaultDistribution
-        let dist = ExerciseDistribution(distribution: rawDist.normalizeDistribution)
+        let dist = EffortDistribution(distribution: rawDist.normalizeDistribution)
         
         return RepsAndSets(reps: reps, sets: sets, rest: rest, distribution: dist)
     }

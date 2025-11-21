@@ -19,7 +19,7 @@ struct RepDistribution: Codable, Hashable {
     
     static let types: [EffortType] = EffortType.allCases.filter({ $0.usesReps }) // only types that use reps
     
-    func overallRange(filteredBy exercise: ExerciseDistribution,
+    func overallRange(filteredBy exercise: EffortDistribution,
                       requirePositiveShare: Bool = true) -> ClosedRange<Int> {
         Self.getOverallRange(from: distribution,
                              filteredBy: exercise,
@@ -27,7 +27,7 @@ struct RepDistribution: Codable, Hashable {
     }
 
     /// "lo–hi" string for the filtered range.
-    func formattedTotalRange(filteredBy exercise: ExerciseDistribution,
+    func formattedTotalRange(filteredBy exercise: EffortDistribution,
                              requirePositiveShare: Bool = true) -> String {
         Format.formatRange(range: overallRange(filteredBy: exercise,
                                                requirePositiveShare: requirePositiveShare))
@@ -35,7 +35,7 @@ struct RepDistribution: Codable, Hashable {
 
     /// Static variant.
     static func getOverallRange(from reps: [EffortType: ClosedRange<Int>],
-                                filteredBy exercise: ExerciseDistribution,
+                                filteredBy exercise: EffortDistribution,
                                 requirePositiveShare: Bool = true) -> ClosedRange<Int> {
         let filtered = reps.filter { (type, _) in
             requirePositiveShare
@@ -58,7 +58,7 @@ struct SetDistribution: Codable, Hashable {
         distribution[type] = value
     }
     
-    func overallRange(filteredBy exercise: ExerciseDistribution,
+    func overallRange(filteredBy exercise: EffortDistribution,
                       requirePositiveShare: Bool = true) -> ClosedRange<Int> {
         Self.getOverallRange(from: distribution,
                              filteredBy: exercise,
@@ -66,7 +66,7 @@ struct SetDistribution: Codable, Hashable {
     }
 
     /// "lo–hi" string for the filtered set range.
-    func formattedTotalRange(filteredBy exercise: ExerciseDistribution,
+    func formattedTotalRange(filteredBy exercise: EffortDistribution,
                              requirePositiveShare: Bool = true) -> String {
         Format.formatRange(range: overallRange(filteredBy: exercise,
                                                requirePositiveShare: requirePositiveShare))
@@ -74,7 +74,7 @@ struct SetDistribution: Codable, Hashable {
 
     /// Static variant.
     static func getOverallRange(from sets: [EffortType: Int],
-                                filteredBy exercise: ExerciseDistribution,
+                                filteredBy exercise: EffortDistribution,
                                 requirePositiveShare: Bool = true) -> ClosedRange<Int> {
         let filtered = sets.filter { (type, _) in
             requirePositiveShare
@@ -87,8 +87,7 @@ struct SetDistribution: Codable, Hashable {
     }
 }
 
-// FIXME: should be labeled EffortDistribution
-struct ExerciseDistribution: Codable, Hashable {
+struct EffortDistribution: Codable, Hashable {
     var distribution: [EffortType: Double]
     
     var total: Double { distribution.values.reduce(0, +) }

@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// FIXME: this view is too long and disorganized. too much reused logic
 struct ExerciseSetDisplay: View {
     @Environment(\.colorScheme) var colorScheme
     @Binding var setDetail: SetDetail
@@ -82,7 +81,6 @@ struct ExerciseSetDisplay: View {
         }
         .padding()
         .onAppear(perform: resetInputs)
-        // TODO: test with setDetail changes
         .onChange(of: setDetail.id) {
             // if exercise has changed or moved to next set
             resetInputs()

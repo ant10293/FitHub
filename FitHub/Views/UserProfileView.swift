@@ -75,15 +75,13 @@ struct UserProfileView: View {
                             Text("Personal Information")
                         }
                         
-                        if ctx.userData.settings.allowedCredentials {
-                            Section {
-                                Text(ctx.userData.profile.email)
-                                    .foregroundStyle(Color.secondary)
-                                    .textSelection(.disabled)
-                                    .trailingIconButton(systemName: "lock.fill")
-                            } header: {
-                                Text("Email")
-                            }
+                        Section {
+                            Text(ctx.userData.profile.email)
+                                .foregroundStyle(Color.secondary)
+                                .textSelection(.disabled)
+                                .trailingIconButton(systemName: "lock.fill")
+                        } header: {
+                            Text("Email")
                         }
                         
                         // MARK: — Footer Section with Account Creation and Logout
@@ -211,6 +209,7 @@ struct UserProfileView: View {
     
     private func handleSignOut() {
         kbd.dismiss()
+        ctx.userData.saveToFile()
         let accountID = AuthService.getUid() ?? ""
         
         do {

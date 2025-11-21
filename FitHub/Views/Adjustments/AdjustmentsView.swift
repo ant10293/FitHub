@@ -65,10 +65,11 @@ struct AdjustmentsView: View {
                 let hasExistingEquipmentImage = entry.flatMap { 
                     ctx.adjustments.hasEquipmentLevelImage(for: $0.equipmentID, category: category)
                 } ?? false
-                
+                                
                 AdjustmentImageUpload(
                     initialFilename: initialFilename,
-                    hasExistingEquipmentImage: hasExistingEquipmentImage
+                    hasExistingEquipmentImage: hasExistingEquipmentImage,
+                    showStorageLevelPicker: hasAssociatedEquipment(entry: entry)
                 ) { filename, storageLevel in
                     let normalized = filename.isEmpty ? nil : filename
                     updateImage(for: category, filename: normalized, storageLevel: storageLevel)
@@ -199,6 +200,11 @@ struct AdjustmentsView: View {
         }
     }
     
+    private func hasAssociatedEquipment(entry: AdjustmentEntry?) -> Bool {
+        guard let entry else { return false }
+        return ctx.equipment.equipment(for: entry.equipmentID) != nil
+    }
+    
     private var existingCategories: Set<AdjustmentCategory> { local.categories }
     
     // MARK: – Bindings & Mutations
@@ -209,7 +215,10 @@ struct AdjustmentsView: View {
         )
     }
     
-    private func addAdjustmentCategory(_ category: AdjustmentCategory) { local.addCategory(category) }
+    private func addAdjustmentCategory(_ category: AdjustmentCategory) {
+        local.addCategory(category)
+        commitChangesIfNeeded()
+    }
     
     private func removeAdjustment(_ category: AdjustmentCategory) { local.removeCategory(category) }
     

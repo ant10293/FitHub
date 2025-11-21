@@ -37,7 +37,7 @@ struct NewExercise: View {
         self.original = original
         if let ex = original {
             let initEx = InitExercise(from: ex)
-            _draft = State(initialValue: initEx)   // you already have this init
+            _draft = State(initialValue: initEx)
             self.initialDraft = initEx
         } else {
             let initEx = InitExercise(
@@ -45,7 +45,7 @@ struct NewExercise: View {
                 aliases: [],
                 image: "",
                 muscles: [],
-                instructions: ExerciseInstructions(steps: []),
+                instructions: .init(),
                 equipmentRequired: [],
                 effort: .compound,
                 resistance: .freeWeight,
@@ -192,7 +192,6 @@ struct NewExercise: View {
         if let newResistance = determineType() { draft.resistance = newResistance }
     }
     
-    // FIXME: the selection "any" is invalid and does not have an associated tag, this will give undefined results
     private func determineType() -> ResistanceType? {
         if equipmentRequired.contains(where: { EquipmentCategory.machineCats.contains($0.equCategory) }){
             return .machine

@@ -4,7 +4,7 @@ struct RepRangeEditor: View {
     @Binding var reps: RepDistribution
     let allowed: ClosedRange<Int> = 1...30
     let minSpan: Int = 0
-    var effort: ExerciseDistribution
+    var effort: EffortDistribution
 
     // Match SetCountEditor’s visibility logic
     private var visibleTypes: [EffortType] {

@@ -10,11 +10,11 @@ import Foundation
 /// if keepCurrentExercises, create after generating a workout plan
 struct ParamsBeforeSwitch: Codable, Equatable {
     var resistance: ResistanceType
-    var distribution: ExerciseDistribution?
+    var distribution: EffortDistribution?
     
     init(
         resistance: ResistanceType,
-        customDistribution: ExerciseDistribution?
+        customDistribution: EffortDistribution?
     ) {
         self.resistance = resistance
         self.distribution = customDistribution
@@ -22,7 +22,7 @@ struct ParamsBeforeSwitch: Codable, Equatable {
     
     enum ParamsChanged: String { case resistance, distribution }
     
-    func getChanges(resistance: ResistanceType, distribution: ExerciseDistribution?) -> Set<ParamsChanged> {
+    func getChanges(resistance: ResistanceType, distribution: EffortDistribution?) -> Set<ParamsChanged> {
         var changed: Set<ParamsChanged> = []
         if self.resistance != resistance { changed.insert(.resistance) }
         if self.distribution != distribution { changed.insert(.distribution) }
