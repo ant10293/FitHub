@@ -140,16 +140,7 @@ struct ExerciseAdjustments: Codable, Identifiable, Equatable, Hashable {
     mutating func clearValue(for category: AdjustmentCategory) {
         setValue(.string(""), for: category)
     }
-    /*
-    mutating func setImage(_ image: String?, for category: AdjustmentCategory) {
-        withAdjustment(for: category) { entry in
-            // Update the exercise-specific image override
-            var updatedAdjustment = entry.adjustment
-            updatedAdjustment.image = image
-            entry = AdjustmentEntry(adjustment: updatedAdjustment, value: entry.value)
-        }
-    }
-    */
+
     mutating func normalize() {
         var merged: [AdjustmentCategory: AdjustmentEntry] = [:]
         for entry in entries {
@@ -209,11 +200,6 @@ struct AdjustmentEntry: Codable, Equatable, Hashable {
     }
 }
 
-struct AdjustmentKey: Hashable, Codable, Equatable {
-    let equipmentID: GymEquipment.ID?
-    let category: AdjustmentCategory
-}
-
 struct EquipmentAdjustment: Codable, Identifiable, Equatable, Hashable {
     let id: GymEquipment.ID
     let category: AdjustmentCategory
@@ -226,4 +212,9 @@ struct EquipmentAdjustment: Codable, Identifiable, Equatable, Hashable {
     }
     
     var hasCustomImage: Bool { image?.isEmpty == false }
+}
+
+struct AdjustmentKey: Hashable, Codable, Equatable {
+    let equipmentID: GymEquipment.ID?
+    let category: AdjustmentCategory
 }

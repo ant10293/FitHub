@@ -26,13 +26,12 @@ enum ImageStorageLevel: String, CaseIterable {
 }
 
 struct AdjustmentImageUpload: View {
+    @State private var storageLevel: ImageStorageLevel = .equipment
     var initialFilename: String? = nil
     var hasExistingEquipmentImage: Bool = false
     let showStorageLevelPicker: Bool
     var onImagePicked: (String, ImageStorageLevel) -> Void
-    
-    @State private var storageLevel: ImageStorageLevel = .equipment
-    
+        
     var body: some View {
         VStack(spacing: 20) {
             // Storage level picker

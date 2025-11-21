@@ -470,7 +470,7 @@ extension AuthService {
         upgradeAnonymousUser(
             with: EmailAuthProvider.credential(withEmail: email, password: password),
             // If email already exists or we weren't anonymous, this is the "normal sign-in" it falls back to
-            fallbackSignIn: { handler in Auth.auth().signIn(withEmail: email, password: password, completion: handler) },
+            fallbackSignIn: { handler in Auth.auth().createUser(withEmail: email, password: password, completion: handler) },
             completion: { [weak self] result in
                 guard let self = self else { return }
                 
