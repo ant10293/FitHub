@@ -214,3 +214,5 @@ DispatchQueue.global(qos: .userInitiated).async {
 
 4. **Non-Blocking Errors:** Some errors (like referral tracking) should be non-blocking and not shown to users, but still logged for debugging.
 
+
+

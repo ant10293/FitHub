@@ -1,6 +1,6 @@
 
 //
-//  NewExerciseView.swift
+//  NewEquipmentView.swift
 //  FitHub
 //
 //  Created by Anthony Cantu on 7/3/25.
@@ -22,22 +22,27 @@ struct NewEquipment: View {
     @State private var showRestoreAlert: Bool = false
     @State private var alternativeEquipment: [GymEquipment] = []
     @State private var draft: InitEquipment
-    let original: GymEquipment? 
+    let initialDraft: InitEquipment
+    let original: GymEquipment?
     
     init(original: GymEquipment? = nil) {
         self.original = original
         if let ori = original {
-            _draft = State(initialValue: InitEquipment(from: ori))  
+            let initEq = InitEquipment(from: ori)
+            _draft = State(initialValue: initEq)
+            self.initialDraft = initEq
         } else {
-            _draft = State(initialValue: InitEquipment(
+            let initEq = InitEquipment(
                 name: "",
                 aliases: [],
                 alternativeEquipment: [],
-                image: "", 
+                image: "",
                 equCategory: .other,
                 adjustments: [],
                 description: ""
-            ))
+            )
+            _draft = State(initialValue: initEq)
+            self.initialDraft = initEq
         }
     }
     
@@ -78,7 +83,7 @@ struct NewEquipment: View {
                     
                     if !kbd.isVisible {
                         RectangularButton(
-                            title: isEditing ? "Save Changes" : "Create Equipment",
+                            title: isEditing ? "Save & Exit" : "Create Equipment",
                             enabled: isInputValid,
                             bgColor: isInputValid ? .blue : .gray
                         ) {
@@ -94,13 +99,18 @@ struct NewEquipment: View {
                         if isEditing {
                             switch ctx.equipment.getEquipmentLocation(equipment) {
                             case .user:
-                                RectangularButton(title: "Delete Equipment", systemImage: "trash", bgColor: .red, action: {
+                                RectangularButton(title: "Delete Equipment", systemImage: "trash", bgColor: .red) {
                                     showDeleteAlert = true
-                                })
+                                }
                             case .bundled:
-                                RectangularButton(title: "Restore Equipment", systemImage: "arrow.2.circlepath", bgColor: .red, action: {
+                                RectangularButton(
+                                    title: "Restore Equipment",
+                                    systemImage: "arrow.2.circlepath",
+                                    enabled: isBundledOverride,
+                                    bgColor: .red
+                                ) {
                                     showRestoreAlert = true
-                                })
+                                }
                             case .none:
                                 EmptyView()
                             }
@@ -143,6 +153,10 @@ struct NewEquipment: View {
         } message: {
             Text("This will discard your changes and reload the original equipment.")
         }
+    }
+    
+    private var isBundledOverride: Bool {
+        ctx.equipment.isOverridenEquipment(equipment)
     }
     
     private var isEditing: Bool { original != nil }
@@ -274,7 +288,8 @@ struct NewEquipment: View {
     private var isInputValid: Bool {
         !draft.name.isEmpty &&
         InputLimiter.isValidInput(draft.name) &&
-        !isDuplicateName
+        !isDuplicateName &&
+        draft != initialDraft
     }
     
     private func setEquipment(selection: [GymEquipment]) {

@@ -11,7 +11,7 @@ struct EquipmentDetail: View {
     @Environment(\.dismiss) private var dismiss
     @State private var expandList: Bool = false
     @State private var editingEquipment: Bool = false
-    var equipment: GymEquipment
+    let equipment: GymEquipment
     var alternative: [GymEquipment]?
     let allExercises: [Exercise]
     let allEquipment: [GymEquipment]

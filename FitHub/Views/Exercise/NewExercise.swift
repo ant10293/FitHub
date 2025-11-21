@@ -30,14 +30,17 @@ struct NewExercise: View {
     @State private var showRestoreAlert: Bool = false
     @State private var equipmentRequired: [GymEquipment] = []
     @State private var draft: InitExercise
+    let initialDraft: InitExercise
     let original: Exercise?
 
     init(original: Exercise? = nil) {
         self.original = original
         if let ex = original {
-            _draft = State(initialValue: InitExercise(from: ex))   // you already have this init
+            let initEx = InitExercise(from: ex)
+            _draft = State(initialValue: initEx)   // you already have this init
+            self.initialDraft = initEx
         } else {
-            _draft = State(initialValue: InitExercise(
+            let initEx = InitExercise(
                 name: "",
                 aliases: [],
                 image: "",
@@ -48,7 +51,9 @@ struct NewExercise: View {
                 resistance: .freeWeight,
                 url: "",
                 difficulty: .beginner
-            ))
+            )
+            _draft = State(initialValue: initEx)
+            self.initialDraft = initEx
         }
     }
     
@@ -83,7 +88,7 @@ struct NewExercise: View {
                                                 
                 if !kbd.isVisible {
                     RectangularButton(
-                        title: isEditing ? "Save Changes" : "Create Exercise",
+                        title: isEditing ? "Save & Exit" : "Create Exercise",
                         enabled: isInputValid,
                         bgColor: isInputValid ? .blue : .gray
                     ) {
@@ -99,13 +104,18 @@ struct NewExercise: View {
                     if isEditing {
                         switch ctx.exercises.getExerciseLocation(exercise) {
                         case .user:
-                            RectangularButton(title: "Delete Exercise", systemImage: "trash", bgColor: .red, action: {
+                            RectangularButton(title: "Delete Exercise", systemImage: "trash", bgColor: .red) {
                                 showDeleteAlert = true
-                            })
+                            }
                         case .bundled:
-                            RectangularButton(title: "Restore Exercise", systemImage: "arrow.2.circlepath", bgColor: .red, action: {
+                            RectangularButton(
+                                title: "Restore Exercise",
+                                systemImage: "arrow.2.circlepath",
+                                enabled: isBundledOverride,
+                                bgColor: .red
+                            ) {
                                 showRestoreAlert = true
-                            })
+                            }
                         case .none:
                             EmptyView()
                         }
@@ -162,6 +172,10 @@ struct NewExercise: View {
                 draft.weightInstruction = determineWeightInstruction()
             }
         }
+    }
+    
+    private var isBundledOverride: Bool {
+        ctx.exercises.isOverriddenExercise(exercise)
     }
     
     private var isEditing: Bool { original != nil }
@@ -346,7 +360,8 @@ struct NewExercise: View {
     private var isInputValid: Bool {
         !draft.name.isEmpty &&
         InputLimiter.isValidInput(draft.name) &&
-        !isDuplicateName
+        !isDuplicateName &&
+        draft != initialDraft
     }
     
     private var isDuplicateName: Bool {

@@ -81,3 +81,5 @@ Usage:
 
 Manual upload is actually **more reliable** than automatic upload, especially with User Script Sandboxing enabled. It's a small trade-off for guaranteed functionality.
 
+
+

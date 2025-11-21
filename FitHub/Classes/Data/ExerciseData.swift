@@ -101,6 +101,10 @@ extension ExerciseData {
         return bundledExercises.contains(where: { $0.id == exercise.id })
     }
     
+    func isOverriddenExercise(_ exercise: Exercise) -> Bool {
+        return bundledOverrides[exercise.id] != nil
+    }
+    
     func getExerciseLocation(_ exercise: Exercise) -> ExEquipLocation {
         if isUserExercise(exercise) {
             return .user

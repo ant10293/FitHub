@@ -92,6 +92,10 @@ extension EquipmentData {
         bundledEquipment.contains(where: { $0.id == equipment.id })
     }
     
+    func isOverridenEquipment(_ equipment: GymEquipment) -> Bool {
+        bundledOverrides[equipment.id] != nil
+    }
+    
     func getEquipmentLocation(_ equipment: GymEquipment) -> ExEquipLocation {
         if isUserEquipment(equipment) {
             return .user
