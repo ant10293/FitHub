@@ -36,15 +36,30 @@ struct CompletedDetails: View {
                     
                     ForEach(workout.template.exercises) { exercise in
                         VStack(alignment: .leading, spacing: 5) {
+                            let statusSuffix: Text = {
+                                if exercise.isCompleted {
+                                    return Text("") // no suffix
+                                } else if exercise.noSetsCompleted {
+                                    return Text(" (Skipped)").foregroundStyle(.red)
+                                } else {
+                                    return Text(" (Incomplete)").foregroundStyle(.orange)
+                                }
+                            }()
+
+                            (
                             Text(exercise.name)
                                 .font(.subheadline)
-                                .padding(.top, 10)
-                                .multilineTextAlignment(.leading)
-                            
+                            + statusSuffix
+                                .font(.caption)
+                            )
+                            .padding(.top, 10)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                        
                             if let ex = workout.template.supersetFor(exercise: exercise) {
                                 Text("(Supersetted with \(ex.name))")
                                     .font(.caption)
-                                    .foregroundStyle(.orange)
+                                    .foregroundStyle(.green)
                                     .multilineTextAlignment(.leading)
                             }
                             
@@ -187,5 +202,3 @@ private extension CompletedDetails {
         }
     }
 }
-
-

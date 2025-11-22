@@ -18,7 +18,7 @@ final class WorkoutVM: ObservableObject {
     @Published var workoutCompleted: Bool = false
     @Published var isOverlayVisible: Bool = true
     @Published var showWorkoutSummary: Bool = false
-    @Published private var completionDuration: Int = 0
+    @Published private var completionDuration: Int?
 
     init(
         template: WorkoutTemplate,
@@ -130,7 +130,7 @@ final class WorkoutVM: ObservableObject {
     }
 
     func calculateWorkoutSummary() -> WorkoutSummaryData {
-        template.calculateWorkoutSummary(completionDuration: completionDuration, updates: updates)
+        template.calculateWorkoutSummary(completionDuration: completionDuration ?? 0, updates: updates)
     }
     
     private var secondsElapsed: Int { CalendarUtility.secondsSince(startDate) }
@@ -176,19 +176,22 @@ final class WorkoutVM: ObservableObject {
     func finishWorkoutAndDismiss(ctx: AppContext, completion: () -> Void) {
         let now = Date()
         let roundedDate = CalendarUtility.shared.startOfDay(for: now)
+        
+        // Calculate duration if not already set (e.g., when user exits via back button)
+        let finalDuration = completionDuration ?? secondsElapsed
                 
-        let completedToday = ctx.userData.workoutPlans.completedWorkouts.contains { workout in // Check if there was a workout completed today
+        // Check if there was a workout completed today
+        let completedToday = ctx.userData.workoutPlans.completedWorkouts.contains { workout in
             CalendarUtility.shared.isDate(workout.date, inSameDayAs: roundedDate)
         }
         
-        // MARK: remove date only if a workout was not already completed today - Maybe remove this requirement so date is always removed
-        ctx.userData.removePlannedWorkoutDate(templateID: template.id, removeDate: !completedToday, date: roundedDate)
-                
         if !completedToday { ctx.userData.incrementWorkoutStreak() }
         
-        // save precise date for determing freshness of muscle groups
-        let completedWorkout: CompletedWorkout = .init(template: template, updatedMax: updates.updatedMax, duration: completionDuration, date: now)
-        ctx.userData.workoutPlans.completedWorkouts.append(completedWorkout) // Append to completedWorkouts and save
+        // MARK: remove date only if a workout was not already completed today - Maybe remove this requirement so date is always removed
+        ctx.userData.removePlannedWorkoutDate(templateID: template.id, removeDate: !completedToday, date: roundedDate)
+                        
+        let completedWorkout: CompletedWorkout = .init(template: template, updatedMax: updates.updatedMax, duration: finalDuration, date: now)
+        ctx.userData.workoutPlans.completedWorkouts.append(completedWorkout)
         
         endWorkoutAndDismiss(ctx: ctx, completion: completion)
     }
@@ -200,6 +203,8 @@ final class WorkoutVM: ObservableObject {
         
         // CRITICAL: Reset all workout state atomically
         ctx.userData.resetWorkoutSession()
+        
+        ctx.userData.saveToFile()
         
         completion()
     }

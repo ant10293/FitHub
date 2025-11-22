@@ -147,6 +147,10 @@ extension Exercise {
         }
     }
     
+    var noSetsCompleted: Bool {
+        setDetails.allSatisfy { $0.completed == nil }
+    }
+    
     var usesWeight: Bool {
         switch resistance {
         case .machine: return effort != .cardio ? true : false
