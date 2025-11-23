@@ -26,7 +26,6 @@ final class ReferralCodeAdmin: ObservableObject {
         influencerName: String,
         influencerEmail: String? = nil,
         notes: String? = nil,
-        payoutMethod: String? = nil,
         acceptedTermsVersion: String
     ) async throws {
         // Check if user already has a referral code
@@ -58,7 +57,6 @@ final class ReferralCodeAdmin: ObservableObject {
             "influencerName": influencerName,
             "influencerEmail": influencerEmail ?? "",
             "notes": notes ?? "",
-            "payoutMethod": payoutMethod ?? "",
             "isActive": true,
             "createdAt": FieldValue.serverTimestamp(),
             "createdBy": userId,
@@ -78,7 +76,6 @@ final class ReferralCodeAdmin: ObservableObject {
         influencerName: String,
         influencerEmail: String? = nil,
         notes: String? = nil,
-        payoutMethod: String? = nil,
         acceptedTermsVersion: String
     ) async throws -> String {
         // Check if user already has a referral code
@@ -120,7 +117,6 @@ final class ReferralCodeAdmin: ObservableObject {
                     influencerName: influencerName,
                     influencerEmail: influencerEmail,
                     notes: notes,
-                    payoutMethod: payoutMethod,
                     acceptedTermsVersion: acceptedTermsVersion
                 )
                 return code
@@ -165,7 +161,7 @@ final class ReferralCodeAdmin: ObservableObject {
         }
     }
 
-    func getData(_ code: String) async throws -> (code: String, email: String, pMethod: String, notes: String, stats: CodeStats, stripe: StripeAffiliateStatus, acceptedTermsVersion: String?) {
+    func getData(_ code: String) async throws -> (code: String, email: String, notes: String, stats: CodeStats, stripe: StripeAffiliateStatus, acceptedTermsVersion: String?) {
         let codeData = try await getCodeData(code)
 
         let affiliate = loadAffiliateInfo(from: codeData)
@@ -176,7 +172,6 @@ final class ReferralCodeAdmin: ObservableObject {
         return (
             code: affiliate.code,
             email: affiliate.email,
-            pMethod: affiliate.pMethod,
             notes: affiliate.notes,
             stats: stats,
             stripe: stripe,
@@ -205,13 +200,12 @@ final class ReferralCodeAdmin: ObservableObject {
         ])
     }
 
-    private func loadAffiliateInfo(from codeData: [String: Any]) -> (code: String, email: String, pMethod: String, notes: String) {
+    private func loadAffiliateInfo(from codeData: [String: Any]) -> (code: String, email: String, notes: String) {
         let code    = codeData["code"] as? String ?? ""
         let email   = codeData["influencerEmail"] as? String ?? ""
-        let pMethod = codeData["payoutMethod"] as? String ?? ""
         let notes   = codeData["notes"] as? String ?? ""
 
-        return (code, email, pMethod, notes)
+        return (code, email, notes)
     }
     
     private func loadReferralInfo(from codeData: [String: Any]) -> CodeStats {

@@ -35,183 +35,180 @@ struct AffiliateRegistrationView: View {
     @State private var acceptedTermsVersion: String? = nil
     @State private var currentTermsVersion: String? = nil
     @State private var needsTermsAcceptance: Bool = false
-    //@State private var checkedTermsAcceptance: Bool = false
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    //if checkedTermsAcceptance {
-                        if let code = generatedCode {
-                            if needsTermsAcceptance {
-                                // BLOCKING VIEW - Terms need re-acceptance
-                                VStack(spacing: 20) {
-                                    Text("Terms and Conditions Update")
-                                        .font(.title2.bold())
-                                    
-                                    Text("The Affiliate Program Terms and Conditions have been updated. Please review and accept the new terms to continue.")
-                                        .font(.body)
-                                        .foregroundStyle(.secondary)
-                                        .multilineTextAlignment(.center)
-                                    
-                                    termsAcceptanceButton(action: {
-                                        acceptedTerms.toggle()
-                                        if acceptedTerms {
-                                            Task { await updateTermsAcceptance(code: code) }
-                                        }
-                                    })
-                                }
-                                .padding()
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            } else if codeNotFound {
-                                // CODE NOT FOUND WARNING STATE
-                                VStack(alignment: .leading, spacing: 16) {
-                                    Text("Code Not Found")
-                                        .font(.headline)
-                                    
-                                    Text("Referral code '\(code)' not found in our servers. Please generate a new code or contact support.")
-                                        .font(.subheadline)
-                                        .foregroundStyle(.secondary)
-                                    
-                                    RectangularButton(
-                                        title: "Start Over",
-                                        enabled: true,
-                                        fontWeight: .bold,
-                                        action: startOver
-                                    )
-                                }
-                                .cardContainer(cornerRadius: 12, backgroundColor: Color(UIColor.secondarySystemBackground))
-                            } else {
-                                // SUCCESS STATE
-                                VStack(alignment: .leading, spacing: 12) {
-                                    Text("Your Referral Code")
-                                        .font(.headline)
-                                    
-                                    ZStack {
-                                        Text(code)
-                                            .font(.system(size: 30, weight: .bold, design: .monospaced))
-                                            .foregroundStyle(.blue)
-                                            .frame(maxWidth: .infinity, alignment: .center)
-                                            .padding()
-                                            .background(Color.blue.opacity(0.08))
-                                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                                    .stroke(Color.blue, lineWidth: 1)
-                                            )
-                                    }
-                                    .overlay(alignment: .trailing) {
-                                        Button {
-                                            UIPasteboard.general.string = code
-                                            codeCopied = true
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                                codeCopied = false
-                                            }
-                                        } label: {
-                                            Image(systemName: codeCopied ? "checkmark.circle.fill" : "doc.on.doc")
-                                                .font(.title3)
-                                                .foregroundStyle(codeCopied ? .green : .blue)
-                                                .padding()   // system padding, not fixed
-                                        }
-                                        .buttonStyle(.plain)
-                                        .animation(.easeInOut(duration: 0.2), value: codeCopied)
-                                    }
-                                    
-                                    Button {
-                                        UIPasteboard.general.string = generateAppStoreLink(with: code)
-                                        linkCopied = true
-                                        // Reset after 2 seconds
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                            linkCopied = false
-                                        }
-                                    } label: {
-                                        Label(linkCopied ? "Link Copied!" : "Copy App Link", systemImage: linkCopied ? "checkmark" : "link")
-                                            .frame(maxWidth: .infinity)
-                                    }
-                                    .buttonStyle(.borderedProminent)
-                                    .animation(.easeInOut(duration: 0.2), value: linkCopied)
-                                    
-                                    ShareLink(item: generateShareText(code: code)) {
-                                        Label("Share Referral Code", systemImage: "square.and.arrow.up")
-                                            .frame(maxWidth: .infinity)
-                                    }
-                                    .buttonStyle(.bordered)
-                                    
-                                    StripeConnect(stripeStatus: $stripeStatus, referralCode: code, refreshStripeStatus: refreshStripeStatus)
-                                        .id(stripeConnectKey) // Force reset by changing key
-                                    
-                                    ReferralStats(isLoadingStats: isLoadingStats, codeStats: codeStats)
-                                }
-                            }
-                        } else {
-                            // INPUT STATE
-                            AffiliateInfoForm(
-                                fullName: $fullName,
-                                email: $email,
-                                notes: $notes,
-                                allowEditFullName: true,
-                                allowEditEmail: true,
-                                allowEditNotes: true,
-                                emailErrorMessage: emailValidationError(email)
-                            )
-                            
-                            Text("Create Custom Code")
-                                .font(.headline)
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                TextField("Custom code (optional)", text: $customCode)
-                                    .textInputAutocapitalization(.characters)
-                                    .autocorrectionDisabled(true)
-                                    .inputStyle()
-                                    .onChange(of: customCode) { _, _ in
-                                        if errorMessage?.forCustomCode == true {
-                                            errorMessage = nil
-                                        }
-                                    }
+                    if let code = generatedCode {
+                        if needsTermsAcceptance {
+                            // BLOCKING VIEW - Terms need re-acceptance
+                            VStack(spacing: 20) {
+                                Text("Terms and Conditions Update")
+                                    .font(.title2.bold())
                                 
-                                if let customCodeError = customCodeValidationError(customCode) {
-                                    Text(customCodeError)
-                                        .font(.caption)
-                                        .foregroundStyle(.red)
-                                        .padding(.leading, 4)
-                                }
-                            }
-                            
-                            // Terms acceptance for new users
-                            if needsTermsAcceptance {
-                                Text("Terms and Conditions")
-                                    .font(.headline)
+                                Text("The Affiliate Program Terms and Conditions have been updated. Please review and accept the new terms to continue.")
+                                    .font(.body)
+                                    .foregroundStyle(.secondary)
+                                    .multilineTextAlignment(.center)
                                 
                                 termsAcceptanceButton(action: {
                                     acceptedTerms.toggle()
+                                    if acceptedTerms {
+                                        Task { await updateTermsAcceptance(code: code) }
+                                    }
                                 })
                             }
-                            
-                            Spacer()
-                            
-                            Group {
-                                if let error = errorMessage {
-                                    Text(error.localizedDescription)
-                                        .font(.caption)
-                                        .foregroundStyle(.red)
+                            .padding()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        } else if codeNotFound {
+                            // CODE NOT FOUND WARNING STATE
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text("Code Not Found")
+                                    .font(.headline)
+                                
+                                Text("Referral code '\(code)' not found in our servers. Please generate a new code or contact support.")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                
+                                RectangularButton(
+                                    title: "Start Over",
+                                    enabled: true,
+                                    fontWeight: .bold,
+                                    action: startOver
+                                )
+                            }
+                            .cardContainer(cornerRadius: 12, backgroundColor: Color(UIColor.secondarySystemBackground))
+                        } else {
+                            // SUCCESS STATE
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("Your Referral Code")
+                                    .font(.headline)
+                                
+                                ZStack {
+                                    Text(code)
+                                        .font(.system(size: 30, weight: .bold, design: .monospaced))
+                                        .foregroundStyle(.blue)
+                                        .frame(maxWidth: .infinity, alignment: .center)
+                                        .padding()
+                                        .background(Color.blue.opacity(0.08))
+                                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                                .stroke(Color.blue, lineWidth: 1)
+                                        )
+                                }
+                                .overlay(alignment: .trailing) {
+                                    Button {
+                                        UIPasteboard.general.string = code
+                                        codeCopied = true
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                            codeCopied = false
+                                        }
+                                    } label: {
+                                        Image(systemName: codeCopied ? "checkmark.circle.fill" : "doc.on.doc")
+                                            .font(.title3)
+                                            .foregroundStyle(codeCopied ? .green : .blue)
+                                            .padding()   // system padding, not fixed
+                                    }
+                                    .buttonStyle(.plain)
+                                    .animation(.easeInOut(duration: 0.2), value: codeCopied)
                                 }
                                 
-                                if isGenerating { ProgressView() }
+                                Button {
+                                    UIPasteboard.general.string = generateAppStoreLink(with: code)
+                                    linkCopied = true
+                                    // Reset after 2 seconds
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                        linkCopied = false
+                                    }
+                                } label: {
+                                    Label(linkCopied ? "Link Copied!" : "Copy App Link", systemImage: linkCopied ? "checkmark" : "link")
+                                        .frame(maxWidth: .infinity)
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .animation(.easeInOut(duration: 0.2), value: linkCopied)
+                                
+                                ShareLink(item: generateShareText(code: code)) {
+                                    Label("Share Referral Code", systemImage: "square.and.arrow.up")
+                                        .frame(maxWidth: .infinity)
+                                }
+                                .buttonStyle(.bordered)
+                                
+                                StripeConnect(stripeStatus: $stripeStatus, referralCode: code, refreshStripeStatus: refreshStripeStatus)
+                                    .id(stripeConnectKey) // Force reset by changing key
+                                
+                                ReferralStats(isLoadingStats: isLoadingStats, codeStats: codeStats)
                             }
-                            .centerHorizontally()
-                            
-                            RectangularButton(
-                                title: buttonTitle,
-                                enabled: isButtonEnabled,
-                                fontWeight: .bold,
-                                action: generateCode
-                            )
-                            
-                            Text("Your referral code will be generated from your name and stored so signups can be attributed.")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
                         }
-                   // }
+                    } else {
+                        // INPUT STATE
+                        AffiliateInfoForm(
+                            fullName: $fullName,
+                            email: $email,
+                            notes: $notes,
+                            allowEditFullName: true,
+                            allowEditEmail: true,
+                            allowEditNotes: true,
+                            emailErrorMessage: emailValidationError(email)
+                        )
+                        
+                        Text("Create Custom Code")
+                            .font(.headline)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            TextField("Custom code (optional)", text: $customCode)
+                                .textInputAutocapitalization(.characters)
+                                .autocorrectionDisabled(true)
+                                .inputStyle()
+                                .onChange(of: customCode) { _, _ in
+                                    if errorMessage?.forCustomCode == true {
+                                        errorMessage = nil
+                                    }
+                                }
+                            
+                            if let customCodeError = customCodeValidationError(customCode) {
+                                Text(customCodeError)
+                                    .font(.caption)
+                                    .foregroundStyle(.red)
+                                    .padding(.leading, 4)
+                            }
+                        }
+                        
+                        // Terms acceptance for new users
+                        if needsTermsAcceptance {
+                            Text("Terms and Conditions")
+                                .font(.headline)
+                            
+                            termsAcceptanceButton(action: {
+                                acceptedTerms.toggle()
+                            })
+                        }
+                        
+                        Spacer()
+                        
+                        Group {
+                            if let error = errorMessage {
+                                Text(error.localizedDescription)
+                                    .font(.caption)
+                                    .foregroundStyle(.red)
+                            }
+                            
+                            if isGenerating { ProgressView() }
+                        }
+                        .centerHorizontally()
+                        
+                        RectangularButton(
+                            title: buttonTitle,
+                            enabled: isButtonEnabled,
+                            fontWeight: .bold,
+                            action: generateCode
+                        )
+                        
+                        Text("Your referral code will be generated from your name and stored so signups can be attributed.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                     
                     Spacer(minLength: 0)
                 }
@@ -277,9 +274,6 @@ struct AffiliateRegistrationView: View {
         fullName = ctx.userData.profile.displayName(.full)
         email = ctx.userData.profile.email
         
-        // Reset checkedTermsAcceptance to prevent flash of wrong state
-        //checkedTermsAcceptance = false
-        
         Task {
             currentTermsVersion = await AffiliateTermsConstants.getCurrentVersion()
             if let existingCode = ctx.userData.profile.referralCode, !existingCode.isEmpty {
@@ -306,8 +300,6 @@ struct AffiliateRegistrationView: View {
         if !needsTermsAcceptance {
             acceptedTerms = true
         }
-        
-        //checkedTermsAcceptance = true
     }
     
     private func updateTermsAcceptance(code: String) async {

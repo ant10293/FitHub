@@ -28,18 +28,26 @@ struct TemplateSelection: View {
     
     private var allTemplates: [WorkoutTemplate] { userTemplates + trainerTemplates }
     
-    private var workoutList: some View {
-        List {
-            if userTemplates.isEmpty && trainerTemplates.isEmpty {
-                Text("No templates found. Create your own or generate them in the trainer tab.")
-                    .foregroundStyle(.gray)
-                    .padding(.horizontal)
-            } else {
-                if !trainerTemplates.isEmpty {
-                    templatesSection(templates: trainerTemplates, location: .trainer)
-                }
-                if !userTemplates.isEmpty {
-                    templatesSection(templates: userTemplates, location: .user)
+    @ViewBuilder private var workoutList: some View {
+        if userTemplates.isEmpty && trainerTemplates.isEmpty {
+            EmptyState(
+                systemName: "nosign",
+                title: "No workouts created yet...",
+                subtitle: "Create a workout in the 'Workouts' tab or generate them in the 'Trainer' tab to get started!"
+            )
+        } else {
+            List {
+                if userTemplates.isEmpty && trainerTemplates.isEmpty {
+                    Text("No templates found. Create your own or generate them in the trainer tab.")
+                        .foregroundStyle(.gray)
+                        .padding(.horizontal)
+                } else {
+                    if !trainerTemplates.isEmpty {
+                        templatesSection(templates: trainerTemplates, location: .trainer)
+                    }
+                    if !userTemplates.isEmpty {
+                        templatesSection(templates: userTemplates, location: .user)
+                    }
                 }
             }
         }

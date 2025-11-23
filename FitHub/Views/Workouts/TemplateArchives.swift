@@ -33,7 +33,11 @@ struct TemplateArchives: View {
                     templatesSection(templates: userData.workoutPlans.archivedTemplates)
                 }
             } else {
-                EmptyTemplatesState
+                EmptyState(
+                    systemName: "tray",
+                    title: "Nothing Archived Yet",
+                    subtitle: "When you archive a workout template it will be stored here for safekeeping."
+                )
             }
         }
     }
@@ -135,25 +139,5 @@ struct TemplateArchives: View {
     private func resetEditing() {
         showingActionOverlay = false
         editingTemplate = nil
-    }
-    
-    // MARK: – Empty state
-    private var EmptyTemplatesState: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "tray")
-                .symbolRenderingMode(.hierarchical)
-                .font(.system(.largeTitle, weight: .regular))
-                .foregroundStyle(.secondary)
-
-            Text("Nothing Archived Yet")
-                .font(.title3.weight(.semibold))
-
-            Text("When you **archive** a workout template it will be stored here for safekeeping.")
-            .font(.callout)
-            .foregroundStyle(.secondary)
-            .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity)
-        .padding()
     }
 }

@@ -19,7 +19,11 @@ struct CompletedWorkouts: View {
     var body: some View {
         VStack(spacing: 0) {
             if sortedWorkouts.isEmpty {
-                emptyWorkoutsView
+                EmptyState(
+                    systemName: "figure.walk",
+                    title: "No completed workouts yet...",
+                    subtitle: "Start your FitHub journey today!"
+                )
             } else {
                 HStack {
                     Text("Sort by").bold()
@@ -101,26 +105,6 @@ struct CompletedWorkouts: View {
                 .disabled(sortedWorkouts.isEmpty)
             }
         }
-    }
-    
-    // MARK: – Empty state
-    private var emptyWorkoutsView: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "figure.walk")
-                .symbolRenderingMode(.hierarchical)
-                .font(.system(.largeTitle, weight: .regular))
-                .foregroundStyle(.secondary)
-
-            Text("No completed workouts yet...")
-                .font(.title3.weight(.semibold))
-
-            Text("Start your FitHub journey today!")
-            .font(.callout)
-            .foregroundStyle(.secondary)
-            .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity)
-        .padding()
     }
     
     private var sortedWorkouts: [CompletedWorkout] {

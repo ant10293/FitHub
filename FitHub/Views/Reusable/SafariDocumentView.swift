@@ -73,18 +73,11 @@ private struct LegalDocumentSheetHost: View {
             if let url = URL(string: urlString) {
                 SafariDocumentView(url: url)
             } else {
-                VStack(spacing: 16) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.system(size: 40))
-                        .foregroundStyle(.yellow)
-                    Text("\(title) is temporarily unavailable.")
-                        .font(.headline)
-                    Text("Please try again later or contact support@fithub.app if the issue persists.")
-                        .font(.subheadline)
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.secondary)
-                }
-                .padding()
+                EmptyState(
+                    systemName: "exclamationmark.triangle.fill",
+                    title: "\(title) is temporarily unavailable.",
+                    subtitle: "Please try again later or contact support@fithub.app if the issue persists."
+                )
             }
         }
     }

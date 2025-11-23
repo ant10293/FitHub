@@ -248,7 +248,7 @@ enum LegalURL {
     
     var urlSuffix: String {
         switch self {
-        case .privacyPolicy: "privacy-policy"
+        case .privacyPolicy: "privacy"
         case .termsOfService: "terms"
         case .affiliateTerms: "affiliate-terms"
         }
