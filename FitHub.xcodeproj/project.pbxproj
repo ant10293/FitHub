@@ -92,6 +92,8 @@
 		6584B0B42C30BF4700447EC1 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 6584B0B32C30BF4700447EC1 /* FirebaseStorage */; };
 		658D80092ED1184F0041FB4D /* ExerciseRPEGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80082ED1184F0041FB4D /* ExerciseRPEGraph.swift */; };
 		658D800B2ED121AD0041FB4D /* SetDetailHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D800A2ED121AD0041FB4D /* SetDetailHistory.swift */; };
+		658D800D2ED269FC0041FB4D /* AffiliateTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D800C2ED269FC0041FB4D /* AffiliateTermsView.swift */; };
+		658D800F2ED26A530041FB4D /* AffiliateTermsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D800E2ED26A530041FB4D /* AffiliateTermsConstants.swift */; };
 		6592279E2EC80DDF00EEDF42 /* GuestAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */; };
 		659227A02EC820E100EEDF42 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592279F2EC820E100EEDF42 /* Name.swift */; };
 		65A0D1CC2E2F39D5008466D8 /* CustomToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */; };
@@ -370,6 +372,8 @@
 		6584B0632C30BC2000447EC1 /* FitHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		658D80082ED1184F0041FB4D /* ExerciseRPEGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseRPEGraph.swift; sourceTree = "<group>"; };
 		658D800A2ED121AD0041FB4D /* SetDetailHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDetailHistory.swift; sourceTree = "<group>"; };
+		658D800C2ED269FC0041FB4D /* AffiliateTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateTermsView.swift; sourceTree = "<group>"; };
+		658D800E2ED26A530041FB4D /* AffiliateTermsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateTermsConstants.swift; sourceTree = "<group>"; };
 		6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestAuthView.swift; sourceTree = "<group>"; };
 		6592279F2EC820E100EEDF42 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToolBar.swift; sourceTree = "<group>"; };
@@ -1281,6 +1285,7 @@
 		65DD05192EB97C86000D159C /* Affiliate */ = {
 			isa = PBXGroup;
 			children = (
+				658D800C2ED269FC0041FB4D /* AffiliateTermsView.swift */,
 				65DD051D2EBBED1D000D159C /* AffiliateInfoForm.swift */,
 				65DD051E2EBBED1D000D159C /* AffiliateSettingsView.swift */,
 				65DD05182EB97C86000D159C /* AffiliateRegistrationView.swift */,
@@ -1377,6 +1382,7 @@
 		65F5EF892EB16A5D005557F1 /* ReferralSystems */ = {
 			isa = PBXGroup;
 			children = (
+				658D800E2ED26A530041FB4D /* AffiliateTermsConstants.swift */,
 				65DD051B2EB9BB8A000D159C /* ReferralCodeRetriever.swift */,
 				65F5EF882EB16A5D005557F1 /* ReferralAttributor.swift */,
 				65DD050D2EB979F7000D159C /* AdminScript_GenerateCodes.swift */,
@@ -1600,6 +1606,7 @@
 				65A4D9702ECFD7770055D561 /* PurchaseErrorHandler.swift in Sources */,
 				65CD3C632DD3C84F00C2B671 /* SettingsView.swift in Sources */,
 				65CD3C642DD3C84F00C2B671 /* StartWeekOn.swift in Sources */,
+				658D800D2ED269FC0041FB4D /* AffiliateTermsView.swift in Sources */,
 				65CD3C652DD3C84F00C2B671 /* TermsOfService.swift in Sources */,
 				65CD3C662DD3C84F00C2B671 /* UnitSelection.swift in Sources */,
 				65039B7B2E8371C3007A31E1 /* CompletedEntry.swift in Sources */,
@@ -1724,6 +1731,7 @@
 				65CD3C872DD3C84F00C2B671 /* HomeView.swift in Sources */,
 				65CFBFA72E1F48F200CD521E /* NewEquipment.swift in Sources */,
 				65DD05392EC28E73000D159C /* InlineDeletion.swift in Sources */,
+				658D800F2ED26A530041FB4D /* AffiliateTermsConstants.swift in Sources */,
 				65CD3C882DD3C84F00C2B671 /* MainAppView.swift in Sources */,
 				65C5DC6D2DEFBD0A00B09AD2 /* Asset.swift in Sources */,
 				65A0D1CE2E304FCF008466D8 /* Unit.swift in Sources */,

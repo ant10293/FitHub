@@ -30,9 +30,7 @@ final class NotificationManager: ObservableObject {
         guard let workoutDate = workoutTemplate.date else { return notificationIDs }
 
         // App/user settings gates
-        if !user.settings.allowedNotifications || !user.settings.notifyBeforePlannedTime {
-            return notificationIDs
-        }
+        if !user.settings.workoutReminders { return notificationIDs }
 
         if user.settings.useDateOnly {
             if user.settings.notifications.times.isEmpty {
@@ -125,23 +123,6 @@ final class NotificationManager: ObservableObject {
         }
 
         return notificationIDs
-    }
-
-    // MARK: – Writable binding for Toggle
-    var toggleBinding: Binding<Bool> {
-        Binding(
-            get: { self.isAuthorized },
-            set: { newVal in
-                if newVal {
-                    self.requestIfNeeded()
-                } else {
-                    self._removeAllPending()
-                    Task { @MainActor in
-                        self.isAuthorized = false
-                    }
-                }
-            }
-        )
     }
 
     // MARK: – Public wrappers (no MainActor assumptions)

@@ -1,19 +1,24 @@
 //
-//  PrivacyPolicy.swift
+//  AffiliateTermsView.swift
 //  FitHub
 //
-//  Created by Anthony Cantu on 5/3/25.
+//  View to display affiliate program terms and conditions
 //
 
 import SwiftUI
 
-struct PrivacyPolicy: View {
+struct AffiliateTermsView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         LegalSheetDisplay(
-            document: .privacyPolicy,
+            document: .affiliateTerms,
             dismiss: { dismiss() }
         )
     }
 }
+
+
+
+
+

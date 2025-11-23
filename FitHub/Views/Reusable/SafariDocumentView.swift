@@ -8,17 +8,15 @@
 import SwiftUI
 import SafariServices
 
-struct LegalSheetDisplay: View {
-    private let URLPrefix: String = "https://ant10293.github.io/fithub-legal/"
+struct LegalSheetDisplay: View {    
     @State private var showSheet = false
-    let title: String
-    let URLString: String
+    let document: LegalURL
     let dismiss: () -> Void
 
     var body: some View {
         LegalDocumentSheetHost(
-            title: title,
-            urlString: URLPrefix + URLString,
+            title: document.title,
+            urlString: document.rawURL,
             isPresented: $showSheet
         )
         .onAppear { showSheet = true }
@@ -28,7 +26,7 @@ struct LegalSheetDisplay: View {
     }
 }
 
-private struct SafariDocumentView: UIViewControllerRepresentable {
+struct SafariDocumentView: UIViewControllerRepresentable {
     let url: URL
     
     func makeUIViewController(context: Context) -> SFSafariViewController {

@@ -21,7 +21,7 @@ final class AppContext: ObservableObject {
     // MARK: –  Domain data models that views observe via `@Published`
     // ------------------------------------------------------------------
     @Published var userData: UserData            // Profile & settings
-    @Published var adjustments: AdjustmentsData       // Progressive‑overload prefs
+    @Published var adjustments = AdjustmentsData()       // Progressive‑overload prefs
     @Published var exercises = ExerciseData()      // Exercise catalogue & stats
     @Published var equipment = EquipmentData()
     @Published var store: PremiumStore
@@ -34,8 +34,6 @@ final class AppContext: ObservableObject {
     init() {
         // Load persisted user‑modifiable models (or fallback to defaults)
         self.userData = UserData.loadFromFile() ?? .init()
-        self.adjustments = AdjustmentsData.loadAdjustmentsFromFile() ?? .init()
-
         self.store = PremiumStore(appAccountToken: nil)
 
         // Forward child updates so that *any* change triggers a view refresh
@@ -79,8 +77,8 @@ final class AppContext: ObservableObject {
     }
 
     func reloadDataFromDisk() {
-        let loadedUserData = UserData.loadFromFile() ?? .init()
-        let loadedAdjustments = AdjustmentsData.loadAdjustmentsFromFile() ?? .init()
+        let loadedUserData = UserData.loadFromFile() ?? .init(reloadingBlank: true)
+        let loadedAdjustments = AdjustmentsData()
         let loadedExercises = ExerciseData()
         let loadedEquipment = EquipmentData()
         

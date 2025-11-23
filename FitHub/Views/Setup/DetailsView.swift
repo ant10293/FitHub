@@ -9,16 +9,14 @@ struct DetailsView: View {
     @State private var age: String = ""
     @State private var selectedGender: Gender?
     @State private var dob: Date = Date()
-
     @State private var height: Length
     @State private var weight: Mass
-    
     @State private var activePicker: ActivePicker = .none
 
     init(userData: UserData) {
         self.userData = userData
         _userName = State(initialValue: userData.profile.userName)
-        _dob = State(initialValue: userData.profile.dob)
+        _dob = State(initialValue: userData.profile.dob ?? Date())
         _height = State(initialValue: userData.physical.height)
         _weight = State(initialValue: Mass(kg: userData.currentMeasurementValue(for: .weight).actualValue))
         _selectedGender = State(initialValue: userData.physical.gender)

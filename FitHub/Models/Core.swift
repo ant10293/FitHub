@@ -237,3 +237,28 @@ enum SupersetOption: String, CaseIterable, Codable {
 }
 */
 
+enum LegalURL {
+    static let urlPrefix = "https://ant10293.github.io/fithub-legal/"
+    
+    case privacyPolicy, termsOfService, affiliateTerms
+    
+    var rawURL: String {
+        LegalURL.urlPrefix + urlSuffix + "/"
+    }
+    
+    var urlSuffix: String {
+        switch self {
+        case .privacyPolicy: "privacy-policy"
+        case .termsOfService: "terms"
+        case .affiliateTerms: "affiliate-terms"
+        }
+    }
+    
+    var title: String {
+        switch self {
+        case .privacyPolicy: "Privacy Policy"
+        case .termsOfService: "Terms of Service"
+        case .affiliateTerms: "Affiliate Program Terms"
+        }
+    }
+}

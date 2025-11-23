@@ -3,7 +3,6 @@ import UserNotifications
 
 struct SettingsView: View {
     @EnvironmentObject private var ctx: AppContext
-    @ObservedObject var notifications = NotificationManager.shared
     @State private var isNotificationsExpanded = false
     
     var body: some View {
@@ -24,30 +23,6 @@ struct SettingsView: View {
             //navigationLink("globe", "Change Language") { ChangeLanguage(userData: ctx.userData) }
             navigationLink("ruler", "Imperial / Metric") { UnitSelection(userData: ctx.userData) }
             //navigationLink("paintbrush", "Change Theme") { ChangeTheme(userData: ctx.userData) }
-            
-            DisclosureGroup(isExpanded: $isNotificationsExpanded) {
-                VStack {
-                    Toggle("Workout Reminders", isOn: Binding<Bool>(
-                        get: { ctx.userData.settings.allowedNotifications },
-                        set: { newValue in
-                            ctx.userData.settings.allowedNotifications = newValue
-                            if newValue == false {
-                                NotificationManager.removeAllPending()
-                            }
-                        }
-                    ))
-                    if !notifications.isAuthorized, ctx.userData.settings.allowedNotifications {
-                        WarningFooter(message: "Must allow Notifications in Device Settings.")
-                    }
-                }               
-            }
-            label: {
-                HStack {
-                    Image(systemName: "bell")
-                    Text("Push Notifications")
-                }
-            }
-            .accentColor(Color(UIColor.secondaryLabel)) // This ensures the chevron arrow is gray
         } header: {
             Text("General")
         }
@@ -80,8 +55,10 @@ struct SettingsView: View {
     
     private func legalSection() -> some View {
          Section {
-             navigationLink("shield", "Privacy Policy") { PrivacyPolicy() }
-             navigationLink("doc.text", "Terms of Service") { TermsOfService() }
+             navigationLink("shield", LegalURL.privacyPolicy.title) { PrivacyPolicy() }
+             navigationLink("doc.text", LegalURL.termsOfService.title) { TermsOfService() }
+             // TODO: only show for affiliates
+             navigationLink("checkmark.shield", LegalURL.affiliateTerms.title) { AffiliateTermsView() }
          } header: {
              Text("Legal")
          }

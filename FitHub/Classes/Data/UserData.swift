@@ -13,9 +13,6 @@ import Combine
 final class UserData: ObservableObject, Codable {
     static let jsonKey: String = "UserData.json"
     
-    /// Last JSON blob that was actually written to disk
-    private var lastSavedData: Data?
-    
     @Published var profile          = Profile()
     @Published var physical         = PhysicalStats()
     @Published var workoutPrefs     = WorkoutPreferences()
@@ -38,7 +35,9 @@ final class UserData: ObservableObject, Codable {
     
     @Published var allowDisliked: Bool = false
     
-    init(){}
+    init(reloadingBlank: Bool = false){
+        if reloadingBlank { setup.setupState = .healthKitView }
+    }
 
     // MARK: – Persistence Logic
     enum CodingKeys: CodingKey {
@@ -267,7 +266,8 @@ extension UserData {
     }
 
     func checkAndUpdateAge() {
-        let calculatedAge = CalendarUtility.shared.age(from: profile.dob, to: Date())
+        guard let dob = profile.dob else { return }
+        let calculatedAge = CalendarUtility.shared.age(from: dob, to: Date())
         if calculatedAge != profile.age { profile.age = calculatedAge }
     }
 }

@@ -8,13 +8,11 @@
 import SwiftUI
 
 struct TermsOfService: View {
-    private let termsURLString = "terms/"
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         LegalSheetDisplay(
-            title: "Terms of Service",
-            URLString: termsURLString,
+            document: .termsOfService,
             dismiss: { dismiss() }
         )
     }

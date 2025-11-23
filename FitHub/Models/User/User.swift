@@ -15,7 +15,7 @@ struct Profile: Codable, Equatable {
     var email: String = ""
     var userId: String = ""
     var age: Int = 0
-    var dob: Date = Date()
+    var dob: Date?
     var accountCreationDate: Date?
     var referralCode: String?
 }
@@ -72,7 +72,6 @@ struct Setup: Codable {
 // settings         = Settings()
 struct Settings: Codable, Equatable {
     var restTimerEnabled: Bool = true
-    var allowedNotifications: Bool = true
     var progressiveOverload: Bool = true
     var allowDeloading: Bool = true
     var userLanguage: Languages = .english
@@ -86,7 +85,7 @@ struct Settings: Codable, Equatable {
     var customOverloadFactor: Double?
     var periodUntilDeload: Int = 4
     var useDateOnly: Bool = true // If true, only the date is considered
-    var notifyBeforePlannedTime: Bool = true // If true, notify before planned time; otherwise, notify at the beginning of the day
+    var workoutReminders: Bool = true 
     var notifications: Notifications = Notifications()
     var defaultWorkoutTime: DateComponents?  // Default workout time, [.hour, .minute]
     var enableSortPicker: Bool = true // disable ExerciseSortOptions picker

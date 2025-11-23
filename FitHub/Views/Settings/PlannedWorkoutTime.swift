@@ -12,6 +12,7 @@ import SwiftUI
 // Notify how long before planned Time or Notify at Beginning of Day
 // Select Default Workout Time
 struct PlannedWorkoutTime: View {
+    @ObservedObject var notifications = NotificationManager.shared
     @ObservedObject var userData: UserData
     @State private var duration: TimeSpan = .hrMinToSec(hours: 1, minutes: 0)
     @State private var isPickerExpanded: Bool = false
@@ -34,8 +35,9 @@ struct PlannedWorkoutTime: View {
     var body: some View {
         List {
             generalSection
-            
-            notificationSection
+            if userData.settings.workoutReminders {
+                notificationSection
+            }
         }
         .listStyle(InsetGroupedListStyle())
         .navigationBarTitle("Workout Time Settings", displayMode: .inline)
@@ -44,16 +46,18 @@ struct PlannedWorkoutTime: View {
     private var generalSection: some View {
         Section {
             VStack {
-                Toggle("Date Only", isOn: $userData.settings.useDateOnly)
-                Text(userData.settings.useDateOnly ? "Notifications will be based on the date only." : "Notifications will include time of day.")
+                Toggle("Notify Before Workout", isOn: $userData.settings.workoutReminders)
+                Text(userData.settings.workoutReminders ? "You will be notified before your workout." : "No workout reminders will be sent.")
                     .multilineTextAlignment(.leading)
                     .font(.caption)
+                if !notifications.isAuthorized, userData.settings.workoutReminders {
+                    WarningFooter(message: "Must allow Notifications in Device Settings.")
+                }
             }
             
             VStack {
-                // should be workout reminders?
-                Toggle("Notify Before Workout", isOn: $userData.settings.notifyBeforePlannedTime)
-                Text(userData.settings.notifyBeforePlannedTime ? "You will be notified before the planned workout time." : "You will be dynamically notified the day of your workout.")
+                Toggle("Date Only", isOn: $userData.settings.useDateOnly)
+                Text(userData.settings.useDateOnly ? "Notifications will be based on the date only." : "Notifications will include time of day.")
                     .multilineTextAlignment(.leading)
                     .font(.caption)
             }

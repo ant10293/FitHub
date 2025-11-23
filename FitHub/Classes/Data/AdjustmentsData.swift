@@ -8,31 +8,23 @@
 import Foundation
 
 final class AdjustmentsData: ObservableObject {
-    static let exerciseAdjustmentsKey: String = "adjustments.json"
+    static let exerciseAdjustmentsKey: String = "exerciseAdjustments.json"
     static let equipmentAdjustmentsKey: String = "equipmentAdjustments.json"
     @Published var exerciseAdjustments: [Exercise.ID: ExerciseAdjustments] = [:] // Store adjustments using a dictionary for fast lookups
     @Published var equipmentAdjustments: [GymEquipment.ID: [EquipmentAdjustment]] = [:] // Store equipment-level images
     
+    init() {
+        exerciseAdjustments = AdjustmentsData.loadExerciseAdjustments()
+        equipmentAdjustments = AdjustmentsData.loadEquipmentAdjustments()
+    }
+    
     // MARK: – Persistence Logic
-    static func loadAdjustmentsFromFile() -> AdjustmentsData? {
-        let adjustmentsData = AdjustmentsData()
-        
-        // Load exercise adjustments
-        if let savedAdjustments = JSONFileManager.shared.loadAdjustments(from: AdjustmentsData.exerciseAdjustmentsKey) {
-            adjustmentsData.exerciseAdjustments = savedAdjustments
-        }
-        
-        // Load equipment adjustments
-        if let savedEquipmentAdjustments = JSONFileManager.shared.loadEquipmentAdjustments(from: AdjustmentsData.equipmentAdjustmentsKey) {
-            adjustmentsData.equipmentAdjustments = savedEquipmentAdjustments
-        }
-        
-        // Return nil only if both are empty (no saved data at all)
-        guard !adjustmentsData.exerciseAdjustments.isEmpty || !adjustmentsData.equipmentAdjustments.isEmpty else {
-            return nil
-        }
-        
-        return adjustmentsData
+    static func loadExerciseAdjustments() -> [Exercise.ID: ExerciseAdjustments] {
+        JSONFileManager.shared.loadExerciseAdjustments(from: AdjustmentsData.exerciseAdjustmentsKey) ?? [:]
+    }
+    
+    static func loadEquipmentAdjustments() -> [GymEquipment.ID: [EquipmentAdjustment]] {
+        JSONFileManager.shared.loadEquipmentAdjustments(from: AdjustmentsData.equipmentAdjustmentsKey) ?? [:]
     }
     
     // Load adjustments for all exercises

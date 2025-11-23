@@ -26,7 +26,8 @@ final class ReferralCodeAdmin: ObservableObject {
         influencerName: String,
         influencerEmail: String? = nil,
         notes: String? = nil,
-        payoutMethod: String? = nil
+        payoutMethod: String? = nil,
+        acceptedTermsVersion: String
     ) async throws {
         // Check if user already has a referral code
         if let existingCode = try await ReferralRetriever.getCreatedCode(), !existingCode.isEmpty {
@@ -60,9 +61,11 @@ final class ReferralCodeAdmin: ObservableObject {
             "payoutMethod": payoutMethod ?? "",
             "isActive": true,
             "createdAt": FieldValue.serverTimestamp(),
-            "createdBy": userId, // Track who created it
+            "createdBy": userId,
             "usageCount": 0,
-            "usedBy": []
+            "usedBy": [],
+            "acceptedTermsVersion": acceptedTermsVersion,
+            "termsAcceptedAt": FieldValue.serverTimestamp()
         ])
         
         print("✅ Created referral code: \(uppercasedCode) for \(influencerName)")
@@ -75,7 +78,8 @@ final class ReferralCodeAdmin: ObservableObject {
         influencerName: String,
         influencerEmail: String? = nil,
         notes: String? = nil,
-        payoutMethod: String? = nil
+        payoutMethod: String? = nil,
+        acceptedTermsVersion: String
     ) async throws -> String {
         // Check if user already has a referral code
         if let existingCode = try await ReferralRetriever.getCreatedCode(), !existingCode.isEmpty {
@@ -116,7 +120,8 @@ final class ReferralCodeAdmin: ObservableObject {
                     influencerName: influencerName,
                     influencerEmail: influencerEmail,
                     notes: notes,
-                    payoutMethod: payoutMethod
+                    payoutMethod: payoutMethod,
+                    acceptedTermsVersion: acceptedTermsVersion
                 )
                 return code
             } catch {
@@ -160,14 +165,44 @@ final class ReferralCodeAdmin: ObservableObject {
         }
     }
 
-    func getData(_ code: String) async throws -> (code: String, email: String, pMethod: String, notes: String, stats: CodeStats, stripe: StripeAffiliateStatus) {
-        let codeData = try await getCodeData(code)  // non-optional now
+    func getData(_ code: String) async throws -> (code: String, email: String, pMethod: String, notes: String, stats: CodeStats, stripe: StripeAffiliateStatus, acceptedTermsVersion: String?) {
+        let codeData = try await getCodeData(code)
 
         let affiliate = loadAffiliateInfo(from: codeData)
         let stats     = loadReferralInfo(from: codeData)
         let stripe    = loadStripeStatus(from: codeData)
+        let acceptedTermsVersion = codeData["acceptedTermsVersion"] as? String
 
-        return (affiliate.code, affiliate.email, affiliate.pMethod, affiliate.notes, stats, stripe)
+        return (
+            code: affiliate.code,
+            email: affiliate.email,
+            pMethod: affiliate.pMethod,
+            notes: affiliate.notes,
+            stats: stats,
+            stripe: stripe,
+            acceptedTermsVersion: acceptedTermsVersion
+        )
+    }
+    
+    func updateAcceptedTerms(code: String, version: String) async throws {
+        guard let userId = AuthService.getUid() else {
+            throw NSError(domain: "ReferralCodeAdmin", code: -1, userInfo: [NSLocalizedDescriptionKey: "User not authenticated"])
+        }
+        
+        let codeRef = db.collection("referralCodes").document(code.uppercased())
+        let codeDoc = try await codeRef.getDocument()
+        
+        guard codeDoc.exists,
+              let codeData = codeDoc.data(),
+              let createdBy = codeData["createdBy"] as? String,
+              createdBy == userId else {
+            throw ReferralAdminError.codeNotFound
+        }
+        
+        try await codeRef.updateData([
+            "acceptedTermsVersion": version,
+            "termsAcceptedAt": FieldValue.serverTimestamp()
+        ])
     }
 
     private func loadAffiliateInfo(from codeData: [String: Any]) -> (code: String, email: String, pMethod: String, notes: String) {

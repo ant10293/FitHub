@@ -23,7 +23,7 @@ struct ContentView: View {
                     .onAppear {
                         //ctx.exercises.testCSVs(userData: ctx.userData)
                         notifications.requestIfNeeded(onUpdate: { allowed in
-                            ctx.userData.settings.allowedNotifications = allowed
+                            ctx.userData.settings.workoutReminders = allowed
                         })
                         NotificationManager.printAllPendingNotifications()
                         ctx.adjustments.loadAllAdjustments(for: ctx.exercises.allExercises, allEquipment: ctx.equipment.allEquipment)

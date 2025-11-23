@@ -36,8 +36,11 @@ service cloud.firestore {
       allow update: if request.auth != null && (
         // Allow updating usedBy array and lastUsedAt (for sign-ups)
         // User must be adding themselves to usedBy array
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usedBy', 'lastUsedAt']) &&
-        request.auth.uid in request.resource.data.usedBy
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usedBy', 'lastUsedAt']) &&
+         request.auth.uid in request.resource.data.usedBy) ||
+        // Allow updating acceptedTermsVersion and termsAcceptedAt (for terms acceptance)
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['acceptedTermsVersion', 'termsAcceptedAt']) &&
+         resource.data.createdBy == request.auth.uid)
       );
       
       // Purchase arrays can ONLY be updated by Cloud Functions (admin SDK bypasses rules)
