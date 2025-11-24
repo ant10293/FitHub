@@ -35,15 +35,13 @@ struct UpdateMaxEditor: View {
                 NewPeakEntry(newPeak: $peak, focus: focus)
             },
             additionalContent: {
-                DatePicker(
-                    "",
-                    selection: Binding(
-                        get: { plannedDate ?? Date() },
-                        set: { plannedDate = $0 }
-                    ),
-                    displayedComponents: .date
-                )
-                .datePickerStyle(CompactDatePickerStyle())
+                OptionalDatePicker(
+                    initialDate: plannedDate,
+                    label: "Custom Date",
+                    useDateOnly: true
+                ) { newDate in
+                    plannedDate = newDate
+                }
                 .padding(.horizontal)
             }
         )

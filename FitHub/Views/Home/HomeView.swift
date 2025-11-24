@@ -13,10 +13,9 @@ struct HomeView: View {
         NavigationStack {
             List {
                 profileSection
-                selectViewSection
+                graphSection
             }
             .onAppear(perform: initializeVariables)
-            .listStyle(InsetGroupedListStyle())
             .navigationTitle("Home")
             .customToolbar(
                 settingsDestination: { AnyView(SettingsView()) },
@@ -83,7 +82,7 @@ struct HomeView: View {
         .background(Color.clear)
     }
     
-    private var selectViewSection: some View {
+    private var graphSection: some View {
         Section {
             VStack {
                 Picker("Select View", selection: $selectedView) {
@@ -96,9 +95,11 @@ struct HomeView: View {
                 .onChange(of: selectedView) { oldValue, newValue in
                     ctx.userData.sessionTracking.selectedView = newValue
                 }
-                if selectedView == .exercisePerformance {
-                    exercisePerformanceSection
-                } else {
+                
+                switch selectedView {
+                case .exercisePerformance:
+                    performanceGraphSection
+                case .bodyMeasurements:
                     measurementsGraphSection
                 }
             }
@@ -106,31 +107,23 @@ struct HomeView: View {
         .background(Color.clear)
     }
     
-    // FIXME: exercisePerformanceSection & measurementsGraphSection are visually not consistent and use fixed padding
-    private var exercisePerformanceSection: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text("Exercise")
-                    .padding(.leading)
-                Spacer()
-                
+    private var performanceGraphSection: some View {
+        GraphSectionView(
+            label: "Exercise",
+            selectionControl: {
                 Button(action: { showingExerciseSelection = true }) {
                     ExercisePickerLabel(exerciseName: unwrappedExercise?.name)
-                        .padding(.trailing)
                         .contentShape(Rectangle()) // Ensure tap area is tightly bound
                 }
                 .buttonStyle(PlainButtonStyle()) // Prevents full-row tap behavior
-            }
-            .padding(.bottom)
-            
-            if let selectedExercise = selectedExercise ?? ctx.exercises.exercise(named: "Bench Press")?.id {
-                let perf = ctx.exercises.allExercisePerformance[selectedExercise]
-                
-                if let ex = ctx.exercises.exercise(for: selectedExercise) {
-                    ExercisePerformanceGraph(exercise: ex, performance: perf)
+            },
+            content: {
+                if let selectedExercise = unwrappedExercise {
+                    let perf = ctx.exercises.allExercisePerformance[selectedExercise.id]
+                    ExercisePerformanceGraph(exercise: selectedExercise, performance: perf)
                 }
             }
-        }
+        )
         .onChange(of: selectedExercise) { oldValue, newValue in
             if oldValue != newValue { // Only perform side effects if the value has truly changed
                 ctx.userData.sessionTracking.selectedExercise = newValue
@@ -152,10 +145,9 @@ struct HomeView: View {
     }
     
     private var measurementsGraphSection: some View {
-        VStack(alignment: .leading) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("Measurement")
-
+        GraphSectionView(
+            label: "Measurement",
+            selectionControl: {
                 Picker("", selection: $selectedMeasurement) {
                     ForEach(ctx.userData.getValidMeasurements()) { measurement in
                         Text(measurement.rawValue).tag(measurement)
@@ -164,17 +156,15 @@ struct HomeView: View {
                 .pickerStyle(.menu)
                 .labelsHidden()
                 .frame(maxWidth: .infinity, alignment: .trailing)
+            },
+            content: {
+                MeasurementsGraph(
+                    selectedMeasurement: ctx.userData.sessionTracking.selectedMeasurement,
+                    currentMeasurement: ctx.userData.physical.currentMeasurements[selectedMeasurement],
+                    pastMeasurements: ctx.userData.physical.pastMeasurements[selectedMeasurement]
+                )
             }
-            .padding(.horizontal)
-            .padding(.top, -10)
-            .padding(.bottom, 5)
-
-            MeasurementsGraph(
-                selectedMeasurement: ctx.userData.sessionTracking.selectedMeasurement,
-                currentMeasurement: ctx.userData.physical.currentMeasurements[selectedMeasurement],
-                pastMeasurements: ctx.userData.physical.pastMeasurements[selectedMeasurement]
-            )
-        }
+        )
         .onChange(of: selectedMeasurement) { old, new in
             if old != new {
                 ctx.userData.sessionTracking.selectedMeasurement = new

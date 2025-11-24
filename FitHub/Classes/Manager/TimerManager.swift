@@ -9,18 +9,10 @@ import Foundation
 
 // TODO: remove workoutTimer
 final class TimerManager: ObservableObject {
-    // MARK: - Workout (stopwatch by date)
-    @Published var secondsElapsed: Int = 0
-    @Published var isActive: Bool = false
-    @Published var workoutStartAt: Date? = nil
-    private var workoutTimer: Timer?
-
     // MARK: - Rest (countdown by date)
-    @Published var restTimeRemaining: Int = 0
     @Published var restIsActive: Bool = false
     @Published var restTotalSeconds: Int = 0
     @Published var restStartAt: Date? = nil
-    private var restTimer: Timer?
 
     // MARK: - Hold (classic decrementing countdown)
     @Published var holdTimeRemaining: Int = 0
@@ -29,67 +21,43 @@ final class TimerManager: ObservableObject {
     private var holdTimer: Timer?
 
     deinit {
-        workoutTimer?.invalidate()
-        restTimer?.invalidate()
         holdTimer?.invalidate()
         print("timer denitialized")
     }
     
     func stopAll() {
-        stopTimer()
         stopRest()
         stopHold()
     }
 
-    // MARK: - WORKOUT (stopwatch, date-driven)
-    func startTimer(startDate: Date? = nil) {
-        workoutTimer?.invalidate()
-        isActive = true
-        workoutStartAt = startDate ?? Date()
-        tickWorkout()
-
-        let t = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
-            self?.tickWorkout()
-        }
-        RunLoop.main.add(t, forMode: .common)
-        workoutTimer = t
-    }
-
-    func stopTimer() {
-        isActive = false
-        workoutTimer?.invalidate()
-    }
-    
-    func resetTimer() {
-        workoutTimer = nil
-        workoutStartAt = nil
-        secondsElapsed = 0
-    }
-
-    private func tickWorkout() {
-        secondsElapsed = CalendarUtility.secondsSince(workoutStartAt)
-    }
-
-    // MARK: - REST (countdown, date-driven via shared startCountdown)
+    // MARK: - REST (Timeline-driven via SimpleStopwatch style)
     func startRest(for seconds: Int, startDate: Date? = nil) {
-        startCountdown(
-            seconds: seconds,
-            total: \.restTotalSeconds,
-            remaining: \.restTimeRemaining,
-            isActive: \.restIsActive,
-            timerStorage: \.restTimer,
-            mode: .dateDriven(startAt: \.restStartAt, startDate: startDate)
-        )
+        let clamped = max(0, seconds)
+        guard clamped > 0 else {
+            stopRest()
+            return
+        }
+        restTotalSeconds = clamped
+        restStartAt = startDate ?? Date()
+        restIsActive = true
     }
 
     func stopRest() {
-        stopCountdown(
-            total: \.restTotalSeconds,
-            remaining: \.restTimeRemaining,
-            isActive: \.restIsActive,
-            timerStorage: \.restTimer,
-            startAt: \.restStartAt
-        )
+        restIsActive = false
+        restTotalSeconds = 0
+        restStartAt = nil
+    }
+    
+    func restTimeRemaining(at referenceDate: Date = Date()) -> Int {
+        guard restIsActive, let start = restStartAt else { return 0 }
+        let elapsed = max(0, Int(referenceDate.timeIntervalSince(start).rounded()))
+        let remaining = max(0, restTotalSeconds - elapsed)
+        if remaining == 0 {
+            DispatchQueue.main.async { [weak self] in
+                self?.stopRest()
+            }
+        }
+        return remaining
     }
 
     // MARK: - HOLD (classic decrementing via shared startCountdown/resumeCountdown)
@@ -128,21 +96,20 @@ final class TimerManager: ObservableObject {
         )
     }
 
-    // MARK: - Shared countdown engine
-
+    // MARK: - Shared countdown engine (used for hold timers, etc.)
     private enum CountdownMode {
         case decrementing
         case dateDriven(startAt: ReferenceWritableKeyPath<TimerManager, Date?>,
                         startDate: Date?)
     }
-
+    
     private func startCountdown(
         seconds: Int,
         total: ReferenceWritableKeyPath<TimerManager, Int>,
         remaining: ReferenceWritableKeyPath<TimerManager, Int>,
         isActive: ReferenceWritableKeyPath<TimerManager, Bool>,
         timerStorage: ReferenceWritableKeyPath<TimerManager, Timer?>,
-        mode: CountdownMode
+        mode: CountdownMode = .decrementing
     ) {
         // cancel existing timer of this kind
         self[keyPath: timerStorage]?.invalidate()
@@ -150,38 +117,37 @@ final class TimerManager: ObservableObject {
         // seed totals/flags
         self[keyPath: total] = max(1, seconds)
         self[keyPath: isActive] = true
-
-        // set startAt for date-driven, and compute initial remaining
+        
         switch mode {
-        case .dateDriven(let startAtKP, let startDate):
-            self[keyPath: startAtKP] = startDate ?? Date()
-            let elapsed = CalendarUtility.secondsSince(self[keyPath: startAtKP])
-            self[keyPath: remaining] = max(0, self[keyPath: total] - elapsed)
-
         case .decrementing:
             self[keyPath: remaining] = self[keyPath: total]
+            
+        case .dateDriven(let startAtKeyPath, let startDate):
+            self[keyPath: startAtKeyPath] = startDate ?? Date()
+            let elapsed = CalendarUtility.secondsSince(self[keyPath: startAtKeyPath])
+            self[keyPath: remaining] = max(0, self[keyPath: total] - elapsed)
         }
 
         // schedule ticks
         let t = Timer(timeInterval: 1, repeats: true) { [weak self] timer in
             guard let self else { timer.invalidate(); return }
-
+            
             switch mode {
-            case .dateDriven(let startAtKP, _):
-                let elapsed = CalendarUtility.secondsSince(self[keyPath: startAtKP])
-                self[keyPath: remaining] = max(0, self[keyPath: total] - elapsed)
-                if self[keyPath: remaining] <= 0 {
-                    timer.invalidate()
-                    self[keyPath: isActive] = false
-                    self[keyPath: startAtKP] = nil
-                }
-
             case .decrementing:
                 if self[keyPath: remaining] > 0 {
                     self[keyPath: remaining] -= 1
                 } else {
                     timer.invalidate()
                     self[keyPath: isActive] = false
+                }
+                
+            case .dateDriven(let startAtKeyPath, _):
+                let elapsed = CalendarUtility.secondsSince(self[keyPath: startAtKeyPath])
+                self[keyPath: remaining] = max(0, self[keyPath: total] - elapsed)
+                if self[keyPath: remaining] <= 0 {
+                    timer.invalidate()
+                    self[keyPath: isActive] = false
+                    self[keyPath: startAtKeyPath] = nil
                 }
             }
         }
@@ -201,7 +167,9 @@ final class TimerManager: ObservableObject {
         self[keyPath: isActive] = false
         self[keyPath: remaining] = 0
         self[keyPath: total] = 0
-        if let startAt { self[keyPath: startAt] = nil }
+        if let startAt {
+            self[keyPath: startAt] = nil
+        }
     }
 
     private func resumeCountdown(

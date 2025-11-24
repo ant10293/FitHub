@@ -122,7 +122,7 @@ extension UserData {
     
     func addUserTemplate(template: WorkoutTemplate) {
         var newTemplate = template
-
+        
         if template.date != nil {
             let notificationIDs = scheduleNotification(for: template) // Schedule notifications and get the IDs
             newTemplate.notificationIDs.append(contentsOf: notificationIDs) // Append notification IDs
@@ -155,14 +155,16 @@ extension UserData {
     
     func updateTemplate(
         template: WorkoutTemplate,
-        overwrite: Bool = true,
-        shouldRemoveNotifications: Bool = false,
-        shouldRemoveDate: Bool = false
+        overwrite: Bool = true
     ) {
         if let (foundTmpl, index, location) = getTemplate(templateID: template.id) {
             var tmpl = overwrite ? template : foundTmpl
-            if shouldRemoveNotifications { tmpl.notificationIDs.removeAll() }
-            if shouldRemoveDate { tmpl.date = nil }
+            // reschedule notifications if date changed
+            if template.date != foundTmpl.date {
+                NotificationManager.remove(ids: foundTmpl.notificationIDs)
+                let ids = scheduleNotification(for: tmpl)
+                tmpl.notificationIDs = ids
+            }
             _ = updateTemplate(template: tmpl, index: index, location: location)
         }
     }
@@ -235,19 +237,17 @@ extension UserData {
         return Array(unique).sorted()     // keep ‘em in order
     }
     
-    func removePlannedWorkoutDate(templateID: WorkoutTemplate.ID, removeDate: Bool, date: Date) {
-        if let (foundTmpl, _, _) = getTemplate(templateID: templateID),
+    func removePlannedWorkoutDate(templateID: WorkoutTemplate.ID, date: Date) {
+        if let (foundTmpl, index, location) = getTemplate(templateID: templateID),
             let templateDate = foundTmpl.date, CalendarUtility.shared.isDate(templateDate, inSameDayAs: date) || templateDate < date
         {
-            // only remove notifications if planned date is today or has already passed && only remove date if there wasn't a workout already completed today
-            removeTemplateNotifications(for: foundTmpl, removeDate: removeDate)
+            // only remove notifications if planned date is today or has already passed
+            var tpl = foundTmpl
+            NotificationManager.remove(ids: tpl.notificationIDs)
+            tpl.notificationIDs.removeAll()
+            tpl.date = nil
+            _ = updateTemplate(template: tpl, index: index, location: location)
         }
-    }
-    
-    private func removeTemplateNotifications(for template: WorkoutTemplate, removeDate: Bool) {
-        NotificationManager.remove(ids: template.notificationIDs)
-        updateTemplate(template: template, shouldRemoveNotifications: true, shouldRemoveDate: removeDate)
-        NotificationManager.printAllPendingNotifications() // Fetch pending notifications to verify
     }
     
     func scheduleNotification(for workoutTemplate: WorkoutTemplate) -> [String] {

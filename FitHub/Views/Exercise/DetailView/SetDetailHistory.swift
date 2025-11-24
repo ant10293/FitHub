@@ -14,24 +14,27 @@ struct SetDetailHistory: View {
 
     var body: some View {
         VStack {
-            HStack {
-                Text("Sort by")
-                    .bold()
-                Picker("Sort by", selection: $selectedSortOption) {
-                    ForEach(CompletedExerciseSortOption.allCases, id: \.self) { option in
-                        Text(option.rawValue).tag(option)
+            if sortedExercise.isEmpty {
+                EmptyState(
+                    systemName: "nosign",
+                    title: "No recent sets available for this exercise.",
+                    subtitle: "Include this exercise in your next workout to see your performed sets here."
+                )
+                .centerVertically()
+            } else {
+                HStack {
+                    Text("Sort by")
+                        .bold()
+                    Picker("Sort by", selection: $selectedSortOption) {
+                        ForEach(CompletedExerciseSortOption.allCases, id: \.self) { option in
+                            Text(option.rawValue).tag(option)
+                        }
                     }
+                    .pickerStyle(MenuPickerStyle())
                 }
-                .pickerStyle(MenuPickerStyle())
-            }
-            .centerHorizontally()
-            
-            ScrollView {
-                if sortedExercise.isEmpty {
-                    Text("No recent sets available for this exercise.")
-                        .foregroundStyle(.gray)
-                        .cardContainer()
-                } else {
+                .centerHorizontally()
+                
+                ScrollView {
                     ForEach(sortedExercise, id: \.self) { workout in
                         VStack(alignment: .leading) {
                             Text("\(workout.date.formatted(date: .abbreviated, time: .shortened))")

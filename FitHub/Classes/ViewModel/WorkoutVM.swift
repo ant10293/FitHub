@@ -187,10 +187,9 @@ final class WorkoutVM: ObservableObject {
         
         if !completedToday { ctx.userData.incrementWorkoutStreak() }
         
-        // MARK: remove date only if a workout was not already completed today - Maybe remove this requirement so date is always removed
-        ctx.userData.removePlannedWorkoutDate(templateID: template.id, removeDate: !completedToday, date: roundedDate)
+        ctx.userData.removePlannedWorkoutDate(templateID: template.id, date: roundedDate)
                         
-        let completedWorkout: CompletedWorkout = .init(template: template, updatedMax: updates.updatedMax, duration: finalDuration, date: now)
+        let completedWorkout = CompletedWorkout(template: template, updatedMax: updates.updatedMax, duration: finalDuration, date: now)
         ctx.userData.workoutPlans.completedWorkouts.append(completedWorkout)
         
         endWorkoutAndDismiss(ctx: ctx, completion: completion)

@@ -30,7 +30,6 @@ struct TemplateEditor: View {
 
     // Local state
     @State private var showingCategorySelection: Bool = false
-    @State private var showDatePicker: Bool
     @State private var submitted: Bool = false
 
     init(
@@ -53,8 +52,6 @@ struct TemplateEditor: View {
         self.onDelete = onDelete
         self.onArchive = onArchive
         self.onCancel = onCancel
-        // Date picker is visible iff template already has a date
-        self._showDatePicker = State(initialValue: template.wrappedValue.date != nil)
     }
 
     var body: some View {
@@ -144,30 +141,17 @@ private extension TemplateEditor {
             .foregroundStyle(.blue)
         }
     }
-
-    @ViewBuilder var datePicker: some View {
-        HStack {
-            Button(action: toggleDatePicker) {
-                Label("Planned Date:", systemImage: showDatePicker ? "checkmark.square" : "square")
-                    .font(.headline)
-            }
-            .foregroundStyle(showDatePicker ? .primary : .secondary)
-            Spacer()
-        }
-        if showDatePicker {
-            DatePicker(
-                "",
-                selection: Binding(
-                    get: { template.date ?? Date() },
-                    set: { template.date = $0 }
-                ),
-                displayedComponents: useDateOnly ? .date : [.date, .hourAndMinute]
-            )
-            .datePickerStyle(CompactDatePickerStyle())
-            .padding(.trailing)
+    
+    var datePicker: some View {
+        OptionalDatePicker(
+            initialDate: template.date,
+            label: "Planned Date",
+            useDateOnly: useDateOnly
+        ) { newDate in
+            template.date = newDate
         }
     }
-    
+
     var trimmedName: String { template.name.trimmed }
 
     var isDuplicateName: Bool {
@@ -196,16 +180,6 @@ private extension TemplateEditor {
         cancel() // match NewTemplate behavior which dismisses after create
     }
 
-    func toggleDatePicker() {
-        showDatePicker.toggle()
-        if showDatePicker {
-            template.date = template.date ?? Date()
-        } else {
-            template.date = nil
-        }
-    }
-
     func cancel() { if let onCancel { onCancel() } else { dismiss() } }
 }
-
 

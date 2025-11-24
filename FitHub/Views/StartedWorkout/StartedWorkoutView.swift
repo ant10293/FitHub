@@ -156,17 +156,16 @@ struct StartedWorkoutView: View {
                 Text("Back")
             }
         }
-        .alert(isPresented: $showingExitConfirmation) {
-            Alert(
-                title: Text("Are you sure you want to go back?"),
-                message: Text("Workout still in progress. Save as a completed workout?"),
-                primaryButton: .default(Text("Yes")) {
-                    viewModel.finishWorkoutAndDismiss(ctx: ctx, completion: onExit)
-                },
-                secondaryButton: .default(Text("No")) {
-                    viewModel.endWorkoutAndDismiss(ctx: ctx, completion: onExit)
-                }
-            )
+        .alert("Workout still in progress", isPresented: $showingExitConfirmation) {
+            Button("Save") {
+                viewModel.finishWorkoutAndDismiss(ctx: ctx, completion: onExit)
+            }
+            Button("Discard", role: .destructive) {
+                viewModel.endWorkoutAndDismiss(ctx: ctx, completion: onExit)
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Save as a completed workout?")
         }
     }
 }

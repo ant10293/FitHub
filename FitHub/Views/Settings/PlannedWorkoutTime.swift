@@ -46,7 +46,18 @@ struct PlannedWorkoutTime: View {
     private var generalSection: some View {
         Section {
             VStack {
-                Toggle("Notify Before Workout", isOn: $userData.settings.workoutReminders)
+                Toggle(
+                    "Notify Before Workout",
+                    isOn: Binding<Bool>(
+                        get: { userData.settings.workoutReminders },
+                        set: { newValue in
+                            userData.settings.workoutReminders = newValue
+                            if !newValue {
+                                NotificationManager.removeAllPending()
+                            }
+                        }
+                    )
+                )
                 Text(userData.settings.workoutReminders ? "You will be notified before your workout." : "No workout reminders will be sent.")
                     .multilineTextAlignment(.leading)
                     .font(.caption)

@@ -21,9 +21,12 @@ struct NextButton: View {
     var body: some View {
         VStack {
             if timerManager.restIsActive {
-                Text("Rest for \(Format.timeString(from: timerManager.restTimeRemaining))")
-                    .font(.headline)
-                    .padding(.bottom)
+                TimelineView(.periodic(from: .now, by: 1)) { context in
+                    let remaining = timerManager.restTimeRemaining(at: context.date)
+                    Text("Rest for \(Format.timeString(from: remaining))")
+                        .font(.headline)
+                        .padding(.bottom)
+                }
                 Button(action: skipRest) {
                     HStack {
                         Text("Skip Rest")
@@ -94,7 +97,3 @@ struct NextButton: View {
         isPressed = false
     }
 }
-
-
-
-

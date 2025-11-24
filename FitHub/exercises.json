@@ -49,7 +49,8 @@
         "difficulty": "Nov.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Dependent",
-        "resistance": "Free Weight"
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1527-barbell-decline-bench-press.html?search_query=barbell+decline+bench+press&results=12"
     },
     {
         "name": "Incline Bench Press",
@@ -74,7 +75,8 @@
         "difficulty": "Nov.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Dependent",
-        "resistance": "Free Weight"
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1541-barbell-incline-bench-press.html?search_query=barbell+incline+bench+press&results=20"
     },
     {
         "name": "Close-Grip Incline Bench Press",
@@ -99,7 +101,8 @@
         "difficulty": "Int.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Dependent",
-        "resistance": "Free Weight"
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3731-barbell-incline-close-grip-bench-press.html?search_query=Barbell+close+grip+Bench+Press&results=21"
     },
     {
         "name": "Close-Grip Bench Press",
@@ -121,7 +124,8 @@
         "difficulty": "Nov.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Dependent",
-        "resistance": "Free Weight"
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1524-barbell-close-grip-bench-press.html?search_query=Barbell+close+grip+Bench+Press&results=21"
     },
     {
         "name": "Wide-Grip Bench Press",
@@ -167,7 +171,8 @@
         "difficulty": "Nov.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Dependent",
-        "resistance": "Free Weight"
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/8911-barbell-floor-chest-press.html?search_query=floor+chest+press&results=55"
     },
     {
         "name": "Reverse Grip Bench Press",
@@ -192,7 +197,8 @@
         "difficulty": "Int.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Dependent",
-        "resistance": "Free Weight"
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/13554-barbell-reverse-grip-bench-press.html?search_query=reverse+grip+bench+press&results=26"
     },
     {
         "name": "Bench Pin Press",
@@ -217,7 +223,8 @@
         "difficulty": "Nov.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Dependent",
-        "resistance": "Free Weight"
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/14134-barbell-pin-chest-press.html?search_query=barbell+pin+press&results=12"
     },
     {
         "name": "Smith Machine Incline Bench Press",
@@ -238,7 +245,8 @@
         "difficulty": "Beg.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Dependent",
-        "resistance": "Machine"
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2240-smith-incline-bench-press.html?search_query=smith+incline+bench&results=6"
     },
     {
         "name": "Smith Machine Bench Press",
@@ -263,7 +271,8 @@
         "difficulty": "Nov.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Dependent",
-        "resistance": "Machine"
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2231-smith-bench-press.html?search_query=smith+bench&results=37"
     },
     {
         "name": "Converging Smith Bench Press",
@@ -361,7 +370,8 @@
         "difficulty": "Int.",
         "effort": "Compound",
         "limbMovementType": "Bilateral Dependent",
-        "resistance": "Free Weight"
+        "resistance": "Free Weight",
+        "imageURL": "https://gymvisual.com/animated-gifs/1539-barbell-guillotine-bench-press.html?search_query=guillotine+press&results=3"
     },
     {
         "name": "Spoto Press",
@@ -453,7 +463,8 @@
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+        "imageURL": "https://gymvisual.com/animated-gifs/1801-dumbbell-fly.html?search_query=dumbbell+chest+fly&results=100"
 	},
 	{
 		"name": "Incline Dumbbell Fly",
@@ -475,7 +486,8 @@
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+        "imageURL": "https://gymvisual.com/animated-gifs/1820-dumbbell-incline-fly.html?search_query=incline+dumbbell+fly&results=36"
 	},
 	{
 		"name": "Dumbbell Bench Press",
@@ -501,36 +513,63 @@
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+        "imageURL": "https://gymvisual.com/animated-gifs/1782-dumbbell-bench-press.html?search_query=dumbbell+bench+press&results=66"
 	},
+    {
+        "name": "Dumbbell Squeeze Press",
+        "id": "E6C1BA03-38DE-41F8-ACC5-C203AEA3D118",
+        "image": "dumbbell_squeeze_press",
+        "aliases": ["DB Crush Press"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dumbbells", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
+            ] },
+            { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Triceps Lateral Head" }
+            ] },
+            { "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Independent",
+        "resistance": "Free Weight",
+        "weightInstruction" : "Per Dumbbell",
+        "imageURL": "https://gymvisual.com/animated-gifs/9923-dumbbell-squeeze-bench-press.html?search_query=dumbbell+bench+press&results=66"
+    },
+    {
+        "name": "Incline Dumbbell Bench Press",
+        "id": "82942328-CE09-4A6E-8074-648382A6A24A",
+        "image": "incline_dumbbell_press",
+        "csvKey": "incline-dumbbell-bench-press",
+        "aliases": ["Incline Dumbbell Press"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
+            ] },
+            { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Independent",
+        "resistance": "Free Weight",
+        "weightInstruction" : "Per Dumbbell",
+        "imageURL": "https://gymvisual.com/animated-gifs/1807-dumbbell-incline-bench-press.html?search_query=incline+dumbbell+bench+press&results=12"
+    },
 	{
-		"name": "Close-Grip Dumbbell Bench Press",
-		"id": "E3B1C4D5-A6F7-48B9-8C0D-2E3F4A5B6C7D",
-		"image": "close_grip_dumbbell_bench_press",
-		"csvKey": "close-grip-dumbbell-bench-press",
-		"aliases": ["Close-Grip Chest Press"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
-			] },
-			{ "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Free Weight",
-		"weightInstruction" : "Per Dumbbell"
-	},
-	{
-		"name": "Dumbbell Decline Bench Press",
+		"name": "Decline Dumbbell Bench Press",
 		"id": "A6859431-856C-4B7C-9D2E-F7727BE51E42",
 		"image": "dumbbell_decline_bench_press",
 		"csvKey": "decline-dumbbell-bench-press",
@@ -553,7 +592,8 @@
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+        "imageURL": "https://gymvisual.com/animated-gifs/1794-dumbbell-decline-bench-press.html?search_query=decline+dumbbell+bench+press&results=9"
 	},
 	{
 		"name": "Dumbbell Floor Press",
@@ -576,7 +616,8 @@
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
-		"weightInstruction" : "Per Dumbbell"
+		"weightInstruction" : "Per Dumbbell",
+        "imageURL": "https://gymvisual.com/animated-gifs/8890-dumbbell-lying-on-floor-chest-press.html?search_query=dumbbell+floor+press&results=34"
 	},
 	{
 		"name": "Dumbbell Pullover",
@@ -599,7 +640,8 @@
 		"difficulty": "Int.",
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
+		"resistance": "Free Weight",
+        "imageURL": "https://gymvisual.com/animated-gifs/15959-dumbbell-pullover-version-2.html?search_query=dumbbell+pullover&results=57"
 	},
 	{
 		"name": "Barbell Pullover",
@@ -622,7 +664,8 @@
 		"difficulty": "Int.",
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
+		"resistance": "Free Weight",
+        "imageURL": "https://gymvisual.com/animated-gifs/1567-barbell-pullover.html?search_query=barbell+pullover&results=37"
 	},
 	{
 		"name": "Bent-Arm Barbell Pullover",
@@ -645,33 +688,8 @@
 		"difficulty": "Int.",
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
-	},
-	{
-		"name": "Incline Dumbbell Bench Press",
-		"id": "82942328-CE09-4A6E-8074-648382A6A24A",
-		"image": "incline_dumbbell_press",
-		"csvKey": "incline-dumbbell-bench-press",
-		"aliases": ["Incline Dumbbell Press"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
-			] },
-			{ "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
-		"weightInstruction" : "Per Dumbbell"
+        "imageURL": "https://gymvisual.com/animated-gifs/18245-barbell-bent-arm-pullover-male.html?search_query=barbell+pullover&results=37"
 	},
 	{
 		"name": "Pec Deck Fly",
@@ -686,7 +704,8 @@
 		"difficulty": "Beg.",
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Machine"
+		"resistance": "Machine",
+        "imageURL": "https://gymvisual.com/animated-gifs/2499-lever-pec-deck-fly.html?search_query=pec+deck&results=6"
 	},
 	{
 		"name": "Machine Chest Fly",
@@ -704,7 +723,8 @@
 		"difficulty": "Beg.",
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Machine"
+		"resistance": "Machine",
+        "imageURL": "https://gymvisual.com/animated-gifs/2093-lever-seated-fly.html?search_query=machine+chest+fly&results=21"
 	},
 	{
 		"name": "Machine Chest Press",
@@ -1045,7 +1065,7 @@
         "resistance": "Bodyweight"
     },
     {
-        "name": "Close-Grip Push-Up (Knees)",
+        "name": "Kneeling Close-Grip Push-Up",
         "id": "E29B0B81-7CF8-4231-AA55-9B5E273B222F",
         "image": "close_grip_knee_push_up",
         "aliases": ["Modified Narrow Push-Up"],
@@ -1221,30 +1241,6 @@
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Dumbbell Squeeze Press",
-		"id": "E6C1BA03-38DE-41F8-ACC5-C203AEA3D118",
-		"image": "dumbbell_squeeze_press",
-		"aliases": ["DB Crush Press"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
-			] },
-			{ "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Lateral Head" }
-			] },
-			{ "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Free Weight",
-		"weightInstruction" : "Per Dumbbell"
 	},
 	{
 		"name": "Standing Cable Chest Press",

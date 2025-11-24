@@ -96,6 +96,8 @@
 		658D800F2ED26A530041FB4D /* AffiliateTermsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D800E2ED26A530041FB4D /* AffiliateTermsConstants.swift */; };
 		658D80112ED2A5F80041FB4D /* EmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80102ED2A5F80041FB4D /* EmptyState.swift */; };
 		658D80132ED3E1BD0041FB4D /* ErrorFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80122ED3E1BD0041FB4D /* ErrorFooter.swift */; };
+		658D80152ED40A290041FB4D /* OptionalDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80142ED40A290041FB4D /* OptionalDatePicker.swift */; };
+		658D80172ED416AC0041FB4D /* GraphSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80162ED416AC0041FB4D /* GraphSectionView.swift */; };
 		6592279E2EC80DDF00EEDF42 /* GuestAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */; };
 		659227A02EC820E100EEDF42 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592279F2EC820E100EEDF42 /* Name.swift */; };
 		65A0D1CC2E2F39D5008466D8 /* CustomToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */; };
@@ -378,6 +380,8 @@
 		658D800E2ED26A530041FB4D /* AffiliateTermsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateTermsConstants.swift; sourceTree = "<group>"; };
 		658D80102ED2A5F80041FB4D /* EmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyState.swift; sourceTree = "<group>"; };
 		658D80122ED3E1BD0041FB4D /* ErrorFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorFooter.swift; sourceTree = "<group>"; };
+		658D80142ED40A290041FB4D /* OptionalDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalDatePicker.swift; sourceTree = "<group>"; };
+		658D80162ED416AC0041FB4D /* GraphSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphSectionView.swift; sourceTree = "<group>"; };
 		6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestAuthView.swift; sourceTree = "<group>"; };
 		6592279F2EC820E100EEDF42 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToolBar.swift; sourceTree = "<group>"; };
@@ -708,6 +712,7 @@
 		6531363A2E5902A800EECCA5 /* Picker */ = {
 			isa = PBXGroup;
 			children = (
+				658D80142ED40A290041FB4D /* OptionalDatePicker.swift */,
 				65CD3BE42DD3C84F00C2B671 /* MinSecPicker.swift */,
 				652131712E3D9C3900FDFB9C /* DurationPicker.swift */,
 			);
@@ -931,6 +936,16 @@
 				6584B0632C30BC2000447EC1 /* FitHub.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		658D80182ED444290041FB4D /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				65CD3C192DD3C84F00C2B671 /* HomeView.swift */,
+				65CD3C1E2DD3C84F00C2B671 /* UserProfileView.swift */,
+				658D80162ED416AC0041FB4D /* GraphSectionView.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 		65A0D1D12E34A115008466D8 /* Tables */ = {
@@ -1210,10 +1225,9 @@
 				65CD3C182DD3C84F00C2B671 /* ContentView.swift */,
 				65CD3C1A2DD3C84F00C2B671 /* MainAppView.swift */,
 				65CD3C1B2DD3C84F00C2B671 /* MenuView.swift */,
-				65CD3C192DD3C84F00C2B671 /* HomeView.swift */,
 				65CD3C1C2DD3C84F00C2B671 /* StatsView.swift */,
-				65CD3C1E2DD3C84F00C2B671 /* UserProfileView.swift */,
 				65CD3BFA2DD3C84F00C2B671 /* Setup */,
+				658D80182ED444290041FB4D /* Home */,
 				65DD05192EB97C86000D159C /* Affiliate */,
 				65DD05472EC6940D000D159C /* Authentication */,
 				653BF8AB2E5AC732005A07EA /* PlateVisualization */,
@@ -1591,6 +1605,7 @@
 				65ECFF182E2609190091032A /* SearchBar.swift in Sources */,
 				65362BE82E0244A60044AF72 /* DeloadSettings.swift in Sources */,
 				65CD3C582DD3C84F00C2B671 /* MinSecPicker.swift in Sources */,
+				658D80172ED416AC0041FB4D /* GraphSectionView.swift in Sources */,
 				65CD3C592DD3C84F00C2B671 /* SplitCategoryPicker.swift in Sources */,
 				65CD3C5A2DD3C84F00C2B671 /* WeightSelectorView.swift in Sources */,
 				65CD3C5B2DD3C84F00C2B671 /* ChangeLanguage.swift in Sources */,
@@ -1616,6 +1631,7 @@
 				65CD3C642DD3C84F00C2B671 /* StartWeekOn.swift in Sources */,
 				658D800D2ED269FC0041FB4D /* AffiliateTermsView.swift in Sources */,
 				65CD3C652DD3C84F00C2B671 /* TermsOfService.swift in Sources */,
+				658D80152ED40A290041FB4D /* OptionalDatePicker.swift in Sources */,
 				65CD3C662DD3C84F00C2B671 /* UnitSelection.swift in Sources */,
 				65039B7B2E8371C3007A31E1 /* CompletedEntry.swift in Sources */,
 				6570679E2E3F29BE0063090C /* RepRangeEditor.swift in Sources */,

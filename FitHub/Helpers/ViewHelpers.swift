@@ -76,6 +76,7 @@ private struct CenterVerticallyModifier: ViewModifier {
     func body(content: Content) -> some View {
         VStack {
             content
+                .frame(maxHeight: .infinity)
                 .padding(.top, 1)
                 .padding(.bottom, 1)
         }
