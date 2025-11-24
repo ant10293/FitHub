@@ -29,7 +29,7 @@ struct UserProfileView: View {
                 // 1) Show any banner (for username/first/last update)
                 if ctx.toast.showingSaveConfirmation {
                     InfoBanner(
-                        text: alertMessage,
+                        title: alertMessage,
                         bgColor: !alertMessage.contains("failed")
                             ? Color.green
                             : Color.red

@@ -38,11 +38,8 @@ struct EmailAuthView: View {
     
     private var footerContent: some View {
         VStack(alignment: .leading, spacing: 8) {
-            if let errorMessage {
-                Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.footnote)
-            }
+            ErrorFooter(message: errorMessage)
+
             
             RectangularButton(
                 title: flowStep.buttonTitle,

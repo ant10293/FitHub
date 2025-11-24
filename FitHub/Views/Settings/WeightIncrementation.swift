@@ -19,7 +19,7 @@ struct WeightIncrementation: View {
 
     var body: some View {
         VStack(spacing: 30) {
-            if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Preferences Saved Successfully!") }
+            if ctx.toast.showingSaveConfirmation { InfoBanner(title: "Preferences Saved Successfully!") }
             
             EquipmentRoundingRow(
                 value: $platedRounding,

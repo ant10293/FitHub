@@ -40,7 +40,7 @@ struct TemplateDetail: View {
             
             VStack {
                 if isEditing { editToolBar }
-                if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Template Saved Successfully!").zIndex(1) }
+                if ctx.toast.showingSaveConfirmation { InfoBanner(title: "Template Saved Successfully!").zIndex(1) }
                 
                 Spacer()
                 
@@ -204,14 +204,18 @@ struct TemplateDetail: View {
     
     @ViewBuilder
     private func emptyView() -> some View {
+       // EmptyState(systemName: "exclamationmark.circle", title: "No exercises added", subtitle: "Press + to add an exercise to the workout.")
         VStack {
             HStack(spacing: 5) {
+                Image(systemName: "exclamationmark.circle")
+                    .foregroundStyle(.red)
                 Text("No exercises added")
                     .font(.headline)
                     .foregroundStyle(colorScheme == .dark ? .white : .gray)
-                Image(systemName: "exclamationmark.circle").foregroundStyle(.red)
             }
-            Text("Press + to add an exercise to the workout.").foregroundStyle(.blue).padding()
+            Text("Press + to add an exercise to the workout.")
+                .foregroundStyle(.blue)
+                .padding()
         }
         .onAppear { self.pulsate = true }
         .onDisappear { self.pulsate = false }

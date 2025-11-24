@@ -8,34 +8,22 @@
 import SwiftUI
 
 struct RingView: View {
-    var dailyCaloricIntake: Double
-    var carbs: Double
-    var fats: Double
-    var proteins: Double
+    let kcal: Double
+    let carbs: Double
+    let fats: Double
+    let proteins: Double
     
     var body: some View {
+        let height = UIScreen.main.bounds.height
+        
         VStack {
             ZStack {
-                //    if dailyCaloricIntake == 0 {
                 if carbs == 0 && fats == 0 && proteins == 0 {
                     Circle()
                         .stroke(Color.gray, lineWidth: 20)
                         .rotationEffect(.degrees(-90))
-                    VStack {
-                        if dailyCaloricIntake == 0 {
-                            //Text("0")
-                            Text("N/A")
-                                .font(.title)
-                                .fontWeight(.bold)
-                        }
-                        else {
-                            Text("\(Int(dailyCaloricIntake))")
-                                .font(.title)
-                                .fontWeight(.bold)
-                            Text("kcal")
-                                .font(.subheadline)
-                        }
-                    }
+                    
+                    kcalLabel
                 } else {
                     Circle()
                         .trim(from: 0, to: CGFloat(carbsRatio))
@@ -49,47 +37,45 @@ struct RingView: View {
                         .trim(from: CGFloat(carbsRatio + fatsRatio), to: 1)
                         .stroke(Color.red, lineWidth: 20)
                         .rotationEffect(.degrees(-90))
-                    VStack {
-                        Text("\(Int(dailyCaloricIntake))")
-                            .font(.title)
-                            .fontWeight(.bold)
-                        Text("kcal")
-                            .font(.subheadline)
-                    }
+                    
+                    kcalLabel
                 }
             }
-            .frame(width: 200, height: 200)
+            .frame(height: height * 0.25)
             
             HStack {
-                VStack {
-                    Circle()
-                        .fill(Color.blue)
-                        .frame(width: 20, height: 20)
-                    Text("Carbs")
-                        .font(.caption)
-                }
-                VStack {
-                    Circle()
-                        .fill(Color.yellow)
-                        .frame(width: 20, height: 20)
-                    Text("Fats")
-                        .font(.caption)
-                }
-                VStack {
-                    Circle()
-                        .fill(Color.red)
-                        .frame(width: 20, height: 20)
-                    Text("Proteins")
-                        .font(.caption)
-                }
+                legendLabel(label: "Carbs", color: .blue)
+                legendLabel(label: "Fats", color: .yellow)
+                legendLabel(label: "Proteins", color: .red)
             }
             .padding(.top, 10)
         }
     }
+
+    private var kcalLabel: some View {
+        VStack {
+            Text(kcal <= 0 ? "N/A" : "\(Int(kcal))")
+                .font(.title)
+                .fontWeight(.bold)
+            Text("kcal")
+                .font(.subheadline)
+        }
+    }
+    
+    private func legendLabel(label: String, color: Color) -> some View {
+        VStack {
+            Circle()
+                .fill(color)
+                .frame(width: 20, height: 20)
+            Text(label)
+                .font(.caption)
+        }
+    }
+    
     private var carbsCalories: Double { return carbs * 4 }
     private var fatsCalories: Double { return fats * 9 }
     private var proteinsCalories: Double { return proteins * 4 }
-    private var carbsRatio: Double { return carbsCalories / dailyCaloricIntake }
-    private var fatsRatio: Double { return fatsCalories / dailyCaloricIntake }
-    private var proteinsRatio: Double { return proteinsCalories / dailyCaloricIntake }
+    private var carbsRatio: Double { return carbsCalories / kcal }
+    private var fatsRatio: Double { return fatsCalories / kcal }
+    private var proteinsRatio: Double { return proteinsCalories / kcal }
 }

@@ -244,14 +244,14 @@ struct MacroCalculator: View {
 
     // MARK: - View Models
 
-    struct MacroResult {
+    private struct MacroResult {
         let totalCalories: Double
         let carbs: Double
         let proteins: Double
         let fats: Double
     }
 
-    struct MacroResultView: View {
+    private struct MacroResultView: View {
         let result: MacroResult
         var dismissAction: () -> Void
 
@@ -262,10 +262,12 @@ struct MacroCalculator: View {
                 customText(for: "Proteins", value: result.proteins, unit: "g")
                 customText(for: "Fats", value: result.fats, unit: "g")
 
-                RingView(dailyCaloricIntake: result.totalCalories,
-                         carbs: result.carbs,
-                         fats: result.fats,
-                         proteins: result.proteins)
+                RingView(
+                    kcal: result.totalCalories,
+                    carbs: result.carbs,
+                    fats: result.fats,
+                    proteins: result.proteins
+                )
                 .padding(.vertical)
             })
         }

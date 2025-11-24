@@ -74,7 +74,6 @@ struct CompletedWorkouts: View {
                                     }
                                     .padding(.vertical, 5)
                                 }
-                                
                             }
                         }
                     }

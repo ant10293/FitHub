@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct AliasesField: View {
-    @Binding var aliases: [String]?
-    @State private var showSheet = false
+    let aliases: [String]?
     let readOnly: Bool
+    let onEdit: () -> Void
 
     var body: some View {
         let list = aliases ?? []
@@ -20,44 +20,32 @@ struct AliasesField: View {
             isEmpty: list.isEmpty,
             isReadOnly: readOnly,
             buttonLabel: "Add Alias",
-            onEdit: { showSheet = true }
+            onEdit: onEdit
         )
-        .sheet(isPresented: $showSheet) {
-            AliasesEditorSheet(
-                aliases: Binding(
-                    get: { aliases ?? [] },
-                    set: { new in aliases = new.isEmpty ? nil : new }
-                )
-            )
-        }
     }
 }
 
-private struct AliasesEditorSheet: View {
-    @Binding var aliases: [String]
+struct AliasesEditorSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @State var aliases: [String]
     @State private var newAlias: String = ""
     @State private var isEditing: Bool = false
     @StateObject private var kbd = KeyboardManager.shared
-    @Environment(\.dismiss) private var dismiss
+    let onSave: ([String]) -> Void
 
     var body: some View {
         NavigationStack {
             List {
                 Section("Add") {
-                    HStack {
-                        TextField("New alias", text: $newAlias)
-                            .textInputAutocapitalization(.words)
-                            .disableAutocorrection(true)
-                            .onSubmit(addAlias)
-
-                        Button {
-                            addAlias()
-                        } label: {
-                            Image(systemName: "checkmark.circle.fill")
-                        }
-                        .disabled(!isNewValid)
-                        .accessibilityLabel("Add alias")
-                    }
+                    TextField("New alias", text: $newAlias)
+                        .textInputAutocapitalization(.words)
+                        .disableAutocorrection(true)
+                        .trailingIconButton(
+                            systemName: "checkmark.circle.fill",
+                            fgColor: .green,
+                            disabled: !isNewValid,
+                            action: addAlias
+                        )
                 }
 
                 Section("Aliases") {
@@ -66,12 +54,13 @@ private struct AliasesEditorSheet: View {
                             .foregroundStyle(.secondary)
                     } else {
                         ForEach(Array(aliases.enumerated()), id: \.offset) { i, alias in
-                            HStack(spacing: 10) {
+                            HStack(spacing: 8) {
                                 InlineDeletion(isEditing: isEditing, delete: {
                                     deleteIndex(i)
                                 })
-                                Text(alias)
-                                Spacer()
+                                TextField("", text: $aliases[i])
+                                    .textInputAutocapitalization(.words)
+                                    .disableAutocorrection(true)
                             }
                         }
                     }
@@ -87,7 +76,10 @@ private struct AliasesEditorSheet: View {
                     .disabled(aliases.isEmpty)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Close") { dismiss() }
+                    Button("Close") {
+                        onSave(aliases)
+                        dismiss()
+                    }
                 }
             }
         }
@@ -97,9 +89,7 @@ private struct AliasesEditorSheet: View {
     }
 
     // MARK: - Logic
-    private var trimmed: String {
-        newAlias.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
+    private var trimmed: String { newAlias.trimmed }
     
     private var isNewValid: Bool {
         InputLimiter.isValidInput(trimmed)

@@ -39,11 +39,7 @@ struct StripeConnect: View {
                 }
             }
 
-            if let errorMessage = stripeErrorMessage {
-                Text(errorMessage)
-                    .font(.caption)
-                    .foregroundStyle(.red)
-            }
+            ErrorFooter(message: stripeErrorMessage)
 
             if isRequestingStripeOnboardingLink {
                 ProgressView()

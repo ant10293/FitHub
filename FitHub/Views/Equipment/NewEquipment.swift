@@ -20,6 +20,7 @@ struct NewEquipment: View {
     @State private var selectingEquipment: Bool = false
     @State private var showDeleteAlert: Bool = false
     @State private var showRestoreAlert: Bool = false
+    @State private var showingAliasEditor: Bool = false
     @State private var alternativeEquipment: [GymEquipment] = []
     @State private var draft: InitEquipment
     let initialDraft: InitEquipment
@@ -55,7 +56,8 @@ struct NewEquipment: View {
                         NameField(title: "Name", placeholder: "Equipment Name", text: $draft.name, error: nameError)
                             .disabled(isReadOnly)
 
-                        AliasesField(aliases: $draft.aliases, readOnly: isReadOnly)
+                        AliasesField(aliases: draft.aliases, readOnly: isReadOnly, onEdit: { showingAliasEditor = true })
+
                         alternativeSection
                         categoryPicker
                             .disabled(isReadOnly)
@@ -134,6 +136,11 @@ struct NewEquipment: View {
                 setEquipment(selection: selection)
             })
         }
+        .sheet(isPresented: $showingAliasEditor) {
+            AliasesEditorSheet(aliases: draft.aliases ?? [], onSave: { aliases in
+                draft.aliases = aliases
+            })
+        }
         .alert("Delete this equipment?", isPresented: $showDeleteAlert) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
@@ -155,9 +162,7 @@ struct NewEquipment: View {
         }
     }
     
-    private var isBundledOverride: Bool {
-        ctx.equipment.isOverridenEquipment(equipment)
-    }
+    private var isBundledOverride: Bool { ctx.equipment.isOverridenEquipment(equipment) }
     
     private var isEditing: Bool { original != nil }
     

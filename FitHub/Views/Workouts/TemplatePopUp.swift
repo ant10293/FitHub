@@ -75,6 +75,7 @@ struct TemplatePopup: View {
     private var disableTemplate: Bool { template.shouldDisableTemplate  }
     
     private var emptyView: some View {
+        /*
         VStack {
             Image(systemName: "figure.walk")
                 .font(.largeTitle)
@@ -91,6 +92,8 @@ struct TemplatePopup: View {
                 .fixedSize(horizontal: false, vertical: true) // Allow text to grow vertically
                 .padding(.bottom)
         }
+        */
+        EmptyState(systemName: "figure.walk", title: "Nothing Here...", subtitle: "Press 'Edit' to Build your Workout!")
         .frame(maxWidth: .infinity)
         .background(RoundedRectangle(cornerRadius: 12).fill(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground)))
     }

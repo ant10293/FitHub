@@ -9,22 +9,20 @@ import SwiftUI
 
 struct InfoBanner: View {
     // MARK: – Public API
-    let text: String
-    var width: CGFloat? = 300
-    var height: CGFloat? = 100
-    var bgColor: Color? = .blue
+    let title: String
+    let bgColor: Color
+    
+    init(
+        title: String,
+        bgColor: Color = .blue
+    ) {
+        self.title = title
+        self.bgColor = bgColor
+    }
     
     var body: some View {
-        VStack {
-            Text(text)
-                .foregroundStyle(.white)
-                .padding()
-                .background(bgColor)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-        }
-        .frame(width: width, height: height)
-        .background(Color.clear)
-        .shadow(radius: 10)
-        .transition(.scale)
+        RectangularLabel(title: title, bgColor: bgColor, width: .fit)
+            .shadow(radius: 10)
+            .transition(.scale)
     }
 }

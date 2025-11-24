@@ -32,7 +32,7 @@ struct WorkoutGeneration: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Workout Plan Generated!").zIndex(1) }
+                    if ctx.toast.showingSaveConfirmation { InfoBanner(title: "Workout Plan Generated!").zIndex(1) }
                     
                     selectionBar
                     HStack {

@@ -15,7 +15,6 @@ struct MeasurementsView: View {
     @ObservedObject var userData: UserData
     @State private var currentMeasurementType: MeasurementType? = nil
     @State private var showMeasurementEditor: Bool = false
-    @State private var showMeasurementGraph: Bool = false
     @State private var showGraph: Bool = false
 
     var body: some View {
@@ -32,7 +31,7 @@ struct MeasurementsView: View {
                     )
                 }
             }
-
+            
             Section(header: Text("BODY PART (Circumference)")) {
                 ForEach(MeasurementType.bodyPartMeasurements, id: \.self) { measurement in
                     MeasurementRow(
@@ -47,35 +46,34 @@ struct MeasurementsView: View {
             }
         }
         .disabled(showMeasurementEditor)
-        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Measurements")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(action: { showGraph.toggle() }) {
-                    Image(systemName: showGraph ? "chart.bar" : "square.and.pencil")
+                Button {
+                    showGraph.toggle()
+                } label: {
+                    Image(systemName: showGraph ? "square.and.pencil" : "chart.bar")
                 }
             }
         }
-        .sheet(isPresented: $showMeasurementGraph) {
-            if let type = currentMeasurementType {
-                NavigationStack {
-                    MeasurementsGraph(
-                        selectedMeasurement: type,
-                        currentMeasurement: userData.physical.currentMeasurements[type],
-                        pastMeasurements: userData.physical.pastMeasurements[type]
-                    )
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Close") {
-                                showMeasurementGraph = false
-                            }
-                            .foregroundStyle(.red)
+        .sheet(item: graphMeasurementType) { type in
+            NavigationStack {
+                MeasurementsGraph(
+                    selectedMeasurement: type,
+                    currentMeasurement: userData.physical.currentMeasurements[type],
+                    pastMeasurements: userData.physical.pastMeasurements[type]
+                )
+                .padding()
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Close") {
+                            currentMeasurementType = nil
                         }
                     }
                 }
             }
         }
-        .overlay(alignment: .center, content: {
+        .overlay(alignment: .center) {
             if showMeasurementEditor, let type = currentMeasurementType {
                 MeasurementEditor(
                     measurement: userData.currentMeasurementValue(for: type),
@@ -91,7 +89,18 @@ struct MeasurementsView: View {
                 .id(type)
                 .padding(.horizontal)
             }
-        })
+        }
+    }
+    
+    // Computed binding: only return measurement type when in graph mode
+    private var graphMeasurementType: Binding<MeasurementType?> {
+        Binding(
+            get: { showGraph ? currentMeasurementType : nil },
+            set: { newValue in
+                // When sheet is dismissed (swiped away), clear the measurement type
+                currentMeasurementType = newValue
+            }
+        )
     }
     
     private func closeEditor() {
@@ -102,17 +111,18 @@ struct MeasurementsView: View {
     private func handleSelection(type: MeasurementType) {
         currentMeasurementType = type
         if showGraph {
-            showMeasurementGraph = true
+            // Sheet will automatically present because graphMeasurementType computed property returns the type
         } else {
+            // For editor view, show the editor
             showMeasurementEditor = true
         }
     }
 
-    struct MeasurementRow: View {
-        var showGraph: Bool
-        var type: MeasurementType
-        var measurement: MeasurementValue
-        var onSelectMeasurement: () -> Void
+    private struct MeasurementRow: View {
+        let showGraph: Bool
+        let type: MeasurementType
+        let measurement: MeasurementValue
+        let onSelectMeasurement: () -> Void
 
         var body: some View {
             HStack {
@@ -129,13 +139,16 @@ struct MeasurementsView: View {
                         }
                     }
                 } else {
-                    if showGraph {
-                        Image(systemName: "chevron.right")
-                            .foregroundStyle(.blue)
-                    } else {
-                        Image(systemName: "plus")
-                            .foregroundStyle(.blue)
-                    }
+                    let imageName: String = {
+                        if showGraph {
+                            return "chevron.right"
+                        } else {
+                            return "plus"
+                        }
+                    }()
+                    
+                    Image(systemName: imageName)
+                        .foregroundStyle(.blue)
                 }
             }
             .contentShape(Rectangle())

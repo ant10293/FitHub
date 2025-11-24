@@ -7,35 +7,66 @@
 
 import SwiftUI
 
-
-// FIXME: potential error - Publishing changes from within view updates is not allowed, this will cause undefined behavior.
 struct ExInstructionsEditor: View {
     @State private var isEditing: Bool = false
     @Binding var instructions: ExerciseInstructions
     @FocusState private var focusedIndex: Int?
     @StateObject private var kbd = KeyboardManager.shared
+    @State private var newStep: String = ""
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         NavigationStack {
             List {
-                ForEach(0..<instructions.count, id: \.self) { i in
-                    HStack(spacing: 8) {
-                        InlineDeletion(isEditing: isEditing, delete: {
-                            deleteIndex(i)
-                        })
-                        Text("\(i + 1).").foregroundStyle(.secondary)
-                        TextField("Step \(i + 1)", text: binding(for: i))
+                Section("Add Step") {
+                    HStack {
+                        HStack(spacing: 8) {
+                            Text("\(instructions.newStepNumber).")
+                                .foregroundStyle(.secondary)
+
+                            TextField(
+                                "Step #\(instructions.newStepNumber) Instructions",
+                                text: $newStep,
+                                axis: .vertical
+                            )
                             .textInputAutocapitalization(.sentences)
-                            .focused($focusedIndex, equals: i)
+                            .disableAutocorrection(true)
+                        }
+                        .trailingIconButton(
+                            systemName: "checkmark.circle.fill",
+                            fgColor: .green,
+                            disabled: !isNewValid,
+                            action: addStep
+                        )
                     }
                 }
-                .onMove(perform: move)
 
-                Button {
-                    addStep()
-                } label: {
-                    Label("Add Step", systemImage: "plus")
+                Section("Existing Steps") {
+                    if instructions.steps.isEmpty {
+                        Text("No steps added yet")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ForEach(0..<instructions.count, id: \.self) { i in
+                            HStack(spacing: 8) {
+                                InlineDeletion(isEditing: isEditing, delete: {
+                                    deleteIndex(i)
+                                })
+                                Text("\(i + 1).")
+                                    .foregroundStyle(.secondary)
+                                
+                                TextField(
+                                    "Step #\(instructions.newStepNumber) Instructions",
+                                    text: binding(for: i),
+                                    axis: .vertical
+                                )
+                                .textInputAutocapitalization(.sentences)
+                                .disableAutocorrection(true)
+                                .focused($focusedIndex, equals: i)
+                                .trailingIconButton(systemName: "line.horizontal.3")
+                            }
+                        }
+                        .onMove(perform: move)
+                    }
                 }
             }
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
@@ -45,7 +76,7 @@ struct ExInstructionsEditor: View {
                     Button(isEditing ? "Done" : "Edit") {
                         isEditing.toggle()
                     }
-                    .disabled(instructions.count == 0)
+                    .disabled(instructions.steps.isEmpty)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Close") { dismiss() }
@@ -65,11 +96,18 @@ struct ExInstructionsEditor: View {
         )
     }
 
+    private var trimmed: String { newStep.trimmed }
+    
+    private var isNewValid: Bool {
+        InputLimiter.isValidInput(trimmed)
+        && !trimmed.isEmpty
+    }
+    
     private func addStep() {
         kbd.dismiss()
-        let newIndex = instructions.count
-        instructions.add("")
-        focusedIndex = newIndex
+        guard isNewValid else { return }
+        instructions.add(trimmed)
+        newStep = ""
     }
     
     private func deleteIndex(_ i: Int) {

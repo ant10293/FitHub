@@ -213,6 +213,8 @@ struct ExerciseInstructions: Codable, Hashable {
     init(steps: [String] = []) { self.steps = steps }
 
     var count: Int { steps.count }
+    
+    var newStepNumber: Int { count + 1 }
 
     func step(at index: Int) -> String? {
         guard steps.indices.contains(index) else { return nil }

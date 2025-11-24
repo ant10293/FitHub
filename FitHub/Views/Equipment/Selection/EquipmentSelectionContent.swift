@@ -30,7 +30,7 @@ struct EquipmentSelectionContent: View {
                 .padding(.horizontal)
 
             if showSaveBanner {
-                InfoBanner(text: "Equipment Saved Successfully!").zIndex(1)
+                InfoBanner(title: "Equipment Saved Successfully!").zIndex(1)
             }
 
             List {

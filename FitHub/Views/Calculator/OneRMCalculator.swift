@@ -23,7 +23,7 @@ struct OneRMCalculator: View {
     var body: some View {
         ZStack {
             if ctx.toast.showingSaveConfirmation {
-                InfoBanner(text: "1RM Saved Successfully!").zIndex(1)
+                InfoBanner(title: "1RM Saved Successfully!").zIndex(1)
             }
 
             let unitLabel = UnitSystem.current.weightUnit
@@ -44,9 +44,7 @@ struct OneRMCalculator: View {
                     } header: {
                         Text("Reps Performed")
                     } footer: {
-                        if let msg = repsErrorMessage {
-                            Text(msg).foregroundStyle(.red)
-                        }
+                        ErrorFooter(message: repsErrorMessage)
                     }
 
                     // ─── Calculate button ─────────────────────────────────

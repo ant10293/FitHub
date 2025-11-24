@@ -48,22 +48,15 @@ struct MuscleEngagementEditor: View {
                                 VStack(alignment: .leading) {
                                     Text("Engagement: \(Int(pct)) %")
                                     Slider(value: $pct, in: 0...100, step: 1)
+                                    
+                                    if pct <= 0 {
+                                        ErrorFooter(message: "Engagement percentage must be greater than 0%.", showImage: true)
+                                    }
                                 }
                                 
-                                let effectiveTotal: Double = {
-                                    if let idx = editingIndex {                     // editing existing
-                                        return totalUsed                             // current saved total
-                                             - muscleEngagements[idx].engagementPercentage // subtract old value
-                                             + pct                                    // add slider value
-                                    } else {                                        // adding new
-                                        return totalUsed + pct
-                                    }
-                                }()
-                                
-                                // ── Overall-total warning  (only when nothing selected) ─────
+                                // ── Overall-total warning ──────────────────────
                                 if !muscleEngagements.isEmpty && effectiveTotal != 100 {
-                                    Text("⚠️ Overall total is \(Int(effectiveTotal)) %. Must equal 100 %.")
-                                        .foregroundStyle(.red)
+                                    ErrorFooter(message: "Overall total is \(Int(effectiveTotal)) %. Must equal 100 %.", showImage: true)
                                 }
                                 
                                 VStack(alignment: .leading, spacing: 8) {
@@ -113,22 +106,34 @@ struct MuscleEngagementEditor: View {
                 }
 
                 // ── Add / Save button pinned bottom ───────────
-                Button(action: editingIndex == nil ? append : save) {
-                    Text(editingIndex == nil ? "Add Muscle" : "Save Changes")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .roundedBackground(cornerRadius: 12, color: selectedMuscle == nil ? Color.gray : Color.blue)
-                        .foregroundStyle(.white)
-                }
-                .disabled(selectedMuscle == nil)
+                RectangularButton(
+                    title: editingIndex == nil ? "Add Muscle" : "Save Changes",
+                    enabled: !invalidEngagement,
+                    bgColor: .blue,
+                    fontWeight: .semibold,
+                    action: editingIndex == nil ? append : save
+                )
                 .padding()
             }
             .navigationBarTitle("Muscle Engagement", displayMode: .inline)
-            .toolbar { ToolbarItem(placement: .topBarTrailing) {
-                Button("Close") { dismiss() }
-                    .foregroundStyle(.red)
-            }}
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Close") { dismiss() }
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+    }
+    
+    private var invalidEngagement: Bool { pct <= 0 || selectedMuscle == nil || effectiveTotal > 100 }
+    
+    private var effectiveTotal: Double {
+        if let idx = editingIndex {                     // editing existing
+            return totalUsed                             // current saved total
+                 - muscleEngagements[idx].engagementPercentage // subtract old value
+                 + pct                                    // add slider value
+        } else {                                        // adding new
+            return totalUsed + pct
         }
     }
 

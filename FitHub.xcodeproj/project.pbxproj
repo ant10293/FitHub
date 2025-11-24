@@ -95,6 +95,7 @@
 		658D800D2ED269FC0041FB4D /* AffiliateTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D800C2ED269FC0041FB4D /* AffiliateTermsView.swift */; };
 		658D800F2ED26A530041FB4D /* AffiliateTermsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D800E2ED26A530041FB4D /* AffiliateTermsConstants.swift */; };
 		658D80112ED2A5F80041FB4D /* EmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80102ED2A5F80041FB4D /* EmptyState.swift */; };
+		658D80132ED3E1BD0041FB4D /* ErrorFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80122ED3E1BD0041FB4D /* ErrorFooter.swift */; };
 		6592279E2EC80DDF00EEDF42 /* GuestAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */; };
 		659227A02EC820E100EEDF42 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592279F2EC820E100EEDF42 /* Name.swift */; };
 		65A0D1CC2E2F39D5008466D8 /* CustomToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */; };
@@ -376,6 +377,7 @@
 		658D800C2ED269FC0041FB4D /* AffiliateTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateTermsView.swift; sourceTree = "<group>"; };
 		658D800E2ED26A530041FB4D /* AffiliateTermsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateTermsConstants.swift; sourceTree = "<group>"; };
 		658D80102ED2A5F80041FB4D /* EmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyState.swift; sourceTree = "<group>"; };
+		658D80122ED3E1BD0041FB4D /* ErrorFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorFooter.swift; sourceTree = "<group>"; };
 		6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestAuthView.swift; sourceTree = "<group>"; };
 		6592279F2EC820E100EEDF42 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToolBar.swift; sourceTree = "<group>"; };
@@ -1038,8 +1040,8 @@
 				653BF8992E595A8D005A07EA /* Selection */,
 				65CD3BC32DD3C84F00C2B671 /* EquipmentDetail.swift */,
 				65CD3BC42DD3C84F00C2B671 /* EquipmentPopUp.swift */,
-				65CFBFA62E1F48F200CD521E /* NewEquipment.swift */,
 				65CFBFA82E1F5B2B00CD521E /* AdjustmentPicker.swift */,
+				65CFBFA62E1F48F200CD521E /* NewEquipment.swift */,
 			);
 			path = Equipment;
 			sourceTree = "<group>";
@@ -1117,10 +1119,11 @@
 				653BF8B02E6618E2005A07EA /* GenericEditor.swift */,
 				653136202E53F11A00EECCA5 /* TappableDisclosure.swift */,
 				6550ADB92E6BAC12002072C1 /* TemplateNavigator.swift */,
-				65AB47F42EA31362001BEAFE /* WarningFooter.swift */,
 				65DD05382EC28E73000D159C /* InlineDeletion.swift */,
 				65DD05412EC681A7000D159C /* SafariDocumentView.swift */,
 				658D80102ED2A5F80041FB4D /* EmptyState.swift */,
+				65AB47F42EA31362001BEAFE /* WarningFooter.swift */,
+				658D80122ED3E1BD0041FB4D /* ErrorFooter.swift */,
 			);
 			path = Reusable;
 			sourceTree = "<group>";
@@ -1511,6 +1514,7 @@
 				65CD3C302DD3C84F00C2B671 /* TimerManager.swift in Sources */,
 				65CD3C312DD3C84F00C2B671 /* ToastManager.swift in Sources */,
 				65CFBF9F2E1DC6B800CD521E /* MuscleEngagementEditor.swift in Sources */,
+				658D80132ED3E1BD0041FB4D /* ErrorFooter.swift in Sources */,
 				65AB47F92EA6E008001BEAFE /* GenerationWarning.swift in Sources */,
 				65DD053B2EC2A6B2000D159C /* StripeAffiliateService.swift in Sources */,
 				65CD3C332DD3C84F00C2B671 /* WorkoutVM.swift in Sources */,

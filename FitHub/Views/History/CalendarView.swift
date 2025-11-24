@@ -11,6 +11,7 @@ import SwiftUI
 struct CalendarView: View {
     @Environment(\.colorScheme) var colorScheme
     @Binding var currentMonth: Date
+    @State private var selectedWorkout: CompletedWorkout? = nil
     let workoutDates: [Date]
     let plannedWorkoutDates: [Date]
     let completedWorkouts: [CompletedWorkout]
@@ -73,26 +74,48 @@ struct CalendarView: View {
         .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .padding(.horizontal)
+        .navigationDestination(item: $selectedWorkout) { workout in
+            CompletedDetails(
+                workout: workout,
+                categories: SplitCategory.concatenateCategories(for: workout.template.categories)
+            )
+        }
     }
 
-    // MARK: - Day cell plumbing (unchanged)
+    // MARK: - Day cell plumbing
     @ViewBuilder
     private func dayCell(for day: Date?) -> some View {
         if let day {
-            if let w = workout(for: day) {
-                NavigationLink(
-                    destination: CompletedDetails(
-                        workout: w,
-                        categories: SplitCategory.concatenateCategories(for: w.template.categories)
-                    )
-                ) { baseDayView(for: day) }
-                .buttonStyle(.plain)
+            let workouts = workouts(for: day)
+            if workouts.count == 1, let workout = workouts.first {
+                // Single workout - set selectedWorkout on tap
+                baseDayView(for: day)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        selectedWorkout = workout
+                    }
+            } else if workouts.count > 1 {
+                // Multiple workouts - use Menu
+                Menu {
+                    ForEach(workouts, id: \.id) { workout in
+                        Button(workoutLabel(for: workout)) {
+                            selectedWorkout = workout
+                        }
+                    }
+                } label: {
+                    baseDayView(for: day)
+                }
             } else {
                 baseDayView(for: day)
             }
         } else {
             placeholderDayCell
         }
+    }
+    
+    private func workoutLabel(for workout: CompletedWorkout) -> String {
+        let timeString = Format.formatDate(workout.date, dateStyle: .none, timeStyle: .short)
+        return "\(workout.template.name) - \(timeString)"
     }
 
     private func baseDayView(for day: Date) -> some View {
@@ -114,12 +137,12 @@ struct CalendarView: View {
         .hidden()
     }
 
-    // MARK: - Helpers (unchanged)
-    private func workout(for date: Date) -> CompletedWorkout? {
-        return completedWorkouts.first {
-            CalendarUtility.shared.isDate(($0.template.date ?? $0.date), inSameDayAs: date)
+    // MARK: - Helpers
+    private func workouts(for date: Date) -> [CompletedWorkout] {
+        return completedWorkouts.filter {
+            CalendarUtility.shared.isDate($0.date, inSameDayAs: date)
             && !$0.template.exercises.isEmpty
-        }
+        }.sorted { $0.date < $1.date } // Sort by time, earliest first
     }
 
     private func moveToPreviousMonth() {
@@ -181,22 +204,22 @@ struct CalendarView: View {
             .frame(maxWidth: .infinity, minHeight: 36) // ensure each cell takes full column width
         }
 
-        private var isWorkoutDay: Bool {
+        private var isCompletedDay: Bool {
             completedWorkouts.contains { CalendarUtility.shared.isDate($0, inSameDayAs: day) }
         }
 
-        private var isPlannedWorkoutDay: Bool {
+        private var isPlannedDay: Bool {
             plannedWorkouts.contains { CalendarUtility.shared.isDate($0, inSameDayAs: day) }
         }
 
         private var workoutColor: Color {
-            (isWorkoutDay || isPlannedWorkoutDay) ? .white : (colorScheme == .dark ? .white : .black)
+            (isCompletedDay || isPlannedDay) ? .white : (colorScheme == .dark ? .white : .black)
         }
 
         private var backgroundView: some View {
             Group {
-                if isWorkoutDay { Circle().fill(.green).shadow(radius: 2.5) }
-                else if isPlannedWorkoutDay { Circle().fill(.blue).shadow(radius: 2.5) }
+                if isCompletedDay { Circle().fill(.green).shadow(radius: 2.5) }
+                else if isPlannedDay { Circle().fill(.blue).shadow(radius: 2.5) }
                 else { Color.clear }
             }
         }

@@ -18,32 +18,37 @@ import SwiftUI
 /// ```
 struct SearchBar: View {
     @Binding var text: String
-    var placeholder: String = "Search"
+    let placeholder: String
+    
+    init(
+        text: Binding<String>,
+        placeholder: String = "Search"
+    ) {
+        _text = text
+        self.placeholder = placeholder
+    }
 
     var body: some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-                .foregroundStyle(Color.secondary)
-
-            // Actual text field
-            TextField(placeholder, text: $text)
-                .textInputAutocapitalization(.none)
-                .disableAutocorrection(true)
-
-            // Clear button (only when text isn’t empty)
-            if !text.isEmpty {
-                Button {
-                    text = ""
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.gray)
-                }
-                .buttonStyle(.plain) // removes tap-area inset
+        // Actual text field
+        TextField(
+            placeholder,
+            text: $text
+        )
+        .textInputAutocapitalization(.none)
+        .disableAutocorrection(true)
+        .leadingIconButton(
+            systemName: "magnifyingglass",
+            fgColor: Color.secondary,
+            isButton: false
+        )
+        .trailingIconButton(
+            systemName: "xmark.circle.fill",
+            isShowing: !text.isEmpty,
+            isButton: false,
+            action: {
+                text = ""
             }
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal)
-        .background(Color(UIColor.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        )
+        .inputStyle()
     }
 }

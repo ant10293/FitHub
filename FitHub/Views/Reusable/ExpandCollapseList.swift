@@ -9,8 +9,18 @@ import SwiftUI
 
 struct ExpandCollapseList: View {
     @Binding var expandList: Bool
-    var expandText: String = "Expand List"
-    var collapseText: String = "Collapse List"
+    let expandText: String
+    let collapseText: String
+    
+    init(
+        expandList: Binding<Bool>,
+        expandText: String = "Expand List",
+        collapseText: String = "Collapse List"
+    ) {
+        _expandList = expandList
+        self.expandText = expandText
+        self.collapseText = collapseText
+    }
     
     var body: some View {
         Button(action: {

@@ -28,10 +28,7 @@ struct FieldEditor: View {
 
             if !isReadOnly {
                 Button(action: onEdit) {
-                    HStack(spacing: 4) {
-                        Image(systemName: isEmpty ? "plus" : "square.and.pencil")
-                        Text(buttonLabel)
-                    }
+                    Text(buttonLabel)
                 }
                 .foregroundStyle(.blue)
                 .buttonStyle(.plain)

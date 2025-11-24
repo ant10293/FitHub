@@ -25,7 +25,7 @@ struct WorkoutCustomization: View {
     
     var body: some View {
         VStack {
-            if ctx.toast.showingSaveConfirmation { InfoBanner(text: "Restored Default Preferences!") }
+            if ctx.toast.showingSaveConfirmation { InfoBanner(title: "Restored Default Preferences!") }
             
             Form {
                 Section {

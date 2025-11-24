@@ -166,11 +166,9 @@ extension SetDetail {
             return Text("—")
         }
     }
-
+    
     var formattedCompletedText: Text {
-        let head = Text("Set \(setNumber): ").bold()
-        guard let completed else { return head + Text("—") }
-        return head + SetDetail.formatLoadMetric(load: load, metric: completed)
+        SetDetail.formatLoadMetric(load: load, metric: completed ?? planned.zeroValue)
     }
 
     var formattedPlannedText: Text {

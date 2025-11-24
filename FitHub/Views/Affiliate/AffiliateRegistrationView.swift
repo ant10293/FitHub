@@ -167,12 +167,7 @@ struct AffiliateRegistrationView: View {
                                     }
                                 }
                             
-                            if let customCodeError = customCodeValidationError(customCode) {
-                                Text(customCodeError)
-                                    .font(.caption)
-                                    .foregroundStyle(.red)
-                                    .padding(.leading, 4)
-                            }
+                            ErrorFooter(message: customCodeValidationError(customCode))
                         }
                         
                         // Terms acceptance for new users
@@ -189,9 +184,7 @@ struct AffiliateRegistrationView: View {
                         
                         Group {
                             if let error = errorMessage {
-                                Text(error.localizedDescription)
-                                    .font(.caption)
-                                    .foregroundStyle(.red)
+                                ErrorFooter(message: error.localizedDescription)
                             }
                             
                             if isGenerating { ProgressView() }

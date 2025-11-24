@@ -139,44 +139,105 @@ extension View {
     }
 }
 
-struct TrailingIconButtonModifier: ViewModifier {
+struct IconButtonModifier: ViewModifier {
+    enum Position {
+        case leading, trailing
+    }
+
     let systemName: String
+    let fgColor: Color
     let isShowing: Bool
+    let disabled: Bool       // logical "disabled"
+    let isButton: Bool       // controls hit testing / semantics
+    let position: Position
     let action: () -> Void
-    
+
     init(
         systemName: String,
+        fgColor: Color = .secondary,
         isShowing: Bool = true,
+        disabled: Bool = false,
+        isButton: Bool = true,
+        position: Position,
         action: @escaping () -> Void = {}
     ) {
         self.systemName = systemName
+        self.fgColor = fgColor
         self.isShowing = isShowing
+        self.disabled = disabled
+        self.isButton = isButton
+        self.position = position
         self.action = action
     }
 
+    @ViewBuilder
     func body(content: Content) -> some View {
         HStack {
+            if position == .leading, isShowing {
+                iconView
+            }
+
             content
-            if isShowing {
+
+            if position == .trailing, isShowing {
                 Spacer()
-                Button(action: action) {
-                    Image(systemName: systemName)
-                        .foregroundStyle(.secondary)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
+                iconView
             }
         }
+    }
+
+    @ViewBuilder
+    private var iconView: some View {
+        Button(action: action) {
+            Image(systemName: systemName)
+                .foregroundStyle(fgColor)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .allowsHitTesting(!isButton)
     }
 }
 
 extension View {
     func trailingIconButton(
         systemName: String,
+        fgColor: Color = .secondary,
         isShowing: Bool = true,
+        disabled: Bool = false,
+        isButton: Bool = true,
         action: @escaping () -> Void = {}
     ) -> some View {
-        modifier(TrailingIconButtonModifier(systemName: systemName, isShowing: isShowing, action: action))
+        modifier(
+            IconButtonModifier(
+                systemName: systemName,
+                fgColor: fgColor,
+                isShowing: isShowing,
+                disabled: disabled,
+                isButton: isButton,
+                position: .trailing,
+                action: action
+            )
+        )
+    }
+
+    func leadingIconButton(
+        systemName: String,
+        fgColor: Color = .secondary,
+        isShowing: Bool = true,
+        disabled: Bool = false,
+        isButton: Bool = true,
+        action: @escaping () -> Void = {}
+    ) -> some View {
+        modifier(
+            IconButtonModifier(
+                systemName: systemName,
+                fgColor: fgColor,
+                isShowing: isShowing,
+                disabled: disabled,
+                isButton: isButton,
+                position: .leading,
+                action: action
+            )
+        )
     }
 }
-

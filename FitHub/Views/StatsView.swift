@@ -11,6 +11,7 @@ struct StatsView: View {
         let carbs = userData.physical.carbs
         let fats = userData.physical.fats
         let proteins = userData.physical.proteins
+        let total = carbs + fats + proteins
         
         ScrollView {
             VStack {
@@ -39,7 +40,7 @@ struct StatsView: View {
                 )
                 
                 metricRow(
-                    label: "Daily Caloric Intake",
+                    label: "Caloric Intake",
                     value: calories,
                     formatted: String(format: "%.0f", calories),
                     unit: "kcal",
@@ -51,7 +52,7 @@ struct StatsView: View {
                 
                 metricRow(
                     label: "Daily Macronutrients",
-                    value: carbs == 0 ? carbs : -1,
+                    value: total == 0 ? total : -1,
                     linkText: "Macro Calculator",
                     destination: {
                         MacroCalculator(userData: userData)
@@ -63,7 +64,7 @@ struct StatsView: View {
                 macroRow(name: "Proteins", value: proteins)
                 
                 RingView(
-                    dailyCaloricIntake: calories,
+                    kcal: calories,
                     carbs: carbs,
                     fats: fats,
                     proteins: proteins

@@ -26,40 +26,43 @@ struct ExerciseRPEGraph: View {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal) {
                     HStack(spacing: 0) {
-                        Chart {
-                            if !sortedRecords.isEmpty {
-                                // RPE Line and Points
-                                ForEach(sortedRecords) { record in
-                                    let isLatest = record.date == latestRecord?.date
-                                    
-                                    LineMark(
-                                        x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
-                                        y: .value("RPE", record.rpe)
-                                    )
-                                    .foregroundStyle(isLatest ? .green : .blue)
-                                    
-                                    PointMark(
-                                        x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
-                                        y: .value("RPE", record.rpe)
-                                    )
-                                    .foregroundStyle(isLatest ? .green : .blue)
+                        ZStack(alignment: .bottomTrailing) {
+                            Chart {
+                                if !sortedRecords.isEmpty {
+                                    // RPE Line and Points
+                                    ForEach(sortedRecords) { record in
+                                        let isLatest = record.date == latestRecord?.date
+                                        
+                                        LineMark(
+                                            x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
+                                            y: .value("RPE", record.rpe)
+                                        )
+                                        .foregroundStyle(isLatest ? .green : .blue)
+                                        
+                                        PointMark(
+                                            x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
+                                            y: .value("RPE", record.rpe)
+                                        )
+                                        .foregroundStyle(isLatest ? .green : .blue)
+                                    }
                                 }
                             }
-                        }
-                        .chartYScale(domain: yAxisRange)
-                        .frame(width: max(CGFloat(sortedRecords.count) * 60, UIScreen.main.bounds.width - 40), height: UIScreen.main.bounds.height * 0.33)
-                        .overlay(alignment: .center) {
-                            if sortedRecords.isEmpty {
-                                Text("No data available \n for this exercise...")
-                                    .foregroundStyle(.gray)
-                                    .multilineTextAlignment(.center)
+                            .chartYScale(domain: yAxisRange)
+                            .overlay(alignment: .center) {
+                                if sortedRecords.isEmpty {
+                                    Text("No data available \n for this exercise...")
+                                        .foregroundStyle(.gray)
+                                        .multilineTextAlignment(.center)
+                                }
+                            }
+                            
+                            if !sortedRecords.isEmpty {
+                                Text("RPE")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                             }
                         }
-                        .chartYAxisLabel(position: .trailing) {
-                            Text("RPE")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
+                        .frame(width: max(CGFloat(sortedRecords.count) * 60, UIScreen.main.bounds.width - 40), height: UIScreen.main.bounds.height * 0.33)
                         
                         Color.clear.frame(width: 0.1).id("END")   // sentinel at far right
                     }

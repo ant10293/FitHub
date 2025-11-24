@@ -41,11 +41,7 @@ struct AffiliateInfoForm: View {
                     .inputStyle()
                     .disabled(!allowEditEmail)
                 
-                if let errorMessage = emailErrorMessage {
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                }
+                ErrorFooter(message: emailErrorMessage)
             }
             
             // Notes

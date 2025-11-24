@@ -19,48 +19,49 @@ struct MeasurementsGraph: View {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal) {
                     HStack(spacing: 0) {
-                        Chart {
-                            if !sortedMeasurementRecords.isEmpty {
-                                ForEach(sortedMeasurementRecords) { record in
-                                    LineMark(
-                                        x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
-                                        y: .value("Value", record.entry.displayValue)
-                                    )
-                                    .foregroundStyle(.blue)
-                                    PointMark(
-                                        x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
-                                        y: .value("Value", record.entry.displayValue)
-                                    )
-                                    .foregroundStyle(record.date == currentMeasurementDate ? .green : .blue)
-                                    .annotation(position: .top) {
-                                        Text(Format.smartFormat(record.entry.displayValue))
-                                            .font(.caption)
-                                            .foregroundStyle(record.date == currentMeasurementDate ? .green : .blue)
-                                            .padding(1)
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 1)
-                                                    .fill(Color(colorScheme == .dark ? .secondarySystemBackground : .systemBackground).opacity(0.8))
-                                            )
+                        ZStack(alignment: .bottomTrailing) {
+                            Chart {
+                                if !sortedMeasurementRecords.isEmpty {
+                                    ForEach(sortedMeasurementRecords) { record in
+                                        LineMark(
+                                            x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
+                                            y: .value("Value", record.entry.displayValue)
+                                        )
+                                        .foregroundStyle(.blue)
+                                        PointMark(
+                                            x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
+                                            y: .value("Value", record.entry.displayValue)
+                                        )
+                                        .foregroundStyle(record.date == currentMeasurementDate ? .green : .blue)
+                                        .annotation(position: .top) {
+                                            Text(Format.smartFormat(record.entry.displayValue))
+                                                .font(.caption)
+                                                .foregroundStyle(record.date == currentMeasurementDate ? .green : .blue)
+                                                .padding(1)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 1)
+                                                        .fill(Color(colorScheme == .dark ? .secondarySystemBackground : .systemBackground).opacity(0.8))
+                                                )
+                                        }
                                     }
                                 }
                             }
-                        }
-                        .chartYScale(domain: yAxisRange)
-                        .frame(width: max(CGFloat(sortedMeasurementRecords.count) * 60, UIScreen.main.bounds.width - 40), height: UIScreen.main.bounds.height * 0.33)
-                        .overlay(alignment: .center) {                    // ← ① add overlay
-                            if sortedMeasurementRecords.isEmpty {
-                                Text("No data available for \n this measurement...")
-                                    .foregroundStyle(.gray)
-                                    .multilineTextAlignment(.center)
+                            .chartYScale(domain: yAxisRange)
+                            .overlay(alignment: .center) {
+                                if sortedMeasurementRecords.isEmpty {
+                                    Text("No data available for \n this measurement...")
+                                        .foregroundStyle(.gray)
+                                        .multilineTextAlignment(.center)
+                                }
                             }
-                        }
-                        .chartYAxisLabel(position: .trailing) {
-                            if let unitLabel = selectedMeasurement.unitLabel {
+                            
+                            if !sortedMeasurementRecords.isEmpty, let unitLabel = selectedMeasurement.unitLabel {
                                 Text(unitLabel)
                                     .font(.caption)
-                                    .foregroundStyle(Color.secondary)
+                                    .foregroundStyle(.secondary)
                             }
                         }
+                        .frame(width: max(CGFloat(sortedMeasurementRecords.count) * 60, UIScreen.main.bounds.width - 40), height: UIScreen.main.bounds.height * 0.33)
                         
                         Color.clear.frame(width: 0.1).id("END")   // sentinel at far right
                     }
@@ -149,7 +150,7 @@ struct MeasurementsGraph: View {
     
     private var minValue: Double { sortedMeasurementRecords.map { $0.entry.displayValue }.min() ?? 0 }
     
-    private var maxValue: Double { sortedMeasurementRecords.map { $0.entry.displayValue }.max() ?? 0 }
+    private var maxValue: Double { sortedMeasurementRecords.map { $0.entry.displayValue }.max() ?? 100 }
     
     private var yAxisRange: ClosedRange<Double> { return minValue - (minValue * 0.1)...maxValue + (maxValue * 0.1) }
 }

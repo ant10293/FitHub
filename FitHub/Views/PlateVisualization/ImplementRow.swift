@@ -24,7 +24,7 @@ struct ImplementRow: View {
     let plan: Plan
     let pegCount: PegCountOption?
     let showMultiplier: Bool
-    var showBaseWeightEditor: () -> Void
+    let showBaseWeightEditor: () -> Void
     
     private var implementTotal: Mass {
         if showMultiplier {

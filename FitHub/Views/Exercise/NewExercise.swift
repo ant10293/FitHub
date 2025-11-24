@@ -26,6 +26,7 @@ struct NewExercise: View {
     @State private var showingMuscleEditor: Bool = false
     @State private var showingAdjustmentsView: Bool = false
     @State private var showingInstructionEditor: Bool = false
+    @State private var showingAliasEditor: Bool = false
     @State private var showDeleteAlert: Bool = false
     @State private var showRestoreAlert: Bool = false
     @State private var equipmentRequired: [GymEquipment] = []
@@ -64,7 +65,8 @@ struct NewExercise: View {
                     NameField(title: "Name", placeholder: "Exercise Name", text: $draft.name, error: nameError)
                         .disabled(isReadOnly)
 
-                    AliasesField(aliases: $draft.aliases, readOnly: isReadOnly)
+                    AliasesField(aliases: draft.aliases, readOnly: isReadOnly, onEdit: { showingAliasEditor = true })
+                    
                     muscleField
                     equipmentSection
                               
@@ -147,6 +149,11 @@ struct NewExercise: View {
         .sheet(isPresented: $showingInstructionEditor) {
             ExInstructionsEditor(instructions: $draft.instructions)
         }
+        .sheet(isPresented: $showingAliasEditor) {
+            AliasesEditorSheet(aliases: draft.aliases ?? [], onSave: { aliases in
+                draft.aliases = aliases
+            })
+        }
         .alert("Delete this exercise?", isPresented: $showDeleteAlert) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
@@ -173,9 +180,7 @@ struct NewExercise: View {
         }
     }
     
-    private var isBundledOverride: Bool {
-        ctx.exercises.isOverriddenExercise(exercise)
-    }
+    private var isBundledOverride: Bool { ctx.exercises.isOverriddenExercise(exercise) }
     
     private var isEditing: Bool { original != nil }
     
