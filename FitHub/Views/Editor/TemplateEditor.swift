@@ -145,7 +145,7 @@ private extension TemplateEditor {
     var datePicker: some View {
         OptionalDatePicker(
             initialDate: template.date,
-            label: "Planned Date",
+            label: "Planned Date:",
             useDateOnly: useDateOnly
         ) { newDate in
             template.date = newDate

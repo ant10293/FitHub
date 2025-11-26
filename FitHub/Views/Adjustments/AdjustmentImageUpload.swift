@@ -11,13 +11,20 @@ enum ImageStorageLevel: String, CaseIterable {
     case equipment = "Equipment Level"
     case exercise = "Exercise Level"
     
-    func description(hasExistingEquipmentImage: Bool) -> String {
+    func description(hasExistingEquipmentImage: Bool, associatedEquipment: GymEquipment?) -> String {
         switch self {
         case .equipment:
-            if hasExistingEquipmentImage {
-                return "This will overwrite the existing equipment-level image shared across all exercises using this equipment."
+            let equipmentLabel: String
+            if let name = associatedEquipment?.name, !name.isEmpty {
+                equipmentLabel = "the '\(name)' equipment"
             } else {
-                return "This image will be shared across all exercises using this equipment."
+               equipmentLabel = "this equipment"
+            }
+            
+            if hasExistingEquipmentImage {
+                return "This will overwrite the existing equipment-level image shared across all exercises using \(equipmentLabel)."
+            } else {
+                return "This image will be shared across all exercises using \(equipmentLabel)."
             }
         case .exercise:
             return "This image will only apply to this specific exercise."
@@ -29,7 +36,7 @@ struct AdjustmentImageUpload: View {
     @State private var storageLevel: ImageStorageLevel = .equipment
     var initialFilename: String? = nil
     var hasExistingEquipmentImage: Bool = false
-    let showStorageLevelPicker: Bool
+    let associatedEquipment: GymEquipment?
     var onImagePicked: (String, ImageStorageLevel) -> Void
         
     var body: some View {
@@ -45,10 +52,14 @@ struct AdjustmentImageUpload: View {
                     .pickerStyle(.segmented)
                     
                     WarningFooter(
-                        message: storageLevel.description(hasExistingEquipmentImage: hasExistingEquipmentImage),
+                        message: storageLevel.description(
+                            hasExistingEquipmentImage: hasExistingEquipmentImage,
+                            associatedEquipment: associatedEquipment
+                        ),
                         color: isWarning ? .orange : .secondary,
                         showImage: isWarning
                     )
+                    .centerHorizontally()
                 }
                 .padding(.horizontal)
             }
@@ -61,6 +72,10 @@ struct AdjustmentImageUpload: View {
                 onImagePicked(filename, level)
             }
         }
+    }
+    
+    private var showStorageLevelPicker: Bool {
+        associatedEquipment != nil
     }
     
     private var isWarning: Bool {

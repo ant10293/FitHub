@@ -69,7 +69,7 @@ struct AdjustmentsView: View {
                 AdjustmentImageUpload(
                     initialFilename: initialFilename,
                     hasExistingEquipmentImage: hasExistingEquipmentImage,
-                    showStorageLevelPicker: hasAssociatedEquipment(entry: entry)
+                    associatedEquipment: associatedEquipment(entry: entry)
                 ) { filename, storageLevel in
                     let normalized = filename.isEmpty ? nil : filename
                     updateImage(for: category, filename: normalized, storageLevel: storageLevel)
@@ -204,9 +204,9 @@ struct AdjustmentsView: View {
         }
     }
     
-    private func hasAssociatedEquipment(entry: AdjustmentEntry?) -> Bool {
-        guard let entry else { return false }
-        return ctx.equipment.equipment(for: entry.equipmentID) != nil
+    private func associatedEquipment(entry: AdjustmentEntry?) -> GymEquipment? {
+        guard let entry else { return nil }
+        return ctx.equipment.equipment(for: entry.equipmentID)
     }
     
     private var existingCategories: Set<AdjustmentCategory> { local.categories }

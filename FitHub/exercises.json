@@ -1220,29 +1220,6 @@
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
-		"name": "Costal Dip",
-		"id": "1718181A-6FB6-40FF-A4A3-F7299038CE1E",
-		"image": "costal_dip",
-		"aliases": ["Lower-Chest Dip"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dip Bar"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
-			] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
 		"name": "Standing Cable Chest Press",
 		"id": "8880F704-7053-4A6A-AC41-C5FF8ED5F9A5",
 		"image": "standing_cable_chest_press",
@@ -2170,7 +2147,7 @@
 		"weightInstruction" : "Per Dumbbell"
 	},
 	{
-		"name": "KB Bottoms-Up Press",
+		"name": "Kettlebell Bottoms-Up Press",
 		"id": "00F5D530-03B3-4DFF-AD66-643C1AC60918",
 		"image": "kb_bottoms_up_press",
 		"aliases": ["Bottoms-Up Kettlebell Press"],
@@ -2192,7 +2169,7 @@
 		"repsInstruction" : "Per Arm"
 	},
 	{
-		"name": "KB Halo",
+		"name": "Kettlebell Halo",
 		"id": "C88DE516-461C-4C31-A67C-22B07F725072",
 		"image": "kb_halo",
 		"aliases": ["Kettlebell Halo"],
@@ -2652,6 +2629,50 @@
 		"weightInstruction" : "Per Dumbbell",
 		"repsInstruction" : "Per Arm"
 	},
+    {
+        "name": "Cable Hammer Curl",
+        "id": "02547B50-5996-44E4-8D5D-DEBBEFC4F90F",
+        "image": "cable_hammer_curl",
+        "csvKey": "cable-hammer-curl",
+        "aliases": ["Neutral Grip Cable Curl"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Hi-Lo Pulley"],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Biceps Long Head" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Forearm Flexors" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine"
+    },
+    {
+        "name": "Incline Hammer Curl",
+        "id": "1276CE49-A814-4CAD-8D95-6BF8DBB9F6BC",
+        "image": "incline_hammer_curl",
+        "csvKey": "incline-hammer-curl",
+        "aliases": ["Incline Neutral Grip Curl"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Forearm Flexors" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Independent",
+        "resistance": "Free Weight",
+        "weightInstruction" : "Per Dumbbell"
+    },
 	{
 		"name": "Incline Dumbbell Curl",
 		"id": "D09D0936-93F4-4E05-981D-5B291EFA3369",
@@ -2750,29 +2771,6 @@
 		"repsInstruction" : "Per Arm"
 	},
 	{
-		"name": "Incline Hammer Curl",
-		"id": "1276CE49-A814-4CAD-8D95-6BF8DBB9F6BC",
-		"image": "incline_hammer_curl",
-		"csvKey": "incline-hammer-curl",
-		"aliases": ["Incline Neutral Grip Curl"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Forearm Flexors" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Free Weight",
-		"weightInstruction" : "Per Dumbbell"
-	},
-	{
 		"name": "Zottman Curl",
 		"id": "DAB81916-5A46-4776-BB03-06102657F69E",
 		"image": "zottman_curl",
@@ -2832,27 +2830,6 @@
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight"
-	},
-	{
-		"name": "Cable Hammer Curl",
-		"id": "02547B50-5996-44E4-8D5D-DEBBEFC4F90F",
-		"image": "cable_hammer_curl",
-		"csvKey": "cable-hammer-curl",
-		"aliases": ["Neutral Grip Cable Curl"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Biceps Long Head" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Forearm Flexors" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Machine"
 	},
 	{
 		"name": "Overhead Cable Curl",
@@ -3082,24 +3059,6 @@
 		"resistance": "Machine"
 	},
 	{
-		"name": "Barbell Spider Curl",
-		"id": "95229C1F-1CAF-4D78-81C4-C90159EA99BA",
-		"image": "barbell_spider_curl",
-		"aliases": ["Incline Spider Curl"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell", "Incline Bench Rack"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
-	},
-	{
 		"name": "Dips",
 		"id": "81B8B2DA-A5F0-44C0-AF54-A0B9757425BC",
 		"image": "bar_dip",
@@ -3120,6 +3079,29 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Bodyweight"
 	},
+    {
+        "name": "Costal Dip",
+        "id": "1718181A-6FB6-40FF-A4A3-F7299038CE1E",
+        "image": "costal_dip",
+        "aliases": ["Lower-Chest Dip"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dip Bar"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
 	{
 		"name": "Bench Dips",
 		"id": "136398DC-0BC9-4EB6-9F19-A25B7FCFD4B4",
@@ -7595,7 +7577,7 @@
 		"repsInstruction" : "Per Side"
 	},
 	{
-		"name": "Stability Ball Rollout",
+		"name": "Stability Ball Roll-Out",
 		"id": "1A01BBB2-0F54-494B-9724-AD80C607DC0D",
 		"image": "stability_ball_rollout",
 		"aliases": ["Swiss Ball Rollout"],
