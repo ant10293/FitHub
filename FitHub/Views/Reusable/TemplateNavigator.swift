@@ -135,6 +135,7 @@ struct TemplateNavigator<Content: View>: View {
     }
     
     // MARK: - Popup Overlay
+    // TODO: add a stroke around this
     @ViewBuilder
     private var templatePopupOverlay: some View {
         if let sel = selectedTemplate, let tpl = templateBinding(for: sel)?.wrappedValue {

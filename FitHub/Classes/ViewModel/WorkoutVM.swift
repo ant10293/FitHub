@@ -118,7 +118,6 @@ final class WorkoutVM: ObservableObject {
         completionDuration = secondsElapsed
         isOverlayVisible = false
         showWorkoutSummary = true
-        workoutCompleted = true
     }
 
     func isLastExerciseForIndex(_ exerciseIndex: Int) -> Bool {
@@ -197,6 +196,9 @@ final class WorkoutVM: ObservableObject {
         
     @MainActor
     func endWorkoutAndDismiss(ctx: AppContext, completion: () -> Void) {
+        // ensure that this workout cannot be set as active workout
+        workoutCompleted = true
+        
         // update exercise performance
         ctx.exercises.applyPerformanceUpdates(updates: updates.updatedMax, csvEstimate: false)
         

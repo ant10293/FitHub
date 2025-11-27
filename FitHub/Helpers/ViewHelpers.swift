@@ -11,20 +11,27 @@ import SwiftUI
 //    .frame(maxHeight: UIScreen.main.bounds.height * 0.33)  // ≈ 1/3 screen
 
 func getFullImage(_ imageName: String, _ fullPath: String) -> Image {
-    // 1️⃣ Asset catalog check
+    // 1️⃣ Asset catalog check (fullPath)
     if UIImage(named: fullPath) != nil {
         return Image(fullPath)
     }
+    
     // 2️⃣ Fallback to file in Documents
-    guard let documentsURL = FileManager.default
-        .urls(for: .documentDirectory, in: .userDomainMask).first else {
-        return Image(systemName: "photo")
+    if let documentsURL = FileManager.default
+        .urls(for: .documentDirectory, in: .userDomainMask).first {
+        
+        let url = documentsURL.appendingPathComponent(imageName)
+        if let uiImg = UIImage(contentsOfFile: url.path) {
+            return Image(uiImage: uiImg)
+        }
     }
-    let url = documentsURL.appendingPathComponent(imageName)
-    if let uiImg = UIImage(contentsOfFile: url.path) {
-        return Image(uiImage: uiImg)
+    
+    // 3️⃣ Fallback to "placeholder" asset
+    if let placeholder = UIImage(named: "placeholder") {
+        return Image(uiImage: placeholder)
     }
-    // 3️⃣ Final fallback
+    
+    // 4️⃣ Final fallback
     return Image(systemName: "photo")
 }
 

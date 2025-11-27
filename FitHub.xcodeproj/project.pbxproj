@@ -98,6 +98,7 @@
 		658D80132ED3E1BD0041FB4D /* ErrorFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80122ED3E1BD0041FB4D /* ErrorFooter.swift */; };
 		658D80152ED40A290041FB4D /* OptionalDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80142ED40A290041FB4D /* OptionalDatePicker.swift */; };
 		658D80172ED416AC0041FB4D /* GraphSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80162ED416AC0041FB4D /* GraphSectionView.swift */; };
+		658D801A2ED852750041FB4D /* CenteredOverlayHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80192ED852750041FB4D /* CenteredOverlayHeader.swift */; };
 		6592279E2EC80DDF00EEDF42 /* GuestAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */; };
 		659227A02EC820E100EEDF42 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592279F2EC820E100EEDF42 /* Name.swift */; };
 		65A0D1CC2E2F39D5008466D8 /* CustomToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */; };
@@ -382,6 +383,7 @@
 		658D80122ED3E1BD0041FB4D /* ErrorFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorFooter.swift; sourceTree = "<group>"; };
 		658D80142ED40A290041FB4D /* OptionalDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalDatePicker.swift; sourceTree = "<group>"; };
 		658D80162ED416AC0041FB4D /* GraphSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphSectionView.swift; sourceTree = "<group>"; };
+		658D80192ED852750041FB4D /* CenteredOverlayHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenteredOverlayHeader.swift; sourceTree = "<group>"; };
 		6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestAuthView.swift; sourceTree = "<group>"; };
 		6592279F2EC820E100EEDF42 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToolBar.swift; sourceTree = "<group>"; };
@@ -1139,6 +1141,7 @@
 				658D80102ED2A5F80041FB4D /* EmptyState.swift */,
 				65AB47F42EA31362001BEAFE /* WarningFooter.swift */,
 				658D80122ED3E1BD0041FB4D /* ErrorFooter.swift */,
+				658D80192ED852750041FB4D /* CenteredOverlayHeader.swift */,
 			);
 			path = Reusable;
 			sourceTree = "<group>";
@@ -1694,6 +1697,7 @@
 				6550ADC02E6E562C002072C1 /* PlateSelection.swift in Sources */,
 				6531361F2E53F07000EECCA5 /* ExerciseChangeRow.swift in Sources */,
 				65CD3C752DD3C84F00C2B671 /* Questionnaire.swift in Sources */,
+				658D801A2ED852750041FB4D /* CenteredOverlayHeader.swift in Sources */,
 				658D80092ED1184F0041FB4D /* ExerciseRPEGraph.swift in Sources */,
 				65CD3C762DD3C84F00C2B671 /* SimilarExercisesView.swift in Sources */,
 				653136292E53F92900EECCA5 /* ExerciseInfo.swift in Sources */,

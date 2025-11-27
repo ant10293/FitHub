@@ -1,0 +1,75 @@
+Deep Exercise Analysis - 27 Nov 2025
+====================================
+
+1. Movement Type & Instruction Diagnostics
+------------------------------------------
+- Movement-type conflicts:
+  - Bicycle Crunch is tagged as Bilateral Dependent even though its aliases reference an alternating pattern and the reps cue is "Per Side", so it should be Bilateral Independent.
+  - Front Rack Hold behaves like a loaded carry, yet it is stored as Bilateral Dependent; the hold/carry distinction matters for programming walk distances vs. static holds.
+  - Medicine Ball Russian Twist is alternating trunk rotation but still labeled Bilateral Dependent, which blocks unilateral tracking logic.
+  - Roman Chair Side Bend is marked Bilateral Dependent despite being executed one side at a time.
+- Missing limbMovementType (28 cases): every sit-up/crunch variant, core holds (Hollow Body Hold, Ab Wheel Roll-Out), conditioning entries (Elliptical Stride, Indoor Cycling, Ladder/Stair Climb, Treadmill Walk/Run, Endurance Row) and the entire hanging leg raise cluster (Hanging Knee/Leg Raise, Lying Leg Raise, Toes to Bar, Scissor Kicks) are missing the field entirely, so filtering by unilateral/bilateral silently drops them.
+- RepsInstruction gaps:
+  - Concentration Curl, Machine Glute Kickback, Single-Arm Dead Hang and Dumbbell Side Bend are all unilateral but lack the "Per Arm/Leg" cue, which means per-side volume cannot be derived.
+  - Bicycle Crunch, Medicine Ball Russian Twist, Roman Chair Side Bend and Standing Dumbbell Tricep Extension are the inverse problem: they specify per-side/arm reps even though the stored movement type is Bilateral Dependent.
+- WeightInstruction issues:
+  - High to Low Cable Chest Fly inherits "Per Dumbbell" even though its equipment is strictly Cable Crossover hardware. The same mismatch exists on every Converging Smith and Plate-Loaded Row entry where "Per Peg" is present but the equipment strings never mention plates or pegs, so the UI cannot describe which lever arm is being loaded.
+  - Twenty-two dumbbell lifts (clean & press, hang clean, high pull, snatch, external rotation, face pull, calf raise, concentration curl, Jefferson curl, all single-arm preacher/squat/row/kickback variations, etc.) are missing `weightInstruction` entirely. These should consistently read "Per Dumbbell" so logbook math understands per-hand loading.
+
+2. Missing but Useful Variations
+--------------------------------
+- Chest & shoulders:
+  - Plate-Loaded Lying Chest Press bridges the gap between the seated plate-loaded machines already in the file and barbell benching, and only exists in the new CSV despite GymVisual already offering media for it.
+  - Cable Internal Rotation is missing even though External Rotation is provided; adding it fills the shoulder health pairing.
+  - Ring Dips and Floor Tricep Dips provide advanced bodyweight pushing progressions that differ materially from bench dips.
+- Back & pulling:
+  - Wide-Grip Lat Pulldown, Reverse-Grip Bent-Over Row variants (barbell and cable) and Barbell Incline Row are absent, limiting pulling variety for users who cannot load pull-ups heavily yet.
+  - Smith Machine Deadlift and Rack Pull give fixed-path options for users rehabbing or with limited equipment.
+- Glutes & legs:
+  - Belt Bulgarian Split Squat, Belt Sumo Squat, Reverse V-Squat and Landmine Hack Squat add machine-based knee-dominant progressions for lifters who struggle with spinal loading.
+  - Horizontal Single-Leg Press, Bodyweight Donkey Calf Raise, Weighted Frog Pump, Bodyweight/Landmine Cossack Squat and Landmine V-Squat Good Morning expand unilateral and adductor/isometric coverage where only barbell/dumbbell entries currently exist.
+- Core:
+  - Hanging Oblique Knee Raise, Incline Close-Grip Push-Up (core + triceps) and Cable Seated One-Arm Concentration Curl (rotational anti-extension) all exist in GymVisual's catalog and complement the current lineup.
+- Reference: GymVisual already exposes imagery for each of the movements above, so onboarding assets is low friction ([GymVisual search](https://gymvisual.com/search?near=All+categories&controller=search&orderby=position&orderway=desc&search_query=enter_name_here&submit_search=)).
+
+3. Non-useful or Redundant Variations
+-------------------------------------
+- Bench Pin Press vs. Bench Press Pin Hold: both entries describe mid-range isometrics on the same setup. One can be demoted to an alias to reduce clutter.
+- Machine Chest Fly vs. Pec Deck Fly both expose the alias "Butterfly Machine", causing users to see two nearly identical cards for the same machine path.
+- Duplicate Machine Glute Kickback records: one has the correct reps cue, the other does not, but both point to the same hardware.
+- Side Lying Hip Abduction vs. Side Lying Leg Raise overlap almost completely (even sharing the alias "Side-Lying Hip Abduction"). Keeping both confuses filtering.
+- Converging Smith Bench/Incline/Decline Press entries are marked as "Per Peg" without plate-loaded equipment strings. Either add true plate-loaded machines or collapse these into standard Smith variations.
+- Standing Dumbbell Tricep Extension is stored as Bilateral Dependent even though the description and URL show a single-arm overhead extension.
+
+4. Alias Quality Issues
+-----------------------
+- Shared aliases that point to multiple canonicals: "Butterfly Machine" (Machine Chest Fly & Pec Deck Fly), "Parallel Grip Pull-Up" (assisted, bodyweight, weighted variants), "Reverse Hyper" (bodyweight vs. machine), "Trap Shrug" (barbell vs. machine) and "Side-Lying Hip Abduction" (two separate entries) all need disambiguation or relocation to the canonical movement.
+- Self-aliases (alias identical to name) add no search value and should be removed: Barbell Hip Thrust, Overhead Press, Machine Shrug, Nordic Curl, Hyperextension, Weighted Hyperextension, Lateral Lunge, Kettlebell Halo.
+- Aliases that collide with a different canonical exercise (e.g., "Incline Chest Press" stored under Incline Bench Press, "Dumbbell High Pull" stored under Dumbbell Upright Row, "Flutter Kicks" nested under Scissor Kicks) make global search ambiguous and should be converted into primary records or renamed with the actual variation in parentheses.
+
+5. Review of `new_exercises - Sheet1.csv`
+-----------------------------------------
+**High-value adds (unique coverage):** cable preacher curl, cable seated one-arm concentration curl, ring dips, floor tricep dips, smith machine deadlift, bodyweight good morning, weighted frog pump, smith machine rack pull, hanging oblique knee raise, barbell lateral lunge, dumbbell lateral lunge, dumbbell reverse lunge, wide-grip lat pulldown, incline close-grip push-up, barbell reverse-grip bent-over row, barbell incline row, landmine cossack squat, landmine hack squat, reverse V-squat, V-squat good morning. All of these introduce either new equipment paths or unilateral progressions that the current catalog lacks.
+
+**Optional/overlapping but still defensible:** plate-loaded lying chest press, cable internal rotation, bodyweight donkey calf raise, dumbbell reverse hyperextension, horizontal single-leg press, belt Bulgarian split squat, belt sumo squat, smith machine hack squat, pin front squat, bodyweight sumo squat. These either tweak stance/implement on an existing pattern or duplicate a movement that already exists but with a novel loading modality.
+
+**Already covered / redundant:** barbell reverse curl (exact name already exists), reverse grip tricep pushdown (duplicate), smith machine leg press (too close to existing compact/horizontal leg press + smith squat), bodyweight cossack squat (the current Cossack Squat is already bodyweight) and dumbbell lateral lunge/reverse lunge could also be modeled as aliases if you prefer to keep the primary "Lateral Lunge" and "Reverse Lunge" entries equipment-agnostic.
+
+Action Items
+------------
+1. Normalize `limbMovementType`, `repsInstruction`, and `weightInstruction` for the flagged exercises so unilateral tracking + per-hand loading logic works consistently.
+2. Collapse redundant aliases/entries (especially in chest fly, hip abduction, glute kickback) and convert near-duplicate movements into aliases where possible.
+3. Prioritize onboarding the high-value additions listed above; the GymVisual catalog already provides imagery so implementation cost is minimal.
+4. Decide whether optional variations should be separate cards or stored as aliases/overrides to keep the list lean.
+
+6. Image Verification Follow-Up
+-------------------------------
+- Bicycle Crunch – the linked asset is literally titled “Bicycle Crunch (male)” and shows the alternating pedaling pattern ([GymVisual](https://gymvisual.com/animated-gifs/15580-bicycle-crunch-male.html?search_query=bicycle+crunch&results=16)). Because the demonstrator cycles one leg out while the opposite elbow drives across the midline, the clip is clearly bilateral independent, not dependent, so the `limbMovementType` plus `repsInstruction` need to move to the unilateral/“per side” path.
+- Medicine Ball Russian Twist – the referenced clip “Russian Twist (with medicine ball)” alternates from left to right on every rep ([GymVisual](https://gymvisual.com/animated-gifs/2691-russian-twist-with-medicine-ball.html#/47-style_type-basic_grey)). The metadata still says Bilateral Dependent even though the image only shows alternating trunk rotation w/ a pause at each side.
+- Roman Chair Side Bend – the asset “45 degrees Side Bend (male)” clearly demonstrates one hip hinging over a 45° roman chair before switching sides ([GymVisual](https://gymvisual.com/animated-gifs/14251-45-degrees-side-bend-male.html#/47-style_type-basic_grey)). Movement type should therefore be Unilateral with a per-side rep cue instead of the current Bilateral Dependent tag.
+- Single-Arm Dead Hang – the current media is titled “Alternating Dead Hang (male)” where the athlete switches hands mid-set ([GymVisual](https://gymvisual.com/animated-gifs/22858-alternating-dead-hang-male.html#/47-style_type-basic_grey)). The exercise is marked Unilateral with no per-side cue, but the clip depicts bilateral-independent alternations, so either change the movement type or source a true static single-arm hang GIF.
+- Single-Leg Deadlift – the GIF is “Barbell Single Leg Deadlift” ([GymVisual](https://gymvisual.com/animated-gifs/3768-barbell-single-leg-deadlift.html#/47-style_type-basic_grey)), yet the record is tagged as a dumbbell movement (`equipmentRequired`: Dumbbells, no barbell listed). Either swap in a dumbbell clip or update the equipment + `weightInstruction` to match the barbell demo.
+- Landmine Row – the linked page is “Lever Bent-over Row with V-bar (plate loaded)” ([GymVisual](https://gymvisual.com/animated-gifs/7155-lever-bent-over-row-with-v-bar-plate-loaded.html#/47-style_type-basic_grey)). That machine path is nothing like a barbell-in-landmine hinge, so this entry should either be retitled to the lever row or given a proper landmine GIF.
+- Weighted Wall Sit – the media is “Dumbbell Goblet Wall Sit (male)” ([GymVisual](https://gymvisual.com/animated-gifs/18051-dumbbell-goblet-wall-sit-male.html#/47-style_type-basic_grey)), but the exercise data says it’s performed with a weight plate. Update the equipment + instructions (or replace the clip) so users aren’t cued to grab the wrong implement.
+- Barbell Curtsy Lunge – the file is literally “Barbell Curtsey Lunge (female)” ([GymVisual](https://gymvisual.com/animated-gifs/19080-barbell-curtsey-lunge-female.html#/47-style_type-basic_grey)), yet the exercise object has no equipment listed and is still marked `Bodyweight`. Flip it to `Free Weight`, declare the barbell/V-hold, and add `weightInstruction` so tracking works.
+

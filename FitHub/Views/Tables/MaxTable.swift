@@ -7,70 +7,58 @@
 
 import SwiftUI
 
-// FIXME: messy asf. doesn't use existing display logic
 struct MaxTable: View {
     let peak: PeakMetric
 
     var body: some View {
         Grid(horizontalSpacing: 0, verticalSpacing: 4) {
             ForEach(percents, id: \.self) { pct in
-                GridRow {
-                    // ── Col 1: percent label (always shown)
-                    (Text("\(pct)") + Text("%").textScale(.secondary).fontWeight(.light))
-                        .gridColumnAlignment(.leading)
+                ThreeColumnRow(
+                    left: {
+                        // LEFT: percent
+                        (Text("\(pct)") + Text("%").textScale(.secondary).fontWeight(.light))
+                    },
+                    center: {
+                        // MIDDLE: weight / time / empty, depending on mode
+                        switch peak {
+                        case .oneRepMax(let oneRM):
+                            let weight = oneRM.displayValue * Double(pct) / 100.0
+                            (Text(weight > 0 ? Format.smartFormat(weight) : "—")
+                             + Text(" \(UnitSystem.current.weightUnit)").fontWeight(.light))
 
-                    // ── Col 2 & Col 3: depend on metric type
-                    switch peak {
-                    case .oneRepMax(let oneRM):
-                        // Col 2: weight at %
-                        let weight = oneRM.displayValue * Double(pct) / 100.0
-                        (Text(weight > 0 ? Format.smartFormat(weight) : "—")
-                         + Text(" \(UnitSystem.current.weightUnit)").fontWeight(.light))
-                            .gridColumnAlignment(.center)
+                        case .maxHold(let span):
+                            let secs = Int((Double(span.inSeconds) * Double(pct) / 100.0).rounded())
+                            Text(secs > 0 ? TimeSpan(seconds: secs).displayStringCompact : "—")
+                                .fontWeight(.light)
 
-                        // Col 3: reps at % (from the mapping)
-                        let reps = oneRMReps[pct] ?? 1
-                        (Text("\(reps) ") + Text(reps == 1 ? "rep" : "reps").fontWeight(.light))
-                            .gridColumnAlignment(.trailing)
+                        default:
+                            // keep column, just no content
+                            Text(" ")
+                        }
+                    },
+                    right: {
+                        // RIGHT: reps / load / whatever
+                        switch peak {
+                        case .oneRepMax:
+                            let reps = oneRMReps[pct] ?? 1
+                            (Text("\(reps) ") + Text(reps == 1 ? "rep" : "reps").fontWeight(.light))
 
-                    case .maxReps(let maxReps):
-                        // Col 3: empty to keep grid structure consistent
-                        Text(" ").hidden()
-                            .gridColumnAlignment(.center)
-                        
-                        // Col 2: reps estimate via RIR-style rule
-                        let r = repsFromPercent(pct, maxReps: maxReps)
-                        (Text(maxReps > 0 ? "\(r) " : "— ")
-                         + Text(maxReps > 0 ? (r == 1 ? "rep" : "reps") : "reps"))
-                            .fontWeight(.light)
-                            .gridColumnAlignment(.trailing)
+                        case .maxReps(let maxReps):
+                            let r = repsFromPercent(pct, maxReps: maxReps)
+                            (Text(maxReps > 0 ? "\(r) " : "— ")
+                             + Text(maxReps > 0 ? (r == 1 ? "rep" : "reps") : "reps"))
+                                .fontWeight(.light)
 
-                    case .maxHold(let span):
-                        // Col 3: empty to keep grid structure consistent
-                        Text(" ").hidden()
-                            .gridColumnAlignment(.center)
-                        
-                        // Col 2: time scaled by %
-                        let secs = Int((Double(span.inSeconds) * Double(pct) / 100.0).rounded())
-                        Text(secs > 0 ? TimeSpan(seconds: secs).displayStringCompact : "—")
-                            .fontWeight(.light)
-                            .gridColumnAlignment(.trailing)
-                        
-                    case .hold30sLoad(let l30):
-                        // Col 2: empty to keep grid structure consistent
-                        Text(" ").hidden()
-                            .gridColumnAlignment(.center)
-                        
-                        // Col 3: load at %
-                        let load = l30.displayValue * Double(pct) / 100.0
-                        (Text(load > 0 ? Format.smartFormat(load) : "—")
-                         + Text(" \(UnitSystem.current.weightUnit)").fontWeight(.light))
-                            .gridColumnAlignment(.trailing)
-                    
-                    case .none:
-                        EmptyView()
+                        case .hold30sLoad(let l30):
+                            let load = l30.displayValue * Double(pct) / 100.0
+                            (Text(load > 0 ? Format.smartFormat(load) : "—")
+                             + Text(" \(UnitSystem.current.weightUnit)").fontWeight(.light))
+
+                        default:
+                            Text(" ")
+                        }
                     }
-                }
+                )
 
                 if pct != percents.last {
                     Divider().gridCellColumns(3)
@@ -78,6 +66,7 @@ struct MaxTable: View {
             }
         }
     }
+    
     // Rendered percent steps (shared across all modes)
     private let percents = Array(stride(from: 100, through: 50, by: -5))
 
@@ -92,3 +81,35 @@ struct MaxTable: View {
         return max(1, maxReps - rir)
     }
 }
+
+
+private struct ThreeColumnRow<Left: View, Center: View, Right: View>: View {
+    private let left: Left
+    private let center: Center
+    private let right: Right
+
+    init(
+        @ViewBuilder left: () -> Left,
+        @ViewBuilder center: () -> Center,
+        @ViewBuilder right: () -> Right
+    ) {
+        self.left = left()
+        self.center = center()
+        self.right = right()
+    }
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 0) {
+            left
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            center
+                .frame(maxWidth: .infinity, alignment: .center)
+
+            right
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+    }
+}
+
+

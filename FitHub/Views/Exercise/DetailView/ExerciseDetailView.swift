@@ -70,21 +70,20 @@ struct ExerciseDetailView: View {
     }
         
     private var workoutToolbar: some View {
-        HStack {
-            Text("\(exercise.name)").bold()
-                .frame(maxWidth: UIScreen.main.bounds.width * 0.66)  // ≈ 2/3 screen
-                .multilineTextAlignment(.center)
-                .centerHorizontally()
-                .overlay(
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .imageScale(.large)
-                            .foregroundStyle(.gray)
-                    }
-                    .padding(.trailing),
-                    alignment: .trailing
-                )
-        }
+        CenteredOverlayHeader(
+            center: {
+                Text("\(exercise.name)").bold()
+                    .multilineTextAlignment(.center)
+            },
+            trailing: {
+                Button(action: { dismiss() }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .imageScale(.large)
+                        .foregroundStyle(.gray)
+                }
+                .padding(.trailing)
+            }
+        )
         .padding(.vertical)
     }
 }

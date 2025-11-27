@@ -80,47 +80,41 @@ struct ExerciseSetOverlay: View {
 
     // TODO: use this layout to make a generic toolbar header that we can use instead of a real toolbar
     private var exerciseToolbar: some View {
-        HStack {
-            let width: CGFloat = UIScreen.main.bounds.width
-            
-            Text("Exercise \n\(progress.exerciseIdx + 1) of \(progress.numExercises)")
-                .frame(maxWidth: width * 0.15)
-                .foregroundStyle(.gray)
-                .font(.caption)
-                .multilineTextAlignment(.center)
-            
-            VStack(alignment: .center) {
-                Button(action: viewDetail) {
-                    HStack(spacing: 5) {
-                        Text("\(exercise.name)")
-                            .font(.headline)
-                            .multilineTextAlignment(.center)
-                        Image(systemName: "info.circle")
-                    }
-                    .frame(maxWidth: width * 0.7)
-                }
-                .buttonStyle(.plain)
-     
-                Text("Sets: \(exercise.workingSets)")
-                    .font(.subheadline)
+        CenteredOverlayHeader(
+            leading: {
+                Text("Exercise \n\(progress.exerciseIdx + 1) of \(progress.numExercises)")
+                    .font(.caption)
                     .foregroundStyle(.gray)
-            }
-            .padding(.horizontal)
-            
-            Button(action: onClose) {
-                HStack {
-                    Spacer()
+                    .multilineTextAlignment(.center)
+            },
+            center: {
+                VStack(alignment: .center, spacing: 4) {
+                    Button(action: viewDetail) {
+                        HStack(spacing: 5) {
+                            Text(exercise.name)
+                                .font(.headline)
+                                .multilineTextAlignment(.center)
+                            Image(systemName: "info.circle")
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.plain)
+
+                    Text("Sets: \(exercise.workingSets)")
+                        .font(.subheadline)
+                        .foregroundStyle(.gray)
+                }
+            },
+            trailing: {
+                Button(action: onClose) {
                     Image(systemName: "xmark.circle.fill")
                         .imageScale(.large)
                         .foregroundStyle(.gray)
-                    Spacer()
+                        .contentShape(Rectangle())
                 }
-                .frame(maxWidth: .infinity)
-                .contentShape(Rectangle())
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
-            .frame(width: width * 0.15)
-        }
+        ) 
         .padding(.bottom)
     }
     
