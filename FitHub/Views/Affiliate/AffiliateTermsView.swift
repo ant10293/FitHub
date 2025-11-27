@@ -35,3 +35,7 @@ struct AffiliateTermsView: View {
 
 
 
+
+
+
+

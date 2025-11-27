@@ -122,3 +122,4 @@ After changes, you'll have:
 - **Spaced compound terms:** Smith Machine, Trap Bar, Behind the Back, Behind the Neck
 - **Consistent terminology:** Single-Arm (not One-Arm), Triceps (not Tricep)
 
+

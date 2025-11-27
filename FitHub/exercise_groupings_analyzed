@@ -11,7 +11,10 @@ Exercises marked with
 ================================================================================
 
 Group 1: BENCH PRESS
-  Exercises (24):
+  Subgroup 1: GUILLOTINE BENCH PRESS (2):
+    - Smith-Machine Guillotine Press -> Smith Machine Guillotine Press
+    - Guillotine Press
+  Remaining Exercises (22):
     - Bench Press
     - Bench Pin Press
     - Bench Press Pin Hold
@@ -33,8 +36,6 @@ Group 1: BENCH PRESS
     - Single-Arm Dumbbell Bench Press
     - Smith Machine Bench Press
     - Smith Machine Incline Bench Press
-    - Smith-Machine Guillotine Press -> Smith Machine Guillotine Press
-    - Guillotine Press
     - Spoto Press
 
 Group 2: CHEST PRESS
@@ -53,27 +54,30 @@ Group 3: FLOOR PRESS
     - Landmine Floor Press
 
 Group 4: CLEAN
-  Exercises (12):
+  Subgroup 1: PULL CLEAN (4):
+    - Clean High Pull
+    - Clean Pull
+    - Dumbbell High Pull
+    - **High Pull**
+  Subgroup 2: POWER CLEAN (2):
+    - Hang Power Clean
+    - Power Clean
+  Remaining Exercises (6):
     - Clean
     - Clean and Jerk
     - Clean and Press
-    - Clean High Pull
-    - Clean Pull
     - Dumbbell Clean and Press
     - Dumbbell Hang Clean
-    - Dumbbell High Pull
     - Hang Clean
-    - Hang Power Clean
-    - **High Pull**
-    - Power Clean
 
 Group 5: SNATCH
-  Exercises (7):
-    - Dumbbell Snatch
+  Subgroup 1: POWER SNATCH (2):
     - Hang Power Snatch
+    - Power Snatch
+  Remaining Exercises (5):
+    - Dumbbell Snatch
     - Hang Snatch
     - Muscle Snatch
-    - Power Snatch
     - Snatch
     - Snatch Pull
 
@@ -114,15 +118,17 @@ Group 8: BRIDGE
     - Single-Leg Hip Thrust
 
 Group 9: PULL UP
-  Exercises (9):
+  Subgroup 1: NEUTRAL PULL UP (3):
     - Assisted Neutral Grip Pull-Up
-    - Assisted Pull-Up
-    - Muscle-Up
     - Neutral Grip Pull-Up
+    - Weighted Neutral Grip Pull-Up
+  Subgroup 2: MUSCLE PULL UP (2):
+    - Muscle-Up
+    - Weighted Muscle-Up
+  Remaining Exercises (4):
+    - Assisted Pull-Up
     - Pull-Up
     - Towel Pull-Up
-    - Weighted Muscle-Up
-    - Weighted Neutral Grip Pull-Up
     - Weighted Pull-Up
 
 Group 10: CHIN UP
@@ -132,11 +138,12 @@ Group 10: CHIN UP
     - Weighted Chin-Up
 
 Group 11: DIP
-  Exercises (6):
+  Subgroup 1: DIPS DIP (3):
     - Bench Dips
     - Bench Dips (Feet Elevated)
-    - Costal Dip
     - Dips
+  Remaining Exercises (3):
+    - Costal Dip
     - Machine Seated Dip
     - Weighted Dip
 
@@ -160,11 +167,12 @@ Group 13: CRUNCH
     - Standing Cable Crunch
 
 Group 14: HOLD
-  Exercises (7):
+  Subgroup 1: BODY HOLD (2):
     - Arch Body Hold
+    - Hollow Body Hold
+  Remaining Exercises (5):
     - Front Rack Hold
     - Handstand Hold
-    - Hollow Body Hold
     - Overhead Hold
     - Thick-Bar Hold
     - Trap Bar Hold
@@ -178,7 +186,10 @@ Group 15: PLANK
     - Side Plank
 
 Group 16: SHOULDER PRESS
-  Exercises (24):
+  Subgroup 1: Z SHOULDER PRESS (2):
+    - Dumbbell Z Press
+    - Z Press
+  Remaining Exercises (22):
     - Arnold Press
     - Behind the Neck Press
     - Bradford Press
@@ -186,7 +197,6 @@ Group 16: SHOULDER PRESS
     - Cuban Press
     - Dumbbell Push Press
     - Dumbbell Shoulder Press
-    - Dumbbell Z Press
     - Half-Kneeling Landmine Press
     - Kettlebell Bottoms-Up Press
     - Machine Shoulder Press
@@ -202,27 +212,29 @@ Group 16: SHOULDER PRESS
     - Single-Arm Landmine Press
     - Viking Press
     - Y Press
-    - Z Press
 
 Group 17: SHOULDER ROTATION
-  Exercises (6):
+  Subgroup 1: EXTERNAL SHOULDER ROTATION (4):
     - Cable External Rotation
     - Band External Shoulder Rotation
     - Lying Dumbbell External Shoulder Rotation
     - Seated Dumbbell External Shoulder Rotation
+  Subgroup 2: INTERNAL SHOULDER ROTATION (2):
     - Band Internal Shoulder Rotation
     - Lying Dumbbell Internal Shoulder Rotation
 
 Group 18: SHOULDER RAISE
-  Exercises (9):
+  Subgroup 1: LATERAL SHOULDER RAISE (4):
     - Banded Lateral Raise
     - Cable Lateral Raise
     - Dumbbell Lateral Raise
     - Machine Lateral Raise
-    - Barbell Front Raise
-    - Dumbbell Front Raise
+  Subgroup 2: Y SHOULDER RAISE (2):
     - I-Y-T Raise (on Bench)
     - Incline Y Raise
+  Remaining Exercises (3):
+    - Barbell Front Raise
+    - Dumbbell Front Raise
     - Scaption Raise
 
 Group 19: FACE PULL
@@ -261,70 +273,76 @@ Group 22: CALF RAISE
     - Standing Calf Raise
 
 Group 23: CARDIO
-  Exercises (6):
-    - Elliptical Stride
-    - Indoor Cycling
+  Subgroup 1: CLIMB CARDIO (2):
     - Ladder Climb
     - Stair Climb
+  Remaining Exercises (4):
+    - Elliptical Stride
+    - Indoor Cycling
     - Treadmill Walk/Run
     - Endurance Row
 
 Group 24: CURL
-  Exercises (40):
+  Subgroup 1: PREACHER CURL (5):
+    - EZ-Bar Preacher Curl
+    - Machine Preacher Curl
+    - Preacher Curl
+    - Reverse-Grip Preacher Curl
+    - Single-Arm Dumbbell Preacher Curl
+  Subgroup 2: HAMMER CURL (3):
+    - Cable Hammer Curl
+    - Hammer Curl
+    - Incline Hammer Curl
+  Subgroup 3: CONCENTRATION CURL (2):
+    - Cable Concentration Curl
+    - Concentration Curl
+  Subgroup 4: WRIST CURL (5):
+    - Barbell Wrist Curl
+    - Dumbbell Wrist Curl
+    - Dumbbell Reverse Wrist Curl
+    - Plate Wrist Curl
+    - Reverse Wrist Curl
+  Remaining Exercises (25):
     - 21s Curl
     - Band Biceps Curl
     - Barbell Curl
     - Barbell Reverse Curl
-    - Barbell Wrist Curl
     - Bayesian Curl
-    - Cable Concentration Curl
     - Cable Curl With Bar
     - Cable Curl With Rope
-    - Cable Hammer Curl
     - Cheat Curl
-    - Concentration Curl
     - Drag Curl
     - Dumbbell Curl
     - Dumbbell Reverse Curl
-    - Dumbbell Reverse Wrist Curl
-    - Dumbbell Wrist Curl
     - EZ Bar Curl -> EZ-Bar Curl
-    - EZ-Bar Preacher Curl
     - EZ-Bar Reverse Curl
-    - Hammer Curl
     - Incline Cable Curl
     - Incline Dumbbell Curl
-    - Incline Hammer Curl
     - Lying Cable Curl
     - Machine Bicep Curl
-    - Machine Preacher Curl
     - Neck Curl
     - Overhead Cable Curl
-    - Plate Wrist Curl
-    - Preacher Curl
-    - Reverse Wrist Curl
-    - Reverse-Grip Preacher Curl
     - Seated Dumbbell Curl
     - Single-Arm Cable Bicep Curl
-    - Single-Arm Dumbbell Preacher Curl
     - Spider Curl
     - Standing Cable Curl
     - Strict Curl
     - Zottman Curl
 
 Group 25: DEADLIFT
-  Exercises (16):
+  Subgroup 1: ROMANIAN DEADLIFT (3):
+    - Dumbbell Romanian Deadlift
+    - Romanian Deadlift
+    - Single-Leg Romanian Deadlift
+  Remaining Exercises (13):
     - Behind the Back Deadlift
     - Deadlift
     - Deficit Deadlift
     - Dumbbell Deadlift
-    - Dumbbell Romanian Deadlift
     - Jefferson Deadlift
     - Rack Pull
-    - Romanian Deadlift
     - Single-Leg Deadlift
     - Single-Leg Dumbbell Deadlift
-    - Single-Leg Romanian Deadlift
     - Snatch Grip Deadlift
     - Stiff-Legged Deadlift
     - Sumo Deadlift
@@ -332,12 +350,13 @@ Group 25: DEADLIFT
     - Zercher Deadlift
 
 Group 26: EXTENSION
-  Exercises (6):
-    - Back Extension
+  Subgroup 1: HYPEREXTENSION EXTENSION (2):
     - Bodyweight Reverse Hyperextension
+    - Reverse Hyperextension
+  Remaining Exercises (4):
+    - Back Extension
     - Machine Back Extension
     - Neck Extension
-    - Reverse Hyperextension
     - Weighted Back Extension
 
 Group 27: GLUTE KICKBACK
@@ -354,24 +373,26 @@ Group 28: HANG
     - Weighted Flexed-Arm Hang
 
 Group 29: HIP ABDUCTION/ADDUCTION
-  Exercises (8):
+  Subgroup 1: MACHINE HIP ABDUCTION/ADDUCTION (2):
+    - Machine Hip Abduction
+    - Machine Hip Adduction
+  Remaining Exercises (6):
     - Bird Dog
     - Dead Bug
     - Floor Hip Abduction
     - Floor Hip Extension
-    - Hip Airplane
     - Hip Extension
-    - Machine Hip Abduction
-    - Machine Hip Adduction
+    - Hip Airplane
 
 Group 30: LEG CURL
-  Exercises (5):
+  Subgroup 1: NORDIC LEG CURL (2):
+    - Nordic Hamstring Curl -> Nordic Curl
+    - Reverse Nordic Curl
+  Remaining Exercises (6):
     - Lying Leg Curl
     - Seated Leg Curl
     - Slider Leg Curl
     - Standing Leg Curl
-    - Nordic Hamstring Curl -> Nordic Curl
-    - Reverse Nordic Curl
     - **Stability-Ball Hamstring Curl**
     - Swiss-Ball Leg Curl -> Stability-Ball Leg Curl
 
@@ -428,37 +449,40 @@ Group 36: PULLOVER
     - Machine Pullover
 
 Group 37: PUSH UP
-  Exercises (14):
+  Remaining Exercises (14):
     - Archer Push-Up
     - Close-Grip Push-Up
-    - Decline Push-Up
-    - Diamond Cutter Push-Up
-    - Diamond Push-Up
-    - Handstand Push-Up
-    - Incline Push-Up
     - Kneeling Close-Grip Push-Up
     - Kneeling Incline Push-Up
     - Kneeling Push-Up
+    - Decline Push-Up
+    - Handstand Push-Up
+    - Incline Push-Up
     - Pike Push-Up
     - Push-Up
     - Tate Push-Up
     - Wide-Grip Push-Up
+    - **Diamond Cutter Push-Up**
+    - Diamond Push-Up
 
 Group 38: ROW
-  Exercises (27):
+  Subgroup 1: PULL ROW (2):
+    - Bench Pull
+    - Dumbbell Bench Pull
+  Subgroup 2: T ROW (2):
+    - Chest-Supported T-Bar Row
+    - T-Bar Row
+  Remaining Exercises (23):
     - Barbell Rear Delt Row
     - Barbell Row
     - Barbell Upright Row
-    - Bench Pull
     - Cable Rear Delt Row
     - Cable Upright Row
     - Chest-Supported Dumbbell Row
-    - Chest-Supported T-Bar Row
-    - Dumbbell Bench Pull
     - Dumbbell Rear Delt Row
     - Dumbbell Row
     - Dumbbell Upright Row
-    - Incline Row
+    - **Incline Row**
     - Inverted Row
     - Landmine Row
     - Meadows Row
@@ -470,7 +494,6 @@ Group 38: ROW
     - Seated Cable Row
     - Seated Machine Row
     - Single-Arm Cable Row
-    - T-Bar Row
     - Towel Row
     - Yates Row
 
@@ -485,41 +508,43 @@ Group 40: SIDE BEND
     - Roman Chair Side Bend
 
 Group 41: SQUAT
-  Exercises (38):
-    - Back Squat
+  Subgroup 1: SPLIT SQUAT (7):
     - Barbell Bulgarian Split Squat
-    - Barbell Hack Squat
     - Barbell Split Squat
+    - Chair Bulgarian Split Squat
+    - Dumbbell Bulgarian Split Squat
+    - Dumbbell Split Squat
+    - Goblet Bulgarian Split Squat
+    - Split-Squat Jump
+  Subgroup 2: HACK SQUAT (3):
+    - Barbell Hack Squat
+    - Machine Hack Squat
+    - Sissy Hack Squat
+  Remaining Exercises (28):
+    - Back Squat
     - Belt Squat
     - Bodyweight Squat
     - Box Squat
     - Cambered Bar Squat
-    - Chair Bulgarian Split Squat
     - Chair Squat
     - Cossack Squat
     - Cyclist Squat
-    - Dumbbell Bulgarian Split Squat
     - Dumbbell Front Squat
-    - Dumbbell Split Squat
     - Dumbbell Squat
     - Front Squat
-    - Goblet Bulgarian Split Squat
     - Goblet Squat
     - Half Squat
     - Jefferson Squat
     - Landmine Squat
-    - Machine Hack Squat
     - Overhead Squat
     - Pendulum Squat
     - Pin Squat
     - Pistol Squat
     - Safety Bar Squat
     - Single-Leg Squat
-    - Sissy Hack Squat
     - Sissy Squat
     - Smith Machine Squat
     - Spanish Squat
-    - Split-Squat Jump
     - Sumo Squat
     - Trap-Bar Jump Squat -> Trap Bar Jump Squat
     - V-Squat
@@ -532,24 +557,27 @@ Group 42: THRUSTER
     - Squat Thrust
 
 Group 43: TRICEP EXTENSION
-  Exercises (17):
-    - Bent-Over Dumbbell Triceps Extension -> Bent-Over Dumbbell Tricep Extension
+  Subgroup 1: PUSHDOWN TRICEP EXTENSION (3):
+    - Reverse Grip Tricep Pushdown -> Reverse-Grip Tricep Pushdown
+    - Tricep Pushdown With Bar
+    - Tricep Rope Pushdown
+  Subgroup 2: KICKBACK TRICEP EXTENSION (2):
     - Cable Triceps Kickback -> Cable Tricep Kickback
     - Dumbbell Tricep Kickback
+  Subgroup 3: OVERHEAD TRICEP EXTENSION (2):
+    - Overhead Cable Triceps Extension -> Overhead Cable Tricep Extension
+    - Overhead Rope Triceps Extension -> Overhead Rope Tricep Extension
+  Remaining Exercises (10):
+    - Bent-Over Dumbbell Triceps Extension -> Bent-Over Dumbbell Tricep Extension
     - Lying Barbell Triceps Extension -> Lying Barbell Tricep Extension
     - Lying Dumbbell Triceps Extension -> Lying Dumbbell Tricep Extension
     - Lying EZ-Bar Triceps Extension -> Lying EZ-Bar Tricep Extension
     - Machine Tricep Extension
-    - Overhead Cable Triceps Extension -> Overhead Cable Tricep Extension
-    - Overhead Rope Triceps Extension -> Overhead Rope Tricep Extension
-    - Reverse Grip Tricep Pushdown -> Reverse-Grip Tricep Pushdown
     - Seated Dumbbell Triceps Extension -> Seated Dumbbell Tricep Extension
     - Single-Arm Cable Triceps Extension -> Single-Arm Cable Tricep Extension
     - Standing Barbell Triceps Extension -> Standing Barbell Tricep Extension
     - Standing Dumbbell Triceps Extension -> Standing Dumbbell Tricep Extension
     - Tate Press
-    - Tricep Pushdown With Bar
-    - Tricep Rope Pushdown
 
 Group 44: WALL SIT
   Exercises (2):
