@@ -105,9 +105,12 @@ enum ExerciseSortOption: String, Codable, CaseIterable, Equatable {
 }
 
 enum ResistanceType: String, CaseIterable, Identifiable, Codable {
+    // not used for exercise resistance type
     case any = "Any"
-    case bodyweight = "Bodyweight"
     case weighted = "Weighted"
+
+    // used for exercise resistance type
+    case bodyweight = "Bodyweight"
     case freeWeight = "Free Weight"
     case machine = "Machine"
     case banded = "Banded" 
@@ -127,6 +130,7 @@ enum RepsInstruction: String, Codable, CaseIterable {
 
 enum WeightInstruction: String, Codable, CaseIterable {
     case perDumbbell = "Per Dumbbell"
+    case perKettlebell = "Per Kettlebell"
     case perStack = "Per Stack" // cable loaded
     case perPeg = "Per Peg" // iso-lateral chest press
     case perHandle = "Per Handle" // farmer's walk handles

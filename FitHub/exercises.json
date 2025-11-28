@@ -53,7 +53,7 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/14134-barbell-pin-chest-press.html?search_query=barbell+pin+press&results=12"
 	},
 	{
-		"name": "Bench Press Pin Hold",
+		"name": "Bench Pin Press Hold",
 		"id": "2B5F4C7E-9A13-4C1D-9E52-6B7A9C3D8F1E",
 		"image": "bench_press_pin_hold",
 		"aliases": ["Bench Against Pins"],
@@ -429,7 +429,7 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/13554-barbell-reverse-grip-bench-press.html?search_query=reverse+grip+bench+press&results=26"
 	},
 	{
-		"name": "Reverse-Grip Dumbbell Press",
+		"name": "Reverse-Grip Dumbbell Bench Press",
 		"id": "06B6D435-A4EA-445C-9E88-AFF5BA5D0C3F",
 		"image": "reverse_grip_db_press",
 		"aliases": ["Underhand DB Bench"],
@@ -451,7 +451,7 @@
 		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
 		"weightInstruction": "Per Dumbbell",
-		"imageUrl": "https://gymvisual.com/animated-gifs/12352-dumbbell-reverse-grip-squeeze-bench-press.html?search_query=reverse+grip+dumbbell+press&results=7"
+		"imageUrl": "https://gymvisual.com/animated-gifs/3562-dumbbell-reverse-bench-press.html#/47-style_type-basic_grey"
 	},
 	{
 		"name": "Single-Arm Dumbbell Bench Press",
@@ -936,8 +936,9 @@
 		],
 		"difficulty": "Adv.",
 		"effort": "Plyometric",
-		"limbMovementType": "Bilateral Dependent",
+		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
+        "weightInstruction": "Per Dumbbell",
 		"imageUrl": "https://gymvisual.com/animated-gifs/12804-dumbbell-clean-and-press.html#/47-style_type-basic_grey"
 	},
 	{
@@ -962,8 +963,9 @@
 		],
 		"difficulty": "Adv.",
 		"effort": "Plyometric",
-		"limbMovementType": "Bilateral Dependent",
+		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
+        "weightInstruction": "Per Dumbbell",
 		"imageUrl": "https://gymvisual.com/animated-gifs/12217-dumbbell-hang-clean.html#/47-style_type-basic_grey"
 	},
 	{
@@ -983,9 +985,10 @@
 			] }
 		],
 		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
+		"effort": "Plyometric",
+		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
+        "weightInstruction": "Per Dumbbell",
 		"imageUrl": "https://gymvisual.com/animated-gifs/14155-dumbbell-high-pull.html?search_query=dumbbell+high+pull&results=2"
 	},
 	{
@@ -1371,7 +1374,7 @@
 		],
 		"difficulty": "Beg.",
 		"effort": "Isolation",
-		"limbMovementType": "Bilateral Independent",
+		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Banded",
 		"imageUrl": "https://gymvisual.com/animated-gifs/12292-resistance-band-pull-apart.html#/47-style_type-basic_grey"
 	},
@@ -1395,6 +1398,44 @@
 		"weightInstruction": "Per Stack",
 		"imageUrl": "https://gymvisual.com/animated-gifs/1681-cable-middle-fly.html?search_query=cable+chest+fly&results=78"
 	},
+    {
+        "name": "High to Low Cable Chest Fly",
+        "id": "B1CDD4A1-DC6D-4DAE-B51C-3993387C71DB",
+        "image": "cable_chest_fly",
+        "aliases": ["Hi-Lo Cable Fly", "High-Low Cable Fly"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Crossover"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Independent",
+        "resistance": "Machine",
+        "weightInstruction": "Per Stack",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1720-cable-standing-fly.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Low to High Cable Chest Fly",
+        "id": "94156A67-FACF-4CE4-B259-E7B189310F69",
+        "image": "cable_chest_fly",
+        "aliases": ["Lo-Hi Cable Fly", "Low-High Cable Fly"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Crossover"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Independent",
+        "resistance": "Machine",
+        "weightInstruction": "Per Stack",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1672-cable-low-fly.html?search_query=cable+chest+fly&results=78"
+    },
 	{
 		"name": "Cable Reverse Fly",
 		"id": "4127807B-2E7A-4DCD-A366-AEB41C045F7A",
@@ -1419,110 +1460,96 @@
 		"weightInstruction": "Per Stack",
 		"imageUrl": "https://gymvisual.com/animated-gifs/20003-cable-45-degrees-reverse-fly-male.html?search_query=cable+reverse+fly&results=22"
 	},
-	{
-		"name": "Decline Dumbbell Fly",
-		"id": "C340E32A-711E-4B7E-830B-161ABA39CBAA",
-		"image": "decline_db_fly",
-		"csvKey": "decline-dumbbell-fly",
-		"aliases": ["Decline DB Chest Fly"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Decline Bench Rack"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Free Weight",
-		"weightInstruction": "Per Dumbbell",
-		"imageUrl": "https://gymvisual.com/animated-gifs/1795-dumbbell-decline-fly.html?search_query=decline+dumbbell+fly&results=13"
-	},
-	{
-		"name": "Dumbbell Chest Fly",
-		"id": "668E2BEA-1BB0-46E4-A817-2B2DB3FCF022",
-		"image": "dumbbell_chest_fly",
-		"csvKey": "dumbbell-fly",
-		"aliases": ["Dumbbell Flyes", "Dumbbell Pec Fly"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Free Weight",
-		"weightInstruction": "Per Dumbbell",
-		"imageUrl": "https://gymvisual.com/animated-gifs/1801-dumbbell-fly.html?search_query=dumbbell+chest+fly&results=100"
-	},
-	{
-		"name": "High to Low Cable Chest Fly",
-		"id": "B1CDD4A1-DC6D-4DAE-B51C-3993387C71DB",
-		"image": "cable_chest_fly",
-		"aliases": ["Hi-Lo Cable Fly", "High-Low Cable Fly"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Crossover"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Machine",
-		"weightInstruction": "Per Dumbbell",
-		"imageUrl": "https://gymvisual.com/animated-gifs/16442-cable-kneeling-high-to-low-fly-male.html?search_query=cable+high+to+low+fly&results=4"
-	},
-	{
-		"name": "Incline Dumbbell Fly",
-		"id": "6E2F7A3C-9B41-4A53-9C0E-1D4F2B6A8C90",
-		"image": "incline_dumbbell_fly",
-		"csvKey": "incline-dumbbell-fly",
-		"aliases": ["Incline DB Chest Fly", "Incline Flyes"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
-		"muscles": [
-			{ "engagementPercentage": 85, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
-			] },
-			{ "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Free Weight",
-		"weightInstruction": "Per Dumbbell",
-		"imageUrl": "https://gymvisual.com/animated-gifs/1820-dumbbell-incline-fly.html?search_query=incline+dumbbell+fly&results=36"
-	},
-	{
-		"name": "Low to High Cable Chest Fly",
-		"id": "94156A67-FACF-4CE4-B259-E7B189310F69",
-		"image": "cable_chest_fly",
-		"aliases": ["Lo-Hi Cable Fly", "Low-High Cable Fly"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Crossover"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Machine",
-		"weightInstruction": "Per Stack",
-		"imageUrl": "https://gymvisual.com/animated-gifs/1672-cable-low-fly.html?search_query=cable+chest+fly&results=78"
-	},
+    {
+        "name": "Dumbbell Chest Fly",
+        "id": "668E2BEA-1BB0-46E4-A817-2B2DB3FCF022",
+        "image": "dumbbell_chest_fly",
+        "csvKey": "dumbbell-fly",
+        "aliases": ["Dumbbell Flyes", "Dumbbell Pec Fly"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dumbbells", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Independent",
+        "resistance": "Free Weight",
+        "weightInstruction": "Per Dumbbell",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1801-dumbbell-fly.html?search_query=dumbbell+chest+fly&results=100"
+    },
+    {
+        "name": "Incline Dumbbell Chest Fly",
+        "id": "6E2F7A3C-9B41-4A53-9C0E-1D4F2B6A8C90",
+        "image": "incline_dumbbell_fly",
+        "csvKey": "incline-dumbbell-fly",
+        "aliases": ["Incline DB Chest Fly", "Incline Flyes"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
+        "muscles": [
+            { "engagementPercentage": 85, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
+            ] },
+            { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Independent",
+        "resistance": "Free Weight",
+        "weightInstruction": "Per Dumbbell",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1820-dumbbell-incline-fly.html?search_query=incline+dumbbell+fly&results=36"
+    },
+    {
+        "name": "Decline Dumbbell Chest Fly",
+        "id": "C340E32A-711E-4B7E-830B-161ABA39CBAA",
+        "image": "decline_db_fly",
+        "csvKey": "decline-dumbbell-fly",
+        "aliases": ["Decline DB Chest Fly"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dumbbells", "Decline Bench Rack"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Independent",
+        "resistance": "Free Weight",
+        "weightInstruction": "Per Dumbbell",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1795-dumbbell-decline-fly.html?search_query=decline+dumbbell+fly&results=13"
+    },
+    {
+        "name": "Reverse Dumbbell Fly",
+        "id": "D0758C8F-05F6-45E0-9151-3E4A203EA3CC",
+        "image": "reverse_dumbbell_flyes",
+        "csvKey": "dumbbell-reverse-fly",
+        "aliases": ["Bent-Over Dumbbell Reverse Fly"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dumbbells"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
+            ] },
+            { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Upper Traps" },
+                { "engagementPercentage": 40, "submuscleWorked": "Lower Traps" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Independent",
+        "resistance": "Free Weight",
+        "weightInstruction": "Per Dumbbell",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1884-dumbbell-reverse-fly.html?search_query=reverse+dumbbell+fly&results=19"
+    },
 	{
 		"name": "Machine Chest Fly",
 		"id": "77CDEFC9-4FAC-4824-AEA1-AC9F6275564D",
@@ -1582,31 +1609,7 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/2499-lever-pec-deck-fly.html?search_query=pec+deck&results=6"
 	},
 	{
-		"name": "Reverse Dumbbell Fly",
-		"id": "D0758C8F-05F6-45E0-9151-3E4A203EA3CC",
-		"image": "reverse_dumbbell_flyes",
-		"csvKey": "dumbbell-reverse-fly",
-		"aliases": ["Bent-Over Dumbbell Reverse Fly"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
-			] },
-			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Upper Traps" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Lower Traps" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Free Weight",
-		"weightInstruction": "Per Dumbbell",
-		"imageUrl": "https://gymvisual.com/animated-gifs/1884-dumbbell-reverse-fly.html?search_query=reverse+dumbbell+fly&results=19"
-	},
-	{
-		"name": "Standing Resistance Band Chest Fly",
+		"name": "Banded Chest Fly",
 		"id": "77EB887A-D914-4D94-A47A-D005ACFF944D",
 		"image": "standing_resistance_band_chest_fly",
 		"aliases": ["Band Chest Fly", "Standing Band Fly"],
@@ -1617,10 +1620,104 @@
 		],
 		"difficulty": "Beg.",
 		"effort": "Isolation",
-		"limbMovementType": "Bilateral Independent",
+		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Banded",
 		"imageUrl": "https://gymvisual.com/animated-gifs/12042-band-chest-fly-male.html#/47-style_type-basic_grey"
 	},
+    {
+        "name": "Hip Thrust",
+        "id": "7A61A3F0-6C5C-4A20-BF1A-1C9325563B98",
+        "image": "hip_thrust",
+        "aliases": ["Hip Thrust"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 24, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 12, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 24, "submuscleWorked": "Biceps Femoris" }
+            ] },
+            { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/4701-hip-thrusts.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Single-Leg Hip Thrust",
+        "id": "BF9E47D4-BC97-4ED6-B3FB-106D3CF34A43",
+        "image": "single_leg_hip_thrust",
+        "aliases": ["Unilateral Hip Thrust"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 24, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 12, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 24, "submuscleWorked": "Biceps Femoris" }
+            ] },
+            { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/4700-single-leg-hip-thrusts.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Barbell Hip Thrust",
+        "id": "CDD41D98-51AA-4D4A-9D1F-A117C2F41E59",
+        "image": "hip_thrust",
+        "csvKey": "hip-thrust",
+        "aliases": ["Barbell Hip Thrust"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Rectus Femoris" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2520-barbell-hip-thrust.html?search_query=barbell+hip+thrust&results=18"
+    },
+    {
+        "name": "Barbell Hip Thrust Hold",
+        "id": "C1D2E3F4-A5B6-47C8-9D0E-1F2A3B4C5D6E",
+        "image": "hip_thrust_top_hold",
+        "aliases": ["Glute Bridge Top Hold"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 65, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 85, "submuscleWorked": "Gluteus Maximus" },
+                { "engagementPercentage": 15, "submuscleWorked": "Gluteus Medius" }
+            ] },
+            { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Hamstrings" },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Erector Spinae" }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isometric",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
 	{
 		"name": "Banded Hip Thrust",
 		"id": "3A8E4268-0485-4C76-8A6D-B5FD0DEBB663",
@@ -1648,30 +1745,6 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/10117-resistance-band-hip-thrusts.html#/47-style_type-basic_grey"
 	},
 	{
-		"name": "Barbell Glute Bridge",
-		"id": "C5F6D76E-4AA3-4E47-8A49-8F490D2A6C97",
-		"image": "barbell_glute_bridge",
-		"csvKey": "barbell-glute-bridge",
-		"aliases": ["Weighted Glute Bridge", "Barbell Hip Bridge"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell"],
-		"muscles": [
-			{ "engagementPercentage": 75, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 10, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 5, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 10, "submuscleWorked": "Biceps Femoris" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/6489-barbell-glute-bridge-hands-on-bar.html?search_query=barbell+glute+bridge&results=13"
-	},
-	{
 		"name": "Glute Bridge",
 		"id": "44B25D0F-9B7D-4CBD-B4DF-D2FF9C4E6309",
 		"image": "glute_bridge",
@@ -1695,6 +1768,54 @@
 		"resistance": "Bodyweight",
 		"imageUrl": "https://gymvisual.com/animated-gifs/5512-glute-bridge-two-legs-on-floor.html#/47-style_type-basic_grey"
 	},
+    {
+        "name": "Single-Leg Glute Bridge",
+        "id": "76CD81D8-5042-4858-91E5-D2CEB217BE85",
+        "image": "single_leg_glute_bridge",
+        "aliases": ["Unilateral Glute Bridge"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/15267-single-straight-leg-glute-bridge-hold-left-female.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Barbell Glute Bridge",
+        "id": "C5F6D76E-4AA3-4E47-8A49-8F490D2A6C97",
+        "image": "barbell_glute_bridge",
+        "csvKey": "barbell-glute-bridge",
+        "aliases": ["Weighted Glute Bridge", "Barbell Hip Bridge"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 75, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 10, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 5, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 10, "submuscleWorked": "Biceps Femoris" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/6489-barbell-glute-bridge-hands-on-bar.html?search_query=barbell+glute+bridge&results=13"
+    },
 	{
 		"name": "Glute-Ham Raise",
 		"id": "10AFFC85-3B47-4B80-B9AF-9CB5E1A6B772",
@@ -1740,101 +1861,107 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Bodyweight"
 	},
-	{
-		"name": "Barbell Hip Thrust",
-		"id": "CDD41D98-51AA-4D4A-9D1F-A117C2F41E59",
-		"image": "hip_thrust",
-		"csvKey": "hip-thrust",
-		"aliases": ["Barbell Hip Thrust"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell", "Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Rectus Femoris" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/2520-barbell-hip-thrust.html?search_query=barbell+hip+thrust&results=18"
-	},
-	{
-		"name": "Barbell Hip Thrust Hold",
-		"id": "C1D2E3F4-A5B6-47C8-9D0E-1F2A3B4C5D6E",
-		"image": "hip_thrust_top_hold",
-		"aliases": ["Glute Bridge Top Hold"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 65, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 85, "submuscleWorked": "Gluteus Maximus" },
-				{ "engagementPercentage": 15, "submuscleWorked": "Gluteus Medius" }
-			] },
-			{ "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Hamstrings" },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Erector Spinae" }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isometric",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
-	{
-		"name": "Single-Leg Glute Bridge",
-		"id": "76CD81D8-5042-4858-91E5-D2CEB217BE85",
-		"image": "single_leg_glute_bridge",
-		"aliases": ["Unilateral Glute Bridge"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [ ],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Unilateral",
-		"resistance": "Bodyweight",
-		"repsInstruction": "Per Leg",
-		"imageUrl": "https://gymvisual.com/animated-gifs/15267-single-straight-leg-glute-bridge-hold-left-female.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Single-Leg Hip Thrust",
-		"id": "BF9E47D4-BC97-4ED6-B3FB-106D3CF34A43",
-		"image": "single_leg_hip_thrust",
-		"aliases": ["Unilateral Hip Thrust"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 24, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 12, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 24, "submuscleWorked": "Biceps Femoris" }
-			] },
-			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Unilateral",
-		"resistance": "Bodyweight",
-		"repsInstruction": "Per Leg",
-		"imageUrl": "https://gymvisual.com/animated-gifs/4700-single-leg-hip-thrusts.html#/47-style_type-basic_grey"
-	},
+    
+    {
+        "name": "Pull-Up",
+        "id": "BFD3B9CF-D410-4030-AEE1-6CCC09F11624",
+        "image": "pull_up",
+        "csvKey": "pull-ups",
+        "aliases": ["Overhand Pull-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Pull-Up Bar"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+            { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2145-pull-up.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Towel Pull-Up",
+        "id": "42B56D7B-18D4-410B-9754-6706A9EF8CE0",
+        "image": "towel_pull_up",
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Pull-Up Bar", "Towel"],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [ ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Upper Traps" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Weighted Pull-Up",
+        "id": "45B2C4C6-FF43-4085-A09C-5CCC8F6EB2B7",
+        "image": "weighted_pull_up",
+        "csvKey": "weighted-pull-ups",
+        "aliases": ["Overhand Pull-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+            { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Adv.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2322-weighted-pull-up.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Assisted Pull-Up",
+        "id": "EDBF39AF-ADFE-465B-B919-7A44DFB4F3AA",
+        "image": "assisted_pull_up",
+        "aliases": ["Gravitron Pull-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Assisted Machine"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+            { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1508-assisted-pull-up.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Neutral Grip Pull-Up",
+        "id": "ABAF0756-8ECB-44B6-86EC-AA28FCD7BE4A",
+        "image": "neutral_grip_pull_up",
+        "csvKey": "neutral-grip-pull-ups",
+        "aliases": ["Parallel Grip Pull-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Pull-Up Bar"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+            { "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/13420-shoulder-width-neutral-grip-pull-up.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Assisted Neutral Grip Pull-Up",
 		"id": "10ABC801-2B18-401E-B2B7-D75675D67619",
@@ -1855,106 +1982,109 @@
 		"resistance": "Machine",
 		"imageUrl": "https://gymvisual.com/animated-gifs/1502-assisted-parallel-close-grip-pull-up.html#/47-style_type-basic_grey"
 	},
-	{
-		"name": "Assisted Pull-Up",
-		"id": "EDBF39AF-ADFE-465B-B919-7A44DFB4F3AA",
-		"image": "assisted_pull_up",
-		"aliases": ["Gravitron Pull-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Assisted Machine"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Machine",
-		"imageUrl": "https://gymvisual.com/animated-gifs/1508-assisted-pull-up.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Muscle-Up",
-		"id": "F55B0E2D-79FF-4935-893B-312F442C331E",
-		"image": "muscle_up",
-		"csvKey": "muscle-ups",
-		"aliases": ["Bar Muscle-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Adv.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/3171-muscle-up-on-vertical-bar.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Neutral Grip Pull-Up",
-		"id": "ABAF0756-8ECB-44B6-86EC-AA28FCD7BE4A",
-		"image": "neutral_grip_pull_up",
-		"csvKey": "neutral-grip-pull-ups",
-		"aliases": ["Parallel Grip Pull-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/13420-shoulder-width-neutral-grip-pull-up.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Pull-Up",
-		"id": "BFD3B9CF-D410-4030-AEE1-6CCC09F11624",
-		"image": "pull_up",
-		"csvKey": "pull-ups",
-		"aliases": ["Overhand Pull-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/2145-pull-up.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Towel Pull-Up",
-		"id": "42B56D7B-18D4-410B-9754-6706A9EF8CE0",
-		"image": "towel_pull_up",
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar", "Towel"],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Upper Traps" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
-	},
+    {
+        "name": "Weighted Neutral Grip Pull-Up",
+        "id": "E48A99B5-1C72-4190-9539-5DAA35AAB8B2",
+        "image": "weighted_neutral_grip_pull_up",
+        "aliases": ["Parallel Grip Pull-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+            { "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/8221-weighted-hammer-grip-pull-up-on-dip-cage.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Chin-Up",
+        "id": "DD48D48E-A119-44F1-BFC7-3FBC171D1DFB",
+        "image": "chin_up",
+        "csvKey": "chin-ups",
+        "aliases": ["Underhand Pull-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Pull-Up Bar"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+            { "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3098-chin-up.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Assisted Chin-Up",
+        "id": "726CD91A-33F3-4637-8B47-EE76A295E0A4",
+        "image": "assisted_chin_up",
+        "aliases": ["Underhand Pull-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Assisted Machine"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+            { "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2669-assisted-close-grip-underhand-chin-up.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Weighted Chin-Up",
+        "id": "14C6C0D7-8251-45E9-A91E-0F0C2ED3D38D",
+        "image": "weighted_chin_up",
+        "csvKey": "weighted-chin-ups",
+        "aliases": ["Underhand Pull-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+            { "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/10153-weighted-chin-up-male.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Muscle-Up",
+        "id": "F55B0E2D-79FF-4935-893B-312F442C331E",
+        "image": "muscle_up",
+        "csvKey": "muscle-ups",
+        "aliases": ["Bar Muscle-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Pull-Up Bar"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+            { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Adv.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3171-muscle-up-on-vertical-bar.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Weighted Muscle-Up",
 		"id": "ED5C0418-8113-483A-B183-D60F04DC6A0D",
@@ -1975,109 +2105,6 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight",
 		"imageUrl": "https://gymvisual.com/animated-gifs/7215-weighted-muscle-up-on-bar.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Weighted Neutral Grip Pull-Up",
-		"id": "E48A99B5-1C72-4190-9539-5DAA35AAB8B2",
-		"image": "weighted_neutral_grip_pull_up",
-		"aliases": ["Parallel Grip Pull-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/8221-weighted-hammer-grip-pull-up-on-dip-cage.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Weighted Pull-Up",
-		"id": "45B2C4C6-FF43-4085-A09C-5CCC8F6EB2B7",
-		"image": "weighted_pull_up",
-		"csvKey": "weighted-pull-ups",
-		"aliases": ["Overhand Pull-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Adv.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/2322-weighted-pull-up.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Assisted Chin-Up",
-		"id": "726CD91A-33F3-4637-8B47-EE76A295E0A4",
-		"image": "assisted_chin_up",
-		"aliases": ["Underhand Pull-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Assisted Machine"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Machine",
-		"imageUrl": "https://gymvisual.com/animated-gifs/2669-assisted-close-grip-underhand-chin-up.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Chin-Up",
-		"id": "DD48D48E-A119-44F1-BFC7-3FBC171D1DFB",
-		"image": "chin_up",
-		"csvKey": "chin-ups",
-		"aliases": ["Underhand Pull-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/3098-chin-up.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Weighted Chin-Up",
-		"id": "14C6C0D7-8251-45E9-A91E-0F0C2ED3D38D",
-		"image": "weighted_chin_up",
-		"csvKey": "weighted-chin-ups",
-		"aliases": ["Underhand Pull-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Pull-Up Bar", "Dip Belt", "Weight Plate"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/10153-weighted-chin-up-male.html#/47-style_type-basic_grey"
 	},
 	{
 		"name": "Bench Dips",
@@ -2170,6 +2197,33 @@
 		"resistance": "Bodyweight",
 		"imageUrl": "https://gymvisual.com/animated-gifs/2296-triceps-dip.html#/47-style_type-basic_grey"
 	},
+    {
+        "name": "Weighted Dip",
+        "id": "B69BFF63-2547-40D8-A5C0-02D72816C5AD",
+        "image": "weighted_parallel_bar_dip",
+        "csvKey": "weighted-dips",
+        "aliases": ["Weighted Parallel Dip", "Weighted Bar Dip"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dip Bar", "Dip Belt", "Weight Plate"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
+                { "engagementPercentage": 20, "submuscleWorked": "Triceps Lateral Head" },
+                { "engagementPercentage": 20, "submuscleWorked": "Triceps Medial Head" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Adv.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3767-weighted-tricep-dips.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Machine Seated Dip",
 		"id": "9ABB8EEC-9827-40B7-B92D-D0AA67C8A428",
@@ -2197,33 +2251,25 @@
 		"resistance": "Machine",
 		"imageUrl": "https://gymvisual.com/animated-gifs/2924-lever-seated-dip.html?search_query=machine+seated+dip&results=6"
 	},
-	{
-		"name": "Weighted Dip",
-		"id": "B69BFF63-2547-40D8-A5C0-02D72816C5AD",
-		"image": "weighted_parallel_bar_dip",
-		"csvKey": "weighted-dips",
-		"aliases": ["Weighted Parallel Dip", "Weighted Bar Dip"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dip Bar", "Dip Belt", "Weight Plate"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
-				{ "engagementPercentage": 20, "submuscleWorked": "Triceps Lateral Head" },
-				{ "engagementPercentage": 20, "submuscleWorked": "Triceps Medial Head" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Pectorals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
-			] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Adv.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/3767-weighted-tricep-dips.html#/47-style_type-basic_grey"
-	},
+    {
+        "name": "Sit-Up",
+        "id": "D011FE15-0E04-411E-BF9E-5153634CE050",
+        "image": "sit_up",
+        "csvKey": "sit-ups",
+        "aliases": ["Full Sit-Up", "Basic Sit-Up"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Upper Abs" },
+                { "engagementPercentage": 40, "submuscleWorked": "Lower Abs" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Compound",
+        "resistance": "Bodyweight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2218-sit-up-version-2.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Decline Sit-Up",
 		"id": "4387CAED-ACFF-450A-84B5-96C68DF64B22",
@@ -2247,7 +2293,7 @@
 		"name": "Jackknife Sit-Up",
 		"id": "4D70C3C1-CFE4-4A37-96D8-4587DB6AF51F",
 		"image": "jackknife_sit_up",
-		"aliases": ["Jackknife Crunch"],
+		"aliases": ["Jackknife Crunch", "V-Up"],
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": [ ],
 		"muscles": [
@@ -2261,25 +2307,6 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Bodyweight",
 		"imageUrl": "https://gymvisual.com/animated-gifs/2005-jackknife-sit-up.html?search_query=jackknife+sit+up&results=4"
-	},
-	{
-		"name": "Sit-Up",
-		"id": "D011FE15-0E04-411E-BF9E-5153634CE050",
-		"image": "sit_up",
-		"csvKey": "sit-ups",
-		"aliases": ["Full Sit-Up", "Basic Sit-Up"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [ ],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Upper Abs" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Lower Abs" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Compound",
-		"resistance": "Bodyweight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/2218-sit-up-version-2.html#/47-style_type-basic_grey"
 	},
 	{
 		"name": "Bicycle Crunch",
@@ -2304,7 +2331,7 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/15580-bicycle-crunch-male.html?search_query=bicycle+crunch&results=16"
 	},
 	{
-		"name": "Cable Crunch",
+		"name": "Kneeling Cable Crunch",
 		"id": "42BB78AD-2E3A-44F4-A208-DE1DE64ABC14",
 		"image": "cable_crunch",
 		"csvKey": "cable-crunch",
@@ -2322,6 +2349,42 @@
 		"resistance": "Machine",
 		"imageUrl": "https://gymvisual.com/animated-gifs/14259-cable-kneeling-crunch-version-2.html?search_query=cable+crunch&results=48"
 	},
+    {
+        "name": "Standing Cable Crunch",
+        "id": "97DB345C-C09A-4D0C-965E-FE4455C4C407",
+        "image": "standing_cable_crunch",
+        "csvKey": "standing-cable-crunch",
+        "aliases": ["Cable Ab Pulldown", "Standing Crunch"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Hi-Lo Pulley"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Upper Abs" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2354-cable-standing-crunch-with-rope-attachment.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Seated Cable Crunch",
+        "id": "79E0F74C-B04D-460B-B5A3-F201A2D4A7B8",
+        "image": "high_pulley_crunch",
+        "csvKey": "high-pulley-crunch",
+        "aliases": ["Overhead Cable Crunch"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Hi-Lo Pulley"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Upper Abs" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1705-cable-seated-crunch.html?search_query=cable+crunch&results=48"
+    },
 	{
 		"name": "Crunch",
 		"id": "F0098597-7F8E-453D-9D85-8D2527AA648A",
@@ -2359,24 +2422,6 @@
 		"effort": "Compound",
 		"resistance": "Bodyweight",
 		"imageUrl": "https://gymvisual.com/animated-gifs/1770-decline-crunch.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Seated Cable Crunch",
-		"id": "79E0F74C-B04D-460B-B5A3-F201A2D4A7B8",
-		"image": "high_pulley_crunch",
-		"csvKey": "high-pulley-crunch",
-		"aliases": ["Overhead Cable Crunch"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Upper Abs" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"resistance": "Machine",
-		"imageUrl": "https://gymvisual.com/animated-gifs/1705-cable-seated-crunch.html?search_query=cable+crunch&results=48"
 	},
 	{
 		"name": "Machine Seated Crunch",
@@ -2433,24 +2478,6 @@
 		"effort": "Compound",
 		"resistance": "Bodyweight",
 		"imageUrl": "https://gymvisual.com/animated-gifs/2196-side-crunch.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Standing Cable Crunch",
-		"id": "97DB345C-C09A-4D0C-965E-FE4455C4C407",
-		"image": "standing_cable_crunch",
-		"csvKey": "standing-cable-crunch",
-		"aliases": ["Cable Ab Pulldown", "Standing Crunch"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Upper Abs" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"resistance": "Machine",
-		"imageUrl": "https://gymvisual.com/animated-gifs/2354-cable-standing-crunch-with-rope-attachment.html#/47-style_type-basic_grey"
 	},
 	{
 		"name": "Arch Body Hold",
@@ -3443,6 +3470,24 @@
 		"weightInstruction": "Per Dumbbell",
 		"imageUrl": "https://gymvisual.com/animated-gifs/1803-dumbbell-front-raise.html?search_query=dumbbell+front+raise&results=92"
 	},
+    {
+        "name": "Plate Front Raise",
+        "id": "BCB5FC52-C2C3-43E5-9FE2-F612299843A9",
+        "image": "plate_raise",
+        "aliases": ["Plate Raise"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Weight Plate"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/12363-weighted-plate-standing-high-front-raise.html?search_query=plate+raise&results=26"
+    },
 	{
 		"name": "I-Y-T Raise (on Bench)",
 		"id": "670374B5-9DA7-4D4F-B286-3972FBFF3EEB",
@@ -3527,6 +3572,7 @@
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
+        "weightInstruction": "Per Dumbbell",
 		"imageUrl": "https://gymvisual.com/animated-gifs/14154-dumbbell-bent-over-face-pull.html?search_query=dumbbell+face+pull&results=3"
 	},
 	{
@@ -3828,6 +3874,7 @@
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight",
+        "weightInstruction": "Per Dumbbell",
 		"imageUrl": "https://gymvisual.com/animated-gifs/1918-dumbbell-standing-calf-raise.html?search_query=dumbbell+calf+raise&results=47"
 	},
 	{
@@ -4510,7 +4557,7 @@
 		"id": "3BE70137-DD4A-4ACF-A5DD-D1E607713B7D",
 		"image": "jefferson_curl",
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell", "Dumbbells"],
+		"equipmentRequired": ["Dumbbells"],
 		"muscles": [
 			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
 				{ "engagementPercentage": 33, "submuscleWorked": "Iliocostalis" },
@@ -4523,6 +4570,7 @@
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight",
+        "weightInstruction": "Per Dumbbell",
 		"imageUrl": "https://gymvisual.com/animated-gifs/17770-dumbbell-jefferson-curl-male.html?search_query=jefferson+curl&results=4"
 	},
 	{
@@ -4586,44 +4634,6 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/2089-lever-preacher-curl.html?search_query=machine+preacher+curl&results=29"
 	},
 	{
-		"name": "Neck Curl",
-		"id": "E3D4C5B6-A7F8-4920-BC1D-2E3F4A5B6C7D",
-		"image": "neck_curl",
-		"csvKey": "neck-curl",
-		"aliases": ["Supine Neck Curl"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/2512-weighted-lying-neck-flexion.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Nordic Curl",
-		"id": "47C4FC6D-E322-43B6-AA97-64302319B095",
-		"image": "nordic_ham_curl",
-		"csvKey": "nordic-hamstring-curl",
-		"aliases": ["Nordic Curl", "Nordic Ham Curl"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [ ],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/18424-nordic-hamstring-curl-male.html?search_query=nordic+hamstring+curl&results=6"
-	},
-	{
 		"name": "Overhead Cable Curl",
 		"id": "340FC7E3-8760-47B9-9D21-81E36F84B44F",
 		"image": "overhead_cable_curl",
@@ -4679,28 +4689,6 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight",
         "imageUrl": "https://gymvisual.com/animated-gifs/16019-ez-barbell-preacher-curl.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Reverse Nordic Curl",
-		"id": "F6A9CD77-B86A-48D8-8840-B0441878449C",
-		"image": "reverse_nordic_curl",
-		"aliases": ["Reverse Nordic"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [ ],
-		"muscles": [
-			{ "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
-			] },
-			{ "engagementPercentage": 70, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Rectus Femoris" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight"
 	},
 	{
 		"name": "Reverse Wrist Curl",
@@ -4847,33 +4835,66 @@
 		"weightInstruction": "Per Dumbbell",
 		"imageUrl": "https://gymvisual.com/animated-gifs/1940-dumbbell-zottman-curl.html?search_query=zottman+curl&results=18"
 	},
-	{
-		"name": "Behind the Back Deadlift",
-		"id": "D4F7A19E-3B2C-4E5A-8F3B-7C9D2E1A5B6C",
-		"image": "behind_the_back_deadlift",
-		"csvKey": "behind-the-back-deadlift",
-		"aliases": ["BTB Deadlift", "Reverse Grip Deadlift"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/14152-barbell-behind-the-back-deadlift.html?search_query=behind+the+back+deadlift&results=2"
-	},
+    {
+        "name": "Nordic Curl",
+        "id": "47C4FC6D-E322-43B6-AA97-64302319B095",
+        "image": "nordic_ham_curl",
+        "csvKey": "nordic-hamstring-curl",
+        "aliases": ["Nordic Curl", "Nordic Ham Curl"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/18424-nordic-hamstring-curl-male.html?search_query=nordic+hamstring+curl&results=6"
+    },
+    {
+        "name": "Reverse Nordic Curl",
+        "id": "F6A9CD77-B86A-48D8-8840-B0441878449C",
+        "image": "reverse_nordic_curl",
+        "aliases": ["Reverse Nordic"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            ] },
+            { "engagementPercentage": 70, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Rectus Femoris" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight"
+    },
+    {
+        "name": "Neck Curl",
+        "id": "E3D4C5B6-A7F8-4920-BC1D-2E3F4A5B6C7D",
+        "image": "neck_curl",
+        "csvKey": "neck-curl",
+        "aliases": ["Supine Neck Curl"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2512-weighted-lying-neck-flexion.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Deadlift",
 		"id": "B61A4A76-D761-4A08-8C66-25AB3662AC35",
@@ -4901,33 +4922,32 @@
 		"resistance": "Free Weight",
 		"imageUrl": "https://gymvisual.com/animated-gifs/1526-barbell-deadlift.html#/47-style_type-basic_grey"
 	},
-	{
-		"name": "Deficit Deadlift",
-		"id": "7025768D-F8C7-40E7-A6B7-CEF6C6599DAC",
-		"image": "deficit_deadlift",
-		"csvKey": "deficit-deadlift",
-		"aliases": ["Elevated Deadlift"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/14254-barbell-deadlift-from-deficit.html?search_query=deficit+deadlift&results=12"
-	},
+    {
+        "name": "Single-Leg Deadlift",
+        "id": "4C9D8E7F-6A5B-4C3D-8E1F-2A3B4C5D6E7F",
+        "image": "single_leg_deadlift",
+        "csvKey": "single-leg-deadlift",
+        "aliases": ["Unilateral Deadlift"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 30, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 30, "submuscleWorked": "Biceps Femoris" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Unilateral",
+        "resistance": "Free Weight",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3768-barbell-single-leg-deadlift.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Dumbbell Deadlift",
 		"id": "FBC96D2E-FDD1-42EE-B5A6-F664A3E4C037",
@@ -4956,6 +4976,288 @@
 		"weightInstruction": "Per Dumbbell",
 		"imageUrl": "https://gymvisual.com/animated-gifs/11281-dumbbell-deadlift-version-2-male.html#/47-style_type-basic_grey"
 	},
+    {
+        "name": "Single-Leg Dumbbell Deadlift",
+        "id": "A4D9F3E1-7B2C-4A5D-8E6F-1B2C3D4E5F6A",
+        "image": "single_leg_dumbbell_deadlift",
+        "csvKey": "single-leg-dumbbell-deadlift",
+        "aliases": ["Unilateral DB Deadlift"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Dumbbells"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 30, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 30, "submuscleWorked": "Biceps Femoris" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Unilateral",
+        "implementCount": 2,
+        "resistance": "Free Weight",
+        "weightInstruction": "Per Dumbbell",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3769-dumbbell-single-leg-deadlift.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Deficit Deadlift",
+        "id": "7025768D-F8C7-40E7-A6B7-CEF6C6599DAC",
+        "image": "deficit_deadlift",
+        "csvKey": "deficit-deadlift",
+        "aliases": ["Elevated Deadlift"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/14254-barbell-deadlift-from-deficit.html?search_query=deficit+deadlift&results=12"
+    },
+    {
+        "name": "Behind the Back Deadlift",
+        "id": "D4F7A19E-3B2C-4E5A-8F3B-7C9D2E1A5B6C",
+        "image": "behind_the_back_deadlift",
+        "csvKey": "behind-the-back-deadlift",
+        "aliases": ["BTB Deadlift", "Reverse Grip Deadlift"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/14152-barbell-behind-the-back-deadlift.html?search_query=behind+the+back+deadlift&results=2"
+    },
+    {
+        "name": "Jefferson Deadlift",
+        "id": "8F1B0D24-3C7E-4A97-9B53-5A2F4D7C1E8A",
+        "image": "jefferson_deadlift",
+        "csvKey": "jefferson-deadlift",
+        "aliases": ["Straddle Deadlift"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 35, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] },
+            { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/14258-barbell-jefferson-deadlift.html?search_query=jefferson+deadlift&results=2"
+    },
+    {
+        "name": "Snatch Grip Deadlift",
+        "id": "B312F32F-6168-42CD-B35D-5DF0BBB4FF04",
+        "image": "snatch_grip_deadlift",
+        "csvKey": "snatch-deadlift",
+        "aliases": ["Wide-Grip Deadlift"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
+                { "engagementPercentage": 35, "submuscleWorked": "Iliocostalis" },
+                { "engagementPercentage": 35, "submuscleWorked": "Longissimus" },
+                { "engagementPercentage": 30, "submuscleWorked": "Spinalis" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [ ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Upper Traps" }
+            ] }
+        ],
+        "difficulty": "Adv.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/17605-barbell-snatch-grip-deadlift-male.html?search_query=snatch+grip+deadlift&results=3"
+    },
+    {
+        "name": "Stiff-Legged Deadlift",
+        "id": "D942C43F-CC00-41E8-8AFF-DEB0A56918E9",
+        "image": "stiff_legged_deadlift",
+        "csvKey": "stiff-leg-deadlift",
+        "aliases": ["Straight-Leg Deadlift"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] },
+            { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 16, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 8, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 16, "submuscleWorked": "Biceps Femoris" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3409-barbell-stiff-legged-deadlift.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Sumo Deadlift",
+        "id": "3206FB0D-7981-468F-968E-362BACC5126B",
+        "image": "sumo_deadlift",
+        "csvKey": "sumo-deadlift",
+        "aliases": ["Wide-Stance Deadlift"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1615-barbell-sumo-deadlift.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Trap Bar Deadlift",
+        "id": "E301EA58-B367-418F-9E9A-9A470AE79AA1",
+        "image": "trap_bar_deadlift",
+        "csvKey": "hex-bar-deadlift",
+        "aliases": ["Hex Bar Deadlift"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Trap Bar"],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2293-trap-bar-deadlift.html?search_query=trap+bar+deadlift&results=12"
+    },
+    {
+        "name": "Zercher Deadlift",
+        "id": "D7E4C3B2-A1F9-48D0-8E7B-6C5A4D3F2E1B",
+        "image": "zercher_deadlift",
+        "csvKey": "zercher-deadlift",
+        "aliases": ["Elbow Cradle Deadlift"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/14159-barbell-zercher-deadlift.html?search_query=zercher+deadlift&results=2"
+    },
+    {
+        "name": "Romanian Deadlift",
+        "id": "71ACFCED-5EE5-4EB7-9E04-3E62AB9B9A39",
+        "image": "romanian_deadlift",
+        "csvKey": "romanian-deadlift",
+        "aliases": ["RDL"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 20, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 10, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 20, "submuscleWorked": "Biceps Femoris" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1579-barbell-romanian-deadlift.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Single-Leg Romanian Deadlift",
+        "id": "5752D53B-8DB9-4559-AB3D-3E0CCAED5DD7",
+        "image": "single_leg_romanian_deadlift",
+        "csvKey": "single-leg-romanian-deadlift",
+        "aliases": ["Unilateral RDL"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gluteus Maximus" },
+                { "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
+            ] },
+            { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 16, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 8, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 16, "submuscleWorked": "Biceps Femoris" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Unilateral",
+        "resistance": "Free Weight",
+        "repsInstruction": "Per Leg"
+    },
 	{
 		"name": "Dumbbell Romanian Deadlift",
 		"id": "FBB0749D-F949-4C69-9A5A-864F63E6D744",
@@ -4982,31 +5284,6 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/3206-dumbbell-romanian-deadlift.html#/47-style_type-basic_grey"
 	},
 	{
-		"name": "Jefferson Deadlift",
-		"id": "8F1B0D24-3C7E-4A97-9B53-5A2F4D7C1E8A",
-		"image": "jefferson_deadlift",
-		"csvKey": "jefferson-deadlift",
-		"aliases": ["Straddle Deadlift"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell"],
-		"muscles": [
-			{ "engagementPercentage": 35, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/14258-barbell-jefferson-deadlift.html?search_query=jefferson+deadlift&results=2"
-	},
-	{
 		"name": "Rack Pull",
 		"id": "A3737649-EB4D-4B06-9679-799F67D2488D",
 		"image": "rack_pull",
@@ -5030,235 +5307,6 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight",
 		"imageUrl": "https://gymvisual.com/animated-gifs/1568-barbell-rack-pull.html?search_query=rack+pull&results=7"
-	},
-	{
-		"name": "Romanian Deadlift",
-		"id": "71ACFCED-5EE5-4EB7-9E04-3E62AB9B9A39",
-		"image": "romanian_deadlift",
-		"csvKey": "romanian-deadlift",
-		"aliases": ["RDL"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 20, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 10, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 20, "submuscleWorked": "Biceps Femoris" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/1579-barbell-romanian-deadlift.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Single-Leg Deadlift",
-		"id": "4C9D8E7F-6A5B-4C3D-8E1F-2A3B4C5D6E7F",
-		"image": "single_leg_deadlift",
-		"csvKey": "single-leg-deadlift",
-		"aliases": ["Unilateral Deadlift"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Biceps Femoris" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Unilateral",
-		"resistance": "Free Weight",
-		"weightInstruction": "Per Dumbbell",
-		"repsInstruction": "Per Leg",
-		"imageUrl": "https://gymvisual.com/animated-gifs/3768-barbell-single-leg-deadlift.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Single-Leg Dumbbell Deadlift",
-		"id": "A4D9F3E1-7B2C-4A5D-8E6F-1B2C3D4E5F6A",
-		"image": "single_leg_dumbbell_deadlift",
-		"csvKey": "single-leg-dumbbell-deadlift",
-		"aliases": ["Unilateral DB Deadlift"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Biceps Femoris" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Unilateral",
-		"resistance": "Free Weight",
-		"weightInstruction": "Per Dumbbell",
-		"repsInstruction": "Per Leg",
-		"imageUrl": "https://gymvisual.com/animated-gifs/3769-dumbbell-single-leg-deadlift.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Single-Leg Romanian Deadlift",
-		"id": "5752D53B-8DB9-4559-AB3D-3E0CCAED5DD7",
-		"image": "single_leg_romanian_deadlift",
-		"csvKey": "single-leg-romanian-deadlift",
-		"aliases": ["Unilateral RDL"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 70, "submuscleWorked": "Gluteus Maximus" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
-			] },
-			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 16, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 8, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 16, "submuscleWorked": "Biceps Femoris" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Unilateral",
-		"resistance": "Free Weight",
-		"repsInstruction": "Per Leg"
-	},
-	{
-		"name": "Snatch Grip Deadlift",
-		"id": "B312F32F-6168-42CD-B35D-5DF0BBB4FF04",
-		"image": "snatch_grip_deadlift",
-		"csvKey": "snatch-deadlift",
-		"aliases": ["Wide-Grip Deadlift"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
-				{ "engagementPercentage": 35, "submuscleWorked": "Iliocostalis" },
-				{ "engagementPercentage": 35, "submuscleWorked": "Longissimus" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Spinalis" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Upper Traps" }
-			] }
-		],
-		"difficulty": "Adv.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/17605-barbell-snatch-grip-deadlift-male.html?search_query=snatch+grip+deadlift&results=3"
-	},
-	{
-		"name": "Stiff-Legged Deadlift",
-		"id": "D942C43F-CC00-41E8-8AFF-DEB0A56918E9",
-		"image": "stiff_legged_deadlift",
-		"csvKey": "stiff-leg-deadlift",
-		"aliases": ["Straight-Leg Deadlift"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 16, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 8, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 16, "submuscleWorked": "Biceps Femoris" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/3409-barbell-stiff-legged-deadlift.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Sumo Deadlift",
-		"id": "3206FB0D-7981-468F-968E-362BACC5126B",
-		"image": "sumo_deadlift",
-		"csvKey": "sumo-deadlift",
-		"aliases": ["Wide-Stance Deadlift"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell"],
-		"muscles": [
-			{ "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/1615-barbell-sumo-deadlift.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Trap Bar Deadlift",
-		"id": "E301EA58-B367-418F-9E9A-9A470AE79AA1",
-		"image": "trap_bar_deadlift",
-		"csvKey": "hex-bar-deadlift",
-		"aliases": ["Hex Bar Deadlift"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Trap Bar"],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/2293-trap-bar-deadlift.html?search_query=trap+bar+deadlift&results=12"
-	},
-	{
-		"name": "Zercher Deadlift",
-		"id": "D7E4C3B2-A1F9-48D0-8E7B-6C5A4D3F2E1B",
-		"image": "zercher_deadlift",
-		"csvKey": "zercher-deadlift",
-		"aliases": ["Elbow Cradle Deadlift"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell"],
-		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/14159-barbell-zercher-deadlift.html?search_query=zercher+deadlift&results=2"
 	},
 	{
 		"name": "Hyperextension",
@@ -8496,11 +8544,11 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/6493-dumbbell-thruster.html#/47-style_type-basic_grey"
 	},
 	{
-		"name": "Thruster",
+		"name": "Barbell Thruster",
 		"id": "C7D8E9F0-1A2B-3C4D-5E6F-7A8B9C0D1E2F",
 		"image": "thruster",
 		"csvKey": "thruster",
-		"aliases": ["Barbell Thruster"],
+		"aliases": [],
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": ["Barbell"],
 		"muscles": [
@@ -8520,7 +8568,8 @@
 		"difficulty": "Int.",
 		"effort": "Compound",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
+		"resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/7199-barbell-thruster.html#/47-style_type-basic_grey"
 	},
 	{
 		"name": "Bent-Over Dumbbell Tricep Extension",
@@ -9179,24 +9228,6 @@
 		"limbMovementType": "Bilateral Independent",
 		"resistance": "Free Weight",
 		"imageUrl": "https://gymvisual.com/animated-gifs/2513-plate-pinch.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Plate Raise",
-		"id": "BCB5FC52-C2C3-43E5-9FE2-F612299843A9",
-		"image": "plate_raise",
-		"aliases": ["Front Plate Raise"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Weight Plate"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/12363-weighted-plate-standing-high-front-raise.html?search_query=plate+raise&results=26"
 	},
 	{
 		"name": "Rice-Bucket Wrist Twist",

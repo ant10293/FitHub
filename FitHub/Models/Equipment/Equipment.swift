@@ -20,6 +20,7 @@ struct GymEquipment: Identifiable, Hashable, Codable {
     var baseWeight: BaseWeight?
     let pegCount: PegCountOption? // weight pegs
     let implementation: ImplementationType?
+    let weightInstruction: WeightInstruction?
     let description: String
 }
 extension GymEquipment {
@@ -58,6 +59,7 @@ extension GymEquipment {
             adjustments: nil,
             pegCount: nil,
             implementation: nil,
+            weightInstruction: nil,
             description: ""
         )
     }
@@ -76,6 +78,7 @@ extension GymEquipment {
         self.baseWeight           = initEquip.baseWeight
         self.pegCount             = initEquip.pegCount
         self.implementation       = initEquip.implementation
+        self.weightInstruction    = initEquip.weightInstruction
         self.description          = initEquip.description
     }
 }
@@ -90,6 +93,7 @@ enum EquipmentCategory: String, CaseIterable, Identifiable, Codable {
     case weightMachines = "Weight Machines"
     case resistanceBands = "Resistance Bands"
     case cardioMachines = "Cardio Machines"
+    case attachments = "Attachments"
     case other = "Other"
     
     var id: String { self.rawValue }

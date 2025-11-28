@@ -39,7 +39,7 @@ struct SplitSelection: View {
             .onDisappear { if !donePressed { vm.saveIfNeeded() } }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Clear All") { vm.clearDay(vm.selectedDay) }
+                    Button("Clear") { vm.clearDay(vm.selectedDay) }
                         .foregroundStyle(.red)
                 }
                 ToolbarItem(placement: .topBarTrailing) {

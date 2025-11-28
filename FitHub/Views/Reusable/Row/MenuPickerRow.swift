@@ -12,6 +12,7 @@ struct MenuPickerRow<Selection: Hashable, Options: View>: View {
     @Binding var selection: Selection
     var showDivider: Bool = true
     var insets: EdgeInsets = .init(top: 6, leading: 16, bottom: 6, trailing: 16)
+    var description: String? = nil
     @ViewBuilder var options: () -> Options
 
     var body: some View {
@@ -37,6 +38,18 @@ struct MenuPickerRow<Selection: Hashable, Options: View>: View {
                 .pickerStyle(.menu)
                 .padding(.trailing, insets.trailing)
                 .padding(.vertical, insets.top) // keep it vertically comfortable
+            }
+            
+            // Description text (if provided)
+            if let description = description {
+                HStack {
+                    Text(description)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                }
+                .padding(.horizontal, insets.leading)
+                .padding(.bottom, 8)
             }
         }
     }

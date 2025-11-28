@@ -262,3 +262,8 @@ enum LegalURL {
         }
     }
 }
+
+
+enum EquipmentOption {
+    case originalOnly, alternativeOnly, both, dynamic
+}

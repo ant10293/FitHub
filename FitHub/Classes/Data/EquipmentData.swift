@@ -235,15 +235,62 @@ extension EquipmentData {
         return allEquipment.filter { want.contains($0.name.normalize()) }
     }
 
-    func equipmentForExercise(_ ex: Exercise, includeAlternatives: Bool = false) -> [GymEquipment] {
+    func equipmentForExercise(
+        _ ex: Exercise,
+        inclusion: EquipmentOption = .originalOnly,
+        available: Set<GymEquipment.ID> = []
+    ) -> [GymEquipment] {
         let equipment = getEquipment(from: ex.equipmentRequired)
-        if includeAlternatives {
-            return equipment + alternativesFor(equipment: equipment)
-        } else {
+
+        // Convenience helper to avoid duplicates
+        func appendUnique(_ items: [GymEquipment], into result: inout [GymEquipment], seen: inout Set<GymEquipment.ID>) {
+            for item in items where seen.insert(item.id).inserted {
+                result.append(item)
+            }
+        }
+
+        switch inclusion {
+        case .originalOnly:
             return equipment
+
+        case .alternativeOnly:
+            return alternativesFor(equipment: equipment)
+
+        case .both:
+            let alternatives = alternativesFor(equipment: equipment)
+            return equipment + alternatives
+
+        case .dynamic:
+            // No availability info -> just respect the original requirements
+            if available.isEmpty { return equipment }
+
+            var result: [GymEquipment] = []
+            var seen = Set<GymEquipment.ID>()
+
+            for original in equipment {
+                // If the original is available, we keep it.
+                if available.contains(original.id) {
+                    appendUnique([original], into: &result, seen: &seen)
+                    continue
+                }
+
+                // Original not available -> look for available alternatives for THIS piece
+                let alternatives = alternativesFor(equipment: [original])
+                let availableAlts = alternatives.filter { available.contains($0.id) }
+
+                if !availableAlts.isEmpty {
+                    // Use available alternatives instead of the missing original
+                    appendUnique(availableAlts, into: &result, seen: &seen)
+                } else {
+                    // No alternatives available either -> fall back to original
+                    appendUnique([original], into: &result, seen: &seen)
+                }
+            }
+
+            return result
         }
     }
-    
+
     func equipment(for id: UUID) -> GymEquipment? { allEquipment.first { $0.id == id } }
     
     func equipmentObjects(for selection: [UUID]) -> [GymEquipment] { selection.compactMap { equipment(for: $0) } }

@@ -42,7 +42,7 @@ struct CategorySelection: View {
             .navigationBarTitle("Customize Split", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Clear All") { vm.clearDay() }
+                    Button("Clear") { vm.clearDay() }
                         .foregroundStyle(.red)
                 }
                 ToolbarItem(placement: .topBarTrailing) {

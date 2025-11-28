@@ -214,8 +214,8 @@ struct NewExercise: View {
     // FIXME: doesnt accomodate others like per peg, etc
     private func determineWeightInstruction() -> WeightInstruction? {
         if let movement = draft.limbMovementType, movement != .bilateralDependent {
-            if draft.equipmentRequired.contains("Dumbbells") {
-                return .perDumbbell
+            if let individualEquipment = individualEquipment {
+                return individualEquipment.weightInstruction
             } else if equipmentRequired.contains(where: { $0.equCategory == .cableMachines }) {
                 return .perStack
             } else if equipmentRequired.contains(where: { $0.equCategory == .platedMachines }) {
@@ -315,7 +315,11 @@ struct NewExercise: View {
                     }
                     
                     // Limb Movement (Optional)
-                    MenuPickerRow(title: "Limb Movement", selection: $draft.limbMovementType) {
+                    MenuPickerRow(
+                        title: "Limb Movement",
+                        selection: $draft.limbMovementType,
+                        description: draft.limbMovementType?.description
+                    ) {
                         Text("None").tag(nil as LimbMovementType?)
                         ForEach(LimbMovementType.allCases, id: \.self) {
                             Text($0.rawValue).tag(Optional($0))
@@ -342,6 +346,27 @@ struct NewExercise: View {
                             Text($0.rawValue).tag(Optional($0))
                         }
                     }
+                }
+                
+                // Implement Count (Optional, conditional - only for .individual equipment)
+                if let individualEquipment = individualEquipment {
+                    MenuPickerRow(
+                        title: "Implement Count",
+                        selection: Binding(
+                            get: { draft.implementCount ?? defaultImplementCount },
+                            set: { newValue in
+                                // Set to nil if it matches the current default
+                                let currentDefault = defaultImplementCount
+                                draft.implementCount = (newValue == currentDefault) ? nil : newValue
+                            }
+                        ),
+                        description: "Number of \(individualEquipment.name) used for this exercise"
+                    ) {
+                        ForEach(1...2, id: \.self) { count in
+                            Text("\(count)").tag(count)
+                        }
+                    }
+                    .disabled(isReadOnly)
                 }
             }
             .roundedBackground(cornerRadius: 12, color: Color(UIColor.secondarySystemGroupedBackground), style: .continuous)
@@ -372,5 +397,20 @@ struct NewExercise: View {
             $0.id != original?.id &&                       // ← ignore self
             $0.name.caseInsensitiveCompare(draft.name) == .orderedSame
         }
+    }
+    
+    // MARK: - Implement Count Helpers
+    private var individualEquipment: GymEquipment? {
+        equipmentRequired.first(where: { $0.implementation == .individual })
+    }
+    
+    private var defaultImplementCount: Int {
+        let movement = draft.limbMovementType ?? .bilateralDependent
+        guard let individualEquip = individualEquipment,
+              let impl = individualEquip.implementation else {
+            return 1
+        }
+        let movementCount = impl.getMovementCount(for: movement)
+        return movementCount.implementsUsed
     }
 }

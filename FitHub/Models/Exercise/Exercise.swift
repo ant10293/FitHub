@@ -22,6 +22,7 @@ struct Exercise: Identifiable, Hashable, Codable {
     let csvKey: String?
     let difficulty: StrengthLevel
     let limbMovementType: LimbMovementType? // no longer optional
+    let implementCount: Int?
     let repsInstruction: RepsInstruction?
     let weightInstruction: WeightInstruction?
     let imageUrl: String?
@@ -60,6 +61,7 @@ extension Exercise {
         self.csvKey               = initEx.csvKey
         self.difficulty           = initEx.difficulty
         self.limbMovementType     = initEx.limbMovementType
+        self.implementCount       = initEx.implementCount
         self.repsInstruction      = initEx.repsInstruction
         self.weightInstruction    = initEx.weightInstruction
         self.imageUrl             = initEx.imageUrl
@@ -211,7 +213,7 @@ extension Exercise {
     }
     
     func usesPlates(equipmentData: EquipmentData) -> Bool {
-        let equipmentList = equipmentData.equipmentForExercise(self, includeAlternatives: true)
+        let equipmentList = equipmentData.equipmentForExercise(self, inclusion: .both)
 
         // If ANY equipment in the list is a weight machine → false
         if equipmentList.contains(where: { ($0.pegCount ?? .none).count > 0 }) {
@@ -252,28 +254,20 @@ extension Exercise {
     /// Returns `true` if *every* piece of required equipment can be satisfied
     /// either directly or via a declared alternative.    
     func canPerform(equipmentData: EquipmentData, equipmentSelected: [UUID]) -> Bool {
-        // Retrieve GymEquipment objects from stored UUIDs
-        let equipmentObjects = equipmentData.equipmentObjects(for: equipmentSelected)
-        // 1️⃣ Gear the user explicitly owns
-        let owned: Set<String> = Set(equipmentObjects.map { $0.name.normalize() })
-        // 2️⃣ Alternatives provided BY the gear the user owns
-        let altFromOwned: Set<String> = equipmentData.altFromOwned(equipmentObjects)
-        let allowed = owned.union(altFromOwned)
-        // 3️⃣  Build lookup of each *required* item → its own alternatives
-        let neededGear = equipmentData.equipmentForExercise(self)  // [GymEquipment]
-        let altForRequired: [String: Set<String>] = neededGear.reduce(into: [:]) { dict, gear in
-            dict[gear.name.normalize()] = Set((gear.alternativeEquipment ?? []).map { $0.normalize() })
-        }
-        // 4️⃣  Check every requirement
-        for raw in equipmentRequired {   // [String]
-            let req = raw.normalize()
-            if allowed.contains(req) { continue } // Own the exact item?
-            // Own an acceptable alternative?
-            if let altSet = altForRequired[req], !owned.isDisjoint(with: altSet) { continue }
-            return false // Missing both required item and its alternatives
-        }
-        
-        return true
+        // Convert to the same ID type you use in EquipmentData
+        let available = Set(equipmentSelected)
+
+        // Ask: if we try to build the equipment set dynamically,
+        // what would we end up using?
+        let chosen = equipmentData.equipmentForExercise(
+            self,
+            inclusion: .dynamic,
+            available: available
+        )
+
+        // If any chosen item is NOT actually available, then we had to
+        // "fall back" to something the user doesn't own => can't perform
+        return chosen.allSatisfy { available.contains($0.id) }
     }
     
     func similarityPct(to other: Exercise) -> Double {

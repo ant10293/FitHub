@@ -32,6 +32,7 @@ struct EquipmentManagement: View {
             ToolbarItem(placement: .topBarTrailing) {
                 if ctx.userData.setup.isEquipmentSelected {
                     Button("Save") {
+                        ctx.userData.saveToFile()
                         ctx.toast.showSaveConfirmation()
                     }
                 }

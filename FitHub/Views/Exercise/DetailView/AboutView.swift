@@ -19,7 +19,7 @@ struct AboutView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {   // <- single vertical spacing source
                 // IMAGE + RATING
-                AboutSection {
+                VStack(alignment: .leading, spacing: 4) {
                     ExEquipImage(image: exercise.fullImage, button: .expand)
                         .centerHorizontally()
                     
@@ -38,7 +38,7 @@ struct AboutView: View {
                 }
 
                 // HOW TO PERFORM
-                AboutSection {
+                VStack(alignment: .leading, spacing: 4) {
                     Text("How to perform: ")
                         .bold()
 
@@ -52,17 +52,17 @@ struct AboutView: View {
 
                 // LIMB MOVEMENT TYPE
                 if let limbMovementType = exercise.limbMovementType {
-                    AboutSection {
+                    VStack(alignment: .leading, spacing: 4) {
                         limbMovementType.displayInfoText
                     }
                 }
 
                 // DIFFICULTY
-                AboutSection {
+                VStack(alignment: .leading, spacing: 4) {
                     (Text("Difficulty: ").bold() + Text(exercise.difficulty.fullName))
                 }
 
-                AboutSection {
+                VStack(alignment: .leading, spacing: 4) {
                     if !exercise.primaryMuscleEngagements.isEmpty {
                         exercise.primaryMusclesFormatted
                             .multilineTextAlignment(.leading)
@@ -75,15 +75,19 @@ struct AboutView: View {
       
                 // EQUIPMENT REQUIRED
                 if !exercise.equipmentRequired.isEmpty {
-                    let equipment = ctx.equipment.equipmentForExercise(exercise)
-                    AboutSection {
+                    let equipment = ctx.equipment.equipmentForExercise(
+                        exercise,
+                        inclusion: .dynamic,
+                        available: Set(ctx.userData.evaluation.equipmentSelected)
+                    )
+                    VStack(alignment: .leading, spacing: 4) {
                         EquipmentScrollRow(equipment: equipment, title: "Equipment Required")
                     }
                 }
 
                 // EQUIPMENT ADJUSTMENTS BUTTON
                 if ctx.equipment.hasEquipmentAdjustments(for: exercise) {
-                    AboutSection {
+                    VStack(alignment: .leading, spacing: 4) {
                         LabelButton(
                             title: "Equipment Adjustments",
                             systemImage: "slider.horizontal.3",
@@ -95,28 +99,15 @@ struct AboutView: View {
                 }
 
                 // SIMILAR EXERCISES
-                AboutSection {
-                    SimilarExercisesRow(loadedExercises: $loadedExercises, exercise: exercise)
+                if let loaded = loadedExercises, !loaded.isEmpty {
+                    VStack(alignment: .leading, spacing: 4) {
+                        SimilarExercisesRow(loadedExercises: $loadedExercises, exercise: exercise)
+                    }
                 }
             }
         }
         .sheet(isPresented: $showingAdjustmentsView) {
             AdjustmentsView(exercise: exercise)
-        }
-    }
-}
-
-
-private struct AboutSection<Content: View>: View {
-    let content: Content
-
-    init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            content
         }
     }
 }

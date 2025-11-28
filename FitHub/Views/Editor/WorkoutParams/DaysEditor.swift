@@ -59,7 +59,7 @@ struct DaysEditor: View {
                             numDays = selectedDays.count
                         }
                         // Closes the view
-                        dismiss() // Dismiss the view
+                        dismiss()
                     }
                 }
             }

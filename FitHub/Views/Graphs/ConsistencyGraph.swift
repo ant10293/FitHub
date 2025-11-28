@@ -41,8 +41,9 @@ struct ConsistencyGraph: View {
                                     .foregroundStyle(.gray)
                             }
                         }
-                        .padding()
+                        .padding(.horizontal)
                         .chartYScale(domain: 0...7)
+                        .chartXAxisLabel("Week Start Date", alignment: .center)
                         .frame(width: max(CGFloat(workoutData.count) * 60, UIScreen.main.bounds.width - 40), height: UIScreen.main.bounds.height * 0.33)
                         .overlay(alignment: .center) {
                             if workoutData.isEmpty {

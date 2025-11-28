@@ -107,7 +107,7 @@ struct PlateVisualizer: View {
     // MARK: - Base mass + count + kind from equipment
     private func baseSpecForExercise() -> (base: Mass, input: Mass, equip: GymEquipment, baseCount: Int, implementsCount: Int, pegCount: PegCountOption?) {
         let movement = exercise.limbMovementType ?? .bilateralDependent
-        let gear = ctx.equipment.equipmentForExercise(exercise, includeAlternatives: true)
+        let gear = ctx.equipment.equipmentForExercise(exercise, inclusion: .dynamic, available: Set(ctx.userData.evaluation.equipmentSelected))
 
         var bestBase = Mass(kg: -1)
         var bestEquip: GymEquipment = .defaultEquipment
@@ -115,13 +115,24 @@ struct PlateVisualizer: View {
         var bestImplementsCount = 1
         var bestWeight = weight
         var bestMovementPegMultiplier: Double = 1.0
-
+        
         for g in gear {
             guard let bw = g.baseWeight else { continue }
             guard let impl = g.implementation else { continue }
 
             let mass = bw.resolvedMass
-            let movementCount = impl.getMovementCount(for: movement)
+            var movementCount = impl.getMovementCount(for: movement)
+            
+            // Override implementsUsed and baseWeightMultiplier if implementCount is specified
+            // and this equipment is .individual
+            if let implementCount = exercise.implementCount, g.implementation == .individual {
+                movementCount = MovementCount(
+                    implementsUsed: implementCount,
+                    baseWeightMultiplier: implementCount,
+                    pegMultiplier: movementCount.pegMultiplier
+                )
+            }            
+            
             let weightMultiplier = movementCount.baseWeightMultiplier
             let totalBaseWeight = mass.inKg * Double(weightMultiplier)
             let totalWeight: Mass = .init(kg: weight.inKg * Double(weightMultiplier))

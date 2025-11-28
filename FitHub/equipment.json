@@ -8,7 +8,8 @@
         "equCategory" : "Small Weights",
         "baseWeight" : { "lb": 5, "kg": 2.5 },
         "pegCount" : 2,
-        "implementation" : "Individual"
+        "implementation" : "Individual",
+        "weightInstruction" : "Per Dumbbell"
     },
     {
         "name" : "Kettlebells",
@@ -18,7 +19,8 @@
         "description" : "A cannonball‑shaped weight with an offset handle that enables ballistic, hinging, and rotational exercises such as swings, cleans, snatches, and Turkish get‑ups.",
         "equCategory" : "Small Weights",
         "alternativeEquipment" : ["Adjustable Kettlebells"],
-        "implementation" : "Individual"
+        "implementation" : "Individual",
+        "weightInstruction" : "Per Kettlebell"
     },
     {
         "name" : "Medicine Ball",
@@ -349,7 +351,7 @@
         "name" : "Incline Row",
         "id" : "A41FB0C0-FB5B-4650-A6C0-F52E5120B302",
         "image" : "incline_row",
-        "aliases" : ["incline lever row", "HS incline row"],
+        "aliases" : ["Chest-supported T-bar Row"],
         "description" : "Chest‑supported plate row pulling from a low‑to‑high angle—hammers lats and upper‑back thickness.",
         "equCategory" : "Plated Machines",
         "baseWeight" : { "lb": 45, "kg": 20 },
@@ -952,5 +954,45 @@
         "aliases" : ["ladder climber", "vertical treadmill"],
         "description" : "Self-paced cardio machine using a continuous ladder climbing motion for a high-intensity, full-body workout.",
         "equCategory" : "Cardio Machines"
+    },
+    {
+      "name": "Close V-Handle",
+      "id": "C2E1E6F3-38C8-4E05-9F5C-7AC7E6C3E5C1",
+      "image": "close_grip_v_attachment",
+      "aliases": ["Close-grip handle", "Neutral-grip V handle", "V bar handle"],
+      "description": "Neutral-grip cable handle suitable for rows, pulldowns, and multi-purpose pulling movements.",
+      "equCategory": "Attachments"
+    },
+    {
+      "name": "Wide Pulldown Bar",
+      "id": "5C4D9A21-7F5E-4714-9E5D-8A4D9BA1C7E3",
+      "image": "lat_pulldown_attachment",
+      "aliases": ["Wide grip bar", "Angled wide bar"],
+      "description": "Angled wide bar used for vertical or horizontal cable pulling variations with multiple grip widths.",
+      "equCategory": "Attachments"
+    },
+    {
+      "name": "Dual-End Rope",
+      "id": "8B7F3A9E-2D41-4E8F-9C32-0E9B5F8D3A21",
+      "image": "rope_attachment",
+      "aliases": ["Cable rope", "Rope handle"],
+      "description": "Flexible rope with two end stops for rotational neutral-grip cable work including pulls, extensions, curls, and press variations.",
+      "equCategory": "Attachments"
+    },
+    {
+      "name": "Straight Bar",
+      "id": "F1D8A3B2-6C54-4F0D-9B72-1A6E3C8F4D29",
+      "image": "straight_bar_attachment",
+      "aliases": ["Short straight bar", "Cable straight bar"],
+      "description": "Straight bar for neutral or overhand/underhand cable pulling or pressing variations including curls, rows, and pressdowns.",
+      "equCategory": "Attachments"
+    },
+    {
+      "name": "Angled V-Bar",
+      "id": "9E3B7C2A-4D1F-48A7-8C5B-0F3A9D2E7B61",
+      "image": "v_bar_attachment",
+      "aliases": ["V-bar", "Angled pressdown bar"],
+      "description": "Angled steel bar with neutral grip positions for cable pressdowns and multi-angle pulling.",
+      "equCategory": "Attachments"
     }
 ]

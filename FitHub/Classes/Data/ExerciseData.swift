@@ -649,23 +649,18 @@ extension ExerciseData {
 
         let existingNames = Set(existing.map(\.name))
 
-        // Base: not the same exercise, not already in the list
         let basePool = allExercises.filter {
             $0.id != exercise.id &&
             !existingNames.contains($0.name)
         }
 
-        let minCount = 5
         let maxCount = 15
-
-        // --- Similarity mode (no search) ---
+        let similarityThreshold: Double = 0.0  // drop 0% matches
 
         let targetEffort     = exercise.effort
         let targetUsesWeight = exercise.usesWeight
         let targetUsesReps   = exercise.usesReps
 
-        // We'll accumulate (exercise, score) pairs directly,
-        // instead of building filtered arrays and then recomputing scores.
         var strictScored: [(exercise: Exercise, score: Double)] = []
         var relaxedScored: [(exercise: Exercise, score: Double)] = []
 
@@ -673,27 +668,25 @@ extension ExerciseData {
         relaxedScored.reserveCapacity(32)
 
         for cand in basePool {
-            // Optional performance data requirement
+
             if needPerformanceData && hasPerformanceData(exercise: cand) == nil {
                 continue
             }
 
-            // Optional equipment requirement
             if canPerformRequirement &&
-                !cand.canPerform(
-                    equipmentData: equipmentData,
-                    equipmentSelected: availableEquipmentIDs
-                ) {
+               !cand.canPerform(
+                   equipmentData: equipmentData,
+                   equipmentSelected: availableEquipmentIDs
+               ) {
                 continue
             }
 
-            // Skip exercises we've explicitly replaced
             if replaced.contains(cand.name) { continue }
 
-            // Compute similarity once
             let score = cand.similarityPct(to: exercise)
 
-            // Check "strict" criteria
+            if score <= similarityThreshold { continue }
+
             let isStrict =
                 cand.effort == targetEffort &&
                 cand.usesWeight == targetUsesWeight &&
@@ -706,22 +699,17 @@ extension ExerciseData {
             }
         }
 
-        // Decide which pool to use:
-        // - If we have enough strict matches, only use those.
-        // - Otherwise, fall back to ALL valid candidates (strict + relaxed).
         let chosen: [(exercise: Exercise, score: Double)]
-
-        if strictScored.count >= minCount {
+        if !strictScored.isEmpty {
             chosen = strictScored
         } else {
             chosen = strictScored + relaxedScored
         }
 
-        // Sort only the chosen pool once, by score desc
-        let sorted = chosen.sorted { $0.score > $1.score }
-                           .map { $0.exercise }
+        let sorted = chosen
+            .sorted { $0.score > $1.score }
+            .map { $0.exercise }
 
-        // Single cap point
         return sorted.count > maxCount
             ? Array(sorted.prefix(maxCount))
             : sorted

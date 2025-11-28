@@ -18,6 +18,7 @@ struct InitEquipment: Identifiable, Hashable, Codable {
     var baseWeight: BaseWeight?
     var pegCount: PegCountOption?
     var implementation: ImplementationType?
+    var weightInstruction: WeightInstruction?
     var description: String
 }
 extension InitEquipment {
@@ -33,6 +34,7 @@ extension InitEquipment {
         self.baseWeight           = equip.baseWeight
         self.pegCount             = equip.pegCount
         self.implementation       = equip.implementation
+        self.weightInstruction    = equip.weightInstruction
         self.description          = equip.description
     }
 }

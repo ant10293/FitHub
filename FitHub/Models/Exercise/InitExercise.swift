@@ -21,6 +21,7 @@ struct InitExercise: Identifiable, Hashable, Codable {
     var csvKey: String?
     var difficulty: StrengthLevel
     var limbMovementType: LimbMovementType?
+    var implementCount: Int?
     var repsInstruction: RepsInstruction?
     var weightInstruction: WeightInstruction?
     var imageUrl: String?
@@ -39,6 +40,7 @@ extension InitExercise {
        self.csvKey               = ex.csvKey
        self.difficulty           = ex.difficulty
        self.limbMovementType     = ex.limbMovementType
+       self.implementCount       = ex.implementCount
        self.repsInstruction      = ex.repsInstruction
        self.weightInstruction    = ex.weightInstruction
        self.imageUrl             = ex.imageUrl
