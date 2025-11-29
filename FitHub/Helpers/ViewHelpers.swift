@@ -202,7 +202,8 @@ struct IconButtonModifier: ViewModifier {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .allowsHitTesting(!isButton)
+        .disabled(disabled)
+        .allowsHitTesting(isButton)
     }
 }
 

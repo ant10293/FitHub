@@ -75,46 +75,37 @@ struct TemplatePopup: View {
     private var disableTemplate: Bool { template.shouldDisableTemplate  }
     
     private var emptyView: some View {
-        /*
-        VStack {
-            Image(systemName: "figure.walk")
-                .font(.largeTitle)
-                .padding()
-                .foregroundStyle(.blue)
-            Text("Nothing Here...")
-                .font(.title2)
-                .fontWeight(.semibold)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-            Text("Press 'Edit' to Build your Workout!")
-                .foregroundStyle(Color.primary)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true) // Allow text to grow vertically
-                .padding(.bottom)
-        }
-        */
-        EmptyState(systemName: "figure.walk", title: "Nothing Here...", subtitle: "Press 'Edit' to Build your Workout!")
+        EmptyState(
+            systemName: "figure.walk",
+            title: "Nothing Here...",
+            subtitle: "Press 'Edit' to Build your Workout!"
+        )
         .frame(maxWidth: .infinity)
         .background(RoundedRectangle(cornerRadius: 12).fill(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground)))
     }
     
     private var headerToolbar: some View {
-        HStack {
-            Button(action: onClose) {
-                Image(systemName: "xmark")
-                    .contentShape(Rectangle())
-                    .padding()
+        CenteredOverlayHeader(
+            leading: {
+                Button(action: onClose) {
+                    Image(systemName: "xmark")
+                        .padding()
+                }
+                .contentShape(Rectangle())
+            },
+            center: {
+                Text(template.name)
+                    .bold()
+                    .multilineTextAlignment(.center)
+
+            },
+            trailing: {
+                Button(action: onEdit) {
+                    Text("Edit")
+                        .padding()
+                }
+                .contentShape(Rectangle())
             }
-            
-            Spacer()
-            Text(template.name).bold().zIndex(1).multilineTextAlignment(.center)
-            Spacer()
-            
-            Button(action: onEdit) {
-                Text("Edit")
-                    .padding()
-            }
-            .contentShape(Rectangle())
-        }
+        )
     }
 }

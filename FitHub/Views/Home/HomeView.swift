@@ -112,10 +112,10 @@ struct HomeView: View {
             label: "Exercise",
             selectionControl: {
                 Button(action: { showingExerciseSelection = true }) {
-                    ExercisePickerLabel(exerciseName: unwrappedExercise?.name)
-                        .contentShape(Rectangle()) // Ensure tap area is tightly bound
+                    PickerLabel(text: unwrappedExercise?.name ?? "Select Exercise")
+                        .contentShape(Rectangle())
                 }
-                .buttonStyle(PlainButtonStyle()) // Prevents full-row tap behavior
+                .buttonStyle(PlainButtonStyle())
             },
             content: {
                 if let selectedExercise = unwrappedExercise {
@@ -125,21 +125,19 @@ struct HomeView: View {
             }
         )
         .onChange(of: selectedExercise) { oldValue, newValue in
-            if oldValue != newValue { // Only perform side effects if the value has truly changed
+            if oldValue != newValue {
                 ctx.userData.sessionTracking.selectedExercise = newValue
             }
         }
         .sheet(isPresented: $showingExerciseSelection) {
             ExerciseSelection(
-                selectedExercises: [], // supply an empty array because in "performance" mode we only pick one
+                mode: .performanceView,
                 onDone: { chosenExercises in
-                    // Because forPerformanceView = true, we expect only one exercise
                     if let first = chosenExercises.first {
                         self.selectedExercise = first.id
                     }
                     showingExerciseSelection = false
-                },
-                forPerformanceView: true // Hides checkboxes & filters out maxValue == 0
+                }
             )
         }
     }
@@ -148,14 +146,25 @@ struct HomeView: View {
         GraphSectionView(
             label: "Measurement",
             selectionControl: {
-                Picker("", selection: $selectedMeasurement) {
+                Menu {
                     ForEach(ctx.userData.getValidMeasurements()) { measurement in
-                        Text(measurement.rawValue).tag(measurement)
+                        Button(action: {
+                            selectedMeasurement = measurement
+                        }) {
+                            HStack {
+                                Text(measurement.rawValue)
+                                if selectedMeasurement == measurement {
+                                    Spacer()
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
                     }
+                } label: {
+                    PickerLabel(text: selectedMeasurement.rawValue)
+                        .contentShape(Rectangle())
                 }
-                .pickerStyle(.menu)
-                .labelsHidden()
-                .frame(maxWidth: .infinity, alignment: .trailing)
+                .buttonStyle(PlainButtonStyle())
             },
             content: {
                 MeasurementsGraph(

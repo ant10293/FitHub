@@ -77,10 +77,10 @@ struct AuthProviderButtons: View {
     
     private var appleButton: some View {
         SignInWithAppleButton(.signIn) { request in
+            // Show progress view immediately when button is pressed
+            isProcessing = true
             request.requestedScopes = [.email, .fullName]
         } onCompletion: { result in
-            guard !isProcessing else { return }
-            isProcessing = true
             AuthService.shared.signInWithApple(with: result, into: userData) { response in
                 DispatchQueue.main.async {
                     isProcessing = false
@@ -88,6 +88,12 @@ struct AuthProviderButtons: View {
                     case .success:
                         onSuccess()
                     case .failure(let error):
+                        // Don't show error for user cancellation - it's not an error
+                        if let authError = error as? AuthServiceError,
+                           case .userCancelled = authError {
+                            // Silently handle cancellation - user intentionally cancelled
+                            return
+                        }
                         onFailure(error)
                     }
                 }

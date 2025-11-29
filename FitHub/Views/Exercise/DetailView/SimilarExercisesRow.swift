@@ -50,7 +50,7 @@ struct SimilarExercisesRow: View {
             let result = ctx.exercises.similarExercises(
                 to: exercise,
                 equipmentData: ctx.equipment,
-                availableEquipmentIDs: ctx.userData.evaluation.equipmentSelected,
+                availableEquipmentIDs: ctx.userData.evaluation.availableEquipment,
                 needPerformanceData: false,
                 canPerformRequirement: false
             )

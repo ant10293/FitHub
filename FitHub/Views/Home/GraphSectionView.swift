@@ -42,3 +42,7 @@ struct GraphSectionView<SelectionControl: View, Content: View>: View {
     }
 }
 
+enum GraphSelection {
+    case exercise(Exercise)
+    case measurement(MeasurementType)
+}

@@ -107,7 +107,7 @@ struct PlateVisualizer: View {
     // MARK: - Base mass + count + kind from equipment
     private func baseSpecForExercise() -> (base: Mass, input: Mass, equip: GymEquipment, baseCount: Int, implementsCount: Int, pegCount: PegCountOption?) {
         let movement = exercise.limbMovementType ?? .bilateralDependent
-        let gear = ctx.equipment.equipmentForExercise(exercise, inclusion: .dynamic, available: Set(ctx.userData.evaluation.equipmentSelected))
+        let gear = ctx.equipment.equipmentForExercise(exercise, inclusion: .dynamic, available: ctx.userData.evaluation.availableEquipment)
 
         var bestBase = Mass(kg: -1)
         var bestEquip: GymEquipment = .defaultEquipment

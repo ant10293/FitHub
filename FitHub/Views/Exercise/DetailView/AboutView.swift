@@ -78,7 +78,7 @@ struct AboutView: View {
                     let equipment = ctx.equipment.equipmentForExercise(
                         exercise,
                         inclusion: .dynamic,
-                        available: Set(ctx.userData.evaluation.equipmentSelected)
+                        available: ctx.userData.evaluation.availableEquipment
                     )
                     VStack(alignment: .leading, spacing: 4) {
                         EquipmentScrollRow(equipment: equipment, title: "Equipment Required")

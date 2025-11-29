@@ -137,9 +137,12 @@ struct NewEquipment: View {
             })
         }
         .sheet(isPresented: $showingAliasEditor) {
-            AliasesEditorSheet(aliases: draft.aliases ?? [], onSave: { aliases in
-                draft.aliases = aliases
-            })
+            AliasesEditorSheet(
+                aliases: Binding<[String]>(
+                    get: { draft.aliases ?? [] },
+                    set: { draft.aliases = $0 }
+                )
+            )
         }
         .alert("Delete this equipment?", isPresented: $showDeleteAlert) {
             Button("Cancel", role: .cancel) {}

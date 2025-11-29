@@ -502,7 +502,7 @@ extension AuthService {
     }
 }
 
-private enum AuthServiceError: LocalizedError {
+enum AuthServiceError: LocalizedError {
     case userCancelled
     case systemIssue            // ASAuthorizationError.unknown / transient system state
     case missingIdentityToken

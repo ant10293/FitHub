@@ -117,7 +117,7 @@ struct Questionnaire: View {
         .onAppear(perform: initializeQuestions)
         .sheet(isPresented: $showingPopup) {            
             EquipmentPopupView(
-                selectedEquipment: ctx.equipment.equipmentObjects(for: ctx.userData.evaluation.equipmentSelected),
+                selectedEquipment: ctx.equipment.equipmentObjects(for: ctx.userData.evaluation.availableEquipment),
                 onClose: {
                     showingPopup = false
                 },
@@ -147,7 +147,7 @@ struct Questionnaire: View {
     private func updateSelectedEquipment() {
         if answers.count > 4 {
             let equipment = ctx.equipment.selectEquipment(basedOn: answers[4])
-            ctx.userData.evaluation.equipmentSelected = equipment.map(\.id)
+            ctx.userData.evaluation.availableEquipment = Set(equipment.map(\.id))
         }
     }
     

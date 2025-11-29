@@ -22,7 +22,7 @@ struct EquipmentManagement: View {
         EquipmentSelectionContent(
             selectedCategory: $selectedCategory,
             searchText: $searchText,
-            isSelected: { ge in idsSet.contains(ge.id) },
+            isSelected: { ge in ctx.userData.evaluation.availableEquipment.contains(ge.id) },
             onToggle: { ge in toggle(ge) },
             onViewDetail: { id in selectedEquipmentId = id; viewDetail = true },
             showSaveBanner: ctx.toast.showingSaveConfirmation
@@ -68,19 +68,13 @@ struct EquipmentManagement: View {
         )
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
     }
-    
-    private var idsSet: Set<UUID> {
-        Set(ctx.userData.evaluation.equipmentSelected)
-    }
 
     private func toggle(_ ge: GymEquipment) {
-        var s = Set(ctx.userData.evaluation.equipmentSelected)
-        if s.contains(ge.id) {
-            s.remove(ge.id)
+        if ctx.userData.evaluation.availableEquipment.contains(ge.id) {
+            ctx.userData.evaluation.availableEquipment.remove(ge.id)
         } else {
-            s.insert(ge.id)
+            ctx.userData.evaluation.availableEquipment.insert(ge.id)
         }
-        ctx.userData.evaluation.equipmentSelected = Array(s)
     }
 
     private var actionVisible: Bool {

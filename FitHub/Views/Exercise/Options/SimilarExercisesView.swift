@@ -113,7 +113,7 @@ struct SimilarExercises: View {
     }
 
     // MARK: - Data sources (now all delegated to ExerciseData)
-    private var availableEquipmentIDs: [UUID] { ctx.userData.evaluation.equipmentSelected }
+    private var availableEquipmentIDs: Set<GymEquipment.ID> { ctx.userData.evaluation.availableEquipment }
 
     /// Search results (global search; not constrained by similarity buckets)
     private var searchResults: [Exercise] {

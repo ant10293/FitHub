@@ -26,6 +26,11 @@ struct EnterOneRepMaxes: View {
                 .ignoresSafeArea()
 
             VStack {
+                Text("Enter \(numberReps) Rep Maxes")
+                    .font(.largeTitle)
+                    .bold()
+                    .padding(.top)
+                
                 header
 
                 repPicker
@@ -51,7 +56,6 @@ struct EnterOneRepMaxes: View {
                 Spacer()
             }
         }
-        .navigationBarTitle("Enter \(numberReps) Rep Maxes", displayMode: .large)
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
     }
 

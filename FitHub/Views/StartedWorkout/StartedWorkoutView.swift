@@ -18,9 +18,25 @@ struct StartedWorkoutView: View {
         ZStack {
             // Main content
             VStack(spacing: 0) {
-                SimpleStopwatch(start: viewModel.startDate, isStopped: viewModel.showWorkoutSummary)
-                    .font(.largeTitle)
-                    .padding()
+                CenteredOverlayHeader(
+                    leading: {
+                        Text("\(viewModel.completedExercisesCount) of \(viewModel.totalExercises)\n Completed")
+                            .font(.caption)
+                            .foregroundStyle(.gray)
+                            .multilineTextAlignment(.center)
+                    },
+                    center: {
+                        SimpleStopwatch(start: viewModel.startDate, isStopped: viewModel.showWorkoutSummary)
+                            .font(.largeTitle)
+                    },
+                    trailing: {
+                        (Text("\(viewModel.prCount) ")
+                         + Text(Image(systemName: "trophy.fill")))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                )
+                .padding()
                
                 Divider()
                

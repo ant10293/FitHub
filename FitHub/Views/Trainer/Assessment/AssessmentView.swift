@@ -15,12 +15,17 @@ struct AssessmentView: View {
         NavigationStack(path: $navPath) {
             VStack(alignment: .center, spacing: 20) {
                 let width = UIScreen.main.bounds.width * 0.8
+                                
+                Text("Tailor Your Workouts")
+                    .font(.largeTitle)
+                    .bold()
+                    .padding(.top)
                 
                 Text("To ensure that your workouts are best tailored to you, please complete one or both of the options below:")
                     .font(.body)
                     .multilineTextAlignment(.center)
                     .frame(width: width)
-                    .padding(.vertical)
+                    .padding(.bottom)
                 
                 VStack(spacing: 16) {
                     if !ctx.userData.setup.maxRepsEntered {
@@ -52,7 +57,7 @@ struct AssessmentView: View {
                 Spacer()
             }
             .background(Color(UIColor.secondarySystemBackground))
-            .navigationTitle("Tailor Your Workouts")
+            .safeAreaInset(edge: .top) { Color.clear.frame(height: 20) }
             .navigationBarBackButtonHidden()
             .onAppear(perform: checkCompletion)
             .navigationDestination(for: ViewOption.self) { route in
@@ -68,11 +73,15 @@ struct AssessmentView: View {
     
     private var skipOrContinueButton: some View {
         RectangularButton(
-            title: (ctx.userData.setup.maxRepsEntered || ctx.userData.setup.oneRepMaxesEntered) ? "Continue" : "Skip",
-            bgColor: (ctx.userData.setup.maxRepsEntered || ctx.userData.setup.oneRepMaxesEntered) ? Color.green : Color.gray,
+            title: isContinue ? "Continue" : "Skip",
+            bgColor: isContinue ? Color.green : Color.gray,
             action: handleCompletion
         )
         .padding(.horizontal)
+    }
+    
+    private var isContinue: Bool {
+        ctx.userData.setup.maxRepsEntered || ctx.userData.setup.oneRepMaxesEntered
     }
     
     private var needsEstimate: Bool {

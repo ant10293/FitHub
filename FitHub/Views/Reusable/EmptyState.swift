@@ -21,6 +21,7 @@ struct EmptyState: View {
 
             Text(title)
                 .font(.title3.weight(.semibold))
+                .multilineTextAlignment(.center)
             
             if let subtitle {
                 Text(subtitle)

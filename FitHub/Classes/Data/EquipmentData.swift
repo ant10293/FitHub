@@ -293,7 +293,7 @@ extension EquipmentData {
 
     func equipment(for id: UUID) -> GymEquipment? { allEquipment.first { $0.id == id } }
     
-    func equipmentObjects(for selection: [UUID]) -> [GymEquipment] { selection.compactMap { equipment(for: $0) } }
+    func equipmentObjects(for selection: Set<GymEquipment.ID>) -> [GymEquipment] { selection.compactMap { equipment(for: $0) } }
 
     func equipmentForCategory(for rounding: RoundingCategory) -> [GymEquipment] {
         allEquipment.filter { $0.roundingCategory == rounding }

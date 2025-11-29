@@ -19,7 +19,7 @@ struct MeasurementsView: View {
 
     var body: some View {
         List {
-            Section(header: Text("CORE")) {
+            Section {
                 ForEach(MeasurementType.coreMeasurements, id: \.self) { measurement in
                     MeasurementRow(
                         showGraph: showGraph,
@@ -30,9 +30,11 @@ struct MeasurementsView: View {
                         }
                     )
                 }
+            } header: {
+                Text("CORE")
             }
             
-            Section(header: Text("BODY PART (Circumference)")) {
+            Section {
                 ForEach(MeasurementType.bodyPartMeasurements, id: \.self) { measurement in
                     MeasurementRow(
                         showGraph: showGraph,
@@ -43,6 +45,8 @@ struct MeasurementsView: View {
                         }
                     )
                 }
+            } header: {
+                Text("BODY PART (Circumference)")
             }
         }
         .disabled(showMeasurementEditor)
@@ -65,7 +69,7 @@ struct MeasurementsView: View {
                 )
                 .padding()
                 .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
+                    ToolbarItem(placement: .topBarLeading) {
                         Button("Close") {
                             currentMeasurementType = nil
                         }

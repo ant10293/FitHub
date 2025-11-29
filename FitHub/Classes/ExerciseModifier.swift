@@ -28,7 +28,7 @@ struct ExerciseModifier {
         onComplete: @escaping (ReplaceResult) -> Void
     ) {
         // Capture all necessary data before going to background thread
-        let availableEquipmentIDs = userData.evaluation.equipmentSelected
+        let availableEquipmentIDs = userData.evaluation.availableEquipment
 
         DispatchQueue.global(qos: .userInitiated).async {
             var workingTemplate = template

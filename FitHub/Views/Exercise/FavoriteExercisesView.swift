@@ -120,7 +120,6 @@ struct FavoriteExercisesView: View {
     }
 }
 
-
 struct RatingIcon: View {
     let exercise: Exercise
     let favState: FavoriteState

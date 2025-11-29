@@ -113,6 +113,10 @@ final class WorkoutVM: ObservableObject {
             return
         }
     }
+    
+    var completedExercisesCount: Int { template.exercises.filter { $0.isCompleted }.count }
+    var totalExercises: Int { template.exercises.count }
+    var prCount: Int { updates.updatedMax.count }
 
     private func showCompletionAlert() {
         completionDuration = secondsElapsed

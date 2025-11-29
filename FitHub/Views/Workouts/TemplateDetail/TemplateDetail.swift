@@ -180,6 +180,7 @@ struct TemplateDetail: View {
         ExerciseSelection(
             selectedExercises: template.exercises,
             templateCategories: template.categories,
+            mode: .templateSelection,
             onDone: { finalSelection in
                 // Step 1: Constant-time membership tables
                 let currentIDs = Set(template.exercises.map(\.id))

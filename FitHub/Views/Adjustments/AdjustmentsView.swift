@@ -310,7 +310,7 @@ struct AdjustmentsView: View {
     
     // MARK: – Lifecycle
     private func onAppear() {
-        ctx.adjustments.loadAdjustments(for: exercise, allEquipment: ctx.equipment.allEquipment)
+        ctx.adjustments.loadAdjustments(for: exercise, equipment: ctx.equipment, availableEquipment: ctx.userData.evaluation.availableEquipment)
         local = ctx.adjustments.adjustmentsEntry(for: exercise)
     }
     

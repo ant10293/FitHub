@@ -617,7 +617,7 @@ extension ExerciseData {
             if hideUnequipped &&
                 !ex.canPerform(
                     equipmentData: equipmentData,
-                    equipmentSelected: userData.evaluation.equipmentSelected
+                    equipmentSelected: userData.evaluation.availableEquipment
                 ) { continue }
             if hideDifficult && !ex.difficultyOK(maxStrength) { continue }
             
@@ -640,7 +640,7 @@ extension ExerciseData {
     func similarExercises(
         to exercise: Exercise,
         equipmentData: EquipmentData,
-        availableEquipmentIDs: [UUID],
+        availableEquipmentIDs: Set<GymEquipment.ID>,
         needPerformanceData: Bool = true,
         canPerformRequirement: Bool = true,
         existing: [Exercise] = [],

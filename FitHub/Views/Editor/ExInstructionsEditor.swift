@@ -18,7 +18,7 @@ struct ExInstructionsEditor: View {
     var body: some View {
         NavigationStack {
             List {
-                Section("Add Step") {
+                Section {
                     HStack {
                         HStack(spacing: 8) {
                             Text("\(instructions.newStepNumber).")
@@ -39,9 +39,11 @@ struct ExInstructionsEditor: View {
                             action: addStep
                         )
                     }
+                } header: {
+                    Text("Add Step")
                 }
 
-                Section("Existing Steps") {
+                Section {
                     if instructions.steps.isEmpty {
                         Text("No steps added yet")
                             .foregroundStyle(.secondary)
@@ -67,6 +69,8 @@ struct ExInstructionsEditor: View {
                         }
                         .onMove(perform: move)
                     }
+                } header: {
+                    Text("Existing Steps")
                 }
             }
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)

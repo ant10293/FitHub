@@ -26,7 +26,7 @@ struct ContentView: View {
                             ctx.userData.settings.workoutReminders = allowed
                         })
                         NotificationManager.printAllPendingNotifications()
-                        ctx.adjustments.loadAllAdjustments(for: ctx.exercises.allExercises, allEquipment: ctx.equipment.allEquipment)
+                        ctx.adjustments.loadAllAdjustments(for: ctx.exercises.allExercises, equipment: ctx.equipment, availableEquipment: ctx.userData.evaluation.availableEquipment)
                         if ctx.userData.sessionTracking.activeWorkout != nil { showResumeWorkoutOverlay = true }
                         if ctx.userData.setup.infoCollected { determineStrengthAndSeedMaxes() }
                         ctx.userData.checkAndUpdateAge()

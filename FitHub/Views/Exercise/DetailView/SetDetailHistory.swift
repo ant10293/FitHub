@@ -17,7 +17,7 @@ struct SetDetailHistory: View {
             if sortedExercise.isEmpty {
                 EmptyState(
                     systemName: "nosign",
-                    title: "No recent sets available for this exercise.",
+                    title: "No recently completed sets available for this exercise.",
                     subtitle: "Include this exercise in your next workout to see your performed sets here."
                 )
                 .centerVertically()

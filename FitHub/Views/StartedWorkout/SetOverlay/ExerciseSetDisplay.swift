@@ -54,7 +54,7 @@ struct ExerciseSetDisplay: View {
                 }
             }
             
-            if !hideCompletedEntry, !timerManager.restIsActive {
+            if !hideCompletedEntry, !timerManager.restIsActive, !shouldDisableNext {
                 CompletedEntry(
                     isWarm: exercise.isWarmUp,
                     hideRPE: hideRPE,
@@ -100,7 +100,9 @@ struct ExerciseSetDisplay: View {
         }
     }
     
-    private var hideCompletedEntry: Bool { planned.secondsValue != nil && !hideStartButton }
+    private var hideCompletedEntry: Bool {
+        planned.secondsValue != nil && !hideStartButton
+    }
     
     @ViewBuilder private var setLabel: some View {
         VStack(alignment: .leading, spacing: 2) {

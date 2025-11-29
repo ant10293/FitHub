@@ -13,12 +13,12 @@ struct OneRMCalculator: View {
     @StateObject private var kbd = KeyboardManager.shared
     @State private var weightLifted: Mass = .init(kg: 0)   // canonical
     @State private var repsText: String = ""              
-    @State private var searchText: String = ""
     @State private var exerciseToSave: Exercise?
     @State private var tappedExercise: Exercise?
     @State private var calculatedOneRepMax: Mass?
     @State private var isCalculated = false
     @State private var showingConfirmationPopup = false
+    @State private var showingExerciseSelection = false
 
     var body: some View {
         ZStack {
@@ -26,13 +26,11 @@ struct OneRMCalculator: View {
                 InfoBanner(title: "1RM Saved Successfully!").zIndex(1)
             }
 
-            let unitLabel = UnitSystem.current.weightUnit
-
             Form {
                 if !isCalculated {
                     // ─── Inputs ─────────────────────────────────────────────
                     Section {
-                        TextField("Enter Weight (\(unitLabel))", text: $weightLifted.asText())
+                        TextField("Enter Weight (\(UnitSystem.current.weightUnit))", text: $weightLifted.asText())
                         .keyboardType(.decimalPad)
                     } header: {
                         Text("Weight Lifted")
@@ -75,38 +73,17 @@ struct OneRMCalculator: View {
                         }
 
                         Section {
-                            SearchBar(text: $searchText, placeholder: "Search Exercises")
-                        } header: {
-                            Text("Save 1RM to Exercise")
-                        }
-
-                        Section {
-                            if filteredExercises.isEmpty {
-                                Text("No matching exercises.")
-                                    .foregroundStyle(.secondary)
-                            } else {
-                                ForEach(filteredExercises) { exercise in
-                                    ExerciseRow(
-                                        exercise,
-                                        heartOverlay: true,
-                                        favState: FavoriteState.getState(for: exercise, userData: ctx.userData),
-                                        accessory: { EmptyView() },
-                                        detail: {
-                                            if let oneRM = ctx.exercises.getMax(for: exercise.id)?.value {
-                                                (
-                                                    Text(Image(systemName: "trophy.fill"))
-                                                    +
-                                                    Text(" ")
-                                                    +
-                                                    oneRM.labeledText
-                                                )
-                                                .font(.caption2)
-                                            }
-                                        },
-                                        onTap: { exerciseTap(exercise) }
-                                    )
+                            Button {
+                                showingExerciseSelection = true
+                            } label: {
+                                HStack {
+                                    Text("Select Exercise")
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
                                 }
                             }
+                        } header: {
+                            Text("Save 1RM to Exercise")
                         }
                     }
                 }
@@ -126,6 +103,18 @@ struct OneRMCalculator: View {
             }
         }
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+        .sheet(isPresented: $showingExerciseSelection) {
+            ExerciseSelection(
+                initialCategory: .resistanceType(.weighted),
+                mode: .oneRMCalculator,
+                onDone: { exercises in
+                    if let first = exercises.first {
+                        exerciseTap(first)
+                    }
+                    showingExerciseSelection = false
+                }
+            )
+        }
         .alert(isPresented: $showingConfirmationPopup) {
             Alert(
                 title: Text("Update 1RM"),
@@ -150,16 +139,6 @@ struct OneRMCalculator: View {
                 secondaryButton: .cancel()
             )
         }
-    }
-
-    // MARK: - Filters / Derived
-    private var filteredExercises: [Exercise] {
-        ctx.exercises.filteredExercises(
-            searchText: searchText,
-            selectedCategory: .resistanceType(.weighted),
-            userData: ctx.userData,
-            equipmentData: ctx.equipment
-        )
     }
 
     private var isCalculateEnabled: Bool {
@@ -193,7 +172,10 @@ struct OneRMCalculator: View {
         tappedExercise = exercise
         ctx.toast.manageTap { tappedExercise = nil }
         exerciseToSave = exercise
-        showingConfirmationPopup = true
+        // Defer alert presentation slightly so it isn't racing with sheet dismissal
+        DispatchQueue.main.async {
+            showingConfirmationPopup = true
+        }
     }
 
     private func resetView() {
@@ -201,7 +183,6 @@ struct OneRMCalculator: View {
         repsText = ""
         calculatedOneRepMax = nil
         isCalculated = false
-        searchText = ""
         exerciseToSave = nil
     }
 }

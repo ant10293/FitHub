@@ -28,14 +28,14 @@ final class AdjustmentsData: ObservableObject {
     }
     
     // Load adjustments for all exercises
-    func loadAllAdjustments(for exercises: [Exercise], allEquipment: [GymEquipment]) {
+    func loadAllAdjustments(for exercises: [Exercise], equipment: EquipmentData, availableEquipment: Set<GymEquipment.ID>) {
         for exercise in exercises {
-            loadAdjustments(for: exercise, allEquipment: allEquipment)
+            loadAdjustments(for: exercise, equipment: equipment, availableEquipment: availableEquipment)
         }
     }
     
-    func loadAdjustments(for exercise: Exercise, allEquipment: [GymEquipment]) {
-        let requiredKeys = categoriesForExercise(exercise, allEquipment: allEquipment)
+    func loadAdjustments(for exercise: Exercise, equipment: EquipmentData, availableEquipment: Set<GymEquipment.ID>) {
+        let requiredKeys = categoriesForExercise(exercise, equipment: equipment, availableEquipment: availableEquipment)
         
         // Start from existing or create empty container
         var localAdjustments = exerciseAdjustments[exercise.id] ?? ExerciseAdjustments(
@@ -278,16 +278,18 @@ extension AdjustmentsData {
         return nil
     }
     
-    private func categoriesForExercise(_ exercise: Exercise, allEquipment: [GymEquipment]) -> [AdjustmentKey] {
+    private func categoriesForExercise(_ exercise: Exercise, equipment: EquipmentData, availableEquipment: Set<GymEquipment.ID>) -> [AdjustmentKey] {
         var result: [AdjustmentKey] = []
         var seen = Set<AdjustmentKey>()
         
-        for requiredName in exercise.equipmentRequired {
-            guard let gear = allEquipment.first(where: { $0.name.normalize() == requiredName.normalize() }),
-                  let gearAdjustments = gear.adjustments else { continue }
+        // Use dynamic equipment selection to get available equipment (including alternatives)
+        let gear = equipment.equipmentForExercise(exercise, inclusion: .dynamic, available: availableEquipment)
+        
+        for gearItem in gear {
+            guard let gearAdjustments = gearItem.adjustments else { continue }
             
             for category in gearAdjustments {
-                let key = AdjustmentKey(equipmentID: gear.id, category: category)
+                let key = AdjustmentKey(equipmentID: gearItem.id, category: category)
                 guard !seen.contains(key) else { continue }
                 
                 seen.insert(key)

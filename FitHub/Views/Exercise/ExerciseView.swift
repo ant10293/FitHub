@@ -75,30 +75,11 @@ struct ExerciseView: View {
                             imageSize: 0.2,
                             accessory: { EmptyView() },
                             detail: {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    if let aliases = exercise.aliases, !aliases.isEmpty {
-                                        (
-                                            Text(aliases.count == 1 ? "Alias: " : "Aliases: ")
-                                                .fontWeight(.semibold)
-                                            +
-                                            Text(aliases.joined(separator: ", "))
-                                                .foregroundStyle(.gray)
-                                        )
-                                        .font(.caption)
-                                    }
-                                    
-                                    // 🏆 1RM
-                                    if let max = ctx.exercises.peakMetric(for: exercise.id) {
-                                        (
-                                            Text(Image(systemName: "trophy.fill"))
-                                            +
-                                            Text(" ")
-                                            +
-                                            max.formattedText
-                                        )
-                                        .font(.caption2)
-                                    }
-                                }
+                                ExerciseRowDetails(
+                                    exercise: exercise,
+                                    peak: ctx.exercises.peakMetric(for: exercise.id),
+                                    showAliases: true
+                                )
                             },
                             onTap: {
                                 kbd.dismiss()
@@ -116,4 +97,3 @@ struct ExerciseView: View {
         }
     }
 }
-

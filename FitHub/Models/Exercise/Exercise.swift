@@ -253,9 +253,8 @@ extension Exercise {
     
     /// Returns `true` if *every* piece of required equipment can be satisfied
     /// either directly or via a declared alternative.    
-    func canPerform(equipmentData: EquipmentData, equipmentSelected: [UUID]) -> Bool {
-        // Convert to the same ID type you use in EquipmentData
-        let available = Set(equipmentSelected)
+    func canPerform(equipmentData: EquipmentData, equipmentSelected: Set<GymEquipment.ID>) -> Bool {
+        let available = equipmentSelected
 
         // Ask: if we try to build the equipment set dynamically,
         // what would we end up using?

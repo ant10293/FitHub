@@ -92,8 +92,38 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
     }
 }
 
-// MARK: - Convenience overloads (give us “defaults” without the compiler pain)
+struct ExerciseRowDetails: View {
+    let exercise: Exercise
+    let peak: PeakMetric?
+    let showAliases: Bool
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            if showAliases, let aliases = exercise.aliases, !aliases.isEmpty {
+                (
+                    Text(aliases.count == 1 ? "Alias: " : "Aliases: ")
+                        .fontWeight(.semibold)
+                    +
+                    Text(aliases.joined(separator: ", "))
+                        .foregroundStyle(.gray)
+                )
+                .font(.caption)
+            }
+            
+            // 🏆 1RM
+            if let peak {
+                (
+                    Text(Image(systemName: "trophy.fill"))
+                    + Text(" ")
+                    + peak.formattedText
+                )
+                .font(.caption2)
+            }
+        }
+    }
+}
 
+// MARK: - Convenience overloads (give us “defaults” without the compiler pain)
 extension ExerciseRow where Accessory == EmptyView, Detail == EmptyView {
     /// No accessory, no detail
     init(_ exercise: Exercise,
@@ -116,3 +146,4 @@ extension ExerciseRow where Detail == EmptyView {
                   onTap: onTap)
     }
 }
+

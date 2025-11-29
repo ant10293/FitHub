@@ -27,16 +27,15 @@ struct AliasesField: View {
 
 struct AliasesEditorSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @State var aliases: [String]
+    @Binding var aliases: [String]
     @State private var newAlias: String = ""
     @State private var isEditing: Bool = false
     @StateObject private var kbd = KeyboardManager.shared
-    let onSave: ([String]) -> Void
 
     var body: some View {
         NavigationStack {
             List {
-                Section("Add") {
+                Section {
                     TextField("New alias", text: $newAlias)
                         .textInputAutocapitalization(.words)
                         .disableAutocorrection(true)
@@ -46,9 +45,13 @@ struct AliasesEditorSheet: View {
                             disabled: !isNewValid,
                             action: addAlias
                         )
+                } header: {
+                    Text("Add")
+                } footer: {
+                    ErrorFooter(message: duplicateEror)
                 }
-
-                Section("Aliases") {
+                
+                Section {
                     if aliases.isEmpty {
                         Text("No aliases yet")
                             .foregroundStyle(.secondary)
@@ -64,6 +67,8 @@ struct AliasesEditorSheet: View {
                             }
                         }
                     }
+                } header: {
+                    Text("Aliases")
                 }
             }
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
@@ -77,7 +82,6 @@ struct AliasesEditorSheet: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Close") {
-                        onSave(aliases)
                         dismiss()
                     }
                 }
@@ -89,12 +93,21 @@ struct AliasesEditorSheet: View {
     }
 
     // MARK: - Logic
+    private var duplicateEror: String? {
+        if isDuplicateName { return "Alias already exists" }
+        return nil
+    }
+    
+    private var isDuplicateName: Bool {
+        aliases.contains { $0.caseInsensitiveCompare(trimmed) == .orderedSame }
+    }
+    
     private var trimmed: String { newAlias.trimmed }
     
     private var isNewValid: Bool {
         InputLimiter.isValidInput(trimmed)
         && !trimmed.isEmpty
-        && !aliases.contains { $0.caseInsensitiveCompare(trimmed) == .orderedSame }
+        && !isDuplicateName
     }
     
     private func addAlias() {

@@ -23,6 +23,11 @@ struct EnterMaxReps: View {
                 .zIndex(0)
             
             VStack {
+                Text("Enter Max Reps")
+                    .font(.largeTitle)
+                    .bold()
+                    .padding(.top)
+                
                 Spacer()
                 
                 Text("How many reps can you perform consecutively in each bodyweight exercise?")
@@ -39,14 +44,18 @@ struct EnterMaxReps: View {
                 Spacer()
                 
                 if !kbd.isVisible {
-                    RectangularButton(title: "Submit", enabled: submitEnabled, bgColor: submitEnabled ? .green : .gray, action: handleSubmit)
-                        .padding()
+                    RectangularButton(
+                        title: "Submit",
+                        enabled: submitEnabled,
+                        bgColor: submitEnabled ? .green : .gray,
+                        action: handleSubmit
+                    )
+                    .padding()
                 }
                 
                 Spacer()
             }
         }
-        .navigationBarTitle("Enter Max Reps", displayMode: .large)
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
     }
     

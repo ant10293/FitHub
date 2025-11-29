@@ -110,7 +110,7 @@ struct Evaluation: Codable {
     var isFamiliarWithGym: Bool = false // change this after certain number of completed workouts, or allow manual change
     var strengths: [Muscle: StrengthLevel]?
     var weaknesses: [Muscle: StrengthLevel]?
-    var equipmentSelected: [UUID] = [] // TODO: should be a set, not array
+    var availableEquipment: Set<GymEquipment.ID> = []
     var favoriteExercises: Set<Exercise.ID> = []
     var dislikedExercises: Set<Exercise.ID> = []
     var availablePlates: WeightPlates = WeightPlates()
