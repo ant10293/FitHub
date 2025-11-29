@@ -1,18 +1,5 @@
 import SwiftUI
 
-enum SelectionMode {
-    case performanceView, oneRMCalculator, templateSelection
-    
-    var isSingleSelectImmediate: Bool {
-        switch self {
-        case .performanceView, .oneRMCalculator:
-            return true
-        case .templateSelection:
-            return false
-        }
-    }
-}
-
 struct ExerciseSelection: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) var colorScheme
@@ -51,24 +38,26 @@ struct ExerciseSelection: View {
     private var isPerformanceMode: Bool { mode == .performanceView }
     private var isOneRMMode: Bool { mode == .oneRMCalculator }
     /// In these modes we immediately resolve selection on tap and dismiss.
-    private var isSingleSelectImmediate: Bool { isPerformanceMode || isOneRMMode }
+    private var isSingleSelectImmediate: Bool { mode.isSingleSelectImmediate }
     
     var body: some View {
         NavigationStack {
             VStack {
-                SplitCategoryPicker(
-                    userData: ctx.userData,
-                    selectedCategory: $selectedCategory,
-                    templateCategories: templateCategories,
-                    onChange: { sortOption in
-                        if sortOption == .templateCategories {
-                            templateFilter = true
-                        } else {
-                            templateFilter = false
+                if !isOneRMMode {
+                    SplitCategoryPicker(
+                        userData: ctx.userData,
+                        selectedCategory: $selectedCategory,
+                        templateCategories: templateCategories,
+                        onChange: { sortOption in
+                            if sortOption == .templateCategories {
+                                templateFilter = true
+                            } else {
+                                templateFilter = false
+                            }
                         }
-                    }
-                )
-                .padding(.bottom, -5)
+                    )
+                    .padding(.bottom, -5)
+                }
                
                 // Search bar
                 SearchBar(text: $searchText, placeholder: "Search Exercises")
@@ -77,7 +66,7 @@ struct ExerciseSelection: View {
                 // The List of Exercises
                 List {
                     if filteredExercises.isEmpty {
-                        Text("No exercises found \(isPerformanceMode ? "with performance data" : "").")
+                        Text("No exercises found\(isPerformanceMode ? " with performance data" : "").")
                             .padding()
                             .multilineTextAlignment(.center)
                     } else {
@@ -205,6 +194,17 @@ struct ExerciseSelection: View {
             )
         default:
             EmptyView()
+        }
+    }
+    
+    enum SelectionMode {
+        case performanceView, oneRMCalculator, templateSelection
+        
+        var isSingleSelectImmediate: Bool {
+            switch self {
+            case .performanceView, .oneRMCalculator: return true
+            case .templateSelection: return false
+            }
         }
     }
 }

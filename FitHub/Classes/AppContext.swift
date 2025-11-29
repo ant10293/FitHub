@@ -16,7 +16,6 @@ final class AppContext: ObservableObject {
     // MARK: –  App‑wide singletons / services (stateless or long‑lived)
     // ------------------------------------------------------------------
     let persistence: PersistenceController = .shared       // Core Data wrapper
-    let toast = ToastManager()      // In‑app toast helper
 
     // MARK: –  Domain data models that views observe via `@Published`
     // ------------------------------------------------------------------
@@ -41,7 +40,6 @@ final class AppContext: ObservableObject {
         stitch(adjustments)
         stitch(exercises)
         stitch(equipment)
-        stitch(toast)
         stitch(store)
         
         // Kick StoreKit once at startup
@@ -109,7 +107,6 @@ final class AppContext: ObservableObject {
         stitch(adjustments)
         stitch(exercises)
         stitch(equipment)
-        stitch(toast)
         stitch(store)
     }
     

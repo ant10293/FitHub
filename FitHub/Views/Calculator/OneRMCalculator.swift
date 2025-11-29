@@ -10,6 +10,7 @@ import SwiftUI
 struct OneRMCalculator: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var ctx: AppContext
+    @StateObject private var toast = ToastManager()
     @StateObject private var kbd = KeyboardManager.shared
     @State private var weightLifted: Mass = .init(kg: 0)   // canonical
     @State private var repsText: String = ""              
@@ -22,7 +23,7 @@ struct OneRMCalculator: View {
 
     var body: some View {
         ZStack {
-            if ctx.toast.showingSaveConfirmation {
+            if toast.showingSaveConfirmation {
                 InfoBanner(title: "1RM Saved Successfully!").zIndex(1)
             }
 
@@ -88,8 +89,8 @@ struct OneRMCalculator: View {
                     }
                 }
             }
-            .disabled(ctx.toast.showingSaveConfirmation)
-            .blur(radius: ctx.toast.showingSaveConfirmation ? 10 : 0)
+            .disabled(toast.showingSaveConfirmation)
+            .blur(radius: toast.showingSaveConfirmation ? 10 : 0)
         }
         .navigationBarTitle("1 Rep Max Calculator", displayMode: .inline)
         .toolbar {
@@ -130,7 +131,7 @@ struct OneRMCalculator: View {
                             loadXmetric: LoadXMetric(load: .weight(weightLifted), metric: .reps(repsVal))
                         )
                         ctx.exercises.savePerformanceData()
-                        ctx.toast.showSaveConfirmation(duration: 2) {
+                        toast.showSaveConfirmation(duration: 2) {
                             resetView()
                             dismiss()
                         }
@@ -170,7 +171,7 @@ struct OneRMCalculator: View {
 
     private func exerciseTap(_ exercise: Exercise) {
         tappedExercise = exercise
-        ctx.toast.manageTap { tappedExercise = nil }
+        toast.manageTap { tappedExercise = nil }
         exerciseToSave = exercise
         // Defer alert presentation slightly so it isn't racing with sheet dismissal
         DispatchQueue.main.async {

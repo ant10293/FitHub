@@ -11,6 +11,7 @@ struct EquipmentManagement: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
+    @StateObject private var toast = ToastManager()
 
     @State private var selectedCategory: EquipmentCategory = .all
     @State private var searchText: String = ""
@@ -25,7 +26,7 @@ struct EquipmentManagement: View {
             isSelected: { ge in ctx.userData.evaluation.availableEquipment.contains(ge.id) },
             onToggle: { ge in toggle(ge) },
             onViewDetail: { id in selectedEquipmentId = id; viewDetail = true },
-            showSaveBanner: ctx.toast.showingSaveConfirmation
+            showSaveBanner: toast.showingSaveConfirmation
         )
         .navigationBarTitle("\(ctx.userData.profile.userName)'s Gym", displayMode: .inline)
         .toolbar {
@@ -33,7 +34,7 @@ struct EquipmentManagement: View {
                 if ctx.userData.setup.isEquipmentSelected {
                     Button("Save") {
                         ctx.userData.saveToFile()
-                        ctx.toast.showSaveConfirmation()
+                        toast.showSaveConfirmation()
                     }
                 }
             }

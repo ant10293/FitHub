@@ -6,6 +6,7 @@ struct UserProfileView: View {
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var authService = AuthService.shared
     @StateObject private var kbd = KeyboardManager.shared
+    @StateObject private var toast = ToastManager()
     @State private var alertMessage: String = ""
     @State private var showingDeleteConfirmation: Bool = false
 
@@ -27,7 +28,7 @@ struct UserProfileView: View {
             
             VStack {
                 // 1) Show any banner (for username/first/last update)
-                if ctx.toast.showingSaveConfirmation {
+                if toast.showingSaveConfirmation {
                     InfoBanner(
                         title: alertMessage,
                         bgColor: !alertMessage.contains("failed")
@@ -121,11 +122,11 @@ struct UserProfileView: View {
                             buttonHeight: btnH,
                             onSuccess: {
                                 alertMessage = "Sign in successful"
-                                ctx.toast.showSaveConfirmation(duration: 2.0)
+                                toast.showSaveConfirmation(duration: 2.0)
                             },
                             onFailure: { error in
                                 alertMessage = "Sign in failed: \(error.localizedDescription)"
-                                ctx.toast.showSaveConfirmation(duration: 2.0)
+                                toast.showSaveConfirmation(duration: 2.0)
                             }
                         )
                         .padding()
@@ -179,7 +180,7 @@ struct UserProfileView: View {
             case .failure(let error):
                 alertMessage = "Failed to update username: \(error.localizedDescription)"
             }
-            ctx.toast.showSaveConfirmation(duration: 2.0)
+            toast.showSaveConfirmation(duration: 2.0)
         }
     }
     
@@ -191,7 +192,7 @@ struct UserProfileView: View {
         ctx.userData.profile.firstName = trimmed
         
         alertMessage = "First name updated"
-        ctx.toast.showSaveConfirmation(duration: 2.0)
+        toast.showSaveConfirmation(duration: 2.0)
     }
     
     /// Commit lastName locally only, then show a banner.
@@ -202,7 +203,7 @@ struct UserProfileView: View {
         ctx.userData.profile.lastName = trimmed
         
         alertMessage = "Last name updated"
-        ctx.toast.showSaveConfirmation(duration: 2.0)
+        toast.showSaveConfirmation(duration: 2.0)
     }
     
     // MARK: — Handle Logout/Login Button
@@ -217,7 +218,7 @@ struct UserProfileView: View {
             try AccountDataStore.shared.clearActiveData()
         } catch {
             alertMessage = "Failed to back up data: \(error.localizedDescription)"
-            ctx.toast.showSaveConfirmation(duration: 2.0)
+            toast.showSaveConfirmation(duration: 2.0)
             return
         }
         
@@ -231,7 +232,7 @@ struct UserProfileView: View {
             case .failure(let error):
                 alertMessage = "Failed to log out: \(error.localizedDescription)"
             }
-            ctx.toast.showSaveConfirmation(duration: 2.0)
+            toast.showSaveConfirmation(duration: 2.0)
         }
     }
     
@@ -251,7 +252,7 @@ struct UserProfileView: View {
             case .failure(let error):
                 alertMessage = "Failed to delete account: \(error.localizedDescription)"
             }
-            ctx.toast.showSaveConfirmation(duration: 2.0)
+            toast.showSaveConfirmation(duration: 2.0)
         }
     }
 }

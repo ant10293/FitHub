@@ -16,6 +16,8 @@ struct CompletedEntry: View {
     @Binding var completed: SetMetric
     @Binding var rpe: Double
     
+    private var isCardio: Bool { planned.timeSpeed != nil }
+    
     var body: some View {
         if !hideCompleted {
             switch planned {
@@ -30,8 +32,7 @@ struct CompletedEntry: View {
             }
         }
         
-        // TODO: hide for cardio exercises
-        if !showPicker, !hideRPE {
+        if !showPicker, !hideRPE, !isCardio {
             rpeEntry
         }
     }
@@ -115,9 +116,7 @@ struct CompletedEntry: View {
                 HStack {
                     Spacer()
                     FloatingButton(image: "checkmark") { showPicker = false }
-                        .padding()
                 }
-                .padding(.top, 6)
             }
         }
         .padding(.trailing)
@@ -134,10 +133,13 @@ struct CompletedEntry: View {
                             .offset(y: 15)
                     }
 
-                Slider(value: Binding(
-                    get: { rpe },
-                    set: { rpe = $0 }
-                ), in: 1...10, step: 0.5)
+                Slider(
+                    value: Binding(
+                        get: { rpe },
+                        set: { rpe = $0 }
+                    ),
+                    in: 1...10, step: 0.5
+                )
                 .padding(.horizontal)
             }
         }

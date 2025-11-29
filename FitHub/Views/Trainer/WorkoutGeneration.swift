@@ -11,6 +11,7 @@ import SwiftUI
 struct WorkoutGeneration: View {
     @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
     @EnvironmentObject private var ctx: AppContext
+    @StateObject private var toast = ToastManager()
     @State private var showingCustomizationForm: Bool = false
     @State private var showAlert: Bool = false
     @State private var showingExerciseOptions: Bool = false
@@ -32,7 +33,7 @@ struct WorkoutGeneration: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    if ctx.toast.showingSaveConfirmation { InfoBanner(title: "Workout Plan Generated!").zIndex(1) }
+                    if toast.showingSaveConfirmation { InfoBanner(title: "Workout Plan Generated!").zIndex(1) }
                     
                     selectionBar
                     HStack {
@@ -181,7 +182,7 @@ struct WorkoutGeneration: View {
                         keepCurrentExercises: ctx.userData.workoutPrefs.keepCurrentExercises,
                         nextWeek: false,
                         onDone: {
-                            ctx.toast.showSaveConfirmation(duration: 2)
+                            toast.showSaveConfirmation(duration: 2)
                         }
                     )
                 }

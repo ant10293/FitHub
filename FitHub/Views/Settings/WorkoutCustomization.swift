@@ -22,10 +22,11 @@ struct WorkoutCustomization: View {
     @State private var selectedDays: [DaysOfWeek] = []
     @State private var selectedSetStructure: SetStructures = .pyramid
     @State private var duration: TimeSpan = .hrMinToSec(hours: 1, minutes: 0)
+    @StateObject private var toast = ToastManager()
     
     var body: some View {
         VStack {
-            if ctx.toast.showingSaveConfirmation { InfoBanner(title: "Restored Default Preferences!") }
+            if toast.showingSaveConfirmation { InfoBanner(title: "Restored Default Preferences!") }
             
             Form {
                 Section {
@@ -354,7 +355,7 @@ struct WorkoutCustomization: View {
                 
         initializeVariables()
 
-        ctx.toast.showSaveConfirmation()
+        toast.showSaveConfirmation()
     }
     
     private var isDefault: Bool {

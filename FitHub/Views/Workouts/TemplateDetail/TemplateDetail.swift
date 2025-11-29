@@ -29,6 +29,7 @@ struct TemplateDetail: View {
     @State private var activeDetailID: UUID? = nil   // nil = no menu open
     @State private var isReplacing: Bool = false
     @State private var replaceMessage: String = ""
+    @StateObject private var toast = ToastManager()
     private let modifier = ExerciseModifier()
     var isArchived: Bool = false
     
@@ -40,7 +41,7 @@ struct TemplateDetail: View {
             
             VStack {
                 if isEditing { editToolBar }
-                if ctx.toast.showingSaveConfirmation { InfoBanner(title: "Template Saved Successfully!").zIndex(1) }
+                if toast.showingSaveConfirmation { InfoBanner(title: "Template Saved Successfully!").zIndex(1) }
                 
                 Spacer()
                 

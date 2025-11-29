@@ -237,6 +237,8 @@ extension WorkoutTemplate {
         )
     }
     
+    var noSetsCompleted: Bool { exercises.allSatisfy(\.noSetsCompleted) }
+    
     var shouldDisableTemplate: Bool {
         exercises.isEmpty || exercises.contains { $0.setDetails.isEmpty }
     }

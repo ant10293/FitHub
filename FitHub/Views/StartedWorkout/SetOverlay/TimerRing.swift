@@ -12,16 +12,17 @@ import SwiftUI
 struct PlannedTimerRing: View {
     @ObservedObject var manager: TimerManager
     let planned: SetMetric
+    let completed: SetMetric?
     var fallbackSeconds: Int = 30
     let onCompletion: (SetMetric) -> Void
 
     var body: some View {
         TimerRing(
             manager: manager,
-            holdSeconds: planned.secondsValue ?? fallbackSeconds,
+            plannedSeconds: planned.secondsValue ?? fallbackSeconds,
+            initialElapsedSeconds: completed?.secondsValue ?? 0,
             onCompletion: { seconds in
-                let elapsed = TimeSpan(seconds: max(0, seconds))
-                if let completed = completedFromTimer(elapsed) {
+                if let completed = completedFromTimer(seconds) {
                     onCompletion(completed)
                 }
             }
@@ -29,7 +30,9 @@ struct PlannedTimerRing: View {
     }
 
     // MARK: - Private
-    private func completedFromTimer(_ elapsed: TimeSpan) -> SetMetric? {
+    private func completedFromTimer(_ seconds: Int) -> SetMetric? {
+        let elapsed = TimeSpan(seconds: max(0, seconds))
+
         switch planned {
         case .hold:
             return .hold(elapsed)
@@ -45,7 +48,9 @@ struct PlannedTimerRing: View {
 
 private struct TimerRing: View {
     @ObservedObject var manager: TimerManager
-    let holdSeconds: Int   // e.g., 30 or whatever you want as the default
+    @State private var hasFiredCompletion: Bool = false
+    let plannedSeconds: Int
+    let initialElapsedSeconds: Int
     let onCompletion: (Int) -> Void
     
     var body: some View {
@@ -86,8 +91,7 @@ private struct TimerRing: View {
                 .accessibilityLabel(isRunning ? "Pause hold" : (isPaused ? "Resume hold" : "Start hold"))
                 
                 Button(role: .destructive) {
-                    onCompletion(secElapsed)
-                    manager.stopHold()
+                    fireCompletionIfNeeded()
                 } label: {
                     Image(systemName: "stop.fill")
                         .font(.title3.weight(.semibold))
@@ -101,10 +105,11 @@ private struct TimerRing: View {
         }
         .padding()
         .onAppear(perform: toggleHold)
+        .onDisappear(perform: fireCompletionIfNeeded)
         .onChange(of: manager.holdTimeRemaining) {
             if progress == 1 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    onCompletion(secElapsed) // close one second after completion
+                    fireCompletionIfNeeded()
                 }
             }
         }
@@ -113,9 +118,7 @@ private struct TimerRing: View {
     // Progress for the HOLD countdown
     private var progress: CGFloat {
         guard manager.holdTotalSeconds > 0 else { return 0 }
-        let done = secElapsed
-        let prog = CGFloat(done) / CGFloat(max(manager.holdTotalSeconds, 1))
-        return prog
+        return CGFloat(secElapsed) / CGFloat(max(manager.holdTotalSeconds, 1))
     }
 
     // Derive states
@@ -130,8 +133,17 @@ private struct TimerRing: View {
         } else if isPaused {
             manager.resumeHold()
         } else {
-            // Idle: arm a new hold with the default duration
-            manager.startHold(for: holdSeconds)
+            // Idle: arm a new hold with the total duration and initial elapsed time
+            manager.startHold(totalSeconds: plannedSeconds, initialElapsed: initialElapsedSeconds)
         }
+    }
+    
+    /// Call this everywhere you "finish" the timer: stop button, auto-complete, disappear
+    private func fireCompletionIfNeeded() {
+        // If you *don't* want to record 0-second holds, keep this guard:
+        guard !hasFiredCompletion, secElapsed > 0 else { return }
+        hasFiredCompletion = true
+        onCompletion(secElapsed)
+        manager.stopHold()
     }
 }

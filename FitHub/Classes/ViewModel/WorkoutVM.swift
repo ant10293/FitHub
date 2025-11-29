@@ -15,7 +15,7 @@ final class WorkoutVM: ObservableObject {
     let startDate: Date
     @Published var currentExerciseState: CurrentExerciseState?
     @Published var updates: PerformanceUpdates
-    @Published var workoutCompleted: Bool = false
+    @Published var workoutEnded: Bool = false
     @Published var isOverlayVisible: Bool = true
     @Published var showWorkoutSummary: Bool = false
     @Published private var completionDuration: Int?
@@ -114,8 +114,9 @@ final class WorkoutVM: ObservableObject {
         }
     }
     
+    var noSetsCompleted: Bool { template.noSetsCompleted }
     var completedExercisesCount: Int { template.exercises.filter { $0.isCompleted }.count }
-    var totalExercises: Int { template.exercises.count }
+    var totalExercises: Int { template.numExercises }
     var prCount: Int { updates.updatedMax.count }
 
     private func showCompletionAlert() {
@@ -201,7 +202,7 @@ final class WorkoutVM: ObservableObject {
     @MainActor
     func endWorkoutAndDismiss(ctx: AppContext, completion: () -> Void) {
         // ensure that this workout cannot be set as active workout
-        workoutCompleted = true
+        workoutEnded = true
         
         // update exercise performance
         ctx.exercises.applyPerformanceUpdates(updates: updates.updatedMax, csvEstimate: false)

@@ -61,9 +61,10 @@ final class TimerManager: ObservableObject {
     }
 
     // MARK: - HOLD (classic decrementing via shared startCountdown/resumeCountdown)
-    func startHold(for seconds: Int) {
+    func startHold(totalSeconds: Int, initialElapsed: Int = 0) {
         startCountdown(
-            seconds: seconds,
+            seconds: totalSeconds,
+            initialElapsed: initialElapsed,
             total: \.holdTotalSeconds,
             remaining: \.holdTimeRemaining,
             isActive: \.holdIsActive,
@@ -105,6 +106,7 @@ final class TimerManager: ObservableObject {
     
     private func startCountdown(
         seconds: Int,
+        initialElapsed: Int = 0,
         total: ReferenceWritableKeyPath<TimerManager, Int>,
         remaining: ReferenceWritableKeyPath<TimerManager, Int>,
         isActive: ReferenceWritableKeyPath<TimerManager, Bool>,
@@ -120,7 +122,8 @@ final class TimerManager: ObservableObject {
         
         switch mode {
         case .decrementing:
-            self[keyPath: remaining] = self[keyPath: total]
+            let clampedElapsed = max(0, min(initialElapsed, self[keyPath: total]))
+            self[keyPath: remaining] = max(0, self[keyPath: total] - clampedElapsed)
             
         case .dateDriven(let startAtKeyPath, let startDate):
             self[keyPath: startAtKeyPath] = startDate ?? Date()

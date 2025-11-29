@@ -10,20 +10,19 @@ import SwiftUI
 
 struct SplitCategoryPicker: View {
     @ObservedObject var userData: UserData
+    @State private var showSortSheet: Bool = false
     @State private var sortOption: ExerciseSortOption          // editable
     @Binding var selectedCategory: CategorySelections          // editable
 
     // ── flags copied once from Settings – not edited inside this View ──
     let enableSortPicker: Bool
     let saveSelectedSort: Bool
+    let templateCategories: [SplitCategory]?
+    let onChange: (ExerciseSortOption) -> Void
+    
     let sortByTemplateCategories: Bool
 
     private let templateSortingEnabled: Bool
-    var templateCategories: [SplitCategory]?
-    var onChange: (ExerciseSortOption) -> Void
-    
-    @State private var showSortSheet = false
-
 
     init(
         userData: UserData,
@@ -48,7 +47,6 @@ struct SplitCategoryPicker: View {
         } else {
             _sortOption = State(initialValue: userData.sessionTracking.exerciseSortOption)
         }
-
         self.onChange = onChange
     }
     
@@ -82,7 +80,6 @@ struct SplitCategoryPicker: View {
             .presentationDetents([.fraction(0.9)])
             .presentationDragIndicator(.visible)
         }
-
     }
     
     private var SortButton: some View {
@@ -172,6 +169,7 @@ struct SplitCategoryPicker: View {
                     }
                 }
             }
+            
             .onChange(of: sortOption) { selectedCategory = sortOption.getDefaultSelection(templateCategories: templateCategories) }
         }
     }

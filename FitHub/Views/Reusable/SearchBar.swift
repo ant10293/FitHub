@@ -44,7 +44,6 @@ struct SearchBar: View {
         .trailingIconButton(
             systemName: "xmark.circle.fill",
             isShowing: !text.isEmpty,
-            isButton: false,
             action: {
                 text = ""
             }

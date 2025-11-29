@@ -11,6 +11,7 @@ import SwiftUI
 struct WeightIncrementation: View {
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
+    @StateObject private var toast = ToastManager()
     @State private var platedRounding: Double = 5
     @State private var independentPlatedRounding: Double = 2.5
     @State private var pinLoadedRounding: Double = 2.5
@@ -19,7 +20,7 @@ struct WeightIncrementation: View {
 
     var body: some View {
         VStack(spacing: 30) {
-            if ctx.toast.showingSaveConfirmation { InfoBanner(title: "Preferences Saved Successfully!") }
+            if toast.showingSaveConfirmation { InfoBanner(title: "Preferences Saved Successfully!") }
             
             EquipmentRoundingRow(
                 value: $platedRounding,
@@ -53,7 +54,7 @@ struct WeightIncrementation: View {
                 }
             )
             
-            if !ctx.toast.showingSaveConfirmation && !kbd.isVisible {
+            if !toast.showingSaveConfirmation && !kbd.isVisible {
                 RectangularButton(title: "Save", action: saveChanges)
                     .padding(.top)
             }
@@ -119,7 +120,7 @@ struct WeightIncrementation: View {
         ctx.userData.settings.roundingPreference.setRounding(weight: pinLoadedRounding, for: .pinLoaded)
         ctx.userData.settings.roundingPreference.setRounding(weight: smallWeightsRounding, for: .smallWeights)
         
-        ctx.toast.showSaveConfirmation()  // Trigger the notification
+        toast.showSaveConfirmation()  // Trigger the notification
     }
     
     struct EquipmentRoundingRow: View {

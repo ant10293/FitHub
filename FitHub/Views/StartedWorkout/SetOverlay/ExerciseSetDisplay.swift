@@ -41,8 +41,10 @@ struct ExerciseSetDisplay: View {
                 .padding(.bottom)
                 
                 if !hideStartButton, let seconds = planned.secondsValue {
+                    let completedSec = completed.secondsValue ?? 0
+                    let isResume = completedSec > 0 && completedSec < seconds
                     RectangularButton(
-                        title: "Start Countdown",
+                        title: isResume ? "Resume Countdown" : "Start Countdown",
                         systemImage: "play.fill",
                         enabled: seconds > 0,
                         bgColor: .green,
@@ -88,11 +90,12 @@ struct ExerciseSetDisplay: View {
             PlannedTimerRing(
                 manager: timerManager,
                 planned: planned,
+                completed: completed,
                 onCompletion: { completedMetric in
                     showTimer = false
-                    hideStartButton = true
                     setDetail.completed = completedMetric
                     completed = completedMetric
+                    toggleHideStartIfNeeded()
                 }
             )
             .presentationDetents([.fraction(0.75)])
@@ -101,7 +104,18 @@ struct ExerciseSetDisplay: View {
     }
     
     private var hideCompletedEntry: Bool {
-        planned.secondsValue != nil && !hideStartButton
+        let completedSec = completed.secondsValue ?? 0
+        return planned.secondsValue != nil && completedSec <= 0
+    }
+    
+    private func toggleHideStartIfNeeded() {
+        if let plannedSec = planned.secondsValue, let completedSec = completed.secondsValue {
+            if completedSec >= plannedSec {
+                hideStartButton = true
+            } else {
+                hideStartButton = false
+            }
+        }
     }
     
     @ViewBuilder private var setLabel: some View {
@@ -162,8 +176,13 @@ struct ExerciseSetDisplay: View {
                     set: {
                         planned = $0
                         setDetail.planned = $0
-                        completed = $0
-                        setDetail.completed = $0
+                        switch planned {
+                        case .reps:
+                            completed = $0
+                            setDetail.completed = $0
+                        case .cardio, .hold:
+                            toggleHideStartIfNeeded()
+                        }
                     }
                 ),
                 load: load,
@@ -195,16 +214,17 @@ struct ExerciseSetDisplay: View {
         rpe = setDetail.rpe ?? 1
         load = setDetail.load
         planned = setDetail.planned
-
-        switch planned {
-        case .reps(let plannedReps):
-            completed = .reps(plannedReps)
-
-        case .hold(let plannedTime):
-            completed = .hold(TimeSpan(seconds: plannedTime.inSeconds))
-           
-        case .cardio(let timeSpeed):
-            completed = .cardio(TimeOrSpeed(showing: .time, time: timeSpeed.time, speed: timeSpeed.speed))
+        
+        if let comp = setDetail.completed {
+            completed = comp
+            toggleHideStartIfNeeded()
+        } else {
+            switch planned {
+            case .reps:
+                completed = planned
+            case .hold, .cardio:
+                completed = planned.zeroValue
+            }
         }
     }
 

@@ -3,7 +3,6 @@ import Symbols
 
 struct StartedWorkoutView: View {
     @EnvironmentObject private var ctx: AppContext
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var kbd = KeyboardManager.shared
@@ -59,7 +58,7 @@ struct StartedWorkoutView: View {
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
             if oldPhase == .active, newPhase == .inactive,
-               !viewModel.workoutCompleted {
+               !viewModel.workoutEnded {
                 viewModel.saveWorkoutInProgress(userData: ctx.userData)
             }
         }
@@ -167,7 +166,13 @@ struct StartedWorkoutView: View {
     }
     
     private var backButton: some View {
-        Button(action: { showingExitConfirmation = true }) {
+        Button(action: {
+            if viewModel.noSetsCompleted {
+                viewModel.endWorkoutAndDismiss(ctx: ctx, completion: onExit)
+            } else {
+                showingExitConfirmation = true
+            }
+        }) {
             HStack {
                 Image(systemName: "arrow.left")
                 Text("Back")
