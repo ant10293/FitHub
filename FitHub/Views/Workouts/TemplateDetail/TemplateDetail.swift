@@ -77,7 +77,7 @@ struct TemplateDetail: View {
         .sheet(isPresented: $showingExerciseSelection) { exerciseSelectionSheet }
         .sheet(item: $selectedExercise, onDismiss: { handleSheetDismiss() }) { exercise in
             if showingDetailView {
-                ExerciseDetailView(viewingDuringWorkout: true, exercise: exercise)
+                ExerciseDetailView(exercise: exercise, viewingAsSheet: true)
             } else if showingAdjustmentsView {
                 AdjustmentsView(exercise: exercise)
             }

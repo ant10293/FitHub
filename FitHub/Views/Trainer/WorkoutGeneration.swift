@@ -19,6 +19,7 @@ struct WorkoutGeneration: View {
     @State private var currentTemplateIndex: Int = 0
     @State private var selectedExercise: Exercise?
     @State private var selectedTemplate: SelectedTemplate?
+    @State private var exerciseForDetail: Exercise?
     @State private var alertMessage: String = ""
     @State private var replacedExercises: [String] = [] // Define replacedExercises here
     @State private var isReplacing: Bool = false
@@ -66,6 +67,9 @@ struct WorkoutGeneration: View {
             .navigationDestination(isPresented: $showingCustomizationForm) { WorkoutCustomization() }
             .alert(isPresented: $showAlert) { Alert(title: Text("Template Update"), message: Text(alertMessage), dismissButton: .default(Text("OK"))) }
             .overlay(showingExerciseOptions ? exerciseOptions : nil)
+            .sheet(item: $exerciseForDetail) { exercise in
+                ExerciseDetailView(exercise: exercise, viewingAsSheet: true)
+            }
         }
     }
     
@@ -122,40 +126,37 @@ struct WorkoutGeneration: View {
     
     // TODO: should shrink and display a message that no template(s) exist
     private var exerciseList: some View {
-        List {
+        Group {
             if let template = templates[safe: currentTemplateIndex] {
-                Section {
-                    if template.exercises.isEmpty {
+                if template.exercises.isEmpty {
+                    List {
                         Text("No exercises defined for this template.")
                             .foregroundStyle(.secondary)
                             .padding(.vertical)
-                    } else {
-                        ForEach(template.exercises, id: \.id) { exercise in
-                            ExerciseRow(
-                                exercise,
-                                secondary: true,
-                                heartOverlay: true,
-                                favState: FavoriteState.getState(for: exercise, userData: ctx.userData)
-                            ) {
-                                Button(action: {
-                                    selectedExercise = exercise
-                                    showingExerciseOptions = true
-                                }) {
-                                    Image(systemName: "ellipsis")
-                                        .imageScale(.medium)
-                                        .contentShape(Rectangle())
-                                }
-                                .buttonStyle(PlainButtonStyle())
-                            } detail: {
-                                exercise.setsSubtitle
-                                    .font(.subheadline)
-                                    .foregroundStyle(Color.secondary)
-                            }
-                        }
                     }
-                } header: {
-                    Text("\(template.numExercises) Exercises")
-                        .font(.caption)
+                } else {
+                    TemplateExerciseList(
+                        exercises: template.exercises,
+                        userData: ctx.userData,
+                        secondary: true,
+                        heartOverlay: true
+                    ) { exercise in
+                        Button(action: {
+                            selectedExercise = exercise
+                            showingExerciseOptions = true
+                        }) {
+                            Image(systemName: "ellipsis")
+                                .imageScale(.medium)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    } detail: { exercise in
+                        exercise.setsSubtitle
+                            .font(.subheadline)
+                            .foregroundStyle(Color.secondary)
+                    } onTap: { exercise, _ in
+                        exerciseForDetail = exercise
+                    }
                 }
             }
         }

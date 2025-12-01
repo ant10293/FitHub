@@ -253,9 +253,7 @@ extension Exercise {
     
     /// Returns `true` if *every* piece of required equipment can be satisfied
     /// either directly or via a declared alternative.    
-    func canPerform(equipmentData: EquipmentData, equipmentSelected: Set<GymEquipment.ID>) -> Bool {
-        let available = equipmentSelected
-
+    func canPerform(equipmentData: EquipmentData, available: Set<GymEquipment.ID>) -> Bool {
         // Ask: if we try to build the equipment set dynamically,
         // what would we end up using?
         let chosen = equipmentData.equipmentForExercise(
@@ -392,9 +390,52 @@ extension Exercise {
         let setStructure = userData.workoutPrefs.setStructure
         let rounding     = userData.settings.roundingPreference
         
+        // Extract intensity settings
+        let minIntensityPct = Double(userData.settings.setIntensity.minIntensity) / 100.0
+        let maxIntensityPct = Double(userData.settings.setIntensity.maxIntensity) / 100.0
+        let fixedIntensityPct = Double(userData.settings.setIntensity.fixedIntensity) / 100.0
+        let topSet = userData.settings.setIntensity.topSet
+        
+        // Helper function to calculate intensity percentage for a given set
+        func intensityPercentage(for setNumber: Int, totalSets: Int) -> Double {
+            // If topSet is .allSets or setStructure is .fixed, use fixed intensity
+            if topSet == .allSets || setStructure == .fixed {
+                return fixedIntensityPct
+            }
+            
+            // For single set, use max intensity
+            guard totalSets > 1 else { return maxIntensityPct }
+            
+            switch topSet {
+            case .firstSet:
+                // First set = max, last set = min, interpolate in between
+                if setNumber == 1 {
+                    return maxIntensityPct
+                } else if setNumber == totalSets {
+                    return minIntensityPct
+                } else {
+                    let progress = Double(setNumber - 1) / Double(totalSets - 1)
+                    return maxIntensityPct - (maxIntensityPct - minIntensityPct) * progress
+                }
+            case .lastSet:
+                // First set = min, last set = max, interpolate in between
+                if setNumber == 1 {
+                    return minIntensityPct
+                } else if setNumber == totalSets {
+                    return maxIntensityPct
+                } else {
+                    let progress = Double(setNumber - 1) / Double(totalSets - 1)
+                    return minIntensityPct + (maxIntensityPct - minIntensityPct) * progress
+                }
+            case .allSets:
+                return fixedIntensityPct
+            }
+        }
+        
         for n in 1...numSets {
             let load: SetLoad
             let planned: SetMetric
+            let intensityPct = min(1.0, max(0.0, intensityPercentage(for: n, totalSets: numSets)))
 
             switch peak {
                 // ───────── holds: drive off saved TimeSpan ─────────
@@ -402,45 +443,65 @@ extension Exercise {
             case .maxHold(let ts):
                 let maxSec = max(1, ts.inSeconds)
                 let sec: Int
+                
+                // Combine set structure with intensity settings
                 switch setStructure {
                 case .pyramid:
-                    let minSec = max(1, Int(Double(maxSec) * 0.80)) // 80% → … → 100% across the sets
-                    let step   = max(1, (maxSec - minSec) / max(1, numSets - 1))
-                    sec = min(maxSec, minSec + step * (n - 1))
-
+                    // Pyramid: start at min intensity, progress to max intensity
+                    // Map intensity percentage (min to max) to seconds (minSec to maxSec)
+                    let minSec = max(1, Int(round(Double(maxSec) * minIntensityPct)))
+                    let progress = (intensityPct - minIntensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
+                    sec = max(1, min(maxSec, minSec + Int(round(Double(maxSec - minSec) * progress))))
+                    
                 case .reversePyramid:
-                    let dec = max(1, Int(Double(maxSec) * 0.10)) // Start at 100%, drop ~10% per set
-                    sec = max(1, maxSec - dec * (n - 1))
-
+                    // Reverse pyramid: start at max intensity, decrease to min intensity
+                    let maxSecAtIntensity = max(1, Int(round(Double(maxSec) * maxIntensityPct)))
+                    let minSecAtIntensity = max(1, Int(round(Double(maxSec) * minIntensityPct)))
+                    let progress = (maxIntensityPct - intensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
+                    sec = max(1, min(maxSec, maxSecAtIntensity - Int(round(Double(maxSecAtIntensity - minSecAtIntensity) * progress))))
+                    
                 case .fixed:
-                    sec = min(maxSec, max(1, Int(Double(maxSec) * 0.95))) // ~95% of max, constant
+                    // Fixed: use fixed intensity
+                    sec = max(1, Int(round(Double(maxSec) * fixedIntensityPct)))
                 }
+                
                 load = .none // should change if we add weighted isometric
                 planned = .hold(TimeSpan(seconds: sec))
 
             // ───────── bodyweight reps: drive off saved max reps ─────────
             case .maxReps(let maxReps):
                 let reps: Int
+                
+                // Combine set structure with intensity settings
                 switch setStructure {
                 case .pyramid:
-                    if numSets == 1 || n == numSets {
-                        reps = maxReps
-                    } else {
-                        let progress = Double(n - 1) / Double(numSets - 1) // 0.0 to 1.0
-                        let targetPercentage = 0.8 + (0.2 * progress) // 80% to 100%
-                        reps = Int(round(Double(maxReps) * targetPercentage))
-                    }
+                    // Pyramid: start at min intensity, progress to max intensity
+                    let minReps = max(1, Int(round(Double(maxReps) * minIntensityPct)))
+                    let maxRepsAtIntensity = max(1, Int(round(Double(maxReps) * maxIntensityPct)))
+                    let progress = (intensityPct - minIntensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
+                    reps = max(1, min(maxReps, minReps + Int(round(Double(maxRepsAtIntensity - minReps) * progress))))
+                    
                 case .reversePyramid:
-                    let dec = max(1, Int(0.10 * Double(maxReps))) // Start at 100%, drop ~10% per set
-                    reps = max(1, maxReps - dec * (n - 1))
+                    // Reverse pyramid: start at max intensity, decrease to min intensity
+                    let maxRepsAtIntensity = max(1, Int(round(Double(maxReps) * maxIntensityPct)))
+                    let minReps = max(1, Int(round(Double(maxReps) * minIntensityPct)))
+                    let progress = (maxIntensityPct - intensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
+                    reps = max(1, min(maxReps, maxRepsAtIntensity - Int(round(Double(maxRepsAtIntensity - minReps) * progress))))
+                    
                 case .fixed:
-                    reps = max(1, Int(Double(maxReps) * 0.95)) // ~95% of max, constant
+                    // Fixed: use fixed intensity
+                    reps = max(1, Int(round(Double(maxReps) * fixedIntensityPct)))
                 }
+                
                 load = .none
                 planned = .reps(reps)
 
             // ───────── weighted reps: compute target from 1RM ─────────
             case .oneRepMax(let oneRM):
+                // Calculate target 1RM based on intensity percentage
+                let target1RM = oneRM.inKg * intensityPct
+                
+                // Determine reps based on set structure (pyramid/reverse pyramid/fixed)
                 let reps: Int
                 switch setStructure {
                 case .pyramid:
@@ -450,27 +511,43 @@ extension Exercise {
                 case .fixed:
                     reps = (range.lowerBound + range.upperBound) / 2
                 }
-                let target = SetDetail.calculateSetWeight(oneRm: oneRM, reps: reps)
-                load = .weight(equipmentData.roundWeight(target, for: equipmentRequired, rounding: rounding))
+                
+                // Calculate weight such that weight × reps estimates to target1RM
+                // Formula: 1RM = weight / percent(at: reps)  =>  weight = 1RM * percent(at: reps)
+                let formula = OneRMFormula.canonical
+                let percentAtReps = formula.percent(at: reps)
+                let targetWeight = Mass(kg: target1RM * percentAtReps)
+                let roundedWeight = equipmentData.roundWeight(targetWeight, for: equipmentRequired, rounding: rounding)
+                
+                load = .weight(roundedWeight)
                 planned = .reps(max(1, reps))
                 
             case .hold30sLoad(let l30):
-                // Plan: constant 30s holds; vary load by structure %.
+                // Plan: constant 30s holds; vary load by set structure and intensity.
                 let tRefSec = WeightedHoldFormula.canonical.inSeconds
-                let pct: Double
+                let targetKg: Double
+                
+                // Combine set structure with intensity settings
                 switch setStructure {
                 case .pyramid:
-                    // 80% → 100% across sets
-                    let progress = (numSets > 1) ? Double(n - 1) / Double(numSets - 1) : 1.0
-                    pct = 0.80 + 0.20 * progress
+                    // Pyramid: start at min intensity, progress to max intensity
+                    let minKg = max(0.0, l30.inKg * minIntensityPct)
+                    let maxKgAtIntensity = max(0.0, l30.inKg * maxIntensityPct)
+                    let progress = (intensityPct - minIntensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
+                    targetKg = minKg + (maxKgAtIntensity - minKg) * progress
+                    
                 case .reversePyramid:
-                    // 100% then ~90% then ~80%...
-                    pct = max(0.50, 1.00 - 0.10 * Double(n - 1))
+                    // Reverse pyramid: start at max intensity, decrease to min intensity
+                    let maxKgAtIntensity = max(0.0, l30.inKg * maxIntensityPct)
+                    let minKg = max(0.0, l30.inKg * minIntensityPct)
+                    let progress = (maxIntensityPct - intensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
+                    targetKg = maxKgAtIntensity - (maxKgAtIntensity - minKg) * progress
+                    
                 case .fixed:
-                    // ~95% steady
-                    pct = 0.95
+                    // Fixed: use fixed intensity
+                    targetKg = max(0.0, l30.inKg * fixedIntensityPct)
                 }
-                let targetKg = max(0.0, l30.inKg * pct)
+                
                 let rounded = equipmentData.roundWeight(Mass(kg: targetKg), for: equipmentRequired, rounding: rounding)
                 load = .weight(rounded)
                 planned = .hold(TimeSpan(seconds: tRefSec))
@@ -489,48 +566,58 @@ extension Exercise {
     
     mutating func createWarmupDetails(equipmentData: EquipmentData, userData: UserData) {
         guard let baseline = setDetails.first else { return }
-
-        let setStructure = userData.workoutPrefs.setStructure
-        let rounding = userData.settings.roundingPreference
         
-        let totalWarmUpSets: Int
-        let reductionSteps: [Double]
-        let repSteps: [Int] // reps or seconds, depending on metric
-        switch setStructure {
-        case .pyramid:
-            totalWarmUpSets = 2
-            reductionSteps = [0.50, 0.65]
-            repSteps = [12, 10]
-        case .reversePyramid, .fixed:
-            totalWarmUpSets = 3
-            reductionSteps = [0.50, 0.65, 0.80]
-            repSteps = [10, 8, 6]
+        // Only create warmup sets for weight × reps exercises
+        guard case (.weight(let firstSetWeight), .reps(let firstSetReps)) = (baseline.load, baseline.planned) else {
+            return
+        }
+
+        let rounding = userData.settings.roundingPreference
+        let warmupSettings = userData.settings.warmupSettings
+        
+        // Calculate warmup set count based on working set count
+        let workingSets = setDetails.count
+        let totalWarmUpSets = warmupSettings.setCountModifier.warmupSetCount(for: workingSets)
+        guard totalWarmUpSets > 0 else { return }
+        
+        // Extract intensity settings
+        let minIntensityPct = Double(warmupSettings.minIntensity) / 100.0
+        let maxIntensityPct = Double(warmupSettings.maxIntensity) / 100.0
+        
+        // Helper function to calculate intensity percentage for a given warmup set
+        func intensityPercentage(for setNumber: Int, totalSets: Int) -> Double {
+            // For single warmup set, use min intensity
+            guard totalSets > 1 else { return minIntensityPct }
+            
+            // Interpolate from min (first set) to max (last set)
+            if setNumber == 1 {
+                return minIntensityPct
+            } else if setNumber == totalSets {
+                return maxIntensityPct
+            } else {
+                let progress = Double(setNumber - 1) / Double(totalSets - 1)
+                return minIntensityPct + (maxIntensityPct - minIntensityPct) * progress
+            }
         }
         
         var details: [SetDetail] = []
+        let baseKg = firstSetWeight.inKg
 
         for i in 0..<totalWarmUpSets {
             let idx = i + 1
+            let intensityPct = intensityPercentage(for: idx, totalSets: totalWarmUpSets)
             
-            // rep, and hold based exercises should not require a warmup.
-            switch (baseline.load, baseline.planned) {
-            case (.weight(let weight), .reps):
-                let reps = repSteps[i]
-                let baseKg = weight.inKg
-                let targetKg = baseKg * reductionSteps[i]
-                var warmW = Mass(kg: targetKg)
-                warmW = equipmentData.roundWeight(warmW, for: equipmentRequired, rounding: rounding)
-                details.append(
-                    SetDetail(
-                        setNumber: idx,
-                        load: .weight(warmW),
-                        planned: .reps(reps)
-                    )
+            // Apply intensity to first working set's weight
+            let targetKg = baseKg * intensityPct
+            let roundedWeight = equipmentData.roundWeight(Mass(kg: targetKg), for: equipmentRequired, rounding: rounding)
+            
+            details.append(
+                SetDetail(
+                    setNumber: idx,
+                    load: .weight(roundedWeight),
+                    planned: .reps(firstSetReps) // Keep reps the same as first working set
                 )
-                
-            default:
-                break
-            }
+            )
         }
 
         warmUpDetails = details

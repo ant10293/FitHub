@@ -71,40 +71,47 @@ struct Setup: Codable {
 
 // settings         = Settings()
 struct Settings: Codable, Equatable {
-    var restTimerEnabled: Bool = true
     var progressiveOverload: Bool = true
-    var allowDeloading: Bool = true
-    var userLanguage: Languages = .english
-    var selectedTheme: Themes = .defaultMode // Default style
-    var roundingPreference: RoundingPreference = RoundingPreference()
     var progressiveOverloadPeriod: Int = 6 // Default to 6 weeks
     var progressiveOverloadStyle: ProgressiveOverloadStyle = .dynamic // Default style
-    var muscleRestDuration: Int = 48 // Default to 48 hours
-    var deloadIntensity: Int = 85
-    //var relativeSetIntensity: Int = 100 // relative to max
     var customOverloadFactor: Double?
+
+    var allowDeloading: Bool = true
     var periodUntilDeload: Int = 4
+    var deloadIntensity: Int = 85
+    
+    var userLanguage: Languages = .english
+    var selectedTheme: Themes = .defaultMode // Default style
+    var roundingPreference: RoundingPreference = .init()
+    var muscleRestDuration: Int = 48 // Default to 48 hours
+    
+    var setIntensity: SetIntensitySettings = .init()
+    var warmupSettings: WarmupSettings = .init()
+    
     var useDateOnly: Bool = true // If true, only the date is considered
-    var workoutReminders: Bool = true 
-    var notifications: Notifications = Notifications()
     var defaultWorkoutTime: DateComponents?  // Default workout time, [.hour, .minute]
+
+    var workoutReminders: Bool = true
+    var notifications: Notifications = .init()
+    
     var enableSortPicker: Bool = true // disable ExerciseSortOptions picker
     var saveSelectedSort: Bool = false // save selections as new exerciseSortOption
     var sortByTemplateCategories: Bool = true // sort by template categories when editing a template with categories
     var hideUnequippedExercises: Bool = false // hide exercises that the user DOES NOT have equipment for in exercise selection or or exercise view
     var hideDifficultExercises: Bool = false // hide exercises that would be too difficult for the user
     var hideDislikedExercises: Bool = false // hide exercises that the user has disliked
-    //var hiddenExercises: Set<Exercise.ID> = []
+    
+    var restTimerEnabled: Bool = true
     var hideRpeSlider: Bool = false
     var hideCompletedInput: Bool = false
     var hideExerciseImage: Bool = false
+    
+    //var hiddenExercises: Set<Exercise.ID> = []
     //var monthlyStrengthUpdate: Bool = true
 }
 
 // evaluation       = Evaluation()
 struct Evaluation: Codable {
-    // var fitnessScore: Int = 0
-    // var strengthPercentile: Int = 0
     var strengthLevel: StrengthLevel = .beginner
     var determineStrengthLevelDate: Date?
     var isFamiliarWithGym: Bool = false // change this after certain number of completed workouts, or allow manual change

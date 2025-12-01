@@ -14,6 +14,7 @@ struct AffiliateRegistrationView: View {
     @StateObject private var kbd = KeyboardManager.shared
     @StateObject private var admin = ReferralCodeAdmin()
     
+    @State private var anonAcctBlocker: Bool = false
     @State private var fullName: String = ""
     @State private var email: String = ""
     @State private var notes: String = ""
@@ -142,65 +143,73 @@ struct AffiliateRegistrationView: View {
                             }
                         }
                     } else {
-                        // INPUT STATE
-                        AffiliateInfoForm(
-                            fullName: $fullName,
-                            email: $email,
-                            notes: $notes,
-                            allowEditFullName: true,
-                            allowEditEmail: true,
-                            allowEditNotes: true,
-                            emailErrorMessage: emailValidationError(email)
-                        )
-                        
-                        Text("Create Custom Code")
-                            .font(.headline)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            TextField("Custom code (optional)", text: $customCode)
-                                .textInputAutocapitalization(.characters)
-                                .autocorrectionDisabled(true)
-                                .inputStyle()
-                                .onChange(of: customCode) { _, _ in
-                                    if errorMessage?.forCustomCode == true {
-                                        errorMessage = nil
-                                    }
-                                }
+                        if anonAcctBlocker {
+                            EmptyState(
+                                systemName: "nosign",
+                                title: "Affiliate Registration Requires Account",
+                                subtitle: "Please navigate to 'Home' → 'Profile' and then Sign-In or create an account."
+                            )
+                        } else {
+                            // INPUT STATE
+                            AffiliateInfoForm(
+                                fullName: $fullName,
+                                email: $email,
+                                notes: $notes,
+                                allowEditFullName: true,
+                                allowEditEmail: true,
+                                allowEditNotes: true,
+                                emailErrorMessage: emailValidationError(email)
+                            )
                             
-                            ErrorFooter(message: customCodeValidationError(customCode))
-                        }
-                        
-                        // Terms acceptance for new users
-                        if needsTermsAcceptance {
-                            Text("Terms and Conditions")
+                            Text("Create Custom Code")
                                 .font(.headline)
                             
-                            termsAcceptanceButton(action: {
-                                acceptedTerms.toggle()
-                            })
-                        }
-                        
-                        Spacer()
-                        
-                        Group {
-                            if let error = errorMessage {
-                                ErrorFooter(message: error.localizedDescription)
+                            VStack(alignment: .leading, spacing: 4) {
+                                TextField("Custom code (optional)", text: $customCode)
+                                    .textInputAutocapitalization(.characters)
+                                    .autocorrectionDisabled(true)
+                                    .inputStyle()
+                                    .onChange(of: customCode) { _, _ in
+                                        if errorMessage?.forCustomCode == true {
+                                            errorMessage = nil
+                                        }
+                                    }
+                                
+                                ErrorFooter(message: customCodeValidationError(customCode))
                             }
                             
-                            if isGenerating { ProgressView() }
+                            // Terms acceptance for new users
+                            if needsTermsAcceptance {
+                                Text("Terms and Conditions")
+                                    .font(.headline)
+                                
+                                termsAcceptanceButton(action: {
+                                    acceptedTerms.toggle()
+                                })
+                            }
+                            
+                            Spacer()
+                            
+                            Group {
+                                if let error = errorMessage {
+                                    ErrorFooter(message: error.localizedDescription)
+                                }
+                                
+                                if isGenerating { ProgressView() }
+                            }
+                            .centerHorizontally()
+                            
+                            RectangularButton(
+                                title: buttonTitle,
+                                enabled: isButtonEnabled,
+                                fontWeight: .bold,
+                                action: generateCode
+                            )
+                            
+                            Text("Your referral code will be generated from your name and stored so signups can be attributed.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                         }
-                        .centerHorizontally()
-                        
-                        RectangularButton(
-                            title: buttonTitle,
-                            enabled: isButtonEnabled,
-                            fontWeight: .bold,
-                            action: generateCode
-                        )
-                        
-                        Text("Your referral code will be generated from your name and stored so signups can be attributed.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
                     }
                     
                     Spacer(minLength: 0)
@@ -266,6 +275,12 @@ struct AffiliateRegistrationView: View {
     private func initializeFromUserData() {
         fullName = ctx.userData.profile.displayName(.full)
         email = ctx.userData.profile.email
+        
+        // only initialize data if account is not anonymous
+        guard !AuthService.isAnonymous() else {
+            anonAcctBlocker = true
+            return
+        }
         
         Task {
             currentTermsVersion = await AffiliateTermsConstants.getCurrentVersion()

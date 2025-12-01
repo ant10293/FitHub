@@ -82,7 +82,7 @@ final class ExerciseSelector {
             for (i, ex) in exercises.enumerated() {
                 if let s = ex.splitCategory { split[s, default: []].append(i) }
                 if let g = ex.groupCategory(forGeneration: true) { group[g, default: []].append(i) }
-                perf.append(ex.canPerform(equipmentData: equipment, equipmentSelected: selection))
+                perf.append(ex.canPerform(equipmentData: equipment, available: selection))
             }
             
             self.bySplit = split

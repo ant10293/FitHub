@@ -1,5 +1,5 @@
 //
-//  DeloadSettings.swift
+//  DeloadSettingsView.swift
 //  FitHub
 //
 //  Created by Anthony Cantu on 6/17/25.
@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-
-struct DeloadSettings: View {
+struct DeloadSettingsView: View {
     @ObservedObject var userData: UserData
     @State private var deloadIntensity: Int
     
@@ -33,17 +32,15 @@ struct DeloadSettings: View {
                     Slider(
                         value: Binding(
                             get: { Double(deloadIntensity) },
-                            set: { deloadIntensity = Int($0) }
+                            set: { newValue in
+                                deloadIntensity = Int(newValue)
+                                userData.settings.deloadIntensity = Int(newValue)
+                            }
                         ),
                         in: 1...100,
                         step: 1
                     )
                     .accessibilityValue("\(deloadIntensity) percent")
-                    .onChange(of: deloadIntensity) { old, new in
-                        if old != new {
-                            userData.settings.deloadIntensity = new
-                        }
-                    }
                 }
             } header: {
                 Text("Deload Intensity")

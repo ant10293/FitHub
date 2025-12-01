@@ -1,5 +1,5 @@
 //
-//  OverloadStyle.swift
+//  OverloadSettingsView.swift
 //  FitHub
 //
 //  Created by Anthony Cantu on 5/3/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-struct OverloadSettings: View {
+struct OverloadSettingsView: View {
     @ObservedObject var userData: UserData
     var fromCalculator: Bool = false
     

@@ -48,7 +48,7 @@ struct OverloadCalculator: View {
         .navigationBarTitle("Progressive Overload", displayMode: .inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                NavigationLink(destination: LazyDestination { OverloadSettings(userData: ctx.userData, fromCalculator: true) }) {
+                NavigationLink(destination: LazyDestination { OverloadSettingsView(userData: ctx.userData, fromCalculator: true) }) {
                     Image(systemName: "slider.horizontal.3")
                         .imageScale(.large)
                         .padding()

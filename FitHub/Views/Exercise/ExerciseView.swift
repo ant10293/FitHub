@@ -24,7 +24,7 @@ struct ExerciseView: View {
         .navigationBarTitle("Exercises", displayMode: .inline)
         .navigationDestination(isPresented: $viewDetail) {
             if let exerciseId = selectedExerciseId, let exercise = ctx.exercises.exercise(for: exerciseId) {
-                ExerciseDetailView(viewingDuringWorkout: false, exercise: exercise)
+                ExerciseDetailView(exercise: exercise)
             } else {
                 // exercise got deleted while we were on the detail screen → pop
                 Color.clear.onAppear { selectedExerciseId = nil; viewDetail = false }

@@ -115,7 +115,7 @@ struct PlateVisualizer: View {
         var bestImplementsCount = 1
         var bestWeight = weight
         var bestMovementPegMultiplier: Double = 1.0
-        
+
         for g in gear {
             guard let bw = g.baseWeight else { continue }
             guard let impl = g.implementation else { continue }

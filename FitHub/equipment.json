@@ -956,18 +956,42 @@
         "equCategory" : "Cardio Machines"
     },
     {
-      "name": "Close V-Handle",
+      "name": "Double D-Handle",
       "id": "C2E1E6F3-38C8-4E05-9F5C-7AC7E6C3E5C1",
-      "image": "close_grip_v_attachment",
-      "aliases": ["Close-grip handle", "Neutral-grip V handle", "V bar handle"],
+      "image": "double_d_handle",
+      "aliases": ["Close-grip handle", "Neutral-grip V handle", "Close V-Handle"],
       "description": "Neutral-grip cable handle suitable for rows, pulldowns, and multi-purpose pulling movements.",
       "equCategory": "Attachments"
     },
     {
-      "name": "Wide Pulldown Bar",
+      "name": "Single D-Handles",
+      "id": "716c723d-b5be-4bcf-bb66-4f5fdc2d310f",
+      "image": "single_d_handles",
+      "aliases": ["D-Grip Handle", "Single Cable Handle"],
+      "description": "A universal single-hand cable attachment used for unilateral pulling and pressing exercises such as rows, flyes, curls, and triceps extensions.",
+      "equCategory": "Attachments"
+    },
+    {
+      "name": "Neutral-Grip Pulldown Bar",
+      "id": "3c63cd14-3e3f-4f4b-8aa4-dcd1a975251a",
+      "image": "neutral_grip_pulldown_bar",
+      "aliases": ["Parallel Grip Pulldown Bar", "Neutral Pulldown Handle"],
+      "description": "A pulldown bar with parallel (neutral) hand positioning to reduce shoulder stress and emphasize the lats and upper back during pulldowns or low-row cables.",
+      "equCategory": "Attachments"
+    },
+    {
+      "name": "Multi-Grip Pulldown Bar",
+      "id": "668cfc00-6e0f-46a8-9ef9-8d52843575a2",
+      "image": "multi_grip_pulldown_bar",
+      "aliases": ["Multi-Angle Pulldown Bar"],
+      "description": "A lat pulldown bar featuring multiple grip widths and angles that allow varied targeting of the back muscles and improved customization of pulling movements.",
+      "equCategory": "Attachments"
+    },
+    {
+      "name": "Wide-Grip Pulldown Bar",
       "id": "5C4D9A21-7F5E-4714-9E5D-8A4D9BA1C7E3",
-      "image": "lat_pulldown_attachment",
-      "aliases": ["Wide grip bar", "Angled wide bar"],
+      "image": "wide_grip_pulldown_bar",
+      "aliases": ["Lat Pulldown Bar", "Angled wide bar"],
       "description": "Angled wide bar used for vertical or horizontal cable pulling variations with multiple grip widths.",
       "equCategory": "Attachments"
     },
@@ -980,7 +1004,15 @@
       "equCategory": "Attachments"
     },
     {
-      "name": "Straight Bar",
+      "name": "EZ-Bar Attachment",
+      "id": "e7ad7f4b-4fb6-4f27-9a60-f16e1c851d16",
+      "image": "ez_bar_attachment",
+      "aliases": ["Cambered Bar Attachment", "Curved Curl Bar"],
+      "description": "A curved cable attachment designed to reduce wrist strain during bicep curls, triceps pushdowns, and upright rows. Provides multiple grip angles for ergonomic arm training.",
+      "equCategory": "Attachments"
+    },
+    {
+      "name": "Straight Bar Attachment",
       "id": "F1D8A3B2-6C54-4F0D-9B72-1A6E3C8F4D29",
       "image": "straight_bar_attachment",
       "aliases": ["Short straight bar", "Cable straight bar"],
@@ -988,11 +1020,19 @@
       "equCategory": "Attachments"
     },
     {
-      "name": "Angled V-Bar",
+      "name": "Angled V-Bar Attachment",
       "id": "9E3B7C2A-4D1F-48A7-8C5B-0F3A9D2E7B61",
       "image": "v_bar_attachment",
       "aliases": ["V-bar", "Angled pressdown bar"],
       "description": "Angled steel bar with neutral grip positions for cable pressdowns and multi-angle pulling.",
+      "equCategory": "Attachments"
+    },
+    {
+      "name": "Ankle Strap Attachments",
+      "id": "65a9dee5-ed46-4f4b-98b2-8df3ad56faa7",
+      "image": "ankle_strap_attachments",
+      "aliases": ["Leg Strap", "Ankle Cuff"],
+      "description": "A padded ankle cuff designed for cable machines to target the legs and glutes with movements such as hip abductions, extensions, kickbacks, and hamstring curls.",
       "equCategory": "Attachments"
     }
 ]

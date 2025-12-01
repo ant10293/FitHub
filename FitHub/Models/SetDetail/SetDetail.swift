@@ -201,3 +201,25 @@ extension SetDetail {
     static let secPerStep: Int = 5 // conversion for time-based sets
 }
 
+enum TopSetOption: String, Codable, Equatable, CaseIterable {
+    case firstSet, lastSet, allSets
+    
+    var displayName: String {
+        switch self {
+        case .firstSet: return "First Set"
+        case .lastSet: return "Last Set"
+        case .allSets: return "All Sets"
+        }
+    }
+    
+    var footerText: String {
+        switch self {
+        case .firstSet:
+            return "The first set will use maximum intensity, with subsequent sets decreasing in intensity."
+        case .lastSet:
+            return "The last set will use maximum intensity, with earlier sets building up to it."
+        case .allSets:
+            return "All sets will use the \"Fixed Intensity\" value above. This is typically only used for advanced training protocols."
+        }
+    }
+}

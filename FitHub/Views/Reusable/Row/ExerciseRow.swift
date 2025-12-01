@@ -29,9 +29,10 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
     let favState: FavoriteState
     let imageSize: CGFloat
     let lineLimit: Int
+    let nextExercise: Exercise? // Used to check if next exercise is superset partner
     let accessory: () -> Accessory
     let detail:    () -> Detail
-    var onTap: () -> Void
+    let onTap: () -> Void
     
     // ------------------------------------------------------------------
     // Designated init  (only one — keep it simple)
@@ -42,6 +43,7 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
          favState: FavoriteState = .unmarked,
          imageSize: CGFloat = 0.12,
          lineLimit: Int = 2,
+         nextExercise: Exercise? = nil,
          @ViewBuilder accessory: @escaping () -> Accessory,
          @ViewBuilder detail:    @escaping () -> Detail,
          onTap: @escaping () -> Void = {}
@@ -52,6 +54,7 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
         self.favState = favState
         self.imageSize = imageSize
         self.lineLimit = lineLimit
+        self.nextExercise = nextExercise
         self.accessory = accessory
         self.detail    = detail
         self.onTap     = onTap
@@ -60,6 +63,13 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
     private var resolvedState: FavoriteState {
         if !heartOverlay { return .unmarked }
         else { return favState }
+    }
+    
+    /// Check if this exercise is the first in a consecutive superset pair
+    private var isFirstInSuperset: Bool {
+        guard let next = nextExercise else { return false }
+        // Check if current exercise is supersetted with next, or next is supersetted with current
+        return exercise.isSupersettedWith == next.id.uuidString || next.isSupersettedWith == exercise.id.uuidString
     }
     
     // ------------------------------------------------------------------
@@ -127,8 +137,10 @@ struct ExerciseRowDetails: View {
 extension ExerciseRow where Accessory == EmptyView, Detail == EmptyView {
     /// No accessory, no detail
     init(_ exercise: Exercise,
+         nextExercise: Exercise? = nil,
          onTap: @escaping () -> Void = {}) {
         self.init(exercise,
+                  nextExercise: nextExercise,
                   accessory: { EmptyView() },
                   detail:    { EmptyView() },
                   onTap: onTap)
@@ -138,9 +150,11 @@ extension ExerciseRow where Accessory == EmptyView, Detail == EmptyView {
 extension ExerciseRow where Detail == EmptyView {
     /// Accessory only
     init(_ exercise: Exercise,
+         nextExercise: Exercise? = nil,
          @ViewBuilder accessory: @escaping () -> Accessory,
          onTap: @escaping () -> Void = {}) {
         self.init(exercise,
+                  nextExercise: nextExercise,
                   accessory: accessory,
                   detail:    { EmptyView() },
                   onTap: onTap)

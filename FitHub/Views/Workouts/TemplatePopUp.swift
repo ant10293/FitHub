@@ -26,28 +26,25 @@ struct TemplatePopup: View {
                     .foregroundStyle(.gray)
             }
                       
-            List {
-                if template.exercises.isEmpty {
-                    emptyView
-                } else {
-                    Section {
-                        ForEach(template.exercises, id: \.id) { exercise in
-                            ExerciseRow(
-                                exercise,
-                                secondary: true,
-                                heartOverlay: true,
-                                favState: FavoriteState.getState(for: exercise, userData: userData)
-                            ) { } detail: {
-                                exercise.setsSubtitle
-                                    .font(.caption)
-                                    .foregroundStyle(Color.secondary)
-                            }
+            if template.exercises.isEmpty {
+                emptyView
+            } else {
+                TemplateExerciseList(
+                    exercises: template.exercises,
+                    userData: userData,
+                    secondary: true,
+                    heartOverlay: true
+                ) { _ in
+                    EmptyView()
+                } detail: { exercise in
+                    exercise.setsSubtitle
+                        .font(.caption)
+                        .foregroundStyle(Color.secondary)
+                } applyRowModifiers: { _, _, _, view in
+                    AnyView(
+                        view
                             .listRowBackground(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground))
-                        }
-                    } header: {
-                        Text(Format.countText(template.exercises.count))
-                            .font(.caption)
-                    }
+                    )
                 }
             }
 

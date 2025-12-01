@@ -53,7 +53,7 @@ struct StartedWorkoutView: View {
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .sheet(isPresented: $showingDetailView, onDismiss: { showingDetailView = false }) {
             if let index = selectedExerciseIndex, let exercise = viewModel.template.exercises[safe: index] {
-                ExerciseDetailView(viewingDuringWorkout: true, exercise: exercise)
+                ExerciseDetailView(exercise: exercise, viewingAsSheet: true)
             }
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
@@ -71,32 +71,30 @@ struct StartedWorkoutView: View {
     }
     
     private var exerciseList: some View {
-      List {
-          ForEach(viewModel.template.exercises) { exercise in
-              ExerciseRow(
-                exercise,
-                heartOverlay: true,
-                favState: FavoriteState.getState(for: exercise, userData: ctx.userData)
-              ) { }
-              detail: {
-                  exercise.setsSubtitle
-                      .font(.subheadline)
-                      .foregroundStyle(Color.secondary)
-              } onTap: {
-                  // find its index at tap time
-                  if let idx = viewModel.template.exercises.firstIndex(where: { $0.id == exercise.id }) {
-                      selectedExerciseIndex = idx
-                      viewModel.isOverlayVisible = true
-                  }
-              }
-              .id(exercise.id)
-              .disabled(exercise.isCompleted)
-              .opacity(exercise.isCompleted ? 0.25 : 1.0)
-          }
-      }
-      .opacity((viewModel.isOverlayVisible || viewModel.showWorkoutSummary) ? 0.6 : 1.0)
-      .listStyle(GroupedListStyle())
-      .disabled(viewModel.isOverlayVisible)
+        TemplateExerciseList(
+            exercises: viewModel.template.exercises,
+            userData: ctx.userData,
+            heartOverlay: true
+        ) { _ in
+            EmptyView()
+        } detail: { exercise in
+            exercise.setsSubtitle
+                .font(.subheadline)
+                .foregroundStyle(Color.secondary)
+        } onTap: { exercise, index in
+            selectedExerciseIndex = index
+            viewModel.isOverlayVisible = true
+        } applyRowModifiers: { exercise, index, _, view in
+            AnyView(
+                view
+                    .id(exercise.id)
+                    .disabled(exercise.isCompleted)
+                    .opacity(exercise.isCompleted ? 0.25 : 1.0)
+            )
+        }
+        .opacity((viewModel.isOverlayVisible || viewModel.showWorkoutSummary) ? 0.6 : 1.0)
+        .listStyle(GroupedListStyle())
+        .disabled(viewModel.isOverlayVisible)
     }
     
     private var rpePromptOverlay: some View {

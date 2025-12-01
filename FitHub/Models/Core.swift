@@ -138,6 +138,31 @@ enum OneRMFormula {
         let p = formula.percent(at: reps) // %1RM fraction
         return Mass(kg: weight.inKg / p)
     }
+    
+    /// Calculate approximate reps for a given percentage of 1RM
+    /// This is the inverse of `percent(at:)`
+    @inline(__always)
+    func reps(at percent: Double) -> Int {
+        let clamped = max(0.0001, min(1.0, percent)) // Clamp to valid range
+        switch self {
+        case .epleys:
+            // % = 1 / (1 + 0.0333*r)  =>  r = (1/% - 1) / 0.0333
+            let r = (1.0 / clamped - 1.0) / 0.0333
+            return max(1, Int(round(r)))
+        case .landers:
+            // % = (101.3 - 2.67123*r) / 100  =>  r = (101.3 - 100*%) / 2.67123
+            let r = (101.3 - 100.0 * clamped) / 2.67123
+            return max(1, Int(round(r)))
+        case .brzycki:
+            // % = 1.0278 - 0.0278*r  =>  r = (1.0278 - %) / 0.0278
+            let r = (1.0278 - clamped) / 0.0278
+            return max(1, Int(round(r)))
+        case .oconnor:
+            // % = 1 / (1 + 0.025*r)  =>  r = (1/% - 1) / 0.025
+            let r = (1.0 / clamped - 1.0) / 0.025
+            return max(1, Int(round(r)))
+        }
+    }
 
     var description: String {
         switch self {
@@ -224,19 +249,6 @@ enum RestType: String, CaseIterable, Identifiable, Hashable, Codable {
     }
 }
 
-/*
-struct SupersetSettings: Codable, Hashable {
-    var enabled: Bool = false
-    var style: SupersetOption = .sameEquipment
-    var maxPairs: Int = 1         // 0–2 recommended
-    var restBetweenSupersets: Int?
-}
-
-enum SupersetOption: String, CaseIterable, Codable {
-    case sameEquipment, sameMuscle, relatedMuscle
-}
-*/
-
 enum LegalURL {
     static let urlPrefix = "https://ant10293.github.io/fithub-legal/"
     
@@ -262,7 +274,6 @@ enum LegalURL {
         }
     }
 }
-
 
 enum EquipmentOption {
     case originalOnly, alternativeOnly, both, dynamic

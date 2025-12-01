@@ -49,6 +49,7 @@ struct PlannedTimerRing: View {
 private struct TimerRing: View {
     @ObservedObject var manager: TimerManager
     @State private var hasFiredCompletion: Bool = false
+    @State private var showingResetAlert: Bool = false
     let plannedSeconds: Int
     let initialElapsedSeconds: Int
     let onCompletion: (Int) -> Void
@@ -74,8 +75,6 @@ private struct TimerRing: View {
                     .monospacedDigit()
             }
             .padding(.horizontal)
-            .accessibilityLabel("Isometric hold timer")
-            .accessibilityValue("\(manager.holdTimeRemaining) seconds remaining")
             
             // Controls
             HStack(spacing: 12) {
@@ -83,27 +82,48 @@ private struct TimerRing: View {
                     toggleHold()
                 } label: {
                     Image(systemName: isRunning ? "pause.fill" : "play.fill")
-                        .font(.title2.weight(.bold))
+                        .font(.title3.weight(.semibold))
+                        .imageScale(.large)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 10)
                         .background(Capsule().fill(isRunning ? Color.gray.opacity(0.2) : Color.blue.opacity(0.2)))
                 }
-                .accessibilityLabel(isRunning ? "Pause hold" : (isPaused ? "Resume hold" : "Start hold"))
+                
+                Button {
+                    showingResetAlert = true
+                } label: {
+                    Image(systemName: "arrow.counterclockwise")
+                        .font(.title3.weight(.semibold))
+                        .imageScale(.large)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(Capsule().fill(Color.gray.opacity(0.2)))
+                }
+                .disabled(isIdle)
+                .opacity(isIdle ? 0.5 : 1.0)
                 
                 Button(role: .destructive) {
                     fireCompletionIfNeeded()
                 } label: {
                     Image(systemName: "stop.fill")
                         .font(.title3.weight(.semibold))
-                        .padding(.horizontal, 16)
+                        .imageScale(.large)
+                        .padding(.horizontal, 20)
                         .padding(.vertical, 10)
-                        .background(Capsule().strokeBorder(Color.red.opacity(0.6)))
+                        .background(Capsule().fill(Color.gray.opacity(0.2)))
                 }
-                .accessibilityLabel("Reset hold")
             }
             .padding(.top)
         }
         .padding()
+        .alert("Start Over?", isPresented: $showingResetAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Start Over", role: .destructive) {
+                resetTimer()
+            }
+        } message: {
+            Text("This will reset the timer to the beginning. Your current progress will be lost.")
+        }
         .onAppear(perform: toggleHold)
         .onDisappear(perform: fireCompletionIfNeeded)
         .onChange(of: manager.holdTimeRemaining) {
@@ -145,5 +165,12 @@ private struct TimerRing: View {
         hasFiredCompletion = true
         onCompletion(secElapsed)
         manager.stopHold()
+    }
+    
+    /// Reset the timer to the beginning
+    private func resetTimer() {
+        manager.stopHold()
+        hasFiredCompletion = false
+        manager.startHold(totalSeconds: plannedSeconds, initialElapsed: 0)
     }
 }

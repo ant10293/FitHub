@@ -16,6 +16,7 @@ struct RectangularLabel: View {
     let bgColor: Color
     let fgColor: Color
     let width: WidthStyle
+    let font: Font
     let fontWeight: Font.Weight
     let iconPosition: IconPosition
     let cornerRadius: CGFloat
@@ -27,6 +28,7 @@ struct RectangularLabel: View {
         bgColor: Color = .blue,
         fgColor: Color = .primary,
         width: WidthStyle = .fill,
+        font: Font = .body,
         fontWeight: Font.Weight = .regular,
         iconPosition: IconPosition = .leading,
         cornerRadius: CGFloat = 10
@@ -37,6 +39,7 @@ struct RectangularLabel: View {
         self.bgColor = bgColor
         self.fgColor = fgColor
         self.width = width
+        self.font = font
         self.fontWeight = fontWeight
         self.iconPosition = iconPosition
         self.cornerRadius = cornerRadius
@@ -46,6 +49,7 @@ struct RectangularLabel: View {
         HStack(spacing: 8) {
             if iconPosition == .leading { icon }
             Text(title)
+                .font(font)
                 .fontWeight(fontWeight)
             if iconPosition == .trailing { icon }
         }
@@ -58,6 +62,8 @@ struct RectangularLabel: View {
     private var icon: some View {
         if let name = systemImage {
             Image(systemName: name)
+                .font(font)
+                .fontWeight(fontWeight)
         }
     }
 }

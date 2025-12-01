@@ -47,7 +47,7 @@ struct ExerciseSetDisplay: View {
                         title: isResume ? "Resume Countdown" : "Start Countdown",
                         systemImage: "play.fill",
                         enabled: seconds > 0,
-                        bgColor: .green,
+                        bgColor: isResume ? .orange : .green,
                         width: .fit,
                         action: {
                             showTimer = true

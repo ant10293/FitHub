@@ -706,7 +706,7 @@
 		"image": "standing_cable_chest_press",
 		"aliases": ["Cable Press"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Crossover"],
+		"equipmentRequired": ["Cable Crossover", "Single D-Handles"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
@@ -1385,7 +1385,7 @@
 		"csvKey": "cable-fly",
 		"aliases": ["Cable Pec Fly", "Cable Crossover Fly"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Crossover"],
+		"equipmentRequired": ["Cable Crossover", "Single D-Handles"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
@@ -1404,7 +1404,7 @@
         "image": "cable_chest_fly",
         "aliases": ["Hi-Lo Cable Fly", "High-Low Cable Fly"],
         "instructions": { "steps": [ ] },
-        "equipmentRequired": ["Cable Crossover"],
+        "equipmentRequired": ["Cable Crossover", "Single D-Handles"],
         "muscles": [
             { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
                 { "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
@@ -1423,7 +1423,7 @@
         "image": "cable_chest_fly",
         "aliases": ["Lo-Hi Cable Fly", "Low-High Cable Fly"],
         "instructions": { "steps": [ ] },
-        "equipmentRequired": ["Cable Crossover"],
+        "equipmentRequired": ["Cable Crossover", "Single D-Handles"],
         "muscles": [
             { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
                 { "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
@@ -1942,7 +1942,7 @@
         "imageUrl": "https://gymvisual.com/animated-gifs/1508-assisted-pull-up.html#/47-style_type-basic_grey"
     },
     {
-        "name": "Neutral Grip Pull-Up",
+        "name": "Neutral-Grip Pull-Up",
         "id": "ABAF0756-8ECB-44B6-86EC-AA28FCD7BE4A",
         "image": "neutral_grip_pull_up",
         "csvKey": "neutral-grip-pull-ups",
@@ -1963,7 +1963,7 @@
         "imageUrl": "https://gymvisual.com/animated-gifs/13420-shoulder-width-neutral-grip-pull-up.html#/47-style_type-basic_grey"
     },
 	{
-		"name": "Assisted Neutral Grip Pull-Up",
+		"name": "Assisted Neutral-Grip Pull-Up",
 		"id": "10ABC801-2B18-401E-B2B7-D75675D67619",
 		"image": "assisted_neutral_grip_pull_up",
 		"aliases": ["Parallel Grip Pull-Up"],
@@ -1983,7 +1983,7 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/1502-assisted-parallel-close-grip-pull-up.html#/47-style_type-basic_grey"
 	},
     {
-        "name": "Weighted Neutral Grip Pull-Up",
+        "name": "Weighted Neutral-Grip Pull-Up",
         "id": "E48A99B5-1C72-4190-9539-5DAA35AAB8B2",
         "image": "weighted_neutral_grip_pull_up",
         "aliases": ["Parallel Grip Pull-Up"],
@@ -2337,7 +2337,7 @@
 		"csvKey": "cable-crunch",
 		"aliases": ["Kneeling Cable Crunch", "Weighted Ab Pulldown"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Dual-End Rope"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
 				{ "engagementPercentage": 50, "submuscleWorked": "Upper Abs" },
@@ -2356,7 +2356,7 @@
         "csvKey": "standing-cable-crunch",
         "aliases": ["Cable Ab Pulldown", "Standing Crunch"],
         "instructions": { "steps": [ ] },
-        "equipmentRequired": ["Cable Hi-Lo Pulley"],
+        "equipmentRequired": ["Cable Hi-Lo Pulley", "Dual-End Rope"],
         "muscles": [
             { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
                 { "engagementPercentage": 100, "submuscleWorked": "Upper Abs" }
@@ -2374,7 +2374,7 @@
         "csvKey": "high-pulley-crunch",
         "aliases": ["Overhead Cable Crunch"],
         "instructions": { "steps": [ ] },
-        "equipmentRequired": ["Cable Hi-Lo Pulley"],
+        "equipmentRequired": ["Cable Hi-Lo Pulley", "Dual-End Rope"],
         "muscles": [
             { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
                 { "engagementPercentage": 100, "submuscleWorked": "Upper Abs" }
@@ -3264,7 +3264,7 @@
 		"csvKey": "cable-external-rotation",
 		"aliases": ["Cable ER", "External Rotation (Cable)"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Crossover"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Single D-Handles"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
@@ -3322,7 +3322,7 @@
         "image": "cable_internal_rotation",
         "aliases": [],
         "instructions": { "steps": [ ] },
-        "equipmentRequired": ["Cable Crossover"],
+        "equipmentRequired": ["Cable Hi-Lo Pulley", "Single D-Handles"],
         "muscles": [
             { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
                 { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
@@ -3379,7 +3379,7 @@
 		"csvKey": "cable-lateral-raise",
 		"aliases": ["Side Cable Raise"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Single D-Handles"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Side Delt" }
@@ -3582,7 +3582,7 @@
 		"csvKey": "face-pull",
 		"aliases": ["Rope Face Pull"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Dual-End Rope"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
@@ -3643,7 +3643,7 @@
 		"csvKey": "cable-shrug",
 		"aliases": ["Cable Trap Raise"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Straight Bar Attachment"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Trapezius", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Upper Traps" }
@@ -4209,7 +4209,7 @@
 		"image": "cable_concentration_curl",
 		"aliases": ["Kneeling Cable Concentration Curl"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Straight Bar Attachment"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
@@ -4218,9 +4218,8 @@
 		],
 		"difficulty": "Nov.",
 		"effort": "Isolation",
-		"limbMovementType": "Unilateral",
+		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Machine",
-		"repsInstruction": "Per Arm",
 		"imageUrl": "https://gymvisual.com/animated-gifs/3568-cable-concentration-curl.html?search_query=cable+concentration+curl&results=14"
 	},
 	{
@@ -4230,7 +4229,7 @@
 		"csvKey": "cable-bicep-curl",
 		"aliases": ["Straight Bar Cable Curl"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Straight Bar Attachment"],
 		"muscles": [
 			{ "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
@@ -4251,9 +4250,9 @@
 		"id": "02547B50-5996-44E4-8D5D-DEBBEFC4F90F",
 		"image": "cable_hammer_curl",
 		"csvKey": "cable-hammer-curl",
-		"aliases": ["Neutral Grip Cable Curl"],
+		"aliases": ["Neutral-Grip Cable Curl"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Dual-End Rope"],
 		"muscles": [
 			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Biceps Long Head" }
@@ -4465,7 +4464,7 @@
 		"id": "2928830C-646E-4799-817C-0CC7E951D22A",
 		"image": "hammer_curl",
 		"csvKey": "hammer-curl",
-		"aliases": ["Neutral Grip Curl"],
+		"aliases": ["Neutral-Grip Curl"],
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": ["Dumbbells"],
 		"muscles": [
@@ -4484,6 +4483,29 @@
 		"repsInstruction": "Per Arm",
 		"imageUrl": "https://gymvisual.com/animated-gifs/1806-dumbbell-hammer-curl.html#/47-style_type-basic_grey"
 	},
+    {
+        "name": "Lying Cable Curl",
+        "id": "82D5DDEF-D996-4E98-956F-A6269ADDBD9B",
+        "image": "lying_cable_curl",
+        "csvKey": "lying-cable-curl",
+        "aliases": ["Supine Cable Curl"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Hi-Lo Pulley", "Straight Bar Attachment"],
+        "muscles": [
+            { "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Forearm Flexors" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3571-cable-lying-bicep-curl.html?search_query=lying+cable+curl&results=21"
+    },
 	{
 		"name": "Incline Cable Curl",
 		"id": "A2D42A15-FFA6-425D-B0E7-B6BE13126908",
@@ -4491,7 +4513,7 @@
 		"csvKey": "incline-cable-curl",
 		"aliases": ["Incline Cable Bicep Curl"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Straight Bar Attachment"],
 		"muscles": [
 			{ "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
@@ -4533,7 +4555,7 @@
 		"id": "1276CE49-A814-4CAD-8D95-6BF8DBB9F6BC",
 		"image": "incline_hammer_curl",
 		"csvKey": "incline-hammer-curl",
-		"aliases": ["Incline Neutral Grip Curl"],
+		"aliases": ["Incline Neutral-Grip Curl"],
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
 		"muscles": [
@@ -4572,29 +4594,6 @@
 		"resistance": "Free Weight",
         "weightInstruction": "Per Dumbbell",
 		"imageUrl": "https://gymvisual.com/animated-gifs/17770-dumbbell-jefferson-curl-male.html?search_query=jefferson+curl&results=4"
-	},
-	{
-		"name": "Lying Cable Curl",
-		"id": "82D5DDEF-D996-4E98-956F-A6269ADDBD9B",
-		"image": "lying_cable_curl",
-		"csvKey": "lying-cable-curl",
-		"aliases": ["Supine Cable Curl"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
-		"muscles": [
-			{ "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Forearm Flexors" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Machine",
-		"imageUrl": "https://gymvisual.com/animated-gifs/3571-cable-lying-bicep-curl.html?search_query=lying+cable+curl&results=21"
 	},
 	{
 		"name": "Machine Bicep Curl",
@@ -4640,7 +4639,7 @@
 		"csvKey": "overhead-cable-curl",
 		"aliases": ["High Cable Bicep Curl"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Crossover"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Single D-Handles"],
 		"muscles": [
 			{ "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
@@ -4652,8 +4651,9 @@
 		],
 		"difficulty": "Int.",
 		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
+		"limbMovementType": "Bilateral Independent",
 		"resistance": "Machine",
+        "weightInstruction": "Per Stack",
 		"imageUrl": "https://gymvisual.com/animated-gifs/3573-cable-overhead-curl.html?search_query=overhead+cable+curl&results=13"
 	},
 	{
@@ -4737,7 +4737,7 @@
 		"csvKey": "one-arm-cable-bicep-curl",
 		"aliases": ["Single Arm Cable Curl"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Single D-Handles"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
@@ -5425,7 +5425,7 @@
 		"csvKey": "cable-kickback",
 		"aliases": ["Cable Kickbacks"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Ankle Strap Attachments"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
@@ -5823,7 +5823,7 @@
 		"csvKey": "cable-leg-extension",
 		"aliases": ["Cable Quad Extension"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Ankle Strap Attachments"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
 				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
@@ -6351,7 +6351,7 @@
 		"csvKey": "close-grip-lat-pulldown",
 		"aliases": ["Narrow-Grip Pulldown"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Lat Pulldown"],
+		"equipmentRequired": ["Cable Lat Pulldown", "Double D-Handle"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
 			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
@@ -6379,7 +6379,7 @@
 		"csvKey": "lat-pulldown",
 		"aliases": ["Wide-Grip Pulldown"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Lat Pulldown"],
+		"equipmentRequired": ["Cable Lat Pulldown", "Wide-Grip Pulldown Bar"],
 		"muscles": [
 			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
 			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
@@ -6407,7 +6407,7 @@
 		"csvKey": "one-arm-pulldown",
 		"aliases": ["Unilateral Lat Pulldown"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Lat Pulldown"],
+		"equipmentRequired": ["Cable Lat Pulldown", "Single D-Handles"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
 			{ "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
@@ -6436,7 +6436,7 @@
 		"csvKey": "reverse-grip-lat-pulldown",
 		"aliases": ["Underhand Pulldown"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Lat Pulldown"],
+		"equipmentRequired": ["Cable Lat Pulldown", "Wide-Grip Pulldown Bar"],
 		"muscles": [
 			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
 			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
@@ -6461,7 +6461,7 @@
 		"csvKey": "straight-arm-pulldown",
 		"aliases": ["Lat Isolator Pulldown"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Lat Pulldown"],
+		"equipmentRequired": ["Cable Lat Pulldown", "Straight Bar Attachment"],
 		"muscles": [
 			{ "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
 			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
@@ -6952,7 +6952,7 @@
 		"csvKey": "cable-upright-row",
 		"aliases": ["Cable High Pull"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Crossover"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Straight Bar Attachment"],
 		"muscles": [
 			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
 				{ "engagementPercentage": 50, "submuscleWorked": "Front Delt" },
@@ -7341,7 +7341,7 @@
 		"csvKey": "seated-cable-row",
 		"aliases": ["Cable Row"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Row"],
+		"equipmentRequired": ["Cable Row", "Double D-Handle"],
 		"muscles": [
 			{ "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
 			{ "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
@@ -7362,6 +7362,31 @@
 		"resistance": "Machine",
 		"imageUrl": "https://gymvisual.com/animated-gifs/2342-cable-seated-row.html#/47-style_type-basic_grey"
 	},
+    {
+        "name": "Seated Single-Arm Cable Row",
+        "id": "B5AA4915-F4E3-4628-BBD4-A0EC656DC1FC",
+        "image": "single_arm_cable_row",
+        "csvKey": "one-arm-seated-cable-row",
+        "aliases": ["Unilateral Cable Row"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Row", "Single D-Handles"],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Lower Traps" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Unilateral",
+        "resistance": "Machine",
+        "repsInstruction": "Per Arm",
+        "imageUrl": "https://gymvisual.com/animated-gifs/22117-cable-seated-single-arm-lats-focused-row.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Seated Machine Row",
 		"id": "4B086E98-8F84-4625-9DEF-A67D6EA6DE29",
@@ -7389,31 +7414,6 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Machine",
 		"imageUrl": "https://gymvisual.com/animated-gifs/3120-lever-seated-row.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Seated Single-Arm Cable Row",
-		"id": "B5AA4915-F4E3-4628-BBD4-A0EC656DC1FC",
-		"image": "single_arm_cable_row",
-		"csvKey": "one-arm-seated-cable-row",
-		"aliases": ["Unilateral Cable Row"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Row"],
-		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Lower Traps" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-			] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Compound",
-		"limbMovementType": "Unilateral",
-		"resistance": "Machine",
-		"repsInstruction": "Per Arm",
-		"imageUrl": "https://gymvisual.com/animated-gifs/22117-cable-seated-single-arm-lats-focused-row.html#/47-style_type-basic_grey"
 	},
 	{
 		"name": "T-Bar Row",
@@ -8597,7 +8597,7 @@
 		"image": "cable_triceps_kickback",
 		"aliases": ["Cable Kickback"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Crossover"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Lateral Head" }
@@ -8605,9 +8605,9 @@
 		],
 		"difficulty": "Nov.",
 		"effort": "Isolation",
-		"limbMovementType": "Unilateral",
+		"limbMovementType": "Bilateral Independent",
 		"resistance": "Machine",
-		"repsInstruction": "Per Arm",
+        "weightInstruction": "Per Stack",
 		"imageUrl": "https://gymvisual.com/animated-gifs/3740-cable-two-arm-tricep-kickback.html#/47-style_type-basic_grey"
 	},
 	{
@@ -8710,13 +8710,12 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/16671-lever-triceps-extension-version-2.html?search_query=machine+tricep+extension&results=24"
 	},
 	{
-		"name": "Overhead Cable Triceps Extension",
+		"name": "Overhead Straight Bar Triceps Extension",
 		"id": "AE91F80A-A058-4492-BCD2-E3404457D6C3",
 		"image": "overhead_cable_triceps_extension",
 		"csvKey": "cable-overhead-tricep-extension",
-		"aliases": ["Overhead Rope Tricep Extension"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Straight Bar Attachment"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
@@ -8725,15 +8724,15 @@
 		"difficulty": "Int.",
 		"effort": "Isolation",
 		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Machine"
+		"resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/10167-cable-overhead-tricep-extension-straight-bar-male.html#/47-style_type-basic_grey"
 	},
 	{
 		"name": "Overhead Rope Tricep Extension",
 		"id": "4B047321-6A66-4CB2-B189-5465624ECDF5",
 		"image": "overhead_rope_triceps_extension",
-		"aliases": ["Rope Overhead Extension"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Dual-End Rope"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
@@ -8752,7 +8751,7 @@
 		"csvKey": "reverse-grip-tricep-pushdown",
 		"aliases": ["Reverse Cable Pushdown"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "EZ-Bar Attachment"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Triceps Long Head" }
@@ -8789,7 +8788,7 @@
 		"image": "one_arm_cable_triceps_extension",
 		"aliases": ["Single-Arm Cable Extension"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Single D-Handles"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
@@ -8870,7 +8869,7 @@
 		"csvKey": "tricep-pushdown",
 		"aliases": ["Straight Bar Pushdown"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Straight Bar Attachment"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
 				{ "engagementPercentage": 50, "submuscleWorked": "Triceps Medial Head" },
@@ -8890,7 +8889,7 @@
 		"csvKey": "tricep-rope-pushdown",
 		"aliases": ["Cable Rope Pushdown"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Dual-End Rope"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
 				{ "engagementPercentage": 50, "submuscleWorked": "Triceps Medial Head" },
@@ -8974,7 +8973,7 @@
 		"csvKey": "cable-pull-through",
 		"aliases": ["Cable Hip Hinge"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Dual-End Rope"],
 		"muscles": [
 			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
@@ -8998,7 +8997,7 @@
 		"csvKey": "cable-woodchopper",
 		"aliases": ["Rotational Chop", "Oblique Woodchopper"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Crossover"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Dual-End Rope"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Obliques" }
@@ -9185,7 +9184,7 @@
 		"image": "pallof_press",
 		"aliases": ["Cable Anti-Rotation Press"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Cable Hi-Lo Pulley"],
+		"equipmentRequired": ["Cable Hi-Lo Pulley", "Single D-Handles"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Obliques" }

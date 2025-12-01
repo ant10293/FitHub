@@ -51,7 +51,7 @@
 		653136392E552FF000EECCA5 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653136382E552FF000EECCA5 /* Notification.swift */; };
 		6531363C2E59106500EECCA5 /* TimesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6531363B2E59106500EECCA5 /* TimesEditor.swift */; };
 		65362BE62E0244830044AF72 /* TemplateArchives.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65362BE52E0244830044AF72 /* TemplateArchives.swift */; };
-		65362BE82E0244A60044AF72 /* DeloadSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65362BE72E0244A60044AF72 /* DeloadSettings.swift */; };
+		65362BE82E0244A60044AF72 /* DeloadSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65362BE72E0244A60044AF72 /* DeloadSettingsView.swift */; };
 		653BF89B2E595AA3005A07EA /* EquipmentManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653BF89A2E595AA3005A07EA /* EquipmentManagement.swift */; };
 		653BF89D2E595ADB005A07EA /* EquipmentSelectionContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653BF89C2E595ADB005A07EA /* EquipmentSelectionContent.swift */; };
 		653BF89F2E595AFB005A07EA /* EquipmentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653BF89E2E595AFB005A07EA /* EquipmentRow.swift */; };
@@ -99,6 +99,9 @@
 		658D80152ED40A290041FB4D /* OptionalDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80142ED40A290041FB4D /* OptionalDatePicker.swift */; };
 		658D80172ED416AC0041FB4D /* GraphSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80162ED416AC0041FB4D /* GraphSectionView.swift */; };
 		658D801A2ED852750041FB4D /* CenteredOverlayHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D80192ED852750041FB4D /* CenteredOverlayHeader.swift */; };
+		658D801C2EDBDFC60041FB4D /* SetDetailIntensity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D801B2EDBDFC60041FB4D /* SetDetailIntensity.swift */; };
+		658D801E2EDCF8440041FB4D /* WarmupSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D801D2EDCF8440041FB4D /* WarmupSettingsView.swift */; };
+		658D80202EDD0D9C0041FB4D /* TemplateExerciseList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658D801F2EDD0D9C0041FB4D /* TemplateExerciseList.swift */; };
 		6592279E2EC80DDF00EEDF42 /* GuestAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */; };
 		659227A02EC820E100EEDF42 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592279F2EC820E100EEDF42 /* Name.swift */; };
 		65A0D1CC2E2F39D5008466D8 /* CustomToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */; };
@@ -181,7 +184,7 @@
 		65CD3C5C2DD3C84F00C2B671 /* ChangeTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD3BE92DD3C84F00C2B671 /* ChangeTheme.swift */; };
 		65CD3C5D2DD3C84F00C2B671 /* HealthKitSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD3BEA2DD3C84F00C2B671 /* HealthKitSettings.swift */; };
 		65CD3C5E2DD3C84F00C2B671 /* MuscleRest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD3BEB2DD3C84F00C2B671 /* MuscleRest.swift */; };
-		65CD3C5F2DD3C84F00C2B671 /* OverloadSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD3BEC2DD3C84F00C2B671 /* OverloadSettings.swift */; };
+		65CD3C5F2DD3C84F00C2B671 /* OverloadSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD3BEC2DD3C84F00C2B671 /* OverloadSettingsView.swift */; };
 		65CD3C602DD3C84F00C2B671 /* PlannedWorkoutTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD3BED2DD3C84F00C2B671 /* PlannedWorkoutTime.swift */; };
 		65CD3C612DD3C84F00C2B671 /* PrivacyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD3BEE2DD3C84F00C2B671 /* PrivacyPolicy.swift */; };
 		65CD3C622DD3C84F00C2B671 /* RestTimerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD3BEF2DD3C84F00C2B671 /* RestTimerSettings.swift */; };
@@ -341,7 +344,7 @@
 		653136382E552FF000EECCA5 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		6531363B2E59106500EECCA5 /* TimesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimesEditor.swift; sourceTree = "<group>"; };
 		65362BE52E0244830044AF72 /* TemplateArchives.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateArchives.swift; sourceTree = "<group>"; };
-		65362BE72E0244A60044AF72 /* DeloadSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeloadSettings.swift; sourceTree = "<group>"; };
+		65362BE72E0244A60044AF72 /* DeloadSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeloadSettingsView.swift; sourceTree = "<group>"; };
 		653BF89A2E595AA3005A07EA /* EquipmentManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentManagement.swift; sourceTree = "<group>"; };
 		653BF89C2E595ADB005A07EA /* EquipmentSelectionContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentSelectionContent.swift; sourceTree = "<group>"; };
 		653BF89E2E595AFB005A07EA /* EquipmentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentRow.swift; sourceTree = "<group>"; };
@@ -384,6 +387,9 @@
 		658D80142ED40A290041FB4D /* OptionalDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalDatePicker.swift; sourceTree = "<group>"; };
 		658D80162ED416AC0041FB4D /* GraphSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphSectionView.swift; sourceTree = "<group>"; };
 		658D80192ED852750041FB4D /* CenteredOverlayHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenteredOverlayHeader.swift; sourceTree = "<group>"; };
+		658D801B2EDBDFC60041FB4D /* SetDetailIntensity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDetailIntensity.swift; sourceTree = "<group>"; };
+		658D801D2EDCF8440041FB4D /* WarmupSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarmupSettingsView.swift; sourceTree = "<group>"; };
+		658D801F2EDD0D9C0041FB4D /* TemplateExerciseList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateExerciseList.swift; sourceTree = "<group>"; };
 		6592279D2EC80DDF00EEDF42 /* GuestAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestAuthView.swift; sourceTree = "<group>"; };
 		6592279F2EC820E100EEDF42 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToolBar.swift; sourceTree = "<group>"; };
@@ -467,7 +473,7 @@
 		65CD3BE92DD3C84F00C2B671 /* ChangeTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeTheme.swift; sourceTree = "<group>"; };
 		65CD3BEA2DD3C84F00C2B671 /* HealthKitSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitSettings.swift; sourceTree = "<group>"; };
 		65CD3BEB2DD3C84F00C2B671 /* MuscleRest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleRest.swift; sourceTree = "<group>"; };
-		65CD3BEC2DD3C84F00C2B671 /* OverloadSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverloadSettings.swift; sourceTree = "<group>"; };
+		65CD3BEC2DD3C84F00C2B671 /* OverloadSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverloadSettingsView.swift; sourceTree = "<group>"; };
 		65CD3BED2DD3C84F00C2B671 /* PlannedWorkoutTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannedWorkoutTime.swift; sourceTree = "<group>"; };
 		65CD3BEE2DD3C84F00C2B671 /* PrivacyPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicy.swift; sourceTree = "<group>"; };
 		65CD3BEF2DD3C84F00C2B671 /* RestTimerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestTimerSettings.swift; sourceTree = "<group>"; };
@@ -1133,6 +1139,7 @@
 				65CD3BE62DD3C84F00C2B671 /* WeightSelectorView.swift */,
 				65A0D1D22E38639A008466D8 /* GeneratingOverlay.swift */,
 				653136112E5112D500EECCA5 /* ExpandCollapseList.swift */,
+				658D801F2EDD0D9C0041FB4D /* TemplateExerciseList.swift */,
 				653BF8B02E6618E2005A07EA /* GenericEditor.swift */,
 				653136202E53F11A00EECCA5 /* TappableDisclosure.swift */,
 				6550ADB92E6BAC12002072C1 /* TemplateNavigator.swift */,
@@ -1149,12 +1156,13 @@
 		65CD3BF52DD3C84F00C2B671 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				658D801D2EDCF8440041FB4D /* WarmupSettingsView.swift */,
 				65CD3BF02DD3C84F00C2B671 /* SettingsView.swift */,
 				65CD3BE82DD3C84F00C2B671 /* ChangeLanguage.swift */,
 				65CD3BE92DD3C84F00C2B671 /* ChangeTheme.swift */,
 				65CD3BEA2DD3C84F00C2B671 /* HealthKitSettings.swift */,
 				65CD3BEB2DD3C84F00C2B671 /* MuscleRest.swift */,
-				65CD3BEC2DD3C84F00C2B671 /* OverloadSettings.swift */,
+				65CD3BEC2DD3C84F00C2B671 /* OverloadSettingsView.swift */,
 				65CD3BED2DD3C84F00C2B671 /* PlannedWorkoutTime.swift */,
 				65CD3BEE2DD3C84F00C2B671 /* PrivacyPolicy.swift */,
 				65CD3BEF2DD3C84F00C2B671 /* RestTimerSettings.swift */,
@@ -1164,10 +1172,11 @@
 				65CD3BF42DD3C84F00C2B671 /* WeightIncrementation.swift */,
 				6548AB8A2DDAFB0200BD9DAD /* SortSettings.swift */,
 				65D48DED2DFA22350032F815 /* WorkoutCustomization.swift */,
-				65362BE72E0244A60044AF72 /* DeloadSettings.swift */,
+				65362BE72E0244A60044AF72 /* DeloadSettingsView.swift */,
 				6550ADBF2E6E562C002072C1 /* PlateSelection.swift */,
 				65039B902E970D12007A31E1 /* SetDetailSettings.swift */,
 				65D273B52EA9790100D09602 /* AdvancedGeneration.swift */,
+				658D801B2EDBDFC60041FB4D /* SetDetailIntensity.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1580,6 +1589,7 @@
 				65AC86492E2836070034FAA3 /* ExEquipImage.swift in Sources */,
 				65CD3C492DD3C84F00C2B671 /* CalendarView.swift in Sources */,
 				658D80112ED2A5F80041FB4D /* EmptyState.swift in Sources */,
+				658D801C2EDBDFC60041FB4D /* SetDetailIntensity.swift in Sources */,
 				65CD3C4A2DD3C84F00C2B671 /* HistoryView.swift in Sources */,
 				65039B932E9869E9007A31E1 /* MenuPickerRow.swift in Sources */,
 				65DD05372EC28A7D000D159C /* FieldEditor.swift in Sources */,
@@ -1606,7 +1616,7 @@
 				65CD3C522DD3C84F00C2B671 /* SimpleMuscleGroupsView.swift in Sources */,
 				65CD3C532DD3C84F00C2B671 /* SplitSelection.swift in Sources */,
 				65ECFF182E2609190091032A /* SearchBar.swift in Sources */,
-				65362BE82E0244A60044AF72 /* DeloadSettings.swift in Sources */,
+				65362BE82E0244A60044AF72 /* DeloadSettingsView.swift in Sources */,
 				65CD3C582DD3C84F00C2B671 /* MinSecPicker.swift in Sources */,
 				658D80172ED416AC0041FB4D /* GraphSectionView.swift in Sources */,
 				65CD3C592DD3C84F00C2B671 /* SplitCategoryPicker.swift in Sources */,
@@ -1619,7 +1629,7 @@
 				65CD3C5D2DD3C84F00C2B671 /* HealthKitSettings.swift in Sources */,
 				65CD3C5E2DD3C84F00C2B671 /* MuscleRest.swift in Sources */,
 				65DD05352EC02A20000D159C /* MeasurementCard.swift in Sources */,
-				65CD3C5F2DD3C84F00C2B671 /* OverloadSettings.swift in Sources */,
+				65CD3C5F2DD3C84F00C2B671 /* OverloadSettingsView.swift in Sources */,
 				653BF8AA2E5AB284005A07EA /* DataHelpers.swift in Sources */,
 				65DD051F2EBBED1D000D159C /* AffiliateInfoForm.swift in Sources */,
 				65DD05202EBBED1D000D159C /* AffiliateSettingsView.swift in Sources */,
@@ -1706,6 +1716,7 @@
 				65CD3C782DD3C84F00C2B671 /* WeekWorkout.swift in Sources */,
 				65CD3C792DD3C84F00C2B671 /* WorkoutGeneration.swift in Sources */,
 				65F5EF8A2EB16A5D005557F1 /* ReferralAttributor.swift in Sources */,
+				658D801E2EDCF8440041FB4D /* WarmupSettingsView.swift in Sources */,
 				65C5DC592DEFB5AE00B09AD2 /* Split.swift in Sources */,
 				65E199D32E99CF9300682415 /* RectangularLabel.swift in Sources */,
 				653BF89F2E595AFB005A07EA /* EquipmentRow.swift in Sources */,
@@ -1736,6 +1747,7 @@
 				65CD3C812DD3C84F00C2B671 /* RestTimeEditor.swift in Sources */,
 				65ECFF122E25A4D60091032A /* InputField.swift in Sources */,
 				65CD3C822DD3C84F00C2B671 /* TemplateDetail.swift in Sources */,
+				658D80202EDD0D9C0041FB4D /* TemplateExerciseList.swift in Sources */,
 				65CD3C832DD3C84F00C2B671 /* TemplatePopUp.swift in Sources */,
 				65C5DC672DEFBB5500B09AD2 /* Measurement.swift in Sources */,
 				65CD3C842DD3C84F00C2B671 /* ExerciseWarmUpDetail.swift in Sources */,

@@ -11,9 +11,21 @@ import SwiftUI
 struct ExEquipImage: View {
     @State private var isExpanded = false
     let image: Image
-    var size: CGFloat = 0.44                // collapsed % of screen width
-    var button: ButtonOption = .none
-    var onTap: (() -> Void)? = nil          // used for .info / .none
+    let size: CGFloat              // collapsed % of screen width
+    let button: ButtonOption
+    let onTap: () -> Void         // used for .info / .none
+    
+    init(
+        image: Image,
+        size: CGFloat = 0.44,
+        button: ButtonOption = .none,
+        onTap: @escaping () -> Void = {}
+    ) {
+        self.image = image
+        self.size = size
+        self.button = button
+        self.onTap = onTap
+    }
         
     var body: some View {
         Button(action: handleTap) {
@@ -26,6 +38,7 @@ struct ExEquipImage: View {
                 .animation(.spring(response: 0.35, dampingFraction: 0.8), value: isExpanded)
         }
         .buttonStyle(.plain)
+        .allowsHitTesting(button != .none)
     }
     
     // MARK: Overlay
@@ -71,8 +84,10 @@ struct ExEquipImage: View {
         switch button {
         case .expand:
             isExpanded.toggle()
-        case .info, .none:
-            onTap?()
+        case .info:
+            onTap()
+        case .none:
+            break
         }
     }
 }

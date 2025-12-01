@@ -617,7 +617,7 @@ extension ExerciseData {
             if hideUnequipped &&
                 !ex.canPerform(
                     equipmentData: equipmentData,
-                    equipmentSelected: userData.evaluation.availableEquipment
+                    available: userData.evaluation.availableEquipment
                 ) { continue }
             if hideDifficult && !ex.difficultyOK(maxStrength) { continue }
             
@@ -676,7 +676,7 @@ extension ExerciseData {
             if canPerformRequirement &&
                !cand.canPerform(
                    equipmentData: equipmentData,
-                   equipmentSelected: availableEquipmentIDs
+                   available: availableEquipmentIDs
                ) {
                 continue
             }

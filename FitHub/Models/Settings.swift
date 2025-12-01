@@ -90,3 +90,82 @@ enum SetStructures: String, CaseIterable, Codable, Identifiable {
         }
     }
 }
+
+/*
+struct SupersetSettings: Codable, Hashable {
+    var enabled: Bool = false
+    var style: SupersetOption = .sameEquipment
+    var maxPairs: Int = 1         // 0–2 recommended
+    var restBetweenSupersets: Int?
+}
+
+enum SupersetOption: String, CaseIterable, Codable {
+    case sameEquipment, sameMuscle, relatedMuscle
+}
+
+struct OverloadSettings: Codable, Hashable {
+    var progressiveOverload: Bool = true
+    var progressiveOverloadPeriod: Int = 6 // Default to 6 weeks
+    var progressiveOverloadStyle: ProgressiveOverloadStyle = .dynamic // Default style
+    var customOverloadFactor: Double?
+}
+
+struct DeloadSettings: Codable, Hashable {
+    var allowDeloading: Bool = true
+    var deloadIntensity: Int = 85
+    var periodUntilDeload: Int = 4
+}
+
+struct ExerciseSortSettings: Codable, Hashable {
+    var enableSortPicker: Bool = true // disable ExerciseSortOptions picker
+    var saveSelectedSort: Bool = false // save selections as new exerciseSortOption
+    var sortByTemplateCategories: Bool = true // sort by template categories when editing a template with categories
+    var hideUnequippedExercises: Bool = false // hide exercises that the user DOES NOT have equipment for in exercise selection or or exercise view
+    var hideDifficultExercises: Bool = false // hide exercises that would be too difficult for the user
+    var hideDislikedExercises: Bool = false // hide exercises that the user has disliked
+}
+
+struct SetDisplaySettings: Codable, Hashable {
+    var restTimerEnabled: Bool = true
+    var hideRpeSlider: Bool = false
+    var hideCompletedInput: Bool = false
+    var hideExerciseImage: Bool = false
+}
+*/
+
+struct SetIntensitySettings: Codable, Hashable {
+    var minIntensity: Int = 70
+    var maxIntensity: Int = 90
+    var fixedIntensity: Int = 80
+    var topSet: TopSetOption = .lastSet
+}
+
+struct WarmupSettings: Codable, Hashable {
+    // var includeSets: Bool = false // include warmup sets in workout generation
+    var minIntensity: Int = 50
+    var maxIntensity: Int = 75
+    var setCountModifier: WarmupSetCountModifier = .oneHalf
+}
+
+enum WarmupSetCountModifier: String, Codable, Equatable, CaseIterable {
+    case oneQuarter = "1/4"
+    case oneHalf = "1/2"
+    case threeQuarters = "3/4"
+    case oneToOne = "1/1"
+    
+    var displayName: String { rawValue }
+    
+    var fraction: Double {
+        switch self {
+        case .oneQuarter: return 0.25
+        case .oneHalf: return 0.5
+        case .threeQuarters: return 0.75
+        case .oneToOne: return 1.0
+        }
+    }
+    
+    /// Calculate the number of warmup sets based on working set count
+    func warmupSetCount(for workingSets: Int) -> Int {
+        max(1, Int(round(Double(workingSets) * fraction)))
+    }
+}

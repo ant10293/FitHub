@@ -10,15 +10,26 @@ import SwiftUI
 struct ExerciseDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var ctx: AppContext
-    @State private var editingExercise: Bool = false
-    @State private var selectedView: Views = .about
-    @State private var loadedExercises: [Exercise]? = nil
-    let viewingDuringWorkout: Bool
+    @State private var editingExercise: Bool
+    @State private var selectedView: Views
+    @State private var loadedExercises: [Exercise]?
     let exercise: Exercise
+    let viewingAsSheet: Bool
+
+    init(
+        exercise: Exercise,
+        viewingAsSheet: Bool = false
+    ) {
+        self.exercise = exercise
+        self.viewingAsSheet = viewingAsSheet
+        _selectedView = State(initialValue: .about)
+        _editingExercise = State(initialValue: false)
+        _loadedExercises = State(initialValue: nil)
+    }
     
     var body: some View {
         VStack {
-            if viewingDuringWorkout { workoutToolbar }
+            if viewingAsSheet { workoutToolbar }
             
             Picker("View", selection: $selectedView) {
                 ForEach(Views.allCases) { v in
