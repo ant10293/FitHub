@@ -52,12 +52,37 @@ final class WorkoutVM: ObservableObject {
     func goToNextSetOrExercise(for exerciseIndex: Int, selectedExerciseIndex: inout Int?) {
         let currentExercise = template.exercises[exerciseIndex]
         
+        enum SetAction { case incrementSet, setCompleted }
+        
         // Helper to allocate time when truly leaving an exercise
         func allocateTimeToCurrentExercise(index: Int, exercise: Exercise) {
             let timeSpent = secondsElapsed - (currentExerciseState?.startTime ?? 0)
             template.exercises[index].timeSpent += timeSpent
             currentExerciseState = CurrentExerciseState(id: exercise.id, name: exercise.name, index: index, startTime: secondsElapsed)
-            //print("⏱  Allocated \(timeSpent)s to “\(exercise.name)”, new exerciseState=\(currentExerciseState!)")
+            //print("⏱  Allocated \(timeSpent)s to "\(exercise.name)", new exerciseState=\(currentExerciseState!)")
+        }
+        
+        // Helper to update currentExerciseState after switching to a new exercise
+        func updateStateForNewExercise(from oldIndex: Int) {
+            if let newExerciseIndex = selectedExerciseIndex, newExerciseIndex != oldIndex {
+                let newExercise = template.exercises[newExerciseIndex]
+                currentExerciseState = CurrentExerciseState(id: newExercise.id, name: newExercise.name, index: newExerciseIndex, startTime: secondsElapsed)
+            }
+        }
+        
+        // Helper to handle set progression and move to next exercise
+        func handleSetProgression(exerciseIndex: Int, action: SetAction, after searchIndex: Int) {
+            allocateTimeToCurrentExercise(index: exerciseIndex, exercise: currentExercise)
+            
+            switch action {
+            case .incrementSet: template.exercises[exerciseIndex].currentSet += 1
+            case .setCompleted: template.exercises[exerciseIndex].isCompleted = true
+            }
+            
+            moveToNextIncompleteExercise(after: searchIndex, selectedExerciseIndex: &selectedExerciseIndex)
+            updateStateForNewExercise(from: exerciseIndex)
+            
+            if case .setCompleted = action, showWorkoutSummary { return }
         }
 
         // 1) If we're still in warm‑up sets, just advance the set number here
@@ -72,31 +97,23 @@ final class WorkoutVM: ObservableObject {
             // If main sets remain on this exercise
             if currentExercise.currentSet < currentExercise.totalSets {
                 //print("➡️ Main sets remain (\(currentExercise.currentSet)/\(currentExercise.totalSets)), advancing current exercise")
-                allocateTimeToCurrentExercise(index: exerciseIndex, exercise: currentExercise)
-                template.exercises[exerciseIndex].currentSet += 1
-                moveToNextIncompleteExercise(after: supersetIdx - 1, selectedExerciseIndex: &selectedExerciseIndex)
+                handleSetProgression(exerciseIndex: exerciseIndex, action: .incrementSet, after: supersetIdx - 1)
                 //print("🔄 switched to superset exercise \(supersetExercise.name)")
             // Otherwise both done, mark complete and move on
             } else {
                 //print("\(currentExercise.name) Set: \(currentExercise.currentSet)/\(currentExercise.totalSets)")
-                //print("✅ Superset exercise “\(currentExercise.name)” complete")
-                allocateTimeToCurrentExercise(index: exerciseIndex, exercise: currentExercise)
-                template.exercises[exerciseIndex].isCompleted = true
-                moveToNextIncompleteExercise(after: supersetIdx - 1, selectedExerciseIndex: &selectedExerciseIndex)
-                if showWorkoutSummary { return }
+                //print("✅ Superset exercise "\(currentExercise.name)" complete")
+                handleSetProgression(exerciseIndex: exerciseIndex, action: .setCompleted, after: supersetIdx - 1)
             }
         } else {
             // 3) No superset configured—just finish this exercise
             if currentExercise.currentSet < currentExercise.totalSets {
-                //print("➡️ Finishing remaining sets on “\(currentExercise.name)” (\(currentExercise.currentSet)/\(currentExercise.totalSets))")
+                //print("➡️ Finishing remaining sets on "\(currentExercise.name)" (\(currentExercise.currentSet)/\(currentExercise.totalSets))")
                 template.exercises[exerciseIndex].currentSet += 1
             } else {
                 //print("\(currentExercise.name) Set: \(currentExercise.currentSet)/\(currentExercise.totalSets)")
-                //print("✅ “\(currentExercise.name)” fully completed, moving to next incomplete")
-                allocateTimeToCurrentExercise(index: exerciseIndex, exercise: currentExercise)
-                template.exercises[exerciseIndex].isCompleted = true
-                moveToNextIncompleteExercise(after: exerciseIndex, selectedExerciseIndex: &selectedExerciseIndex)
-                if showWorkoutSummary { return }
+                //print("✅ "\(currentExercise.name)" fully completed, moving to next incomplete")
+                handleSetProgression(exerciseIndex: exerciseIndex, action: .setCompleted, after: exerciseIndex)
             }
         }
     }

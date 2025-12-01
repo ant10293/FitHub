@@ -76,7 +76,7 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
                 }
                 
                 let modifiedRow = applyRowModifiers(exercise, index, isFirstInSuperset, AnyView(baseRow))
-                    .listRowSeparator(isFirstInSuperset ? .hidden : .automatic)
+                    .listRowSeparator(isFirstInSuperset ? .hidden : .automatic, edges: isFirstInSuperset ? .bottom : .all)
                 
                 // Apply negative padding to reduce spacing for supersetted exercises
                 if isFirstInSuperset {
