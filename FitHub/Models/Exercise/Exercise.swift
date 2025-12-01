@@ -452,14 +452,14 @@ extension Exercise {
                     let minSec = max(1, Int(round(Double(maxSec) * minIntensityPct)))
                     let progress = (intensityPct - minIntensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
                     sec = max(1, min(maxSec, minSec + Int(round(Double(maxSec - minSec) * progress))))
-                    
+
                 case .reversePyramid:
                     // Reverse pyramid: start at max intensity, decrease to min intensity
                     let maxSecAtIntensity = max(1, Int(round(Double(maxSec) * maxIntensityPct)))
                     let minSecAtIntensity = max(1, Int(round(Double(maxSec) * minIntensityPct)))
                     let progress = (maxIntensityPct - intensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
                     sec = max(1, min(maxSec, maxSecAtIntensity - Int(round(Double(maxSecAtIntensity - minSecAtIntensity) * progress))))
-                    
+
                 case .fixed:
                     // Fixed: use fixed intensity
                     sec = max(1, Int(round(Double(maxSec) * fixedIntensityPct)))
@@ -566,7 +566,7 @@ extension Exercise {
     
     mutating func createWarmupDetails(equipmentData: EquipmentData, userData: UserData) {
         guard let baseline = setDetails.first else { return }
-        
+
         // Only create warmup sets for weight × reps exercises
         guard case (.weight(let firstSetWeight), .reps(let firstSetReps)) = (baseline.load, baseline.planned) else {
             return
@@ -611,9 +611,9 @@ extension Exercise {
             let targetKg = baseKg * intensityPct
             let roundedWeight = equipmentData.roundWeight(Mass(kg: targetKg), for: equipmentRequired, rounding: rounding)
             
-            details.append(
-                SetDetail(
-                    setNumber: idx,
+                details.append(
+                    SetDetail(
+                        setNumber: idx,
                     load: .weight(roundedWeight),
                     planned: .reps(firstSetReps) // Keep reps the same as first working set
                 )

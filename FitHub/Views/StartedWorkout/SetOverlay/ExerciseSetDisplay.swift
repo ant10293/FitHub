@@ -178,8 +178,8 @@ struct ExerciseSetDisplay: View {
                         setDetail.planned = $0
                         switch planned {
                         case .reps:
-                            completed = $0
-                            setDetail.completed = $0
+                        completed = $0
+                        setDetail.completed = $0
                         case .cardio, .hold:
                             toggleHideStartIfNeeded()
                         }
@@ -214,12 +214,12 @@ struct ExerciseSetDisplay: View {
         rpe = setDetail.rpe ?? 1
         load = setDetail.load
         planned = setDetail.planned
-        
+
         if let comp = setDetail.completed {
             completed = comp
             toggleHideStartIfNeeded()
         } else {
-            switch planned {
+        switch planned {
             case .reps:
                 completed = planned
             case .hold, .cardio:

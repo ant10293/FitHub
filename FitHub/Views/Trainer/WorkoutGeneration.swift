@@ -128,34 +128,34 @@ struct WorkoutGeneration: View {
     private var exerciseList: some View {
         Group {
             if let template = templates[safe: currentTemplateIndex] {
-                if template.exercises.isEmpty {
+                    if template.exercises.isEmpty {
                     List {
                         Text("No exercises defined for this template.")
                             .foregroundStyle(.secondary)
                             .padding(.vertical)
                     }
-                } else {
+                    } else {
                     TemplateExerciseList(
                         template: template,
                         userData: ctx.userData,
-                        secondary: true,
+                                secondary: true,
                         heartOverlay: true
                     ) { exercise in
-                        Button(action: {
-                            selectedExercise = exercise
-                            showingExerciseOptions = true
-                        }) {
-                            Image(systemName: "ellipsis")
-                                .imageScale(.medium)
-                                .contentShape(Rectangle())
-                        }
-                        .buttonStyle(PlainButtonStyle())
+                                Button(action: {
+                                    selectedExercise = exercise
+                                    showingExerciseOptions = true
+                                }) {
+                                    Image(systemName: "ellipsis")
+                                        .imageScale(.medium)
+                                        .contentShape(Rectangle())
+                                }
+                                .buttonStyle(PlainButtonStyle())
                     } detail: { exercise in
-                        exercise.setsSubtitle
-                            .font(.subheadline)
-                            .foregroundStyle(Color.secondary)
+                                exercise.setsSubtitle
+                                    .font(.subheadline)
+                                    .foregroundStyle(Color.secondary)
                     } onTap: { exercise, _ in
-                        exerciseForDetail = exercise
+                                exerciseForDetail = exercise
                     }
                 }
             }

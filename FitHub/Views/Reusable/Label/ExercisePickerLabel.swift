@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PickerLabel: View {
     let text: String
-    
+
     var body: some View {
         HStack(spacing: 5) {
             Text(text)

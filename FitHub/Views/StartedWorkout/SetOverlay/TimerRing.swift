@@ -28,7 +28,7 @@ struct PlannedTimerRing: View {
             }
         )
     }
-
+    
     // MARK: - Private
     private func completedFromTimer(_ seconds: Int) -> SetMetric? {
         let elapsed = TimeSpan(seconds: max(0, seconds))

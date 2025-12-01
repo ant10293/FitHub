@@ -18,7 +18,44 @@ struct EnterOneRepMaxes: View {
     @State private var numberReps: Int = 1
     // Usually 2–8 for submax estimation (tweak as you like)
     let repOptions: [Int] = Array(1...8)
+    var bench: Exercise? = nil
+    var squat: Exercise? = nil
+    var deadlift: Exercise? = nil
     let onFinish: () -> Void
+    
+    init(
+        userData: UserData,
+        exerciseData: ExerciseData,
+        onFinish: @escaping () -> Void
+    ) {
+        self.userData = userData
+        self.exerciseData = exerciseData
+        self.onFinish = onFinish
+        
+        if let bench = exerciseData.exercise(named: "Bench Press") { self.bench = .init(bench) }
+        
+        if let squat = exerciseData.exercise(named: "Back Squat") { self.squat = .init(squat) }
+        
+        if let deadlift = exerciseData.exercise(named: "Deadlift") { self.deadlift = .init(deadlift) }
+        
+        // Autofill Bench Press
+        if let bench = self.bench, let peak = exerciseData.peakMetric(for: bench.id),
+           case .oneRepMax(let mass) = peak {
+            _benchPressMax = .init(initialValue: mass)
+        }
+        
+        // Autofill Squat
+        if let squat = self.squat, let peak = exerciseData.peakMetric(for: squat.id),
+           case .oneRepMax(let mass) = peak {
+            _squatMax = .init(initialValue: mass)
+        }
+        
+        // Autofill Deadlift
+        if let deadlift = self.deadlift, let peak = exerciseData.peakMetric(for: deadlift.id),
+           case .oneRepMax(let mass) = peak {
+            _deadliftMax = .init(initialValue: mass)
+        }
+    }
 
     var body: some View {
         ZStack {
@@ -91,8 +128,7 @@ struct EnterOneRepMaxes: View {
         let metric: SetMetric = .reps(numberReps)
         var maxValuesEntered = false
 
-        if benchPressMax.inKg > 0,
-           let bench = exerciseData.exercise(named: "Bench Press") {
+        if benchPressMax.inKg > 0, let bench = bench {
             let est = OneRMFormula.calculateOneRepMax(weight: benchPressMax, reps: numberReps, formula: formula)
             let loadXmetric = numberReps > 1 ? LoadXMetric(load: .weight(benchPressMax), metric: metric) : nil
             exerciseData.updateExercisePerformance(
@@ -103,8 +139,7 @@ struct EnterOneRepMaxes: View {
             maxValuesEntered = true
         }
 
-        if squatMax.inKg > 0,
-           let squat = exerciseData.exercise(named: "Back Squat") {
+        if squatMax.inKg > 0, let squat = squat {
             let est = OneRMFormula.calculateOneRepMax(weight: squatMax, reps: numberReps, formula: formula)
             let loadXmetric = numberReps > 1 ? LoadXMetric(load: .weight(squatMax), metric: metric) : nil
             exerciseData.updateExercisePerformance(
@@ -115,8 +150,7 @@ struct EnterOneRepMaxes: View {
             maxValuesEntered = true
         }
 
-        if deadliftMax.inKg > 0,
-           let deadlift = exerciseData.exercise(named: "Deadlift") {
+        if deadliftMax.inKg > 0, let deadlift = deadlift {
             let est = OneRMFormula.calculateOneRepMax(weight: deadliftMax, reps: numberReps, formula: formula)
             let loadXmetric = numberReps > 1 ? LoadXMetric(load: .weight(deadliftMax), metric: metric) : nil
             exerciseData.updateExercisePerformance(
