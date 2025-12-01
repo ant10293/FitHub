@@ -151,10 +151,12 @@ struct TemplateNavigator<Content: View>: View {
                     },
                     onBeginWorkout: {
                         currentTemplate = newSel
+                        selectedTemplate = nil // Dismiss popup immediately before navigation
                         workoutRoute = WorkoutRoute(id: UUID(), sel: newSel)
                     },
                     onEdit: {
                         currentTemplate = newSel
+                        selectedTemplate = nil // Dismiss popup immediately before navigation
                         navigateToTemplateDetail = true
                     }
                 )
