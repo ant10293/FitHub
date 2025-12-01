@@ -72,7 +72,7 @@ struct StartedWorkoutView: View {
     
     private var exerciseList: some View {
         TemplateExerciseList(
-            exercises: viewModel.template.exercises,
+            template: viewModel.template,
             userData: ctx.userData,
             heartOverlay: true
         ) { _ in
@@ -84,16 +84,9 @@ struct StartedWorkoutView: View {
         } onTap: { exercise, index in
             selectedExerciseIndex = index
             viewModel.isOverlayVisible = true
-        } applyRowModifiers: { exercise, index, _, view in
-            AnyView(
-                view
-                    .id(exercise.id)
-                    .disabled(exercise.isCompleted)
-                    .opacity(exercise.isCompleted ? 0.25 : 1.0)
-            )
         }
-        .opacity((viewModel.isOverlayVisible || viewModel.showWorkoutSummary) ? 0.6 : 1.0)
         .listStyle(GroupedListStyle())
+        .opacity((viewModel.isOverlayVisible || viewModel.showWorkoutSummary) ? 0.6 : 1.0)
         .disabled(viewModel.isOverlayVisible)
     }
     

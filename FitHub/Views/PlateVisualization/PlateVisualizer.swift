@@ -11,9 +11,9 @@ import SwiftUI
 // MARK: - Main View
 struct PlateVisualizer: View {
     @EnvironmentObject private var ctx: AppContext
+    @State private var showBaseWeightEditor: Bool = false
     let weight: Mass
     let exercise: Exercise
-    @State private var showBaseWeightEditor: Bool = false
 
     var body: some View {
         let (base, input, equip, baseCount, implementsCount, pegCount) = baseSpecForExercise()

@@ -138,7 +138,7 @@ extension SetDetail {
     static func formatLoadMetric(load: SetLoad, metric: SetMetric, simple: Bool = false) -> Text {
         // separators
         let sepTimes = Text(" × ")
-        let sepDash  = Text(" - ")
+        let sepAt    = Text(" @ ")
         func light(_ s: String) -> Text { Text(s).fontWeight(.light) }
 
         // adapters to avoid duplication
@@ -160,7 +160,7 @@ extension SetDetail {
             return T(t) + (simple ? Text("") : light(" hold"))
 
         case (.distance(let d), .cardio(let ts)):
-            return D(d) + sepDash + Text(ts.time.displayString)
+            return D(d) + sepAt + ts.speed.formattedText
 
         default:
             return Text("—")

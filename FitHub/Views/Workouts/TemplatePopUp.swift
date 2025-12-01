@@ -30,7 +30,7 @@ struct TemplatePopup: View {
                 emptyView
             } else {
                 TemplateExerciseList(
-                    exercises: template.exercises,
+                    template: template,
                     userData: userData,
                     secondary: true,
                     heartOverlay: true
@@ -40,11 +40,6 @@ struct TemplatePopup: View {
                     exercise.setsSubtitle
                         .font(.caption)
                         .foregroundStyle(Color.secondary)
-                } applyRowModifiers: { _, _, _, view in
-                    AnyView(
-                        view
-                            .listRowBackground(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground))
-                    )
                 }
             }
 
@@ -72,13 +67,15 @@ struct TemplatePopup: View {
     private var disableTemplate: Bool { template.shouldDisableTemplate  }
     
     private var emptyView: some View {
-        EmptyState(
-            systemName: "figure.walk",
-            title: "Nothing Here...",
-            subtitle: "Press 'Edit' to Build your Workout!"
-        )
-        .frame(maxWidth: .infinity)
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground)))
+        List {
+            EmptyState(
+                systemName: "figure.walk",
+                title: "Nothing Here...",
+                subtitle: "Press 'Edit' to Build your Workout!"
+            )
+            .frame(maxWidth: .infinity)
+            .background(RoundedRectangle(cornerRadius: 12).fill(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground)))
+        }
     }
     
     private var headerToolbar: some View {

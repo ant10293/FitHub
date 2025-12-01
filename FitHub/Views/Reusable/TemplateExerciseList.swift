@@ -9,7 +9,7 @@ import SwiftUI
 
 /// A reusable view that enumerates exercises from a template with superset visualization support
 struct TemplateExerciseList<Accessory: View, Detail: View>: View {
-    let exercises: [Exercise]
+    let template: WorkoutTemplate
     let userData: UserData
     let secondary: Bool
     let heartOverlay: Bool
@@ -18,10 +18,9 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
     let accessory: (Exercise) -> Accessory
     let detail: (Exercise) -> Detail
     let onTap: (Exercise, Int) -> Void
-    let applyRowModifiers: (Exercise, Int, Bool, AnyView) -> AnyView
     
     init(
-        exercises: [Exercise],
+        template: WorkoutTemplate,
         userData: UserData,
         secondary: Bool = false,
         heartOverlay: Bool = true,
@@ -29,10 +28,9 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
         lineLimit: Int = 2,
         @ViewBuilder accessory: @escaping (Exercise) -> Accessory,
         @ViewBuilder detail: @escaping (Exercise) -> Detail,
-        onTap: @escaping (Exercise, Int) -> Void = { _, _ in },
-        applyRowModifiers: @escaping (Exercise, Int, Bool, AnyView) -> AnyView = { _, _, _, view in view }
+        onTap: @escaping (Exercise, Int) -> Void = { _, _ in }
     ) {
-        self.exercises = exercises
+        self.template = template
         self.userData = userData
         self.secondary = secondary
         self.heartOverlay = heartOverlay
@@ -41,22 +39,23 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
         self.accessory = accessory
         self.detail = detail
         self.onTap = onTap
-        self.applyRowModifiers = applyRowModifiers
     }
     
     var body: some View {
         List {
-            ForEach(Array(exercises.enumerated()), id: \.element.id) { index, exercise in
-                let nextExercise = (index + 1 < exercises.count) ? exercises[index + 1] : nil
-                let previousExercise = (index > 0) ? exercises[index - 1] : nil
-                let isFirstInSuperset = nextExercise != nil && (
-                    exercise.isSupersettedWith == nextExercise?.id.uuidString ||
-                    nextExercise?.isSupersettedWith == exercise.id.uuidString
-                )
-                let isSecondInSuperset = previousExercise != nil && (
-                    exercise.isSupersettedWith == previousExercise?.id.uuidString ||
-                    previousExercise?.isSupersettedWith == exercise.id.uuidString
-                )
+            ForEach(Array(template.exercises.enumerated()), id: \.element.id) { index, exercise in
+                let nextExercise = (index + 1 < template.exercises.count) ? template.exercises[index + 1] : nil
+                let previousExercise = (index > 0) ? template.exercises[index - 1] : nil
+                let isFirstInSuperset: Bool = {
+                    guard let next = nextExercise else { return false }
+                    return template.supersetFor(exercise: exercise) == next ||
+                           template.supersetFor(exercise: next) == exercise
+                }()
+                let isSecondInSuperset: Bool = {
+                    guard let previous = previousExercise else { return false }
+                    return template.supersetFor(exercise: exercise) == previous ||
+                           template.supersetFor(exercise: previous) == exercise
+                }()
                 
                 // Regular exercise row
                 let baseRow = ExerciseRow(
@@ -75,7 +74,10 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
                     onTap(exercise, index)
                 }
                 
-                let modifiedRow = applyRowModifiers(exercise, index, isFirstInSuperset, AnyView(baseRow))
+                let modifiedRow = baseRow
+                    .id(exercise.id)
+                    .disabled(exercise.isCompleted)
+                    .opacity(exercise.isCompleted ? 0.25 : 1.0)
                     .listRowSeparator(isFirstInSuperset ? .hidden : .automatic, edges: isFirstInSuperset ? .bottom : .all)
                 
                 // Apply negative padding to reduce spacing for supersetted exercises

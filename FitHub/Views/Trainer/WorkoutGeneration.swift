@@ -136,7 +136,7 @@ struct WorkoutGeneration: View {
                     }
                 } else {
                     TemplateExerciseList(
-                        exercises: template.exercises,
+                        template: template,
                         userData: ctx.userData,
                         secondary: true,
                         heartOverlay: true

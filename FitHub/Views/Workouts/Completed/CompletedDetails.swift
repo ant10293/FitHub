@@ -189,7 +189,7 @@ private extension CompletedDetails {
             switch metric {
             case .reps(let r): return "\(max(0, r)) reps"
             case .hold(let span): return span.displayStringCompact
-            case .cardio(let ts): return "\(ts.speed.displayString) \(ts.speed.unitLabel)"
+            case .cardio(let ts): return ts.time.displayStringCompact
             }
         }
         
