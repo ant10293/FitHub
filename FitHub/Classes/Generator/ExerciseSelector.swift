@@ -17,6 +17,7 @@ final class ExerciseSelector {
     private let strengthCeiling: Int
     private let resistance: ResistanceType
     private let allowDisliked: Bool
+    private let repCapMultiplier: Double
     private let nonDefaultParams: Set<PoolChanges.RelaxedFilter>
     private let policy: Policy
     private let baseSeed: UInt64
@@ -42,6 +43,7 @@ final class ExerciseSelector {
         self.strengthCeiling = userData.evaluation.strengthLevel.strengthValue
         self.resistance = userData.workoutPrefs.resistance
         self.allowDisliked = userData.allowDisliked
+        self.repCapMultiplier = userData.workoutPrefs.maxBwRepCapMultiplier
         self.nonDefaultParams = nonDefaultParams
         self.policy = policy
         self.baseSeed = seed
@@ -295,7 +297,7 @@ final class ExerciseSelector {
                 if Double(repRange.lowerBound) > max {
                     missesRepMin.insert(ex.id); continue
                 }
-                if !relaxed.contains(.repCap), Double(repRange.upperBound) * 2 < max {
+                if !relaxed.contains(.repCap), Double(repRange.upperBound) * repCapMultiplier < max {
                     exceedsRepCap.insert(ex.id); continue
                 }
             }

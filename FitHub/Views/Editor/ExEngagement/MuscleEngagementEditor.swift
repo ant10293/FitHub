@@ -47,6 +47,7 @@ struct MuscleEngagementEditor: View {
                             VStack(alignment: .leading, spacing: 16) {
                                 VStack(alignment: .leading) {
                                     Text("Engagement: \(Int(pct)) %")
+                                        .monospacedDigit()
                                     Slider(value: $pct, in: 0...100, step: 1)
                                     
                                     if pct <= 0 {

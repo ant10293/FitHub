@@ -43,10 +43,7 @@ struct AffiliateSettingsView: View {
                 
                 // Server error message (for API errors, not validation)
                 if let error = errorMessage {
-                    Text(error.localizedDescription)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .centerHorizontally()
+                    ErrorFooter(message: error.localizedDescription)
                 }
                 
                 // Update Email Button

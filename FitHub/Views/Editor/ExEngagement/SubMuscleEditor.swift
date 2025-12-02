@@ -91,6 +91,7 @@ struct SubMuscleEditor: View {
                         if editingIndex == idx {
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("Engagement: \(Int(editingValue)) %")
+                                    .monospacedDigit()
                                 Slider(value: $editingValue, in: 0...100, step: 1)
                                 HStack {
                                     Spacer()

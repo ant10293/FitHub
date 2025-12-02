@@ -29,6 +29,7 @@ struct DeloadSettingsView: View {
             Section {
                 HStack {
                     Text("\(deloadIntensity)%")
+                        .monospacedDigit()
                     Slider(
                         value: Binding(
                             get: { Double(deloadIntensity) },

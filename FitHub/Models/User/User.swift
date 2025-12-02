@@ -52,8 +52,7 @@ struct WorkoutPreferences: Codable, Equatable {
     var customDuration: TimeSpan?
     var customDistribution: EffortDistribution?
     //var supersetSettings: SupersetSettings = SupersetSettings()
-    //var minBwRepsMultiplier: Double = 0.5
-    //var maxBwRepsMultiplier: Double = 2.0
+    var maxBwRepCapMultiplier: Double = 2.0 // MARK: no editing implemented yet
     //var minHoldTime: TimeSpan = .init(seconds: 30)
     //var maxHoldTime: TimeSpan = .init(minutes: 5)
 }

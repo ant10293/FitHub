@@ -50,6 +50,7 @@ struct OverloadSettingsView: View {
              
              HStack {
              Text("\(intensityPercent)")
+                .monospacedDigit()
              Slider(value: factor, in: 0.5...1.5, step: 0.05)
              }
              
