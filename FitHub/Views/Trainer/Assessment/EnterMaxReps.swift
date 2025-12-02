@@ -29,9 +29,7 @@ struct EnterMaxReps: View {
         self.onFinish = onFinish
         
         if let situp = exerciseData.exercise(named: "Sit-Up") { self.situp = .init(situp) }
-        
         if let pushup = exerciseData.exercise(named: "Push-Up") { self.pushup = .init(pushup) }
-        
         if let squat = exerciseData.exercise(named: "Bodyweight Squat") { self.squat = .init(squat) }
         
         if let situp = self.situp, let max = exerciseData.peakMetric(for: situp.id) {
