@@ -65,12 +65,12 @@ extension Muscle {
 
 extension Muscle {
     static let subMuscles: [Muscle: [SubMuscles]] = [
-        .abdominals: [.upperAbs, .lowerAbs, .obliques, .externalObliques, .transverseAbdominis],
+        .abdominals: [.upperAbs, .lowerAbs, .obliques, .transverseAbdominis, .serratusAnterior],
         .pectorals: [.clavicularHead, .sternocostalHead, .costalHead],
         .deltoids: [.frontDelt, .sideDelt, .rearDelt],
         .biceps: [.bicepsLongHead, .bicepsShortHead, .brachialis],
         .triceps: [.tricepsLongHead, .tricepsLateralHead, .tricepsMedialHead],
-        .trapezius: [.upperTraps, .middleTraps, .lowerTraps],
+        .trapezius: [.upperTraps, .middleTraps, .lowerTraps, .rhomboids],
         .erectorSpinae: [.iliocostalis, .longissimus, .spinalis],
         .forearms: [.brachioradialis, .forearmFlexors, .forearmExtensors, .forearmRotators],
         .quadriceps: [.rectusFemoris, .vastusMedialis, .vastusLateralis, .vastusIntermedius],

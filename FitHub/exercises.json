@@ -3095,29 +3095,6 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/1906-dumbbell-seated-shoulder-press.html#/47-style_type-basic_grey"
 	},
 	{
-		"name": "Seated Shoulder Press",
-		"id": "E2D009AA-B5F9-4608-8432-206648921022",
-		"image": "seated_barbell_overhead_press",
-		"csvKey": "seated-shoulder-press",
-		"aliases": ["Seated Barbell Overhead Press"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell", "Vertical Bench"],
-		"muscles": [
-			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
-			] }
-		],
-		"difficulty": "Int.",
-		"effort": "Compound",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight"
-	},
-	{
 		"name": "Overhead Pin Press",
 		"id": "F3E2D1C0-B9A8-4765-4E3F-2D1C0B9A8E7D",
 		"image": "shoulder_pin_press",
@@ -3165,6 +3142,30 @@
 		"resistance": "Free Weight",
 		"imageUrl": "https://gymvisual.com/animated-gifs/12838-barbell-standing-shoulders-press.html?search_query=barbell+shoulder+press&results=90"
 	},
+    {
+        "name": "Seated Overhead Press",
+        "id": "E2D009AA-B5F9-4608-8432-206648921022",
+        "image": "seated_barbell_overhead_press",
+        "csvKey": "seated-shoulder-press",
+        "aliases": ["Seated Barbell Shoulder Press"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell", "Vertical Bench"],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
+                { "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
+            ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
+                { "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1588-barbell-seated-overhead-press.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Single-Arm Landmine Press",
 		"id": "BF17A9A1-1A33-4074-BF6D-FBA44E9EB99D",
@@ -4203,6 +4204,41 @@
 		"resistance": "Free Weight",
 		"imageUrl": "https://gymvisual.com/animated-gifs/1623-barbell-wrist-curl-version-2.html#/47-style_type-basic_grey"
 	},
+    {
+        "name": "Reverse Wrist Curl",
+        "id": "28EAF89E-3805-47C3-946A-926B4ADAD132",
+        "image": "reverse_wrist_curl",
+        "csvKey": "reverse-wrist-curl",
+        "aliases": ["Wrist Extensor Curl", "Barbell Wrist Extension"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Forearm Extensors" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1573-barbell-revers-wrist-curl-version-2.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Single-Arm Plate Wrist Curl",
+        "id": "149BB87D-41C9-4687-B420-C564CF3ABCFB",
+        "image": "plate_wrist_curl",
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "repsInstruction": "Per Arm",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/10263-weighted-seated-one-arm-wrist-curl.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Cable Concentration Curl",
 		"id": "F7B2331C-6357-4481-B81F-F91C3BA6956A",
@@ -4657,20 +4693,6 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/3573-cable-overhead-curl.html?search_query=overhead+cable+curl&results=13"
 	},
 	{
-		"name": "Plate Wrist Curl",
-		"id": "149BB87D-41C9-4687-B420-C564CF3ABCFB",
-		"image": "plate_wrist_curl",
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [ ],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [ ] }
-		],
-		"difficulty": "Nov.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Independent",
-		"resistance": "Free Weight"
-	},
-	{
 		"name": "Ez-Bar Preacher Curl",
 		"id": "2F46DC00-B87C-4E04-961F-B347830B9BED",
 		"image": "barbell_preacher_curl",
@@ -4689,25 +4711,6 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight",
         "imageUrl": "https://gymvisual.com/animated-gifs/16019-ez-barbell-preacher-curl.html#/47-style_type-basic_grey"
-	},
-	{
-		"name": "Reverse Wrist Curl",
-		"id": "28EAF89E-3805-47C3-946A-926B4ADAD132",
-		"image": "reverse_wrist_curl",
-		"csvKey": "reverse-wrist-curl",
-		"aliases": ["Wrist Extensor Curl", "Barbell Wrist Extension"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell", "Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Forearm Extensors" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Free Weight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/1573-barbell-revers-wrist-curl-version-2.html#/47-style_type-basic_grey"
 	},
 	{
 		"name": "Seated Dumbbell Curl",
@@ -4877,23 +4880,6 @@
         "effort": "Compound",
         "limbMovementType": "Bilateral Dependent",
         "resistance": "Bodyweight"
-    },
-    {
-        "name": "Neck Curl",
-        "id": "E3D4C5B6-A7F8-4920-BC1D-2E3F4A5B6C7D",
-        "image": "neck_curl",
-        "csvKey": "neck-curl",
-        "aliases": ["Supine Neck Curl"],
-        "instructions": { "steps": [ ] },
-        "equipmentRequired": ["Flat Bench"],
-        "muscles": [
-            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
-        ],
-        "difficulty": "Beg.",
-        "effort": "Isolation",
-        "limbMovementType": "Bilateral Dependent",
-        "resistance": "Bodyweight",
-        "imageUrl": "https://gymvisual.com/animated-gifs/2512-weighted-lying-neck-flexion.html#/47-style_type-basic_grey"
     },
 	{
 		"name": "Deadlift",
@@ -5363,23 +5349,6 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/2070-lever-back-extension.html#/47-style_type-basic_grey"
 	},
 	{
-		"name": "Neck Extension",
-		"id": "F2A9B3C7-5D4E-4F81-9A6B-7C3D2E1F4A5B",
-		"image": "neck_extension",
-		"csvKey": "neck-extension",
-		"aliases": ["Lying Neck Extension"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Flat Bench"],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Bodyweight",
-		"imageUrl": "https://gymvisual.com/animated-gifs/23035-seated-neck-flexion-to-extension-on-chair-male.html#/47-style_type-basic_grey"
-	},
-	{
 		"name": "Reverse Hyperextension",
 		"id": "4D6D945E-F13E-4B2D-B69C-3F30D9728D7C",
 		"image": "reverse_hyperextension",
@@ -5442,8 +5411,6 @@
 		"name": "Machine Glute Kickback",
 		"id": "D8B37D59-665B-4CE6-8D0D-B8F11EAB6848",
 		"image": "glute_kickback_machine",
-		"csvKey": "glute-kickback",
-		"aliases": ["Cable Donkey Kick"],
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": ["Glute Kickback"],
 		"muscles": [
@@ -5452,8 +5419,27 @@
 		"difficulty": "Beg.",
 		"effort": "Isolation",
 		"limbMovementType": "Unilateral",
-		"resistance": "Machine"
+		"resistance": "Machine",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/16526-lever-glute-press-male.html#/47-style_type-basic_grey"
 	},
+    {
+        "name": "Glute Kickback",
+        "id": "E0C9C4C1-3A4C-4F5C-9AD0-9A8EAEF78C61",
+        "image": "glute_kickback",
+        "csvKey": "glute-kickback",
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/8249-bent-leg-kickback-kneeling-male.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Dead Hang",
 		"id": "9E2A1B4C-73D1-49B8-8C0E-51F8D2B6A91C",
@@ -5612,12 +5598,27 @@
 		"repsInstruction": "Per Leg",
 		"imageUrl": "https://gymvisual.com/animated-gifs/2198-side-hip-abduction.html#/47-style_type-basic_grey"
 	},
+    {
+        "name": "Side Lying Hip Adduction",
+        "id": "4F8FA4E5-6A9C-41E2-B5F3-0CF6A0E5B8C0",
+        "image": "floor_hip_adduction",
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Adductors", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2198-side-hip-abduction.html#/47-style_type-basic_grey"
+    },
 	{
-		"name": "Side Lying Hip Adduction",
+		"name": "Kneeling Hip Extension",
 		"id": "2E7B1C53-4F8A-4B93-9C1D-6F5A2D3C4B1E",
 		"image": "floor_hip_extension",
 		"csvKey": "floor-hip-extension",
-		"aliases": ["Side-Lying Hip Adduction", "Inner Thigh Raise"],
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": [ ],
 		"muscles": [
@@ -5628,13 +5629,38 @@
 		"limbMovementType": "Unilateral",
 		"resistance": "Bodyweight",
 		"repsInstruction": "Per Leg",
-		"imageUrl": "https://gymvisual.com/animated-gifs/7986-side-lying-hip-adduction-male.html#/47-style_type-basic_grey"
+		"imageUrl": "https://gymvisual.com/animated-gifs/8328-straight-leg-kickback-kneeling-male.html#/47-style_type-basic_grey"
 	},
+    {
+        "name": "Hip Extension",
+        "id": "7CB5F6E1-2A34-4D8C-9F07-3B1E6A4D2C58",
+        "image": "hip_extension",
+        "csvKey": "hip-extension",
+        "aliases": ["Quadruped Hip Extension", "Donkey Kick"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 34, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 33, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 33, "submuscleWorked": "Biceps Femoris" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/11990-hip-extension.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Hip Airplane",
 		"id": "8D554BC7-BC11-48B6-977A-4F5703BDACC5",
 		"image": "hip_airplane",
-		"aliases": ["Airplane Lunge"],
+		"aliases": ["Warrior 3 Pose"],
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": [ ],
 		"muscles": [
@@ -5652,31 +5678,8 @@
 		"effort": "Compound",
 		"limbMovementType": "Unilateral",
 		"resistance": "Bodyweight",
-		"repsInstruction": "Per Leg"
-	},
-	{
-		"name": "Hip Extension",
-		"id": "7CB5F6E1-2A34-4D8C-9F07-3B1E6A4D2C58",
-		"image": "hip_extension",
-		"csvKey": "hip-extension",
-		"aliases": ["Quadruped Hip Extension", "Donkey Kick"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [ ],
-		"muscles": [
-			{ "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 34, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 33, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 33, "submuscleWorked": "Biceps Femoris" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Unilateral",
-		"resistance": "Bodyweight",
-		"repsInstruction": "Per Leg"
+		"repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/14864-warrior-iii-pose-female.html?search_query=warrior+3&results=24"
 	},
 	{
 		"name": "Machine Hip Abduction",
@@ -6046,7 +6049,7 @@
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
 				{ "engagementPercentage": 40, "submuscleWorked": "Lower Abs" },
 				{ "engagementPercentage": 35, "submuscleWorked": "Transverse Abdominis" },
-				{ "engagementPercentage": 25, "submuscleWorked": "External Obliques" }
+				{ "engagementPercentage": 25, "submuscleWorked": "Obliques" }
 			] },
 			{ "engagementPercentage": 25, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Rectus Femoris" },
@@ -7614,7 +7617,8 @@
 		"effort": "Compound",
 		"limbMovementType": "Unilateral",
 		"resistance": "Free Weight",
-		"repsInstruction": "Per Leg"
+		"repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1597-barbell-single-leg-split-squat.html#/47-style_type-basic_grey"
 	},
 	{
 		"name": "Barbell Hack Squat",
@@ -9360,5 +9364,39 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Free Weight",
         "imageUrl": "https://gymvisual.com/animated-gifs/2340-wrist-roller.html?search_query=wrist+roller&results=6"
-	}
+	},
+    {
+        "name": "Neck Curl",
+        "id": "E3D4C5B6-A7F8-4920-BC1D-2E3F4A5B6C7D",
+        "image": "neck_curl",
+        "csvKey": "neck-curl",
+        "aliases": ["Supine Neck Curl"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2512-weighted-lying-neck-flexion.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Neck Extension",
+        "id": "F2A9B3C7-5D4E-4F81-9A6B-7C3D2E1F4A5B",
+        "image": "neck_extension",
+        "csvKey": "neck-extension",
+        "aliases": ["Lying Neck Extension"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/23035-seated-neck-flexion-to-extension-on-chair-male.html#/47-style_type-basic_grey"
+    }
 ]

@@ -33,13 +33,14 @@ enum SubMuscles: String, CaseIterable, Identifiable, Codable {
     case upperAbs = "Upper Abs"
     case lowerAbs = "Lower Abs"
     case obliques = "Obliques"
-    case externalObliques = "External Obliques"
     case transverseAbdominis = "Transverse Abdominis"
+    case serratusAnterior = "Serratus Anterior"
     
     // MARK: - Traps
     case upperTraps = "Upper Traps"
     case middleTraps = "Middle Traps"
     case lowerTraps = "Lower Traps"
+    case rhomboids = "Rhomboids"
     
     // MARK: - Erector Spinae
     case iliocostalis = "Iliocostalis"
