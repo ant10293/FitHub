@@ -2628,10 +2628,14 @@
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": ["Flat Bench"],
 		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Medius" }
-			] },
-			{ "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Adductors", "submusclesWorked": [ ] }
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Adductors", "submusclesWorked": [] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Medius" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Abdominals", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Obliques" },
+                { "engagementPercentage": 40, "submuscleWorked": "Transverse Abdominis" }
+            ] }
 		],
 		"difficulty": "Int.",
 		"effort": "Isometric",
@@ -5586,10 +5590,11 @@
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": [ ],
 		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 70, "submuscleWorked": "Gluteus Medius" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Gluteus Minimus" }
-			] }
+            { "engagementPercentage": 85, "mover": "primary", "muscleWorked": "Abductors", "submusclesWorked": [] },
+            { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gluteus Medius" },
+                { "engagementPercentage": 30, "submuscleWorked": "Gluteus Minimus" }
+            ]}
 		],
 		"difficulty": "Beg.",
 		"effort": "Isolation",
@@ -5614,6 +5619,28 @@
         "repsInstruction": "Per Leg",
         "imageUrl": "https://gymvisual.com/animated-gifs/2198-side-hip-abduction.html#/47-style_type-basic_grey"
     },
+    {
+        "name": "Side Lying Leg Raise",
+        "id": "5A7C1E2D-3B4F-6A8C-9E0D-1F2B3C4D5E6F",
+        "image": "side_leg_raise",
+        "csvKey": "side-leg-raise",
+        "aliases": ["Side-Lying Hip Abduction", "Floor Hip Abduction"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Abductors", "submusclesWorked": [] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gluteus Medius" },
+                { "engagementPercentage": 30, "submuscleWorked": "Gluteus Minimus" }
+            ]}
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/10118-side-lying-leg-raise.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Kneeling Hip Extension",
 		"id": "2E7B1C53-4F8A-4B93-9C1D-6F5A2D3C4B1E",
@@ -5622,7 +5649,14 @@
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": [ ],
 		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Adductors", "submusclesWorked": [ ] }
+            { "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 34, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 33, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 33, "submuscleWorked": "Biceps Femoris" }
+            ] }
 		],
 		"difficulty": "Beg.",
 		"effort": "Isolation",
@@ -5664,15 +5698,17 @@
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": [ ],
 		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Medius" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-				{ "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-				{ "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-				{ "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [ ] }
+            { "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Abductors", "submusclesWorked": [] },
+            { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Gluteus Medius" },
+                { "engagementPercentage": 40, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+                { "engagementPercentage": 34, "submuscleWorked": "Semitendinosus" },
+                { "engagementPercentage": 33, "submuscleWorked": "Semimembranosus" },
+                { "engagementPercentage": 33, "submuscleWorked": "Biceps Femoris" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [] }
 		],
 		"difficulty": "Adv.",
 		"effort": "Compound",
@@ -6103,27 +6139,6 @@
 		"imageUrl": "https://gymvisual.com/animated-gifs/2117-lying-scissor-kick.html?search_query=scissor+kick&results=3"
 	},
 	{
-		"name": "Side Lying Leg Raise",
-		"id": "5A7C1E2D-3B4F-6A8C-9E0D-1F2B3C4D5E6F",
-		"image": "side_leg_raise",
-		"csvKey": "side-leg-raise",
-		"aliases": ["Side-Lying Hip Abduction", "Floor Hip Abduction"],
-		"instructions": { "steps": [ ] },
-		"equipmentRequired": [ ],
-		"muscles": [
-			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 70, "submuscleWorked": "Gluteus Medius" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Gluteus Minimus" }
-			] }
-		],
-		"difficulty": "Beg.",
-		"effort": "Isolation",
-		"limbMovementType": "Unilateral",
-		"resistance": "Bodyweight",
-		"repsInstruction": "Per Leg",
-		"imageUrl": "https://gymvisual.com/animated-gifs/10118-side-lying-leg-raise.html#/47-style_type-basic_grey"
-	},
-	{
 		"name": "Toes to Bar",
 		"id": "7C2EF15B-AAB4-4E2E-B290-31BFF38EE4BA",
 		"image": "toes_to_bar",
@@ -6229,15 +6244,16 @@
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": [ ],
 		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-			] },
-			{ "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 60, "submuscleWorked": "Gluteus Medius" },
-				{ "engagementPercentage": 40, "submuscleWorked": "Gluteus Maximus" }
-			] }
+            { "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Abductors", "submusclesWorked": [] },
+            { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 60, "submuscleWorked": "Gluteus Medius" },
+                { "engagementPercentage": 40, "submuscleWorked": "Gluteus Maximus" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+            ] }
 		],
 		"difficulty": "Nov.",
 		"effort": "Compound",
@@ -6331,14 +6347,15 @@
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": [ ],
 		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-			] },
-			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-			] }
+            { "engagementPercentage": 45, "mover": "primary", "muscleWorked": "Adductors", "submusclesWorked": [] },
+            { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+            ] }
 		],
 		"difficulty": "Nov.",
 		"effort": "Compound",
@@ -7766,15 +7783,16 @@
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": ["Dumbbells"],
 		"muscles": [
-			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-			] },
-			{ "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 70, "submuscleWorked": "Gluteus Maximus" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
-			] }
+            { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Adductors", "submusclesWorked": [] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gluteus Maximus" },
+                { "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
+            ] }
 		],
 		"difficulty": "Adv.",
 		"effort": "Compound",
@@ -8427,15 +8445,16 @@
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": ["Barbell", "Squat Rack"],
 		"muscles": [
-			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
-				{ "engagementPercentage": 70, "submuscleWorked": "Gluteus Maximus" }
-			] },
-			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-				{ "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-				{ "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-			] },
-			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Adductors", "submusclesWorked": [ ] }
+            { "engagementPercentage": 45, "mover": "primary", "muscleWorked": "Adductors", "submusclesWorked": [] },
+            { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gluteus Maximus" },
+                { "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
+            ] },
+            { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+                { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+                { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+            ] }
 		],
 		"difficulty": "Nov.",
 		"effort": "Compound",
