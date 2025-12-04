@@ -160,7 +160,7 @@ struct TemplateNavigator<Content: View>: View {
                         navigateToTemplateDetail = true
                     }
                 )
-                .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.5)
+                .frame(width: screenWidth * 0.8, height: screenHeight * 0.5)
                 .background(colorScheme == .dark ? Color.black : Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .shadow(radius: 20)

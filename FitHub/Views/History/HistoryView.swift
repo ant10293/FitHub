@@ -50,10 +50,12 @@ struct HistoryView: View {
     
     // MARK: – Header
     private var headerSection: some View {
-        HStack {
+        let count = userData.sessionTracking.workoutStreak
+        let longest = userData.sessionTracking.longestWorkoutStreak
+
+        return HStack {
             Spacer()
             VStack(spacing: 2) {
-                let count = userData.sessionTracking.workoutStreak
                 (
                   Text("Workout Streak: ").bold()
                 + Text("\(count) ")
@@ -63,7 +65,6 @@ struct HistoryView: View {
                 .layoutPriority(1)             // claim width before shrinking
                 .minimumScaleFactor(0.85)
 
-                let longest = userData.sessionTracking.longestWorkoutStreak
                 (
                   Text("Longest Streak: ").bold()
                 + Text("\(longest) \(longest == 1 ? "day" : "days")")
@@ -88,30 +89,32 @@ struct HistoryView: View {
     }
 
     private var LegendView: some View {
-        VStack(spacing: 10) {
+        let width = screenWidth
+        
+        return VStack(spacing: 10) {
             if showCalendar {
                 HStack {
                     Text(" ")
                     Circle()
                         .fill(.blue)
-                        .frame(width: UIScreen.main.bounds.width * 0.0375, height: UIScreen.main.bounds.width * 0.0375, alignment: .leading)
+                        .frame(width: width * 0.0375, height: width * 0.0375, alignment: .leading)
                     Text("Planned Workouts")
                     Spacer()
                 }
             }
-            NavigationLink(destination: CompletedWorkouts(userData: userData)) {
+            NavigationLink(destination: LazyDestination { CompletedWorkouts(userData: userData) }) {
                 HStack {
                     Text(" ")
                     if showCalendar {
                         Circle()
                             .fill(.green)
-                            .frame(width: UIScreen.main.bounds.width * 0.0375, height: UIScreen.main.bounds.width * 0.0375, alignment: .leading)
+                            .frame(width: width * 0.0375, height: width * 0.0375, alignment: .leading)
                     }
                     Text("Completed Workouts")
                         //.foregroundStyle(.blue)
                     Spacer()
                     Image(systemName: "chevron.right")
-                        .frame(width: UIScreen.main.bounds.width * 0.0375, height: UIScreen.main.bounds.width * 0.0375)
+                        .frame(width: width * 0.0375, height: width * 0.0375)
                         .foregroundStyle(.blue)
                         .padding(.horizontal)
                 }
@@ -124,7 +127,7 @@ struct HistoryView: View {
                     Text("Last Month")
                         .font(.subheadline)
                         .foregroundStyle(.gray)
-                    Text("\(workoutCountForLastMonth())")
+                    Text("\(workoutCountForLastMonth)")
                 }
                 .padding()
                 
@@ -132,7 +135,7 @@ struct HistoryView: View {
                     Text("This Month")
                         .font(.subheadline)
                         .foregroundStyle(.gray)
-                    Text("\(workoutCountForCurrentMonth())")
+                    Text("\(workoutCountForCurrentMonth)")
                 }
                 .padding()
             }
@@ -144,14 +147,14 @@ struct HistoryView: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
     
-    private func workoutCountForLastMonth() -> Int {
+    private var workoutCountForLastMonth: Int {
         if let lastMonth = CalendarUtility.shared.previousMonth(from: currentMonth) {
             return workoutDates.filter { CalendarUtility.shared.isDate($0, equalTo: lastMonth, toGranularity: .month) }.count
         }
         return 0
     }
     
-    private func workoutCountForCurrentMonth() -> Int {
+    private var workoutCountForCurrentMonth: Int {
         return workoutDates.filter { CalendarUtility.shared.isDate($0, equalTo: currentMonth, toGranularity: .month) }.count
     }
 }

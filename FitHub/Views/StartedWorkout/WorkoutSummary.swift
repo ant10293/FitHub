@@ -100,7 +100,7 @@ struct WorkoutSummary: View {
                     }
                 }
                 .chartYScale(domain: 0...maxY)
-                .frame(height: UIScreen.main.bounds.width * 0.33)
+                .frame(height: screenWidth * 0.33)
             }
             .padding()
         }

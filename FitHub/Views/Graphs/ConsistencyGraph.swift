@@ -44,7 +44,7 @@ struct ConsistencyGraph: View {
                         .padding(.horizontal)
                         .chartYScale(domain: 0...7)
                         .chartXAxisLabel("Week Start Date", alignment: .center)
-                        .frame(width: max(CGFloat(workoutData.count) * 60, UIScreen.main.bounds.width - 40), height: UIScreen.main.bounds.height * 0.33)
+                        .frame(width: max(CGFloat(workoutData.count) * 60, screenWidth - 40), height: screenHeight * 0.33)
                         .overlay(alignment: .center) {
                             if workoutData.isEmpty {
                                 Text("No workout data available")

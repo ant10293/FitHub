@@ -110,7 +110,7 @@ struct DetailsView: View {
                 DatePicker("", selection: $dob, displayedComponents: .date)
                     .datePickerStyle(.wheel)
                     .labelsHidden()
-                    .frame(height: UIScreen.main.bounds.height * 0.2)
+                    .frame(height: screenHeight * 0.2)
                     .padding(.top)
 
                 floatingDoneButton

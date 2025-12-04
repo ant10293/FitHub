@@ -51,7 +51,7 @@ struct EquipmentDetail: View {
                             .minimumScaleFactor(0.7)
                     }
                 }
-                .frame(maxHeight: !expandList ? UIScreen.main.bounds.height * 0.33 : .infinity)
+                .frame(maxHeight: !expandList ? screenHeight * 0.33 : .infinity)
             }
             .padding()
             .navigationBarTitle(equipment.name, displayMode: .inline)

@@ -103,17 +103,17 @@ struct ExerciseOptions: View {
             .padding(.horizontal)
         }
         .padding()
-        .frame(width: UIScreen.main.bounds.width * 0.8)
+        .frame(width: screenWidth * 0.8)
         .background(Color(UIColor.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(radius: 10)
+        /*
         .sheet(isPresented: $showSimilarExercises) {
-            /*
             SimilarExercises(currentExercise: exercise, template: template) { replacedExercise in
                 modifier.replaceSpecific(currentExercise: exercise, with: replacedExercise, in: &template, ctx: ctx)
             }
-            */
         }
+        */
     }
     
     private func replaceExercise() {

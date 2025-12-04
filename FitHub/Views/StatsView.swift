@@ -5,7 +5,7 @@ struct StatsView: View {
     @ObservedObject var userData: UserData
     
     var body: some View {
-        let height = UIScreen.main.bounds.height
+        let height = screenHeight
         let bmi = userData.currentMeasurementValue(for: .bmi).displayValue
         let calories = userData.currentMeasurementValue(for: .caloricIntake).displayValue
         let carbs = userData.physical.carbs

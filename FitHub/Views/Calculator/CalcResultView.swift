@@ -43,7 +43,7 @@ struct CalcResultView<Content: View>: View {
 
             RectangularButton(title: buttonLabel, action: dismissAction)
         }
-        .frame(width:UIScreen.main.bounds.width * 0.9)
+        .frame(width: screenWidth * 0.9)
         .cardContainer(
             cornerRadius: 12,
             shadowRadius: 10,

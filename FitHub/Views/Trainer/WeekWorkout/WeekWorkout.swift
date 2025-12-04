@@ -69,6 +69,7 @@ struct WeekWorkout: View {
         let onSelect: (WorkoutTemplate) -> Void
 
         var body: some View {
+            let width = screenWidth
             ZStack {
                 VStack {
                     Text(info.dayName)
@@ -95,7 +96,7 @@ struct WeekWorkout: View {
                         }
                     }
                 }
-                .frame(width: UIScreen.main.bounds.width * 0.225, height: UIScreen.main.bounds.width * 0.275)
+                .frame(width: width * 0.225, height: width * 0.275)
                 .background(cardBackground)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
@@ -107,7 +108,7 @@ struct WeekWorkout: View {
                 if info.isToday {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.gray.opacity(0.2))
-                        .frame(width: UIScreen.main.bounds.width * 0.275, height: UIScreen.main.bounds.width * 0.325)
+                        .frame(width: width * 0.275, height: width * 0.325)
                         .allowsHitTesting(false)
                 }
             }

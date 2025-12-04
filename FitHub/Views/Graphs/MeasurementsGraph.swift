@@ -61,7 +61,7 @@ struct MeasurementsGraph: View {
                                     .foregroundStyle(.secondary)
                             }
                         }
-                        .frame(width: max(CGFloat(sortedMeasurementRecords.count) * 60, UIScreen.main.bounds.width - 40), height: UIScreen.main.bounds.height * 0.33)
+                        .frame(width: max(CGFloat(sortedMeasurementRecords.count) * 60, screenWidth - 40), height: screenHeight * 0.33)
                         
                         Color.clear.frame(width: 0.1).id("END")   // sentinel at far right
                     }

@@ -30,7 +30,7 @@ struct AddCategoryPicker: View {
                                 Image(category.image)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: UIScreen.main.bounds.height * 0.1)
+                                    .frame(height: screenHeight * 0.1)
                                     .clipShape(RoundedRectangle(cornerRadius: 6))
                             }
                             

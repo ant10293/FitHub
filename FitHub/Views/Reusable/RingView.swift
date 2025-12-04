@@ -14,7 +14,7 @@ struct RingView: View {
     let proteins: Double
     
     var body: some View {
-        let height = UIScreen.main.bounds.height
+        let height = screenHeight
         
         VStack {
             ZStack {
@@ -63,10 +63,12 @@ struct RingView: View {
     }
     
     private func legendLabel(label: String, color: Color) -> some View {
-        VStack {
+        let size = screenWidth * 0.05
+        
+        return VStack {
             Circle()
                 .fill(color)
-                .frame(width: UIScreen.main.bounds.width * 0.05, height: UIScreen.main.bounds.width * 0.05)
+                .frame(width: size, height: size)
             Text(label)
                 .font(.caption)
         }

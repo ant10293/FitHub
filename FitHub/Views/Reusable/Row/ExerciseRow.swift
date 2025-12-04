@@ -79,7 +79,7 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 12) {
                 exercise.fullImageView(favState: resolvedState)
-                    .frame(width: UIScreen.main.bounds.width * imageSize)
+                    .frame(width: screenWidth * imageSize)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(exercise.name)

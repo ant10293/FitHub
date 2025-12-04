@@ -122,7 +122,8 @@ struct AdjustmentsView: View {
     
     // MARK: – Header
     private var headerSection: some View {
-        let imageSize = UIScreen.main.bounds.height * 0.14
+        let imageSize = screenHeight * 0.14
+        
         return HStack {
             Text(exercise.name.isEmpty ? "Unnamed\nExercise" : exercise.name)
                 .font(.title2)
@@ -172,7 +173,7 @@ struct AdjustmentsView: View {
     
     // MARK: – Row
     private func adjustmentRow(for adjustment: AdjustmentEntry) -> some View {
-        let fieldSize = UIScreen.main.bounds.width * 0.2
+        let fieldSize = screenWidth * 0.2
 
         return VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -237,12 +238,12 @@ struct AdjustmentsView: View {
     
     // MARK: – Image Helpers
     private func imagePreview(for adjustment: AdjustmentEntry) -> some View {
-        let width = UIScreen.main.bounds.width
+        let width = screenWidth * 0.2
         
         return displayImage(for: adjustment)
             .resizable()
             .scaledToFit()
-            .frame(width: width * 0.2)
+            .frame(width: width)
             .clipShape(RoundedRectangle(cornerRadius: 6))
             .overlay(
                 RoundedRectangle(cornerRadius: 6)

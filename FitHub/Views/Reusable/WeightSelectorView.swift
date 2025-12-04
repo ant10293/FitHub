@@ -22,7 +22,6 @@ struct WeightSelectorView: View {
             }
 
             WheelPicker(value: $value, config: config)
-                .frame(height: UIScreen.main.bounds.height * 0.075)
                 .padding(.bottom)
         }
     }
@@ -30,9 +29,12 @@ struct WeightSelectorView: View {
     struct WheelPicker: View {
         @Binding var value: CGFloat
         @State private var selectedIndex: Int? = nil
-        var config: Config
+        let config: Config
 
         var body: some View {
+            let height = screenHeight
+            let width = screenWidth
+            
             GeometryReader { geometry in
                 let size = geometry.size
                 let horizontalPadding = size.width / 2
@@ -40,7 +42,7 @@ struct WeightSelectorView: View {
                 ScrollView(.horizontal) {
                     HStack(spacing: config.spacing) {
                         let totalSteps = config.steps * config.count
-                        let baseHeight = UIScreen.main.bounds.height * 0.025
+                        let baseHeight = height * 0.025
 
                         ForEach(0...totalSteps, id: \.self) { index in
                             let remainder = index % config.steps
@@ -95,16 +97,17 @@ struct WeightSelectorView: View {
                     ZStack(alignment: .top) {
                         Rectangle()
                             .fill(Color.red)
-                            .frame(width: 1.0 / UIScreen.main.scale, height: UIScreen.main.bounds.height * 0.05)
-                            .padding(.bottom, UIScreen.main.bounds.height * 0.025)
+                            .frame(width: 1.0 / UIScreen.main.scale, height: height * 0.05)
+                            .padding(.bottom, height * 0.025)
 
                         DownwardTriangle()
                             .fill(Color.red)
-                            .frame(width: UIScreen.main.bounds.width * 0.0375, height: UIScreen.main.bounds.width * 0.025)
+                            .frame(width: width * 0.0375, height: width * 0.025)
                             .rotationEffect(.degrees(180))
                     }
                 }
             }
+            .frame(height: height * 0.075)
         }
 
         struct Config: Equatable {

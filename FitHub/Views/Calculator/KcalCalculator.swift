@@ -36,7 +36,7 @@ struct KcalCalculator: View {
     }
 
     var body: some View {
-        let height = UIScreen.main.bounds.height * 0.1
+        let height = screenHeight * 0.1
 
         VStack {
             ScrollView {

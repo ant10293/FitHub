@@ -33,7 +33,7 @@ struct ResumeWorkoutOverlay: View {
                 .padding(.top, 10)
             }
             .cardContainer(cornerRadius: 10, shadowRadius: 10)
-            .frame(width: UIScreen.main.bounds.width * 0.8)
+            .frame(width: screenWidth * 0.8)
             
             Spacer()
         }

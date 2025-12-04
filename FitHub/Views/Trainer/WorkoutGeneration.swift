@@ -162,7 +162,7 @@ struct WorkoutGeneration: View {
         }
         .disabled(showingExerciseOptions)
         .padding(.top, -5) // Reduce space above the list
-        .frame(maxHeight: !expandList ? UIScreen.main.bounds.height * 0.66 : .infinity)
+        .frame(maxHeight: !expandList ? screenHeight * 0.66 : .infinity)
     }
     
     @ViewBuilder private var manageSection: some View {

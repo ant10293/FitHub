@@ -27,7 +27,7 @@ struct BMICalculator: View {
     }
     
     var body: some View {
-        let height = UIScreen.main.bounds.height * 0.1
+        let height = screenHeight * 0.1
 
         VStack {
             ScrollView {
@@ -66,7 +66,7 @@ struct BMICalculator: View {
                     }) {
                             BMICategoryTable(userBMI: bmi)
                                 .padding(.bottom)
-                                .frame(height: UIScreen.main.bounds.height * 0.1)
+                                .frame(height: height)
                     }
                 }
             }

@@ -17,7 +17,7 @@ struct SimilarExercises: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            let width = UIScreen.main.bounds.width
+            let width = screenWidth
 
             // Header
             VStack(alignment: .leading, spacing: 12) {

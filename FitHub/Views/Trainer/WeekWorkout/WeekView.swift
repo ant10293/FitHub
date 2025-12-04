@@ -19,13 +19,13 @@ struct WeekView: View {
             
             Rectangle()
                 .fill(Color.gray.opacity(0.3))
-                .frame(height: UIScreen.main.bounds.height * 0.25)
+                .frame(height: screenHeight * 0.25)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .overlay(WeekWorkout(userData: userData, selectedTemplate: $selectedTemplate))
                 .padding(.horizontal)
-                .overlay(alignment: .bottom, content: {
+                .overlay(alignment: .bottom) {
                     weekLegend
-                })
+                }
         }
     }
     
@@ -43,10 +43,12 @@ struct WeekView: View {
         var label: String
         
         var body: some View {
+            let size = screenWidth * 0.03
+            
             HStack(spacing: 4) {
                 RoundedRectangle(cornerRadius: 2)
                     .fill(color)
-                    .frame(width: UIScreen.main.bounds.width * 0.03, height: UIScreen.main.bounds.width * 0.03)
+                    .frame(width: size, height: size)
                 Text(label)
                     .font(.caption)
                     .foregroundStyle(Color.primary)

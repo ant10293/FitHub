@@ -136,7 +136,7 @@ struct TemplateDetail: View {
             
             // Spacer row at the end
             Color.clear
-                .frame(height: UIScreen.main.bounds.height * 0.0625)
+                .frame(height: screenHeight * 0.0625)
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
         }

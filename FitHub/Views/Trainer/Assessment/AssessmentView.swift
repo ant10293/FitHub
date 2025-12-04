@@ -14,7 +14,7 @@ struct AssessmentView: View {
     var body: some View {
         NavigationStack(path: $navPath) {
             VStack(alignment: .center, spacing: 20) {
-                let width = UIScreen.main.bounds.width * 0.8
+                let width = screenWidth * 0.8
                                 
                 Text("Tailor Your Workouts")
                     .font(.largeTitle)
@@ -57,7 +57,7 @@ struct AssessmentView: View {
                 Spacer()
             }
             .background(Color(UIColor.secondarySystemBackground))
-            .safeAreaInset(edge: .top) { Color.clear.frame(height: UIScreen.main.bounds.height * 0.05) }
+            .safeAreaInset(edge: .top) { Color.clear.frame(height: screenHeight * 0.05) }
             .navigationBarBackButtonHidden()
             .onAppear(perform: checkCompletion)
             .navigationDestination(for: ViewOption.self) { route in

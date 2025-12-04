@@ -68,7 +68,7 @@ struct GoalSelectionView: View {
                 .font(.headline)
             
             BMICategoryTable(userBMI: bmi)
-                .frame(maxHeight: UIScreen.main.bounds.height * 0.1)  // ≈ 1/3 screen
+                .frame(maxHeight: screenHeight * 0.1)  // ≈ 1/3 screen
 
             Text("  Recommended goal: \(recommendedGoal.rawValue)  ")
                 .font(.subheadline)
@@ -101,7 +101,7 @@ struct GoalSelectionView: View {
                 ) { userGoal = goal }
             }
         }
-        .frame(maxHeight: UIScreen.main.bounds.height * 0.5)  // ≈ 1/2 screen
+        .frame(maxHeight: screenHeight * 0.5)  // ≈ 1/2 screen
     }
     
     private enum AlertType: Identifiable {

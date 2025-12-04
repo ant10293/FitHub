@@ -23,7 +23,7 @@ struct UploadImage: View {
     @State private var showCamera = false
 
     var body: some View {
-        let height = UIScreen.main.bounds.height
+        let height = screenHeight
         
         VStack(spacing: 20) {
             if let uiImage = selectedImage {

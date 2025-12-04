@@ -19,10 +19,7 @@ extension View {
 
 // Global helpers for use outside of View context
 var screenWidth: CGFloat { UIScreen.main.bounds.width }
-
 var screenHeight: CGFloat { UIScreen.main.bounds.height }
-
-//    .frame(maxHeight: UIScreen.main.bounds.height * 0.33)  // ≈ 1/3 screen
 
 func getFullImage(_ imageName: String, _ fullPath: String) -> Image {
     // 1️⃣ Asset catalog check (fullPath)
@@ -52,7 +49,7 @@ func getFullImage(_ imageName: String, _ fullPath: String) -> Image {
 enum WidthStyle { case fit, fill }
 
 var dismissKeyboardButton: some View {
-    let width = UIScreen.main.bounds.width * 0.065
+    let width = screenWidth * 0.065
     return Button(action: {
         // Move any potential non-UI related work off the main thread
         DispatchQueue.global(qos: .userInitiated).async {

@@ -49,7 +49,7 @@ struct EquipmentPopupView: View {
         List(selectedEquipment, id: \.id) { gymEquip in
             HStack {
                 gymEquip.fullImageView
-                    .frame(width: UIScreen.main.bounds.width * 0.15)
+                    .frame(width: screenWidth * 0.15)
                 
                 Text(gymEquip.name)
 
