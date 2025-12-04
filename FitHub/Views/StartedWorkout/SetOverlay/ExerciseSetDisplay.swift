@@ -33,11 +33,9 @@ struct ExerciseSetDisplay: View {
                     setLabel
                     // Weight input (unchanged)
                     weightSection
-                    
                     // Metric input (reps or hold) – same visual container as reps
                     metricSection
                 }
-                .padding(.horizontal, -20)
                 .padding(.bottom)
                 
                 if !hideStartButton, let seconds = planned.secondsValue {
@@ -78,9 +76,10 @@ struct ExerciseSetDisplay: View {
                         }
                     )
                 )
+                .padding(.horizontal)
             }
         }
-        .padding()
+        .padding(.vertical)
         .onAppear(perform: resetInputs)
         .onChange(of: setDetail.id) {
             // if exercise has changed or moved to next set
@@ -136,7 +135,6 @@ struct ExerciseSetDisplay: View {
             let width = calculateTextWidth(text: load.fieldString, minWidth: 60, maxWidth: 100)
             let isZero = load.actualValue == 0
             
-            // Keep your chrome wrapper as-is; just embed the editor
             FieldChrome(width: width, isZero: isZero) {
                 SetLoadEditor(
                     load: Binding(
@@ -165,7 +163,6 @@ struct ExerciseSetDisplay: View {
     }
     
     @ViewBuilder private var metricSection: some View {
-        // Keep your chrome wrapper for sizing/looks; embed the metric editor
         let width  = calculateTextWidth(text: planned.fieldString, minWidth: 60, maxWidth: 100)
         let isZero = planned.actualValue == 0
 
@@ -178,8 +175,8 @@ struct ExerciseSetDisplay: View {
                         setDetail.planned = $0
                         switch planned {
                         case .reps:
-                        completed = $0
-                        setDetail.completed = $0
+                            completed = $0
+                            setDetail.completed = $0
                         case .cardio, .hold:
                             toggleHideStartIfNeeded()
                         }
@@ -219,7 +216,7 @@ struct ExerciseSetDisplay: View {
             completed = comp
             toggleHideStartIfNeeded()
         } else {
-        switch planned {
+            switch planned {
             case .reps:
                 completed = planned
             case .hold, .cardio:

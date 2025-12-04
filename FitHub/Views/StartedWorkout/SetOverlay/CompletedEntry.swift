@@ -119,7 +119,6 @@ struct CompletedEntry: View {
                 }
             }
         }
-        .padding(.trailing)
     }
     
     @ViewBuilder private var rpeEntry: some View {

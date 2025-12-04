@@ -37,6 +37,7 @@ struct ResumeWorkoutOverlay: View {
             
             Spacer()
         }
+        .ignoresSafeArea(.all)
     }
 }
 

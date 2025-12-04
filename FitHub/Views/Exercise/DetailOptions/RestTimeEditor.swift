@@ -64,20 +64,16 @@ struct RestTimeEditor: View {
                                     Text("Adjust Rest Period for Set \(index + 1)")
                                         .font(.headline)
                                     
+                                    MinSecPicker(time: $pickerTime)
+
                                     HStack {
-                                        MinSecPicker(time: $pickerTime)
-                                        
-                                        Button(action: {
+                                        Spacer()
+                                        FloatingButton(image: "checkmark") {
                                             guard let idx = currentRestSetIndex else { return }
                                             updateRestPeriod(for: idx, with: pickerTime)
                                             onSave()
                                             resetPicker()
-                                        }) {
-                                            Image(systemName: "checkmark")
-                                                .foregroundStyle(.white)
-                                                .padding()
                                         }
-                                        .background(Circle().fill(Color.blue))
                                     }
                                 }
                                 

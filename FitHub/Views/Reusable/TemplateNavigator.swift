@@ -108,10 +108,10 @@ struct TemplateNavigator<Content: View>: View {
 
     @ViewBuilder
     private var templateDetailView: some View {
-        if let sel = currentTemplate, let binding = templateBinding(for: sel) {
+        if let curr = currentTemplate, let binding = templateBinding(for: curr) {
             TemplateDetail(
                 template: binding,
-                isArchived: sel.location == .archived
+                isArchived: curr.location == .archived
             )
         } else {
             exitView
