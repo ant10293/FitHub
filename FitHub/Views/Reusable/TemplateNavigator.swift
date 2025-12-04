@@ -156,7 +156,7 @@ struct TemplateNavigator<Content: View>: View {
                     },
                     onEdit: {
                         currentTemplate = newSel
-                        selectedTemplate = nil // Dismiss popup immediately before navigation
+                        //selectedTemplate = nil // Dismiss popup immediately before navigation
                         navigateToTemplateDetail = true
                     }
                 )

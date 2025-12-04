@@ -264,7 +264,7 @@
         "aliases" : ["lat pulldown", "pulldown station", "cable lat"],
         "description" : "Seated cable apparatus with a top pulley for vertical pulls emphasizing lats and upper back.",
         "equCategory" : "Cable Machines",
-        "adjustments" : ["Pulley Height", "Handle Position"],
+        "adjustments" : ["Pad Height", "Seat Height"],
         "implementation" : "Unified"
     },
     {
@@ -583,6 +583,18 @@
         "implementation" : "Unified"
     },
     {
+        "name": "Neck Extension Machine",
+        "id": "3A14DE69-27CE-49A4-B54E-9CDAB9DF9FE0",
+        "image": "neck_extension_machine_pl",
+        "aliases": ["neck extension", "lever neck extension", "plate-loaded neck extension"],
+        "description": "Plate-loaded leverage machine that isolates the posterior cervical muscles through controlled neck extension with adjustable seat and pad positioning.",
+        "equCategory": "Plated Machines",
+        "baseWeight": { "lb": 20, "kg": 10 },
+        "adjustments": ["Seat Height", "Pad Height"],
+        "pegCount": 1,
+        "implementation": "Unified"
+    },
+    {
         "name" : "Horizontal Leg Press",
         "id" : "56C9154E-264F-4CEC-AC4A-FF0184FDF8FD",
         "image" : "horizontal_leg_press",
@@ -745,6 +757,15 @@
         "adjustments" : ["Seat Height", "Pad Height"]
     },
     {
+        "name": "Multi-Hip Machine",
+        "id": "8589E489-A717-4AA7-A9AA-4937CC17D204",
+        "image": "multi_hip_machine",
+        "aliases": ["multi-hip", "hip machine", "4-way hip machine"],
+        "description": "Versatile stack-loaded machine with adjustable arm positions that enables a wide variety of hip movements.",
+        "equCategory": "Weight Machines",
+        "adjustments": ["Seat Height", "Pad Height"]
+    },
+    {
         "name" : "Leg Extension",
         "id" : "6152FA36-8190-4029-B859-E8C7181E9051",
         "image" : "leg_extension_machine",
@@ -853,7 +874,21 @@
         "image" : "dip_belt",
         "aliases" : ["pull up belt", "weight belt"],
         "description" : "Belt with a hanging chain to load plates for weighted dips, pull-ups, and belt-squat variations.",
-        "equCategory" : "Other"
+        "equCategory" : "Other",
+        "baseWeight" : { "lb": 0, "kg": 0 },
+        "implementation" : "Unified",
+        "pegCount" : 1
+    },
+    {
+        "name": "Neck Harness",
+        "id": "2C61D892-5133-487A-8D13-ABAD5AF481D3",
+        "image": "neck_harness",
+        "aliases": ["head harness", "neck weight harness", "cervical harness"],
+        "description": "Padded head harness that attaches to weight plates or cable machines for loaded neck flexion, extension, and lateral flexion exercises.",
+        "equCategory": "Other",
+        "baseWeight" : { "lb": 0, "kg": 0 },
+        "implementation" : "Unified",
+        "pegCount" : 1
     },
     {
         "name" : "Wrist Roller",

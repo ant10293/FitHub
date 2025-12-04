@@ -3998,6 +3998,157 @@
 		"resistance": "Machine",
 		"imageUrl": "https://gymvisual.com/animated-gifs/2102-lever-standing-calf-raise.html#/47-style_type-basic_grey"
 	},
+    {
+        "name": "Hack Squat Machine Calf Raise",
+        "id": "87A04E39-CE0D-48AA-9D65-0BDF8AC7DDAB",
+        "image": "hack_squat_calf_raise",
+        "aliases": ["Hack Calf Raise"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Hack Squat Machine"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gastrocnemius" },
+                { "engagementPercentage": 30, "submuscleWorked": "Soleus" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3153-hack-calf-raise.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Barbell Seated Calf Raise",
+        "id": "F2AE97AC-DAB9-4829-AA9D-2FCA15600CC0",
+        "image": "barbell_seated_calf_raise",
+        "aliases": ["Seated Calf Raise (BB)"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Soleus" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1583-barbell-seated-calf-raise.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Single-Leg Bodyweight Calf Raise",
+        "id": "9B20FF88-F923-47D9-B7C2-D9511FF40E4E",
+        "image": "single_leg_bodyweight_calf_raise",
+        "aliases": ["One Leg Floor Calf Raise", "Single-Leg Calf Raise"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gastrocnemius" },
+                { "engagementPercentage": 30, "submuscleWorked": "Soleus" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3157-one-leg-floor-calf-raise.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Standing Smith Machine Calf Raise",
+        "id": "D4912BDB-26D6-44A5-8B42-EEB90DD4BFED",
+        "image": "smith_standing_calf_raise",
+        "aliases": ["Smith Machine Calf Raise"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Smith Machine"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gastrocnemius" },
+                { "engagementPercentage": 30, "submuscleWorked": "Soleus" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2256-smith-standing-leg-calf-raise.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Seated Smith Machine Calf Raise",
+        "id": "5C821D21-AA48-4DDE-B204-0A5C386F8BA6",
+        "image": "smith_seated_calf_raise",
+        "aliases": ["Smith Machine Seated Calf Raise"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Smith Machine", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Soleus" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/12153-smith-seated-calf-raise.html#/47-style_type-basic_grey"
+    },
+    
+    {
+        "name": "Seated Banded Calf Raise",
+        "id": "A7B8C9D0-E1F2-4A5B-8C9D-0E1F2A3B4C5D",
+        "image": "banded_seated_calf_raise",
+        "aliases": ["Resistance Band Seated Calf Raise"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Loop Bands"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Soleus" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Banded",
+        "imageUrl": "https://gymvisual.com/animated-gifs/5491-resistance-band-calf-raise.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Standing Banded Calf Raise",
+        "id": "103F912D-D126-4443-BFAF-E4A5A743324E",
+        "image": "banded_standing_calf_raise",
+        "aliases": ["Resistance Band Calf Raise"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Handle Bands"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gastrocnemius" },
+                { "engagementPercentage": 30, "submuscleWorked": "Soleus" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Banded",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3139-band-two-legs-calf-raise-band-under-both-legs-version-2.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Cable Standing Calf Raise",
+        "id": "36477C2D-C44A-48F5-8408-8B1A824D06DF",
+        "image": "cable_standing_calf_raise",
+        "aliases": ["Cable Calf Raise"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Hi-lo Pulley Cable"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gastrocnemius" },
+                { "engagementPercentage": 30, "submuscleWorked": "Soleus" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3145-cable-standing-calf-raise.html#/47-style_type-basic_grey"
+    },
 	{
 		"name": "Elliptical Stride",
 		"id": "D2A4B6C8-19E3-4F75-A2E1-5C7B9D0E1F22",
@@ -5603,6 +5754,107 @@
 		"repsInstruction": "Per Leg",
 		"imageUrl": "https://gymvisual.com/animated-gifs/2198-side-hip-abduction.html#/47-style_type-basic_grey"
 	},
+    
+    
+    
+    {
+        "name": "Band Standing Hip Abduction",
+        "id": "25CE9E2F-14BF-47B5-A79B-98A504CE9C9B",
+        "image": "band_standing_hip_abduction",
+        "aliases": ["Resistance Band Standing Balance Hip Abduction"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Loop Bands"],
+        "muscles": [
+            { "engagementPercentage": 85, "mover": "primary", "muscleWorked": "Abductors", "submusclesWorked": [] },
+            { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gluteus Medius" },
+                { "engagementPercentage": 30, "submuscleWorked": "Gluteus Minimus" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Banded",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/23477-resistance-band-standing-balance-hip-abduction-male.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Band Seated Hip Abduction",
+        "id": "008597EE-D9D3-4E59-B59C-366525D370C2",
+        "image": "band_seated_hip_abduction",
+        "aliases": ["Resistance Band Seated Hip Abduction"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Loop Bands", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abductors", "submusclesWorked": [] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Banded",
+        "imageUrl": "https://gymvisual.com/animated-gifs/17014-resistance-band-seated-hip-abduction-version-2.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Cable Hip Abduction",
+        "id": "CB484298-9F7D-4C5C-991C-17F71D7D2F53",
+        "image": "cable_hip_abduction",
+        "aliases": ["Standing Cable Hip Abduction"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Hi-Lo Pulley", "Ankle Strap Attachments"],
+        "muscles": [
+            { "engagementPercentage": 85, "mover": "primary", "muscleWorked": "Abductors", "submusclesWorked": [] },
+            { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gluteus Medius" },
+                { "engagementPercentage": 30, "submuscleWorked": "Gluteus Minimus" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Machine",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/8261-cable-hip-abduction-version-2-male.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Lever Side Hip Abduction",
+        "id": "4550E764-7CAC-441E-8B4C-3CBB74333F7A",
+        "image": "lever_side_hip_abduction",
+        "aliases": ["Machine Side Hip Abduction"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Multi-Hip Machine"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Abductors", "submusclesWorked": [] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Machine",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/6120-lever-side-hip-abduction-female.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Side Bridge Hip Abduction",
+        "id": "E105AA93-2D04-4C66-ADC3-F4C3EDCD5253",
+        "image": "side_bridge_hip_abduction",
+        "aliases": ["Side Plank Hip Abduction", "Side Bridge with Leg Lift"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Abductors", "submusclesWorked": [] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Abdominals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Obliques" }
+            ] },
+            { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Gluteus Medius" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3812-side-bridge-hip-abduction.html#/47-style_type-basic_grey"
+    },
     {
         "name": "Side Lying Hip Adduction",
         "id": "4F8FA4E5-6A9C-41E2-B5F3-0CF6A0E5B8C0",
@@ -5618,6 +5870,94 @@
         "resistance": "Bodyweight",
         "repsInstruction": "Per Leg",
         "imageUrl": "https://gymvisual.com/animated-gifs/2198-side-hip-abduction.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Band Hip Adduction",
+        "id": "E1336FD4-055E-4A2C-A013-3E8584EA3EAF",
+        "image": "band_hip_adduction",
+        "aliases": ["Resistance Band Hip Adduction"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Loop Bands"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Adductors", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Banded",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/10096-band-hip-adduction-male.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Side Plank Hip Adduction",
+        "id": "C979DBD5-6ED8-4524-8720-B3196D4A67F7",
+        "image": "side_plank_hip_adduction",
+        "aliases": ["Side Plank Hip Adduction (Bent Knee)"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Adductors", "submusclesWorked": [ ] },
+            { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Abdominals", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Obliques" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/8432-side-plank-hip-adduction-bent-knee.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Lever Side Hip Adduction",
+        "id": "B98F4842-C9DA-422D-AD27-D3A2561E8DE5",
+        "image": "lever_side_hip_adduction",
+        "aliases": ["Machine Side Hip Adduction", "Lying Hip Adduction Machine"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Multi-Hip Machine"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Adductors", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Machine",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2504-lever-side-hip-adduction.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Standing Hip Adduction",
+        "id": "3FB97467-4592-4AD2-A85C-C8F081C75904",
+        "image": "standing_hip_adduction",
+        "aliases": ["Hip Adduction", "Bodyweight Hip Adduction"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Adductors", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Bodyweight",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/11989-hip-adduction.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Cable Hip Adduction",
+        "id": "845F6511-4906-4461-8C6B-242BCA821764",
+        "image": "cable_hip_adduction",
+        "aliases": ["Standing Cable Hip Adduction"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Hi-Lo Pulley", "Ankle Strap Attachments"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Adductors", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Machine",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1661-cable-hip-adduction.html?search_query=cable+hip+adduction&results=6"
     },
     {
         "name": "Side Lying Leg Raise",
@@ -9215,8 +9555,10 @@
 		],
 		"difficulty": "Nov.",
 		"effort": "Isolation",
-		"limbMovementType": "Bilateral Dependent",
-		"resistance": "Machine"
+		"limbMovementType": "Unilateral",
+		"resistance": "Machine",
+        "repsInstruction": "Per Arm",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2652-cable-horizontal-pallof-press.html#/47-style_type-basic_grey"
 	},
 	{
 		"name": "Plate Flip",
@@ -9365,6 +9707,104 @@
         "repsInstruction": "Per Leg",
 		"imageUrl": "https://gymvisual.com/animated-gifs/20497-sitting-floor-tibialis-raise-male.html?search_query=tibialis+raise&results=8"
 	},
+    {
+        "name": "Kettlebell Seated Tibialis Press",
+        "id": "AD8F5F48-8381-4105-BA41-E21BAB4ED43D",
+        "image": "kettlebell_seated_tibialis_press",
+        "aliases": ["Kettlebell Sitting Tibialis Press"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Kettlebells", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Tibialis", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Tibialis Anterior" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Free Weight",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/22624-kettlebell-sitting-tibialis-press.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Cable Seated Tibialis Press",
+        "id": "A4BDFA72-D061-458C-84AF-88041DB8FA71",
+        "image": "seated_tibialis_anterior_press",
+        "aliases": ["Machine Seated Tibialis Press"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Hi-Lo Pulley", "Ankle Strap Attachments"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Tibialis", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Tibialis Anterior" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Machine",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/16866-seated-tibialis-anterior-press-female.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Band Seated Tibialis Press",
+        "id": "0B1B6DA8-A185-49D2-BEC0-F8B53893BB62",
+        "image": "band_seated_tibialis_press",
+        "aliases": ["Resistance Band Sitting Floor Tibialis Press"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Loop Bands"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Tibialis", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Tibialis Anterior" }
+            ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Unilateral",
+        "resistance": "Banded",
+        "repsInstruction": "Per Leg",
+        "imageUrl": "https://gymvisual.com/animated-gifs/22623-resistance-band-sitting-floor-tibialis-press.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Smith Machine Reverse Calf Raise",
+        "id": "E5965326-2965-436E-955C-6A2C19E610A5",
+        "image": "smith_reverse_calf_raise",
+        "aliases": ["Smith Reverse Calf Raises", "Smith Machine Dorsiflexion"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Smith Machine"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Tibialis", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Tibialis Anterior" }
+            ] }
+        ],
+        "difficulty": "Nov.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/3164-smith-reverse-calf-raises.html?search_query=reverse+calf+raise&results=10"
+    },
+    {
+        "name": "Barbell Standing Rocking Calf Raise",
+        "id": "42C036F5-ED43-414C-AAF6-54486B7FF6DA",
+        "image": "barbell_standing_rocking_calf_raise",
+        "csvKey": "barbell-standing-rocking-calf-raise",
+        "aliases": ["Rocking Leg Calf Raise", "Barbell Rocking Calf Raise"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Barbell"],
+        "muscles": [
+            { "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Tibialis", "submusclesWorked": [
+                { "engagementPercentage": 100, "submuscleWorked": "Tibialis Anterior" }
+            ] },
+            { "engagementPercentage": 45, "mover": "secondary", "muscleWorked": "Calves", "submusclesWorked": [
+                { "engagementPercentage": 70, "submuscleWorked": "Gastrocnemius" },
+                { "engagementPercentage": 30, "submuscleWorked": "Soleus" }
+            ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Compound",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/1609-barbell-standing-rocking-leg-calf-raise.html?search_query=rocking+calf+r&results=2"
+    },
 	{
 		"name": "Wrist Roller",
 		"id": "6EB692DC-B764-4DD9-910B-9AB490368771",
@@ -9385,13 +9825,13 @@
         "imageUrl": "https://gymvisual.com/animated-gifs/2340-wrist-roller.html?search_query=wrist+roller&results=6"
 	},
     {
-        "name": "Neck Curl",
+        "name": "Plate Neck Flexion",
         "id": "E3D4C5B6-A7F8-4920-BC1D-2E3F4A5B6C7D",
         "image": "neck_curl",
         "csvKey": "neck-curl",
         "aliases": ["Supine Neck Curl"],
         "instructions": { "steps": [ ] },
-        "equipmentRequired": ["Flat Bench"],
+        "equipmentRequired": ["Flat Bench", "Weight Plate"],
         "muscles": [
             { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
         ],
@@ -9402,13 +9842,108 @@
         "imageUrl": "https://gymvisual.com/animated-gifs/2512-weighted-lying-neck-flexion.html#/47-style_type-basic_grey"
     },
     {
-        "name": "Neck Extension",
+        "name": "Plate Neck Extension",
         "id": "F2A9B3C7-5D4E-4F81-9A6B-7C3D2E1F4A5B",
         "image": "neck_extension",
-        "csvKey": "neck-extension",
         "aliases": ["Lying Neck Extension"],
         "instructions": { "steps": [ ] },
-        "equipmentRequired": ["Flat Bench"],
+        "equipmentRequired": ["Flat Bench", "Weight Plate"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/23035-seated-neck-flexion-to-extension-on-chair-male.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Cable Seated Neck Extension",
+        "id": "4D770C36-0D2E-467C-8161-F936AFBB67BA",
+        "image": "cable_seated_neck_extension",
+        "aliases": ["Cable Neck Extension (with head harness)"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Cable Hi-lo Pulley", "Neck Harness"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/5421-cable-seated-neck-extension-with-head-harness.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Weighted Seated Neck Extension",
+        "id": "D03CD251-8CF1-4009-84D0-7252E572A7D7",
+        "image": "weighted_seated_neck_extension",
+        "aliases": ["Seated Neck Extension (with head harness)", "Neck Harness Extension"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Neck Harness", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2329-weighted-seated-neck-extension-with-head-harness.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Weighted Lying Neck Extension",
+        "id": "BD454470-2FD3-4449-9381-9943F18E788E",
+        "image": "weighted_lying_neck_extension",
+        "aliases": ["Lying Neck Extension (with head harness)", "Prone Neck Extension"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Neck Harness", "Flat Bench"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/5418-weighted-lying-neck-extension-with-head-harness.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Lever Neck Extension",
+        "id": "C596542E-8D8D-4AA9-B760-F1890B530184",
+        "image": "lever_neck_extension",
+        "aliases": ["Neck Extension Machine", "Plate-Loaded Neck Extension"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Neck Extension Machine"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Machine",
+        "imageUrl": "https://gymvisual.com/animated-gifs/4785-lever-neck-extension-plate-loaded.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Prone Neck Extension Hold",
+        "id": "60CBCFE3-5C0E-4C62-A1E3-1CB30795B0A4",
+        "image": "prone_cervical_extension_isometric",
+        "aliases": ["Prone Neck Extension Hold", "Cervical Extension Isometric"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isometric",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/13665-prone-cervical-extension-isometric-hold.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Prone Neck Extension",
+        "id": "B44476F1-A055-4B46-9292-420D385950EF",
+        "image": "prone_cervical_extension",
+        "aliases": ["Prone Neck Extension", "Bodyweight Neck Extension"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
         "muscles": [
             { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
         ],
@@ -9416,6 +9951,57 @@
         "effort": "Isolation",
         "limbMovementType": "Bilateral Dependent",
         "resistance": "Bodyweight",
-        "imageUrl": "https://gymvisual.com/animated-gifs/23035-seated-neck-flexion-to-extension-on-chair-male.html#/47-style_type-basic_grey"
+        "imageUrl": "https://gymvisual.com/animated-gifs/13664-prone-cervical-extension.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Prone Neck Bridge",
+        "id": "9D0EE4DD-4AA2-4494-BF14-BD5EF4320EF9",
+        "image": "neck_bridge_prone",
+        "csvKey": "neck-bridge-prone",
+        "aliases": ["Prone Neck Bridge", "Wrestler's Bridge"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Adv.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/2127-neck-bridge-prone.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Plate Lying Neck Head Twist",
+        "id": "4528EB94-BC63-4568-AC61-157CA2D7DB7D",
+        "image": "weighted_lying_neck_head_twist",
+        "csvKey": "weighted-lying-neck-head-twist",
+        "aliases": ["Weighted Neck Rotation", "Lying Neck Rotation"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": ["Flat Bench", "Weight Plate"],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Int.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Free Weight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/12206-weighted-lying-neck-head-twist.html#/47-style_type-basic_grey"
+    },
+    {
+        "name": "Chin Tuck",
+        "id": "F5CA1D6C-E541-4599-87E1-9A47F1AC7F0D",
+        "image": "chin_tuck",
+        "csvKey": "chin-tuck",
+        "aliases": ["Cervical Retraction", "Neck Retraction"],
+        "instructions": { "steps": [ ] },
+        "equipmentRequired": [ ],
+        "muscles": [
+            { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
+        ],
+        "difficulty": "Beg.",
+        "effort": "Isolation",
+        "limbMovementType": "Bilateral Dependent",
+        "resistance": "Bodyweight",
+        "imageUrl": "https://gymvisual.com/animated-gifs/6655-chin-tuck.html#/47-style_type-basic_grey"
     }
 ]
