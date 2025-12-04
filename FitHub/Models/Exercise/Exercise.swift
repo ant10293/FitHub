@@ -680,22 +680,32 @@ extension Exercise {
     ) -> Text {
         // Build a bullet-point line for every engagement
         let lines: [Text] = engagements.map { e in
-            let name = Text("• \(e.muscleWorked.rawValue): ").bold()
-
             let subs = e.allSubMuscles
                 .map { $0.simpleName }
                 .joined(separator: ", ")
 
-            return subs.isEmpty ? name : name + Text(subs)
+            let base = "• \(e.muscleWorked.rawValue)"
+
+            if subs.isEmpty {
+                // No submuscles → no colon
+                return Text(base).bold()
+            } else {
+                // Has submuscles → add colon + list
+                return Text(base + ": ").bold() + Text(subs)
+            }
         }
 
         // no muscles
         guard let first = lines.first else {
             let body = Text("• None")
-            return showHeader ? Text(header).bold() + Text("\n") + body : body
+            return showHeader
+                ? Text(header).bold() + Text("\n") + body
+                : body
         }
 
-        let body = lines.dropFirst().reduce(first) { $0 + Text("\n") + $1 }
+        let body = lines
+            .dropFirst()
+            .reduce(first) { $0 + Text("\n") + $1 }
             .font(.caption)
             .foregroundStyle(.secondary)
 
