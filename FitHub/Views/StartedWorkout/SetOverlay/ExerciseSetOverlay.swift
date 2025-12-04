@@ -104,6 +104,7 @@ struct ExerciseSetOverlay: View {
                         .font(.subheadline)
                         .foregroundStyle(.gray)
                 }
+                .padding(.horizontal)
             },
             trailing: {
                 Button(action: onClose) {

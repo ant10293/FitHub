@@ -46,7 +46,7 @@ private struct LegalDocumentSheetHost: View {
     var body: some View {
         VStack(spacing: 16) {
             Image(systemName: "doc.richtext")
-                .font(.system(size: 44))
+                .font(.system(.largeTitle))
                 .foregroundStyle(.secondary)
 
             Text(title)

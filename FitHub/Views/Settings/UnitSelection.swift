@@ -61,7 +61,8 @@ struct UnitSelection: View {
     private var descriptionCard: some View {
         HStack(spacing: 12) {
             Image(systemName: "scalemass")
-                .font(.system(size: 26, weight: .semibold))
+                .imageScale(.large)
+                .fontWeight(.semibold)
                 .foregroundStyle(.blue)
 
             VStack(alignment: .leading, spacing: 4) {

@@ -88,7 +88,7 @@ struct AffiliateRegistrationView: View {
                                 
                                 ZStack {
                                     Text(code)
-                                        .font(.system(size: 30, weight: .bold, design: .monospaced))
+                                        .font(.system(.title, design: .monospaced, weight: .bold))
                                         .foregroundStyle(.blue)
                                         .frame(maxWidth: .infinity, alignment: .center)
                                         .padding()

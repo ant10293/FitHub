@@ -270,7 +270,7 @@ enum LegalURL {
         switch self {
         case .privacyPolicy: "Privacy Policy"
         case .termsOfService: "Terms of Service"
-        case .affiliateTerms: "Affiliate Program Terms"
+        case .affiliateTerms: "Affiliate Terms & Conditions"
         }
     }
 }

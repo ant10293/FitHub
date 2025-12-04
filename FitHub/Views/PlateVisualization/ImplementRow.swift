@@ -36,6 +36,14 @@ struct ImplementRow: View {
         }
     }
     
+    // Determine if we should use vertical layout (too many plates to fit horizontally)
+    private var shouldUseVerticalLayout: Bool {
+        guard let pegCount = pegCount, pegCount == .both else { return false }
+        let totalPlates = plan.leftSide.count + plan.rightSide.count
+        // Use vertical layout if more than 8 plates total (4 per side)
+        return totalPlates > 8
+    }
+    
     var body: some View {
         VStack(spacing: 8) {
             // Title with total weight for multiple implementations
@@ -53,45 +61,25 @@ struct ImplementRow: View {
                 }
             }
             
-            // Weight labels and base chip
-            HStack(spacing: 8) {
-                if let pegCount = pegCount, pegCount == .both {
-                    // Two pegs: show Left and Right labels
-                labelPair(title: "Left", mass: plan.perSideAchieved)
-                Spacer(minLength: 8)
-                
-                VStack(spacing: 2) {
-                    if showMultiplier {
-                        // Show per-side weight × multiplier above (per-side is the raw base weight)
-                        Text("\(base.formattedText()) × \(plan.baseCount)")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
+            // Conditional layout based on plate count
+            if shouldUseVerticalLayout {
+                // Vertical layout: Left, Base, Right stacked
+                VStack(spacing: 12) {
+                    // Left section
+                    VStack(spacing: 4) {
+                        labelPair(title: "Left", mass: plan.perSideAchieved)
+                        PlateStackColumn(plates: plan.leftSide, isVertical: false)
+                            .accessibilityLabel("Left plates")
                     }
                     
-                    // Show modified base value in center
-                    if showMultiplier {
-                        let adjustedBase = Mass(kg: base.inKg * Double(plan.baseCount))
-                        baseChip(adjustedBase, showPerSide: false)
-                    } else {
-                        baseChip(base, showPerSide: false)
-                    }
-                }
-                
-                Spacer(minLength: 8)
-                labelPair(title: "Right", mass: plan.perSideAchieved)
-                } else {
-                    // Single peg or no pegs: center the base weight
-                    Spacer()
-                    
+                    // Base weight chip
                     VStack(spacing: 2) {
                         if showMultiplier {
-                            // Show per-side weight × multiplier above (per-side is the raw base weight)
                             Text("\(base.formattedText()) × \(plan.baseCount)")
                                 .font(.caption2)
                                 .foregroundStyle(.secondary)
                         }
                         
-                        // Show modified base value in center
                         if showMultiplier {
                             let adjustedBase = Mass(kg: base.inKg * Double(plan.baseCount))
                             baseChip(adjustedBase, showPerSide: false)
@@ -100,13 +88,69 @@ struct ImplementRow: View {
                         }
                     }
                     
-                    Spacer()
+                    // Right section
+                    VStack(spacing: 4) {
+                        labelPair(title: "Right", mass: plan.perSideAchieved)
+                        PlateStackColumn(plates: plan.rightSide, isVertical: false)
+                            .accessibilityLabel("Right plates")
+                    }
+                }
+                .font(title.isEmpty ? .headline : .subheadline)
+            } else {
+                // Horizontal layout: Left - Base - Right
+                VStack(spacing: 8) {
+                    // Weight labels and base chip
+                    HStack(spacing: 8) {
+                        if let pegCount = pegCount, pegCount == .both {
+                            // Two pegs: show Left and Right labels
+                            labelPair(title: "Left", mass: plan.perSideAchieved)
+                            Spacer(minLength: 8)
+                            
+                            VStack(spacing: 2) {
+                                if showMultiplier {
+                                    Text("\(base.formattedText()) × \(plan.baseCount)")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                
+                                if showMultiplier {
+                                    let adjustedBase = Mass(kg: base.inKg * Double(plan.baseCount))
+                                    baseChip(adjustedBase, showPerSide: false)
+                                } else {
+                                    baseChip(base, showPerSide: false)
+                                }
+                            }
+                            
+                            Spacer(minLength: 8)
+                            labelPair(title: "Right", mass: plan.perSideAchieved)
+                        } else {
+                            // Single peg or no pegs: center the base weight
+                            Spacer()
+                            
+                            VStack(spacing: 2) {
+                                if showMultiplier {
+                                    Text("\(base.formattedText()) × \(plan.baseCount)")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                
+                                if showMultiplier {
+                                    let adjustedBase = Mass(kg: base.inKg * Double(plan.baseCount))
+                                    baseChip(adjustedBase, showPerSide: false)
+                                } else {
+                                    baseChip(base, showPerSide: false)
+                                }
+                            }
+                            
+                            Spacer()
+                        }
+                    }
+                    .font(title.isEmpty ? .headline : .subheadline)
+                    
+                    // Plate visualization
+                    PlateVisualization(plan: plan, pegCount: pegCount)
                 }
             }
-            .font(title.isEmpty ? .headline : .subheadline)
-
-            // Plate visualization
-            PlateVisualization(plan: plan, pegCount: pegCount)
         }
         .padding(.vertical)
     }
@@ -176,7 +220,7 @@ private struct PlateVisualization: View {
 }
 
 // MARK: - Plate Stack Column
-private struct PlateStackColumn: View {
+struct PlateStackColumn: View {
     enum Orientation { case vertical, horizontal } // vertical = single peg; horizontal = two pegs
 
     let plates: [Mass]
@@ -196,7 +240,7 @@ private struct PlateStackColumn: View {
                     .frame(width: size(for: w).width, height: size(for: w).height)
                     .overlay(
                         Text(w.displayString)
-                            .font(.system(size: 9, weight: .semibold, design: .rounded))
+                            .font(.caption)
                             .foregroundStyle(.white)
                             .shadow(radius: 1, y: 0.5)
                     )
