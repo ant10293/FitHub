@@ -57,7 +57,7 @@ struct AssessmentView: View {
                 Spacer()
             }
             .background(Color(UIColor.secondarySystemBackground))
-            .safeAreaInset(edge: .top) { Color.clear.frame(height: 20) }
+            .safeAreaInset(edge: .top) { Color.clear.frame(height: UIScreen.main.bounds.height * 0.05) }
             .navigationBarBackButtonHidden()
             .onAppear(perform: checkCompletion)
             .navigationDestination(for: ViewOption.self) { route in

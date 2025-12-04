@@ -10,17 +10,23 @@ struct SetInputRow<LoadField: View, MetricField: View>: View {
     // Inject the actual field content
     let loadField: () -> LoadField
     let metricField: () -> MetricField
+    
+    // Optional screen width - if not provided, compute it
+    let providedScreenWidth: CGFloat?
 
-    private let setsColWidth:  CGFloat = 54
-    private let fieldColWidth: CGFloat = 100
-    private let hGap:          CGFloat = 20
-    private let vGap:          CGFloat = 4
+    // Compute screen width once and reuse
+    private var sw: CGFloat { providedScreenWidth ?? screenWidth }
+    private var setsColWidth:  CGFloat { sw * 0.135 }
+    private var fieldColWidth: CGFloat { sw * 0.25 }
+    private var hGap:          CGFloat { sw * 0.06 }
+    private var vGap:          CGFloat { sw * 0.01 }
 
     init(
         setNumber: Int,
         exercise: Exercise,
         load: SetLoad,
         metric: SetMetric,
+        screenWidth: CGFloat? = nil,
         @ViewBuilder loadField: @escaping () -> LoadField,
         @ViewBuilder metricField: @escaping () -> MetricField
     ) {
@@ -29,6 +35,7 @@ struct SetInputRow<LoadField: View, MetricField: View>: View {
         self.isHeaderRow = setNumber == 1
         self.load = load
         self.metric = metric
+        self.providedScreenWidth = screenWidth
         self.loadField = loadField
         self.metricField = metricField
     }

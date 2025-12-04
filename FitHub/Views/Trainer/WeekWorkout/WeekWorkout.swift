@@ -95,7 +95,7 @@ struct WeekWorkout: View {
                         }
                     }
                 }
-                .frame(width: 90, height: 110)
+                .frame(width: UIScreen.main.bounds.width * 0.225, height: UIScreen.main.bounds.width * 0.275)
                 .background(cardBackground)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
@@ -107,7 +107,7 @@ struct WeekWorkout: View {
                 if info.isToday {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.gray.opacity(0.2))
-                        .frame(width: 110, height: 130)
+                        .frame(width: UIScreen.main.bounds.width * 0.275, height: UIScreen.main.bounds.width * 0.325)
                         .allowsHitTesting(false)
                 }
             }

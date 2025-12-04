@@ -1,5 +1,5 @@
 //
-//  Helpers.swift
+//  ViewHelpers.swift
 //  FitHub
 //
 //  Created by Anthony Cantu on 7/9/25.
@@ -7,6 +7,20 @@
 
 import Foundation
 import SwiftUI
+
+// MARK: - Screen Dimension Helpers
+extension View {
+    /// Screen width helper
+    var screenWidth: CGFloat { UIScreen.main.bounds.width }
+    
+    /// Screen height helper
+    var screenHeight: CGFloat { UIScreen.main.bounds.height }
+}
+
+// Global helpers for use outside of View context
+var screenWidth: CGFloat { UIScreen.main.bounds.width }
+
+var screenHeight: CGFloat { UIScreen.main.bounds.height }
 
 //    .frame(maxHeight: UIScreen.main.bounds.height * 0.33)  // ≈ 1/3 screen
 
@@ -38,7 +52,8 @@ func getFullImage(_ imageName: String, _ fullPath: String) -> Image {
 enum WidthStyle { case fit, fill }
 
 var dismissKeyboardButton: some View {
-    Button(action: {
+    let width = UIScreen.main.bounds.width * 0.065
+    return Button(action: {
         // Move any potential non-UI related work off the main thread
         DispatchQueue.global(qos: .userInitiated).async {
             // Perform I/O or any non-UI operations here if needed in the future
@@ -52,7 +67,8 @@ var dismissKeyboardButton: some View {
     }) {
         Image(systemName: "keyboard.chevron.compact.down")
             .resizable()
-            .frame(width: 24, height: 24)
+            .scaledToFit()
+            .frame(width: width, height: width)
             .padding()
             .foregroundStyle(.white)
             .background(Color.blue)
@@ -67,7 +83,7 @@ var dismissKeyboardButton: some View {
 struct Line: View {
     var body: some View {
         Rectangle()
-            .frame(height: 1)
+            .frame(height: 1.0 / UIScreen.main.scale)
             .foregroundStyle(Color.secondary)
     }
 }

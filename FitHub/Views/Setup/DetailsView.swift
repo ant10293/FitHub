@@ -165,7 +165,7 @@ struct DetailsView: View {
         Image(gender == .male ? "Male" : "Female")
         .resizable()
         .aspectRatio(contentMode: .fit)
-        .frame(maxWidth: UIScreen.main.bounds.width * 0.33)
+        .frame(maxWidth: screenWidth * 0.33)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .overlay {
             if isSelected {

@@ -15,7 +15,7 @@ struct HealthKitRequestView: View {
             Image("Logo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: UIScreen.main.bounds.width * 0.5)  // ≈ 1/2 screen
+                .frame(width: screenWidth * 0.5)  // ≈ 1/2 screen
         }
         .navigationBarBackButtonHidden(true) // Hiding the back button
         .onAppear {

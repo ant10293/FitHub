@@ -66,7 +66,7 @@ struct RingView: View {
         VStack {
             Circle()
                 .fill(color)
-                .frame(width: 20, height: 20)
+                .frame(width: UIScreen.main.bounds.width * 0.05, height: UIScreen.main.bounds.width * 0.05)
             Text(label)
                 .font(.caption)
         }

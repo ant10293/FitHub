@@ -22,7 +22,7 @@ struct WeightSelectorView: View {
             }
 
             WheelPicker(value: $value, config: config)
-                .frame(height: 60)
+                .frame(height: UIScreen.main.bounds.height * 0.075)
                 .padding(.bottom)
         }
     }
@@ -40,24 +40,25 @@ struct WeightSelectorView: View {
                 ScrollView(.horizontal) {
                     HStack(spacing: config.spacing) {
                         let totalSteps = config.steps * config.count
+                        let baseHeight = UIScreen.main.bounds.height * 0.025
 
                         ForEach(0...totalSteps, id: \.self) { index in
                             let remainder = index % config.steps
 
                             let lineHeight: CGFloat = {
                                 if remainder == 0 {
-                                    return 20
+                                    return baseHeight * 2.0
                                 } else if remainder == config.steps / 2 {
-                                    return 15
+                                    return baseHeight * 1.5
                                 } else {
-                                    return 10
+                                    return baseHeight
                                 }
                             }()
 
                             Divider()
                                 .background(remainder == 0 ? Color.primary : .gray)
                                 .frame(width: 0, height: lineHeight, alignment: .center)
-                                .frame(maxHeight: 20, alignment: .bottom)
+                                .frame(maxHeight: baseHeight * 2.0, alignment: .bottom)
                                 .overlay(alignment: .bottom) {
                                     if remainder == 0 && config.showsText {
                                         Text("\((index / config.steps) * config.multiplier)")
@@ -65,7 +66,7 @@ struct WeightSelectorView: View {
                                             .fontWeight(.semibold)
                                             .textScale(.secondary)
                                             .fixedSize()
-                                            .offset(y: 20)
+                                            .offset(y: baseHeight * 2.0)
                                     }
                                 }
                         }
@@ -94,12 +95,12 @@ struct WeightSelectorView: View {
                     ZStack(alignment: .top) {
                         Rectangle()
                             .fill(Color.red)
-                            .frame(width: 1, height: 40)
-                            .padding(.bottom, 20)
+                            .frame(width: 1.0 / UIScreen.main.scale, height: UIScreen.main.bounds.height * 0.05)
+                            .padding(.bottom, UIScreen.main.bounds.height * 0.025)
 
                         DownwardTriangle()
                             .fill(Color.red)
-                            .frame(width: 15, height: 10)
+                            .frame(width: UIScreen.main.bounds.width * 0.0375, height: UIScreen.main.bounds.width * 0.025)
                             .rotationEffect(.degrees(180))
                     }
                 }

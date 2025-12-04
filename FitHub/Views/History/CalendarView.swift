@@ -187,19 +187,23 @@ struct CalendarView: View {
         let today: Date
 
         var body: some View {
-            ZStack {
-                Text("\(CalendarUtility.shared.day(from: day))")
-                    .foregroundStyle(workoutColor)
-                    .frame(width: 30, height: 30)
-                    .background(backgroundView)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
+            GeometryReader { geometry in
+                let cellSize = min(geometry.size.width, geometry.size.height) * 0.8
+                ZStack {
+                    Text("\(CalendarUtility.shared.day(from: day))")
+                        .foregroundStyle(workoutColor)
+                        .frame(width: cellSize, height: cellSize)
+                        .background(backgroundView)
+                        .clipShape(RoundedRectangle(cornerRadius: cellSize / 2))
 
-                if CalendarUtility.shared.isDate(day, inSameDayAs: today) {
-                    Circle()
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(width: 35, height: 35)
-                        .zIndex(1)
+                    if CalendarUtility.shared.isDate(day, inSameDayAs: today) {
+                        Circle()
+                            .fill(Color.gray.opacity(0.3))
+                            .frame(width: cellSize * 1.17, height: cellSize * 1.17)
+                            .zIndex(1)
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .frame(maxWidth: .infinity, minHeight: 36) // ensure each cell takes full column width
         }

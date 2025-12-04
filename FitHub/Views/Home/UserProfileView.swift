@@ -106,8 +106,8 @@ struct UserProfileView: View {
                     }
                     .onAppear(perform: populateDrafts)
                 } else {
-                    let maxW  = UIScreen.main.bounds.width
-                    let maxH  = UIScreen.main.bounds.height
+                    let maxW  = screenWidth
+                    let maxH  = screenHeight
                     let btnW  = maxW * 0.75          // 75 % of screen width
                     let btnH  = maxH * 0.075         // ≈ 7.5 % of screen height
 

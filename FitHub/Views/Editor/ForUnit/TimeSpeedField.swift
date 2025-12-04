@@ -71,7 +71,8 @@ struct TimeSpeedField: View {
     private var showingResolved: TimeOrSpeed.InputKey { showing ?? tos.showing }
     
     private var menuButton: some View {
-        Menu {
+        let size = screenWidth * 0.05
+        return Menu {
             ForEach(TimeOrSpeed.InputKey.allCases, id: \.self) { key in
                 Button {
                     // Unfocus the text field first
@@ -91,10 +92,10 @@ struct TimeSpeedField: View {
             Image(systemName: "arrow.2.circlepath")
                 .font(.caption2)
                 .foregroundColor(.secondary)
-                .frame(width: 20, height: 20)
+                .frame(width: size, height: size)
                 .background(Color.gray.opacity(0.1))
                 .clipShape(Circle())
         }
-        .offset(x: 8, y: 8)
+        .offset(x: screenWidth * 0.02, y: screenWidth * 0.02)
     }
 }

@@ -19,7 +19,7 @@ struct WeekView: View {
             
             Rectangle()
                 .fill(Color.gray.opacity(0.3))
-                .frame(height: 200)
+                .frame(height: UIScreen.main.bounds.height * 0.25)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .overlay(WeekWorkout(userData: userData, selectedTemplate: $selectedTemplate))
                 .padding(.horizontal)
@@ -46,7 +46,7 @@ struct WeekView: View {
             HStack(spacing: 4) {
                 RoundedRectangle(cornerRadius: 2)
                     .fill(color)
-                    .frame(width: 12, height: 12)
+                    .frame(width: UIScreen.main.bounds.width * 0.03, height: UIScreen.main.bounds.width * 0.03)
                 Text(label)
                     .font(.caption)
                     .foregroundStyle(Color.primary)

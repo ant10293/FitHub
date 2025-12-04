@@ -130,7 +130,7 @@ struct CompletedEntry: View {
                         Text("(1 - 10)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                            .offset(y: 15)
+                            .offset(y: screenHeight * 0.01875)
                     }
 
                 Slider(

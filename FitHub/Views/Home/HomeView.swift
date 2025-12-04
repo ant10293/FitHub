@@ -45,7 +45,7 @@ struct HomeView: View {
                     Image(systemName: "person.crop.circle")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: UIScreen.main.bounds.width * 0.125) 
+                        .frame(width: screenWidth * 0.125) 
                         .foregroundStyle(colorScheme == .dark ? .gray : .black)
                     
                     VStack(alignment: .leading) {

@@ -23,6 +23,7 @@ struct ExerciseSetDetail: View {
     let hasEquipmentAdjustments: Bool
     let perform: (CallBackAction) -> Void
     let onSuperset: (String) -> Void
+    let screenWidth: CGFloat?
     
     // MARK: - Init
     init(
@@ -33,7 +34,8 @@ struct ExerciseSetDetail: View {
         keyboardVisible: Bool,
         hasEquipmentAdjustments: Bool,
         perform: @escaping (CallBackAction) -> Void,
-        onSuperSet: @escaping (String) -> Void
+        onSuperSet: @escaping (String) -> Void,
+        screenWidth: CGFloat? = nil
     ) {
         _template          = template
         _exercise          = exercise
@@ -51,6 +53,7 @@ struct ExerciseSetDetail: View {
         self.hasEquipmentAdjustments = hasEquipmentAdjustments
         self.perform = perform
         self.onSuperset = onSuperSet
+        self.screenWidth = screenWidth
     }
 
     // MARK: - Body
@@ -89,6 +92,7 @@ struct ExerciseSetDetail: View {
                 exercise: exercise,
                 load: set.load,
                 metric: set.planned,
+                screenWidth: screenWidth,
                 loadField: {
                     SetLoadEditor(load: $set.load)
                         .textFieldStyle(.roundedBorder)
@@ -126,7 +130,7 @@ struct ExerciseSetDetail: View {
                 Button(action: { showSupersetOptions.toggle() }) {
                     Image(systemName: showSupersetOptions ? "chevron.down" : "chevron.right")
                         .foregroundStyle(.blue)
-                        .frame(width: 44, height: 44)
+                        .frame(minWidth: 44, minHeight: 44)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -137,7 +141,7 @@ struct ExerciseSetDetail: View {
             Button(action: { isShowingOptions.toggle() }) {
                 Image(systemName: "line.horizontal.3")
                     .foregroundStyle(.secondary)
-                    .frame(width: 44, height: 44)
+                    .frame(minWidth: 44, minHeight: 44)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)

@@ -26,7 +26,7 @@ struct HeightSelectorRow: View {
                         Text("ft")
                             .bold()
                             .foregroundStyle(.gray)
-                            .offset(x: -50)
+                            .offset(x: -screenWidth * 0.125)
                     }
 
                     Picker("", selection: $inches) {
@@ -37,7 +37,7 @@ struct HeightSelectorRow: View {
                         Text("in")
                             .bold()
                             .foregroundStyle(.gray)
-                            .offset(x: -45)
+                            .offset(x: -screenWidth * 0.1125)
                     }
                 }
                 .pickerStyle(.wheel)
@@ -57,7 +57,7 @@ struct HeightSelectorRow: View {
                     Text("cm")
                         .bold()
                         .foregroundStyle(.gray)
-                        .offset(x: -60)
+                        .offset(x: -screenWidth * 0.15)
                 }
             }
         }

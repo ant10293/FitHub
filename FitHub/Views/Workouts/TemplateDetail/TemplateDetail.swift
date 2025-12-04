@@ -104,7 +104,8 @@ struct TemplateDetail: View {
     }
     
     private var setDetailList: some View {
-        List {
+        let sw = screenWidth
+        return List {
             ForEach($template.exercises, id: \.id) { $exercise in
                 ExerciseSetDetail(
                     template: $template,
@@ -122,7 +123,8 @@ struct TemplateDetail: View {
                     onSuperSet: { ssIdString in
                         captureSnapshot()
                         modifier.handleSupersetSelection(for: &exercise, with: ssIdString, in: &template)
-                    }
+                    },
+                    screenWidth: sw
                 )
                 .listRowBackground(Color.clear) // Ensure list rows have a clear background
                 .listRowSeparator(.hidden)
@@ -134,7 +136,7 @@ struct TemplateDetail: View {
             
             // Spacer row at the end
             Color.clear
-                .frame(height: 50)
+                .frame(height: UIScreen.main.bounds.height * 0.0625)
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
         }

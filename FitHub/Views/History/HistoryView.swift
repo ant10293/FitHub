@@ -94,7 +94,7 @@ struct HistoryView: View {
                     Text(" ")
                     Circle()
                         .fill(.blue)
-                        .frame(width: 15, height: 15, alignment: .leading)
+                        .frame(width: UIScreen.main.bounds.width * 0.0375, height: UIScreen.main.bounds.width * 0.0375, alignment: .leading)
                     Text("Planned Workouts")
                     Spacer()
                 }
@@ -105,13 +105,13 @@ struct HistoryView: View {
                     if showCalendar {
                         Circle()
                             .fill(.green)
-                            .frame(width: 15, height: 15, alignment: .leading)
+                            .frame(width: UIScreen.main.bounds.width * 0.0375, height: UIScreen.main.bounds.width * 0.0375, alignment: .leading)
                     }
                     Text("Completed Workouts")
                         //.foregroundStyle(.blue)
                     Spacer()
                     Image(systemName: "chevron.right")
-                        .frame(width: 15, height: 15)
+                        .frame(width: UIScreen.main.bounds.width * 0.0375, height: UIScreen.main.bounds.width * 0.0375)
                         .foregroundStyle(.blue)
                         .padding(.horizontal)
                 }

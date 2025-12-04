@@ -34,7 +34,7 @@ struct SimilarExercisesRow: View {
             } else {
                 // Not loaded yet, trigger lazily when this section appears
                 Color.clear
-                    .frame(height: 1)
+                    .frame(height: 1.0 / UIScreen.main.scale)
                     .onAppear(perform: loadIfNeeded)
             }
         }
