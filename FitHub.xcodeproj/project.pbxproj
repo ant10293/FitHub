@@ -1000,7 +1000,6 @@
 				653136362E552FCA00EECCA5 /* Distribution.swift */,
 				653136382E552FF000EECCA5 /* Notification.swift */,
 				65F5EF8E2EB19CBE005557F1 /* CoverageState.swift */,
-				65DD05212EBC06B6000D159C /* ReferralValidation.swift */,
 				6592279F2EC820E100EEDF42 /* Name.swift */,
 			);
 			path = Models;
@@ -1420,6 +1419,7 @@
 				65DD050D2EB979F7000D159C /* AdminScript_GenerateCodes.swift */,
 				65DD050E2EB979F7000D159C /* ReferralCodeGenerator.swift */,
 				65DD050F2EB979F7000D159C /* ReferralPurchaseTracker.swift */,
+				65DD05212EBC06B6000D159C /* ReferralValidation.swift */,
 			);
 			path = ReferralSystems;
 			sourceTree = "<group>";
