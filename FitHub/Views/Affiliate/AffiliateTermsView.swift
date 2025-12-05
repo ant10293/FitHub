@@ -71,3 +71,12 @@ struct AffiliateTermsView: View {
 
 
 
+
+
+
+
+
+
+
+
+

@@ -14,6 +14,9 @@ struct WorkoutCustomization: View {
     @State private var showingDayPicker: Bool = false
     @State private var showingTimePicker: Bool = false
     @State private var showingSplitSelection: Bool = false
+    @State private var showingWarmupSettings: Bool = false
+    @State private var showingSetIntensity: Bool = false
+    @State private var showingWeightIncrementation: Bool = false
     @State private var showAlert: Bool = false
     @State private var keepCurrentExercises: Bool = false
     @State private var isDurationExpanded = false
@@ -29,17 +32,26 @@ struct WorkoutCustomization: View {
             if toast.showingSaveConfirmation { InfoBanner(title: "Restored Default Preferences!") }
             
             Form {
+                // Section 1: Generation Parameters
                 Section {
                     daysOfWeekSelector
-                    setsSelector
-                    repsSelector
-                    setStructureSelector
                     resistanceTypeSelector
                     distributionSelector
                     workoutDurationSelector
                     keepCurrentExercisesToggle
                 }
                 
+                // Section 2: Set Configuration
+                Section {
+                    setsSelector
+                    repsSelector
+                    setStructureSelector
+                    setIntensitySelector
+                    warmupSettingsSelector
+                    weightIncrementationSelector
+                }
+                
+                // Section 3: Schedule
                 Section {
                     splitSelector
                     workoutDaysSelector
@@ -55,11 +67,22 @@ struct WorkoutCustomization: View {
         .sheet(isPresented: $showingSplitSelection) { SplitSelection(vm: SplitSelectionVM(userData: ctx.userData)) }
         .sheet(isPresented: $showingDayPicker) { DaysEditor(selectedDays: $selectedDays, numDays: $daysPerWeek) }
         .sheet(isPresented: $showingTimePicker) { TimesEditor(userData: ctx.userData, days: selectedDays) }
-        .toolbar { ToolbarItem(placement: .topBarTrailing) {
-            Button("Reset") { resetToDefaults() }
-                .disabled(isDefault)
-                .foregroundStyle(isDefault ? .gray : .red)
-        }}
+        .sheet(isPresented: $showingWarmupSettings) { WarmupSettingsView(userData: ctx.userData) }
+        .sheet(isPresented: $showingSetIntensity) { SetDetailIntensity(userData: ctx.userData) }
+        .sheet(isPresented: $showingWeightIncrementation) { WeightIncrementation() }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Reset") { showAlert = true }
+                    .disabled(isDefault)
+                    .foregroundStyle(isDefault ? .gray : .red)
+            }
+        }
+        .alert("Reset to Defaults", isPresented: $showAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Reset", role: .destructive) { resetToDefaults() }
+        } message: {
+            Text("This will reset all workout customization preferences to their default values. This action cannot be undone.")
+        }
     }
     
     private var daysOfWeekSelector: some View {
@@ -309,6 +332,67 @@ struct WorkoutCustomization: View {
         }
     }
     
+    private var setIntensitySelector: some View {
+        VStack(alignment: .leading) {
+            Button(action: { showingSetIntensity = true }) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("Set Intensity")
+                        .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
+                    Spacer()
+                    Text(ctx.userData.workoutPrefs.setIntensity.summary(setStructure: selectedSetStructure))
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.gray)
+                }
+            }
+            .buttonStyle(.plain)
+        }
+    }
+    
+    private var warmupSettingsSelector: some View {
+        VStack(alignment: .leading) {
+            Button(action: { showingWarmupSettings = true }) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("Warmup Sets")
+                        .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
+                    Spacer()
+                    Text(ctx.userData.workoutPrefs.warmupSettings.summary(
+                            setDistribution: ctx.userData.workoutPrefs.customSets ?? defaultRepsAndSets.sets,
+                            effortDistribution: distribution
+                        )
+                    )
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.gray)
+                }
+            }
+            .buttonStyle(.plain)
+        }
+    }
+    
+    private var weightIncrementationSelector: some View {
+        VStack(alignment: .leading) {
+            Button(action: { showingWeightIncrementation = true }) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("Weight Rounding")
+                        .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
+                    Spacer()
+                    Text(ctx.userData.workoutPrefs.roundingPreference.summary)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.gray)
+                }
+            }
+            .buttonStyle(.plain)
+        }
+    }
+    
     private var splitWarning: String? {
         let split = WorkoutWeek.determineSplit(customSplit: ctx.userData.workoutPrefs.customWorkoutSplit, daysPerWeek: daysPerWeek)
         if let customSplit = ctx.userData.workoutPrefs.customWorkoutSplit, customSplit != split {
@@ -352,7 +436,11 @@ struct WorkoutCustomization: View {
         ctx.userData.workoutPrefs.customDuration = nil
         ctx.userData.workoutPrefs.customDistribution = nil
         ctx.userData.workoutPrefs.customWorkoutTimes = nil
-                
+        
+        ctx.userData.workoutPrefs.warmupSettings = WarmupSettings()
+        ctx.userData.workoutPrefs.setIntensity = SetIntensitySettings()
+        ctx.userData.workoutPrefs.roundingPreference = RoundingPreference()
+        
         initializeVariables()
 
         toast.showSaveConfirmation()
@@ -371,6 +459,9 @@ struct WorkoutCustomization: View {
             && pref.customDuration == nil
             && pref.customDistribution == nil
             && pref.customWorkoutTimes == nil
+            && pref.warmupSettings == .init()
+            && pref.setIntensity == .init()
+            && pref.roundingPreference == .init()
         )
     }
 }

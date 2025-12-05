@@ -91,7 +91,7 @@ struct OverloadCalculator: View {
                         equipmentData: ctx.equipment,
                         period:   ctx.userData.settings.progressiveOverloadPeriod,
                         style:    ctx.userData.settings.progressiveOverloadStyle,
-                        rounding: ctx.userData.settings.roundingPreference,
+                        rounding: ctx.userData.workoutPrefs.roundingPreference,
                         overloadFactor: ctx.userData.settings.customOverloadFactor ?? 1.0
                     )
                     //print("Debug: Applied progressive overload to \(exercise.name), new set details: \(newExercise.setDetails)")

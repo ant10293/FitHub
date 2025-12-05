@@ -74,7 +74,8 @@ struct StartedWorkoutView: View {
         TemplateExerciseList(
             template: viewModel.template,
             userData: ctx.userData,
-            heartOverlay: true
+            heartOverlay: true,
+            showCount: false
         ) { _ in
             EmptyView()
         } detail: { exercise in

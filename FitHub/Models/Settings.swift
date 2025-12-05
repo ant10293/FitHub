@@ -138,13 +138,32 @@ struct SetIntensitySettings: Codable, Hashable {
     var maxIntensity: Int = 90
     var fixedIntensity: Int = 80
     var topSet: TopSetOption = .lastSet
+    
+    func summary(setStructure: SetStructures) -> String {
+        if setStructure == .fixed || topSet == .allSets {
+            return "\(fixedIntensity)%"
+        } else {
+            return "\(minIntensity)%-\(maxIntensity)%"
+        }
+    }
 }
 
 struct WarmupSettings: Codable, Hashable {
-    // var includeSets: Bool = false // include warmup sets in workout generation
+    var includeSets: Bool = false // include warmup sets in workout generation
     var minIntensity: Int = 50
     var maxIntensity: Int = 75
     var setCountModifier: WarmupSetCountModifier = .oneHalf
+    var exerciseSelection: WarmupExerciseSelection = .compoundWeighted
+    
+    func summary(setDistribution: SetDistribution, effortDistribution: EffortDistribution) -> String {
+        guard self.includeSets else { return "None" }
+        
+        let range = setDistribution.overallRange(filteredBy: effortDistribution)
+        let minWarmupSets = self.setCountModifier.warmupSetCount(for: range.lowerBound)
+        let maxWarmupSets = self.setCountModifier.warmupSetCount(for: range.upperBound)
+        
+        return Format.formatRange(range: minWarmupSets...maxWarmupSets)
+    }
 }
 
 enum WarmupSetCountModifier: String, Codable, Equatable, CaseIterable {
@@ -167,5 +186,25 @@ enum WarmupSetCountModifier: String, Codable, Equatable, CaseIterable {
     /// Calculate the number of warmup sets based on working set count
     func warmupSetCount(for workingSets: Int) -> Int {
         max(1, Int(round(Double(workingSets) * fraction)))
+    }
+}
+
+enum WarmupExerciseSelection: String, Codable, Equatable, CaseIterable {
+    case compoundWeighted = "Compound Weighted"
+    case allWeighted = "All Weighted"
+    
+    var description: String {
+        switch self {
+        case .compoundWeighted: "Only compound weighted rep-based exercises will include warmup sets."
+        case .allWeighted: "All weighted rep-based exercises will include warmup sets."
+        }
+    }
+    
+    func isCompatible(exercise: Exercise) -> Bool {
+        guard exercise.allowedWarmup else { return false }
+        switch self {
+        case .compoundWeighted: return exercise.effort == .compound
+        case .allWeighted: return true
+        }
     }
 }

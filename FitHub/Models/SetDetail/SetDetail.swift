@@ -191,8 +191,8 @@ extension SetDetail {
         default:      base = 1.0
         }
 
-        // Warm-ups move a bit faster (about 15% faster)
-        let adjusted = isWarm ? base * 0.85 : base
+        // Warm-ups move a bit faster (about 25% faster)
+        let adjusted = isWarm ? base * 0.75 : base
         return Int(round(adjusted))
     }
     

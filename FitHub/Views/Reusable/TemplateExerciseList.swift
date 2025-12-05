@@ -15,6 +15,7 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
     let heartOverlay: Bool
     let imageSize: CGFloat
     let lineLimit: Int
+    let showCount: Bool
     let accessory: (Exercise) -> Accessory
     let detail: (Exercise) -> Detail
     let onTap: (Exercise, Int) -> Void
@@ -26,6 +27,7 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
         heartOverlay: Bool = true,
         imageSize: CGFloat = 0.12,
         lineLimit: Int = 2,
+        showCount: Bool = true,
         @ViewBuilder accessory: @escaping (Exercise) -> Accessory,
         @ViewBuilder detail: @escaping (Exercise) -> Detail,
         onTap: @escaping (Exercise, Int) -> Void = { _, _ in }
@@ -36,6 +38,7 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
         self.heartOverlay = heartOverlay
         self.imageSize = imageSize
         self.lineLimit = lineLimit
+        self.showCount = showCount
         self.accessory = accessory
         self.detail = detail
         self.onTap = onTap
@@ -43,72 +46,79 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
     
     var body: some View {
         List {
-            ForEach(Array(template.exercises.enumerated()), id: \.element.id) { index, exercise in
-                let nextExercise = (index + 1 < template.exercises.count) ? template.exercises[index + 1] : nil
-                let previousExercise = (index > 0) ? template.exercises[index - 1] : nil
-                let isFirstInSuperset: Bool = {
-                    guard let next = nextExercise else { return false }
-                    return template.supersetFor(exercise: exercise) == next ||
-                           template.supersetFor(exercise: next) == exercise
-                }()
-                let isSecondInSuperset: Bool = {
-                    guard let previous = previousExercise else { return false }
-                    return template.supersetFor(exercise: exercise) == previous ||
-                           template.supersetFor(exercise: previous) == exercise
-                }()
-                
-                // Regular exercise row
-                let baseRow = ExerciseRow(
-                    exercise,
-                    secondary: secondary,
-                    heartOverlay: heartOverlay,
-                    favState: FavoriteState.getState(for: exercise, userData: userData),
-                    imageSize: imageSize,
-                    lineLimit: lineLimit,
-                    nextExercise: nextExercise
-                ) {
-                    accessory(exercise)
-                } detail: {
-                    detail(exercise)
-                } onTap: {
-                    onTap(exercise, index)
-                }
-                
-                let modifiedRow = baseRow
-                    .id(exercise.id)
-                    .disabled(exercise.isCompleted)
-                    .opacity(exercise.isCompleted ? 0.25 : 1.0)
-                    .listRowSeparator(isFirstInSuperset ? .hidden : .automatic, edges: isFirstInSuperset ? .bottom : .all)
-                
-                // Apply negative padding to reduce spacing for supersetted exercises
-                if isFirstInSuperset {
-                    // First exercise: reduce bottom spacing
-                    modifiedRow
-                        .padding(.bottom, -8)
-                } else if isSecondInSuperset {
-                    // Second exercise: reduce top spacing
-                    modifiedRow
-                        .padding(.top, -8)
-                } else {
-                    modifiedRow
-                }
-                
-                // Superset badge row - inserted between the two supersetted exercises
-                if isFirstInSuperset {
-                    HStack(spacing: 4) {
-                        Text("Supersetted")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Image(systemName: "arrow.up.arrow.down")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+            Section {
+                ForEach(Array(template.exercises.enumerated()), id: \.element.id) { index, exercise in
+                    let nextExercise = (index + 1 < template.exercises.count) ? template.exercises[index + 1] : nil
+                    let previousExercise = (index > 0) ? template.exercises[index - 1] : nil
+                    let isFirstInSuperset: Bool = {
+                        guard let next = nextExercise else { return false }
+                        return template.supersetFor(exercise: exercise) == next ||
+                        template.supersetFor(exercise: next) == exercise
+                    }()
+                    let isSecondInSuperset: Bool = {
+                        guard let previous = previousExercise else { return false }
+                        return template.supersetFor(exercise: exercise) == previous ||
+                        template.supersetFor(exercise: previous) == exercise
+                    }()
+                    
+                    // Regular exercise row
+                    let baseRow = ExerciseRow(
+                        exercise,
+                        secondary: secondary,
+                        heartOverlay: heartOverlay,
+                        favState: FavoriteState.getState(for: exercise, userData: userData),
+                        imageSize: imageSize,
+                        lineLimit: lineLimit,
+                        nextExercise: nextExercise
+                    ) {
+                        accessory(exercise)
+                    } detail: {
+                        detail(exercise)
+                    } onTap: {
+                        onTap(exercise, index)
                     }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 4)
-                    .background(Capsule().fill(Color(.systemBackground)))
-                    .frame(maxWidth: .infinity)
-                    .listRowSeparator(.hidden, edges: .all) // Hide separators above and below
-                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)) // Remove all insets
+                    
+                    let modifiedRow = baseRow
+                        .id(exercise.id)
+                        .disabled(exercise.isCompleted)
+                        .opacity(exercise.isCompleted ? 0.25 : 1.0)
+                        .listRowSeparator(isFirstInSuperset ? .hidden : .automatic, edges: isFirstInSuperset ? .bottom : .all)
+                    
+                    // Apply negative padding to reduce spacing for supersetted exercises
+                    if isFirstInSuperset {
+                        // First exercise: reduce bottom spacing
+                        modifiedRow
+                            .padding(.bottom, -8)
+                    } else if isSecondInSuperset {
+                        // Second exercise: reduce top spacing
+                        modifiedRow
+                            .padding(.top, -8)
+                    } else {
+                        modifiedRow
+                    }
+                    
+                    // Superset badge row - inserted between the two supersetted exercises
+                    if isFirstInSuperset {
+                        HStack(spacing: 4) {
+                            Text("Supersetted")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Image(systemName: "arrow.up.arrow.down")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 4)
+                        .background(Capsule().fill(Color(.systemBackground)))
+                        .frame(maxWidth: .infinity)
+                        .listRowSeparator(.hidden, edges: .all) // Hide separators above and below
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)) // Remove all insets
+                    }
+                }
+            } header: {
+                if showCount {
+                    Text(Format.countText(template.exercises.count))
+                        .font(.caption)
                 }
             }
         }

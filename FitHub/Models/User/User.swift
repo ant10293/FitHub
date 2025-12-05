@@ -54,6 +54,10 @@ struct WorkoutPreferences: Codable, Equatable {
     var maxBwRepCapMultiplier: Double = 2.0 // MARK: no editing implemented yet
     //var minHoldTime: TimeSpan = .init(seconds: 30)
     //var maxHoldTime: TimeSpan = .init(minutes: 5)
+    
+    var roundingPreference: RoundingPreference = .init()
+    var setIntensity: SetIntensitySettings = .init()
+    var warmupSettings: WarmupSettings = .init()
 }
 
 // setup            = Setup()
@@ -80,11 +84,7 @@ struct Settings: Codable, Equatable {
     
     var userLanguage: Languages = .english
     var selectedTheme: Themes = .defaultMode // Default style
-    var roundingPreference: RoundingPreference = .init()
     var muscleRestDuration: Int = 48 // Default to 48 hours
-    
-    var setIntensity: SetIntensitySettings = .init()
-    var warmupSettings: WarmupSettings = .init()
     
     var useDateOnly: Bool = true // If true, only the date is considered
     var defaultWorkoutTime: DateComponents?  // Default workout time, [.hour, .minute]

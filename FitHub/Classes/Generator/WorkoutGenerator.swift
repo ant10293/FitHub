@@ -244,15 +244,9 @@ extension WorkoutGenerator {
         func getExercisesForTemplate(status: TimeSpan.Fit, existingPicked: [Exercise]) -> ([Exercise], [PoolChanges.RelaxedFilter]?) {
             let (exercises, dayChanges): ([Exercise], PoolChanges?) = {
                 let existingCount = existingPicked.count
-                let rawCount: Int = {
-                    switch status {
-                    case .over: return existingCount - 1
-                    case .under: return existingCount + 1
-                    case .within: return existingCount
-                    }
-                }()
+                let newCount = status.newCount(existingCount: existingCount)
                 
-                let targetCount = max(0, rawCount)
+                let targetCount = max(0, newCount)
                 if targetCount == existingCount { return (existingPicked, nil) }
                 if targetCount < existingCount {
                     // TODO: add a warning if the effort distribution gets messed up
@@ -278,7 +272,7 @@ extension WorkoutGenerator {
             
             // [2] Detail each exercise (aggregate timing, plus per-ex timing with threshold)
             let detailedExercises: [Exercise] = exercises.map { ex in
-                let newEx = calculateDetailedExercise(
+                let exStep1 = calculateDetailedExercise(
                     input: input,
                     exercise: ex,
                     repsAndSets: params.repsAndSets,
@@ -287,14 +281,22 @@ extension WorkoutGenerator {
                     }
                 )
                 // —— Overload/deload progression ——————————————
-                return handleExerciseProgression(
+                var exStep2 = handleExerciseProgression(
                     input: input,
-                    exercise: newEx,
+                    exercise: exStep1,
                     completedExercise: completed.byID[ex.id],
                     overloadFactor: params.overloadFactor,
                     overloadStyle: params.overloadStyle,
                     templateCompleted: wasCompleted
                 )
+                if input.user.workoutPrefs.warmupSettings.includeSets {
+                    exStep2.createWarmupDetails(
+                        equipmentData: input.equipmentData,
+                        userData: input.user
+                    )
+                }
+                
+                return exStep2
             }
             
             return (detailedExercises, dayChanges?.relaxedFilters)
@@ -357,6 +359,7 @@ extension WorkoutGenerator {
     ) -> Exercise {
         var ex   = exercise
         let s    = input.user.settings
+        let rounding = input.user.workoutPrefs.roundingPreference
 
         func resetProgression() {
             ex.weeksStagnated      = 0
@@ -379,7 +382,7 @@ extension WorkoutGenerator {
                 equipmentData: input.equipmentData,
                 period:   s.progressiveOverloadPeriod,
                 style:    overloadStyle,
-                rounding: s.roundingPreference,
+                rounding: rounding,
                 overloadFactor: overloadFactor,
                 oldExercise: completedExercise
             )
@@ -402,7 +405,7 @@ extension WorkoutGenerator {
                 ex.applyDeload(
                     equipmentData: input.equipmentData,
                     deloadPct: s.deloadIntensity,
-                    rounding: s.roundingPreference
+                    rounding: rounding
                 )
                 resetProgression()
                 deloadingExercises.insert(ex.id)

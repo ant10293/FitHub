@@ -172,12 +172,18 @@ enum Format {
             : String(format: "%d:%02d", m, s)
     }
     
-    static func formatRange(range: ClosedRange<Int>) -> String {
+    static func formatRange(range: ClosedRange<Double>) -> String {
         if range.lowerBound == range.upperBound {
-            "\(range.lowerBound)"
+            "\(Format.smartFormat(range.lowerBound))"
         } else {
-            "\(range.lowerBound)-\(range.upperBound)"
+            "\(Format.smartFormat(range.lowerBound))-\(Format.smartFormat(range.upperBound))"
         }
+    }
+    
+    static func formatRange(range: ClosedRange<Int>) -> String {
+        let min = Double(range.lowerBound)
+        let max = Double(range.upperBound)
+        return Format.formatRange(range: min...max)
     }
     
     /// Returns "N exercise(s)" with optional capitalization of the leading "e".

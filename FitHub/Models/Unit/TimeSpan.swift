@@ -110,13 +110,20 @@ extension TimeSpan {
     enum Fit {
         case under(by: Delta)
         case within
-        case over(by:  Delta)
+        case over(by: Delta)
 
         var isWithin: Bool { if case .within = self { return true } else { return false } }
         var isUnder:  Bool { if case .under = self  { return true } else { return false } }
         var isOver:   Bool { if case .over  = self  { return true } else { return false } }
+        
+        func newCount(existingCount: Int) -> Int {
+            switch self {
+            case .over: return existingCount - 1
+            case .under: return existingCount + 1
+            case .within: return existingCount
+            }
+        }
     }
-
     /// Compare `self` to `target` with a relative tolerance.
     /// - Parameter tolerancePercent: e.g. 0.10 = ±10% window around `target`.
     func fit(against target: TimeSpan, tolerancePercent: Double = 0.10) -> Fit {

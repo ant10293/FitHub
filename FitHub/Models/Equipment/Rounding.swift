@@ -30,6 +30,17 @@ struct RoundingPreference: Codable, Equatable {
         .smallWeights: Mass(kg: 2.5)
     ]
     
+    var overallRange: ClosedRange<Double> {
+        let values = UnitSystem.current == .imperial ? lb.values.map { $0.inLb } : kg.values.map { $0.inKg }
+        guard let minValue = values.min(), let maxValue = values.max() else { return 0...0 }
+        return minValue...maxValue
+    }
+    
+    var summary: String {
+        let unit = UnitSystem.current.weightUnit
+        return "\(Format.formatRange(range: self.overallRange)) \(unit)"
+    }
+    
     func getRounding(for category: RoundingCategory) -> Double {
         if UnitSystem.current == .imperial {
             return (lb[category] ?? Mass(lb: 0)).inLb

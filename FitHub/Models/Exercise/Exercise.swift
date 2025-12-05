@@ -153,6 +153,10 @@ extension Exercise {
         setDetails.allSatisfy { $0.completed == nil }
     }
     
+    var allowedWarmup: Bool {
+        return usesWeight && usesReps
+    }
+    
     var usesWeight: Bool {
         switch resistance {
         case .machine: return effort != .cardio ? true : false
@@ -388,13 +392,13 @@ extension Exercise {
         let numSets      = repsAndSets.getSets(for: effort); guard numSets > 0 else { return }
         let range        = repsAndSets.repRange(for: effort)   // still used for rep-based
         let setStructure = userData.workoutPrefs.setStructure
-        let rounding     = userData.settings.roundingPreference
+        let rounding     = userData.workoutPrefs.roundingPreference
         
         // Extract intensity settings
-        let minIntensityPct = Double(userData.settings.setIntensity.minIntensity) / 100.0
-        let maxIntensityPct = Double(userData.settings.setIntensity.maxIntensity) / 100.0
-        let fixedIntensityPct = Double(userData.settings.setIntensity.fixedIntensity) / 100.0
-        let topSet = userData.settings.setIntensity.topSet
+        let minIntensityPct = Double(userData.workoutPrefs.setIntensity.minIntensity) / 100.0
+        let maxIntensityPct = Double(userData.workoutPrefs.setIntensity.maxIntensity) / 100.0
+        let fixedIntensityPct = Double(userData.workoutPrefs.setIntensity.fixedIntensity) / 100.0
+        let topSet = userData.workoutPrefs.setIntensity.topSet
         
         // Helper function to calculate intensity percentage for a given set
         func intensityPercentage(for setNumber: Int, totalSets: Int) -> Double {
@@ -572,8 +576,10 @@ extension Exercise {
             return
         }
 
-        let rounding = userData.settings.roundingPreference
-        let warmupSettings = userData.settings.warmupSettings
+        let warmupSettings = userData.workoutPrefs.warmupSettings
+        guard warmupSettings.exerciseSelection.isCompatible(exercise: self) else { return }
+        
+        let rounding = userData.workoutPrefs.roundingPreference
         
         // Calculate warmup set count based on working set count
         let workingSets = setDetails.count
