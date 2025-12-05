@@ -39,7 +39,7 @@ struct UserProfileView: View {
                 
                 if isAuthenticated  {
                     Form {
-                        // MARK: — Personal Info Section
+                        // MARK: — Name Section
                         Section {
                             TextField("First Name", text: $draftFirstName)
                                 .focused($focusedField, equals: .firstName)
@@ -59,7 +59,7 @@ struct UserProfileView: View {
                                     }
                                 }
                         } header: {
-                            Text("Personal Information")
+                            Text("Name")
                         }
                         
                         Section {
@@ -122,10 +122,7 @@ struct UserProfileView: View {
         }
         .navigationTitle("Profile")
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-        .alert(
-            "Delete Account?",
-            isPresented: $showingDeleteConfirmation
-        ) {
+        .alert("Delete Account?", isPresented: $showingDeleteConfirmation) {
             Button("Delete", role: .destructive) {
                 handleDeletion()
             }

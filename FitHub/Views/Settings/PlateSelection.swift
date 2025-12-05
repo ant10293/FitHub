@@ -23,28 +23,26 @@ struct PlateSelection: View {
     private var isSelectionEmpty: Bool { selection.isEmpty }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                header
+        VStack(spacing: 16) {
+            header
 
-                LazyVGrid(columns: columns, spacing: gridSpacing) {
-                    ForEach(all, id: \.self) { mass in
-                        PlateChip(
-                            mass: mass,
-                            selected: selectionSet.contains(mass),
-                            color: WeightPlates.color(for: mass, in: selection)
-                        ) {
-                            toggle(mass)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .aspectRatio(3.0, contentMode: .fit)
+            LazyVGrid(columns: columns, spacing: gridSpacing) {
+                ForEach(all, id: \.self) { mass in
+                    PlateChip(
+                        mass: mass,
+                        selected: selectionSet.contains(mass),
+                        color: WeightPlates.color(for: mass, in: selection)
+                    ) {
+                        toggle(mass)
                     }
+                    .frame(maxWidth: .infinity)
+                    .aspectRatio(3.0, contentMode: .fit)
                 }
-
-                footerActions
             }
-            .padding()
+
+            footerActions
         }
+        .padding()
         .navigationBarTitle("Available Plates", displayMode: .inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
