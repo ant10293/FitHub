@@ -7359,7 +7359,7 @@
 		"image": "chest_supported_t_bar_row",
 		"aliases": ["Supported T-Bar Row", "Chest Pad T-Bar Row"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Chest-Supported T-Bar Row"],
+		"equipmentRequired": ["Incline T-Bar Row"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
 			{ "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [

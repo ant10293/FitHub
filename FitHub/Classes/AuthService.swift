@@ -191,9 +191,6 @@ final class AuthService: ObservableObject {
             if !names.lastName.isEmpty {
                 userData.profile.lastName = names.lastName
             }
-            if !names.userName.isEmpty {
-                userData.profile.userName = names.userName
-            }
             userData.saveToFile()
         }
     }
@@ -346,9 +343,6 @@ extension AuthService {
             Task { @MainActor in
                 userData.profile.firstName = firstName
                 userData.profile.lastName = lastName
-                if let displayName = Name.getDisplayName(firstName: firstName, lastName: lastName) {
-                    userData.profile.userName = displayName
-                }
                 userData.profile.accountCreationDate = user.metadata.creationDate ?? Date()
                 userData.profile.userId = user.uid
                 // Do NOT touch name/email here; those will be set when they upgrade

@@ -130,13 +130,9 @@ extension Profile {
     func displayName(_ style: NameStyle) -> String {
         switch style {
         case .title:
-            if !firstName.isEmpty { return firstName }
-            // fall back to first part of userName
-            let parts = userName.split(separator: " ")
-            return parts.first.map(String.init) ?? userName
+            return firstName
 
         case .full:
-            if !userName.isEmpty { return userName }
             let combined = (firstName + " " + lastName).trimmed
             return combined
         }

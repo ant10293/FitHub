@@ -49,7 +49,7 @@ struct HomeView: View {
                         .foregroundStyle(colorScheme == .dark ? .gray : .black)
                     
                     VStack(alignment: .leading) {
-                        Text(ctx.userData.profile.userName)
+                        Text(ctx.userData.profile.displayName(.full))
                             .font(.title2)
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
                         

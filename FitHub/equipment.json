@@ -348,18 +348,6 @@
         "implementation" : "Divided"
     },
     {
-        "name" : "Incline Row",
-        "id" : "A41FB0C0-FB5B-4650-A6C0-F52E5120B302",
-        "image" : "incline_row",
-        "aliases" : ["Chest-supported T-bar Row"],
-        "description" : "Chest‑supported plate row pulling from a low‑to‑high angle—hammers lats and upper‑back thickness.",
-        "equCategory" : "Plated Machines",
-        "baseWeight" : { "lb": 45, "kg": 20 },
-        "adjustments" : ["Pad Height"],
-        "pegCount" : 2,
-        "implementation" : "Divided"
-    },
-    {
         "name" : "T-Bar Row",
         "id" : "B60CC8FD-9C84-49AA-BC53-3AFFBED2340C",
         "image" : "t-bar_row",
@@ -371,10 +359,10 @@
         "implementation" : "Unified"
     },
     {
-        "name" : "Chest-Supported T-Bar Row",
+        "name" : "Incline T-Bar Row",
         "id" : "C1D2E3F4-A5B6-7890-CDEF-123456789ABC",
-        "image" : "chest_supported_t-bar_row",
-        "aliases" : ["Supported T-Bar Row", "Chest Pad T-Bar Row", "Supported Plate Row"],
+        "image" : "incline_t-bar_row",
+        "aliases" : ["Chest-Supported T-Bar Row"],
         "description" : "Chest-supported arm that rows a plate-loaded lever to target mid-back and rear delts with reduced lower-back strain and enhanced lat isolation.",
         "equCategory" : "Plated Machines",
         "baseWeight" : { "lb": 45, "kg": 20 },
@@ -492,7 +480,7 @@
         "name" : "Seated Calf Raise",
         "id" : "448DB352-62E7-438F-8E3E-F53998B7F5BC",
         "image" : "calf_raise_machine",
-        "aliases" : ["seated calf machine", "calf raise", "donkey calf"],
+        "aliases" : ["seated calf machine", "calf raise"],
         "description" : "Lever with knee pads that loads the soleus and gastrocs through seated plantar flexion.",
         "equCategory" : "Plated Machines",
         "baseWeight" : { "lb": 60, "kg": 25 },
@@ -571,18 +559,6 @@
         "implementation" : "Unified"
     },
     {
-        "name" : "Donkey Calf Raise",
-        "id" : "D73B3273-45B2-45D3-99B6-DF423CCE5879",
-        "image" : "donkey_calf_raise",
-        "aliases" : ["donkey calf", "bent‑over calf raise"],
-        "description" : "Hip‑hinged calf raise with weighted pad at the sacrum—maximises gastroc stretch while unloading spine.",
-        "equCategory" : "Plated Machines",
-        "baseWeight" : { "lb": 40, "kg": 15 },
-        "adjustments" : ["Pad Height"],
-        "pegCount" : 2,
-        "implementation" : "Unified"
-    },
-    {
         "name": "Neck Extension",
         "id": "3A14DE69-27CE-49A4-B54E-9CDAB9DF9FE0",
         "image": "neck_extension_machine_pl",
@@ -593,6 +569,15 @@
         "adjustments": ["Seat Height", "Pad Height"],
         "pegCount": 1,
         "implementation": "Unified"
+    },
+    {
+        "name" : "Donkey Calf Raise",
+        "id" : "D73B3273-45B2-45D3-99B6-DF423CCE5879",
+        "image" : "donkey_calf_machine",
+        "aliases" : ["donkey calf", "bent‑over calf raise"],
+        "description" : "Hip‑hinged calf raise with weighted pad at the sacrum—maximises gastroc stretch while unloading spine.",
+        "equCategory" : "Weight Machines",
+        "adjustments" : ["Pad Height"]
     },
     {
         "name" : "Horizontal Leg Press",
@@ -634,7 +619,7 @@
         "name" : "Standing Calf Raise",
         "id" : "581BC511-DF71-4ABA-B5B6-2B36444B87E7",
         "image" : "standing_calf_raise_machine",
-        "aliases" : ["standing calf machine", "donkey calf"],
+        "aliases" : ["standing calf machine"],
         "description" : "Stack‑loaded apparatus with shoulder pads for heavy standing calf raises.",
         "equCategory" : "Weight Machines",
         "adjustments" : ["Pad Height"]

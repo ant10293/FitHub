@@ -11,7 +11,7 @@ struct UserProfileView: View {
     @State private var showingDeleteConfirmation: Bool = false
 
     // MARK: – Local draft state for each editable field
-    @State private var draftUserName: String = ""
+    //@State private var draftUserName: String = ""
     @State private var draftFirstName: String = ""
     @State private var draftLastName: String = ""
     
@@ -39,20 +39,6 @@ struct UserProfileView: View {
                 
                 if isAuthenticated  {
                     Form {
-                        // MARK: — Username Section
-                        Section {
-                            TextField("Enter username", text: $draftUserName)
-                                .focused($focusedField, equals: .userName)
-                                .onSubmit(commitUserName)
-                                .onChange(of: focusedField) { oldFocus, newFocus in
-                                    if newFocus != .userName {
-                                        commitUserName()
-                                    }
-                                }
-                        } header: {
-                            Text("FitHub Username")
-                        }
-                        
                         // MARK: — Personal Info Section
                         Section {
                             TextField("First Name", text: $draftFirstName)
@@ -153,57 +139,56 @@ struct UserProfileView: View {
         authService.isAuthenticated && !AuthService.isAnonymous()
     }
     
-    private enum Field: Hashable { case userName, firstName, lastName }
+    private enum Field: Hashable { case firstName, lastName }
     
     // MARK: – Populate drafts from userData
     private func populateDrafts() {
-        draftUserName  = ctx.userData.profile.userName
+       // draftUserName  = ctx.userData.profile.userName
         draftFirstName = ctx.userData.profile.firstName
         draftLastName  = ctx.userData.profile.lastName
     }
     
     // MARK: – Commit Helpers
     
-    /// Commit username both locally and to Firebase displayName, then show a success/failure banner.
-    private func commitUserName() {
-        let trimmed = draftUserName.trimmed
-        guard trimmed != ctx.userData.profile.userName else { return }
-        
-        // 1) Update local userData
-        ctx.userData.profile.userName = trimmed
-        
-        // 2) Update Firebase displayName
-        authService.updateDisplayName(to: trimmed) { result in
-            switch result {
-            case .success:
-                alertMessage = "Username updated successfully"
-            case .failure(let error):
-                alertMessage = "Failed to update username: \(error.localizedDescription)"
-            }
-            toast.showSaveConfirmation(duration: 2.0)
-        }
-    }
-    
-    /// Commit firstName locally only, then show a banner.
+    /// Commit firstName locally, update Firebase displayName, then show a banner.
     private func commitFirstName() {
         let trimmed = draftFirstName.trimmed
         guard trimmed != ctx.userData.profile.firstName else { return }
         
         ctx.userData.profile.firstName = trimmed
+        commitDisplayName()
         
         alertMessage = "First name updated"
         toast.showSaveConfirmation(duration: 2.0)
     }
     
-    /// Commit lastName locally only, then show a banner.
+    /// Commit lastName locally, update Firebase displayName, then show a banner.
     private func commitLastName() {
         let trimmed = draftLastName.trimmed
         guard trimmed != ctx.userData.profile.lastName else { return }
         
         ctx.userData.profile.lastName = trimmed
+        commitDisplayName()
         
         alertMessage = "Last name updated"
         toast.showSaveConfirmation(duration: 2.0)
+    }
+    
+    /// Update Firebase displayName using combined first and last name.
+    private func commitDisplayName() {
+        let displayName = ctx.userData.profile.displayName(.full)
+        guard !displayName.isEmpty else { return }
+        
+        authService.updateDisplayName(to: displayName) { result in
+            switch result {
+            case .success:
+                // Success is already handled by the individual commit functions
+                break
+            case .failure(let error):
+                alertMessage = "Failed to update display name: \(error.localizedDescription)"
+                toast.showSaveConfirmation(duration: 2.0)
+            }
+        }
     }
     
     // MARK: — Handle Logout/Login Button

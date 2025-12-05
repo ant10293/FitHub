@@ -21,17 +21,16 @@ enum Name {
     static func parseName(
         preferredFirstName: String?,
         preferredLastName: String?,
-        fallbackDisplayName: String?,
-        firebaseDisplayName: String?
-    ) -> (userName: String, firstName: String, lastName: String) {
+        fallbackDisplayName: String? = nil,
+        firebaseDisplayName: String? = nil
+    ) -> (firstName: String, lastName: String) {
         let trimmedFirst = (preferredFirstName?.trimmed ?? "")
         let trimmedLast = (preferredLastName?.trimmed ?? "")
         
         if !trimmedFirst.isEmpty || !trimmedLast.isEmpty {
             let first = trimmedFirst.formatName()
             let last = trimmedLast.formatName()
-            let userName = last.isEmpty ? first : "\(first) \(last)"
-            return (userName, first, last)
+            return (first, last)
         }
         
         let bestDisplay = [fallbackDisplayName, firebaseDisplayName]
@@ -40,7 +39,6 @@ enum Name {
         let parts = bestDisplay.split(separator: " ")
         let first = parts.first.map(String.init)?.formatName() ?? ""
         let last = parts.dropFirst().joined(separator: " ").formatName()
-        let userName = last.isEmpty ? first : "\(first) \(last)"
-        return (userName, first, last)
+        return (first, last)
     }
 }

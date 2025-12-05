@@ -28,7 +28,7 @@ struct EquipmentManagement: View {
             onViewDetail: { id in selectedEquipmentId = id; viewDetail = true },
             showSaveBanner: toast.showingSaveConfirmation
         )
-        .navigationBarTitle("\(ctx.userData.profile.userName)'s Gym", displayMode: .inline)
+        .navigationBarTitle("\(ctx.userData.profile.firstName)'s Gym", displayMode: .inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 if ctx.userData.setup.isEquipmentSelected {

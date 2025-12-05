@@ -5,8 +5,6 @@ import SwiftUI
 struct DetailsView: View {
     @AppStorage(UnitSystem.storageKey) private var unit: UnitSystem = .metric
     @ObservedObject var userData: UserData
-    @State private var userName: String = ""
-    @State private var age: String = ""
     @State private var selectedGender: Gender?
     @State private var dob: Date = Date()
     @State private var height: Length
@@ -15,7 +13,6 @@ struct DetailsView: View {
 
     init(userData: UserData) {
         self.userData = userData
-        _userName = State(initialValue: userData.profile.userName)
         _dob = State(initialValue: userData.profile.dob ?? Date())
         _height = State(initialValue: userData.physical.height)
         _weight = State(initialValue: Mass(kg: userData.currentMeasurementValue(for: .weight).actualValue))
@@ -34,7 +31,7 @@ struct DetailsView: View {
             continueButton
             Spacer()
         }
-        .navigationTitle("Hello \(userName)")
+        .navigationTitle("Hello \(userData.profile.firstName)")
         .navigationBarBackButtonHidden(true)
     }
     
@@ -187,7 +184,6 @@ struct DetailsView: View {
         // 1️⃣ Update everything in memory first
         userData.updateMeasurementValue(for: .weight, with: weight.inKg)
         userData.setup.setupState = .goalView
-        userData.profile.userName = userName
         userData.profile.dob      = dob
         userData.physical.height  = height
         userData.physical.gender  = gender
