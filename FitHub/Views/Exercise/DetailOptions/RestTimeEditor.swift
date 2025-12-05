@@ -42,7 +42,7 @@ struct RestTimeEditor: View {
                             .cardContainer()
                             .padding()
                     } else {
-                        let width = calculateTextWidth(text: "00:00", minWidth: 80, maxWidth: 100)
+                        let width = calculateTextWidth(text: "00:00", minWidth: screenWidth * 0.2, maxWidth: screenWidth * 0.267)
                         
                         ForEach(selectedSets.indices, id: \.self) { index in
                             VStack {

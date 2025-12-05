@@ -63,11 +63,13 @@ struct ExerciseWarmUpDetail: View {
             }
             .listStyle(.plain)
             .navigationBarTitle(exercise.name, displayMode: .inline)
-            .toolbar { ToolbarItem(placement: .topBarTrailing) {
-                Button("Close", action: saveAndDismiss)
-            }}
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
             .onDisappear(perform: saveIfNeeded)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Close", action: saveAndDismiss)
+                }
+            }
         }
     }
 
@@ -115,7 +117,7 @@ struct ExerciseWarmUpDetail: View {
             .listRowSeparator(.hidden)
 
             LabelButton(
-                title: "Autofill",
+                title: "Autofill Sets",
                 systemImage: "wand.and.stars",
                 tint: .green,
                 action: autofill

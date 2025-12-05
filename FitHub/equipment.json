@@ -561,7 +561,7 @@
         "implementation" : "Divided"
     },
     {
-        "name" : "Reverse Hyperextension Machine",
+        "name" : "Reverse Hyperextension",
         "id" : "C80536A0-09B1-4F8F-9A66-26B3BCEAC046",
         "image" : "reverse_hyper_machine",
         "aliases" : ["reverse hyper bench", "hyperextension bench"],
@@ -583,7 +583,7 @@
         "implementation" : "Unified"
     },
     {
-        "name": "Neck Extension Machine",
+        "name": "Neck Extension",
         "id": "3A14DE69-27CE-49A4-B54E-9CDAB9DF9FE0",
         "image": "neck_extension_machine_pl",
         "aliases": ["neck extension", "lever neck extension", "plate-loaded neck extension"],

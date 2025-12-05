@@ -12,6 +12,7 @@ struct CompletedEntry: View {
     let hideRPE: Bool
     let hideCompleted: Bool
     let planned: SetMetric
+    let setRPE: Double?
     @Binding var showPicker: Bool
     @Binding var completed: SetMetric
     @Binding var rpe: Double
@@ -124,13 +125,18 @@ struct CompletedEntry: View {
     @ViewBuilder private var rpeEntry: some View {
         if !isWarm {
             HStack(spacing: 0) {
-                (Text("RPE:  ").fontWeight(.bold) + Text(String(format: "%.1f", rpe)))
-                    .overlay(alignment: .bottom) {
-                        Text("(1 - 10)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .offset(y: screenHeight * 0.01875)
-                    }
+                (Text("RPE:  ")
+                    .fontWeight(.bold)
+                 + Text(String(format: "%.1f", rpe))
+                    .monospacedDigit()
+                    .foregroundStyle(setRPE != nil ? .primary : .secondary)
+                )
+                .overlay(alignment: .bottom) {
+                    Text("(1 - 10)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .offset(y: screenHeight * 0.01875)
+                }
 
                 Slider(
                     value: Binding(
@@ -139,7 +145,7 @@ struct CompletedEntry: View {
                     ),
                     in: 1...10, step: 0.5
                 )
-                .padding(.horizontal)
+                .padding(.leading)
             }
         }
     }

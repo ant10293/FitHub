@@ -15,6 +15,8 @@ struct TimeSpeedField: View {
     let style: TextFieldVisualStyle
     
     var body: some View {
+        let height = screenHeight * 0.0425
+        
         Group {
             switch showingResolved {
             case .time:
@@ -29,6 +31,7 @@ struct TimeSpeedField: View {
                     ),
                     style: style
                 )
+                .frame(height: height)
                 .overlay(alignment: .bottomTrailing) { if !hideMenuButton { menuButton } }
   
             case .speed:
@@ -41,6 +44,7 @@ struct TimeSpeedField: View {
                         tos.updateSpeed(Speed(speed: val), distance: distance, keyOverride: showing)
                     }
                 ))
+                .frame(height: height)
                 .keyboardType(.decimalPad)
                 .multilineTextAlignment(.center)
                 .overlay(alignment: .bottomTrailing) { if !hideMenuButton { menuButton } }
@@ -72,6 +76,7 @@ struct TimeSpeedField: View {
     
     private var menuButton: some View {
         let size = screenWidth * 0.05
+        
         return Menu {
             ForEach(TimeOrSpeed.InputKey.allCases, id: \.self) { key in
                 Button {

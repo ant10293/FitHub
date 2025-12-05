@@ -18,7 +18,7 @@ struct SetInputRow<LoadField: View, MetricField: View>: View {
     private var sw: CGFloat { providedScreenWidth ?? screenWidth }
     private var setsColWidth:  CGFloat { sw * 0.135 }
     private var fieldColWidth: CGFloat { sw * 0.25 }
-    private var hGap:          CGFloat { sw * 0.06 }
+    private var hGap:          CGFloat { sw * 0.065 }
     private var vGap:          CGFloat { sw * 0.01 }
 
     init(

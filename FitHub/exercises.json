@@ -5510,7 +5510,7 @@
 		"csvKey": "reverse-hyperextension",
 		"aliases": ["Reverse Hyper"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Reverse Hyperextension Machine"],
+		"equipmentRequired": ["Reverse Hyperextension"],
 		"muscles": [
 			{ "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
 				{ "engagementPercentage": 16, "submuscleWorked": "Semitendinosus" },
@@ -9905,12 +9905,11 @@
         "imageUrl": "https://gymvisual.com/animated-gifs/5418-weighted-lying-neck-extension-with-head-harness.html#/47-style_type-basic_grey"
     },
     {
-        "name": "Lever Neck Extension",
+        "name": "Machine Neck Extension",
         "id": "C596542E-8D8D-4AA9-B760-F1890B530184",
-        "image": "lever_neck_extension",
-        "aliases": ["Neck Extension Machine", "Plate-Loaded Neck Extension"],
+        "image": "machine_neck_extension",
         "instructions": { "steps": [ ] },
-        "equipmentRequired": ["Neck Extension Machine"],
+        "equipmentRequired": ["Neck Extension"],
         "muscles": [
             { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [ ] }
         ],

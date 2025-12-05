@@ -24,16 +24,14 @@ struct FieldChrome<Content: View>: View {
     }
 
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(colorScheme == .dark
-                      ? Color(UIColor.systemGray4)
-                      : Color(UIColor.secondarySystemBackground))
-                .frame(width: width, height: 35)
-
-            content()
-                .foregroundStyle(isZero ? .red : .primary)
-                .frame(width: width, alignment: .center)
-        }
+        content()
+            .foregroundStyle(isZero ? .red : .primary)
+            .frame(width: width, height: screenHeight * 0.0425, alignment: .center)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(colorScheme == .dark
+                          ? Color(UIColor.systemGray4)
+                          : Color(UIColor.secondarySystemBackground))
+            )
     }
 }
