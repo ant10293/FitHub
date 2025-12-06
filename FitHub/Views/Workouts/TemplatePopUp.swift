@@ -33,14 +33,13 @@ struct TemplatePopup: View {
                     template: template,
                     userData: userData,
                     secondary: true,
-                    heartOverlay: true
-                ) { _ in
-                    EmptyView()
-                } detail: { exercise in
-                    exercise.setsSubtitle
-                        .font(.caption)
-                        .foregroundStyle(Color.secondary)
-                }
+                    heartOverlay: true,
+                    detail: { exercise in
+                        exercise.setsSubtitle
+                            .font(.caption)
+                            .foregroundStyle(Color.secondary)
+                    }
+                )
             }
 
             Spacer()

@@ -75,17 +75,18 @@ struct StartedWorkoutView: View {
             template: viewModel.template,
             userData: ctx.userData,
             heartOverlay: true,
-            showCount: false
-        ) { _ in
-            EmptyView()
-        } detail: { exercise in
-            exercise.setsSubtitle
-                .font(.subheadline)
-                .foregroundStyle(Color.secondary)
-        } onTap: { exercise, index in
-            selectedExerciseIndex = index
-            viewModel.isOverlayVisible = true
-        }
+            showCount: false,
+            tapAction: .showOverlay,
+            detail: { exercise in
+                exercise.setsSubtitle
+                    .font(.subheadline)
+                    .foregroundStyle(Color.secondary)
+            },
+            onTap: { exercise, index in
+                selectedExerciseIndex = index
+                viewModel.isOverlayVisible = true
+            }
+        )
         .listStyle(GroupedListStyle())
         .opacity((viewModel.isOverlayVisible || viewModel.showWorkoutSummary) ? 0.6 : 1.0)
         .disabled(viewModel.isOverlayVisible)

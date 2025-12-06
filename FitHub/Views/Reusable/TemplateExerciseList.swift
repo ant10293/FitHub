@@ -9,6 +9,7 @@ import SwiftUI
 
 /// A reusable view that enumerates exercises from a template with superset visualization support
 struct TemplateExerciseList<Accessory: View, Detail: View>: View {
+    @State private var selectedExercise: Exercise?
     let template: WorkoutTemplate
     let userData: UserData
     let secondary: Bool
@@ -16,6 +17,7 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
     let imageSize: CGFloat
     let lineLimit: Int
     let showCount: Bool
+    let tapAction: TapAction
     let accessory: (Exercise) -> Accessory
     let detail: (Exercise) -> Detail
     let onTap: (Exercise, Int) -> Void
@@ -28,7 +30,8 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
         imageSize: CGFloat = 0.12,
         lineLimit: Int = 2,
         showCount: Bool = true,
-        @ViewBuilder accessory: @escaping (Exercise) -> Accessory,
+        tapAction: TapAction = .viewDetail,
+        @ViewBuilder accessory: @escaping (Exercise) -> Accessory = { _ in EmptyView() },
         @ViewBuilder detail: @escaping (Exercise) -> Detail,
         onTap: @escaping (Exercise, Int) -> Void = { _, _ in }
     ) {
@@ -39,10 +42,13 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
         self.imageSize = imageSize
         self.lineLimit = lineLimit
         self.showCount = showCount
+        self.tapAction = tapAction
         self.accessory = accessory
         self.detail = detail
         self.onTap = onTap
     }
+    
+    enum TapAction { case showOverlay, viewDetail }
     
     var body: some View {
         List {
@@ -75,7 +81,12 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
                     } detail: {
                         detail(exercise)
                     } onTap: {
-                        onTap(exercise, index)
+                        switch tapAction {
+                        case .showOverlay:
+                            onTap(exercise, index)
+                        case .viewDetail:
+                            selectedExercise = exercise
+                        }
                     }
                     
                     let modifiedRow = baseRow
@@ -123,6 +134,9 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
             }
         }
         .environment(\.defaultMinListRowHeight, 0)
+        .sheet(item: $selectedExercise) { exercise in
+            ExerciseDetailView(exercise: exercise, viewingAsSheet: true)
+        }
     }
 }
 

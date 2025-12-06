@@ -179,7 +179,7 @@ struct OneRMCalculator: View {
         exerciseToSave = exercise
         // Defer alert presentation slightly so it isn't racing with sheet dismissal
         DispatchQueue.main.async {
-        showingConfirmationPopup = true
+            showingConfirmationPopup = true
         }
     }
 
