@@ -131,6 +131,7 @@ extension UserData {
     }
     
     // MARK: new func to be called in WorkoutVM to update non progression changes to template
+    // FIXME: this doesn't work for warmup sets! should use allSetDetails
     func updateTmplExSet(templateID: WorkoutTemplate.ID, exerciseID: Exercise.ID, setDetail: SetDetail) {
         if let (template, index, location) = getTemplate(templateID: templateID) {
             var tmpl = template

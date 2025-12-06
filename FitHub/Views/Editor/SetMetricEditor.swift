@@ -13,22 +13,19 @@ struct SetMetricEditor: View {
     let hideTOSMenu: Bool
     let load: SetLoad
     let style: TextFieldVisualStyle
-    let onValidityChange: ((Bool) -> Void)?
     
     init(
         planned: Binding<SetMetric>,
         showing: Binding<TimeOrSpeed.InputKey?> = .constant(nil),
         hideTOSMenu: Bool = false,
         load: SetLoad,
-        style: TextFieldVisualStyle = .rounded,
-        onValidityChange: ((Bool) -> Void)? = nil,
+        style: TextFieldVisualStyle = .rounded
     ) {
         _planned = planned
         _showing = showing
         self.hideTOSMenu = hideTOSMenu
         self.load = load
         self.style = style
-        self.onValidityChange = onValidityChange
     }
 
     var body: some View {
@@ -42,7 +39,6 @@ struct SetMetricEditor: View {
                     let r = Int(filtered) ?? 0
                     let newPlanned: SetMetric = .reps(r)
                     planned = newPlanned
-                    onValidityChange?(validate(planned: planned))
                 }
             ))
             .keyboardType(.numberPad)
@@ -57,7 +53,6 @@ struct SetMetricEditor: View {
                         let ts = TimeSpan.seconds(from: newValue)
                         let newPlanned: SetMetric = .hold(ts)
                         planned = newPlanned
-                        onValidityChange?(validate(planned: planned))
                     }
                 ),
                 style: style
@@ -70,7 +65,6 @@ struct SetMetricEditor: View {
                     set: { newValue in
                         let newPlanned: SetMetric = .cardio(newValue)
                         planned = newPlanned
-                        onValidityChange?(validate(planned: planned))
                     }
                 ),
                 showing: $showing,
@@ -78,14 +72,6 @@ struct SetMetricEditor: View {
                 hideMenuButton: hideTOSMenu,
                 style: style
             )
-        }
-    }
-
-    private func validate(planned: SetMetric) -> Bool {
-        switch planned {
-        case .reps(let r):     return r > 0
-        case .hold(let t):     return t.inSeconds > 0
-        case .cardio(let tos): return tos.actualValue > 0
         }
     }
 }

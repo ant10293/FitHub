@@ -150,7 +150,7 @@ extension Exercise {
     }
     
     var noSetsCompleted: Bool {
-        setDetails.allSatisfy { $0.completed == nil }
+        allSetDetails.allSatisfy { $0.completed == nil }
     }
     
     var allowedWarmup: Bool {

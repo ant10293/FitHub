@@ -36,7 +36,6 @@ struct ExerciseSetDisplay: View {
                     // Metric input (reps or hold) – same visual container as reps
                     metricSection
                 }
-                .padding(.bottom)
                 
                 if !hideStartButton, let seconds = planned.secondsValue {
                     let completedSec = completed.secondsValue ?? 0
@@ -51,7 +50,7 @@ struct ExerciseSetDisplay: View {
                             showTimer = true
                         }
                     )
-                    .padding(.bottom)
+                    .padding(.top)
                 }
             }
             
@@ -78,7 +77,7 @@ struct ExerciseSetDisplay: View {
                         }
                     )
                 )
-                .padding(.horizontal)
+                .padding([.horizontal, .top])
             }
         }
         .padding(.vertical)
@@ -102,6 +101,7 @@ struct ExerciseSetDisplay: View {
     }
     
     private var hideCompletedEntry: Bool {
+        //if showPicker { return false } 
         let completedSec = completed.secondsValue ?? 0
         return planned.secondsValue != nil && completedSec <= 0
     }
@@ -141,11 +141,9 @@ struct ExerciseSetDisplay: View {
                         set: {
                             load = $0
                             setDetail.load = $0
+                            validateSet()
                         }
-                    ),
-                    onValidityChange: { isValid in
-                        shouldDisableNext = !isValid
-                    }
+                    )
                 )
                 .id(setDetail.id) // refresh for new set
             }
@@ -179,13 +177,11 @@ struct ExerciseSetDisplay: View {
                         case .cardio, .hold:
                             toggleHideStartIfNeeded()
                         }
+                        validateSet()
                     }
                 ),
                 load: load,
-                style: .plain,
-                onValidityChange: { isValid in
-                    shouldDisableNext = !isValid
-                }
+                style: .plain
             )
             .id(setDetail.id) // refresh for new set
         }
@@ -203,7 +199,7 @@ struct ExerciseSetDisplay: View {
     // MARK: - Helpers
     private func resetInputs() {
         initializeVariables()
-        validateNextButton()
+        validateSet()
     }
     
     private func initializeVariables() {
@@ -223,16 +219,8 @@ struct ExerciseSetDisplay: View {
             }
         }
     }
-
-    private func validateNextButton() {
-        switch setDetail.planned {
-        case .reps(let r): validateSetMetric(actual: Double(r))
-        case .hold(let t): validateSetMetric(actual: Double(t.inSeconds))
-        case .cardio(let ts): validateSetMetric(actual: ts.actualValue)
-        }
-    }
     
-    private func validateSetMetric(actual: Double) {
-        shouldDisableNext = actual <= 0 || (setDetail.load != .none && setDetail.load.actualValue <= 0)
+    private func validateSet() {
+        shouldDisableNext = planned.actualValue <= 0 || (load != .none && load.actualValue <= 0)
     }
 }

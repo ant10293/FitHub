@@ -54,7 +54,8 @@ struct DistributionEditor: View {
             .foregroundStyle(totalPct == 100 ? Color.secondary : Color.red)
             .lineLimit(1)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity)
+        .padding(.trailing)
     }
     
 

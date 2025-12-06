@@ -21,7 +21,7 @@ struct SetCountEditor: View {
     }
 
     var body: some View {
-        VStack(spacing: 14) {
+        VStack(alignment: .leading, spacing: 14) {
             // Visible rows only
             ForEach(visibleTypes, id: \.self) { t in
                 CountRow(
@@ -38,12 +38,10 @@ struct SetCountEditor: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.leading)
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.top, 4)
             }
         }
-        .padding(.vertical, 6)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity)
         .padding(.trailing)
     }
 
@@ -59,7 +57,7 @@ struct SetCountEditor: View {
                     Text(title)
                         .font(.headline)
                     Spacer()
-                    Text("\(value) set\(value == 1 ? "" : "s")")
+                    Text("\(Format.countText(value, base: "set"))")
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .monospacedDigit()
@@ -78,7 +76,6 @@ struct SetCountEditor: View {
                         .labelsHidden()
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }

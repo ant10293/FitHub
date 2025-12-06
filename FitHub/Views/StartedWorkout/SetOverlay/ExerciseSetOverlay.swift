@@ -138,7 +138,7 @@ struct ExerciseSetOverlay: View {
     private var currentSetBinding: Binding<SetDetail>? {
         let i = exercise.currentSetIndex              // 0-based
         guard exercise.allSetDetails.indices.contains(i) else { return nil }
-
+        
         return Binding(
             get: { exercise.allSetDetails[i] },
             set: { newVal in

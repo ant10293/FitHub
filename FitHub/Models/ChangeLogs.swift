@@ -79,7 +79,6 @@ struct ExerciseChange: Codable, Identifiable {
     }
 }
 
-// NEW: Add this structure for max record info
 struct MaxRecordInfo: Codable {
     let currentMax: MaxRecord?
     let csvEstimate: PeakMetric?
