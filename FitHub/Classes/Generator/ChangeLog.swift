@@ -12,8 +12,7 @@ extension WorkoutGenerator {
         input: Input,
         params: GenerationParameters,
         templates: [WorkoutTemplate],
-        generationStartTime: Date,
-        //performanceUpdates: PerformanceUpdates
+        generationStartTime: Date
     ) -> WorkoutChangelog? {
         
         // Only generate changelog for next week workouts
@@ -36,7 +35,6 @@ extension WorkoutGenerator {
             exercisesKept: countExercises(for: .kept, templates: templates, saved: input.saved),
             exercisesChanged: countExercises(for: .changed, templates: templates, saved: input.saved),
             performanceUpdates: maxUpdates.count, // Use tracked state instead of countActualMaxUpdates
-            //performanceUpdates: performanceUpdates.updatedMax.count,
             progressiveOverloadApplied: overloadingExercises.count, // Use tracked state
             deloadsApplied: deloadingExercises.count // Use tracked state
         )
@@ -90,7 +88,6 @@ extension WorkoutGenerator {
     ) -> ExerciseChange {
         
         let changeType = determineChangeType(new: newExercise, previous: previousExercise)
-        let setChanges = createSetChanges(new: newExercise, previous: previousExercise)
         let progressionDetails = createProgressionDetails(new: newExercise, input: input)
         
         // NEW: Add max record information
@@ -101,7 +98,6 @@ extension WorkoutGenerator {
             changeType: changeType,
             previousExercise: previousExercise,
             newExercise: newExercise,
-            setChanges: setChanges,
             progressionDetails: progressionDetails,
             maxRecordInfo: maxRecordInfo // NEW: Add this
         )
@@ -140,76 +136,6 @@ extension WorkoutGenerator {
         } else {
             return .replaced
         }
-    }
-    
-    private func createSetChanges(new: Exercise, previous: Exercise?) -> [SetChange] {
-        guard let previous = previous else {
-            // New exercise - all sets are new
-            return new.setDetails.map { set in
-                SetChange(
-                    setNumber: set.setNumber,
-                    previousSet: nil,
-                    newSet: set,
-                    loadChange: nil,
-                    metricChange: nil
-                )
-            }
-        }
-        
-        return new.setDetails.map { newSet in
-            let previousSet = previous.setDetails.first { $0.setNumber == newSet.setNumber }
-            let loadChange = createLoadChange(new: newSet, previous: previousSet)
-            let metricChange = createMetricChange(new: newSet, previous: previousSet)
-            
-            return SetChange(
-                setNumber: newSet.setNumber,
-                previousSet: previousSet,
-                newSet: newSet,
-                loadChange: loadChange,
-                metricChange: metricChange
-            )
-        }
-    }
-
-    private func createLoadChange(new: SetDetail, previous: SetDetail?) -> SetChange.LoadChange? {
-        guard let previous = previous else { return nil }
-        
-        guard new.load != previous.load else { return nil } // Check if loads are different
-        
-        let newValue = new.load.actualValue
-        let prevValue = previous.load.actualValue
-        
-        guard newValue != prevValue else { return nil } // Check if values are different
-        
-        let percentageChange = ((newValue - prevValue) / prevValue) * 100
-        
-        return SetChange.LoadChange(
-            previous: previous.load,
-            new: new.load,
-            percentageChange: abs(percentageChange),
-            isIncrease: newValue > prevValue
-        )
-    }
-    
-    private func createMetricChange(new: SetDetail, previous: SetDetail?) -> SetChange.MetricChange? {
-        guard let previous = previous else { return nil }
-        
-        let newValue = new.planned.actualValue
-        let prevValue = previous.planned.actualValue
-        
-        guard newValue != prevValue else { return nil }
-        
-        let percentageChange = ((newValue - prevValue) / prevValue) * 100
-        let isReps = new.planned.repsValue != nil
-        
-        return SetChange.MetricChange(
-            previous: previous.planned,
-            new: new.planned,
-            isReps: isReps,
-            previousValue: prevValue,
-            newValue: newValue,
-            percentageChange: abs(percentageChange)
-        )
     }
 }
 

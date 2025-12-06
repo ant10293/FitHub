@@ -36,7 +36,6 @@
 		653136162E519AC300EECCA5 /* ChangeLogs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653136152E519AC300EECCA5 /* ChangeLogs.swift */; };
 		653136182E519DDA00EECCA5 /* WorkoutChangeLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653136172E519DDA00EECCA5 /* WorkoutChangeLogView.swift */; };
 		6531361B2E53EFEE00EECCA5 /* TemplateChangeLogCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6531361A2E53EFEE00EECCA5 /* TemplateChangeLogCard.swift */; };
-		6531361D2E53F04900EECCA5 /* SetChangeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6531361C2E53F04900EECCA5 /* SetChangeRow.swift */; };
 		6531361F2E53F07000EECCA5 /* ExerciseChangeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6531361E2E53F07000EECCA5 /* ExerciseChangeRow.swift */; };
 		653136212E53F11A00EECCA5 /* TappableDisclosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653136202E53F11A00EECCA5 /* TappableDisclosure.swift */; };
 		653136232E53F7EB00EECCA5 /* RepsAndSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653136222E53F7EB00EECCA5 /* RepsAndSets.swift */; };
@@ -331,7 +330,6 @@
 		653136152E519AC300EECCA5 /* ChangeLogs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeLogs.swift; sourceTree = "<group>"; };
 		653136172E519DDA00EECCA5 /* WorkoutChangeLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutChangeLogView.swift; sourceTree = "<group>"; };
 		6531361A2E53EFEE00EECCA5 /* TemplateChangeLogCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateChangeLogCard.swift; sourceTree = "<group>"; };
-		6531361C2E53F04900EECCA5 /* SetChangeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetChangeRow.swift; sourceTree = "<group>"; };
 		6531361E2E53F07000EECCA5 /* ExerciseChangeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseChangeRow.swift; sourceTree = "<group>"; };
 		653136202E53F11A00EECCA5 /* TappableDisclosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TappableDisclosure.swift; sourceTree = "<group>"; };
 		653136222E53F7EB00EECCA5 /* RepsAndSets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepsAndSets.swift; sourceTree = "<group>"; };
@@ -1418,7 +1416,6 @@
 			children = (
 				653136172E519DDA00EECCA5 /* WorkoutChangeLogView.swift */,
 				6531361A2E53EFEE00EECCA5 /* TemplateChangeLogCard.swift */,
-				6531361C2E53F04900EECCA5 /* SetChangeRow.swift */,
 				6531361E2E53F07000EECCA5 /* ExerciseChangeRow.swift */,
 			);
 			path = ChangeLog;
@@ -1707,7 +1704,6 @@
 				65AB47F52EA31362001BEAFE /* WarningFooter.swift in Sources */,
 				6550ADB22E6B66DC002072C1 /* WeekView.swift in Sources */,
 				65CD3C6F2DD3C84F00C2B671 /* StartedWorkoutView.swift in Sources */,
-				6531361D2E53F04900EECCA5 /* SetChangeRow.swift in Sources */,
 				653BF8A52E597251005A07EA /* JSONFileManager.swift in Sources */,
 				65DD05462EC69339000D159C /* EmailAuthView.swift in Sources */,
 				65CD3C702DD3C84F00C2B671 /* WorkoutSummary.swift in Sources */,

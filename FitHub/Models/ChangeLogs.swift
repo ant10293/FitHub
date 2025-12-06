@@ -50,7 +50,6 @@ struct ExerciseChange: Codable, Identifiable {
     let changeType: ChangeType
     let previousExercise: Exercise?
     let newExercise: Exercise
-    let setChanges: [SetChange]
     let progressionDetails: ProgressionDetails?
     let maxRecordInfo: MaxRecordInfo? // NEW: Add this
     
@@ -91,35 +90,10 @@ struct MaxRecordInfo: Codable {
         if let currentMax = currentMax {
             return Text("Current \(currentMax.value.formattedText) (set \(currentMax.date.shortDate))")
         } else if let csvEstimate = csvEstimate {
-            return Text("Estimated \(csvEstimate.formattedText) (from CSV data)")
+            return Text("Estimated \(csvEstimate.formattedText)")
         } else {
             return Text("No max recorded")
         }
-    }
-}
-
-struct SetChange: Codable, Identifiable {
-    var id: UUID = UUID()
-    let setNumber: Int
-    let previousSet: SetDetail?
-    let newSet: SetDetail
-    let loadChange: LoadChange?
-    let metricChange: MetricChange?
-    
-    struct LoadChange: Codable {
-        let previous: SetLoad
-        let new: SetLoad
-        let percentageChange: Double
-        let isIncrease: Bool
-    }
-    
-    struct MetricChange: Codable {
-        let previous: SetMetric
-        let new: SetMetric
-        let isReps: Bool
-        let previousValue: Double
-        let newValue: Double
-        let percentageChange: Double
     }
 }
 

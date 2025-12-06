@@ -35,9 +35,7 @@ struct ExerciseChangeRow: View {
                     MaxRecordInfoRow(maxRecordInfo: maxRecordInfo)
                 }
                 VStack(spacing: 6) {
-                    ForEach(change.setChanges) { setChange in
-                        SetChangeRow(setChange: setChange)
-                    }
+                    ExerciseSetChange(newExercise: change.newExercise, oldExercise: change.previousExercise)
                 }
                 if let progression = change.progressionDetails {
                     ProgressionDetailsRow(progression: progression)
@@ -48,7 +46,7 @@ struct ExerciseChangeRow: View {
     }
 }
 
-struct MaxRecordInfoRow: View {
+private struct MaxRecordInfoRow: View {
     let maxRecordInfo: MaxRecordInfo
     
     var body: some View {
@@ -84,13 +82,13 @@ struct MaxRecordInfoRow: View {
     
     private func sinceString(fromDays days: Int) -> String {
         if days == 0 { return "Updated today" }
-        if days <= 6 { return "Last updated \(days) day\(days == 1 ? "" : "s") ago" }
-        let w = days / 7
-        return "Last updated \(w) week\(w == 1 ? "" : "s") ago"
+        if days <= 6 { return "Last updated \(Format.countText(days, base: "day")) ago" }
+        let weeks = days / 7
+        return "Last updated \(Format.countText(weeks, base: "week")) ago"
     }
 }
 
-struct ProgressionDetailsRow: View {
+private struct ProgressionDetailsRow: View {
     let progression: ProgressionDetails
     
     var body: some View {

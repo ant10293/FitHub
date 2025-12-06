@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// Views/Workouts/WorkoutChangelogView.swift
 struct WorkoutChangelogView: View {
     let changelog: WorkoutChangelog
     @Environment(\.dismiss) private var dismiss
@@ -122,7 +121,7 @@ struct WorkoutChangelogView: View {
     }
 }
 
-struct StatCard: View {
+private struct StatCard: View {
     let title: String
     let value: String
     let icon: String
