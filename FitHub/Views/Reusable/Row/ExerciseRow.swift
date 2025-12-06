@@ -44,8 +44,8 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
          imageSize: CGFloat = 0.12,
          lineLimit: Int = 2,
          nextExercise: Exercise? = nil,
-         @ViewBuilder accessory: @escaping () -> Accessory,
-         @ViewBuilder detail:    @escaping () -> Detail,
+         @ViewBuilder accessory: @escaping () -> Accessory = { EmptyView() },
+         @ViewBuilder detail:    @escaping () -> Detail = { EmptyView() },
          onTap: @escaping () -> Void = {}
     ) {
         self.exercise  = exercise
@@ -133,31 +133,4 @@ struct ExerciseRowDetails: View {
     }
 }
 
-// MARK: - Convenience overloads (give us “defaults” without the compiler pain)
-extension ExerciseRow where Accessory == EmptyView, Detail == EmptyView {
-    /// No accessory, no detail
-    init(_ exercise: Exercise,
-         nextExercise: Exercise? = nil,
-         onTap: @escaping () -> Void = {}) {
-        self.init(exercise,
-                  nextExercise: nextExercise,
-                  accessory: { EmptyView() },
-                  detail:    { EmptyView() },
-                  onTap: onTap)
-    }
-}
-
-extension ExerciseRow where Detail == EmptyView {
-    /// Accessory only
-    init(_ exercise: Exercise,
-         nextExercise: Exercise? = nil,
-         @ViewBuilder accessory: @escaping () -> Accessory,
-         onTap: @escaping () -> Void = {}) {
-        self.init(exercise,
-                  nextExercise: nextExercise,
-                  accessory: accessory,
-                  detail:    { EmptyView() },
-                  onTap: onTap)
-    }
-}
 

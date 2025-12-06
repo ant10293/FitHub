@@ -49,9 +49,7 @@ struct FavoriteExercisesView: View {
                                             }
                                         )
                                     }
-                                ) {
-                                    EmptyView()
-                                }
+                                )
                             }
                         } header: {
                             if selectedFilter != .all {

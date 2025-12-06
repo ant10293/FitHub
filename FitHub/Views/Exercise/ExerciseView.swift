@@ -73,7 +73,6 @@ struct ExerciseView: View {
                             heartOverlay: favState != .unmarked,
                             favState: favState,
                             imageSize: 0.2,
-                            accessory: { EmptyView() },
                             detail: {
                                 ExerciseRowDetails(
                                     exercise: exercise,

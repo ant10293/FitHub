@@ -75,19 +75,22 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
                         favState: FavoriteState.getState(for: exercise, userData: userData),
                         imageSize: imageSize,
                         lineLimit: lineLimit,
-                        nextExercise: nextExercise
-                    ) {
-                        accessory(exercise)
-                    } detail: {
-                        detail(exercise)
-                    } onTap: {
-                        switch tapAction {
-                        case .showOverlay:
-                            onTap(exercise, index)
-                        case .viewDetail:
-                            selectedExercise = exercise
+                        nextExercise: nextExercise,
+                        accessory: {
+                            accessory(exercise)
+                        },
+                        detail: {
+                            detail(exercise)
+                        },
+                        onTap: {
+                            switch tapAction {
+                            case .showOverlay:
+                                onTap(exercise, index)
+                            case .viewDetail:
+                                selectedExercise = exercise
+                            }
                         }
-                    }
+                    )
                     
                     let modifiedRow = baseRow
                         .id(exercise.id)

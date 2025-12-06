@@ -87,7 +87,9 @@ struct ExerciseSelection: View {
                                                  : "square"))
                                         .foregroundStyle(colorScheme == .dark ? .white : .black)
                                     },
-                                    detail: { detailView(for: exercise) },
+                                    detail: {
+                                        detailView(for: exercise)
+                                    },
                                     onTap: {
                                         handleTap(on: exercise)
                                     }
