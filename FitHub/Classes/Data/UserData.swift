@@ -131,7 +131,6 @@ extension UserData {
     }
     
     // MARK: new func to be called in WorkoutVM to update non progression changes to template
-    // FIXME: this doesn't work for warmup sets! should use allSetDetails
     func updateTmplExSet(templateID: WorkoutTemplate.ID, exerciseID: Exercise.ID, setDetail: SetDetail) {
         if let (template, index, location) = getTemplate(templateID: templateID) {
             var tmpl = template
@@ -139,17 +138,31 @@ extension UserData {
             if let exIdx = tmpl.exercises.firstIndex(where: { $0.id == exerciseID }) {
                 var exercise = tmpl.exercises[exIdx]
                 
-                if let setIdx = exercise.setDetails.firstIndex(where: { $0.id == setDetail.id }) {
-                    var sd = exercise.setDetails[setIdx]
-                    // only save if there were changes to set load or planned
-                    if sd.load != setDetail.load || sd.planned != setDetail.planned {
-                        sd.load = setDetail.load
-                        sd.planned = setDetail.planned
-                        exercise.setDetails[setIdx] = sd
-                        tmpl.exercises[exIdx] = exercise
-                        _ = updateTemplate(template: tmpl, index: index, location: location)
-                    }
+                // Find the set in allSetDetails to determine which array it belongs to
+                guard let allSetIdx = exercise.allSetDetails.firstIndex(where: { $0.id == setDetail.id }) else { return }
+                
+                // Determine which array contains this set and get the appropriate index
+                let isWarmup = allSetIdx < exercise.warmUpSets
+                let arrayIdx = isWarmup ? allSetIdx : allSetIdx - exercise.warmUpSets
+                
+                // Get the existing set detail from the appropriate array
+                var sd = isWarmup ? exercise.warmUpDetails[arrayIdx] : exercise.setDetails[arrayIdx]
+                
+                // Only save if there were changes to set load or planned
+                guard sd.load != setDetail.load || sd.planned != setDetail.planned else { return }
+                
+                sd.load = setDetail.load
+                sd.planned = setDetail.planned
+                
+                // Update the appropriate array
+                if isWarmup {
+                    exercise.warmUpDetails[arrayIdx] = sd
+                } else {
+                    exercise.setDetails[arrayIdx] = sd
                 }
+                
+                tmpl.exercises[exIdx] = exercise
+                _ = updateTemplate(template: tmpl, index: index, location: location)
             }
         }
     }

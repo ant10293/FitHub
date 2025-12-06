@@ -42,7 +42,7 @@ final class WorkoutVM: ObservableObject {
     }
     
     // TODO: we only need the setID and exerciseBinding, no need for detailBinding
-    // TODO: this shouldnt be called after moving to next set. should be called for entire template once at the end
+    // TODO: this shouldnt be called after moving to next set. should be called for entire template once at the end or upon saving workout in progress
     func saveTemplate(userData: UserData, detailBinding: Binding<SetDetail>, exerciseBinding: Binding<Exercise>) {
         // MARK: the template in UserData should only be updated with set load and metric
         // only pass ID for template and exercise because we ONLY want to update changes to set load and metric
