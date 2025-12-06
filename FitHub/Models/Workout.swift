@@ -205,6 +205,7 @@ extension WorkoutTemplate {
         var totalVolume: Double = 0
         var totalReps:   Int    = 0
         var weightByExercise: [UUID: Double] = [:]
+        var timeByExercise: [UUID: Int] = [:]
 
         for exercise in exercises {
             let repsMul = exercise.limbMovementType?.repsMultiplier ?? 1
@@ -226,6 +227,11 @@ extension WorkoutTemplate {
                 }
                 totalReps += reps
             }
+            
+            // Track time spent per exercise
+            if exercise.timeSpent > 0 {
+                timeByExercise[exercise.id] = exercise.timeSpent
+            }
         }
 
         return WorkoutSummaryData(
@@ -233,7 +239,8 @@ extension WorkoutTemplate {
             totalReps: totalReps,
             totalTime: TimeSpan(seconds: completionDuration),
             exercisePRs: updates.prExerciseIDs,
-            weightByExercise: weightByExercise
+            weightByExercise: weightByExercise,
+            timeByExercise: timeByExercise
         )
     }
     
@@ -307,6 +314,7 @@ struct WorkoutSummaryData {
     let totalTime: TimeSpan
     let exercisePRs: [UUID]
     let weightByExercise: [UUID: Double]
+    let timeByExercise: [UUID: Int] // Time spent per exercise in seconds
 }
 
 struct OldTemplate: Identifiable {
