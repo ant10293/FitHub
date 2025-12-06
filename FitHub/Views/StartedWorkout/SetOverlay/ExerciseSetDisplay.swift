@@ -77,7 +77,7 @@ struct ExerciseSetDisplay: View {
                         }
                     )
                 )
-                .padding([.horizontal, .top])
+                .padding(.top)
             }
         }
         .padding(.vertical)
@@ -101,9 +101,7 @@ struct ExerciseSetDisplay: View {
     }
     
     private var hideCompletedEntry: Bool {
-        //if showPicker { return false } 
-        let completedSec = completed.secondsValue ?? 0
-        return planned.secondsValue != nil && completedSec <= 0
+        planned.secondsValue != nil && !hideStartButton
     }
     
     private func toggleHideStartIfNeeded() {

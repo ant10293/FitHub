@@ -20,22 +20,25 @@ struct CompletedEntry: View {
     private var isCardio: Bool { planned.timeSpeed != nil }
     
     var body: some View {
-        if !hideCompleted {
-            switch planned {
-            case .reps(let plannedReps):
-                repsField(plannedReps: plannedReps)
-                
-            case .hold(let plannedTime):
-                holdField(plannedTime: plannedTime)
-                
-            case .cardio(let plannedTOS):
-                cardioField(plannedTOS: plannedTOS)
+        VStack {
+            if !hideCompleted {
+                switch planned {
+                case .reps(let plannedReps):
+                    repsField(plannedReps: plannedReps)
+                    
+                case .hold(let plannedTime):
+                    holdField(plannedTime: plannedTime)
+                    
+                case .cardio(let plannedTOS):
+                    cardioField(plannedTOS: plannedTOS)
+                }
+            }
+            
+            if !showPicker, !hideRPE, !isCardio {
+                rpeEntry
             }
         }
-        
-        if !showPicker, !hideRPE, !isCardio {
-            rpeEntry
-        }
+        .padding(.horizontal)
     }
     
     @ViewBuilder private func repsField(plannedReps: Int) -> some View {
