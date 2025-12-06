@@ -72,11 +72,18 @@ extension Exercise {
     
     var fullImage: Image { getFullImage(image, fullImagePath) }
     
-    func fullImageView(favState: FavoriteState) -> some View {
+    func fullImageView(favState: FavoriteState, detailIcon: Bool = false) -> some View {
         fullImage
         .resizable()
         .scaledToFit()
         .clipShape(RoundedRectangle(cornerRadius: 6))
+        .overlay(alignment: .bottomLeading) {
+            if detailIcon {
+                Image(systemName: "info.circle")
+                    .imageScale(.small)
+                    .foregroundStyle(.blue)
+            }
+        }
         .overlay(alignment: .bottomTrailing) {
             let (image, color) = favState.systemImageName
             if let image, let color {

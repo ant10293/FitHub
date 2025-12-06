@@ -72,6 +72,7 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
                         exercise,
                         secondary: secondary,
                         heartOverlay: heartOverlay,
+                        infoOverlay: tapAction == .viewDetail,
                         favState: FavoriteState.getState(for: exercise, userData: userData),
                         imageSize: imageSize,
                         lineLimit: lineLimit,

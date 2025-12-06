@@ -26,6 +26,7 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
     let exercise: Exercise
     let secondary: Bool
     let heartOverlay: Bool
+    let infoOverlay: Bool
     let favState: FavoriteState
     let imageSize: CGFloat
     let lineLimit: Int
@@ -40,6 +41,7 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
     init(_ exercise: Exercise,
          secondary: Bool = false,
          heartOverlay: Bool = false,
+         infoOverlay: Bool = false,
          favState: FavoriteState = .unmarked,
          imageSize: CGFloat = 0.12,
          lineLimit: Int = 2,
@@ -51,6 +53,7 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
         self.exercise  = exercise
         self.secondary = secondary
         self.heartOverlay = heartOverlay
+        self.infoOverlay = infoOverlay
         self.favState = favState
         self.imageSize = imageSize
         self.lineLimit = lineLimit
@@ -65,20 +68,13 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
         else { return favState }
     }
     
-    /// Check if this exercise is the first in a consecutive superset pair
-    private var isFirstInSuperset: Bool {
-        guard let next = nextExercise else { return false }
-        // Check if current exercise is supersetted with next, or next is supersetted with current
-        return exercise.isSupersettedWith == next.id.uuidString || next.isSupersettedWith == exercise.id.uuidString
-    }
-    
     // ------------------------------------------------------------------
     // Body
     // ------------------------------------------------------------------
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 12) {
-                exercise.fullImageView(favState: resolvedState)
+                exercise.fullImageView(favState: resolvedState, detailIcon: infoOverlay)
                     .frame(width: screenWidth * imageSize)
 
                 VStack(alignment: .leading, spacing: 2) {
