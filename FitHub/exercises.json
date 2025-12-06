@@ -33,7 +33,7 @@
 		"csvKey": "bench-pin-press",
 		"aliases": ["Pin Press", "Rack Bench Press"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Flat Bench", "Barbell"],
+		"equipmentRequired": ["Barbell", "Flat Bench", "Squat Rack"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" }
@@ -109,7 +109,7 @@
 		"csvKey": "close-grip-bench-press",
 		"aliases": ["Narrow-Grip Bench Press"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Flat Bench", "Barbell"],
+		"equipmentRequired": ["Barbell", "Flat Bench Rack"],
 		"muscles": [
 			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
@@ -409,7 +409,7 @@
 		"csvKey": "reverse-grip-bench-press",
 		"aliases": ["Underhand Bench Press", "Reverse Chest Press"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Flat Bench", "Barbell"],
+		"equipmentRequired": ["Barbell", "Flat Bench Rack"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
@@ -1533,7 +1533,7 @@
         "csvKey": "dumbbell-reverse-fly",
         "aliases": ["Bent-Over Dumbbell Reverse Fly"],
         "instructions": { "steps": [ ] },
-        "equipmentRequired": ["Dumbbells"],
+        "equipmentRequired": ["Dumbbells", "Adjustable Bench"],
         "muscles": [
             { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
                 { "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
@@ -7335,7 +7335,7 @@
 		"csvKey": "chest-supported-dumbbell-row",
 		"aliases": ["Incline Bench Dumbbell Row"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
+		"equipmentRequired": ["Dumbbells", "Adjustable Bench"],
 		"muscles": [
 			{ "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
 			{ "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [

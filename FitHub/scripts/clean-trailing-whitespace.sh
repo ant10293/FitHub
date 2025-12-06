@@ -14,6 +14,7 @@ find . -type f \( -name "*.json" -o -name "*.ts" -o -name "*.js" -o -name "*.md"
     ! -path "*/venv/*" \
     ! -path "*/site-packages/*" \
     ! -path "*/DerivedData/*" \
+    ! -path "./scripts/clean-trailing-whitespace.sh" \
     -exec sh -c '
         file="$1"
         # Remove trailing whitespace from each line
@@ -27,4 +28,3 @@ find . -type f \( -name "*.json" -o -name "*.ts" -o -name "*.js" -o -name "*.md"
     ' _ {} \;
 
 echo "Done! Files cleaned."
-

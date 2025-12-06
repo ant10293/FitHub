@@ -49,6 +49,7 @@ final class WorkoutGenerator {
         var categoriesPerDay: [[SplitCategory]]
         var overloadFactor: Double
         var overloadStyle: ProgressiveOverloadStyle
+        var supersetting: SupersetSettings
         var nonDefaultParameters: Set<PoolChanges.RelaxedFilter>
     }
 
@@ -128,7 +129,8 @@ extension WorkoutGenerator {
         let customSplit = input.user.workoutPrefs.customWorkoutSplit
         let customDist = input.user.workoutPrefs.customDistribution
         let resistance = input.user.workoutPrefs.resistance
-
+        let supersetting = input.user.workoutPrefs.supersetSettings
+        
         let workoutWeek = WorkoutWeek.determineSplit(
             customSplit: customSplit,
             daysPerWeek: daysPerWeek
@@ -193,6 +195,7 @@ extension WorkoutGenerator {
             categoriesPerDay: categoriesPerDay,
             overloadFactor: overloadFactor,
             overloadStyle: overloadStyle,
+            supersetting: supersetting,
             nonDefaultParameters: customParms
         )
     }
@@ -219,6 +222,7 @@ extension WorkoutGenerator {
         let wasCompleted: Bool = testCompleted != nil
         let completed: CompletedWorkout = testCompleted ?? CompletedWorkout()
         let restPeriods: RestPeriods = params.repsAndSets.rest
+        let supersetting: SupersetSettings = params.supersetting
      
         if !input.user.settings.useDateOnly {
             // Prefer per-day custom time → then user default → then 11:00
@@ -322,7 +326,12 @@ extension WorkoutGenerator {
         for _ in 0..<maxAttempts {
             if step() { break }
         }
-      
+        
+        // ---------------- Superset pairing & reordering ----------------
+        tpl.exercises = applySupersetting(
+            to: tpl.exercises,
+            settings: supersetting
+        )
         return tpl
     }
     
@@ -514,6 +523,89 @@ extension WorkoutGenerator {
         // Return in original order
         pickedIdx.sort()
         return pickedIdx.map { existing[$0] }
+    }
+    
+    /// Applies supersetting logic to reorder and pair exercises based on settings
+    private func applySupersetting(
+        to exercises: [Exercise],
+        settings: SupersetSettings
+    ) -> [Exercise] {
+        guard settings.enabled else { return exercises }
+        
+        let workingExercises = exercises.map { ex in
+            var copy = ex
+            copy.isSupersettedWith = nil
+            return copy
+        }
+        
+        func muscleCompatible(_ lhs: Exercise, _ rhs: Exercise) -> Bool {
+            switch settings.muscleOption {
+            case .anyMuscle:
+                return true
+            case .sameMuscle:
+                return lhs.topPrimaryMuscle != nil && lhs.topPrimaryMuscle == rhs.topPrimaryMuscle
+            case .relatedMuscle:
+                let groupA = lhs.groupCategory
+                let groupB = rhs.groupCategory
+                if let groupA, let groupB, groupA == groupB { return true }
+                return lhs.topPrimaryMuscle != nil && lhs.topPrimaryMuscle == rhs.topPrimaryMuscle
+            }
+        }
+        
+        func equipmentCompatible(_ lhs: Exercise, _ rhs: Exercise) -> Bool {
+            switch settings.equipmentOption {
+            case .anyEquipment:
+                return true
+            case .sameEquipment:
+                let lhsSet = Set(lhs.equipmentRequired)
+                let rhsSet = Set(rhs.equipmentRequired)
+                return !lhsSet.isDisjoint(with: rhsSet)
+            }
+        }
+        
+        let maxSupersettedExercises = Int(round(Double(workingExercises.count) * Double(settings.ratio) / 100.0))
+        let pairBudget = min(workingExercises.count / 2, maxSupersettedExercises / 2)
+        guard pairBudget > 0 else { return workingExercises }
+        
+        var paired = Array(repeating: false, count: workingExercises.count)
+        var pairsMade = 0
+        var reordered: [Exercise] = []
+        
+        for i in workingExercises.indices {
+            if paired[i] { continue }
+            if pairsMade >= pairBudget {
+                reordered.append(workingExercises[i])
+                paired[i] = true
+                continue
+            }
+            
+            var partnerIndex: Int?
+            for j in (i + 1)..<workingExercises.count where !paired[j] {
+                if !muscleCompatible(workingExercises[i], workingExercises[j]) { continue }
+                if !equipmentCompatible(workingExercises[i], workingExercises[j]) { continue }
+                partnerIndex = j
+                break
+            }
+            
+            if let j = partnerIndex {
+                var first = workingExercises[i]
+                var second = workingExercises[j]
+                first.isSupersettedWith = second.id.uuidString
+                second.isSupersettedWith = first.id.uuidString
+                
+                reordered.append(first)
+                reordered.append(second)
+                
+                paired[i] = true
+                paired[j] = true
+                pairsMade += 1
+            } else {
+                reordered.append(workingExercises[i])
+                paired[i] = true
+            }
+        }
+        
+        return reordered
     }
 }
 

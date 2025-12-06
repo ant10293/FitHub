@@ -91,12 +91,11 @@ enum SetStructures: String, CaseIterable, Codable, Identifiable {
     }
 }
 
-
 struct SupersetSettings: Codable, Hashable {
     var enabled: Bool = false
     var equipmentOption: SupersetEquipmentOption = .sameEquipment
-    var muscleOption: SupersetMuscleOption = .sameMuscle
-    var ratio: Int = 20 // pct of exercises that can be supersetted
+    var muscleOption: SupersetMuscleOption = .anyMuscle
+    var ratio: Int = 30 // pct of exercises that can be supersetted
     
     var summary: String {
         guard enabled else { return "Disabled" }

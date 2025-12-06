@@ -96,7 +96,7 @@ struct SupersetSettingsView: View {
                                     }
                                 ),
                                 in: 0...100,
-                                step: 10
+                                step: 5
                             )
                         }
                     } header: {
@@ -145,7 +145,11 @@ struct SupersetSettingsView: View {
     private func updateRestPeriod() {
         var custom = userData.workoutPrefs.customRestPeriods ?? userData.physical.goal.defaultRest
         custom.modify(for: supersetRest, with: restTime.inSeconds)
-        userData.workoutPrefs.customRestPeriods = custom
+        if custom == userData.physical.goal.defaultRest {
+            userData.workoutPrefs.customRestPeriods = nil
+        } else {
+            userData.workoutPrefs.customRestPeriods = custom
+        }
     }
 }
 
