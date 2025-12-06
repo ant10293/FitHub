@@ -63,4 +63,3 @@
 - This is normal, wait 10-30 minutes
 - Check for any errors in App Store Connect
 - Sometimes builds can take up to an hour
-

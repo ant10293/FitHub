@@ -79,4 +79,3 @@ After you have these credentials, we'll:
 3. Create the webhook handler function
 
 Let me know when you have the Key ID, Issuer ID, and the `.p8` file downloaded!
-

@@ -122,6 +122,8 @@
 		65AB47FD2EA73AF4001BEAFE /* UnitCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB47FC2EA73AF4001BEAFE /* UnitCategory.swift */; };
 		65AC86472E261D040034FAA3 /* MuscleSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AC86462E261D040034FAA3 /* MuscleSelection.swift */; };
 		65AC86492E2836070034FAA3 /* ExEquipImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AC86482E2836070034FAA3 /* ExEquipImage.swift */; };
+		65B936E82EE3AC0C00D80950 /* SupersetSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936E72EE3AC0C00D80950 /* SupersetSettingsView.swift */; };
+		65B936EC2EE3C21300D80950 /* CustomDisclosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936EB2EE3C21300D80950 /* CustomDisclosure.swift */; };
 		65C5DC552DEFB46400B09AD2 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC542DEFB46400B09AD2 /* Core.swift */; };
 		65C5DC572DEFB51800B09AD2 /* Muscle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC562DEFB51800B09AD2 /* Muscle.swift */; };
 		65C5DC592DEFB5AE00B09AD2 /* Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC582DEFB5AE00B09AD2 /* Split.swift */; };
@@ -410,6 +412,8 @@
 		65AB47FC2EA73AF4001BEAFE /* UnitCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitCategory.swift; sourceTree = "<group>"; };
 		65AC86462E261D040034FAA3 /* MuscleSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleSelection.swift; sourceTree = "<group>"; };
 		65AC86482E2836070034FAA3 /* ExEquipImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExEquipImage.swift; sourceTree = "<group>"; };
+		65B936E72EE3AC0C00D80950 /* SupersetSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupersetSettingsView.swift; sourceTree = "<group>"; };
+		65B936EB2EE3C21300D80950 /* CustomDisclosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDisclosure.swift; sourceTree = "<group>"; };
 		65C5DC542DEFB46400B09AD2 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		65C5DC562DEFB51800B09AD2 /* Muscle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Muscle.swift; sourceTree = "<group>"; };
 		65C5DC582DEFB5AE00B09AD2 /* Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Split.swift; sourceTree = "<group>"; };
@@ -974,6 +978,26 @@
 			path = Premium;
 			sourceTree = "<group>";
 		};
+		65B936E92EE3C1A500D80950 /* Footer */ = {
+			isa = PBXGroup;
+			children = (
+				65AB47F42EA31362001BEAFE /* WarningFooter.swift */,
+				658D80122ED3E1BD0041FB4D /* ErrorFooter.swift */,
+			);
+			path = Footer;
+			sourceTree = "<group>";
+		};
+		65B936EA2EE3C1B600D80950 /* Disclosure */ = {
+			isa = PBXGroup;
+			children = (
+				65B936EB2EE3C21300D80950 /* CustomDisclosure.swift */,
+				65DD05332EC02A20000D159C /* MeasurementCard.swift */,
+				653136202E53F11A00EECCA5 /* TappableDisclosure.swift */,
+				653136112E5112D500EECCA5 /* ExpandCollapseList.swift */,
+			);
+			path = Disclosure;
+			sourceTree = "<group>";
+		};
 		65C5DC472DEFB00600B09AD2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -1124,7 +1148,8 @@
 		65CD3BE72DD3C84F00C2B671 /* Reusable */ = {
 			isa = PBXGroup;
 			children = (
-				65DD05342EC02A20000D159C /* Card */,
+				65B936EA2EE3C1B600D80950 /* Disclosure */,
+				65B936E92EE3C1A500D80950 /* Footer */,
 				65DD052D2EBFE881000D159C /* Label */,
 				65E199D42E99D78200682415 /* Background */,
 				6550ADAA2E6A2B60002072C1 /* Row */,
@@ -1137,16 +1162,12 @@
 				65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */,
 				65CD3BE62DD3C84F00C2B671 /* WeightSelectorView.swift */,
 				65A0D1D22E38639A008466D8 /* GeneratingOverlay.swift */,
-				653136112E5112D500EECCA5 /* ExpandCollapseList.swift */,
 				658D801F2EDD0D9C0041FB4D /* TemplateExerciseList.swift */,
 				653BF8B02E6618E2005A07EA /* GenericEditor.swift */,
-				653136202E53F11A00EECCA5 /* TappableDisclosure.swift */,
 				6550ADB92E6BAC12002072C1 /* TemplateNavigator.swift */,
 				65DD05382EC28E73000D159C /* InlineDeletion.swift */,
 				65DD05412EC681A7000D159C /* SafariDocumentView.swift */,
 				658D80102ED2A5F80041FB4D /* EmptyState.swift */,
-				65AB47F42EA31362001BEAFE /* WarningFooter.swift */,
-				658D80122ED3E1BD0041FB4D /* ErrorFooter.swift */,
 				658D80192ED852750041FB4D /* CenteredOverlayHeader.swift */,
 			);
 			path = Reusable;
@@ -1155,6 +1176,7 @@
 		65CD3BF52DD3C84F00C2B671 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				65B936E72EE3AC0C00D80950 /* SupersetSettingsView.swift */,
 				658D801D2EDCF8440041FB4D /* WarmupSettingsView.swift */,
 				65CD3BF02DD3C84F00C2B671 /* SettingsView.swift */,
 				65CD3BE82DD3C84F00C2B671 /* ChangeLanguage.swift */,
@@ -1341,14 +1363,6 @@
 				65DD052B2EBFE857000D159C /* ExercisePickerLabel.swift */,
 			);
 			path = Label;
-			sourceTree = "<group>";
-		};
-		65DD05342EC02A20000D159C /* Card */ = {
-			isa = PBXGroup;
-			children = (
-				65DD05332EC02A20000D159C /* MeasurementCard.swift */,
-			);
-			path = Card;
 			sourceTree = "<group>";
 		};
 		65DD05402EC2D2CB000D159C /* Stripe */ = {
@@ -1547,6 +1561,7 @@
 				65039B6E2E81D936007A31E1 /* Mass.swift in Sources */,
 				65CD3C342DD3C84F00C2B671 /* AddCategoryPicker.swift in Sources */,
 				65CD3C352DD3C84F00C2B671 /* AdjustmentsView.swift in Sources */,
+				65B936EC2EE3C21300D80950 /* CustomDisclosure.swift in Sources */,
 				65CD3C362DD3C84F00C2B671 /* BFCalculator.swift in Sources */,
 				6550ADBC2E6BBCD1002072C1 /* ResumeWorkoutOverlay.swift in Sources */,
 				65AB47FB2EA709A5001BEAFE /* ChangesPool.swift in Sources */,
@@ -1703,6 +1718,7 @@
 				65AC86472E261D040034FAA3 /* MuscleSelection.swift in Sources */,
 				65CD3C742DD3C84F00C2B671 /* EnterOneRepMaxes.swift in Sources */,
 				657067A42E49729A0063090C /* TemplateEditor.swift in Sources */,
+				65B936E82EE3AC0C00D80950 /* SupersetSettingsView.swift in Sources */,
 				653BF8AD2E5AC750005A07EA /* PlateVisualizer.swift in Sources */,
 				6550ADC02E6E562C002072C1 /* PlateSelection.swift in Sources */,
 				6531361F2E53F07000EECCA5 /* ExerciseChangeRow.swift in Sources */,

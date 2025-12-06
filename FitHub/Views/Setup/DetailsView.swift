@@ -22,7 +22,6 @@ struct DetailsView: View {
     var body: some View {
         VStack {
             heightCard
-                .padding(.top)
             weightCard
             dobCard
             genderSection
@@ -31,6 +30,7 @@ struct DetailsView: View {
             continueButton
             Spacer()
         }
+        .padding(.top)
         .navigationTitle("Hello \(userData.profile.firstName)")
         .navigationBarBackButtonHidden(true)
     }
@@ -47,7 +47,6 @@ struct DetailsView: View {
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding(.horizontal)
-            .padding(.bottom)
         }
     }
     
@@ -57,16 +56,15 @@ struct DetailsView: View {
             title: "Select Height",
             isActive: activePicker == .height,
             onTap: { toggle(.height) },
+            onClose: closePicker,
             valueView: {
-                height.heightFormatted.foregroundStyle(.gray)
+                height.heightFormatted
+                    .foregroundStyle(.gray)
             },
             content: {
                 HeightSelectorRow(height: $height)
-                    .padding(.top)
-
-                floatingDoneButton
-                    .padding(.top, 6)
-
+            },
+            extraView: {
                 unitPicker
             }
         )
@@ -78,17 +76,15 @@ struct DetailsView: View {
             title: "Select Weight",
             isActive: activePicker == .weight,
             onTap: { toggle(.weight) },
+            onClose: closePicker,
             valueView: {
                 weight.formattedText(asInteger: true)
                     .foregroundStyle(.gray)
             },
             content: {
                 WeightSelectorRow(weight: $weight)
-                    .padding(.top)
-
-                floatingDoneButton
-                    .padding(.top, 6)
-
+            },
+            extraView: {
                 unitPicker
             }
         )
@@ -100,6 +96,7 @@ struct DetailsView: View {
             title: "Select DOB",
             isActive: activePicker == .dob,
             onTap: { toggle(.dob) },
+            onClose: closePicker,
             valueView: {
                 Text(Format.formatDate(dob, dateStyle: .long, timeStyle: .none))
             },
@@ -108,10 +105,6 @@ struct DetailsView: View {
                     .datePickerStyle(.wheel)
                     .labelsHidden()
                     .frame(height: screenHeight * 0.2)
-                    .padding(.top)
-
-                floatingDoneButton
-                    .padding(.vertical, 6)
             }
         )
     }
@@ -140,19 +133,9 @@ struct DetailsView: View {
         .padding(.top)
     }
 
-    private var floatingDoneButton: some View {
-        HStack {
-            Spacer()
-            FloatingButton(image: "checkmark", action: { activePicker = .none })
-                .padding()
-        }
-    }
-    
     private var continueButton: some View {
         RectangularButton(title: "Continue", enabled: canContinue, action: {
-            if let gender = selectedGender {
-                saveUserData(gender: gender)
-            }
+            saveUserData()
         })
         .clipShape(Capsule())
         .padding(.horizontal)
@@ -177,16 +160,20 @@ struct DetailsView: View {
         activePicker = activePicker == picker ? .none : picker
     }
     
+    private func closePicker() { activePicker = .none }
+    
     private enum ActivePicker { case none, height, dob, weight }
     
-    private func saveUserData(gender: Gender) {
+    private func saveUserData() {
         userData.checkAndUpdateAge()
         // 1️⃣ Update everything in memory first
         userData.updateMeasurementValue(for: .weight, with: weight.inKg)
         userData.setup.setupState = .goalView
         userData.profile.dob      = dob
         userData.physical.height  = height
-        userData.physical.gender  = gender
+        if let gender = selectedGender {
+            userData.physical.gender = gender
+        }
         
         userData.saveToFile()
     }

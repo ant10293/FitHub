@@ -127,4 +127,3 @@ TestFlight builds automatically use products from App Store Connect (not StoreKi
 ✅ Create products with exact product IDs from your code
 ✅ Test with sandbox accounts in TestFlight
 ✅ Your code already handles sandbox vs production correctly
-

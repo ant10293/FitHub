@@ -43,7 +43,6 @@ struct ExerciseChangeRow: View {
                     ProgressionDetailsRow(progression: progression)
                 }
             }
-            .padding(.leading, 12)
             .padding(.top, 8)
         }
     }

@@ -196,6 +196,3 @@ export async function validateUserSubscription(userId: string): Promise<void> {
     throw error;
   }
 }
-
-
-

@@ -138,6 +138,7 @@ struct MacroCalculator: View {
             title: "Age",
             isActive: activeCard == .age,
             onTap: { toggle(.age) },
+            onClose: closePicker,
             valueView: {
                 Text(ageText.isEmpty ? "—" : "\(ageText) yrs")
             },
@@ -145,9 +146,6 @@ struct MacroCalculator: View {
                 TextField("Age", text: $ageText)
                     .keyboardType(.numberPad)
                     .textFieldStyle(.roundedBorder)
-                    .padding(.top)
-
-                floatingDoneButton
             }
         )
     }
@@ -157,15 +155,12 @@ struct MacroCalculator: View {
             title: "Weight",
             isActive: activeCard == .weight,
             onTap: { toggle(.weight) },
+            onClose: closePicker,
             valueView: {
                 Text(summary(for: weight, unit: UnitSystem.current.weightUnit))
             },
             content: {
                 WeightSelectorRow(weight: $weight)
-                    .padding(.top)
-
-                floatingDoneButton
-                    .padding(.top, 6)
             }
         )
     }
@@ -175,15 +170,12 @@ struct MacroCalculator: View {
             title: "Height",
             isActive: activeCard == .height,
             onTap: { toggle(.height) },
+            onClose: closePicker,
             valueView: {
                 height.heightFormatted.foregroundStyle(.gray)
             },
             content: {
                 HeightSelectorRow(height: $height)
-                    .padding(.top)
-
-                floatingDoneButton
-                    .padding(.top, 6)
             }
         )
     }
@@ -193,6 +185,7 @@ struct MacroCalculator: View {
             title: "Activity Level",
             isActive: activeCard == .activity,
             onTap: { toggle(.activity) },
+            onClose: closePicker,
             valueView: {
                 Text(activityLevel == .select ? "Select" : activityLevel.rawValue)
             },
@@ -204,16 +197,12 @@ struct MacroCalculator: View {
                 }
                 .pickerStyle(.wheel)
                 .labelsHidden()
-                .padding(.top)
 
                 if activityLevel != .select {
                     Text(activityLevel.description)
                         .font(.subheadline)
                         .foregroundStyle(.gray)
-                        .padding(.top, 4)
                 }
-
-                floatingDoneButton
             }
         )
     }
@@ -226,16 +215,10 @@ struct MacroCalculator: View {
     private func toggle(_ card: ActiveCard) {
         activeCard = activeCard == card ? .none : card
     }
-
-    private var floatingDoneButton: some View {
-        HStack {
-            Spacer()
-            FloatingButton(image: "checkmark") {
-                kbd.dismiss()
-                activeCard = .none
-            }
-            .padding(.horizontal)
-        }
+    
+    private func closePicker() {
+        kbd.dismiss()
+        activeCard = .none
     }
 
     private enum ActiveCard {

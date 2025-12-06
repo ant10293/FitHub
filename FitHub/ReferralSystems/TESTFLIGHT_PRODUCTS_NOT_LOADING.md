@@ -47,4 +47,3 @@ This will tell us if it's:
 - All products failing to load (API issue)
 - Only lifetime failing (product setup issue)
 - Products loading but not displaying (UI issue)
-

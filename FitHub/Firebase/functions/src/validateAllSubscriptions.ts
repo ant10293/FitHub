@@ -194,6 +194,3 @@ async function runValidationJob(): Promise<void> {
     // Don't throw - we want the job to complete even if summary storage fails
   }
 }
-
-
-

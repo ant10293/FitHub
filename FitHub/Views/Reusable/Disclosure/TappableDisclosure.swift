@@ -15,14 +15,13 @@ struct TappableDisclosure<Label: View, Content: View>: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(alignment: .firstTextBaseline, spacing: 12) {
+            HStack {
                 label()
-                Spacer(minLength: 0)
+                Spacer()
                 Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
                     .foregroundStyle(.secondary)
                     .accessibilityHidden(true)
             }
-            .padding(.vertical, 12)
             .contentShape(Rectangle())
             .onTapGesture { isExpanded.toggle() }
 

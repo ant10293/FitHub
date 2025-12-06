@@ -126,6 +126,7 @@ struct KcalCalculator: View {
             title: "Age",
             isActive: activeCard == .age,
             onTap: { toggle(.age) },
+            onClose: closePicker,
             valueView: {
                 Text(ageText.isEmpty ? "—" : "\(ageText) yrs")
             },
@@ -133,9 +134,6 @@ struct KcalCalculator: View {
                 TextField("Age in years", text: $ageText)
                     .keyboardType(.numberPad)
                     .textFieldStyle(.roundedBorder)
-                    .padding(.top)
-
-                floatingDoneButton
             }
         )
     }
@@ -145,15 +143,12 @@ struct KcalCalculator: View {
             title: "Weight",
             isActive: activeCard == .weight,
             onTap: { toggle(.weight) },
+            onClose: closePicker,
             valueView: {
                 Text(summary(for: weight, unit: UnitSystem.current.weightUnit))
             },
             content: {
                 WeightSelectorRow(weight: $weight)
-                    .padding(.top)
-
-                floatingDoneButton
-                    .padding(.top, 6)
             }
         )
     }
@@ -163,15 +158,12 @@ struct KcalCalculator: View {
             title: "Height",
             isActive: activeCard == .height,
             onTap: { toggle(.height) },
+            onClose: closePicker,
             valueView: {
                 height.heightFormatted.foregroundStyle(.gray)
             },
             content: {
                 HeightSelectorRow(height: $height)
-                    .padding(.top)
-
-                floatingDoneButton
-                    .padding(.top, 6)
             }
         )
     }
@@ -181,6 +173,7 @@ struct KcalCalculator: View {
             title: "Average Daily Steps",
             isActive: activeCard == .steps,
             onTap: { toggle(.steps) },
+            onClose: closePicker,
             valueView: {
                 Text(stepsText.isEmpty ? "—" : stepsText)
             },
@@ -188,9 +181,6 @@ struct KcalCalculator: View {
                 TextField("Avg Steps per Day", text: $stepsText)
                     .keyboardType(.numberPad)
                     .textFieldStyle(.roundedBorder)
-                    .padding(.top)
-
-                floatingDoneButton
             }
         )
     }
@@ -206,15 +196,9 @@ struct KcalCalculator: View {
         activeCard = activeCard == card ? .none : card
     }
 
-    private var floatingDoneButton: some View {
-        HStack {
-            Spacer()
-            FloatingButton(image: "checkmark") {
-                kbd.dismiss()
-                activeCard = .none
-            }
-            .padding(.horizontal)
-        }
+    private func closePicker() {
+        kbd.dismiss()
+        activeCard = .none
     }
 
     private enum ActiveCard {

@@ -65,6 +65,3 @@ export const createAffiliateOnboardingLink = functions.https.onRequest(async (re
     handleFunctionError(res, error);
   }
 });
-
-
-

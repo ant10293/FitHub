@@ -609,4 +609,3 @@ This system ensures 100% accuracy by:
 - **Payout calculations** use only **active subscriptions**, ensuring accurate 40% commissions
 
 This architecture scales to thousands of users and ensures you never overpay or underpay influencers.
-

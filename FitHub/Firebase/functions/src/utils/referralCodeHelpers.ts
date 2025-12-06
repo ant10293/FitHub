@@ -46,4 +46,3 @@ export const assertUserOwnsReferralCode = (codeData: FirebaseFirestore.DocumentD
     throw new HttpError(403, "You do not have permission to manage this referral code.");
   }
 };
-

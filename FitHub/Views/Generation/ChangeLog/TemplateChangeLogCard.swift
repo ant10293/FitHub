@@ -33,7 +33,6 @@ struct TemplateChangeLogCard: View {
             VStack(spacing: 10) {
                 ForEach(template.changes) { change in
                     ExerciseChangeRow(change: change)
-                        .padding(.leading, 8)
                 }
                 .padding(.top, 10)
             }

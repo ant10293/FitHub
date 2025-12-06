@@ -91,18 +91,45 @@ enum SetStructures: String, CaseIterable, Codable, Identifiable {
     }
 }
 
-/*
+
 struct SupersetSettings: Codable, Hashable {
     var enabled: Bool = false
-    var style: SupersetOption = .sameEquipment
-    var maxPairs: Int = 1         // 0–2 recommended
-    var restBetweenSupersets: Int?
+    var equipmentOption: SupersetEquipmentOption = .sameEquipment
+    var muscleOption: SupersetMuscleOption = .sameMuscle
+    var ratio: Int = 20 // pct of exercises that can be supersetted
+    
+    var summary: String {
+        guard enabled else { return "Disabled" }
+        return "\(ratio)%"
+    }
 }
 
-enum SupersetOption: String, CaseIterable, Codable {
-    case sameEquipment, sameMuscle, relatedMuscle
+enum SupersetEquipmentOption: String, CaseIterable, Codable {
+    case sameEquipment = "Same Equipment"
+    case anyEquipment = "Any Equipment"
+    
+    var description: String {
+        switch self {
+        case .sameEquipment: "Supersetted exercises must use the same equipment."
+        case .anyEquipment: "Supersetted exercises can use any equipment."
+        }
+    }
 }
 
+enum SupersetMuscleOption: String, CaseIterable, Codable {
+    case sameMuscle = "Same Muscle"
+    case relatedMuscle = "Related Muscle"
+    case anyMuscle = "Any Muscle"
+    
+    var description: String {
+        switch self {
+        case .sameMuscle: "Supersetted exercises target the same muscle group."
+        case .relatedMuscle: "Supersetted exercises target related muscle groups."
+        case .anyMuscle: "Supersetted exercises can target any muscle group."
+        }
+    }
+}
+/*
 struct OverloadSettings: Codable, Hashable {
     var progressiveOverload: Bool = true
     var progressiveOverloadPeriod: Int = 6 // Default to 6 weeks

@@ -80,6 +80,3 @@ export const getAffiliateDashboardLink = functions.https.onRequest(async (req, r
     handleFunctionError(res, error);
   }
 });
-
-
-

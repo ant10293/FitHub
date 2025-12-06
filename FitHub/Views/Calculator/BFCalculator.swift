@@ -125,6 +125,7 @@ struct BFCalculator: View {
             title: "Waist",
             isActive: activeCard == .waist,
             onTap: { toggle(.waist) },
+            onClose: closePicker,
             valueView: {
                 Text(summary(for: waist, unit: UnitSystem.current.sizeUnit))
             },
@@ -132,9 +133,6 @@ struct BFCalculator: View {
                 TextField("Waist (\(UnitSystem.current.sizeUnit))", text: $waist.asText())
                     .keyboardType(.decimalPad)
                     .textFieldStyle(.roundedBorder)
-                    .padding(.top)
-
-                floatingDoneButton
             }
         )
     }
@@ -144,6 +142,7 @@ struct BFCalculator: View {
             title: "Neck",
             isActive: activeCard == .neck,
             onTap: { toggle(.neck) },
+            onClose: closePicker,
             valueView: {
                 Text(summary(for: neck, unit: UnitSystem.current.sizeUnit))
             },
@@ -151,9 +150,6 @@ struct BFCalculator: View {
                 TextField("Neck (\(UnitSystem.current.sizeUnit))", text: $neck.asText())
                     .keyboardType(.decimalPad)
                     .textFieldStyle(.roundedBorder)
-                    .padding(.top)
-
-                floatingDoneButton
             }
         )
     }
@@ -163,6 +159,7 @@ struct BFCalculator: View {
             title: "Hip",
             isActive: activeCard == .hip,
             onTap: { toggle(.hip) },
+            onClose: closePicker,
             valueView: {
                 Text(summary(for: hip, unit: UnitSystem.current.sizeUnit))
             },
@@ -170,9 +167,6 @@ struct BFCalculator: View {
                 TextField("Hip (\(UnitSystem.current.sizeUnit))", text: $hip.asText())
                     .keyboardType(.decimalPad)
                     .textFieldStyle(.roundedBorder)
-                    .padding(.top)
-
-                floatingDoneButton
             }
         )
     }
@@ -182,15 +176,12 @@ struct BFCalculator: View {
             title: "Height",
             isActive: activeCard == .height,
             onTap: { toggle(.height) },
+            onClose: closePicker,
             valueView: {
                 height.heightFormatted.foregroundStyle(.gray)
             },
             content: {
                 HeightSelectorRow(height: $height)
-                    .padding(.top)
-
-                floatingDoneButton
-                    .padding(.top, 6)
             }
         )
     }
@@ -204,16 +195,10 @@ struct BFCalculator: View {
     private func toggle(_ card: ActiveCard) {
         activeCard = activeCard == card ? .none : card
     }
-
-    private var floatingDoneButton: some View {
-        HStack {
-            Spacer()
-            FloatingButton(image: "checkmark") {
-                kbd.dismiss()
-                activeCard = .none
-            }
-            .padding(.horizontal)
-        }
+    
+    private func closePicker() {
+        kbd.dismiss()
+        activeCard = .none
     }
 
     private enum ActiveCard {

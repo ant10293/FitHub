@@ -10,7 +10,7 @@ struct MenuView: View {
                 NavigationLink(destination: LazyDestination {
                     ExerciseView()
                 }) {
-                    Label("Exercise Database", systemImage: "list.bullet.rectangle")
+                    Label("Exercise Library", systemImage: "list.bullet.rectangle")
                 }
 
                 NavigationLink(destination: LazyDestination {

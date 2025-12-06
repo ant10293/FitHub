@@ -92,15 +92,12 @@ struct BMICalculator: View {
             title: "Weight",
             isActive: activeCard == .weight,
             onTap: { toggle(.weight) },
+            onClose: closePicker,
             valueView: {
                 Text(summary(for: weight, unit: UnitSystem.current.weightUnit))
             },
             content: {
                 WeightSelectorRow(weight: $weight)
-                    .padding(.top)
-
-                floatingDoneButton
-                    .padding(.top, 6)
             }
         )
     }
@@ -110,15 +107,12 @@ struct BMICalculator: View {
             title: "Height",
             isActive: activeCard == .height,
             onTap: { toggle(.height) },
+            onClose: closePicker,
             valueView: {
                 height.heightFormatted.foregroundStyle(.gray)
             },
             content: {
                 HeightSelectorRow(height: $height)
-                    .padding(.top)
-
-                floatingDoneButton
-                    .padding(.top, 6)
             }
         )
     }
@@ -133,14 +127,9 @@ struct BMICalculator: View {
         activeCard = activeCard == card ? .none : card
     }
     
-    private var floatingDoneButton: some View {
-        HStack {
-            Spacer()
-            FloatingButton(image: "checkmark") {
-                activeCard = .none
-            }
-            .padding(.horizontal)
-        }
+    private func closePicker() {
+        kbd.dismiss()
+        activeCard = .none
     }
     
     private enum ActiveCard {

@@ -130,6 +130,3 @@ export const handleAppStoreNotification = functions.https.onRequest(async (req, 
     res.status(200).send("Error logged");
   }
 });
-
-
-

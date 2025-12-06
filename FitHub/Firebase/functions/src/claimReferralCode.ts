@@ -109,6 +109,3 @@ export const claimReferralCode = functions.https.onCall(async (data, context) =>
     );
   }
 });
-
-
-

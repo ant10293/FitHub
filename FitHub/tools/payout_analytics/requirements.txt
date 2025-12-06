@@ -3,5 +3,3 @@ app-store-server-library>=1.0.0
 python-dotenv>=1.0.1
 stripe>=9.8.0
 requests>=2.32.3
-
-

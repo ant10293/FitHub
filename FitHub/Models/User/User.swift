@@ -50,11 +50,12 @@ struct WorkoutPreferences: Codable, Equatable {
     var setStructure: SetStructures = .pyramid
     var customDuration: TimeSpan?
     var customDistribution: EffortDistribution?
-    //var supersetSettings: SupersetSettings = SupersetSettings()
+    
     var maxBwRepCapMultiplier: Double = 2.0 // MARK: no editing implemented yet
     //var minHoldTime: TimeSpan = .init(seconds: 30)
     //var maxHoldTime: TimeSpan = .init(minutes: 5)
     
+    var supersetSettings: SupersetSettings = SupersetSettings()
     var roundingPreference: RoundingPreference = .init()
     var setIntensity: SetIntensitySettings = .init()
     var warmupSettings: WarmupSettings = .init()

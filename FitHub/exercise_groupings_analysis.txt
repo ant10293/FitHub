@@ -591,4 +591,3 @@ Total exercises: 437
 Meaningful groups: 44
 Exercises in groups: 414
 Ungrouped exercises: 23
-

@@ -257,6 +257,3 @@ export const trackReferralPurchase = functions.https.onCall(async (data, context
     );
   }
 });
-
-
-

@@ -17,6 +17,7 @@ struct WorkoutCustomization: View {
     @State private var showingWarmupSettings: Bool = false
     @State private var showingSetIntensity: Bool = false
     @State private var showingWeightIncrementation: Bool = false
+    @State private var showingSupersetSettings: Bool = false
     @State private var showAlert: Bool = false
     @State private var keepCurrentExercises: Bool = false
     @State private var isDurationExpanded = false
@@ -49,6 +50,7 @@ struct WorkoutCustomization: View {
                     setIntensitySelector
                     warmupSettingsSelector
                     weightIncrementationSelector
+                    supersetSettingsSelector
                 }
                 
                 // Section 3: Schedule
@@ -70,6 +72,7 @@ struct WorkoutCustomization: View {
         .sheet(isPresented: $showingWarmupSettings) { WarmupSettingsView(userData: ctx.userData) }
         .sheet(isPresented: $showingSetIntensity) { SetDetailIntensity(userData: ctx.userData) }
         .sheet(isPresented: $showingWeightIncrementation) { WeightIncrementation() }
+        .sheet(isPresented: $showingSupersetSettings) { SupersetSettingsView(userData: ctx.userData) }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Reset") { showAlert = true }
@@ -393,6 +396,25 @@ struct WorkoutCustomization: View {
         }
     }
     
+    private var supersetSettingsSelector: some View {
+        VStack(alignment: .leading) {
+            Button(action: { showingSupersetSettings = true }) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("Supersetting")
+                        .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
+                    Spacer()
+                    Text(ctx.userData.workoutPrefs.supersetSettings.summary)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.gray)
+                }
+            }
+            .buttonStyle(.plain)
+        }
+    }
+    
     private var splitWarning: String? {
         let split = WorkoutWeek.determineSplit(customSplit: ctx.userData.workoutPrefs.customWorkoutSplit, daysPerWeek: daysPerWeek)
         if let customSplit = ctx.userData.workoutPrefs.customWorkoutSplit, customSplit != split {
@@ -440,6 +462,7 @@ struct WorkoutCustomization: View {
         ctx.userData.workoutPrefs.warmupSettings = WarmupSettings()
         ctx.userData.workoutPrefs.setIntensity = SetIntensitySettings()
         ctx.userData.workoutPrefs.roundingPreference = RoundingPreference()
+        ctx.userData.workoutPrefs.supersetSettings = SupersetSettings()
         
         initializeVariables()
 
@@ -462,6 +485,7 @@ struct WorkoutCustomization: View {
             && pref.warmupSettings == .init()
             && pref.setIntensity == .init()
             && pref.roundingPreference == .init()
+            && pref.supersetSettings == .init()
         )
     }
 }

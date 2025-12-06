@@ -82,5 +82,3 @@ live in the adjacent `logs/` folder. Stripe transfers run in dry-run mode unless
   total paid, per-run history) so re-running the script is idempotent.
 - Stripe transfers are skipped when no payout account exists or when the computed payout is
   negative/zero. Outstanding amounts remain in the next run.
-
-

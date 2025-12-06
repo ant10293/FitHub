@@ -189,4 +189,3 @@ export async function updateReferralCodeSubscriptions(userId: string): Promise<v
   
   console.log(`Updated referral code ${referralCode} subscriptions for user ${userId}`);
 }
-

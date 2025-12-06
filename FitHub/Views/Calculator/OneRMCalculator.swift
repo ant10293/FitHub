@@ -26,7 +26,7 @@ struct OneRMCalculator: View {
             if toast.showingSaveConfirmation {
                 InfoBanner(title: "1RM Saved Successfully!").zIndex(1)
             }
-
+            
             Form {
                 if !isCalculated {
                     // ─── Inputs ─────────────────────────────────────────────
@@ -35,6 +35,8 @@ struct OneRMCalculator: View {
                         .keyboardType(.decimalPad)
                     } header: {
                         Text("Weight Lifted")
+                            .textCase(.none)
+                            .font(.headline)
                     }
                     
                     Section {
@@ -42,14 +44,14 @@ struct OneRMCalculator: View {
                             .keyboardType(.numberPad)
                     } header: {
                         Text("Reps Performed")
+                            .textCase(.none)
+                            .font(.headline)
                     } footer: {
                         ErrorFooter(message: repsErrorMessage)
                     }
 
                     // ─── Calculate button ─────────────────────────────────
                     Section {
-                        EmptyView()
-                    } footer: {
                         if !isCalculated && !kbd.isVisible {
                             RectangularButton(
                                 title: "Calculate One Rep Max",
@@ -57,6 +59,7 @@ struct OneRMCalculator: View {
                                 action: calculate
                             )
                             .padding(.vertical)
+                            .listRowBackground(Color.clear)
                         }
                     }
 
@@ -89,6 +92,7 @@ struct OneRMCalculator: View {
                     }
                 }
             }
+            .padding(.top)
             .disabled(toast.showingSaveConfirmation)
             .blur(radius: toast.showingSaveConfirmation ? 10 : 0)
         }

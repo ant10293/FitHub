@@ -51,6 +51,7 @@ struct ExerciseSetDisplay: View {
                             showTimer = true
                         }
                     )
+                    .padding(.bottom)
                 }
             }
             

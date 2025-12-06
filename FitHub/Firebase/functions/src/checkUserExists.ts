@@ -42,6 +42,3 @@ export const checkUserExists = functions.https.onCall(async (data, context) => {
     throw new functions.https.HttpsError("internal", "Unable to check account status.");
   }
 });
-
-
-
