@@ -45,11 +45,11 @@ struct WorkoutCustomization: View {
                 // Section 2: Set Configuration
                 Section {
                     setsSelector
+                    warmupSettingsSelector
                     repsSelector
                     setStructureSelector
                     setIntensitySelector
-                    warmupSettingsSelector
-                    weightIncrementationSelector
+                    roundingSelector
                     supersetSettingsSelector
                 }
                 
@@ -377,7 +377,7 @@ struct WorkoutCustomization: View {
         }
     }
     
-    private var weightIncrementationSelector: some View {
+    private var roundingSelector: some View {
         VStack(alignment: .leading) {
             Button(action: { showingWeightIncrementation = true }) {
                 HStack(alignment: .firstTextBaseline) {

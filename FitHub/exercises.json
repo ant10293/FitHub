@@ -364,7 +364,7 @@
 		"csvKey": "incline-dumbbell-bench-press",
 		"aliases": ["Incline Dumbbell Press"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
+		"equipmentRequired": ["Dumbbells", "Adjustable Bench"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
@@ -1490,7 +1490,7 @@
         "csvKey": "incline-dumbbell-fly",
         "aliases": ["Incline DB Chest Fly", "Incline Flyes"],
         "instructions": { "steps": [ ] },
-        "equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
+        "equipmentRequired": ["Dumbbells", "Adjustable Bench"],
         "muscles": [
             { "engagementPercentage": 85, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
                 { "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
@@ -3522,7 +3522,7 @@
 		"csvKey": "dumbbell-incline-y-raise",
 		"aliases": ["Prone Y Raise"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
+		"equipmentRequired": ["Dumbbells", "Adjustable Bench"],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Trapezius", "submusclesWorked": [
 				{ "engagementPercentage": 100, "submuscleWorked": "Lower Traps" }
@@ -4727,7 +4727,7 @@
 		"csvKey": "incline-dumbbell-curl",
 		"aliases": ["Incline Bicep Curl"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
+		"equipmentRequired": ["Dumbbells", "Adjustable Bench"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
@@ -4748,7 +4748,7 @@
 		"csvKey": "incline-hammer-curl",
 		"aliases": ["Incline Neutral-Grip Curl"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Dumbbells", "Incline Bench Rack"],
+		"equipmentRequired": ["Dumbbells", "Adjustable Bench"],
 		"muscles": [
 			{ "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
@@ -4937,7 +4937,7 @@
 		"csvKey": "spider-curl",
 		"aliases": ["Incline Bench Spider Curl"],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": ["Barbell", "Incline Bench Rack"],
+		"equipmentRequired": ["Barbell", "Preacher Curl Bench"],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
 				{ "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
