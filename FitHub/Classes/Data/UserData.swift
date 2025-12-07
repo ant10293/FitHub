@@ -130,7 +130,6 @@ extension UserData {
         workoutPlans.userTemplates.append(newTemplate)
     }
     
-    // MARK: new func to be called in WorkoutVM to update non progression changes to template
     func updateTmplExSet(templateID: WorkoutTemplate.ID, exerciseID: Exercise.ID, setDetail: SetDetail) {
         if let (template, index, location) = getTemplate(templateID: templateID) {
             var tmpl = template
@@ -369,7 +368,7 @@ extension UserData {
          
                 self.isGeneratingWorkout = false
                 
-                // 🆕 SHOW CHANGELOG IF IT'S NEXT WEEK
+                // SHOW CHANGELOG IF IT'S NEXT WEEK
                 if nextWeek, let changelog = output.changelog {
                     self.currentChangelog = changelog
                     self.showingChangelog = true

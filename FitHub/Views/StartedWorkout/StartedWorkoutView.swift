@@ -1,5 +1,4 @@
 import SwiftUI
-import Symbols
 
 struct StartedWorkoutView: View {
     @EnvironmentObject private var ctx: AppContext

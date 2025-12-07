@@ -79,14 +79,10 @@
         
         // Redirect to App Store when ready
         // Replace [YOUR_APP_STORE_ID] with your actual App Store ID
+        const appStoreId = '6749919587';
+
         function redirectToAppStore() {
-            // TODO: Replace with your actual App Store ID
-            // You can find this in App Store Connect after your app is submitted
-            const appStoreId = '[YOUR_APP_STORE_ID]';
-            
-            if (appStoreId !== '[YOUR_APP_STORE_ID]') {
-                window.location.href = `https://apps.apple.com/app/id${appStoreId}`;
-            }
+            window.location.href = `https://apps.apple.com/app/id${appStoreId}`;
         }
         
         // Try to open the app (if installed)

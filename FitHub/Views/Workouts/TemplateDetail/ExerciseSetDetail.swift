@@ -122,6 +122,7 @@ struct ExerciseSetDetail: View {
                         .lineLimit(nil)
                         .fixedSize(horizontal: false, vertical: true)
                     Image(systemName: "info.circle")
+                        .foregroundStyle(.blue)
                 }
             }
             .buttonStyle(.plain)

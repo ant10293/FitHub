@@ -95,6 +95,7 @@ struct ExerciseSetOverlay: View {
                                 .font(.headline)
                                 .multilineTextAlignment(.center)
                             Image(systemName: "info.circle")
+                                .foregroundStyle(.blue)
                         }
                         .frame(maxWidth: .infinity)
                     }

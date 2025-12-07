@@ -122,16 +122,16 @@ private struct RoundingSection: View {
                     }
                 }
         } header: {
-            HStack {
-                Text(title)
-                    .textCase(.none)
-                Button(action: onInfoTap) {
+            Button(action: onInfoTap) {
+                HStack {
+                    Text(title)
+                        .textCase(.none)
                     Image(systemName: "info.circle")
                         .foregroundStyle(.blue)
                 }
-                .buttonStyle(.plain)
+                .font(.headline)
             }
-            .font(.headline)
+            .buttonStyle(.plain)
         }
     }
 }
