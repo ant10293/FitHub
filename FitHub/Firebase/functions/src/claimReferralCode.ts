@@ -10,7 +10,7 @@ import { rateLimitCall, RateLimits } from "./utils/rateLimiter";
  */
 export const claimReferralCode = functions.https.onCall(async (data, context) => {
   // Apply rate limiting (throws if exceeded)
-  await rateLimitCall(context, RateLimits.CLAIM_REFERRAL_CODE);
+  await rateLimitCall(context, RateLimits.CLAIM_REFERRAL_CODE, "claimReferralCode");
 
   // Verify authentication
   if (!context.auth) {

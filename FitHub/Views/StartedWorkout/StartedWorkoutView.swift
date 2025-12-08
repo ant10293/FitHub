@@ -56,8 +56,7 @@ struct StartedWorkoutView: View {
             }
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
-            if oldPhase == .active, newPhase == .inactive,
-               !viewModel.workoutEnded {
+            if oldPhase == .active, newPhase == .inactive, !viewModel.workoutEnded {
                 viewModel.saveWorkoutInProgress(userData: ctx.userData)
             }
         }

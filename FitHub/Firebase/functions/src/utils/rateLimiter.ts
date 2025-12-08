@@ -248,19 +248,21 @@ export async function checkRateLimit(config: RateLimitConfig): Promise<RateLimit
  */
 export async function rateLimitCall(
   context: functions.https.CallableContext,
-  config: Omit<RateLimitConfig, "identifier" | "functionName">
+  config: Omit<RateLimitConfig, "identifier" | "functionName">,
+  functionName?: string
 ): Promise<void> {
   if (!context.auth) {
     throw new functions.https.HttpsError("unauthenticated", "User must be authenticated");
   }
   
   const identifier = context.auth.uid;
-  const functionName = context.rawRequest?.url?.split("/").pop() || "unknown";
+  // Use provided functionName, or try to extract from URL, or default to "unknown"
+  const resolvedFunctionName = functionName || context.rawRequest?.url?.split("/").pop() || "unknown";
   
   const result = await checkRateLimit({
     ...config,
     identifier,
-    functionName,
+    functionName: resolvedFunctionName,
   });
   
   if (!result.allowed) {

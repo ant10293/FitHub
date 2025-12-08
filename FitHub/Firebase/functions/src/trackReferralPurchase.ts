@@ -9,7 +9,7 @@ import { rateLimitCall, RateLimits } from "./utils/rateLimiter";
  */
 export const trackReferralPurchase = functions.https.onCall(async (data, context) => {
   // Apply rate limiting (throws if exceeded)
-  await rateLimitCall(context, RateLimits.TRACK_PURCHASE);
+  await rateLimitCall(context, RateLimits.TRACK_PURCHASE, "trackReferralPurchase");
 
   // Verify authentication
   if (!context.auth) {

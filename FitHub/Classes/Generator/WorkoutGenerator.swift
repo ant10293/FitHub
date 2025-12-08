@@ -332,6 +332,7 @@ extension WorkoutGenerator {
             to: tpl.exercises,
             settings: supersetting
         )
+        
         return tpl
     }
     
