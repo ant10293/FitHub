@@ -303,7 +303,7 @@ extension UserData {
             nextWeek: nextWeek
         )
          // The generator only needs `user` (self) plus the same arguments
-        return WorkoutGenerator().calculateDetailedExercise(
+        let (detailedExercise, _) = WorkoutGenerator().calculateDetailedExercise(
             input: input,
             exercise: exercise,
             repsAndSets: rs,
@@ -311,6 +311,7 @@ extension UserData {
                 exerciseData.applyPerformanceUpdate(update: update, csvEstimate: true, shouldSave: true)
             }
         )
+        return detailedExercise
     }
     
     // House-keep old trainerTemplates – returns exercises we might want to keep

@@ -200,6 +200,25 @@ extension WorkoutGenerator {
         )
     }
     
+    func getCompleted(
+        savedID: UUID,
+        input: Input
+    ) -> CompletedWorkout? {
+        // Gather all completed workouts matching this template ID
+        let matchingCompleted: [CompletedWorkout] = input.user.workoutPlans.completedWorkouts.filter { $0.template.id == savedID }
+        
+        // If multiple matches, pick the one with highest updatedMax.count
+        let testCompleted: CompletedWorkout? = {
+            if matchingCompleted.count > 1 {
+                return matchingCompleted.max(by: { $0.updatedMax.count < $1.updatedMax.count })
+            } else {
+                return matchingCompleted.first
+            }
+        }()
+        
+        return testCompleted
+    }
+    
     // Selection via engine
     func makeWorkoutTemplate(
         day: DaysOfWeek,
@@ -218,7 +237,7 @@ extension WorkoutGenerator {
         let savedDay: OldTemplate = input.saved[safe: dayIndex] ?? OldTemplate()
         let dayHasExercises: Bool = dayIndex < input.saved.count && !savedDay.exercises.isEmpty
         let initialExercises: [Exercise] = (input.keepCurrentExercises && dayHasExercises) ? savedDay.exercises : []
-        let testCompleted: CompletedWorkout? = input.user.workoutPlans.completedWorkouts.first(where: { $0.template.id == savedDay.id })
+        let testCompleted: CompletedWorkout? = getCompleted(savedID: savedDay.id, input: input)
         let wasCompleted: Bool = testCompleted != nil
         let completed: CompletedWorkout = testCompleted ?? CompletedWorkout()
         let restPeriods: RestPeriods = params.repsAndSets.rest
@@ -276,10 +295,12 @@ extension WorkoutGenerator {
             
             // [2] Detail each exercise (aggregate timing, plus per-ex timing with threshold)
             let detailedExercises: [Exercise] = exercises.map { ex in
-                let exStep1 = calculateDetailedExercise(
+                let completedExercise = completed.byID[ex.id]
+                let (exStep1, preventedRegression) = calculateDetailedExercise(
                     input: input,
                     exercise: ex,
                     repsAndSets: params.repsAndSets,
+                    completedExercise: completedExercise,
                     maxUpdated: { update in
                         maxUpdated(update)
                     }
@@ -291,7 +312,8 @@ extension WorkoutGenerator {
                     completedExercise: completed.byID[ex.id],
                     overloadFactor: params.overloadFactor,
                     overloadStyle: params.overloadStyle,
-                    templateCompleted: wasCompleted
+                    templateCompleted: wasCompleted,
+                    preventedRegression: preventedRegression
                 )
                 if input.user.workoutPrefs.warmupSettings.includeSets {
                     exStep2.createWarmupDetails(
@@ -340,9 +362,11 @@ extension WorkoutGenerator {
         input: Input,
         exercise: Exercise,
         repsAndSets: RepsAndSets,
+        completedExercise: Exercise? = nil,
         maxUpdated: @escaping (PerformanceUpdate) -> Void
-    ) -> Exercise {
+    ) -> (Exercise, Bool) {
         var ex  = exercise
+        var preventedRegression = false
         
         if let max = input.exerciseData.peakMetric(for: ex.id), max.actualValue > 0 {
             ex.draftMax = max
@@ -352,11 +376,59 @@ extension WorkoutGenerator {
             ex.draftMax = calcMax
             maxUpdated(PerformanceUpdate(exerciseId: ex.id, value: calcMax))
         }
+        
+        // —— Prevent regression: if user performed >= planned on top set, don't regress max ————————————————
+        if let newDraftMax = ex.draftMax,
+           let completedEx = completedExercise,
+           let oldDraftMax = completedEx.draftMax,
+           oldDraftMax.actualValue > newDraftMax.actualValue {
+            
+            // Find the top set (highest equivalent max from completed sets only)
+            // Use oldDraftMax as peakType since that's what we're preserving
+            if let topSet = findTopSetFromCompletedSets(exercise: completedEx, peakType: oldDraftMax),
+               didUserPerformAtOrAbovePlanned(topSet: topSet) {
+                // User performed at or above planned, so no regression should occur
+                ex.draftMax = oldDraftMax
+                preventedRegression = true
+            }
+        }
 
         // —— Set details ————————————————————————————
         ex.createSetDetails(repsAndSets: repsAndSets, userData: input.user, equipmentData: input.equipmentData)
         
-        return ex
+        return (ex, preventedRegression)
+    }
+    
+    /// Find the set with the highest equivalent max from completed working sets only
+    /// Returns the set with the highest equivalent max, or nil if no completed sets exist
+    private func findTopSetFromCompletedSets(
+        exercise: Exercise,
+        peakType: PeakMetric
+    ) -> SetDetail? {
+        var topSet: SetDetail? = nil
+        var highestMax: Double = 0.0
+        
+        // Only check working sets (not warmup)
+        for set in exercise.setDetails {
+            // Only consider sets that have been completed
+            if set.completed == nil { continue }
+            
+            // Calculate the equivalent max from this completed set
+            if let calculatedMax = set.completedPeakMetric(peak: peakType) {
+                if calculatedMax.actualValue > highestMax {
+                    highestMax = calculatedMax.actualValue
+                    topSet = set
+                }
+            }
+        }
+        
+        return topSet
+    }
+    
+    /// Check if the user performed at or above what was planned for the top set
+    private func didUserPerformAtOrAbovePlanned(topSet: SetDetail) -> Bool {
+        guard let completed = topSet.completed else { return false }
+        return completed.actualValue >= topSet.planned.actualValue
     }
     
     func handleExerciseProgression(
@@ -365,7 +437,8 @@ extension WorkoutGenerator {
         completedExercise: Exercise? = nil, // last week's
         overloadFactor: Double,
         overloadStyle: ProgressiveOverloadStyle,
-        templateCompleted: Bool
+        templateCompleted: Bool,
+        preventedRegression: Bool = false
     ) -> Exercise {
         var ex   = exercise
         let s    = input.user.settings
@@ -426,11 +499,13 @@ extension WorkoutGenerator {
         // ── Early exits ───────────────────────────────────────────────────────────────
         guard input.nextWeek && input.keepCurrentExercises else { return ex }
 
-        // 0️⃣ New PR → reset.
+        // 0️⃣ New PR → track it, but only reset progression if we didn't prevent regression
         if newPRSincePlanCreation(input: input, exerciseID: ex.id) {
-            resetProgression()
             maxUpdates.insert(ex.id)
-            return ex
+            if !preventedRegression {
+                resetProgression()
+                return ex
+            }
         }
 
         // 1️⃣ Skip if last week’s template wasn’t completed.

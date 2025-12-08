@@ -210,15 +210,15 @@ extension WorkoutGenerator {
         let progressionType: ProgressionDetails.ProgressionType
         let appliedChange: String
 
-        if maxUpdates.contains(new.id) {
-            progressionType = .prUpdate
-            appliedChange = "New PR since last generation. Set Details recalculated using new PR."
-        }
-        else if overloadingExercises.contains(new.id) {
+        if overloadingExercises.contains(new.id) {
             // Overload happened this tick
             let step = new.overloadProgress
             progressionType = .progressiveOverload
             appliedChange = "Progressive overload applied (Week \(step)/\(olPeriod))"
+        }
+        else if maxUpdates.contains(new.id) {
+            progressionType = .prUpdate
+            appliedChange = "New PR since last generation. Set Details recalculated using new PR."
         }
         else if deloadingExercises.contains(new.id) {
             // Deload happened due to stagnation threshold
