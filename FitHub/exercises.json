@@ -1861,7 +1861,6 @@
 		"limbMovementType": "Bilateral Dependent",
 		"resistance": "Bodyweight"
 	},
-
     {
         "name": "Pull-Up",
         "id": "BFD3B9CF-D410-4030-AEE1-6CCC09F11624",
@@ -4092,7 +4091,6 @@
         "resistance": "Machine",
         "imageUrl": "https://gymvisual.com/animated-gifs/12153-smith-seated-calf-raise.html#/47-style_type-basic_grey"
     },
-
     {
         "name": "Seated Banded Calf Raise",
         "id": "A7B8C9D0-E1F2-4A5B-8C9D-0E1F2A3B4C5D",
@@ -5754,9 +5752,6 @@
 		"repsInstruction": "Per Leg",
 		"imageUrl": "https://gymvisual.com/animated-gifs/2198-side-hip-abduction.html#/47-style_type-basic_grey"
 	},
-
-
-
     {
         "name": "Band Standing Hip Abduction",
         "id": "25CE9E2F-14BF-47B5-A79B-98A504CE9C9B",

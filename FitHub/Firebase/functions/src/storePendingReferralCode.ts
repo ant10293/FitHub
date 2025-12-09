@@ -97,4 +97,3 @@ export const storePendingReferralCode = functions.https.onRequest(async (req, re
     res.status(500).json({ error: "Failed to store referral code" });
   }
 });
-

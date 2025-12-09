@@ -83,4 +83,3 @@ export const getPendingReferralCode = functions.https.onCall(async (data, contex
     throw new functions.https.HttpsError("internal", "Failed to retrieve referral code");
   }
 });
-
