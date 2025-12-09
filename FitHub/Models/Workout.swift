@@ -102,6 +102,10 @@ extension WorkoutTemplate {
                         movement += max(0, span.inSeconds)
                     case .cardio(let ts):
                         movement += max(0, ts.time.inSeconds)
+                    case .carry(let m):
+                        // Estimate time for carry: 1.5 seconds per meter
+                        let secondsPerMeter = SetDetail.secPerMeter
+                        movement += Int((m.inM * secondsPerMeter).rounded())
                     }
                     
                     let noRest = isLastExercise && set.setNumber == ex.totalSets

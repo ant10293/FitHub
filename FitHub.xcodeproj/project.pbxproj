@@ -124,6 +124,7 @@
 		65B936E82EE3AC0C00D80950 /* SupersetSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936E72EE3AC0C00D80950 /* SupersetSettingsView.swift */; };
 		65B936EC2EE3C21300D80950 /* CustomDisclosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936EB2EE3C21300D80950 /* CustomDisclosure.swift */; };
 		65B936EE2EE79D8400D80950 /* DeviceFingerprintManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936ED2EE79D8400D80950 /* DeviceFingerprintManager.swift */; };
+		65B936F02EE8BE4900D80950 /* Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936EF2EE8BE4900D80950 /* Meters.swift */; };
 		65C5DC552DEFB46400B09AD2 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC542DEFB46400B09AD2 /* Core.swift */; };
 		65C5DC572DEFB51800B09AD2 /* Muscle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC562DEFB51800B09AD2 /* Muscle.swift */; };
 		65C5DC592DEFB5AE00B09AD2 /* Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC582DEFB5AE00B09AD2 /* Split.swift */; };
@@ -414,6 +415,7 @@
 		65B936E72EE3AC0C00D80950 /* SupersetSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupersetSettingsView.swift; sourceTree = "<group>"; };
 		65B936EB2EE3C21300D80950 /* CustomDisclosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDisclosure.swift; sourceTree = "<group>"; };
 		65B936ED2EE79D8400D80950 /* DeviceFingerprintManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFingerprintManager.swift; sourceTree = "<group>"; };
+		65B936EF2EE8BE4900D80950 /* Meters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meters.swift; sourceTree = "<group>"; };
 		65C5DC542DEFB46400B09AD2 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		65C5DC562DEFB51800B09AD2 /* Muscle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Muscle.swift; sourceTree = "<group>"; };
 		65C5DC582DEFB5AE00B09AD2 /* Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Split.swift; sourceTree = "<group>"; };
@@ -628,6 +630,7 @@
 				65039B732E81D983007A31E1 /* Speed.swift */,
 				65039B752E81D98B007A31E1 /* Distance.swift */,
 				65AB47FC2EA73AF4001BEAFE /* UnitCategory.swift */,
+				65B936EF2EE8BE4900D80950 /* Meters.swift */,
 			);
 			path = Unit;
 			sourceTree = "<group>";
@@ -1617,6 +1620,7 @@
 				653136302E550E2900EECCA5 /* WorkoutParams.swift in Sources */,
 				65CD3C4D2DD3C84F00C2B671 /* MeasurementsView.swift in Sources */,
 				65039B8F2E88D807007A31E1 /* SimpleStopwatch.swift in Sources */,
+				65B936F02EE8BE4900D80950 /* Meters.swift in Sources */,
 				65CD3C4E2DD3C84F00C2B671 /* CategorySelection.swift in Sources */,
 				65039B742E81D983007A31E1 /* Speed.swift in Sources */,
 				65CFBFA92E1F5B2B00CD521E /* AdjustmentPicker.swift in Sources */,

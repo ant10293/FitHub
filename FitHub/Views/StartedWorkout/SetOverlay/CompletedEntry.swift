@@ -29,6 +29,9 @@ struct CompletedEntry: View {
                 case .hold(let plannedTime):
                     holdField(plannedTime: plannedTime)
                     
+                case .carry(let plannedMeters):
+                    distanceField(plannedMeters: plannedMeters)
+                    
                 case .cardio(let plannedTOS):
                     cardioField(plannedTOS: plannedTOS)
                 }
@@ -78,6 +81,33 @@ struct CompletedEntry: View {
         )
         
         timeCompletedField(planned: plannedTime, timeBinding: completedBinding)
+    }
+    
+    @ViewBuilder private func distanceField(plannedMeters: Meters) -> some View {
+        let completedLocal = completed.metersValue ?? plannedMeters
+        let completedBinding = Binding<Double>(
+            get: { completedLocal.inM },
+            set: { newValue in
+                completed = SetMetric.carry(Meters(meters: newValue))
+            }
+        )
+        
+        HStack {
+            Text("Meters Completed:").fontWeight(.bold)
+            Spacer()
+            Text(" \(Int(completedLocal.inM)) ")
+                .foregroundStyle(completedLocal.inM < plannedMeters.inM ? .red :
+                                    (completedLocal.inM > plannedMeters.inM ? .green : .primary))
+            Spacer()
+            
+            Stepper(
+                "",
+                value: completedBinding,
+                in: 0...(max(1.0, plannedMeters.inM) * 5),
+                step: 1.0
+            )
+            .labelsHidden()
+        }
     }
     
     @ViewBuilder private func cardioField(plannedTOS: TimeOrSpeed) -> some View {

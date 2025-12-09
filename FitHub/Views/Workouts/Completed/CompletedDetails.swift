@@ -189,6 +189,7 @@ private extension CompletedDetails {
             switch metric {
             case .reps(let r): return "\(max(0, r)) reps"
             case .hold(let span): return span.displayStringCompact
+            case .carry(let m): return m.displayString
             case .cardio(let ts): return ts.time.displayStringCompact
             }
         }
@@ -197,6 +198,7 @@ private extension CompletedDetails {
             switch m {
             case .reps(let r): return Double(max(0, r))
             case .hold(let span): return Double(max(0, span.inSeconds))
+            case .carry(let m): return Double(max(0, m.inM))
             case .cardio(let ts): return Double(max(0, ts.time.inSeconds))
             }
         }

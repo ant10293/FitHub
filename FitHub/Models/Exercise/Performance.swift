@@ -13,6 +13,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
     case maxReps(Int)      // e.g. 32 reps
     case maxHold(TimeSpan) // e.g 90 sec or 60 kg for 30 sec
     case hold30sLoad(Mass)
+    case carry50mLoad(Mass)
     case none
     
     var actualValue: Double {
@@ -21,6 +22,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
         case .maxReps(let reps): return Double(reps)
         case .maxHold(let time): return Double(time.inSeconds)
         case .hold30sLoad(let mass): return mass.inKg
+        case .carry50mLoad(let mass): return mass.inKg
         case .none: return 0
         }
     }
@@ -30,6 +32,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
         case .oneRepMax(let mass): return mass.displayValue
         case .maxReps, .maxHold: return self.actualValue // unit doesnt matter
         case .hold30sLoad(let mass): return mass.displayValue
+        case .carry50mLoad(let mass): return mass.displayValue
         case .none: return self.actualValue
         }
     }
@@ -40,13 +43,14 @@ enum PeakMetric: Codable, Equatable, Hashable {
         case .maxReps(let reps): return String(reps)
         case .maxHold(let time): return time.displayStringCompact
         case .hold30sLoad(let mass): return mass.displayString
+        case .carry50mLoad(let mass): return mass.displayString
         case .none: return ""
         }
     }
     
     var unitLabel: String? {
         switch self {
-        case .oneRepMax, .hold30sLoad: return UnitSystem.current.weightUnit
+        case .oneRepMax, .hold30sLoad, .carry50mLoad: return UnitSystem.current.weightUnit
         case .maxReps: return "reps"
         case .maxHold: return "sec"
         case .none: return nil
@@ -59,6 +63,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
         case .maxReps: return "Max Reps"
         case .maxHold: return "Max Hold"
         case .hold30sLoad: return "30s Max Load"
+        case .carry50mLoad: return "50m Max Load"
         case .none: return ""
         }
     }
@@ -75,6 +80,8 @@ enum PeakMetric: Codable, Equatable, Hashable {
             suffix = "hold time based on exertion percentage."
         case .hold30sLoad:
             suffix = "load for a 30-second hold based on exertion percentage."
+        case .carry50mLoad:
+            suffix = "load for a 50-meter carry based on exertion percentage."
         case .none:
             return ""
         }
@@ -85,7 +92,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
 extension PeakMetric {
     private var displayLabel: String? {
         switch self {
-        case .oneRepMax, .hold30sLoad: return unitLabel
+        case .oneRepMax, .hold30sLoad, .carry50mLoad: return unitLabel
         case .maxHold, .maxReps, .none: return nil
         }
     }
@@ -126,7 +133,7 @@ extension Optional where Wrapped == PeakMetric {
 }
 
 enum ExerciseUnit: String, Codable, CaseIterable {
-    case weightXreps, repsOnly, timeOnly, weightXtime, distanceXtimeOrSpeed
+    case weightXreps, repsOnly, timeOnly, weightXtime, weightXdistance, distanceXtimeOrSpeed
     
     func getPeakMetric(metricValue: Double) -> PeakMetric {
         switch self {
@@ -138,6 +145,8 @@ enum ExerciseUnit: String, Codable, CaseIterable {
             return .maxHold(TimeSpan(seconds: Int(metricValue)))
         case .weightXtime:
             return .hold30sLoad(Mass(kg: metricValue))
+        case .weightXdistance:
+            return .carry50mLoad(Mass(kg: metricValue))
         case .distanceXtimeOrSpeed:
             return .none
         }
@@ -158,6 +167,7 @@ enum ExerciseUnit: String, Codable, CaseIterable {
         case .repsOnly: return "Reps Only"
         case .timeOnly: return "Time Only"
         case .weightXtime: return "Weight × Time"
+        case .weightXdistance: return "Weight × Distance"
         case .distanceXtimeOrSpeed: return "Distance × Time/Speed"
         }
     }

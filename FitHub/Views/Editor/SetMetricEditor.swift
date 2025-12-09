@@ -58,6 +58,21 @@ struct SetMetricEditor: View {
                 style: style
             )
 
+        case .carry(let m):
+            TextField("meters", text: Binding<String>(
+                get: { return localText.isEmpty ? m.fieldString : localText },
+                set: { newValue in
+                    let filtered = InputLimiter.filteredWeight(old: m.fieldString, new: newValue)
+                    localText = filtered
+                    let val = Double(filtered) ?? 0
+                    let m = Meters(meters: val)
+                    let newPlanned: SetMetric = .carry(m)
+                    planned = newPlanned
+                }
+            ))
+            .keyboardType(.decimalPad)
+            .multilineTextAlignment(.center)
+
         case .cardio(let tos):
             TimeSpeedField(
                 tos: Binding<TimeOrSpeed>(

@@ -26,6 +26,7 @@ struct Exercise: Identifiable, Hashable, Codable {
     let repsInstruction: RepsInstruction?
     let weightInstruction: WeightInstruction?
     let imageUrl: String?
+    let unitType: ExerciseUnit
 
     var draftMax: PeakMetric?
     var isSupersettedWith: String?  // UUID String
@@ -65,6 +66,7 @@ extension Exercise {
         self.repsInstruction      = initEx.repsInstruction
         self.weightInstruction    = initEx.weightInstruction
         self.imageUrl             = initEx.imageUrl
+        self.unitType             = initEx.unitType
     }
 }
 extension Exercise {
@@ -147,6 +149,13 @@ extension Exercise {
             let loStr = TimeSpan(seconds: lo).displayStringCompact
             let hiStr = TimeSpan(seconds: hi).displayStringCompact
             return (label, lo == hi ? loStr : "\(loStr)-\(hiStr)")
+        case .carry:
+            // Distance range (e.g., "25m-50m")
+            let distances = setDetails.compactMap { $0.planned.metersValue?.inM }
+            guard let lo = distances.min(), let hi = distances.max() else { return (label, "0") }
+            let loStr = "\(Int(lo))"
+            let hiStr = "\(Int(hi))m"
+            return (label, lo == hi ? hiStr : "\(loStr)-\(hiStr)")
         case .cardio:
             let secs = setDetails.compactMap { $0.planned.timeSpeed?.time.inSeconds }
             guard let lo = secs.min(), let hi = secs.max() else { return (label, "0:00") }
@@ -177,22 +186,10 @@ extension Exercise {
     }
     
     var usesReps: Bool { effort.usesReps }
-        
-    var unitType: ExerciseUnit {
-        switch effort {
-        case .cardio:
-            return .distanceXtimeOrSpeed
-        case .isometric:
-            return usesWeight ? .weightXtime : .timeOnly
-        // compound / isolation / plyometric (anything reps-driven)
-        default:
-            return usesWeight ? .weightXreps : .repsOnly
-        }
-    }
     
     var loadMetric: SetLoad {
         switch unitType {
-        case .weightXreps, .weightXtime:
+        case .weightXreps, .weightXtime, .weightXdistance:
             return .weight(Mass(kg: 0))
         case .distanceXtimeOrSpeed:
             return .distance(Distance(km: 0))
@@ -201,13 +198,14 @@ extension Exercise {
         }
     }
     
-    // FIXME: use value and pass distance
     var plannedMetric: SetMetric {
         switch unitType {
         case .weightXreps, .repsOnly:
             return .reps(0)
         case .timeOnly, .weightXtime:
             return .hold(TimeSpan(seconds: 0))
+        case .weightXdistance:
+            return .carry(Meters(meters: 0))
         case .distanceXtimeOrSpeed:
             return .cardio(TimeOrSpeed(time: TimeSpan(seconds: 0), distance: Distance(km: 0)))
         }
@@ -303,13 +301,14 @@ extension Exercise {
             switch (prev.planned, completed) {
             case (.reps(let p), .reps(let c)): return c >= p
             case (.hold(let p), .hold(let c)): return c.inSeconds >= p.inSeconds
+            case (.carry(let p), .carry(let c)): return c.inM >= p.inM
             default: return false
             }
         }
         
         let kg = equipmentData.incrementForEquipment(names: equipmentRequired, rounding: rounding).inKg
         let kgPerStep = kg * overloadFactor
-        let secPerStep = SetDetail.secPerStep
+       // let secPerStep = SetDetail.secPerStep
         let halfway = max(1, period / 2)
         
         var overloadApplied: Bool = false
@@ -336,17 +335,17 @@ extension Exercise {
                     updated.load = .weight(equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding))
                     
                 case .increaseReps:
-                    updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
+                    updated.bumpPlanned(by: overloadProgress)
                     
                 case .decreaseReps:
                     // Fewer reps/seconds but +weight
-                    updated.bumpPlanned(by: -overloadProgress, secondsPerStep: secPerStep)
+                    updated.bumpPlanned(by: -overloadProgress)
                     let newKg = weight.inKg + Double(overloadProgress) * kgPerStep
                     updated.load = .weight(equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding))
 
                 case .dynamic:
                     if overloadProgress <= halfway {
-                        updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
+                        updated.bumpPlanned(by: overloadProgress)
                     } else {
                         // Reset planned target to baseline, then increase weight
                         updated.planned = setDetail.planned
@@ -361,7 +360,7 @@ extension Exercise {
                 
             case .none:
                 // Bodyweight: bump planned target only
-                updated.bumpPlanned(by: overloadProgress, secondsPerStep: secPerStep)
+                updated.bumpPlanned(by: overloadProgress)
             }
             
             return updated
@@ -532,7 +531,8 @@ extension Exercise {
                 
                 load = .weight(roundedWeight)
                 planned = .reps(max(1, reps))
-                
+            
+            // TODO: .hold30sLoad and carry50mLoad logic is basically identical, use single source of truth
             case .hold30sLoad(let l30):
                 // Plan: constant 30s holds; vary load by set structure and intensity.
                 let tRefSec = WeightedHoldFormula.canonical.inSeconds
@@ -563,7 +563,37 @@ extension Exercise {
                 load = .weight(rounded)
                 planned = .hold(TimeSpan(seconds: tRefSec))
             
-            // TODO: implement for weighted hold and cardio exercises
+            case .carry50mLoad(let l50):
+                // Plan: constant 50m carries; vary load by set structure and intensity.
+                let dRefMeters = WeightedCarryFormula.canonical
+                let targetKg: Double
+                
+                // Combine set structure with intensity settings
+                switch setStructure {
+                case .pyramid:
+                    // Pyramid: start at min intensity, progress to max intensity
+                    let minKg = max(0.0, l50.inKg * minIntensityPct)
+                    let maxKgAtIntensity = max(0.0, l50.inKg * maxIntensityPct)
+                    let progress = (intensityPct - minIntensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
+                    targetKg = minKg + (maxKgAtIntensity - minKg) * progress
+                    
+                case .reversePyramid:
+                    // Reverse pyramid: start at max intensity, decrease to min intensity
+                    let maxKgAtIntensity = max(0.0, l50.inKg * maxIntensityPct)
+                    let minKg = max(0.0, l50.inKg * minIntensityPct)
+                    let progress = (maxIntensityPct - intensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
+                    targetKg = maxKgAtIntensity - (maxKgAtIntensity - minKg) * progress
+                    
+                case .fixed:
+                    // Fixed: use fixed intensity
+                    targetKg = max(0.0, l50.inKg * fixedIntensityPct)
+                }
+                
+                let rounded = equipmentData.roundWeight(Mass(kg: targetKg), for: equipmentRequired, rounding: rounding)
+                load = .weight(rounded)
+                planned = .carry(dRefMeters)
+            
+            // TODO: implement for cardio exercises
             case .none:
                 load = loadMetric
                 planned = plannedMetric

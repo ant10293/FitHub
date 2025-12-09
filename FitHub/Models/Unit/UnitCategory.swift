@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum UnitCategory: String {
-    case weight, reps, time, speed, distance, size, percent, calories
+    case weight, reps, time, speed, distance, carryDistance, size, percent, calories
     
     private var label: Labeling {
         let current = UnitSystem.current
@@ -18,6 +18,7 @@ enum UnitCategory: String {
         case .time: return Labeling(label: "Time")
         case .speed: return Labeling(symbol: current.speedUnit, label: "Speed")
         case .distance: return Labeling(symbol: current.distanceUnit, label: "Distance")
+        case .carryDistance: return Labeling(symbol: "m", label: "Carry Distance")
         case .size: return Labeling(symbol: current.sizeUnit, label: "Size")
         case .percent: return Labeling(symbol: "%", label: "Percent")
         case .calories: return Labeling(symbol: "kcal", label: "Calories")

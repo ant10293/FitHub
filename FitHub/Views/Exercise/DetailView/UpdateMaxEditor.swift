@@ -56,7 +56,7 @@ private struct NewPeakEntry: View {
     var body: some View {
         Group {
             switch newPeak {
-            case .oneRepMax, .maxReps, .hold30sLoad:
+            case .oneRepMax, .maxReps, .hold30sLoad, .carry50mLoad:
                 if let binding = textBinding {
                     TextField(newPeak.placeholder, text: binding)
                         .keyboardType(.numberPad)
@@ -118,6 +118,17 @@ private struct NewPeakEntry: View {
                     localText = filtered
                     let val = Double(filtered) ?? 0
                     newPeak = .hold30sLoad(Mass(weight: val))
+                }
+            )
+        
+        case .carry50mLoad(let c50l):
+            return Binding<String>(
+                get: { c50l.fieldString },
+                set: { newValue in
+                    let filtered = InputLimiter.filteredWeight(old: c50l.fieldString, new: newValue)
+                    localText = filtered
+                    let val = Double(filtered) ?? 0
+                    newPeak = .carry50mLoad(Mass(weight: val))
                 }
             )
             

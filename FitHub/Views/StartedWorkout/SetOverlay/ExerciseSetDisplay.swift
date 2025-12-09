@@ -169,7 +169,7 @@ struct ExerciseSetDisplay: View {
                         planned = $0
                         setDetail.planned = $0
                         switch planned {
-                        case .reps:
+                        case .reps, .carry:
                             completed = $0
                             setDetail.completed = $0
                         case .cardio, .hold:
@@ -210,7 +210,7 @@ struct ExerciseSetDisplay: View {
             toggleHideStartIfNeeded()
         } else {
             switch planned {
-            case .reps:
+            case .reps, .carry:
                 completed = planned
             case .hold, .cardio:
                 completed = planned.zeroValue

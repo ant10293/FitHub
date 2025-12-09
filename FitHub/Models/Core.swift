@@ -195,6 +195,23 @@ enum WeightedHoldFormula {
     }
 }
 
+enum WeightedCarryFormula {
+    static let canonical: Meters = Meters(meters: 50) // 50 meters
+    
+    /// Convert (weight × distance) carry to an equivalent load at reference distance.
+    static func equivalentCarryLoad(
+        weight: Mass,                  // effective kg for the carry
+        distance: Meters,              // distance covered
+        reference: Meters = canonical,
+        exponent k: Double = 0.5
+    ) -> Mass {
+        let d = max(1.0, distance.inM)
+        let dRef = max(1.0, reference.inM)
+        let scale = pow(d / dRef, k)
+        return Mass(kg: weight.inKg * scale)
+    }
+}
+
 enum BMI {
     static func calculateBMI(heightCm: Double, weightKg: Double) -> Double {
         let heightM = heightCm / 100.0                     // convert to metres
