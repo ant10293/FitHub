@@ -12,6 +12,7 @@ enum ReferralURLHandler {
     static func handleIncoming(_ url: URL) {
         if let code = extractCode(from: url) {
             UserDefaults.standard.set(code, forKey: "pendingReferralCode")
+            UserDefaults.standard.set(ReferralAttributor.ClaimSource.universalLink.rawValue, forKey: "pendingReferralCodeSource")
             UserDefaults.standard.synchronize()
             print("✅ Successfully handled referral URL: \(url.absoluteString)")
             print("📝 Pending Referral code stored: \(code)")

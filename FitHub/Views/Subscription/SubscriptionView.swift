@@ -112,8 +112,10 @@ struct SubscriptionView: View {
                 let trimmed = newValue.trimmed.uppercased()
                 if trimmed.isEmpty {
                     UserDefaults.standard.removeObject(forKey: "pendingReferralCode")
+                    UserDefaults.standard.removeObject(forKey: "pendingReferralCodeSource")
                 } else if ReferralCodeGenerator.isValidCode(trimmed) {
                     UserDefaults.standard.set(trimmed, forKey: "pendingReferralCode")
+                    UserDefaults.standard.set(ReferralAttributor.ClaimSource.manualEntry.rawValue, forKey: "pendingReferralCodeSource")
                 }
             }
         }

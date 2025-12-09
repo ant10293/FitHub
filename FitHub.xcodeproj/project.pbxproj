@@ -123,6 +123,7 @@
 		65AC86492E2836070034FAA3 /* ExEquipImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AC86482E2836070034FAA3 /* ExEquipImage.swift */; };
 		65B936E82EE3AC0C00D80950 /* SupersetSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936E72EE3AC0C00D80950 /* SupersetSettingsView.swift */; };
 		65B936EC2EE3C21300D80950 /* CustomDisclosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936EB2EE3C21300D80950 /* CustomDisclosure.swift */; };
+		65B936EE2EE79D8400D80950 /* DeviceFingerprintManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936ED2EE79D8400D80950 /* DeviceFingerprintManager.swift */; };
 		65C5DC552DEFB46400B09AD2 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC542DEFB46400B09AD2 /* Core.swift */; };
 		65C5DC572DEFB51800B09AD2 /* Muscle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC562DEFB51800B09AD2 /* Muscle.swift */; };
 		65C5DC592DEFB5AE00B09AD2 /* Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC582DEFB5AE00B09AD2 /* Split.swift */; };
@@ -412,6 +413,7 @@
 		65AC86482E2836070034FAA3 /* ExEquipImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExEquipImage.swift; sourceTree = "<group>"; };
 		65B936E72EE3AC0C00D80950 /* SupersetSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupersetSettingsView.swift; sourceTree = "<group>"; };
 		65B936EB2EE3C21300D80950 /* CustomDisclosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDisclosure.swift; sourceTree = "<group>"; };
+		65B936ED2EE79D8400D80950 /* DeviceFingerprintManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFingerprintManager.swift; sourceTree = "<group>"; };
 		65C5DC542DEFB46400B09AD2 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		65C5DC562DEFB51800B09AD2 /* Muscle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Muscle.swift; sourceTree = "<group>"; };
 		65C5DC582DEFB5AE00B09AD2 /* Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Split.swift; sourceTree = "<group>"; };
@@ -879,6 +881,7 @@
 		6550ADD02E726B1D002072C1 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				65B936ED2EE79D8400D80950 /* DeviceFingerprintManager.swift */,
 				65CD3BB02DD3C84F00C2B671 /* HealthKitManager.swift */,
 				65CD3C992DD6DF8500C2B671 /* NotificationManager.swift */,
 				65CD3BB12DD3C84F00C2B671 /* TimerManager.swift */,
@@ -1289,7 +1292,6 @@
 				65CD3C952DD3CB8E00C2B671 /* FitHubAssets */,
 				65CD3BB72DD3C84F00C2B671 /* Firebase */,
 				65F5EF892EB16A5D005557F1 /* ReferralSystems */,
-				65F5EF8C2EB16A60005557F1 /* URLRouting */,
 				65CD3C222DD3C84F00C2B671 /* FitHub.entitlements */,
 				65CD3C242DD3C84F00C2B671 /* FitHubApp.swift */,
 				65C5DC472DEFB00600B09AD2 /* Models */,
@@ -1424,6 +1426,7 @@
 		65F5EF892EB16A5D005557F1 /* ReferralSystems */ = {
 			isa = PBXGroup;
 			children = (
+				65F5EF8C2EB16A60005557F1 /* URLRouting */,
 				658D800E2ED26A530041FB4D /* AffiliateTermsConstants.swift */,
 				65DD051B2EB9BB8A000D159C /* ReferralCodeRetriever.swift */,
 				65F5EF882EB16A5D005557F1 /* ReferralAttributor.swift */,
@@ -1799,6 +1802,7 @@
 				65DD05112EB979F7000D159C /* ReferralCodeGenerator.swift in Sources */,
 				65DD05122EB979F7000D159C /* ReferralPurchaseTracker.swift in Sources */,
 				65DD05132EB979F7000D159C /* AdminScript_GenerateCodes.swift in Sources */,
+				65B936EE2EE79D8400D80950 /* DeviceFingerprintManager.swift in Sources */,
 				65CD3C8C2DD3C84F00C2B671 /* UserProfileView.swift in Sources */,
 				65CD3C8E2DD3C84F00C2B671 /* FitHub.xcdatamodeld in Sources */,
 				65CD3C8F2DD3C84F00C2B671 /* FitHubApp.swift in Sources */,
