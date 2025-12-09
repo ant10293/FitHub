@@ -24,7 +24,7 @@ export const createAffiliateOnboardingLink = functions.https.onRequest(async (re
   try {
     // Authenticate first (needed for user-based rate limiting)
     const decodedToken = await authenticateRequest(req);
-    
+
     // Apply rate limiting (throws if exceeded)
     await rateLimitRequest(req, RateLimits.AFFILIATE_ONBOARDING, async () => decodedToken.uid);
     const payload = extractDataPayload(req.body);

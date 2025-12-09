@@ -17,14 +17,14 @@ export const validateAllSubscriptions = functions.pubsub
     let lastError: any;
     const maxJobRetries = 2;
     const initialDelayMs = 5000;
-    
+
     for (let attempt = 0; attempt <= maxJobRetries; attempt++) {
       try {
         await runValidationJob();
         return; // Success - exit
       } catch (error) {
         lastError = error;
-        
+
         // Only retry if error is retryable and we haven't exceeded max retries
         if (attempt < maxJobRetries && isRetryableError(error)) {
           const delayMs = initialDelayMs * Math.pow(2, attempt);
@@ -41,7 +41,7 @@ export const validateAllSubscriptions = functions.pubsub
         }
       }
     }
-    
+
     // Should never reach here, but just in case
     throw lastError;
   });
@@ -52,31 +52,31 @@ export const validateAllSubscriptions = functions.pubsub
  */
 async function runValidationJob(): Promise<void> {
   console.log("Starting daily subscription validation...");
-  
+
   const codesSnapshot = await admin.firestore()
     .collection("referralCodes")
     .get();
-  
+
   console.log(`Validating subscriptions for ${codesSnapshot.size} referral codes`);
-  
+
   let validatedCount = 0;
   let errorCount = 0;
   const failedUserIds: string[] = [];
   const persistentFailures: Array<{ userId: string; failureCount: number }> = [];
-  
+
   for (const codeDoc of codesSnapshot.docs) {
     const codeData = codeDoc.data();
-    
+
     // Get all users who purchased (combine all types)
     const allUserIds = [
       ...(codeData.monthlyPurchasedBy || []),
       ...(codeData.annualPurchasedBy || []),
       ...(codeData.lifetimePurchasedBy || []),
     ];
-    
+
     // Remove duplicates
     const uniqueUserIds = [...new Set(allUserIds)];
-    
+
     // Validate each user's subscription with retry logic
     for (const userId of uniqueUserIds) {
       try {
@@ -86,7 +86,7 @@ async function runValidationJob(): Promise<void> {
           2000 // start with 2 second delay
         );
         validatedCount++;
-        
+
         // Clear previous validation errors on success
         try {
           await admin.firestore().collection("users").doc(userId).update({
@@ -100,20 +100,20 @@ async function runValidationJob(): Promise<void> {
       } catch (error) {
         errorCount++;
         failedUserIds.push(userId);
-        
+
         const userDoc = await admin.firestore().collection("users").doc(userId).get();
         const userData = userDoc.data();
         const originalTransactionId = userData?.subscriptionStatus?.originalTransactionID || "unknown";
         const failureCount = userData?.subscriptionStatus?.validationFailureCount || 0;
-        
+
         await trackValidationFailure(userId, error, originalTransactionId);
-        
+
         // Track persistent failures (users with 3+ consecutive failures)
         // Check >= 2 because trackValidationFailure increments it, so this will be their 3rd+ failure
         if (failureCount >= 2) {
           persistentFailures.push({ userId, failureCount: failureCount + 1 });
         }
-        
+
         // Log error with context
         console.error(`Failed to validate subscription for user ${userId} after retries:`, {
           error: error instanceof Error ? error.message : String(error),
@@ -124,7 +124,7 @@ async function runValidationJob(): Promise<void> {
       }
     }
   }
-  
+
   // Log summary
   const summary = {
     totalCodes: codesSnapshot.size,
@@ -133,23 +133,23 @@ async function runValidationJob(): Promise<void> {
     failedUsers: failedUserIds.length,
     persistentFailures: persistentFailures.length,
   };
-  
+
   console.log(`Daily validation complete:`, summary);
-  
+
   // Calculate error rate and alert if high
   const totalValidations = validatedCount + errorCount;
   let errorRate = 0;
   let highErrorRate = false;
-  
+
   if (totalValidations > 0) {
     errorRate = (errorCount / totalValidations) * 100;
     highErrorRate = errorRate > 10;
-    
+
     if (highErrorRate) {
       console.error(`⚠️ HIGH VALIDATION ERROR RATE: ${errorRate.toFixed(2)}% (${errorCount}/${totalValidations})`);
     }
   }
-  
+
   // Store summary in Firestore for monitoring
   try {
     const summaryDoc = {
@@ -160,9 +160,9 @@ async function runValidationJob(): Promise<void> {
       failedUserIds: failedUserIds.slice(0, 100), // Store up to 100 failed user IDs
       persistentFailureUserIds: persistentFailures.map(f => f.userId).slice(0, 50), // Store up to 50 persistent failures
     };
-    
+
     await admin.firestore().collection("validationRuns").add(summaryDoc);
-    
+
     // If high error rate, also create an alert document for monitoring systems
     if (highErrorRate) {
       await admin.firestore().collection("validationAlerts").add({
@@ -174,12 +174,12 @@ async function runValidationJob(): Promise<void> {
         resolved: false,
       });
     }
-    
+
     // Log persistent failures for manual review
     if (persistentFailures.length > 0) {
       console.warn(`⚠️ Found ${persistentFailures.length} users with persistent validation failures (3+ consecutive failures)`);
       console.warn(`Persistent failure user IDs: ${persistentFailures.map(f => f.userId).join(", ")}`);
-      
+
       // Store persistent failures for manual review
       await admin.firestore().collection("validationAlerts").add({
         type: "persistent_failures",

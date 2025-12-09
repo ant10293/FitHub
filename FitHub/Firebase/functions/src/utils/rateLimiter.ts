@@ -52,23 +52,23 @@ function checkInMemoryRateLimit(
   const { maxRequests, windowSeconds, identifier, functionName = "unknown" } = config;
   const key = `${functionName}:${identifier}`;
   const windowStart = now - (windowSeconds * 1000);
-  
+
   // Cleanup old entries periodically
   const entry = inMemoryStore.get(key);
   if (entry && now - entry.lastCleanup > 60000) { // Cleanup every minute
     entry.requests = entry.requests.filter(t => t > windowStart);
     entry.lastCleanup = now;
   }
-  
+
   // Get or create entry
   if (!entry) {
     inMemoryStore.set(key, { requests: [now], lastCleanup: now });
     return { allowed: true, remaining: maxRequests - 1, resetAt: new Date(now + (windowSeconds * 1000)) };
   }
-  
+
   // Filter valid requests
   const validRequests = entry.requests.filter(t => t > windowStart);
-  
+
   // Check limit
   if (validRequests.length >= maxRequests) {
     const oldestRequest = Math.min(...validRequests);
@@ -80,11 +80,11 @@ function checkInMemoryRateLimit(
       retryAfter: Math.ceil((resetAt.getTime() - now) / 1000),
     };
   }
-  
+
   // Add current request
   validRequests.push(now);
   entry.requests = validRequests;
-  
+
   return {
     allowed: true,
     remaining: maxRequests - validRequests.length,
@@ -98,17 +98,17 @@ function checkInMemoryRateLimit(
 function shouldUseFallback(functionName: string, now: number): boolean {
   const key = functionName;
   const failure = firestoreFailureCounts.get(key);
-  
+
   if (!failure) {
     return false;
   }
-  
+
   // Reset if last failure was outside the window
   if (now - failure.lastFailure > FAILURE_WINDOW_MS) {
     firestoreFailureCounts.delete(key);
     return false;
   }
-  
+
   // Use fallback if we've had enough failures
   return failure.count >= FAILURE_THRESHOLD;
 }
@@ -119,7 +119,7 @@ function shouldUseFallback(functionName: string, now: number): boolean {
 function recordFirestoreFailure(functionName: string, now: number): void {
   const key = functionName;
   const existing = firestoreFailureCounts.get(key);
-  
+
   if (existing && now - existing.lastFailure < FAILURE_WINDOW_MS) {
     existing.count++;
     existing.lastFailure = now;
@@ -139,32 +139,32 @@ function recordFirestoreSuccess(functionName: string): void {
  * Rate limits a request based on identifier (userId or IP)
  * Uses Firestore to track request counts with automatic cleanup
  * Falls back to in-memory rate limiting if Firestore fails repeatedly
- * 
+ *
  * @param config Rate limit configuration
  * @returns Rate limit result
  */
 export async function checkRateLimit(config: RateLimitConfig): Promise<RateLimitResult> {
   const { maxRequests, windowSeconds, identifier, functionName = "unknown" } = config;
-  
+
   const now = Date.now();
   const windowStart = now - (windowSeconds * 1000);
-  
+
   // Check if we should use fallback due to repeated Firestore failures
   if (shouldUseFallback(functionName, now)) {
     console.warn(`Using in-memory rate limit fallback for ${functionName} (Firestore failures detected)`);
     return checkInMemoryRateLimit(config, now);
   }
-  
+
   const db = admin.firestore();
   const rateLimitDocId = `${functionName}:${identifier}`;
   const rateLimitRef = db.collection("rateLimits").doc(rateLimitDocId);
-  
+
   try {
     // Use transaction to atomically check and update rate limit
     const result = await db.runTransaction(async (transaction) => {
       const doc = await transaction.get(rateLimitRef);
       const data = doc.data();
-      
+
       // Initialize if doesn't exist
       if (!data) {
         const newData = {
@@ -175,18 +175,18 @@ export async function checkRateLimit(config: RateLimitConfig): Promise<RateLimit
         transaction.set(rateLimitRef, newData);
         return { allowed: true, remaining: maxRequests - 1, resetAt: new Date(now + (windowSeconds * 1000)) };
       }
-      
+
       // Filter out requests outside the current window
       const requests = (data.requests || []) as number[];
       const validRequests = requests.filter((timestamp: number) => timestamp > windowStart);
-      
+
       // Check if limit exceeded
       if (validRequests.length >= maxRequests) {
         // Calculate when the oldest request in window expires
         const oldestRequest = Math.min(...validRequests);
         const resetAt = new Date(oldestRequest + (windowSeconds * 1000));
         const retryAfter = Math.ceil((resetAt.getTime() - now) / 1000);
-        
+
         return {
           allowed: false,
           remaining: 0,
@@ -194,24 +194,24 @@ export async function checkRateLimit(config: RateLimitConfig): Promise<RateLimit
           retryAfter,
         };
       }
-      
+
       // Add current request
       validRequests.push(now);
       const expiresAt = admin.firestore.Timestamp.fromMillis(now + (windowSeconds * 1000));
-      
+
       transaction.update(rateLimitRef, {
         requests: validRequests,
         expiresAt,
         lastRequestAt: admin.firestore.FieldValue.serverTimestamp(),
       });
-      
+
       return {
         allowed: true,
         remaining: maxRequests - validRequests.length,
         resetAt: new Date(now + (windowSeconds * 1000)),
       };
     });
-    
+
     // Success - reset failure count
     recordFirestoreSuccess(functionName);
     return result;
@@ -219,11 +219,11 @@ export async function checkRateLimit(config: RateLimitConfig): Promise<RateLimit
     // Record failure and use fallback
     recordFirestoreFailure(functionName, now);
     console.error(`Rate limit check failed for ${functionName}:${identifier}:`, error);
-    
+
     // Use in-memory fallback
     const fallbackResult = checkInMemoryRateLimit(config, now);
     console.warn(`Using in-memory rate limit fallback for ${functionName}:${identifier}`);
-    
+
     // Track failure for monitoring (don't block request)
     try {
       await admin.firestore().collection("rateLimitFailures").add({
@@ -237,7 +237,7 @@ export async function checkRateLimit(config: RateLimitConfig): Promise<RateLimit
       // Don't fail if tracking fails
       console.warn("Failed to track rate limit failure:", trackingError);
     }
-    
+
     return fallbackResult;
   }
 }
@@ -254,17 +254,17 @@ export async function rateLimitCall(
   if (!context.auth) {
     throw new functions.https.HttpsError("unauthenticated", "User must be authenticated");
   }
-  
+
   const identifier = context.auth.uid;
   // Use provided functionName, or try to extract from URL, or default to "unknown"
   const resolvedFunctionName = functionName || context.rawRequest?.url?.split("/").pop() || "unknown";
-  
+
   const result = await checkRateLimit({
     ...config,
     identifier,
     functionName: resolvedFunctionName,
   });
-  
+
   if (!result.allowed) {
     throw new functions.https.HttpsError(
       "resource-exhausted",
@@ -288,22 +288,22 @@ export async function rateLimitRequest(
 ): Promise<void> {
   // Try to get user identifier from auth token if available
   let identifier: string;
-  
+
   if (getUserIdentifier) {
     identifier = await getUserIdentifier(req);
   } else {
     // Fallback to IP address
     identifier = req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress || "unknown";
   }
-  
+
   const functionName = req.path?.split("/").pop() || "unknown";
-  
+
   const result = await checkRateLimit({
     ...config,
     identifier,
     functionName,
   });
-  
+
   if (!result.allowed) {
     throw new HttpError(
       429,
@@ -334,25 +334,25 @@ export const RateLimits = {
     maxRequests: 5,
     windowSeconds: 60,
   },
-  
+
   // Purchase tracking - 10 attempts per minute per user (allows retries)
   TRACK_PURCHASE: {
     maxRequests: 10,
     windowSeconds: 60,
   },
-  
+
   // User existence check - 20 attempts per minute per IP
   CHECK_USER_EXISTS: {
     maxRequests: 20,
     windowSeconds: 60,
   },
-  
+
   // Affiliate onboarding - 5 attempts per hour per user
   AFFILIATE_ONBOARDING: {
     maxRequests: 5,
     windowSeconds: 3600,
   },
-  
+
   // Affiliate dashboard - 30 requests per minute per user
   AFFILIATE_DASHBOARD: {
     maxRequests: 30,

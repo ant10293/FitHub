@@ -53,4 +53,3 @@ EOF
 
 echo "✅ Files updated successfully!"
 echo "Next step: Run 'firebase deploy --only hosting' to deploy the changes"
-

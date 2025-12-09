@@ -7,7 +7,7 @@ TestFlight builds automatically use products from App Store Connect (not StoreKi
 ## Your Product IDs (from your code):
 
 - `com.FitHub.premium.monthly` - Monthly subscription
-- `com.FitHub.premium.yearly` - Annual subscription  
+- `com.FitHub.premium.yearly` - Annual subscription
 - `com.FitHub.premium.lifetime` - One-time purchase
 
 ## Step 1: Create In-App Purchases in App Store Connect

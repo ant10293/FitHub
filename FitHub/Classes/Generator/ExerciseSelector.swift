@@ -234,17 +234,21 @@ final class ExerciseSelector {
     ) -> [Exercise] {
         var selectedExercises: [Exercise] = []
         var remainingExercises = getExercisePool(pool: pool, existing: existing)
+        let baseExisting = existing ?? []
         
         // For each effort type, select exercises according to distribution
         for (effort, needed) in countByEffort where needed > 0 {
             let matchingExercises = remainingExercises.filter { $0.effort == effort }
             let take = min(needed, matchingExercises.count) // cap by availability
+            
+            // Combine base existing with already selected exercises for similarity comparison
+            let currentExisting = baseExisting + selectedExercises
                         
             let selected: [Exercise]
-            if let best = selectBestForTargets(from: matchingExercises, targets: targets, count: take, rng: &rng) {
+            if let best = selectBestForTargets(from: matchingExercises, targets: targets, count: take, existing: currentExisting, rng: &rng) {
                 selected = best
             } else {
-                selected = selectRandomExercises(from: matchingExercises, count: take, rng: &rng)
+                selected = selectRandomExercises(from: matchingExercises, count: take, existing: currentExisting, rng: &rng)
             }
             selectedExercises.append(contentsOf: selected)
             
@@ -338,19 +342,27 @@ extension ExerciseSelector {
     }
     
     // MARK: - Exercise Selection with Favorite Prioritization
-    private func selectRandomExercises(from array: [Exercise], count: Int, rng: inout SeededRNG) -> [Exercise] {
+    private func selectRandomExercises(from array: [Exercise], count: Int, existing: [Exercise], rng: inout SeededRNG) -> [Exercise] {
         let actual = min(count, array.count)
         guard actual > 0 else { return [] }
 
         let favs = array.filter { favorites.contains($0.id) }
         let non  = array.filter { !favorites.contains($0.id) }
 
-        let takeFav = min(favs.count, actual)
-        var picked  = Array(favs.shuffled(using: &rng).prefix(takeFav))
+        // Prioritize least similar exercises within each group
+        var sortedFavs = favs
+        var sortedNon = non
+        if !existing.isEmpty {
+            sortedFavs.sort { minSimilarityToExisting(exercise: $0, existing: existing) < minSimilarityToExisting(exercise: $1, existing: existing) }
+            sortedNon.sort { minSimilarityToExisting(exercise: $0, existing: existing) < minSimilarityToExisting(exercise: $1, existing: existing) }
+        }
+
+        let takeFav = min(sortedFavs.count, actual)
+        var picked = Array(sortedFavs.shuffled(using: &rng).prefix(takeFav))
 
         if picked.count < actual {
             let need = actual - picked.count
-            picked.append(contentsOf: non.shuffled(using: &rng).prefix(need))
+            picked.append(contentsOf: sortedNon.shuffled(using: &rng).prefix(need))
         }
         return picked
     }
@@ -389,6 +401,13 @@ extension ExerciseSelector {
             if left > 0 { out[type] = left }
         }
         return out
+    }
+    
+    // MARK: - Similarity Helper
+    /// Returns the minimum similarity percentage to existing exercises (lower = more different = better)
+    private func minSimilarityToExisting(exercise: Exercise, existing: [Exercise]) -> Double {
+        guard !existing.isEmpty else { return 0.0 }
+        return existing.map { exercise.similarityPct(to: $0) }.min() ?? 0.0
     }
 }
 
@@ -432,6 +451,7 @@ extension ExerciseSelector {
         from pool: [Exercise],
         target: TargetSpec,
         count: Int,
+        existing: [Exercise],
         rng: inout SeededRNG
     ) -> [Exercise]? {
         guard count > 0 else { return nil }
@@ -459,18 +479,28 @@ extension ExerciseSelector {
         } else {
             band = Array(scored.prefix(topK)).map(\.ex)
         }
+        let bandSize = band.count
 
-        // randomize inside the good band
+        // Prioritize least similar exercises within the band
+        if !existing.isEmpty {
+            band.sort { minSimilarityToExisting(exercise: $0, existing: existing) < minSimilarityToExisting(exercise: $1, existing: existing) }
+        }
         band.shuffle(using: &rng)
 
         var picks: [Exercise] = []
+        var currentExisting = existing
         while picks.count < count, !band.isEmpty {
-            picks.append(band.removeFirst())
+            let picked = band.removeFirst()
+            picks.append(picked)
+            currentExisting.append(picked)
         }
 
-        // fill from the rest (also shuffled) if needed
+        // fill from the rest (prioritized by similarity) if needed
         if picks.count < count {
-            var rest = Array(scored.dropFirst(band.count)).map(\.ex)
+            var rest = Array(scored.dropFirst(bandSize)).map(\.ex)
+            if !currentExisting.isEmpty {
+                rest.sort { minSimilarityToExisting(exercise: $0, existing: currentExisting) < minSimilarityToExisting(exercise: $1, existing: currentExisting) }
+            }
             rest.shuffle(using: &rng)
             while picks.count < count, !rest.isEmpty {
                 picks.append(rest.removeFirst())
@@ -484,6 +514,7 @@ extension ExerciseSelector {
         from pool: [Exercise],
         targets: [TargetSpec],
         count: Int,
+        existing: [Exercise],
         rng: inout SeededRNG
     ) -> [Exercise]? {
         for (idx, t) in targets.enumerated() {
@@ -493,7 +524,7 @@ extension ExerciseSelector {
 
             print("  🔍 trying target: \(t.muscle) sub: \(t.submuscle?.rawValue ?? "nil")")
 
-            if let picked = selectBestForSubmuscles(from: pool, target: t, count: count, rng: &localRng),
+            if let picked = selectBestForSubmuscles(from: pool, target: t, count: count, existing: existing, rng: &localRng),
                !picked.isEmpty {
                 if let ex = picked.first {
                     print("  ✅ target matched: \(t.muscle) sub: \(t.submuscle?.rawValue ?? "nil") → \(ex.name)")

@@ -6,7 +6,7 @@
 /**
  * Validates that all required environment variables are set
  * This ensures functions fail fast at runtime if config is missing
- * 
+ *
  * @throws Error if required environment variables are missing or invalid
  */
 export const validateEnvironmentVariables = (): void => {

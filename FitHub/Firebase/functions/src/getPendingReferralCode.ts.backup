@@ -29,21 +29,21 @@ export const getPendingReferralCode = functions.https.onCall(async (data, contex
 
   try {
     const db = admin.firestore();
-
+    
     // EXACT MATCH ONLY - lookup by device fingerprint (document ID)
     console.log("[getPendingReferralCode] Looking up by device fingerprint:", deviceFingerprint.substring(0, 20) + "...");
     const pendingRef = db.collection("pendingReferralCodes").doc(deviceFingerprint);
     const pendingDoc = await pendingRef.get();
-
+    
     if (!pendingDoc.exists) {
       console.log("[getPendingReferralCode] No document found for fingerprint - exact match required");
       return { success: false, referralCode: null, reason: "not_found" };
     }
-
+    
     console.log("[getPendingReferralCode] Document found:", pendingDoc.id);
-
+    
     const pendingData = pendingDoc.data();
-
+    
     // Check if already claimed or expired
     if (pendingData?.claimed === true) {
       console.log("[getPendingReferralCode] Code already claimed");
@@ -83,3 +83,7 @@ export const getPendingReferralCode = functions.https.onCall(async (data, contex
     throw new functions.https.HttpsError("internal", "Failed to retrieve referral code");
   }
 });
+
+
+
+

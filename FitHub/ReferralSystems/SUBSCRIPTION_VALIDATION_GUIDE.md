@@ -33,7 +33,7 @@ Query Apple's servers directly to get real-time subscription status for any user
   referralCodeUsedForPurchase: true,
   referralPurchaseDate: Timestamp,
   referralPurchaseProductID: "com.FitHub.premium.monthly",
-  
+
   // NEW: Subscription status tracking
   subscriptionStatus: {
     productID: "com.FitHub.premium.monthly",
@@ -54,12 +54,12 @@ Query Apple's servers directly to get real-time subscription status for any user
   monthlyPurchasedBy: ["userId1", "userId2"],
   annualPurchasedBy: ["userId3"],
   lifetimePurchasedBy: ["userId4"],
-  
+
   // NEW: Track active subscriptions separately
   activeMonthlySubscriptions: ["userId1"],  // Only users with active monthly
   activeAnnualSubscriptions: ["userId3"],
   activeLifetimeSubscriptions: ["userId4"],  // Lifetime stays active until refund
-  
+
   // Last validation timestamp
   lastValidationAt: Timestamp
 }
@@ -150,40 +150,40 @@ export const handleAppStoreNotification = functions.https.onRequest(async (req, 
   try {
     const notification = req.body;
     const notificationType = notification.notificationType;
-    
+
     // Get the transaction info
     const signedTransactionInfo = notification.signedTransactionInfo;
     const transactionInfo = await appStoreAPI.getTransactionInfo(signedTransactionInfo);
-    
+
     // CRITICAL: Link transaction to user
     // Option 1: Use appAccountToken (requires passing Firebase UID as UUID)
     // Option 2: Query Firestore for user with matching originalTransactionID
     // We'll use Option 2 as it's simpler and doesn't require UUID conversion
-    
+
     const originalTransactionId = transactionInfo.originalTransactionId;
-    
+
     // Find user by matching originalTransactionID in their subscriptionStatus
     const usersSnapshot = await admin.firestore()
       .collection("users")
       .where("subscriptionStatus.originalTransactionID", "==", String(originalTransactionId))
       .limit(1)
       .get();
-    
+
     if (usersSnapshot.empty) {
       console.warn(`No user found for transaction ${originalTransactionId}`);
       return; // Can't process without user
     }
-    
+
     const userId = usersSnapshot.docs[0].id;
-    
+
     console.log(`Processing ${notificationType} for transaction ${originalTransactionId}`);
-    
+
     // Update subscription status in Firestore
     await updateSubscriptionStatus(userId, originalTransactionId, notificationType);
-    
+
     // Update referral code active subscriptions
     await updateReferralCodeSubscriptions(userId);
-    
+
     res.status(200).send("OK");
   } catch (error) {
     console.error("Error processing notification:", error);
@@ -197,18 +197,18 @@ async function updateSubscriptionStatus(
   notificationType: string
 ) {
   const userRef = admin.firestore().collection("users").doc(userId);
-  
+
   // Get current subscription info from App Store
   const statusResponse = await appStoreAPI.getSubscriptionStatus(originalTransactionId);
   const subscriptionStatus = statusResponse.data[0];
-  
+
   const latestTransaction = subscriptionStatus.latestTransactions[0];
   const transaction = await appStoreAPI.getTransactionInfo(latestTransaction.signedTransactionInfo);
-  
+
   const isActive = subscriptionStatus.status === 1; // 1 = Active
   const expiresAt = transaction.expiresDate ? new Date(transaction.expiresDate) : null;
   const autoRenews = subscriptionStatus.autoRenewStatus === 1;
-  
+
   await userRef.update({
     "subscriptionStatus": {
       productID: transaction.productId,
@@ -225,22 +225,22 @@ async function updateSubscriptionStatus(
 async function updateReferralCodeSubscriptions(userId: string) {
   const userDoc = await admin.firestore().collection("users").doc(userId).get();
   const userData = userDoc.data();
-  
+
   if (!userData?.referralCode) return;
-  
+
   const referralCode = userData.referralCode.toUpperCase();
   const codeRef = admin.firestore().collection("referralCodes").doc(referralCode);
   const subscriptionStatus = userData.subscriptionStatus;
-  
+
   if (!subscriptionStatus) return;
-  
+
   const productID = subscriptionStatus.productID;
   const isActive = subscriptionStatus.isActive;
-  
+
   // Determine subscription type
   let activeArray: string;
   let purchasedArray: string;
-  
+
   if (productID.includes("monthly")) {
     activeArray = "activeMonthlySubscriptions";
     purchasedArray = "monthlyPurchasedBy";
@@ -253,9 +253,9 @@ async function updateReferralCodeSubscriptions(userId: string) {
   } else {
     return;
   }
-  
+
   const updates: any = {};
-  
+
   if (isActive) {
     // Add to active array if not already there
     updates[activeArray] = admin.firestore.FieldValue.arrayUnion(userId);
@@ -263,11 +263,11 @@ async function updateReferralCodeSubscriptions(userId: string) {
     // Remove from active array
     updates[activeArray] = admin.firestore.FieldValue.arrayRemove(userId);
   }
-  
+
   // Ensure user is in purchased array
   updates[purchasedArray] = admin.firestore.FieldValue.arrayUnion(userId);
   updates.lastValidationAt = admin.firestore.FieldValue.serverTimestamp();
-  
+
   await codeRef.update(updates);
 }
 ```
@@ -285,17 +285,17 @@ export const validateAllSubscriptions = functions.pubsub
     const codesSnapshot = await admin.firestore()
       .collection("referralCodes")
       .get();
-    
+
     for (const codeDoc of codesSnapshot.docs) {
       const codeData = codeDoc.data();
-      
+
       // Get all users who purchased
       const allUserIds = [
         ...(codeData.monthlyPurchasedBy || []),
         ...(codeData.annualPurchasedBy || []),
         ...(codeData.lifetimePurchasedBy || [])
       ];
-      
+
       // Validate each user's subscription
       for (const userId of allUserIds) {
         await validateUserSubscription(userId);
@@ -306,23 +306,23 @@ export const validateAllSubscriptions = functions.pubsub
 async function validateUserSubscription(userId: string) {
   const userDoc = await admin.firestore().collection("users").doc(userId).get();
   const userData = userDoc.data();
-  
+
   if (!userData?.subscriptionStatus?.originalTransactionID) return;
-  
+
   const originalTransactionId = userData.subscriptionStatus.originalTransactionID;
-  
+
   try {
     const statusResponse = await appStoreAPI.getSubscriptionStatus(originalTransactionId);
     const subscriptionStatus = statusResponse.data[0];
-    
+
     const isActive = subscriptionStatus.status === 1;
-    
+
     // Update user's subscription status
     await admin.firestore().collection("users").doc(userId).update({
       "subscriptionStatus.isActive": isActive,
       "subscriptionStatus.lastValidatedAt": admin.firestore.FieldValue.serverTimestamp()
     });
-    
+
     // Update referral code active subscriptions
     await updateReferralCodeSubscriptions(userId);
   } catch (error) {
@@ -342,24 +342,24 @@ export const calculateMonthlyPayouts = functions.pubsub
     const lastMonth = new Date();
     lastMonth.setMonth(lastMonth.getMonth() - 1);
     const period = `${lastMonth.getFullYear()}-${String(lastMonth.getMonth() + 1).padStart(2, '0')}`;
-    
+
     const codesSnapshot = await admin.firestore()
       .collection("referralCodes")
       .get();
-    
+
     for (const codeDoc of codesSnapshot.docs) {
       const code = codeDoc.id;
       const codeData = codeDoc.data();
-      
+
       // Get active subscription counts
       const activeMonthly = (codeData.activeMonthlySubscriptions || []).length;
       const activeAnnual = (codeData.activeAnnualSubscriptions || []).length;
       const activeLifetime = (codeData.activeLifetimeSubscriptions || []).length;
-      
+
       if (activeMonthly === 0 && activeAnnual === 0 && activeLifetime === 0) {
         continue; // Skip codes with no active subscriptions
       }
-      
+
       // Calculate payouts
       const calculations = {
         monthly: {
@@ -384,15 +384,15 @@ export const calculateMonthlyPayouts = functions.pubsub
           payoutAmount: activeLifetime * 199.99 * 0.40
         }
       };
-      
-      const totalPayout = 
+
+      const totalPayout =
         calculations.monthly.payoutAmount +
         calculations.annual.payoutAmount +
         calculations.lifetime.payoutAmount;
-      
+
       // Get influencer user ID
       const influencerId = codeData.createdBy;
-      
+
       // Create payout record
       await admin.firestore().collection("subscriptionPayouts").add({
         referralCode: code,
@@ -403,7 +403,7 @@ export const calculateMonthlyPayouts = functions.pubsub
         status: "pending",
         createdAt: admin.firestore.FieldValue.serverTimestamp()
       });
-      
+
       console.log(`Created payout for ${code}: $${totalPayout.toFixed(2)}`);
     }
   });
@@ -419,7 +419,7 @@ In `PremiumStore.swift`, update the purchase tracking:
 // In PremiumStore.buy() after successful purchase:
 case .success(let verification):
     let transaction = try verify(verification)
-    
+
     // Track referral purchase if user has a referral code
     Task {
         await ReferralPurchaseTracker().trackPurchase(
@@ -438,49 +438,49 @@ func trackPurchase(
     transactionID: UInt64,
     originalTransactionID: UInt64  // ADD THIS PARAMETER
 ) async {
-    // Must be signed in        
+    // Must be signed in
     guard let userId = AuthService.getUid() else {
         print("⚠️ Cannot track referral purchase: user not authenticated")
         return
     }
-    
+
     // Get referral code (from UserDefaults or Firestore)
     guard let code = await ReferralRetriever.getClaimedCode() else {
         print("ℹ️ No referral code claimed, skipping purchase tracking")
         return
     }
-    
+
     do {
         // Get referral code info
         let codeRef = db.collection("referralCodes").document(code.uppercased())
         let codeDoc = try await codeRef.getDocument()
-        
+
         guard codeDoc.exists else {
             print("⚠️ Referral code not found: \(code)")
             return
         }
-        
+
         // Determine subscription type for compensation tracking
         let subscriptionType = PremiumStore.ID.membershipType(for: productID)
-        
+
         // Check if this purchase was already tracked
         let userRef = db.collection("users").document(userId)
         let userDoc = try await userRef.getDocument()
-        
+
         if let existingPurchaseProductID = userDoc.data()?["referralPurchaseProductID"] as? String,
            existingPurchaseProductID == productID {
             print("ℹ️ Purchase already tracked for product: \(productID)")
             return
         }
-        
+
         // Perform the tracking in a batch
         let batch = db.batch()
-        
+
         // 1. Update referral code document - track purchases by type
         var updateData: [String: Any] = [
             "lastPurchaseAt": FieldValue.serverTimestamp()
         ]
-        
+
         // Add to the appropriate array based on subscription type
         switch subscriptionType {
         case .monthly:
@@ -495,11 +495,11 @@ func trackPurchase(
         case .free:
             break
         }
-        
+
         guard subscriptionType != .free else { return }
-        
+
         batch.updateData(updateData, forDocument: codeRef)
-        
+
         // 2. Update user document to mark that they purchased
         // CRITICAL: Store originalTransactionID so webhooks can link back to user
         batch.updateData([
@@ -514,11 +514,11 @@ func trackPurchase(
                 "environment": "Production"  // or detect sandbox
             ]
         ], forDocument: userRef)
-        
+
         try await batch.commit()
-        
+
         print("✅ Successfully tracked \(subscriptionType.rawValue) purchase for referral code: \(code)")
-        
+
     } catch {
         print("❌ Failed to track referral purchase: \(error.localizedDescription)")
     }
@@ -530,7 +530,7 @@ And update `PremiumStore.swift` to pass the originalTransactionID:
 ```swift
 case .success(let verification):
     let transaction = try verify(verification)
-    
+
     // Track referral purchase if user has a referral code
     Task {
         await ReferralPurchaseTracker().trackPurchase(
@@ -539,7 +539,7 @@ case .success(let verification):
             originalTransactionID: transaction.originalID  // ADD THIS
         )
     }
-    
+
     await transaction.finish()
     await refreshEntitlement()
 ```

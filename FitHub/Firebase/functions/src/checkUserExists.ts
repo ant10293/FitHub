@@ -14,7 +14,7 @@ export const checkUserExists = functions.https.onCall(async (data, context) => {
     identifier: ip,
     functionName: "checkUserExists",
   });
-  
+
   if (!result.allowed) {
     throw new functions.https.HttpsError(
       "resource-exhausted",

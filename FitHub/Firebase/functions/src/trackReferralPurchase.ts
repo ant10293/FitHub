@@ -18,7 +18,7 @@ export const trackReferralPurchase = functions.https.onCall(async (data, context
 
   const userId = context.auth.uid;
   const productID = typeof data?.productID === "string" ? data.productID : "";
-  const transactionID = typeof data?.transactionID === "number" ? String(data.transactionID) : 
+  const transactionID = typeof data?.transactionID === "number" ? String(data.transactionID) :
                         typeof data?.transactionID === "string" ? data.transactionID : "";
   const originalTransactionID = typeof data?.originalTransactionID === "number" ? String(data.originalTransactionID) :
                                 typeof data?.originalTransactionID === "string" ? data.originalTransactionID : "";
@@ -46,11 +46,11 @@ export const trackReferralPurchase = functions.https.onCall(async (data, context
       .collection("users")
       .where("subscriptionStatus.originalTransactionID", "==", originalTransactionID)
       .get();
-    
+
     // Check if another user already has this transaction
     // Collect users that need cleanup (deleted accounts) vs users that should block (active accounts)
     const usersToCleanup: Array<{ userId: string; referralCode?: string; productID?: string }> = [];
-    
+
     for (const existingUserDoc of existingUsersSnapshot.docs) {
       const existingUserId = existingUserDoc.id;
       if (existingUserId !== userId) {
@@ -60,7 +60,7 @@ export const trackReferralPurchase = functions.https.onCall(async (data, context
           await admin.auth().getUser(existingUserId);
           // User still exists - subscription belongs to them
           console.log(`Transaction ${originalTransactionID} already tracked for user ${existingUserId}. Purchase will be tracked on original account.`);
-          
+
           // Return success with info that it was tracked on another account
           // This is not an error - the purchase was successfully tracked, just on a different account
           // Note: We return the productID being purchased (not the existing account's productID)
@@ -99,7 +99,7 @@ export const trackReferralPurchase = functions.https.onCall(async (data, context
       // Clean up orphaned data from deleted users
       for (const cleanup of usersToCleanup) {
         console.log(`Cleaning up orphaned subscription data from deleted user ${cleanup.userId}`);
-        
+
         if (cleanup.referralCode) {
           const existingCode = String(cleanup.referralCode).toUpperCase();
           const existingCodeRef = db.collection("referralCodes").doc(existingCode);
@@ -219,9 +219,9 @@ export const trackReferralPurchase = functions.https.onCall(async (data, context
         }
       }, { merge: true });
 
-      return { 
-        success: true, 
-        alreadyTracked: false, 
+      return {
+        success: true,
+        alreadyTracked: false,
         referralCode: referralCode,
         subscriptionType: subscriptionType
       };

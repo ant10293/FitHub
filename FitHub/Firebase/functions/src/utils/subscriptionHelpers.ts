@@ -15,12 +15,12 @@ export async function updateSubscriptionStatus(
   decodedTransaction?: any
 ): Promise<void> {
   const userRef = admin.firestore().collection("users").doc(userId);
-  
+
   try {
     console.log(`Refreshing subscription status for user ${userId} from notification ${notificationType ?? "unknown"}`);
     // Get subscription status from App Store Server API
     const statusResponse = await appStoreAPI.getAllSubscriptionStatuses(originalTransactionId);
-    
+
     if (!statusResponse.data || statusResponse.data.length === 0) {
       console.warn(`No subscription status found for transaction ${originalTransactionId}`);
       return;
@@ -36,7 +36,7 @@ export async function updateSubscriptionStatus(
         if (matchingTransaction) break;
       }
     }
-    
+
     let transactionInfo: any = decodedTransaction;
     if ((!matchingTransaction || !matchingTransaction.signedTransactionInfo) && !transactionInfo) {
       console.warn(`No matching transaction found for ${originalTransactionId}`);
@@ -48,15 +48,15 @@ export async function updateSubscriptionStatus(
       const verifier: SignedDataVerifier = makeSignedDataVerifier(environment);
       transactionInfo = await verifier.verifyAndDecodeTransaction(matchingTransaction.signedTransactionInfo);
     }
-    
+
     // Determine if subscription is active
     // Status 1 = Active, Status 2 = Expired, etc.
     const status = matchingTransaction?.status ?? decodedTransaction?.status;
     const isActive = status === 1;
-    const expiresAt = transactionInfo.expiresDate 
-      ? admin.firestore.Timestamp.fromDate(new Date(transactionInfo.expiresDate)) 
+    const expiresAt = transactionInfo.expiresDate
+      ? admin.firestore.Timestamp.fromDate(new Date(transactionInfo.expiresDate))
       : null;
-    
+
     // Get auto-renew status from renewal info if available
     let autoRenews = false;
     const renewalJWSToDecode = matchingTransaction?.signedRenewalInfo ?? signedRenewalInfo;
@@ -103,7 +103,7 @@ export async function updateReferralCodeSubscriptions(userId: string): Promise<v
   const userRef = admin.firestore().collection("users").doc(userId);
   const userDoc = await userRef.get();
   const userData = userDoc.data();
-  
+
   if (!userData?.referralCode) {
     return; // User doesn't have a referral code
   }
@@ -111,7 +111,7 @@ export async function updateReferralCodeSubscriptions(userId: string): Promise<v
   const referralCode = userData.referralCode.toUpperCase();
   const codeRef = admin.firestore().collection("referralCodes").doc(referralCode);
   const subscriptionStatus = userData.subscriptionStatus;
-  
+
   if (!subscriptionStatus) {
     return; // No subscription status to update
   }
@@ -119,11 +119,11 @@ export async function updateReferralCodeSubscriptions(userId: string): Promise<v
   const productID = subscriptionStatus.productID;
   const isActive = subscriptionStatus.isActive;
   const oldProductID = userData.referralPurchaseProductID;
-  
+
   // Determine which arrays to update based on product ID
   let activeArray: string;
   let purchasedArray: string;
-  
+
   if (productID.includes("monthly")) {
     activeArray = "activeMonthlySubscriptions";
     purchasedArray = "monthlyPurchasedBy";
@@ -137,7 +137,7 @@ export async function updateReferralCodeSubscriptions(userId: string): Promise<v
     console.warn(`Unknown product ID: ${productID}`);
     return;
   }
-  
+
   // Determine old arrays if subscription type changed
   let oldActiveArray: string | null = null;
   if (oldProductID && oldProductID !== productID) {
@@ -149,16 +149,16 @@ export async function updateReferralCodeSubscriptions(userId: string): Promise<v
       oldActiveArray = "activeLifetimeSubscriptions";
     }
   }
-  
+
   const codeUpdates: any = {};
   const userUpdates: any = {};
-  
+
   // If subscription type changed, remove from old active array
   if (oldActiveArray && oldActiveArray !== activeArray) {
     codeUpdates[oldActiveArray] = admin.firestore.FieldValue.arrayRemove(userId);
     console.log(`Removing user ${userId} from ${oldActiveArray} (subscription changed from ${oldProductID} to ${productID})`);
   }
-  
+
   // Update current subscription arrays
   if (isActive) {
     // Add to active array if not already there
@@ -167,18 +167,18 @@ export async function updateReferralCodeSubscriptions(userId: string): Promise<v
     // Remove from active array
     codeUpdates[activeArray] = admin.firestore.FieldValue.arrayRemove(userId);
   }
-  
+
   // Ensure user is in purchased array (they purchased at some point)
   codeUpdates[purchasedArray] = admin.firestore.FieldValue.arrayUnion(userId);
   codeUpdates.lastValidationAt = admin.firestore.FieldValue.serverTimestamp();
-  
+
   // Update user's referralPurchaseProductID if it changed
   if (oldProductID !== productID) {
     userUpdates.referralPurchaseProductID = productID;
     userUpdates.referralPurchaseDate = admin.firestore.FieldValue.serverTimestamp();
     console.log(`Updating user ${userId} referralPurchaseProductID from ${oldProductID} to ${productID}`);
   }
-  
+
   // Perform updates in a batch
   const batch = admin.firestore().batch();
   batch.update(codeRef, codeUpdates);
@@ -186,6 +186,6 @@ export async function updateReferralCodeSubscriptions(userId: string): Promise<v
     batch.update(userRef, userUpdates);
   }
   await batch.commit();
-  
+
   console.log(`Updated referral code ${referralCode} subscriptions for user ${userId}`);
 }

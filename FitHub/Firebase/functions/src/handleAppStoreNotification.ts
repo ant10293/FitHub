@@ -94,11 +94,11 @@ export const handleAppStoreNotification = functions.https.onRequest(async (req, 
     // Update all users with this originalTransactionID
     // (In production, there should typically only be one, but we handle multiple for safety)
     const appStoreAPI = getAppStoreAPIForEnvironment(detectedEnvironment);
-    
+
     for (const userDoc of usersSnapshot.docs) {
       const userId = userDoc.id;
       console.log(`Found user ${userId} for transaction ${originalTransactionId}`);
-      
+
       try {
         // Update subscription status based on notification type
         await updateSubscriptionStatus(
@@ -110,7 +110,7 @@ export const handleAppStoreNotification = functions.https.onRequest(async (req, 
           signedRenewalInfo,
           transactionInfo ?? undefined
         );
-        
+
         // Update referral code active subscriptions
         await updateReferralCodeSubscriptions(userId);
       } catch (error) {
@@ -118,7 +118,7 @@ export const handleAppStoreNotification = functions.https.onRequest(async (req, 
         // Continue with other users even if one fails
       }
     }
-    
+
     if (usersSnapshot.size > 1) {
       console.warn(`⚠️ Multiple users (${usersSnapshot.size}) found for transaction ${originalTransactionId}. This may indicate cross-account tracking issue.`);
     }

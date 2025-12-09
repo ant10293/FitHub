@@ -12,12 +12,12 @@ export const storePendingReferralCode = functions.https.onRequest(async (req, re
   res.set("Access-Control-Allow-Origin", "*");
   res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.set("Access-Control-Allow-Headers", "Content-Type");
-  
+
   if (req.method === "OPTIONS") {
     res.status(204).send("");
     return;
   }
-  
+
   // Only allow POST
   if (req.method !== "POST") {
     res.status(405).send("Method not allowed");
@@ -60,20 +60,20 @@ export const storePendingReferralCode = functions.https.onRequest(async (req, re
 
   try {
     const db = admin.firestore();
-    
+
     console.log("[storePendingReferralCode] Storing referral code:", {
       referralCode: referralCode,
       ipAddress: ip,
       deviceFingerprint: deviceFingerprint ? deviceFingerprint.substring(0, 20) + "..." : null
     });
-    
+
     // Create device identifier: IP + User-Agent hash (or use provided fingerprint)
     const userAgent = req.headers["user-agent"] || "";
     const deviceId = deviceFingerprint || `${ip}_${userAgent.substring(0, 50)}`.replace(/[^a-zA-Z0-9_]/g, "_");
-    
+
     // Store pending referral code (expires in 30 days)
     const expiresAt = admin.firestore.Timestamp.fromMillis(Date.now() + (30 * 24 * 60 * 60 * 1000));
-    
+
     // Store with device fingerprint as primary key
     await db.collection("pendingReferralCodes").doc(deviceId).set({
       referralCode: referralCode,
@@ -85,7 +85,7 @@ export const storePendingReferralCode = functions.https.onRequest(async (req, re
       claimed: false,
     });
     console.log("[storePendingReferralCode] Stored with device fingerprint key:", deviceId.substring(0, 20) + "...");
-    
+
     // Also store with IP as key (fallback for app lookup)
     // This allows the app to retrieve the code even if device fingerprint doesn't match
     const ipKey = `ip_${ip.replace(/[^a-zA-Z0-9]/g, "_")}`;
@@ -111,4 +111,3 @@ export const storePendingReferralCode = functions.https.onRequest(async (req, re
     res.status(500).json({ error: "Failed to store referral code" });
   }
 });
-

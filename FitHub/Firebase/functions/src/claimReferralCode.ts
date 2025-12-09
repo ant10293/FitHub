@@ -18,8 +18,8 @@ export const claimReferralCode = functions.https.onCall(async (data, context) =>
   }
 
   const userId = context.auth.uid;
-  const referralCode = typeof data?.referralCode === "string" 
-    ? data.referralCode.trim().toUpperCase() 
+  const referralCode = typeof data?.referralCode === "string"
+    ? data.referralCode.trim().toUpperCase()
     : "";
 
   if (!referralCode) {
@@ -53,7 +53,7 @@ export const claimReferralCode = functions.https.onCall(async (data, context) =>
       // 2. Check if user already has a referral code
       const userDoc = await transaction.get(userRef);
       const userData = userDoc.data();
-      
+
       if (userData?.referralCode) {
         // If they already have this code, return success (idempotent)
         if (String(userData.referralCode).toUpperCase() === referralCode) {
@@ -91,20 +91,20 @@ export const claimReferralCode = functions.https.onCall(async (data, context) =>
     if (error.message === "USER_ALREADY_HAS_CODE") {
       throw new functions.https.HttpsError("already-exists", "User already has a referral code");
     }
-    
+
     // If it's already an HttpsError, re-throw it
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     // Log the actual error for debugging
     console.error("Error claiming referral code:", error);
     console.error("Error stack:", error.stack);
     console.error("Error message:", error.message);
-    
+
     // Return a more descriptive internal error
     throw new functions.https.HttpsError(
-      "internal", 
+      "internal",
       `Failed to claim referral code: ${error.message || String(error)}`
     );
   }

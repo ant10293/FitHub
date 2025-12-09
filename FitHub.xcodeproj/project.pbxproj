@@ -881,7 +881,6 @@
 		6550ADD02E726B1D002072C1 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
-				65B936ED2EE79D8400D80950 /* DeviceFingerprintManager.swift */,
 				65CD3BB02DD3C84F00C2B671 /* HealthKitManager.swift */,
 				65CD3C992DD6DF8500C2B671 /* NotificationManager.swift */,
 				65CD3BB12DD3C84F00C2B671 /* TimerManager.swift */,
@@ -1434,6 +1433,7 @@
 				65DD050E2EB979F7000D159C /* ReferralCodeGenerator.swift */,
 				65DD050F2EB979F7000D159C /* ReferralPurchaseTracker.swift */,
 				65DD05212EBC06B6000D159C /* ReferralValidation.swift */,
+				65B936ED2EE79D8400D80950 /* DeviceFingerprintManager.swift */,
 			);
 			path = ReferralSystems;
 			sourceTree = "<group>";

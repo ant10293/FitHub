@@ -163,7 +163,7 @@ Findings:
 
 ## ✅ CONCLUSION
 
-**Can you release ASAP?** 
+**Can you release ASAP?**
 - **YES** - After fixing the privacy strings (2 minutes)
 
 **Current Blocker:**
