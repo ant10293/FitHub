@@ -192,3 +192,4 @@ Most time-consuming tasks:
 3. Products setup (2-4 hours)
 
 Everything else is pretty quick. You've got this!
+
