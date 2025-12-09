@@ -75,6 +75,7 @@ export const storePendingReferralCode = functions.https.onRequest(async (req, re
     const expiresAt = admin.firestore.Timestamp.fromMillis(Date.now() + (30 * 24 * 60 * 60 * 1000));
 
     // Store with device fingerprint as primary key
+    // Use merge to update existing document if it exists (e.g., if IP changes but fingerprint is same)
     await db.collection("pendingReferralCodes").doc(deviceId).set({
       referralCode: referralCode,
       ipAddress: ip,
@@ -83,23 +84,8 @@ export const storePendingReferralCode = functions.https.onRequest(async (req, re
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       expiresAt: expiresAt,
       claimed: false,
-    });
+    }, { merge: true });
     console.log("[storePendingReferralCode] Stored with device fingerprint key:", deviceId.substring(0, 20) + "...");
-
-    // Also store with IP as key (fallback for app lookup)
-    // This allows the app to retrieve the code even if device fingerprint doesn't match
-    const ipKey = `ip_${ip.replace(/[^a-zA-Z0-9]/g, "_")}`;
-    await db.collection("pendingReferralCodes").doc(ipKey).set({
-      referralCode: referralCode,
-      ipAddress: ip,
-      userAgent: userAgent.substring(0, 200),
-      deviceFingerprint: deviceFingerprint,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      expiresAt: expiresAt,
-      claimed: false,
-      isIPBased: true, // Mark as IP-based for cleanup
-    }, { merge: true }); // Use merge so we don't overwrite existing fingerprint-based entries
-    console.log("[storePendingReferralCode] Stored with IP key:", ipKey);
 
     res.status(200).json({
       success: true,
@@ -111,3 +97,4 @@ export const storePendingReferralCode = functions.https.onRequest(async (req, re
     res.status(500).json({ error: "Failed to store referral code" });
   }
 });
+

@@ -180,7 +180,7 @@
         "aliases": ["incline press station", "incline bench press"],
         "description": "A fixed‑angle incline bench with bar supports geared toward upper‑chest barbell pressing.",
         "equCategory": "Benches & Racks",
-        "alternativeEquipment": ["Adjustable Bench", "Squat Rack"]
+        "alternativeEquipment": ["Adjustable Bench", "Squat Rack", "Bench Angle"]
     },
     {
         "name": "Decline Bench Rack",
