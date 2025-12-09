@@ -199,7 +199,7 @@ extension ExerciseData {
         guard let max = peak else { return }
         updateExercisePerformance(for: exercise.id, newValue: max, csvEstimate: true)
     }
-    
+    /*
     func testCSVs(userData: UserData) {
         var skipped: [Exercise] = []
         for exercise in allExercises {
@@ -258,6 +258,7 @@ extension ExerciseData {
             }
         }
     }
+    */
 }
 
 extension ExerciseData {

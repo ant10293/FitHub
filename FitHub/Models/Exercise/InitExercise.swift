@@ -25,6 +25,7 @@ struct InitExercise: Identifiable, Hashable, Codable {
     var repsInstruction: RepsInstruction?
     var weightInstruction: WeightInstruction?
     var imageUrl: String?
+    var unitType: ExerciseUnit
 }
 extension InitExercise {
    init(from ex: Exercise) {
@@ -44,5 +45,6 @@ extension InitExercise {
        self.repsInstruction      = ex.repsInstruction
        self.weightInstruction    = ex.weightInstruction
        self.imageUrl             = ex.imageUrl
+       self.unitType             = ex.unitType
    }
 }

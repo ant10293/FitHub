@@ -125,7 +125,7 @@ extension Optional where Wrapped == PeakMetric {
     }
 }
 
-enum ExerciseUnit: String {
+enum ExerciseUnit: String, Codable, CaseIterable {
     case weightXreps, repsOnly, timeOnly, weightXtime, distanceXtimeOrSpeed
     
     func getPeakMetric(metricValue: Double) -> PeakMetric {
@@ -149,6 +149,16 @@ enum ExerciseUnit: String {
         switch peak {
         case .none: return false
         default: return true
+        }
+    }
+    
+    var displayName: String {
+        switch self {
+        case .weightXreps: return "Weight × Reps"
+        case .repsOnly: return "Reps Only"
+        case .timeOnly: return "Time Only"
+        case .weightXtime: return "Weight × Time"
+        case .distanceXtimeOrSpeed: return "Distance × Time/Speed"
         }
     }
 }

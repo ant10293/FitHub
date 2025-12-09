@@ -50,7 +50,8 @@ struct NewExercise: View {
                 equipmentRequired: [],
                 effort: .compound,
                 resistance: .freeWeight,
-                difficulty: .beginner
+                difficulty: .beginner,
+                unitType: .weightXreps
             )
             _draft = State(initialValue: initEx)
             self.initialDraft = initEx
@@ -180,6 +181,12 @@ struct NewExercise: View {
             if draft.weightInstruction == nil {
                 draft.weightInstruction = determineWeightInstruction()
             }
+        }
+        .onChange(of: draft.effort) {
+            draft.unitType = computedUnitType
+        }
+        .onChange(of: draft.resistance) {
+            draft.unitType = computedUnitType
         }
     }
     
@@ -317,6 +324,13 @@ struct NewExercise: View {
                         }
                     }
                     
+                    // Unit Type
+                    MenuPickerRow(title: "Unit Type", selection: $draft.unitType) {
+                        ForEach(ExerciseUnit.allCases, id: \.self) {
+                            Text($0.displayName).tag($0)
+                        }
+                    }
+                    
                     // Limb Movement (Optional)
                     MenuPickerRow(
                         title: "Limb Movement",
@@ -415,5 +429,17 @@ struct NewExercise: View {
         }
         let movementCount = impl.getMovementCount(for: movement)
         return movementCount.implementsUsed
+    }
+    
+    private var computedUnitType: ExerciseUnit {
+        switch exercise.effort {
+        case .cardio:
+            return .distanceXtimeOrSpeed
+        case .isometric:
+            return exercise.usesWeight ? .weightXtime : .timeOnly
+        // compound / isolation / plyometric (anything reps-driven)
+        default:
+            return exercise.usesWeight ? .weightXreps : .repsOnly
+        }
     }
 }
