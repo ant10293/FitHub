@@ -48,21 +48,19 @@ struct PRsView: View {
             }
         }
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-        .overlay(alignment: .center) {
-            if showingUpdate1RMView {
-                UpdateMaxEditor(
-                    exercise: exercise,
-                    onSave: { newMax, date in
-                        kbd.dismiss()
-                        ctx.exercises.updateExercisePerformance(for: exercise, newValue: newMax, setOn: date, shouldSave: true)
-                        showingUpdate1RMView = false
-                    },
-                    onCancel: {
-                        kbd.dismiss()
-                        showingUpdate1RMView = false
-                    }
-                )
-            }
+        .sheet(isPresented: $showingUpdate1RMView) {
+            UpdateMaxEditor(
+                exercise: exercise,
+                onSave: { newMax, date in
+                    kbd.dismiss()
+                    ctx.exercises.updateExercisePerformance(for: exercise, newValue: newMax, setOn: date, shouldSave: true)
+                    showingUpdate1RMView = false
+                },
+                onCancel: {
+                    kbd.dismiss()
+                    showingUpdate1RMView = false
+                }
+            )
         }
         .overlay(alignment: .bottomLeading) {
             if !kbd.isVisible && !showingUpdate1RMView {

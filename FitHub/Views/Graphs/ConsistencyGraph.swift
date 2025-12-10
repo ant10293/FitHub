@@ -110,7 +110,7 @@ struct ConsistencyGraph: View {
         let weeks = CalendarUtility.shared.generateWeeklyIntervals(for: filteredWorkoutDates)
         return weeks.map { week in
             let workoutCount = filteredWorkoutDates.filter { CalendarUtility.shared.isDate($0, equalTo: week.start, toGranularity: .weekOfYear) }.count
-            let formattedWeek = week.start.monthDay
+            let formattedWeek = Format.formatDate(week.start, dateStyle: .short, timeStyle: .none)
             return WorkoutData(week: week.start, formattedWeek: formattedWeek, workoutCount: workoutCount)
         }
     }

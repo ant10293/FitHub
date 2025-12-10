@@ -9,13 +9,19 @@ import SwiftUI
 
 struct UpdateMaxEditor: View {
     @Environment(\.colorScheme) var colorScheme
+    @StateObject private var kbd = KeyboardManager.shared
+    @FocusState private var isFocused: Bool
     @State private var peak: PeakMetric
     @State private var plannedDate: Date?
     let exercise: Exercise
     let onSave: (PeakMetric, Date?) -> Void
     let onCancel: () -> Void
     
-    init(exercise: Exercise, onSave: @escaping (PeakMetric, Date?) -> Void, onCancel: @escaping () -> Void) {
+    init(
+        exercise: Exercise,
+        onSave: @escaping (PeakMetric, Date?) -> Void,
+        onCancel: @escaping () -> Void
+    ) {
         self.exercise = exercise
         self.peak = exercise.getPeakMetric(metricValue: 0)
         self.onSave = onSave
@@ -23,28 +29,47 @@ struct UpdateMaxEditor: View {
     }
     
     var body: some View {
-        GenericEditWrapper(
-            title: "Update \(exercise.performanceTitle(includeInstruction: false))",
-            onSave: {
-                onSave(peak, plannedDate)
-            },
-            onCancel: {
-                onCancel()
-            },
-            content: { focus in
-                NewPeakEntry(newPeak: $peak, focus: focus)
-            },
-            additionalContent: {
+        NavigationStack {
+            VStack {
+                NewPeakEntry(newPeak: $peak, focus: $isFocused)
+                    .padding(.vertical)
+                
                 OptionalDatePicker(
                     initialDate: plannedDate,
                     label: "Custom Date",
-                    useDateOnly: true
-                ) { newDate in
-                    plannedDate = newDate
+                    useDateOnly: true,
+                    onDateChange: { newDate in
+                        plannedDate = newDate
+                    }
+                )
+                
+                Spacer()
+                
+                if !kbd.isVisible {
+                    RectangularButton(
+                        title: "Save",
+                        systemImage: "checkmark",
+                        bgColor: .green,
+                        action: {
+                            onSave(peak, plannedDate)
+                        }
+                    )
+                    
+                    RectangularButton(
+                        title: "Cancel",
+                        systemImage: "xmark",
+                        bgColor: .red,
+                        action: onCancel
+                    )
                 }
-                .padding(.horizontal)
+                
+                Spacer()
             }
-        )
+            .padding()
+            .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+            .navigationBarTitle("Update \(exercise.performanceTitle(includeInstruction: false))", displayMode: .inline)
+            .onAppear { isFocused = true }
+        }
     }
 }
 
@@ -59,6 +84,7 @@ private struct NewPeakEntry: View {
             case .oneRepMax, .maxReps, .hold30sLoad, .carry50mLoad:
                 if let binding = textBinding {
                     TextField(newPeak.placeholder, text: binding)
+                        .textFieldStyle(.roundedBorder)
                         .keyboardType(.numberPad)
                         .multilineTextAlignment(.center)
                         .focused(focus) 
@@ -66,7 +92,7 @@ private struct NewPeakEntry: View {
                 
             case .maxHold:
                 if let binding = textBinding {
-                    TimeEntryField(text: binding, placeholder: newPeak.placeholder, style: .plain)
+                    TimeEntryField(text: binding, placeholder: newPeak.placeholder, style: .rounded)
                         .focused(focus)
                 }
                 
