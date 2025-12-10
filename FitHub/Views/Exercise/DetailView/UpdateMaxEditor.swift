@@ -51,6 +51,7 @@ struct UpdateMaxEditor: View {
                         systemImage: "checkmark",
                         bgColor: .green,
                         action: {
+                            kbd.dismiss()
                             onSave(peak, plannedDate)
                         }
                     )
@@ -59,7 +60,10 @@ struct UpdateMaxEditor: View {
                         title: "Cancel",
                         systemImage: "xmark",
                         bgColor: .red,
-                        action: onCancel
+                        action: {
+                            kbd.dismiss()
+                            onCancel()
+                        }
                     )
                 }
                 

@@ -10,7 +10,6 @@ import SwiftUI
 struct PRsView: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject private var ctx: AppContext
-    @StateObject private var kbd = KeyboardManager.shared
     @State private var showingUpdate1RMView: Bool = false
     @State private var showingList: Bool = false
     let exercise: Exercise
@@ -47,23 +46,20 @@ struct PRsView: View {
                 .padding(.vertical)
             }
         }
-        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .sheet(isPresented: $showingUpdate1RMView) {
             UpdateMaxEditor(
                 exercise: exercise,
                 onSave: { newMax, date in
-                    kbd.dismiss()
                     ctx.exercises.updateExercisePerformance(for: exercise, newValue: newMax, setOn: date, shouldSave: true)
                     showingUpdate1RMView = false
                 },
                 onCancel: {
-                    kbd.dismiss()
                     showingUpdate1RMView = false
                 }
             )
         }
         .overlay(alignment: .bottomLeading) {
-            if !kbd.isVisible && !showingUpdate1RMView {
+            if !showingUpdate1RMView {
                 FloatingButton(
                     image: showingList ? "chart.bar" : "list.bullet.rectangle",
                     foreground: .blue,
