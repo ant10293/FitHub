@@ -67,30 +67,17 @@ struct ImplementRow: View {
                 VStack(spacing: 12) {
                     // Left section
                     VStack(spacing: 4) {
-                        labelPair(title: "Left", mass: plan.perSideAchieved)
+                        labelPair(label: "Left", mass: plan.perSideAchieved)
                         PlateStackColumn(plates: plan.leftSide, isVertical: false)
                             .accessibilityLabel("Left plates")
                     }
                     
                     // Base weight chip
-                    VStack(spacing: 2) {
-                        if showMultiplier {
-                            Text("\(base.formattedText()) × \(plan.baseCount)")
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
-                        }
-                        
-                        if showMultiplier {
-                            let adjustedBase = Mass(kg: base.inKg * Double(plan.baseCount))
-                            baseChip(adjustedBase, showPerSide: false)
-                        } else {
-                            baseChip(base, showPerSide: false)
-                        }
-                    }
+                    baseLabelPair()
                     
                     // Right section
                     VStack(spacing: 4) {
-                        labelPair(title: "Right", mass: plan.perSideAchieved)
+                        labelPair(label: "Right", mass: plan.perSideAchieved)
                         PlateStackColumn(plates: plan.rightSide, isVertical: false)
                             .accessibilityLabel("Right plates")
                     }
@@ -103,49 +90,18 @@ struct ImplementRow: View {
                     HStack(spacing: 8) {
                         if let pegCount = pegCount, pegCount == .both {
                             // Two pegs: show Left and Right labels
-                            labelPair(title: "Left", mass: plan.perSideAchieved)
+                            labelPair(label: "Left", mass: plan.perSideAchieved)
                             Spacer(minLength: 8)
-                            
-                            VStack(spacing: 2) {
-                                if showMultiplier {
-                                    Text("\(base.formattedText()) × \(plan.baseCount)")
-                                        .font(.caption2)
-                                        .foregroundStyle(.secondary)
-                                }
-                                
-                                if showMultiplier {
-                                    let adjustedBase = Mass(kg: base.inKg * Double(plan.baseCount))
-                                    baseChip(adjustedBase, showPerSide: false)
-                                } else {
-                                    baseChip(base, showPerSide: false)
-                                }
-                            }
-                            
+                            baseLabelPair()
                             Spacer(minLength: 8)
-                            labelPair(title: "Right", mass: plan.perSideAchieved)
+                            labelPair(label: "Right", mass: plan.perSideAchieved)
                         } else {
                             // Single peg or no pegs: center the base weight
                             Spacer()
-                            
-                            VStack(spacing: 2) {
-                                if showMultiplier {
-                                    Text("\(base.formattedText()) × \(plan.baseCount)")
-                                        .font(.caption2)
-                                        .foregroundStyle(.secondary)
-                                }
-                                
-                                if showMultiplier {
-                                    let adjustedBase = Mass(kg: base.inKg * Double(plan.baseCount))
-                                    baseChip(adjustedBase, showPerSide: false)
-                                } else {
-                                    baseChip(base, showPerSide: false)
-                                }
-                            }
-                            
+                            baseLabelPair()
                             Spacer()
                         }
                     }
-                    .font(title.isEmpty ? .headline : .subheadline)
                     
                     // Plate visualization
                     PlateVisualization(plan: plan, pegCount: pegCount)
@@ -155,10 +111,31 @@ struct ImplementRow: View {
         .padding(.vertical)
     }
     
-    private func labelPair(title: String, mass: Mass) -> some View {
+    private func labelPair(label: String, mass: Mass) -> some View {
         VStack {
-            Text(title)
+            Text(label)
+                .font(title.isEmpty ? .headline : .subheadline)
             mass.formattedText()
+        }
+    }
+    
+    private func baseLabelPair() -> some View {
+        VStack(spacing: 2) {
+            Text("Base")
+                .font(title.isEmpty ? .headline : .subheadline)
+            
+            if showMultiplier {
+                Text("\(base.formattedText()) × \(plan.baseCount)")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            
+            if showMultiplier {
+                let adjustedBase = Mass(kg: base.inKg * Double(plan.baseCount))
+                baseChip(adjustedBase, showPerSide: false)
+            } else {
+                baseChip(base, showPerSide: false)
+            }
         }
     }
 
@@ -167,7 +144,7 @@ struct ImplementRow: View {
             showBaseWeightEditor()
         } label: {
             HStack(spacing: 6) {
-                (Text("Base ") + base.formattedText() + Text(showPerSide ? " per side" : ""))
+                (base.formattedText() + Text(showPerSide ? " per side" : ""))
                     .font(.subheadline)
                 Image(systemName: "pencil")
                     .imageScale(.small)

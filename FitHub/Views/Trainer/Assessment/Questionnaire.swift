@@ -12,7 +12,6 @@ struct Questionnaire: View {
     @EnvironmentObject private var ctx: AppContext
     @State private var currentQuestionIndex: Int = 0
     @State private var answers: [String] = ["", "", "", "", ""]
-   // @State private var isPresenting: Bool = false
     @State private var showingPopup: Bool = false
     
     let questions = [
@@ -26,7 +25,7 @@ struct Questionnaire: View {
     let options = [
         ["Yes", "Somewhat", "No"],
         ["< 3 months", "3–12 months", "1–3 years", "3–5 years", "5+ years"],
-        ["Yes, I am currently following a structured workout program", "No, I do not workout at all", "I workout consistently but without a structured plan", "I workout occasionally but without a structured plan"],
+        ["Yes, I am currently following a structured workout program", "I work out consistently but without a structured plan", "I work out occasionally but without a structured plan", "No, I do not work out at all"],
         ["3", "4", "5", "6"],
         ["All (Gym Membership)", "Some (Home Gym)", "None (Bodyweight Only)"]
     ]
