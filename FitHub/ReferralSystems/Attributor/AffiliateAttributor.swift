@@ -65,7 +65,7 @@ private struct AffiliateAttributorConfig: AttributorConfig {
     private func restorePremiumIfClaimed() async {
         print("🔍 [AffiliateAttributor] Checking for previously claimed affiliate link...")
 
-        guard let userId = AuthService.getUid() else {
+        guard AuthService.getUid() != nil else {
             print("⚠️ [AffiliateAttributor] User not authenticated, skipping restore check")
             return
         }

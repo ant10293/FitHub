@@ -1,6 +1,8 @@
 import * as functions from "firebase-functions/v1";
 import * as admin from "firebase-admin";
 import { rateLimitCall, RateLimits } from "./utils/rateLimiter";
+import { requireAuth, extractString, requireString } from "./utils/authHelpers";
+import { handleFunctionError, ErrorMapping } from "./utils/errorHelpers";
 
 /**
  * Cloud Function to claim a referral code with server-side validation
@@ -13,18 +15,11 @@ export const claimReferralCode = functions.https.onCall(async (data, context) =>
   await rateLimitCall(context, RateLimits.CLAIM_REFERRAL_CODE, "claimReferralCode");
 
   // Verify authentication
-  if (!context.auth) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated");
-  }
+  const userId = requireAuth(context);
 
-  const userId = context.auth.uid;
-  const referralCode = typeof data?.referralCode === "string"
-    ? data.referralCode.trim().toUpperCase()
-    : "";
-
-  if (!referralCode) {
-    throw new functions.https.HttpsError("invalid-argument", "Referral code is required");
-  }
+  // Extract and validate referral code
+  const referralCode = extractString(data, "referralCode", { trim: true, uppercase: true });
+  requireString(referralCode, "Referral code");
 
   // Validate code format (basic validation - 4-20 alphanumeric characters)
   if (referralCode.length < 4 || referralCode.length > 20 || !/^[A-Z0-9]+$/.test(referralCode)) {
@@ -86,31 +81,21 @@ export const claimReferralCode = functions.https.onCall(async (data, context) =>
 
     return result;
   } catch (error: any) {
-    // Handle transaction errors
-    if (error.message === "REFERRAL_CODE_NOT_FOUND") {
-      throw new functions.https.HttpsError("not-found", "Referral code not found");
-    }
-    if (error.message === "REFERRAL_CODE_INACTIVE") {
-      throw new functions.https.HttpsError("failed-precondition", "Referral code is not active");
-    }
-    if (error.message === "USER_ALREADY_HAS_CODE") {
-      throw new functions.https.HttpsError("already-exists", "User already has a referral code");
-    }
+    const errorMappings: ErrorMapping = {
+      REFERRAL_CODE_NOT_FOUND: {
+        code: "not-found",
+        message: "Referral code not found",
+      },
+      REFERRAL_CODE_INACTIVE: {
+        code: "failed-precondition",
+        message: "Referral code is not active",
+      },
+      USER_ALREADY_HAS_CODE: {
+        code: "already-exists",
+        message: "User already has a referral code",
+      },
+    };
 
-    // If it's already an HttpsError, re-throw it
-    if (error instanceof functions.https.HttpsError) {
-      throw error;
-    }
-
-    // Log the actual error for debugging
-    console.error("Error claiming referral code:", error);
-    console.error("Error stack:", error.stack);
-    console.error("Error message:", error.message);
-
-    // Return a more descriptive internal error
-    throw new functions.https.HttpsError(
-      "internal",
-      `Failed to claim referral code: ${error.message || String(error)}`
-    );
+    handleFunctionError(error, errorMappings, "claimReferralCode");
   }
 });

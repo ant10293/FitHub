@@ -1,6 +1,8 @@
 import * as functions from "firebase-functions/v1";
 import * as admin from "firebase-admin";
 import { checkRateLimit, RateLimits, getRequestIP } from "./utils/rateLimiter";
+import { setCorsHeaders, handleCorsPreflight, requirePost } from "./utils/httpHelpers";
+import { generateDeviceId, createFingerprintIndex } from "./utils/fingerprintHelpers";
 
 /**
  * Stores a pending referral code for a device
@@ -8,26 +10,14 @@ import { checkRateLimit, RateLimits, getRequestIP } from "./utils/rateLimiter";
  * Rate limited: 10 requests per minute per IP
  */
 export const storePendingReferralCode = functions.https.onRequest(async (req, res) => {
-  // Handle CORS preflight
-  res.set("Access-Control-Allow-Origin", "*");
-  res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.set("Access-Control-Allow-Headers", "Content-Type");
-
-  if (req.method === "OPTIONS") {
-    res.status(204).send("");
-    return;
-  }
-
-  // Only allow POST
-  if (req.method !== "POST") {
-    res.status(405).send("Method not allowed");
-    return;
-  }
+  setCorsHeaders(res);
+  if (handleCorsPreflight(req, res)) return;
+  if (!requirePost(req, res)) return;
 
   // Rate limit by IP address
   const ip = getRequestIP(req);
   const result = await checkRateLimit({
-    ...RateLimits.CHECK_USER_EXISTS, // Reuse same limits (20/min)
+    ...RateLimits.STORE_PENDING_TOKEN,
     identifier: ip,
     functionName: "storePendingReferralCode",
   });
@@ -84,7 +74,7 @@ export const storePendingReferralCode = functions.https.onRequest(async (req, re
 
     // Create device identifier: IP + User-Agent hash (or use provided fingerprint)
     const userAgent = req.headers["user-agent"] || "";
-    const deviceId = deviceFingerprint || `${ip}_${userAgent.substring(0, 50)}`.replace(/[^a-zA-Z0-9_]/g, "_");
+    const deviceId = generateDeviceId(ip, userAgent, deviceFingerprint);
 
     if (!deviceId || deviceId.length === 0) {
       console.error("[storePendingReferralCode] ERROR: deviceId is empty!");
@@ -120,6 +110,13 @@ export const storePendingReferralCode = functions.https.onRequest(async (req, re
 
     await codeRef.update({
       pendingDeviceFingerprints: pendingFingerprints,
+    });
+
+    // Create reverse index for fast O(1) lookup
+    await createFingerprintIndex(db, deviceId, referralCode, {
+      indexCollection: "referralCodeFingerprints",
+      indexTokenField: "referralCode",
+      expiresAt: expiresAt,
     });
 
     console.log("[storePendingReferralCode] Stored device fingerprint in referralCodes document:", {

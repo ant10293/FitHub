@@ -341,8 +341,26 @@ export const RateLimits = {
     windowSeconds: 60,
   },
 
-  // User existence check - 20 attempts per minute per IP
+  // User existence check by email - 20 attempts per minute per IP (for unauthenticated email check)
   CHECK_USER_EXISTS: {
+    maxRequests: 20,
+    windowSeconds: 60,
+  },
+
+  // General authenticated function calls - 30 requests per minute per user
+  AUTHENTICATED_CALL: {
+    maxRequests: 30,
+    windowSeconds: 60,
+  },
+
+  // Pending link/code retrieval - 20 requests per minute per user (or IP if unauthenticated)
+  GET_PENDING_TOKEN: {
+    maxRequests: 20,
+    windowSeconds: 60,
+  },
+
+  // Store pending link/code - 20 requests per minute per IP
+  STORE_PENDING_TOKEN: {
     maxRequests: 20,
     windowSeconds: 60,
   },

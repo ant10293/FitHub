@@ -55,3 +55,34 @@ export const handleFunctionError = (res: Response, error: unknown): void => {
   console.error("Unknown error during Stripe affiliate request:", error);
   res.status(500).json({ error: { status: 500, message: "An unexpected error occurred." } });
 };
+
+/**
+ * Sets CORS headers for HTTP functions
+ */
+export const setCorsHeaders = (res: Response): void => {
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.set("Access-Control-Allow-Headers", "Content-Type");
+};
+
+/**
+ * Handles CORS preflight requests
+ */
+export const handleCorsPreflight = (req: { method?: string }, res: Response): boolean => {
+  if (req.method === "OPTIONS") {
+    res.status(204).send("");
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Validates that request method is POST
+ */
+export const requirePost = (req: { method?: string }, res: Response): boolean => {
+  if (req.method !== "POST") {
+    res.status(405).send("Method not allowed");
+    return false;
+  }
+  return true;
+};

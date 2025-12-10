@@ -1,6 +1,8 @@
 import * as functions from "firebase-functions/v1";
 import * as admin from "firebase-admin";
 import { rateLimitCall, RateLimits } from "./utils/rateLimiter";
+import { requireAuth, extractString, requireString } from "./utils/authHelpers";
+import { handleFunctionError, ErrorMapping } from "./utils/errorHelpers";
 
 /**
  * Cloud Function to claim an affiliate link with server-side validation
@@ -13,18 +15,11 @@ export const claimAffiliateLink = functions.https.onCall(async (data, context) =
   await rateLimitCall(context, RateLimits.CLAIM_REFERRAL_CODE, "claimAffiliateLink");
 
   // Verify authentication
-  if (!context.auth) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated");
-  }
+  const userId = requireAuth(context);
 
-  const userId = context.auth.uid;
-  const linkToken = typeof data?.linkToken === "string"
-    ? data.linkToken.trim()
-    : "";
-
-  if (!linkToken) {
-    throw new functions.https.HttpsError("invalid-argument", "Link token is required");
-  }
+  // Extract and validate link token
+  const linkToken = extractString(data, "linkToken", { trim: true });
+  requireString(linkToken, "Link token");
 
   // Validate token format (alphanumeric, 16-64 characters)
   if (linkToken.length < 16 || linkToken.length > 64 || !/^[a-zA-Z0-9]+$/.test(linkToken)) {
@@ -108,28 +103,17 @@ export const claimAffiliateLink = functions.https.onCall(async (data, context) =
 
     return result;
   } catch (error: any) {
-    // Handle transaction errors
-    if (error.message === "AFFILIATE_LINK_NOT_FOUND") {
-      throw new functions.https.HttpsError("not-found", "Affiliate link not found");
-    }
-    if (error.message === "AFFILIATE_LINK_ALREADY_CLAIMED") {
-      throw new functions.https.HttpsError("failed-precondition", "Affiliate link has already been claimed");
-    }
+    const errorMappings: ErrorMapping = {
+      AFFILIATE_LINK_NOT_FOUND: {
+        code: "not-found",
+        message: "Affiliate link not found",
+      },
+      AFFILIATE_LINK_ALREADY_CLAIMED: {
+        code: "failed-precondition",
+        message: "Affiliate link has already been claimed",
+      },
+    };
 
-    // If it's already an HttpsError, re-throw it
-    if (error instanceof functions.https.HttpsError) {
-      throw error;
-    }
-
-    // Log the actual error for debugging
-    console.error("Error claiming affiliate link:", error);
-    console.error("Error stack:", error.stack);
-    console.error("Error message:", error.message);
-
-    // Return a more descriptive internal error
-    throw new functions.https.HttpsError(
-      "internal",
-      `Failed to claim affiliate link: ${error.message || String(error)}`
-    );
+    handleFunctionError(error, errorMappings, "claimAffiliateLink");
   }
 });

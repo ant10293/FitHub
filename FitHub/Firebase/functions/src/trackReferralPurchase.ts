@@ -1,6 +1,8 @@
 import * as functions from "firebase-functions/v1";
 import * as admin from "firebase-admin";
 import { rateLimitCall, RateLimits } from "./utils/rateLimiter";
+import { requireAuth, extractString, requireString } from "./utils/authHelpers";
+import { handleFunctionError, ErrorMapping } from "./utils/errorHelpers";
 
 /**
  * Cloud Function to track referral purchase with server-side validation
@@ -12,21 +14,20 @@ export const trackReferralPurchase = functions.https.onCall(async (data, context
   await rateLimitCall(context, RateLimits.TRACK_PURCHASE, "trackReferralPurchase");
 
   // Verify authentication
-  if (!context.auth) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated");
-  }
+  const userId = requireAuth(context);
 
-  const userId = context.auth.uid;
-  const productID = typeof data?.productID === "string" ? data.productID : "";
-  const transactionID = typeof data?.transactionID === "number" ? String(data.transactionID) :
-                        typeof data?.transactionID === "string" ? data.transactionID : "";
-  const originalTransactionID = typeof data?.originalTransactionID === "number" ? String(data.originalTransactionID) :
-                                typeof data?.originalTransactionID === "string" ? data.originalTransactionID : "";
-  const environment = typeof data?.environment === "string" ? data.environment : "Production";
+  // Extract and validate required fields
+  const productID = extractString(data, "productID");
+  const transactionID = typeof data?.transactionID === "number"
+    ? String(data.transactionID)
+    : extractString(data, "transactionID");
+  const originalTransactionID = typeof data?.originalTransactionID === "number"
+    ? String(data.originalTransactionID)
+    : extractString(data, "originalTransactionID");
+  const environment = extractString(data, "environment", { defaultValue: "Production" });
 
-  if (!productID || !originalTransactionID) {
-    throw new functions.https.HttpsError("invalid-argument", "productID and originalTransactionID are required");
-  }
+  requireString(productID, "productID");
+  requireString(originalTransactionID, "originalTransactionID");
 
   // Validate product ID format
   const validProductIDs = ["com.FitHub.premium.monthly", "com.FitHub.premium.yearly", "com.FitHub.premium.lifetime"];
@@ -229,31 +230,21 @@ export const trackReferralPurchase = functions.https.onCall(async (data, context
 
     return result;
   } catch (error: any) {
-    // Handle transaction errors
-    if (error.message === "USER_NO_REFERRAL_CODE") {
-      throw new functions.https.HttpsError("failed-precondition", "User has no referral code");
-    }
-    if (error.message === "REFERRAL_CODE_NOT_FOUND") {
-      throw new functions.https.HttpsError("not-found", "Referral code not found");
-    }
-    if (error.message === "INVALID_PRODUCT_TYPE") {
-      throw new functions.https.HttpsError("invalid-argument", "Invalid product type");
-    }
+    const errorMappings: ErrorMapping = {
+      USER_NO_REFERRAL_CODE: {
+        code: "failed-precondition",
+        message: "User has no referral code",
+      },
+      REFERRAL_CODE_NOT_FOUND: {
+        code: "not-found",
+        message: "Referral code not found",
+      },
+      INVALID_PRODUCT_TYPE: {
+        code: "invalid-argument",
+        message: "Invalid product type",
+      },
+    };
 
-    // If it's already an HttpsError, re-throw it
-    if (error instanceof functions.https.HttpsError) {
-      throw error;
-    }
-
-    // Log the actual error for debugging
-    console.error("Error tracking referral purchase:", error);
-    console.error("Error stack:", error.stack);
-    console.error("Error message:", error.message);
-
-    // Return a more descriptive internal error
-    throw new functions.https.HttpsError(
-      "internal",
-      `Failed to track referral purchase: ${error.message || String(error)}`
-    );
+    handleFunctionError(error, errorMappings, "trackReferralPurchase");
   }
 });
