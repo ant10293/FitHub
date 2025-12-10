@@ -77,19 +77,17 @@
             display: none;
         }
     </style>
-    <script src="shared.js"></script>
+    <script src="/shared.js"></script>
     <script>
         // Extract affiliate link token from URL
         function getAffiliateLinkToken() {
             const path = window.location.pathname;
 
-            // Try path-based: /affiliate/{TOKEN}
             if (path.startsWith('/affiliate/')) {
                 const token = path.split('/affiliate/')[1];
                 if (token) return token;
             }
 
-            // Try query-based: ?token=TOKEN
             const params = new URLSearchParams(window.location.search);
             const token = params.get('token');
             if (token) return token;
@@ -97,9 +95,11 @@
             return null;
         }
 
+        // ALWAYS create device fingerprint FIRST (even if no affiliate token)
+        const deviceFingerprint = getOrCreateDeviceFingerprint();
+
         // Store affiliate link server-side so app can retrieve it
         const linkToken = getAffiliateLinkToken();
-        const deviceFingerprint = getOrCreateDeviceFingerprint();
 
         if (linkToken) {
             storeTokenServerSide(
@@ -109,8 +109,6 @@
                 'affiliateLinkToken',
                 'linkToken'
             );
-        } else {
-            console.log('⚠️ No affiliate link token found in URL');
         }
     </script>
 </head>
@@ -144,36 +142,44 @@
     </div>
 
     <script>
-        // Show appropriate message based on state
-        if (linkToken) {
-            // Check if link was already claimed (check URL parameter or localStorage)
-            const urlParams = new URLSearchParams(window.location.search);
-            const claimed = urlParams.get('claimed') === 'true' || localStorage.getItem('affiliateLinkClaimed') === 'true';
+        (function() {
+            const token = linkToken;
 
-            if (claimed) {
-                document.getElementById('claimedInfo').classList.remove('hidden');
-            } else {
-                document.getElementById('successInfo').classList.remove('hidden');
-                document.getElementById('warningInfo').style.display = 'block';
+            function showMessage() {
+                if (token) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const claimed = urlParams.get('claimed') === 'true' || localStorage.getItem('affiliateLinkClaimed') === 'true';
+
+                    if (claimed) {
+                        document.getElementById('claimedInfo').classList.remove('hidden');
+                    } else {
+                        document.getElementById('successInfo').classList.remove('hidden');
+                        document.getElementById('warningInfo').style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('errorInfo').classList.remove('hidden');
+                }
             }
-        } else {
-            document.getElementById('errorInfo').classList.remove('hidden');
-        }
 
-        // Function to mark as claimed (called from app redirect)
-        function markAsClaimed() {
-            localStorage.setItem('affiliateLinkClaimed', 'true');
-            const url = new URL(window.location);
-            url.searchParams.set('claimed', 'true');
-            window.history.replaceState({}, '', url);
-            document.getElementById('successInfo').classList.add('hidden');
-            document.getElementById('errorInfo').classList.add('hidden');
-            document.getElementById('warningInfo').style.display = 'none';
-            document.getElementById('claimedInfo').classList.remove('hidden');
-        }
+            function markAsClaimed() {
+                localStorage.setItem('affiliateLinkClaimed', 'true');
+                const url = new URL(window.location);
+                url.searchParams.set('claimed', 'true');
+                window.history.replaceState({}, '', url);
+                document.getElementById('successInfo').classList.add('hidden');
+                document.getElementById('errorInfo').classList.add('hidden');
+                document.getElementById('warningInfo').style.display = 'none';
+                document.getElementById('claimedInfo').classList.remove('hidden');
+            }
 
-        // Expose to window for app to call
-        window.markAffiliateAsClaimed = markAsClaimed;
+            window.markAffiliateAsClaimed = markAsClaimed;
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', showMessage);
+            } else {
+                showMessage();
+            }
+        })();
     </script>
 </body>
 </html>

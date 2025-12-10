@@ -84,10 +84,14 @@ struct WelcomeView: View {
                     ctx.userData.profile.referralCode = referralCode
                 }
             }
-            // 2. Claim pending referral code if user came from referral link
-            await ReferralAttributor().claimIfNeeded()
-            // 3. Claim pending affiliate link if user came from affiliate link (grants premium)
-            await AffiliateAttributor().claimIfNeeded()
+
+            // 2. Get device fingerprint once (shared by both attributors to avoid duplicate work)
+            let deviceFingerprint = await BaseAttributor.getBrowserFingerprint()
+
+            // 3. Claim pending referral code if user came from referral link
+            await ReferralAttributor().claimIfNeeded(deviceFingerprint: deviceFingerprint)
+            // 4. Claim pending affiliate link if user came from affiliate link (grants premium)
+            await AffiliateAttributor().claimIfNeeded(deviceFingerprint: deviceFingerprint)
         }
         
         ctx.userData.saveToFile()

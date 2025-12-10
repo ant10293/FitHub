@@ -2,6 +2,20 @@
 
 const APP_STORE_ID = '6749919587';
 
+// Initialize when DOM is ready
+(function() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+    function init() {
+        // Trigger custom event when shared.js is ready
+        document.dispatchEvent(new CustomEvent('sharedJsReady'));
+    }
+})();
+
 // Cookie helpers
 function setCookie(name, value, days) {
     const expires = new Date();
@@ -50,6 +64,9 @@ function getOrCreateDeviceFingerprint() {
 function redirectToAppStore() {
     window.location.href = `https://apps.apple.com/app/id${APP_STORE_ID}`;
 }
+
+// Make sure it's available globally
+window.redirectToAppStore = redirectToAppStore;
 
 // Store token server-side
 function storeTokenServerSide(token, deviceFingerprint, endpoint, storageKey, requestKey) {

@@ -128,6 +128,7 @@
 		65B936F22EE8DF1E00D80950 /* AffiliateURLHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936F12EE8DF1E00D80950 /* AffiliateURLHandler.swift */; };
 		65B936F42EE8DF4E00D80950 /* AffiliateAttributor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936F32EE8DF4E00D80950 /* AffiliateAttributor.swift */; };
 		65B936F62EE8F93D00D80950 /* GenericURLHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936F52EE8F93D00D80950 /* GenericURLHandler.swift */; };
+		65B936F92EE905D700D80950 /* BaseAttributor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936F82EE905D700D80950 /* BaseAttributor.swift */; };
 		65C5DC552DEFB46400B09AD2 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC542DEFB46400B09AD2 /* Core.swift */; };
 		65C5DC572DEFB51800B09AD2 /* Muscle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC562DEFB51800B09AD2 /* Muscle.swift */; };
 		65C5DC592DEFB5AE00B09AD2 /* Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC582DEFB5AE00B09AD2 /* Split.swift */; };
@@ -422,6 +423,7 @@
 		65B936F12EE8DF1E00D80950 /* AffiliateURLHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateURLHandler.swift; sourceTree = "<group>"; };
 		65B936F32EE8DF4E00D80950 /* AffiliateAttributor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateAttributor.swift; sourceTree = "<group>"; };
 		65B936F52EE8F93D00D80950 /* GenericURLHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericURLHandler.swift; sourceTree = "<group>"; };
+		65B936F82EE905D700D80950 /* BaseAttributor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAttributor.swift; sourceTree = "<group>"; };
 		65C5DC542DEFB46400B09AD2 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		65C5DC562DEFB51800B09AD2 /* Muscle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Muscle.swift; sourceTree = "<group>"; };
 		65C5DC582DEFB5AE00B09AD2 /* Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Split.swift; sourceTree = "<group>"; };
@@ -1010,6 +1012,7 @@
 		65B936F72EE9025800D80950 /* Attributor */ = {
 			isa = PBXGroup;
 			children = (
+				65B936F82EE905D700D80950 /* BaseAttributor.swift */,
 				65F5EF882EB16A5D005557F1 /* ReferralAttributor.swift */,
 				65B936F32EE8DF4E00D80950 /* AffiliateAttributor.swift */,
 				65B936ED2EE79D8400D80950 /* DeviceFingerprintManager.swift */,
@@ -1769,6 +1772,7 @@
 				65CD3C7C2DD3C84F00C2B671 /* CompletedWorkouts.swift in Sources */,
 				65DD05492EC6E842000D159C /* AccountDataStore.swift in Sources */,
 				65CD3C9C2DD7C43E00C2B671 /* WorkoutGenerator.swift in Sources */,
+				65B936F92EE905D700D80950 /* BaseAttributor.swift in Sources */,
 				653136352E552B7A00EECCA5 /* TemplateOverload.swift in Sources */,
 				653BF8B32E661BD6005A07EA /* BaseWeightEditor.swift in Sources */,
 				65CD3C7D2DD3C84F00C2B671 /* ExerciseDetailOptions.swift in Sources */,

@@ -78,27 +78,27 @@ def generate_unique_link_token(db: firestore.Client, max_attempts: int = 10) -> 
         if not check_token_exists(db, token):
             return token
         print(f"Token collision detected (attempt {attempt + 1}/{max_attempts}), generating new token...")
-    
+
     raise Exception(f"Failed to generate unique token after {max_attempts} attempts")
 
 
 def create_affiliate_link(db: firestore.Client, base_url: Optional[str] = None) -> dict:
     """
     Create a unique affiliate link.
-    
+
     Note: The userId is NOT known at link generation time. It will be stored
     when the link is claimed by a user.
-    
+
     Args:
         db: Firestore client
         base_url: Optional base URL for the link (defaults to Firebase hosting URL)
-    
+
     Returns:
         Dictionary with linkToken and fullUrl
     """
     # Generate unique token
     link_token = generate_unique_link_token(db)
-    
+
     # Create document in affiliateLinks collection
     # userId will be set later when the link is claimed
     link_data = {
@@ -108,21 +108,21 @@ def create_affiliate_link(db: firestore.Client, base_url: Optional[str] = None) 
         'claimedBy': None,  # Will be set when link is claimed
         'claimedAt': None,  # Will be set when link is claimed
     }
-    
+
     # Use linkToken as document ID for easy lookup
     doc_ref = db.collection('affiliateLinks').document(link_token)
     doc_ref.set(link_data)
-    
+
     # Generate full URL
     if base_url:
         full_url = f"{base_url}/affiliate/{link_token}"
     else:
         full_url = f"https://fithubv1-d3c91.web.app/affiliate/{link_token}"
-    
+
     print(f"✅ Created affiliate link")
     print(f"   Token: {link_token}")
     print(f"   URL: {full_url}")
-    
+
     return {
         'linkToken': link_token,
         'fullUrl': full_url,
@@ -140,29 +140,29 @@ Examples:
   # Generate a new affiliate link (requires GOOGLE_APPLICATION_CREDENTIALS env var)
   export GOOGLE_APPLICATION_CREDENTIALS="/path/to/service-account.json"
   ./run_generate_affiliate_link.sh
-  
+
   # Generate link with custom base URL
   ./run_generate_affiliate_link.sh --base-url https://example.com
-  
+
   # Use --service-account parameter instead of env var
   ./run_generate_affiliate_link.sh --service-account /path/to/service-account.json
         """
     )
-    
+
     parser.add_argument(
         '--base-url',
         default=None,
         help='Base URL for the affiliate link (defaults to Firebase hosting URL)'
     )
-    
+
     parser.add_argument(
         '--service-account',
         default=None,
         help='Path to Firebase service account JSON file (or set GOOGLE_APPLICATION_CREDENTIALS env var)'
     )
-    
+
     args = parser.parse_args()
-    
+
     # Determine service account path
     service_account_path = None
     if args.service_account:
@@ -178,7 +178,7 @@ Examples:
             if not service_account_path.exists():
                 print(f"❌ Error: Service account file from GOOGLE_APPLICATION_CREDENTIALS not found: {service_account_path}")
                 exit(1)
-    
+
     if not service_account_path:
         print("❌ Error: Firebase service account credentials required")
         print("\nPlease provide credentials using one of these methods:")
@@ -189,7 +189,7 @@ Examples:
         print("  3. Use --service-account parameter:")
         print("     ./tools/run_generate_affiliate_link.sh --service-account /path/to/service-account.json")
         exit(1)
-    
+
     # Initialize Firebase Admin
     try:
         # Check if already initialized
@@ -200,7 +200,7 @@ Examples:
         cred = credentials.Certificate(str(service_account_path))
         firebase_admin.initialize_app(cred)
         print(f"✅ Initialized Firebase Admin with service account: {service_account_path}")
-    
+
     # Get Firestore client
     try:
         db = firestore.client()
@@ -208,11 +208,11 @@ Examples:
         print(f"❌ Error getting Firestore client: {e}")
         print("   Make sure your service account has Firestore permissions")
         exit(1)
-    
+
     # Create affiliate link
     try:
         result = create_affiliate_link(db, args.base_url)
-        
+
         print("\n" + "="*60)
         print("AFFILIATE LINK GENERATED")
         print("="*60)
@@ -221,7 +221,7 @@ Examples:
         print("\nNote: This link will be claimed by a user when they install")
         print("      and open the app. The userId will be stored at that time.")
         print("="*60)
-        
+
     except Exception as e:
         print(f"❌ Error creating affiliate link: {e}")
         exit(1)
@@ -229,6 +229,3 @@ Examples:
 
 if __name__ == '__main__':
     main()
-
-
-

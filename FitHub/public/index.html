@@ -51,29 +51,29 @@
             font-size: 0.9rem;
         }
     </style>
-    <script src="shared.js"></script>
+    <script src="/shared.js"></script>
     <script>
         // Extract referral code from URL
         function getReferralCode() {
             const path = window.location.pathname;
             const params = new URLSearchParams(window.location.search);
 
-            // Try path-based: /r/CODE
             if (path.startsWith('/r/')) {
                 const code = path.split('/r/')[1];
                 if (code) return code;
             }
 
-            // Try query-based: ?ref=CODE
             const ref = params.get('ref');
             if (ref) return ref;
 
             return null;
         }
 
+        // ALWAYS create device fingerprint FIRST (even if no referral code)
+        const deviceFingerprint = getOrCreateDeviceFingerprint();
+
         // Store referral code server-side so app can retrieve it
         const code = getReferralCode();
-        const deviceFingerprint = getOrCreateDeviceFingerprint();
 
         if (code) {
             storeTokenServerSide(
@@ -83,8 +83,21 @@
                 'referralCode',
                 'referralCode'
             );
-        } else {
-            console.log('⚠️ No referral code found in URL');
+
+            // Show code info
+            function showCodeInfo() {
+                const codeInfoEl = document.getElementById('codeInfo');
+                const codeDisplayEl = document.getElementById('codeDisplay');
+                if (codeInfoEl && codeDisplayEl) {
+                    codeInfoEl.style.display = 'block';
+                    codeDisplayEl.textContent = code;
+                }
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', showCodeInfo);
+            } else {
+                showCodeInfo();
+            }
         }
     </script>
 </head>
@@ -98,11 +111,5 @@
             <p style="margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.8;">Your referral code will be applied automatically when you install and sign in.</p>
         </div>
     </div>
-    <script>
-        if (code) {
-            document.getElementById('codeInfo').style.display = 'block';
-            document.getElementById('codeDisplay').textContent = code;
-        }
-    </script>
 </body>
 </html>

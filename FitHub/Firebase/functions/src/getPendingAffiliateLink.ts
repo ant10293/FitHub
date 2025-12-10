@@ -84,6 +84,3 @@ export const getPendingAffiliateLink = functions.https.onCall(async (data, conte
     throw new functions.https.HttpsError("internal", "Failed to retrieve affiliate link");
   }
 });
-
-
-

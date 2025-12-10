@@ -14,6 +14,3 @@ fi
 
 cd "$PROJECT_DIR"
 "$PYTHON_BIN" -m tools.affiliate_link_generator.main "$@"
-
-
-

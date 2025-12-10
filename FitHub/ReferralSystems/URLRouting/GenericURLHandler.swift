@@ -124,5 +124,3 @@ enum GenericURLHandler {
         return out.isEmpty ? nil : out
     }
 }
-
-
