@@ -51,130 +51,41 @@
             font-size: 0.9rem;
         }
     </style>
+    <script src="shared.js"></script>
     <script>
         // Extract referral code from URL
         function getReferralCode() {
             const path = window.location.pathname;
             const params = new URLSearchParams(window.location.search);
-            
+
             // Try path-based: /r/CODE
             if (path.startsWith('/r/')) {
                 const code = path.split('/r/')[1];
                 if (code) return code;
             }
-            
+
             // Try query-based: ?ref=CODE
             const ref = params.get('ref');
             if (ref) return ref;
-            
+
             return null;
         }
-        
-        // Set cookie helper (expires in 30 days)
-        function setCookie(name, value, days) {
-            const expires = new Date();
-            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
-        }
-        
-        // Get cookie helper
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for (let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
-        
-        // Generate or retrieve device fingerprint
-        function getOrCreateDeviceFingerprint() {
-            let fingerprint = getCookie('deviceFingerprint');
-            if (!fingerprint) {
-                // Generate a unique fingerprint based on browser characteristics
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                ctx.textBaseline = 'top';
-                ctx.font = '14px Arial';
-                ctx.fillText('Device fingerprint', 2, 2);
-                const canvasFingerprint = canvas.toDataURL();
-                
-                fingerprint = btoa(
-                    navigator.userAgent + 
-                    navigator.language + 
-                    screen.width + 
-                    screen.height + 
-                    new Date().getTimezoneOffset() +
-                    canvasFingerprint
-                ).substring(0, 64); // Limit to 64 chars
-                
-                setCookie('deviceFingerprint', fingerprint, 365); // Store for 1 year
-            }
-            return fingerprint;
-        }
-        
+
         // Store referral code server-side so app can retrieve it
         const code = getReferralCode();
         const deviceFingerprint = getOrCreateDeviceFingerprint();
-        
+
         if (code) {
-            console.log('📝 Referral code detected:', code);
-            console.log('📝 Device fingerprint:', deviceFingerprint);
-            
-            // Store in localStorage and cookie as backup
-            localStorage.setItem('referralCode', code);
-            setCookie('referralCode', code, 30);
-            console.log('✅ Referral code stored in localStorage and cookie');
-            
-            // Store server-side so app can retrieve it
-            console.log('🔄 Attempting to store referral code server-side...');
-            fetch('https://us-central1-fithubv1-d3c91.cloudfunctions.net/storePendingReferralCode', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    referralCode: code,
-                    deviceFingerprint: deviceFingerprint
-                })
-            }).then(response => {
-                console.log('📡 Server response status:', response.status);
-                if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(`HTTP ${response.status}: ${text}`);
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('📦 Server response data:', data);
-                if (data.success) {
-                    console.log('✅ Referral code stored server-side successfully:', code);
-                    console.log('📋 Device ID:', data.deviceId);
-                    // Store device ID in cookie so we can pass it to app if needed
-                    if (data.deviceId) {
-                        setCookie('deviceId', data.deviceId, 365);
-                    }
-                } else {
-                    console.error('❌ Failed to store referral code server-side:', data);
-                }
-            }).catch(error => {
-                console.error('❌ Error storing referral code server-side:', error);
-                console.error('Error details:', error.message);
-            });
+            storeTokenServerSide(
+                code,
+                deviceFingerprint,
+                'https://us-central1-fithubv1-d3c91.cloudfunctions.net/storePendingReferralCode',
+                'referralCode',
+                'referralCode'
+            );
         } else {
             console.log('⚠️ No referral code found in URL');
         }
-        
-        const appStoreId = '6749919587';
-        const currentUrl = window.location.href;
-
-        function redirectToAppStore() {
-            window.location.href = `https://apps.apple.com/app/id${appStoreId}`;
-        }
-        
     </script>
 </head>
 <body>
@@ -195,4 +106,3 @@
     </script>
 </body>
 </html>
-

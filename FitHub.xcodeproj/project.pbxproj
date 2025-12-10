@@ -125,6 +125,9 @@
 		65B936EC2EE3C21300D80950 /* CustomDisclosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936EB2EE3C21300D80950 /* CustomDisclosure.swift */; };
 		65B936EE2EE79D8400D80950 /* DeviceFingerprintManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936ED2EE79D8400D80950 /* DeviceFingerprintManager.swift */; };
 		65B936F02EE8BE4900D80950 /* Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936EF2EE8BE4900D80950 /* Meters.swift */; };
+		65B936F22EE8DF1E00D80950 /* AffiliateURLHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936F12EE8DF1E00D80950 /* AffiliateURLHandler.swift */; };
+		65B936F42EE8DF4E00D80950 /* AffiliateAttributor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936F32EE8DF4E00D80950 /* AffiliateAttributor.swift */; };
+		65B936F62EE8F93D00D80950 /* GenericURLHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936F52EE8F93D00D80950 /* GenericURLHandler.swift */; };
 		65C5DC552DEFB46400B09AD2 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC542DEFB46400B09AD2 /* Core.swift */; };
 		65C5DC572DEFB51800B09AD2 /* Muscle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC562DEFB51800B09AD2 /* Muscle.swift */; };
 		65C5DC592DEFB5AE00B09AD2 /* Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC582DEFB5AE00B09AD2 /* Split.swift */; };
@@ -416,6 +419,9 @@
 		65B936EB2EE3C21300D80950 /* CustomDisclosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDisclosure.swift; sourceTree = "<group>"; };
 		65B936ED2EE79D8400D80950 /* DeviceFingerprintManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFingerprintManager.swift; sourceTree = "<group>"; };
 		65B936EF2EE8BE4900D80950 /* Meters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meters.swift; sourceTree = "<group>"; };
+		65B936F12EE8DF1E00D80950 /* AffiliateURLHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateURLHandler.swift; sourceTree = "<group>"; };
+		65B936F32EE8DF4E00D80950 /* AffiliateAttributor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateAttributor.swift; sourceTree = "<group>"; };
+		65B936F52EE8F93D00D80950 /* GenericURLHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericURLHandler.swift; sourceTree = "<group>"; };
 		65C5DC542DEFB46400B09AD2 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		65C5DC562DEFB51800B09AD2 /* Muscle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Muscle.swift; sourceTree = "<group>"; };
 		65C5DC582DEFB5AE00B09AD2 /* Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Split.swift; sourceTree = "<group>"; };
@@ -1001,6 +1007,16 @@
 			path = Disclosure;
 			sourceTree = "<group>";
 		};
+		65B936F72EE9025800D80950 /* Attributor */ = {
+			isa = PBXGroup;
+			children = (
+				65F5EF882EB16A5D005557F1 /* ReferralAttributor.swift */,
+				65B936F32EE8DF4E00D80950 /* AffiliateAttributor.swift */,
+				65B936ED2EE79D8400D80950 /* DeviceFingerprintManager.swift */,
+			);
+			path = Attributor;
+			sourceTree = "<group>";
+		};
 		65C5DC472DEFB00600B09AD2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -1428,15 +1444,14 @@
 		65F5EF892EB16A5D005557F1 /* ReferralSystems */ = {
 			isa = PBXGroup;
 			children = (
+				65B936F72EE9025800D80950 /* Attributor */,
 				65F5EF8C2EB16A60005557F1 /* URLRouting */,
 				658D800E2ED26A530041FB4D /* AffiliateTermsConstants.swift */,
 				65DD051B2EB9BB8A000D159C /* ReferralCodeRetriever.swift */,
-				65F5EF882EB16A5D005557F1 /* ReferralAttributor.swift */,
 				65DD050D2EB979F7000D159C /* AdminScript_GenerateCodes.swift */,
 				65DD050E2EB979F7000D159C /* ReferralCodeGenerator.swift */,
 				65DD050F2EB979F7000D159C /* ReferralPurchaseTracker.swift */,
 				65DD05212EBC06B6000D159C /* ReferralValidation.swift */,
-				65B936ED2EE79D8400D80950 /* DeviceFingerprintManager.swift */,
 			);
 			path = ReferralSystems;
 			sourceTree = "<group>";
@@ -1444,6 +1459,8 @@
 		65F5EF8C2EB16A60005557F1 /* URLRouting */ = {
 			isa = PBXGroup;
 			children = (
+				65B936F52EE8F93D00D80950 /* GenericURLHandler.swift */,
+				65B936F12EE8DF1E00D80950 /* AffiliateURLHandler.swift */,
 				65F5EF8B2EB16A60005557F1 /* ReferralURLHandler.swift */,
 			);
 			path = URLRouting;
@@ -1616,6 +1633,8 @@
 				65CD3C4B2DD3C84F00C2B671 /* ConsistencyGraph.swift in Sources */,
 				65C5DC712DF01FD500B09AD2 /* BMICategoryTable.swift in Sources */,
 				65CD3C4C2DD3C84F00C2B671 /* MeasurementEditor.swift in Sources */,
+				65B936F42EE8DF4E00D80950 /* AffiliateAttributor.swift in Sources */,
+				65B936F62EE8F93D00D80950 /* GenericURLHandler.swift in Sources */,
 				65039B822E837B00007A31E1 /* SetMetric.swift in Sources */,
 				653136302E550E2900EECCA5 /* WorkoutParams.swift in Sources */,
 				65CD3C4D2DD3C84F00C2B671 /* MeasurementsView.swift in Sources */,
@@ -1785,6 +1804,7 @@
 				65CD3C852DD3C84F00C2B671 /* WorkoutsView.swift in Sources */,
 				65CD3C862DD3C84F00C2B671 /* ContentView.swift in Sources */,
 				65E05D152E7B899100E39CC2 /* Implementation.swift in Sources */,
+				65B936F22EE8DF1E00D80950 /* AffiliateURLHandler.swift in Sources */,
 				65DD053F2EC2C689000D159C /* StripeAffiliateStatus.swift in Sources */,
 				6548AB832DD824F500BD9DAD /* WeekWorkoutVM.swift in Sources */,
 				65CD3C872DD3C84F00C2B671 /* HomeView.swift in Sources */,

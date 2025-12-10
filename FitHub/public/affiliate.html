@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitHub - Affiliate Link</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 500px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        .button:hover {
+            transform: scale(1.05);
+        }
+        .success-info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        .success-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #4ade80;
+        }
+        .success-info p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .warning-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 193, 7, 0.2);
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+        .warning-box p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script src="shared.js"></script>
+    <script>
+        // Extract affiliate link token from URL
+        function getAffiliateLinkToken() {
+            const path = window.location.pathname;
+
+            // Try path-based: /affiliate/{TOKEN}
+            if (path.startsWith('/affiliate/')) {
+                const token = path.split('/affiliate/')[1];
+                if (token) return token;
+            }
+
+            // Try query-based: ?token=TOKEN
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
+            if (token) return token;
+
+            return null;
+        }
+
+        // Store affiliate link server-side so app can retrieve it
+        const linkToken = getAffiliateLinkToken();
+        const deviceFingerprint = getOrCreateDeviceFingerprint();
+
+        if (linkToken) {
+            storeTokenServerSide(
+                linkToken,
+                deviceFingerprint,
+                'https://us-central1-fithubv1-d3c91.cloudfunctions.net/storePendingAffiliateLink',
+                'affiliateLinkToken',
+                'linkToken'
+            );
+        } else {
+            console.log('⚠️ No affiliate link token found in URL');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>🏋️ FitHub</h1>
+
+        <div id="successInfo" class="success-info hidden">
+            <h2>✅ Affiliate Link Ready!</h2>
+            <p>Your affiliate link has been successfully stored. When you install and open the FitHub app, you'll receive premium access automatically.</p>
+        </div>
+
+        <div id="claimedInfo" class="success-info hidden" style="background: rgba(34, 197, 94, 0.2); border-left: 4px solid #22c55e;">
+            <h2 style="color: #4ade80;">🎉 Affiliate Access Claimed!</h2>
+            <p>Your affiliate link has been successfully claimed and you now have premium access!</p>
+            <p>You should see the "Become an Affiliate" tab in the app menu.</p>
+        </div>
+
+        <div id="errorInfo" class="success-info hidden" style="background: rgba(239, 68, 68, 0.2); border-left: 4px solid #ef4444;">
+            <h2 style="color: #fca5a5;">❌ Error</h2>
+            <p>We couldn't process your affiliate link. Please make sure you're using a valid affiliate link.</p>
+        </div>
+
+        <a href="#" class="button" onclick="redirectToAppStore(); return false;" style="margin-top: 2rem;">Download on the App Store</a>
+
+        <div class="warning-box" id="warningInfo" style="display: none; margin-top: 2rem;">
+            <p><strong>Don't see the "Become an Affiliate" tab?</strong></p>
+            <p>If you've installed the app and signed up but don't see the "Become an Affiliate" tab in the app menu, return to this page. If the app is installed, visiting this page will automatically open the app.</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Show appropriate message based on state
+        if (linkToken) {
+            // Check if link was already claimed (check URL parameter or localStorage)
+            const urlParams = new URLSearchParams(window.location.search);
+            const claimed = urlParams.get('claimed') === 'true' || localStorage.getItem('affiliateLinkClaimed') === 'true';
+
+            if (claimed) {
+                document.getElementById('claimedInfo').classList.remove('hidden');
+            } else {
+                document.getElementById('successInfo').classList.remove('hidden');
+                document.getElementById('warningInfo').style.display = 'block';
+            }
+        } else {
+            document.getElementById('errorInfo').classList.remove('hidden');
+        }
+
+        // Function to mark as claimed (called from app redirect)
+        function markAsClaimed() {
+            localStorage.setItem('affiliateLinkClaimed', 'true');
+            const url = new URL(window.location);
+            url.searchParams.set('claimed', 'true');
+            window.history.replaceState({}, '', url);
+            document.getElementById('successInfo').classList.add('hidden');
+            document.getElementById('errorInfo').classList.add('hidden');
+            document.getElementById('warningInfo').style.display = 'none';
+            document.getElementById('claimedInfo').classList.remove('hidden');
+        }
+
+        // Expose to window for app to call
+        window.markAffiliateAsClaimed = markAsClaimed;
+    </script>
+</body>
+</html>

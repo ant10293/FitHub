@@ -67,25 +67,66 @@ export const storePendingReferralCode = functions.https.onRequest(async (req, re
       deviceFingerprint: deviceFingerprint ? deviceFingerprint.substring(0, 20) + "..." : null
     });
 
+    // Verify the referral code exists
+    const codeRef = db.collection("referralCodes").doc(referralCode);
+    const codeDoc = await codeRef.get();
+
+    if (!codeDoc.exists) {
+      res.status(404).json({ error: "Referral code not found" });
+      return;
+    }
+
+    const codeData = codeDoc.data()!;
+    if (codeData.isActive !== true) {
+      res.status(400).json({ error: "Referral code is not active" });
+      return;
+    }
+
     // Create device identifier: IP + User-Agent hash (or use provided fingerprint)
     const userAgent = req.headers["user-agent"] || "";
     const deviceId = deviceFingerprint || `${ip}_${userAgent.substring(0, 50)}`.replace(/[^a-zA-Z0-9_]/g, "_");
 
-    // Store pending referral code (expires in 30 days)
+    if (!deviceId || deviceId.length === 0) {
+      console.error("[storePendingReferralCode] ERROR: deviceId is empty!");
+      res.status(500).json({ error: "Failed to generate device identifier" });
+      return;
+    }
+
+    // Store pending referral code (expires in 30 days) - keep expiry for referral codes
     const expiresAt = admin.firestore.Timestamp.fromMillis(Date.now() + (30 * 24 * 60 * 60 * 1000));
 
-    // Store with device fingerprint as primary key
-    // Use merge to update existing document if it exists (e.g., if IP changes but fingerprint is same)
-    await db.collection("pendingReferralCodes").doc(deviceId).set({
-      referralCode: referralCode,
+    // Store device fingerprints as a map in the referralCodes document
+    // Structure: pendingDeviceFingerprints: { [fingerprint]: { storedAt, expiresAt, ipAddress, userAgent } }
+    const pendingFingerprints = codeData.pendingDeviceFingerprints || {};
+
+    // If this fingerprint already exists, that's fine (idempotent)
+    if (pendingFingerprints[deviceId]) {
+      console.log("[storePendingReferralCode] Same device fingerprint already stored (idempotent)");
+      res.status(200).json({
+        success: true,
+        message: "Referral code already stored for this device",
+        deviceId: deviceId,
+      });
+      return;
+    }
+
+    // Add new device fingerprint to the map
+    pendingFingerprints[deviceId] = {
+      storedAt: admin.firestore.FieldValue.serverTimestamp(),
+      expiresAt: expiresAt, // Keep expiry for referral codes
       ipAddress: ip,
       userAgent: userAgent.substring(0, 200),
-      deviceFingerprint: deviceFingerprint,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      expiresAt: expiresAt,
-      claimed: false,
-    }, { merge: true });
-    console.log("[storePendingReferralCode] Stored with device fingerprint key:", deviceId.substring(0, 20) + "...");
+    };
+
+    await codeRef.update({
+      pendingDeviceFingerprints: pendingFingerprints,
+    });
+
+    console.log("[storePendingReferralCode] Stored device fingerprint in referralCodes document:", {
+      referralCode: referralCode,
+      deviceId: deviceId.substring(0, 20) + "...",
+      totalFingerprints: Object.keys(pendingFingerprints).length
+    });
 
     res.status(200).json({
       success: true,

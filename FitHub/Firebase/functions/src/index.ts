@@ -17,3 +17,7 @@ export { createAffiliateOnboardingLink } from "./createAffiliateOnboardingLink";
 export { getAffiliateDashboardLink } from "./getAffiliateDashboardLink";
 export { storePendingReferralCode } from "./storePendingReferralCode";
 export { getPendingReferralCode } from "./getPendingReferralCode";
+export { storePendingAffiliateLink } from "./storePendingAffiliateLink";
+export { getPendingAffiliateLink } from "./getPendingAffiliateLink";
+export { claimAffiliateLink } from "./claimAffiliateLink";
+export { restoreAffiliatePremium } from "./restoreAffiliatePremium";

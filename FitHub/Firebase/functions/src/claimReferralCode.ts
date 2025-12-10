@@ -56,7 +56,11 @@ export const claimReferralCode = functions.https.onCall(async (data, context) =>
 
       if (userData?.referralCode) {
         // If they already have this code, return success (idempotent)
+        // But still clean up pending fingerprints since the code is effectively claimed
         if (String(userData.referralCode).toUpperCase() === referralCode) {
+          transaction.update(codeRef, {
+            pendingDeviceFingerprints: admin.firestore.FieldValue.delete(), // Clean up pending fingerprints
+          });
           return { success: true, referralCode: referralCode, alreadyClaimed: true };
         }
         // If they have a different code, throw error
@@ -73,7 +77,8 @@ export const claimReferralCode = functions.https.onCall(async (data, context) =>
 
       transaction.update(codeRef, {
         lastUsedAt: admin.firestore.FieldValue.serverTimestamp(),
-        usedBy: admin.firestore.FieldValue.arrayUnion(userId)
+        usedBy: admin.firestore.FieldValue.arrayUnion(userId),
+        pendingDeviceFingerprints: admin.firestore.FieldValue.delete(), // Clean up pending fingerprints
       });
 
       return { success: true, referralCode: referralCode, alreadyClaimed: false };

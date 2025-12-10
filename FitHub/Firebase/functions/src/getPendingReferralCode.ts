@@ -30,49 +30,69 @@ export const getPendingReferralCode = functions.https.onCall(async (data, contex
   try {
     const db = admin.firestore();
 
-    // EXACT MATCH ONLY - lookup by device fingerprint (document ID)
     console.log("[getPendingReferralCode] Looking up by device fingerprint:", deviceFingerprint.substring(0, 20) + "...");
-    const pendingRef = db.collection("pendingReferralCodes").doc(deviceFingerprint);
-    const pendingDoc = await pendingRef.get();
 
-    if (!pendingDoc.exists) {
-      console.log("[getPendingReferralCode] No document found for fingerprint - exact match required");
+    // Query all active referralCodes and search through their pendingDeviceFingerprints
+    const referralCodesSnapshot = await db.collection("referralCodes")
+      .where("isActive", "==", true)
+      .limit(100) // Reasonable limit
+      .get();
+
+    if (referralCodesSnapshot.empty) {
+      console.log("[getPendingReferralCode] No active referral codes found");
       return { success: false, referralCode: null, reason: "not_found" };
     }
 
-    console.log("[getPendingReferralCode] Document found:", pendingDoc.id);
+    // Find the code that has this device fingerprint in its pendingDeviceFingerprints map
+    let codeDoc = null;
+    let referralCode = null;
+    let codeData = null;
 
-    const pendingData = pendingDoc.data();
-
-    // Check if already claimed or expired
-    if (pendingData?.claimed === true) {
-      console.log("[getPendingReferralCode] Code already claimed");
-      return { success: false, referralCode: null, reason: "already_claimed" };
+    for (const doc of referralCodesSnapshot.docs) {
+      const data = doc.data();
+      const pendingFingerprints = data.pendingDeviceFingerprints || {};
+      if (pendingFingerprints[deviceFingerprint]) {
+        codeDoc = doc;
+        referralCode = doc.id;
+        codeData = data;
+        break;
+      }
     }
 
-    const expiresAt = pendingData?.expiresAt?.toMillis();
-    if (expiresAt && expiresAt < Date.now()) {
-      console.log("[getPendingReferralCode] Code expired");
-      // Delete expired document
-      await pendingRef.delete();
-      return { success: false, referralCode: null, reason: "expired" };
+    if (!codeDoc || !referralCode) {
+      console.log("[getPendingReferralCode] No referral code found with this device fingerprint");
+      return { success: false, referralCode: null, reason: "not_found" };
     }
 
-    const referralCode = pendingData?.referralCode;
+    console.log("[getPendingReferralCode] Found referral code:", referralCode);
 
-    if (!referralCode) {
-      console.log("[getPendingReferralCode] No referral code in document");
+    if (!codeData) {
+      console.log("[getPendingReferralCode] Code data is null");
       return { success: false, referralCode: null, reason: "invalid_data" };
     }
 
-    // Mark as claimed (don't delete yet - we'll clean up after successful claim)
-    await pendingRef.update({
-      claimed: true,
-      claimedAt: admin.firestore.FieldValue.serverTimestamp(),
-      claimedBy: userId || null,
-    });
+    // Check if this specific fingerprint entry has expired (keep expiry for referral codes)
+    const pendingFingerprints = codeData.pendingDeviceFingerprints || {};
+    const fingerprintData = pendingFingerprints[deviceFingerprint];
 
-    console.log("[getPendingReferralCode] Successfully retrieved and marked as claimed:", referralCode);
+    if (!fingerprintData) {
+      console.log("[getPendingReferralCode] Device fingerprint not found in pending fingerprints");
+      return { success: false, referralCode: null, reason: "not_found" };
+    }
+
+    const expiresAt = fingerprintData.expiresAt?.toMillis();
+    if (expiresAt && expiresAt < Date.now()) {
+      console.log("[getPendingReferralCode] Device fingerprint entry expired");
+      // Remove expired fingerprint entry
+      const updatedFingerprints = { ...pendingFingerprints };
+      delete updatedFingerprints[deviceFingerprint];
+      await codeDoc.ref.update({
+        pendingDeviceFingerprints: updatedFingerprints,
+      });
+      return { success: false, referralCode: null, reason: "expired" };
+    }
+
+    console.log("[getPendingReferralCode] Successfully retrieved referral code:", referralCode);
 
     return {
       success: true,

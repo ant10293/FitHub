@@ -6,7 +6,9 @@
         "appID": "L26773524X.com.AnthonyC.FitHub",
         "paths": [
           "/r/*",
-          "/*?ref=*"
+          "/*?ref=*",
+          "/affiliate/*",
+          "/*?token=*"
         ]
       }
     ]

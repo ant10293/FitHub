@@ -86,6 +86,8 @@ struct WelcomeView: View {
             }
             // 2. Claim pending referral code if user came from referral link
             await ReferralAttributor().claimIfNeeded()
+            // 3. Claim pending affiliate link if user came from affiliate link (grants premium)
+            await AffiliateAttributor().claimIfNeeded()
         }
         
         ctx.userData.saveToFile()

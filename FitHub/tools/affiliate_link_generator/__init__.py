@@ -1,0 +1,4 @@
+"""Affiliate link generator tool."""
+
+
+
