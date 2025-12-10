@@ -1,5 +1,5 @@
 //
-//  GenericURLHandler.swift
+//  BaseURLHandler.swift
 //  FitHub
 //
 //  Generic URL handler for extracting and storing tokens/codes from URLs
@@ -64,17 +64,21 @@ struct SanitizationConfig {
     )
 }
 
-enum GenericURLHandler {
+enum BaseURLHandler {
     /// Extracts a token/code from a URL and stores it using the provided configuration
-    static func handleIncoming(_ url: URL, config: URLHandlerConfig) {
+    /// - Returns: `true` if a token was successfully extracted and stored, `false` otherwise
+    @discardableResult
+    static func handleIncoming(_ url: URL, config: URLHandlerConfig) -> Bool {
         if let token = extractToken(from: url, config: config) {
             UserDefaults.standard.set(token, forKey: config.pendingTokenKey)
             UserDefaults.standard.set(config.sourceValue, forKey: config.pendingSourceKey)
             UserDefaults.standard.synchronize()
             print("✅ Successfully handled \(config.logPrefix) URL: \(url.absoluteString)")
             print("📝 Pending \(config.logPrefix.capitalized) \(config.tokenTypeName) stored: \(token)")
+            return true
         } else {
             print("⚠️ No \(config.logPrefix) \(config.tokenTypeName) found in URL: \(url.absoluteString)")
+            return false
         }
     }
     

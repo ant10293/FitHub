@@ -20,6 +20,6 @@ enum ReferralURLHandler {
             logPrefix: "referral",
             tokenTypeName: "code"
         )
-        GenericURLHandler.handleIncoming(url, config: config)
+        BaseURLHandler.handleIncoming(url, config: config)
     }
 }

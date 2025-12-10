@@ -25,7 +25,7 @@ struct FitHubApp: App {
                 .onOpenURL { url in
                     // Handle both referral codes and affiliate links
                     ReferralURLHandler.handleIncoming(url)
-                    AffiliateURLHandler.handleIncoming(url)
+                    AffiliateURLHandler.handleIncoming(url, shouldClaim: true)
                 }
         }
     }
