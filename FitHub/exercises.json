@@ -5,7 +5,14 @@
 		"image": "bench_press",
 		"csvKey": "bench-press",
 		"aliases": [ "Barbell Bench Press", "Flat Bench Press" ],
-		"instructions": { "steps": [ ] },
+		"instructions": { "steps": [
+			"Lie flat on the bench with your feet flat on the floor, maintaining a slight arch in your back.",
+			"Grip the barbell slightly wider than shoulder-width apart, with your wrists straight and elbows tucked slightly.",
+			"Unrack the barbell and hold it directly above your chest with your arms fully extended.",
+			"Lower the barbell in a controlled manner to your chest, touching lightly at the lower portion of your sternum.",
+			"Press the barbell upward explosively until your arms are fully extended, keeping your feet planted and core engaged.",
+			"Repeat for the desired number of repetitions, maintaining control throughout the movement."
+		] },
 		"equipmentRequired": [ "Flat Bench Rack", "Barbell" ],
 		"muscles": [
 			{ "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
