@@ -2,10 +2,10 @@
 #
 # Script to remove trailing whitespace and extra blank lines from non-Swift files
 # Automatically extracts file patterns from .editorconfig to avoid hardcoding extensions
-# 
+#
 # WARNING: Only removes trailing whitespace and trailing blank lines at END of files.
 # Does NOT add blank lines in the middle of files - that's your editor's formatter.
-# 
+#
 # Run this manually if you notice files accumulating blank lines.
 # To prevent Cursor/VS Code from auto-formatting, disable formatOnSave in .vscode/settings.json
 #
@@ -88,6 +88,7 @@ find . -type f \( "${FIND_PATTERNS[@]}" \) \
     ! -path "*/site-packages/*" \
     ! -path "*/DerivedData/*" \
     ! -path "*/scripts/clean-trailing-whitespace.sh" \
+    ! -name "*.entitlements" \
     -exec python3 -c "
 import sys
 
