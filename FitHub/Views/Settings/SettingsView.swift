@@ -56,8 +56,10 @@ struct SettingsView: View {
          Section {
              navigationLink("shield", LegalURL.privacyPolicy.title) { PrivacyPolicy() }
              navigationLink("doc.text", LegalURL.termsOfService.title) { TermsOfService() }
-             // TODO: only show for affiliates
-             navigationLink("checkmark.shield", LegalURL.affiliateTerms.title) { AffiliateTermsView() }
+             // MARK: Affiliate System guard
+             if useAffiliateSystem {
+                 navigationLink("checkmark.shield", LegalURL.affiliateTerms.title) { AffiliateTermsView() }
+             }
          } header: {
              Text("Legal")
          }
