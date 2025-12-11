@@ -130,6 +130,7 @@
 		65B936F62EE8F93D00D80950 /* BaseURLHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936F52EE8F93D00D80950 /* BaseURLHandler.swift */; };
 		65B936F92EE905D700D80950 /* BaseAttributor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936F82EE905D700D80950 /* BaseAttributor.swift */; };
 		65B936FD2EEA4B4F00D80950 /* AssessmentFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936FC2EEA4B4F00D80950 /* AssessmentFormView.swift */; };
+		65B937012EEA676500D80950 /* FreePlanLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B937002EEA676500D80950 /* FreePlanLimitView.swift */; };
 		65C5DC552DEFB46400B09AD2 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC542DEFB46400B09AD2 /* Core.swift */; };
 		65C5DC572DEFB51800B09AD2 /* Muscle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC562DEFB51800B09AD2 /* Muscle.swift */; };
 		65C5DC592DEFB5AE00B09AD2 /* Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC582DEFB5AE00B09AD2 /* Split.swift */; };
@@ -425,6 +426,7 @@
 		65B936F52EE8F93D00D80950 /* BaseURLHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseURLHandler.swift; sourceTree = "<group>"; };
 		65B936F82EE905D700D80950 /* BaseAttributor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAttributor.swift; sourceTree = "<group>"; };
 		65B936FC2EEA4B4F00D80950 /* AssessmentFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssessmentFormView.swift; sourceTree = "<group>"; };
+		65B937002EEA676500D80950 /* FreePlanLimitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreePlanLimitView.swift; sourceTree = "<group>"; };
 		65C5DC542DEFB46400B09AD2 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		65C5DC562DEFB51800B09AD2 /* Muscle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Muscle.swift; sourceTree = "<group>"; };
 		65C5DC582DEFB5AE00B09AD2 /* Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Split.swift; sourceTree = "<group>"; };
@@ -699,6 +701,7 @@
 		6531362B2E53FB2500EECCA5 /* Subscription */ = {
 			isa = PBXGroup;
 			children = (
+				65B937002EEA676500D80950 /* FreePlanLimitView.swift */,
 				65CD3C1D2DD3C84F00C2B671 /* SubscriptionView.swift */,
 			);
 			path = Subscription;
@@ -1616,6 +1619,7 @@
 				65CD3C442DD3C84F00C2B671 /* FavoriteExercisesView.swift in Sources */,
 				65A0D1D02E318D21008466D8 /* RectangularBG.swift in Sources */,
 				65CD3C452DD3C84F00C2B671 /* StrengthPercentileView.swift in Sources */,
+				65B937012EEA676500D80950 /* FreePlanLimitView.swift in Sources */,
 				65CD3C462DD3C84F00C2B671 /* UpdateMaxEditor.swift in Sources */,
 				653136102E50381400EECCA5 /* TimerRing.swift in Sources */,
 				65C5DC6F2DEFBF0C00B09AD2 /* Formatter.swift in Sources */,
@@ -1971,8 +1975,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_USE_OPTIMIZATION_PROFILE = YES;
-				CODE_SIGN_ENTITLEMENTS = FitHub/FitHub.entitlements;
 				CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION = NO;
+				CODE_SIGN_ENTITLEMENTS = FitHub/FitHub.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2010,8 +2014,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_USE_OPTIMIZATION_PROFILE = YES;
-				CODE_SIGN_ENTITLEMENTS = FitHub/FitHub.entitlements;
 				CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION = NO;
+				CODE_SIGN_ENTITLEMENTS = FitHub/FitHub.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";

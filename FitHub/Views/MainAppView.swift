@@ -50,6 +50,9 @@ struct MainAppView: View {
                         .id(creation)
                 }
             }
+            .sheet(isPresented: $userData.showPremiumPrompt) {
+                FreePlanLimitView()
+            }
             .onChange(of: selectedTab) {
                 if userData.disableTabView {
                     selectedTab = lockedTab ?? 0
