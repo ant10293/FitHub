@@ -647,12 +647,8 @@ extension ExerciseData {
         existing: [Exercise] = [],
         replaced: Set<String> = []
     ) -> [Exercise] {
-
-        let existingNames = Set(existing.map(\.name))
-
         let basePool = allExercises.filter {
-            $0.id != exercise.id &&
-            !existingNames.contains($0.name)
+            $0.id != exercise.id
         }
 
         let maxCount = 15
@@ -669,7 +665,6 @@ extension ExerciseData {
         relaxedScored.reserveCapacity(32)
 
         for cand in basePool {
-
             if needPerformanceData && hasPerformanceData(exercise: cand) == nil {
                 continue
             }
@@ -685,7 +680,6 @@ extension ExerciseData {
             if replaced.contains(cand.name) { continue }
 
             let score = cand.similarityPct(to: exercise)
-
             if score <= similarityThreshold { continue }
 
             let isStrict =

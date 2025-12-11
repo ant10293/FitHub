@@ -12,7 +12,6 @@ struct WorkoutGeneration: View {
     @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var toast = ToastManager()
-    @State private var showingCustomizationForm: Bool = false
     @State private var showAlert: Bool = false
     @State private var showingExerciseOptions: Bool = false
     @State private var expandList: Bool = false
@@ -40,7 +39,7 @@ struct WorkoutGeneration: View {
                         ExpandCollapseList(expandList: $expandList)
                         Spacer()
                         TextButton(
-                            title: "Edit",
+                            title: "Edit Template",
                             systemImage: "square.and.pencil",
                             action: {
                                 if let template = templates[safe: currentTemplateIndex] {
@@ -59,13 +58,19 @@ struct WorkoutGeneration: View {
                     Spacer()
                 }
                 .disabled(showingExerciseOptions)
-                .padding(.horizontal)
             }
             .generatingOverlay(isReplacing, message: "Replacing Exercise...")
             .navigationBarTitle("Workout Generation", displayMode: .inline)
-            .navigationDestination(isPresented: $showingCustomizationForm) { WorkoutCustomization() }
             .alert(isPresented: $showAlert) { Alert(title: Text("Template Update"), message: Text(alertMessage), dismissButton: .default(Text("OK"))) }
             .overlay(showingExerciseOptions ? exerciseOptions : nil)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink(destination: LazyDestination { WorkoutCustomization() }) {
+                        Image(systemName: "slider.horizontal.3")
+                            .imageScale(.large)
+                    }
+                }
+            }
         }
     }
     
@@ -87,7 +92,6 @@ struct WorkoutGeneration: View {
     
     private var selectionBar: some View {
         HStack {
-            Spacer()
             Button(action: previousTemplate) {
                 Image(systemName: "arrow.left").bold()
                     .contentShape(Rectangle())
@@ -110,17 +114,15 @@ struct WorkoutGeneration: View {
             }
             .frame(alignment: .center)
             .padding(.horizontal)
-            
+                
             Button(action: nextTemplate) {
                 Image(systemName: "arrow.right").bold()
                     .contentShape(Rectangle())
             }
             .disabled(templates[safe: currentTemplateIndex + 1] == nil)
-            Spacer()
         }
     }
     
-    // TODO: should shrink and display a message that no template(s) exist
     private var exerciseList: some View {
         Group {
             if let template = templates[safe: currentTemplateIndex] {
@@ -157,17 +159,12 @@ struct WorkoutGeneration: View {
             }
         }
         .disabled(showingExerciseOptions)
-        .padding(.top, -5) // Reduce space above the list
         .frame(maxHeight: !expandList ? screenHeight * 0.66 : .infinity)
+        .padding(.bottom)
     }
     
     @ViewBuilder private var manageSection: some View {
         if !expandList {
-            Button("Modify Workout Generation") { showingCustomizationForm = true }
-                .disabled(showingExerciseOptions)
-                .font(.subheadline)
-                .padding()
-            
             RectangularButton(
                 title: "Generate Workout Plan",
                 enabled: !showingExerciseOptions && !ctx.userData.isWorkingOut,

@@ -37,13 +37,26 @@ struct WorkoutCustomization: View {
                 Section {
                     daysOfWeekSelector
                     resistanceTypeSelector
-                    distributionSelector
                     workoutDurationSelector
                     keepCurrentExercisesToggle
+                } header: {
+                    Text("General")
+                }
+               
+                // Section 2: Schedule
+                Section {
+                    splitSelector
+                    workoutDaysSelector
+                    if !ctx.userData.settings.useDateOnly {
+                        workoutTimesSelector
+                    }
+                } header: {
+                    Text("Scheduling")
                 }
                 
-                // Section 2: Set Configuration
+                // Section 3: Set Configuration
                 Section {
+                    distributionSelector
                     setsSelector
                     warmupSettingsSelector
                     repsSelector
@@ -51,15 +64,8 @@ struct WorkoutCustomization: View {
                     setIntensitySelector
                     roundingSelector
                     supersetSettingsSelector
-                }
-                
-                // Section 3: Schedule
-                Section {
-                    splitSelector
-                    workoutDaysSelector
-                    if !ctx.userData.settings.useDateOnly {
-                        workoutTimesSelector
-                    }
+                } header: {
+                    Text("Advanced")
                 }
             }
         }
@@ -173,10 +179,10 @@ struct WorkoutCustomization: View {
     }
         
     private var resistanceTypeSelector: some View {
-        let showDistWarn = (paramsBeforeSwitch?.contains(.resistance) == true)
+        let showWarning = (paramsBeforeSwitch?.contains(.resistance) == true)
 
         return HStack {
-            if showDistWarn {
+            if showWarning {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .imageScale(.medium)
                     .foregroundStyle(.orange)
@@ -196,7 +202,7 @@ struct WorkoutCustomization: View {
     
     private var distributionSelector: some View {
         let defaultDist = ctx.userData.physical.goal.defaultDistribution
-        let showDistWarn = (paramsBeforeSwitch?.contains(.distribution) == true)
+        let showWarning = (paramsBeforeSwitch?.contains(.distribution) == true)
 
         return DisclosureGroup {
             DistributionEditor(
@@ -210,7 +216,7 @@ struct WorkoutCustomization: View {
             .listRowSeparator(.hidden, edges: .top)
         } label: {
             HStack {
-                if showDistWarn {
+                if showWarning {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .imageScale(.medium)
                         .foregroundStyle(.orange)
@@ -241,10 +247,7 @@ struct WorkoutCustomization: View {
                 .padding(.trailing)
                 .overlay(alignment: .top, content: {
                     if binding.wrappedValue.inMinutes <= 15 {
-                        Text("Invalid Duration (≤ 15 min) will not be used")
-                            .font(.footnote)
-                            .foregroundStyle(.red)
-                            .lineLimit(1)
+                        ErrorFooter(message: "Invalid Duration (≤ 15 min) will not be used")
                     }
                 })
         } label: {
@@ -277,7 +280,11 @@ struct WorkoutCustomization: View {
     }
     
     private var splitSelector: some View {
-        VStack(alignment: .leading) {
+        let splitWarning = WorkoutWeek.splitWarning(
+            customSplit: ctx.userData.workoutPrefs.customWorkoutSplit,
+            daysPerWeek: daysPerWeek
+        )
+        return VStack(alignment: .leading) {
             Button(action: { showingSplitSelection = true }) {
                 VStack {
                     HStack {
@@ -413,19 +420,6 @@ struct WorkoutCustomization: View {
             }
             .buttonStyle(.plain)
         }
-    }
-    
-    private var splitWarning: String? {
-        let split = WorkoutWeek.determineSplit(customSplit: ctx.userData.workoutPrefs.customWorkoutSplit, daysPerWeek: daysPerWeek)
-        if let customSplit = ctx.userData.workoutPrefs.customWorkoutSplit, customSplit != split {
-            let base = "Custom split will not be used. "
-            if customSplit.categories.count != daysPerWeek {
-                return base + "Does not match selected number of days."
-            } else {
-                return base + "Check for day(s) without categories."
-            }
-        }
-        return nil
     }
     
     private var paramsBeforeSwitch: Set<ParamsBeforeSwitch.ParamsChanged>? {

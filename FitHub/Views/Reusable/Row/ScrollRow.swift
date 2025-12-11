@@ -36,8 +36,7 @@ struct HorizontalScrollRow<Data, ID, ImageContent: View>: View where Data: Rando
             EmptyView()
         } else {
             VStack(alignment: .leading, spacing: 4) {
-                Text("\(title): ")
-                    .bold()
+                Text("\(title)").bold()
 
                 ScrollView(.horizontal) {
                     LazyHStack {

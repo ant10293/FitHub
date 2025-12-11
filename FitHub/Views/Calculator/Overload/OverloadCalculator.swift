@@ -51,7 +51,6 @@ struct OverloadCalculator: View {
                 NavigationLink(destination: LazyDestination { OverloadSettingsView(userData: ctx.userData, fromCalculator: true) }) {
                     Image(systemName: "slider.horizontal.3")
                         .imageScale(.large)
-                        .padding()
                 }
             }
         }

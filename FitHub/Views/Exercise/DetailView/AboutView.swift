@@ -39,8 +39,7 @@ struct AboutView: View {
 
                 // HOW TO PERFORM
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("How to perform: ")
-                        .bold()
+                    Text("How to perform").bold()
 
                     if !exercise.instructions.steps.isEmpty {
                         NumberedListView(
@@ -102,10 +101,8 @@ struct AboutView: View {
                 }
 
                 // SIMILAR EXERCISES
-                if let loaded = loadedExercises, !loaded.isEmpty {
-                    VStack(alignment: .leading, spacing: 4) {
-                        SimilarExercisesRow(loadedExercises: $loadedExercises, exercise: exercise)
-                    }
+                VStack(alignment: .leading, spacing: 4) {
+                    SimilarExercisesRow(loadedExercises: $loadedExercises, exercise: exercise)
                 }
             }
         }

@@ -711,11 +711,11 @@ extension Exercise {
     // MARK: – Public computed properties
     var musclesTextFormatted: Text { formattedMuscles(from: primaryMuscleEngagements + secondaryMuscleEngagements) }
     var primaryMusclesFormatted: Text {
-        formattedMuscles(from: primaryMuscleEngagements, showHeader: true, header: "Primary Muscles:")
+        formattedMuscles(from: primaryMuscleEngagements, showHeader: true, header: "Primary Muscles")
     }
 
     var secondaryMusclesFormatted: Text {
-        formattedMuscles(from: secondaryMuscleEngagements, showHeader: true, header: "Secondary Muscles:")
+        formattedMuscles(from: secondaryMuscleEngagements, showHeader: true, header: "Secondary Muscles")
     }
 
     private func formattedMuscles(

@@ -66,6 +66,19 @@ struct WorkoutWeek: Identifiable, Codable, Equatable {
             return customSplit
         }
     }
+    
+    static func splitWarning(customSplit: WorkoutWeek?, daysPerWeek: Int) -> String? {
+        let split = WorkoutWeek.determineSplit(customSplit: customSplit, daysPerWeek: daysPerWeek)
+        if let customSplit = customSplit, customSplit != split {
+            let base = "Custom split will not be used. "
+            if customSplit.categories.count != daysPerWeek {
+                return base + "Does not match selected number of days."
+            } else {
+                return base + "Check for day(s) without categories."
+            }
+        }
+        return nil
+    }
 }
 
 
