@@ -1175,7 +1175,6 @@
 		65CD3BE72DD3C84F00C2B671 /* Reusable */ = {
 			isa = PBXGroup;
 			children = (
-				65B937022EEAAD3100D80950 /* NumberedListView.swift */,
 				65B936EA2EE3C1B600D80950 /* Disclosure */,
 				65B936E92EE3C1A500D80950 /* Footer */,
 				65DD052D2EBFE881000D159C /* Label */,
@@ -1185,6 +1184,7 @@
 				6531363A2E5902A800EECCA5 /* Picker */,
 				65CFBFB62E21E1D600CD521E /* Image */,
 				6548AB882DDAB68A00BD9DAD /* InfoBanner.swift */,
+				65B937022EEAAD3100D80950 /* NumberedListView.swift */,
 				65C5DC722DF378B500B09AD2 /* RingView.swift */,
 				65ECFF172E2609190091032A /* SearchBar.swift */,
 				65A0D1CB2E2F39D5008466D8 /* CustomToolBar.swift */,

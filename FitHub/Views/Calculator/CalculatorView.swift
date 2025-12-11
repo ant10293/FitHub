@@ -7,23 +7,28 @@ struct CalculatorView: View {
     var body: some View {
         NavigationStack(path: $navPath) {
             List {
-                Section(header: Text("Strength")) {
+                Section {
                     Button {
                         navPath.append(CalculatorRoute.oneRepMax)
                     } label: {
                         CalculatorRow(title: "1 Rep Max Calculator", systemName: "scalemass")
                     }
-
+                    
+                    // MARK: premium feature only
                     Button {
-                        navPath.append(CalculatorRoute.progressiveOverload)
+                        if ctx.store.membershipType == .free {
+                            ctx.userData.premiumFeatureBlocked = .overloadAccess
+                        } else {
+                            navPath.append(CalculatorRoute.progressiveOverload)
+                        }
                     } label: {
                         CalculatorRow(title: "Progressive Overload Calculator", systemName: "chart.line.uptrend.xyaxis")
                     }
-                    // MARK: premium feature only
-                    .disabled(ctx.store.membershipType != .free)
+                } header: {
+                    Text("Strength")
                 }
 
-                Section(header: Text("Health")) {
+                Section {
                     Button {
                         navPath.append(CalculatorRoute.bmi)
                     } label: {
@@ -47,6 +52,8 @@ struct CalculatorView: View {
                     } label: {
                         CalculatorRow(title: "Macronutrient Calculator", systemName: "fork.knife.circle")
                     }
+                } header: {
+                    Text("Health")
                 }
             }
             .navigationTitle("Calculators")

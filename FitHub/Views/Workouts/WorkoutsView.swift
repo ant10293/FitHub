@@ -73,12 +73,18 @@ struct WorkoutsView: View {
                 }
             }
             
+            // MARK: premium feature > 4 templates
             if location == .user {
-                Button(action: { showingTemplateCreation = true }) {
+                Button(action: {
+                    if ctx.disableCreateWorkout {
+                        ctx.userData.premiumFeatureBlocked = .templateLimit
+                    } else {
+                        showingTemplateCreation = true
+                    }
+                }) {
                     Label("Create New Template", systemImage: "square.and.pencil")
                 }
-                // MARK: premium feature > 4 templates
-                .disabled(showingTemplateEditor || ctx.disableCreateWorkout)
+                .disabled(showingTemplateEditor)
             }
         } header: {
             Text(location.label)

@@ -33,7 +33,7 @@ final class UserData: ObservableObject, Codable {
     @Published var workoutChanges: WorkoutChanges?
     @Published var showingGenerationWarning: Bool = false
     
-    @Published var showPremiumPrompt: Bool = false
+    @Published var premiumFeatureBlocked: BlockedFeature? = nil
     
     @Published var allowDisliked: Bool = false
     
@@ -342,7 +342,7 @@ extension UserData {
         
         guard !generationDisabled else {
             isGeneratingWorkout = false
-            showPremiumPrompt = true
+            premiumFeatureBlocked = .generationLimit
             return
         }
 

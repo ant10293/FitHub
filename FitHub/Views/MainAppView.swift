@@ -50,8 +50,8 @@ struct MainAppView: View {
                         .id(creation)
                 }
             }
-            .sheet(isPresented: $userData.showPremiumPrompt) {
-                FreePlanLimitView()
+            .sheet(item: $userData.premiumFeatureBlocked) { feature in
+                FreePlanLimitView(feature: feature)
             }
             .onChange(of: selectedTab) {
                 if userData.disableTabView {

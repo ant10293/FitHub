@@ -11,6 +11,7 @@ struct FreePlanLimitView: View {
     @EnvironmentObject private var ctx: AppContext
     @Environment(\.dismiss) private var dismiss
     @State private var showingSubscription: Bool = false
+    let feature: BlockedFeature
     
     var body: some View {
         NavigationStack {
@@ -22,12 +23,12 @@ struct FreePlanLimitView: View {
                             .font(.system(size: 50))
                             .foregroundStyle(.orange)
                         
-                        Text("Workout Generation Limit Reached")
+                        Text(feature.title)
                             .font(.title2)
                             .fontWeight(.bold)
                             .multilineTextAlignment(.center)
                         
-                        Text("You've reached the limit of generated workouts for the free plan.")
+                        Text(feature.body)
                             .font(.body)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -91,7 +92,7 @@ struct FreePlanLimitView: View {
     
     private var featuresSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            FeatureRow(icon: "chart.bar", title: "Automatic Progressive Overloading", description: "Automatically increase weights based on performance.")
+            FeatureRow(icon: "chart.bar", title: "Automatic Overloading & Deloading", description: "Automatically adjust weights based on performance.")
             
             FeatureRow(icon: "wand.and.stars", title: "Automated Workout Generation", description: "Personalized plans tailored to your goals.")
             
@@ -131,6 +132,35 @@ struct FreePlanLimitView: View {
                 }
             }
             .padding(.vertical, 5)
+        }
+    }
+}
+
+
+enum BlockedFeature: String, Identifiable {
+    case generationLimit, templateLimit, overloadAccess
+    
+    var id: String { self.rawValue }
+    
+    var title: String {
+        switch self {
+        case .generationLimit:
+            return "Workout Generation Limit Reached"
+        case .templateLimit:
+            return "Workout Template Limit Reached"
+        case .overloadAccess:
+            return "Overload Calculator Requires Premium"
+        }
+    }
+    
+    var body: String {
+        switch self {
+        case .generationLimit:
+            return "You've reached the limit of generated workouts for the free plan."
+        case .templateLimit:
+            return "You've reached the limit of created workout templates for the free plan."
+        case .overloadAccess:
+            return "Overload Calculator cannot be accessed with the free plan."
         }
     }
 }
