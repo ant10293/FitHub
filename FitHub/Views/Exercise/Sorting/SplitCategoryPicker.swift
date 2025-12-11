@@ -58,8 +58,7 @@ struct SplitCategoryPicker: View {
             
             CategoryScroller
         }
-        .padding(.horizontal)
-        .padding(.bottom)
+        .padding([.horizontal, .bottom])
         .sheet(isPresented: $showSortSheet) {
             SortOptionSheet(
                 current: sortOption,

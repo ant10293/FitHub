@@ -71,8 +71,7 @@ struct EquipmentSelectionContent: View {
                 }
             }
             .contentShape(Rectangle())
-            .padding(.horizontal)
-            .padding(.bottom)
+            .padding([.horizontal, .bottom])
         }
     }
     
