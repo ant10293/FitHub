@@ -23,6 +23,8 @@ struct FitHubApp: App {
             ContentView()
                 .environmentObject(ctx)
                 .onOpenURL { url in
+                    // MARK: Affiliate System guard
+                    guard useAffiliateSystem else { return }
                     // Handle both referral codes and affiliate links
                     ReferralURLHandler.handleIncoming(url)
                     // only claim if the user is signed in

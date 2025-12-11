@@ -301,3 +301,6 @@ struct FreeLimitations: Hashable, Codable {
     static let workoutGenerations: Int = 1
     static let overloadCalculator: Bool = false
 }
+
+// MARK: global Affiliate System flag
+let useAffiliateSystem: Bool = true

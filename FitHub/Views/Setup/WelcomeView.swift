@@ -77,6 +77,9 @@ struct WelcomeView: View {
                     ctx.userData.setup.setupState = .healthKitView
                 }
             }
+            
+            // MARK: Affiliate System guard
+            guard useAffiliateSystem else { return }
 
             // 1. Check if user has created a referral code and set it in profile
             if let referralCode = try? await ReferralRetriever.getCreatedCode() {

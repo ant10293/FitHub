@@ -19,8 +19,10 @@ struct SubscriptionView: View {
                         manageSubscriptions(openURL: openURL)
                     }
                 }
-                    
-                referralCodeSection
+                // MARK: Affiliate System guard
+                if useAffiliateSystem {
+                    referralCodeSection
+                }
 
                 plansSection
                 

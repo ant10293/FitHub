@@ -221,15 +221,18 @@ final class PremiumStore: ObservableObject {
                 do {
                     let transaction = try verify(verification)
                     
-                    // Track referral purchase if user has a referral code (non-blocking)
-                    // Note: trackPurchase handles errors internally and doesn't throw
-                    Task {
-                        await ReferralPurchaseTracker().trackPurchase(
-                            productID: product.id,
-                            transactionID: transaction.id,
-                            originalTransactionID: transaction.originalID,
-                            environment: transaction.environment.rawValue
-                        )
+                    // MARK: Affiliate System guard
+                    if useAffiliateSystem {
+                        // Track referral purchase if user has a referral code (non-blocking)
+                        // Note: trackPurchase handles errors internally and doesn't throw
+                        Task {
+                            await ReferralPurchaseTracker().trackPurchase(
+                                productID: product.id,
+                                transactionID: transaction.id,
+                                originalTransactionID: transaction.originalID,
+                                environment: transaction.environment.rawValue
+                            )
+                        }
                     }
                     
                     await transaction.finish()

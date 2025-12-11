@@ -53,11 +53,14 @@ struct MenuView: View {
                 }
             }
             
-            Section(header: Text("Partner")) {
-                NavigationLink(destination: LazyDestination {
-                    AffiliateRegistrationView()
-                }) {
-                    Label("Become an Affiliate", systemImage: "person.2")
+            // MARK: Affiliate System guard
+            if useAffiliateSystem {
+                Section(header: Text("Partner")) {
+                    NavigationLink(destination: LazyDestination {
+                        AffiliateRegistrationView()
+                    }) {
+                        Label("Become an Affiliate", systemImage: "person.2")
+                    }
                 }
             }
         }
