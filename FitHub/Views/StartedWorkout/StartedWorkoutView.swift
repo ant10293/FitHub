@@ -78,7 +78,6 @@ struct StartedWorkoutView: View {
             detail: { exercise in
                 exercise.setsSubtitle
                     .font(.subheadline)
-                    .foregroundStyle(Color.secondary)
             },
             onTap: { exercise, index in
                 selectedExerciseIndex = index

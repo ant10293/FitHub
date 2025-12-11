@@ -37,7 +37,8 @@ struct TemplatePopup: View {
                     detail: { exercise in
                         exercise.setsSubtitle
                             .font(.caption)
-                            .foregroundStyle(Color.secondary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
                     }
                 )
             }

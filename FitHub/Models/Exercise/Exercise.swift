@@ -131,8 +131,9 @@ extension Exercise {
         
     var setsSubtitle: Text {
         let (label, range) = setMetricRangeLabeled
-        return Text("Sets: ") + Text("\(workingSets), ").fontWeight(.light)
-        + Text("\(label): ") + Text(range).fontWeight(.light)
+        return (Text("Sets: ") + Text("\(workingSets), ").fontWeight(.light)
+        + Text("\(label): ") + Text(range).fontWeight(.light))
+            .foregroundStyle(Color.secondary)
     }
     
     private var setMetricRangeLabeled: (label: String, range: String) {

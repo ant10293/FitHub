@@ -152,7 +152,6 @@ struct WorkoutGeneration: View {
                         detail: { exercise in
                             exercise.setsSubtitle
                                 .font(.subheadline)
-                                .foregroundStyle(Color.secondary)
                         }
                     )
                 }

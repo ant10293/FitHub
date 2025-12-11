@@ -31,7 +31,7 @@ struct AffiliateInfoForm: View {
             
             // Email
             VStack(alignment: .leading, spacing: 4) {
-                TextField("Email", text: $email)
+                TextField("Contact Email", text: $email)
                     .textContentType(.emailAddress)
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.none)
