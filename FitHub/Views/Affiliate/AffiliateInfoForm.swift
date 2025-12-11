@@ -10,11 +10,9 @@ import SwiftUI
 struct AffiliateInfoForm: View {
     @Binding var fullName: String
     @Binding var email: String
-    @Binding var notes: String
     
     let allowEditFullName: Bool
     let allowEditEmail: Bool
-    let allowEditNotes: Bool
     
     var emailErrorMessage: String? = nil
     
@@ -43,13 +41,6 @@ struct AffiliateInfoForm: View {
                 
                 ErrorFooter(message: emailErrorMessage)
             }
-            
-            // Notes
-            TextField("Notes (Optional)", text: $notes, axis: .vertical)
-                .lineLimit(3...6)
-                .trailingIconButton(systemName: "lock.fill", isShowing: !allowEditNotes)
-                .inputStyle()
-                .disabled(!allowEditNotes)
         }
     }
 }

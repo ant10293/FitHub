@@ -274,7 +274,6 @@
 		65DD051A2EB97C86000D159C /* AffiliateRegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05182EB97C86000D159C /* AffiliateRegistrationView.swift */; };
 		65DD051C2EB9BB8A000D159C /* ReferralCodeRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051B2EB9BB8A000D159C /* ReferralCodeRetriever.swift */; };
 		65DD051F2EBBED1D000D159C /* AffiliateInfoForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051D2EBBED1D000D159C /* AffiliateInfoForm.swift */; };
-		65DD05202EBBED1D000D159C /* AffiliateSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD051E2EBBED1D000D159C /* AffiliateSettingsView.swift */; };
 		65DD05222EBC06B6000D159C /* ReferralValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD05212EBC06B6000D159C /* ReferralValidation.swift */; };
 		65DD05282EBC6C53000D159C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65DD05272EBC6C53000D159C /* StoreKit.framework */; };
 		65DD052C2EBFE857000D159C /* ExercisePickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DD052B2EBFE857000D159C /* ExercisePickerLabel.swift */; };
@@ -572,7 +571,6 @@
 		65DD05182EB97C86000D159C /* AffiliateRegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateRegistrationView.swift; sourceTree = "<group>"; };
 		65DD051B2EB9BB8A000D159C /* ReferralCodeRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralCodeRetriever.swift; sourceTree = "<group>"; };
 		65DD051D2EBBED1D000D159C /* AffiliateInfoForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateInfoForm.swift; sourceTree = "<group>"; };
-		65DD051E2EBBED1D000D159C /* AffiliateSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateSettingsView.swift; sourceTree = "<group>"; };
 		65DD05212EBC06B6000D159C /* ReferralValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralValidation.swift; sourceTree = "<group>"; };
 		65DD05272EBC6C53000D159C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		65DD052B2EBFE857000D159C /* ExercisePickerLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisePickerLabel.swift; sourceTree = "<group>"; };
@@ -1367,7 +1365,6 @@
 			children = (
 				658D800C2ED269FC0041FB4D /* AffiliateTermsView.swift */,
 				65DD051D2EBBED1D000D159C /* AffiliateInfoForm.swift */,
-				65DD051E2EBBED1D000D159C /* AffiliateSettingsView.swift */,
 				65DD05182EB97C86000D159C /* AffiliateRegistrationView.swift */,
 				65A4D96A2ECE59150055D561 /* ReferralStats.swift */,
 				65A4D96C2ECE5A290055D561 /* StripeConnect.swift */,
@@ -1680,7 +1677,6 @@
 				65CD3C5F2DD3C84F00C2B671 /* OverloadSettingsView.swift in Sources */,
 				653BF8AA2E5AB284005A07EA /* DataHelpers.swift in Sources */,
 				65DD051F2EBBED1D000D159C /* AffiliateInfoForm.swift in Sources */,
-				65DD05202EBBED1D000D159C /* AffiliateSettingsView.swift in Sources */,
 				65817F3E2E49B9E900437560 /* PremiumStore.swift in Sources */,
 				65CD3C602DD3C84F00C2B671 /* PlannedWorkoutTime.swift in Sources */,
 				65DC3C542DEA200A00B3D128 /* ExerciseRow.swift in Sources */,

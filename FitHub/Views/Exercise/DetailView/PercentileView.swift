@@ -39,13 +39,10 @@ struct PercentileView: View {
                     .font(.subheadline)
                     .foregroundStyle(.gray)
                     .multilineTextAlignment(.center)
-                    .padding(.bottom)
-                    .padding(.horizontal, 25)
+                    .padding([.bottom, .horizontal])
                 
-                Section {
-                    MaxTable(peak: maxValue)
-                }
-                .padding(.vertical)
+                MaxTable(peak: maxValue)
+                    .padding(.vertical)
             }
             
             Picker("Options", selection: $selectedView) {
