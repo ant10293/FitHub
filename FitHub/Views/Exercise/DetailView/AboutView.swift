@@ -42,8 +42,11 @@ struct AboutView: View {
                     Text("How to perform: ")
                         .bold()
 
-                    if let printedInstructions = exercise.instructions.formattedString() {
-                        Text(printedInstructions)
+                    if !exercise.instructions.steps.isEmpty {
+                        NumberedListView(
+                            items: exercise.instructions.steps,
+                            numberingStyle: .oneDot
+                        )
                     } else {
                         Text("No instructions available.")
                             .foregroundStyle(Color.secondary)

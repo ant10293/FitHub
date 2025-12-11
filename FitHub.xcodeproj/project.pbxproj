@@ -131,6 +131,7 @@
 		65B936F92EE905D700D80950 /* BaseAttributor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936F82EE905D700D80950 /* BaseAttributor.swift */; };
 		65B936FD2EEA4B4F00D80950 /* AssessmentFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B936FC2EEA4B4F00D80950 /* AssessmentFormView.swift */; };
 		65B937012EEA676500D80950 /* FreePlanLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B937002EEA676500D80950 /* FreePlanLimitView.swift */; };
+		65B937032EEAAD3100D80950 /* NumberedListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B937022EEAAD3100D80950 /* NumberedListView.swift */; };
 		65C5DC552DEFB46400B09AD2 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC542DEFB46400B09AD2 /* Core.swift */; };
 		65C5DC572DEFB51800B09AD2 /* Muscle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC562DEFB51800B09AD2 /* Muscle.swift */; };
 		65C5DC592DEFB5AE00B09AD2 /* Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5DC582DEFB5AE00B09AD2 /* Split.swift */; };
@@ -427,6 +428,7 @@
 		65B936F82EE905D700D80950 /* BaseAttributor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAttributor.swift; sourceTree = "<group>"; };
 		65B936FC2EEA4B4F00D80950 /* AssessmentFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssessmentFormView.swift; sourceTree = "<group>"; };
 		65B937002EEA676500D80950 /* FreePlanLimitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreePlanLimitView.swift; sourceTree = "<group>"; };
+		65B937022EEAAD3100D80950 /* NumberedListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberedListView.swift; sourceTree = "<group>"; };
 		65C5DC542DEFB46400B09AD2 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		65C5DC562DEFB51800B09AD2 /* Muscle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Muscle.swift; sourceTree = "<group>"; };
 		65C5DC582DEFB5AE00B09AD2 /* Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Split.swift; sourceTree = "<group>"; };
@@ -1173,6 +1175,7 @@
 		65CD3BE72DD3C84F00C2B671 /* Reusable */ = {
 			isa = PBXGroup;
 			children = (
+				65B937022EEAAD3100D80950 /* NumberedListView.swift */,
 				65B936EA2EE3C1B600D80950 /* Disclosure */,
 				65B936E92EE3C1A500D80950 /* Footer */,
 				65DD052D2EBFE881000D159C /* Label */,
@@ -1789,6 +1792,7 @@
 				65CD3C7E2DD3C84F00C2B671 /* ExerciseSetDetail.swift in Sources */,
 				653136252E53F81300EECCA5 /* Goal.swift in Sources */,
 				657067A22E4434FE0063090C /* TimeEntryField.swift in Sources */,
+				65B937032EEAAD3100D80950 /* NumberedListView.swift in Sources */,
 				65CD3C7F2DD3C84F00C2B671 /* NewTemplate.swift in Sources */,
 				65CD3C802DD3C84F00C2B671 /* EditTemplate.swift in Sources */,
 				65CD3C812DD3C84F00C2B671 /* RestTimeEditor.swift in Sources */,

@@ -125,6 +125,7 @@ func card<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
 }
 
+// FIXME: this uses fixed sizing
 func calculateTextWidth(text: String, minWidth: CGFloat, maxWidth: CGFloat) -> CGFloat {
     let font = UIFont.systemFont(ofSize: 17)
     let measured = (text as NSString).size(withAttributes: [.font: font]).width + 20 // padding

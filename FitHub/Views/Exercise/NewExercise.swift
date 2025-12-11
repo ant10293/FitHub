@@ -264,7 +264,9 @@ struct NewExercise: View {
     }
 
     private var instructionsSection: some View {
-        let text = draft.instructions.formattedString(leadingNewline: true) ?? "None"
+        let text = draft.instructions.steps.isEmpty 
+            ? "None" 
+            : "\n" + draft.instructions.steps.enumerated().map { "\($0.offset + 1). \($0.element)" }.joined(separator: "\n")
         return FieldEditor(
             title: "Instructions",
             valueText: text,
