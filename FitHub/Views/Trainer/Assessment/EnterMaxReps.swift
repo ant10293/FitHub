@@ -10,7 +10,6 @@ import SwiftUI
 struct EnterMaxReps: View {
     @ObservedObject var userData: UserData
     @ObservedObject var exerciseData: ExerciseData
-    @StateObject private var kbd = KeyboardManager.shared
     @State private var situpReps: String = ""
     @State private var squatReps: String = ""
     @State private var pushupReps: String = ""
@@ -46,46 +45,18 @@ struct EnterMaxReps: View {
     }
 
     var body: some View {
-        ZStack {
-            Color(UIColor.secondarySystemBackground)
-                .ignoresSafeArea(.all)
-                .zIndex(0)
-            
-            VStack {
-                Text("Enter Max Reps")
-                    .font(.largeTitle)
-                    .bold()
-                    .padding(.top)
-                
-                Spacer()
-                
-                Text("How many reps can you perform consecutively in each bodyweight exercise?")
-                    .font(.headline)
-                    .padding()
-                    .multilineTextAlignment(.center)
-
-                VStack(spacing: 15) {
-                    InputSection(label: "Push ups", value: $pushupReps)
-                    InputSection(label: "Sit ups", value: $situpReps)
-                    InputSection(label: "Squats", value: $squatReps)
-                }
-                
-                Spacer()
-                
-                if !kbd.isVisible {
-                    RectangularButton(
-                        title: "Submit",
-                        enabled: submitEnabled,
-                        bgColor: submitEnabled ? .green : .gray,
-                        action: handleSubmit
-                    )
-                    .padding()
-                }
-                
-                Spacer()
-            }
-        }
-        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+        AssessmentFormView(
+            title: "Enter Max Reps",
+            headline: "How many reps can you perform consecutively?",
+            subheadline: "Enter your max reps for at least one of the exercises below.",
+            inputFields: [
+                AssessmentInputField(label: "Push ups", text: $pushupReps, placeholder: "Enter Reps"),
+                AssessmentInputField(label: "Sit ups", text: $situpReps, placeholder: "Enter Reps"),
+                AssessmentInputField(label: "Squats", text: $squatReps, placeholder: "Enter Reps")
+            ],
+            submitEnabled: submitEnabled,
+            onSubmit: handleSubmit
+        ) 
     }
     
     private var submitEnabled: Bool { !pushupReps.isEmpty && !situpReps.isEmpty && !squatReps.isEmpty }
@@ -115,8 +86,5 @@ struct EnterMaxReps: View {
         }
     }
     
-    private func InputSection(label: String, value: Binding<String>) -> some View {
-        InputField(text: value, label: label, placeholder: "Enter Reps")
-    }
 }
 

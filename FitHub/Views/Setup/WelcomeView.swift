@@ -58,7 +58,7 @@ struct WelcomeView: View {
 
     // MARK: – Navigation / persistence
     private func handleNavigation() {
-        let accountID = AuthService.getUid() ?? ""
+        guard let accountID = AuthService.getUid() else { return }
 
         Task {
             do {
@@ -85,6 +85,7 @@ struct WelcomeView: View {
                 }
             }
 
+            // TODO: add an overlay showing the results here
             // 2. Get device fingerprint once (shared by both attributors to avoid duplicate work)
             let deviceFingerprint = await BaseAttributor.getBrowserFingerprint()
 

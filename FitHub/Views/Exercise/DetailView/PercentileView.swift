@@ -13,10 +13,10 @@ struct PercentileView: View {
     let exercise: Exercise
 
     var body: some View {
+        let maxValue = ctx.exercises.peakMetric(for: exercise.id) ?? exercise.getPeakMetric(metricValue: 0)
+        let bw = Mass(kg: ctx.userData.currentMeasurementValue(for: .weight).actualValue)
+        
         VStack {
-            let maxValue = ctx.exercises.peakMetric(for: exercise.id) ?? exercise.getPeakMetric(metricValue: 0)
-            let bw = Mass(kg: ctx.userData.currentMeasurementValue(for: .weight).actualValue)
-            
             switch selectedView {
             case .standards:
                 StrengthPercentileView(

@@ -199,7 +199,7 @@ struct IconButtonModifier: ViewModifier {
             }
 
             content
-
+            
             if position == .trailing, isShowing {
                 Spacer()
                 iconView

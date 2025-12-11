@@ -15,25 +15,21 @@ struct NameField: View {
     var error: String?          // nil → no error label
         
     var body: some View {
+        let width = screenWidth
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
                 .font(.headline)
             
             TextField(placeholder, text: $text)
-                .padding(8)
-                .roundedBackground(cornerRadius: 6)
-                .overlay(alignment: .trailing) {
-                    if !text.isEmpty {
-                        Button {
-                            text = ""
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.gray)
-                                .padding(.trailing, 4)
-                                .contentShape(Rectangle())
-                        }
+                .trailingIconButton(
+                    systemName: "xmark.circle.fill",
+                    isShowing: !text.isEmpty,
+                    action: {
+                        text = ""
                     }
-                }
+                )
+                .padding(width * 0.02)
+                .roundedBackground(cornerRadius: 6)
             
             if let err = error {
                 Text(err)

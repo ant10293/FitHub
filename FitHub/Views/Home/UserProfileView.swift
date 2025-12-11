@@ -191,9 +191,9 @@ struct UserProfileView: View {
     // MARK: — Handle Logout/Login Button
     
     private func handleSignOut() {
+        guard let accountID = AuthService.getUid() else { return }
         kbd.dismiss()
         ctx.userData.saveToFile()
-        let accountID = AuthService.getUid() ?? ""
         
         do {
             try AccountDataStore.shared.backupActiveData(for: accountID)
@@ -219,8 +219,8 @@ struct UserProfileView: View {
     }
     
     private func handleDeletion() {
+        guard let accountID = AuthService.getUid() else { return }
         kbd.dismiss()
-        let accountID = AuthService.getUid() ?? ""
         
         AuthService.shared.deleteCurrentAccount(userData: ctx.userData) { result in
             switch result {

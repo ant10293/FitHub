@@ -146,10 +146,11 @@ private extension TemplateEditor {
         OptionalDatePicker(
             initialDate: template.date,
             label: "Planned Date:",
-            useDateOnly: useDateOnly
-        ) { newDate in
-            template.date = newDate
-        }
+            useDateOnly: useDateOnly,
+            onDateChange: { newDate in
+                template.date = newDate
+            }
+        )
     }
 
     var trimmedName: String { template.name.trimmed }

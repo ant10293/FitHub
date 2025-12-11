@@ -11,12 +11,10 @@ import SwiftUI
 struct EnterOneRepMaxes: View {
     @ObservedObject var userData: UserData
     @ObservedObject var exerciseData: ExerciseData
-    @StateObject private var kbd = KeyboardManager.shared
     @State private var benchPressMax: Mass = .init(kg: 0)
     @State private var squatMax: Mass      = .init(kg: 0)
     @State private var deadliftMax: Mass   = .init(kg: 0)
     @State private var numberReps: Int = 1
-    // Usually 2–8 for submax estimation (tweak as you like)
     let repOptions: [Int] = Array(1...8)
     var bench: Exercise? = nil
     var squat: Exercise? = nil
@@ -53,61 +51,30 @@ struct EnterOneRepMaxes: View {
     }
 
     var body: some View {
-        ZStack {
-            Color(UIColor.secondarySystemBackground)
-                .ignoresSafeArea()
-
-            VStack {
-                Text("Enter \(numberReps) Rep Maxes")
-                    .font(.largeTitle)
-                    .bold()
-                    .padding(.top)
-                
-                header
-
+        AssessmentFormView(
+            title: "Enter \(numberReps) Rep Maxes",
+            headline: "Don't know your 1 rep max?",
+            subheadline: "Enter your 2–8 rep max for at least one of the exercises below.",
+            inputFields: [
+                AssessmentInputField(label: "Bench Press", text: $benchPressMax.asText(), placeholder: "Enter Weight (\(UnitSystem.current.weightUnit))"),
+                AssessmentInputField(label: "Squat", text: $squatMax.asText(), placeholder: "Enter Weight (\(UnitSystem.current.weightUnit))"),
+                AssessmentInputField(label: "Deadlift", text: $deadliftMax.asText(), placeholder: "Enter Weight (\(UnitSystem.current.weightUnit))")
+            ],
+            submitEnabled: submitEnabled,
+            onSubmit: handleSubmit,
+            additionalContent: {
                 repPicker
-
-                VStack(spacing: 15) {
-                    InputSection(label: "Bench Press", mass: $benchPressMax)
-                    InputSection(label: "Squat",        mass: $squatMax)
-                    InputSection(label: "Deadlift",     mass: $deadliftMax)
-                }
-
-                Spacer()
-
-                if !kbd.isVisible {
-                    RectangularButton(
-                        title: "Submit",
-                        enabled: submitEnabled,
-                        bgColor: submitEnabled ? .green : .gray,
-                        action: handleSubmit
-                    )
-                    .padding()
-                }
-
-                Spacer()
             }
-        }
-        .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-    }
-
-    private var header: some View {
-        VStack(spacing: 5) {
-            Text("Don't know your 1 rep max?")
-                .font(.headline)
-            Text("Enter your 2–8 rep max for at least one\nof the exercises below.")
-                .font(.subheadline)
-                .foregroundStyle(.gray)
-                .multilineTextAlignment(.center)
-        }
-        .padding(.top)
+        )
     }
 
     private var repPicker: some View {
         HStack {
             Text("Number Of Reps").bold()
             Picker("", selection: $numberReps) {
-                ForEach(repOptions, id: \.self) { Text("\($0)") }
+                ForEach(repOptions, id: \.self) {
+                    Text("\($0)")
+                }
             }
             .pickerStyle(.segmented)
         }
@@ -163,8 +130,5 @@ struct EnterOneRepMaxes: View {
         }
     }
 
-    private func InputSection(label: String, mass: Binding<Mass>) -> some View {
-        InputField(text: mass.asText(), label: label, placeholder: "Enter Weight (\(UnitSystem.current.weightUnit))")
-    }
 }
 
