@@ -77,7 +77,8 @@ struct WorkoutsView: View {
                 Button(action: { showingTemplateCreation = true }) {
                     Label("Create New Template", systemImage: "square.and.pencil")
                 }
-                .disabled(showingTemplateEditor)
+                // MARK: premium feature > 4 templates
+                .disabled(showingTemplateEditor || ctx.disableCreateWorkout)
             }
         } header: {
             Text(location.label)

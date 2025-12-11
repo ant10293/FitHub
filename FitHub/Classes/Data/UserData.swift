@@ -33,6 +33,8 @@ final class UserData: ObservableObject, Codable {
     @Published var workoutChanges: WorkoutChanges?
     @Published var showingGenerationWarning: Bool = false
     
+    @Published var showPremiumPrompt: Bool = false
+    
     @Published var allowDisliked: Bool = false
     
     init(reloadingBlank: Bool = false){
@@ -332,11 +334,18 @@ extension UserData {
         keepCurrentExercises: Bool,
         nextWeek: Bool,
         shouldSave: Bool = true,
+        generationDisabled: Bool,
         onDone: @escaping () -> Void = {}
     ) {
         isGeneratingWorkout = true
         resetWorkoutSession()
         
+        guard !generationDisabled else {
+            isGeneratingWorkout = false
+            showPremiumPrompt = true
+            return
+        }
+
         let saved = manageOldTemplates()
         let generator = WorkoutGenerator()
         let input = WorkoutGenerator.Input(
@@ -368,6 +377,7 @@ extension UserData {
                 exerciseData.applyPerformanceUpdates(updates: output.updatedMax, csvEstimate: true)
          
                 self.isGeneratingWorkout = false
+                self.workoutPlans.workoutPlansGenerated += 1
                 
                 // SHOW CHANGELOG IF IT'S NEXT WEEK
                 if nextWeek, let changelog = output.changelog {

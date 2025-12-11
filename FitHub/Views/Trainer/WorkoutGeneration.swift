@@ -178,6 +178,7 @@ struct WorkoutGeneration: View {
                         equipmentData: ctx.equipment,
                         keepCurrentExercises: ctx.userData.workoutPrefs.keepCurrentExercises,
                         nextWeek: false,
+                        generationDisabled: ctx.disableCreatePlan,
                         onDone: {
                             toast.showSaveConfirmation(duration: 2)
                         }

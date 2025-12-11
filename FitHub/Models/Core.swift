@@ -295,3 +295,9 @@ enum LegalURL {
 enum EquipmentOption {
     case originalOnly, alternativeOnly, both, dynamic
 }
+
+struct FreeLimitations: Hashable, Codable {
+    static let maxTemplates: Int = 4
+    static let workoutGenerations: Int = 1
+    static let overloadCalculator: Bool = false
+}

@@ -161,7 +161,8 @@ struct ContentView: View {
                     equipmentData: ctx.equipment,
                     keepCurrentExercises: true,
                     nextWeek: true,
-                    shouldSave: false
+                    shouldSave: false,
+                    generationDisabled: ctx.disableCreatePlan
                 )
             }
         } else {

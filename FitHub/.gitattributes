@@ -18,3 +18,8 @@
 *.ico binary
 *.pdf binary
 
+# Entitlements files should be treated as text
+# Note: If you get "entitlements were modified during the build" errors,
+# remove extended attributes with: xattr -c FitHub.entitlements
+*.entitlements text
+

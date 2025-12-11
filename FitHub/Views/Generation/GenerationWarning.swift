@@ -62,7 +62,8 @@ struct GenerationWarning: View {
                                 exerciseData: ctx.exercises,
                                 equipmentData: ctx.equipment,
                                 keepCurrentExercises: false,
-                                nextWeek: false
+                                nextWeek: false,
+                                generationDisabled: ctx.disableCreatePlan
                             )
                         }
                     )

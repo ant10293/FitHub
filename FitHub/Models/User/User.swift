@@ -143,5 +143,6 @@ struct WorkoutPlans: Codable, Equatable {
     var archivedTemplates: [WorkoutTemplate] = []
     var workoutsCreationDate: Date?
     var workoutsStartDate: Date?
+    var workoutPlansGenerated: Int = 0
     var completedWorkouts: [CompletedWorkout] = []
 }

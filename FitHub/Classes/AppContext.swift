@@ -118,5 +118,13 @@ final class AppContext: ObservableObject {
             userData.updateTemplate(template: template)
         }
     }
+    
+    var disableCreateWorkout: Bool {
+        store.membershipType == .free && userData.workoutPlans.userTemplates.count == 4
+    }
+    
+    var disableCreatePlan: Bool {
+        store.membershipType == .free && userData.workoutPlans.workoutPlansGenerated == 1
+    }
 }
 
