@@ -120,7 +120,7 @@ final class AppContext: ObservableObject {
     }
     
     var disableCreateWorkout: Bool {
-        store.membershipType == .free && userData.workoutPlans.userTemplates.count == 4
+        store.membershipType == .free && userData.workoutPlans.userTemplates.count >= 4
     }
     
     var disableCreatePlan: Bool {
