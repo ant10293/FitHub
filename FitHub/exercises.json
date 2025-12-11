@@ -2857,7 +2857,7 @@
 					{ "engagementPercentage": 35, "submuscleWorked": "Iliocostalis" },
 					{ "engagementPercentage": 20, "submuscleWorked": "Spinalis" }
 			] },
-			{ "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+			{ "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
 					{ "engagementPercentage": 85, "submuscleWorked": "Gluteus Maximus" },
 					{ "engagementPercentage": 15, "submuscleWorked": "Gluteus Medius" }
 			] },
@@ -3006,7 +3006,7 @@
 		"image": "trap_bar_hold",
 		"aliases": [ "Hex Bar Hold" ],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": [ "Trap Bar", "Weight Plates" ],
+		"equipmentRequired": [ "Trap Bar" ],
 		"muscles": [
 			{ "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [
 					{ "engagementPercentage": 20, "submuscleWorked": "Brachioradialis" },
@@ -3110,7 +3110,7 @@
 					{ "engagementPercentage": 35, "submuscleWorked": "Iliocostalis" },
 					{ "engagementPercentage": 25, "submuscleWorked": "Spinalis" }
 			] },
-			{ "engagementPercentage": 35, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+			{ "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
 					{ "engagementPercentage": 80, "submuscleWorked": "Gluteus Maximus" },
 					{ "engagementPercentage": 20, "submuscleWorked": "Gluteus Medius" }
 			] },
@@ -4507,7 +4507,7 @@
 		"image": "hack_squat_calf_raise",
 		"aliases": [ "Hack Calf Raise" ],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": [ "Hack Squat Machine" ],
+		"equipmentRequired": [ "Hack Squat" ],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
 					{ "engagementPercentage": 70, "submuscleWorked": "Gastrocnemius" },
@@ -4645,7 +4645,7 @@
 		"image": "cable_standing_calf_raise",
 		"aliases": [ "Cable Calf Raise" ],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": [ "Hi-lo Pulley Cable" ],
+		"equipmentRequired": [ "Hi-Lo Pulley Cable" ],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
 					{ "engagementPercentage": 70, "submuscleWorked": "Gastrocnemius" },
@@ -4730,17 +4730,17 @@
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": [ "Jacob's Ladder" ],
 		"muscles": [
-			{ "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-					{ "engagementPercentage": 55, "submuscleWorked": "Front Delt" },
-					{ "engagementPercentage": 40, "submuscleWorked": "Side Delt" },
-					{ "engagementPercentage": 5, "submuscleWorked": "Rear Delt" }
-			] },
-			{ "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+			{ "engagementPercentage": 35, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
 					{ "engagementPercentage": 30, "submuscleWorked": "Rectus Femoris" },
 					{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
 					{ "engagementPercentage": 25, "submuscleWorked": "Vastus Medialis" },
 					{ "engagementPercentage": 15, "submuscleWorked": "Vastus Intermedius" }
 			] },
+      { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+          { "engagementPercentage": 55, "submuscleWorked": "Front Delt" },
+          { "engagementPercentage": 40, "submuscleWorked": "Side Delt" },
+          { "engagementPercentage": 5, "submuscleWorked": "Rear Delt" }
+      ] },
 			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
 			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
 					{ "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
@@ -7236,7 +7236,7 @@
 					{ "engagementPercentage": 35, "submuscleWorked": "Transverse Abdominis" },
 					{ "engagementPercentage": 25, "submuscleWorked": "Obliques" }
 			] },
-			{ "engagementPercentage": 25, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+			{ "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
 					{ "engagementPercentage": 60, "submuscleWorked": "Rectus Femoris" },
 					{ "engagementPercentage": 40, "submuscleWorked": "Vastus Medialis" }
 			] },
@@ -8345,13 +8345,13 @@
 		"instructions": { "steps": [ ] },
 		"equipmentRequired": [ "Rowing Machine" ],
 		"muscles": [
-			{ "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-					{ "engagementPercentage": 30, "submuscleWorked": "Rectus Femoris" },
-					{ "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-					{ "engagementPercentage": 25, "submuscleWorked": "Vastus Medialis" },
-					{ "engagementPercentage": 15, "submuscleWorked": "Vastus Intermedius" }
-			] },
-			{ "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+			{ "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+      { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+          { "engagementPercentage": 30, "submuscleWorked": "Rectus Femoris" },
+          { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+          { "engagementPercentage": 25, "submuscleWorked": "Vastus Medialis" },
+          { "engagementPercentage": 15, "submuscleWorked": "Vastus Intermedius" }
+      ] },
 			{ "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
 					{ "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" },
 					{ "engagementPercentage": 30, "submuscleWorked": "Semitendinosus" },
@@ -10993,7 +10993,7 @@
 		"image": "cable_seated_neck_extension",
 		"aliases": [ "Cable Neck Extension (with head harness)" ],
 		"instructions": { "steps": [ ] },
-		"equipmentRequired": [ "Cable Hi-lo Pulley", "Neck Harness" ],
+		"equipmentRequired": [ "Cable Hi-Lo Pulley", "Neck Harness" ],
 		"muscles": [
 			{ "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Cervical Spine", "submusclesWorked": [
 					{ "engagementPercentage": 20, "submuscleWorked": "Infrahyoid" },
