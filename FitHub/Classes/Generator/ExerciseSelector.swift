@@ -249,12 +249,13 @@ final class ExerciseSelector {
             }
             
             let take = min(needed, matchingExercises.count) // cap by availability
+            let currentExisting = existing + selectedExercises
                         
             let selected: [Exercise]
-            if let best = selectBestForTargets(from: matchingExercises, targets: targets, count: take, rng: &rng) {
+            if let best = selectBestForTargets(from: matchingExercises, targets: targets, count: take, existing: currentExisting, rng: &rng) {
                 selected = best
             } else {
-                selected = selectRandomExercises(from: matchingExercises, count: take, rng: &rng)
+                selected = selectRandomExercises(from: matchingExercises, count: take, existing: currentExisting, rng: &rng)
             }
             selectedExercises.append(contentsOf: selected)
             
@@ -356,19 +357,23 @@ extension ExerciseSelector {
     }
     
     // MARK: - Exercise Selection with Favorite Prioritization
-    private func selectRandomExercises(from array: [Exercise], count: Int, rng: inout SeededRNG) -> [Exercise] {
+    private func selectRandomExercises(from array: [Exercise], count: Int, existing: [Exercise], rng: inout SeededRNG) -> [Exercise] {
         let actual = min(count, array.count)
         guard actual > 0 else { return [] }
 
         let favs = array.filter { favorites.contains($0.id) }
         let non  = array.filter { !favorites.contains($0.id) }
 
-        let takeFav = min(favs.count, actual)
-        var picked  = Array(favs.shuffled(using: &rng).prefix(takeFav))
+        // Sort by similarity (lower = more different = better)
+        let sortedFavs = favs.sorted { similarityToExisting(exercise: $0, existing: existing) < similarityToExisting(exercise: $1, existing: existing) }
+        let sortedNon = non.sorted { similarityToExisting(exercise: $0, existing: existing) < similarityToExisting(exercise: $1, existing: existing) }
+
+        let takeFav = min(sortedFavs.count, actual)
+        var picked = Array(sortedFavs.prefix(takeFav))
 
         if picked.count < actual {
             let need = actual - picked.count
-            picked.append(contentsOf: non.shuffled(using: &rng).prefix(need))
+            picked.append(contentsOf: sortedNon.prefix(need))
         }
         return picked
     }
@@ -407,6 +412,40 @@ extension ExerciseSelector {
             if left > 0 { out[type] = left }
         }
         return out
+    }
+    
+    // MARK: - Similarity Helpers
+    /// Returns the similarity percentage to existing exercises (higher = less different = worse)
+    private func similarityToExisting(exercise: Exercise, existing: [Exercise]) -> Double {
+        guard !existing.isEmpty else { return 0.0 }
+        return existing.map { exercise.similarityPct(to: $0) }.max() ?? 0.0
+    }
+    
+    /// Sorts exercises by similarity (lowest first) and shuffles within similarity groups
+    private func sortBySimilarityAndShuffleGroups(_ exercises: [Exercise], existing: [Exercise], rng: inout SeededRNG) -> [Exercise] {
+        let withSimilarity = exercises.map { (ex: $0, sim: similarityToExisting(exercise: $0, existing: existing)) }
+            .sorted { $0.sim < $1.sim }
+        
+        var result: [Exercise] = []
+        var currentGroup: [Exercise] = []
+        var currentSim: Double?
+        
+        for item in withSimilarity {
+            if let prevSim = currentSim, abs(item.sim - prevSim) > 1.0 {
+                // New similarity group - shuffle current group and add to result
+                currentGroup.shuffle(using: &rng)
+                result.append(contentsOf: currentGroup)
+                currentGroup = [item.ex]
+            } else {
+                currentGroup.append(item.ex)
+            }
+            currentSim = item.sim
+        }
+        // Add final group
+        currentGroup.shuffle(using: &rng)
+        result.append(contentsOf: currentGroup)
+        
+        return result
     }
 }
 
@@ -451,6 +490,7 @@ extension ExerciseSelector {
         from pool: [Exercise],
         target: TargetSpec,
         count: Int,
+        existing: [Exercise],
         rng: inout SeededRNG
     ) -> [Exercise]? {
         guard count > 0 else { return nil }
@@ -479,20 +519,20 @@ extension ExerciseSelector {
             band = Array(scored.prefix(topK)).map(\.ex)
         }
 
-        // randomize inside the good band
-        band.shuffle(using: &rng)
+        // Sort by similarity and shuffle within groups
+        var shuffledBand = sortBySimilarityAndShuffleGroups(band, existing: existing, rng: &rng)
 
         var picks: [Exercise] = []
-        while picks.count < count, !band.isEmpty {
-            picks.append(band.removeFirst())
+        while picks.count < count, !shuffledBand.isEmpty {
+            picks.append(shuffledBand.removeFirst())
         }
 
-        // fill from the rest (also shuffled) if needed
+        // fill from the rest if needed
         if picks.count < count {
-            var rest = Array(scored.dropFirst(band.count)).map(\.ex)
-            rest.shuffle(using: &rng)
-            while picks.count < count, !rest.isEmpty {
-                picks.append(rest.removeFirst())
+            let rest = Array(scored.dropFirst(band.count)).map(\.ex)
+            var shuffledRest = sortBySimilarityAndShuffleGroups(rest, existing: existing, rng: &rng)
+            while picks.count < count, !shuffledRest.isEmpty {
+                picks.append(shuffledRest.removeFirst())
             }
         }
 
@@ -503,6 +543,7 @@ extension ExerciseSelector {
         from pool: [Exercise],
         targets: [TargetSpec],
         count: Int,
+        existing: [Exercise],
         rng: inout SeededRNG
     ) -> [Exercise]? {
         for (idx, t) in targets.enumerated() {
@@ -512,7 +553,7 @@ extension ExerciseSelector {
 
             print("  🔍 trying target: \(t.muscle) sub: \(t.submuscle?.rawValue ?? "nil")")
 
-            if let picked = selectBestForSubmuscles(from: pool, target: t, count: count, rng: &localRng), !picked.isEmpty {
+            if let picked = selectBestForSubmuscles(from: pool, target: t, count: count, existing: existing, rng: &localRng), !picked.isEmpty {
                 if let ex = picked.first {
                     print("  ✅ target matched: \(t.muscle) sub: \(t.submuscle?.rawValue ?? "nil") → \(ex.name)")
                 }
