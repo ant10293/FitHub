@@ -141,7 +141,7 @@ private extension TemplateEditor {
             .foregroundStyle(.blue)
         }
     }
-    
+
     var datePicker: some View {
         OptionalDatePicker(
             initialDate: template.date,
@@ -183,4 +183,3 @@ private extension TemplateEditor {
 
     func cancel() { if let onCancel { onCancel() } else { dismiss() } }
 }
-

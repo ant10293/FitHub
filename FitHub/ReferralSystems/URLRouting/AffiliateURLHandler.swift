@@ -24,7 +24,7 @@ enum AffiliateURLHandler {
             tokenTypeName: "link token"
         )
         let tokenFound = BaseURLHandler.handleIncoming(url, config: config)
-        
+
         if shouldClaim && tokenFound {
             Task {
                 await AffiliateAttributor().claimIfNeeded()

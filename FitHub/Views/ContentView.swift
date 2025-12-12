@@ -48,7 +48,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     private func determineStrengthAndSeedMaxes() {
         let (skipped, oldLvl) = determineUserStrengthLevel()
         // only if strength level changed. already seeded after assessment
@@ -67,13 +67,13 @@ struct ContentView: View {
             print("⏩ Skipping determination; only \(Int(now.timeIntervalSince(last)/86400)) days since last run.")
             return ([], nil)
         }
-        
+
         let ogLvl: StrengthLevel = ctx.userData.evaluation.strengthLevel
 
         // --- Pass 1: tally categories -----------------------------------------
         var globalCounts: [StrengthLevel: Int] = [:]
         var muscleCounts: [Muscle: [StrengthLevel: Int]] = [:]
-     
+
         let (basePathAge, basePathBW) = CSVLoader.getBasePaths(gender: ctx.userData.physical.gender)
 
         var skippedIDs: Set<UUID> = []
@@ -84,7 +84,7 @@ struct ContentView: View {
                 skippedIDs.insert(ex.id)
                 continue
             }
-            
+
             let level = CSVLoader.calculateFitnessCategory(
                 userData: ctx.userData,
                 basePathAge: basePathAge + csvKey,
@@ -131,17 +131,17 @@ struct ContentView: View {
         print("✓ strengths:", strengthsPerMuscle)
         print("✓ weaknesses:", weaknessesPerMuscle)
         print("✓ next evaluation eligible after 30 days.")
-        
+
         return (skippedIDs, ogLvl)
     }
-    
+
     private func generateTemplates() {
         let plannedWorkoutDates = ctx.userData.getAllPlannedWorkoutDates()
         if checkAndResetWorkoutStreak(plannedWorkoutDates: plannedWorkoutDates), ctx.userData.settings.progressiveOverload {
             generateNewWorkoutTemplates(plannedWorkoutDates: plannedWorkoutDates)
        }
     }
-    
+
     private func generateNewWorkoutTemplates(plannedWorkoutDates: [Date]) {
         let currentDate = Date()
 
@@ -169,7 +169,7 @@ struct ContentView: View {
             print("No past dates found. No need to generate a new workout plan.")
         }
     }
-   
+
     private func checkAndResetWorkoutStreak(plannedWorkoutDates: [Date]) -> Bool {
         print("Checking population Date...")
         guard let populatedDate = ctx.userData.workoutPlans.workoutsCreationDate else {
@@ -181,7 +181,7 @@ struct ContentView: View {
         print("Populated Date: \(populatedDate)")
 
         let filteredPlannedWorkoutDates = plannedWorkoutDates.filter { $0 >= populatedDate }
-    
+
         for plannedDate in filteredPlannedWorkoutDates {
             print("Checking planned date: \(plannedDate)")
             if plannedDate < currentDate && !CalendarUtility.shared.isDateInToday(plannedDate) {
@@ -194,5 +194,3 @@ struct ContentView: View {
        return true
     }
 }
-
-

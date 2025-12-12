@@ -27,13 +27,13 @@ struct StripeAffiliateStatus: Equatable {
     )
 
     var isConnected: Bool {
-        accountId != nil 
+        accountId != nil
     }
 
     var needsAction: Bool {
         !requirementsDue.isEmpty
     }
-    
+
     var statusDescription: String {
         if payoutsEnabled {
             return "Payouts are enabled for your Stripe account. You're ready to receive earnings."
@@ -46,7 +46,7 @@ struct StripeAffiliateStatus: Equatable {
         }
         return "Connect your Stripe account to receive affiliate payouts."
     }
-    
+
     var primaryButtonTitle: String {
         if payoutsEnabled {
             return "Manage Stripe Account"
@@ -57,4 +57,3 @@ struct StripeAffiliateStatus: Equatable {
         return "Connect Stripe Account"
     }
 }
-

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
- 
+
 struct Exercise: Identifiable, Hashable, Codable {
     let id: UUID
     let name: String
@@ -44,7 +44,7 @@ struct Exercise: Identifiable, Hashable, Codable {
     var totalSets: Int { warmUpSets + workingSets }
     var isWarmUp: Bool { currentSet <= warmUpSets }
     var currentSetIndex: Int { currentSet - 1 }
-        
+
     var isDeloading: Bool = false
     var weeksStagnated: Int = 0
     var overloadProgress: Int = 0
@@ -73,9 +73,9 @@ extension Exercise {
 }
 extension Exercise {
     private var fullImagePath: String { return "Exercises/\(image)" }
-    
+
     var fullImage: Image { getFullImage(image, fullImagePath) }
-    
+
     func fullImageView(favState: FavoriteState, detailIcon: Bool = false) -> some View {
         fullImage
         .resizable()
@@ -97,7 +97,7 @@ extension Exercise {
             }
         }
     }
-    
+
     func getPeakMetric(metricValue: Double) -> PeakMetric {
         unitType.getPeakMetric(metricValue: metricValue)
     }
@@ -107,7 +107,7 @@ extension Exercise {
         guard includeInstruction, let performanceInstruction else { return base }
         return base + " (\(performanceInstruction))"
     }
-    
+
     private var performanceInstruction: String? {
         let w = weightInstruction?.rawValue
         let r = repsInstruction?.rawValue
@@ -128,14 +128,14 @@ extension Exercise {
 
         return instruction
     }
-        
+
     var setsSubtitle: Text {
         let (label, range) = setMetricRangeLabeled
         return (Text("Sets: ") + Text("\(workingSets), ").fontWeight(.light)
         + Text("\(label): ") + Text(range).fontWeight(.light))
             .foregroundStyle(Color.secondary)
     }
-    
+
     private var setMetricRangeLabeled: (label: String, range: String) {
         let label: String = plannedMetric.label
         guard let first = setDetails.first else { return (label, "0") }
@@ -167,15 +167,15 @@ extension Exercise {
             return (label, lo == hi ? loStr : "\(loStr)-\(hiStr)")
         }
     }
-    
+
     var noSetsCompleted: Bool {
         allSetDetails.allSatisfy { $0.completed == nil }
     }
-    
+
     var allowedWarmup: Bool {
         return usesWeight && usesReps
     }
-    
+
     var usesWeight: Bool {
         switch resistance {
         case .machine: return effort != .cardio ? true : false
@@ -187,9 +187,9 @@ extension Exercise {
         case .any: return false
         }
     }
-    
+
     var usesReps: Bool { effort.usesReps }
-    
+
     var loadMetric: SetLoad {
         switch unitType {
         case .weightXreps, .weightXtime, .weightXdistance:
@@ -200,7 +200,7 @@ extension Exercise {
             return .none
         }
     }
-    
+
     var plannedMetric: SetMetric {
         switch unitType {
         case .weightXreps, .repsOnly:
@@ -223,7 +223,7 @@ extension Exercise {
             return rest.rest(for: .working)
         }
     }
-    
+
     func usesPlates(equipmentData: EquipmentData) -> Bool {
         let equipmentList = equipmentData.equipmentForExercise(self, inclusion: .both)
 
@@ -248,23 +248,23 @@ extension Exercise {
         case .banded:     return resistance == .banded
         }
     }
-    
+
     func effortOK(_ rAndS: RepsAndSets) -> Bool {
         // Check if the effort type has sets configured
         let hasSets = rAndS.sets.sets(for: effort) > 0
-            
+
         // Check if the effort type has a positive distribution percentage
         let hasDistribution = rAndS.distribution.percentage(for: effort) > 0
-            
+
         return hasSets && hasDistribution
     }
-    
+
     func difficultyOK(_ strengthValue: Int) -> Bool {
         return difficulty.strengthValue <= strengthValue
     }
-    
+
     /// Returns `true` if *every* piece of required equipment can be satisfied
-    /// either directly or via a declared alternative.    
+    /// either directly or via a declared alternative.
     func canPerform(equipmentData: EquipmentData, available: Set<GymEquipment.ID>) -> Bool {
         // Ask: if we try to build the equipment set dynamically,
         // what would we end up using?
@@ -278,7 +278,7 @@ extension Exercise {
         // "fall back" to something the user doesn't own => can't perform
         return chosen.allSatisfy { available.contains($0.id) }
     }
-    
+
     func similarityPct(to other: Exercise) -> Double {
         muscles.similarityPct(to: other.muscles)
     }
@@ -308,12 +308,12 @@ extension Exercise {
             default: return false
             }
         }
-        
+
         let kg = equipmentData.incrementForEquipment(names: equipmentRequired, rounding: rounding).inKg
         let kgPerStep = kg * overloadFactor
        // let secPerStep = SetDetail.secPerStep
         let halfway = max(1, period / 2)
-        
+
         var overloadApplied: Bool = false
         setDetails = setDetails.map { setDetail in
             // decide eligibility: no old set => true, else require metPlan
@@ -327,19 +327,19 @@ extension Exercise {
             }()
 
             guard eligible else { return setDetail } // leave as-is if not eligible
-            
+
             var updated = setDetail
-            
+
             switch setDetail.load {
             case .weight(let weight):
                 switch style {
                 case .increaseWeight:
                     let newKg = weight.inKg + Double(overloadProgress) * kgPerStep
                     updated.load = .weight(equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding))
-                    
+
                 case .increaseReps:
                     updated.bumpPlanned(by: overloadProgress)
-                    
+
                 case .decreaseReps:
                     // Fewer reps/seconds but +weight
                     updated.bumpPlanned(by: -overloadProgress)
@@ -360,24 +360,24 @@ extension Exercise {
             // TODO: implement for distance
             case .distance:
                 break
-                
+
             case .none:
                 // Bodyweight: bump planned target only
                 updated.bumpPlanned(by: overloadProgress)
             }
-            
+
             return updated
         }
-        
+
         return overloadApplied
     }
-    
+
     mutating func applyDeload(equipmentData: EquipmentData, deloadPct: Int, rounding: RoundingPreference) {
         let deloadFactor = Double(deloadPct) / 100.0
-        
+
         setDetails = setDetails.map { setDetail in
             var updated = setDetail
-            
+
             switch setDetail.load {
             case .weight(let weight):
                 let scaledKg = weight.inKg * deloadFactor
@@ -389,36 +389,36 @@ extension Exercise {
                 // Bodyweight: scale planned target
                 updated.planned = setDetail.planned.scaling(by: deloadFactor)
             }
-            
+
             return updated
         }
     }
-    
+
     mutating func createSetDetails(repsAndSets: RepsAndSets, userData: UserData, equipmentData: EquipmentData) {
         guard let peak = self.draftMax else { return }
-        
+
         var details: [SetDetail] = []
         let numSets      = repsAndSets.getSets(for: effort); guard numSets > 0 else { return }
         let range        = repsAndSets.repRange(for: effort)   // still used for rep-based
         let setStructure = userData.workoutPrefs.setStructure
         let rounding     = userData.workoutPrefs.roundingPreference
-        
+
         // Extract intensity settings
         let minIntensityPct = Double(userData.workoutPrefs.setIntensity.minIntensity) / 100.0
         let maxIntensityPct = Double(userData.workoutPrefs.setIntensity.maxIntensity) / 100.0
         let fixedIntensityPct = Double(userData.workoutPrefs.setIntensity.fixedIntensity) / 100.0
         let topSet = userData.workoutPrefs.setIntensity.topSet
-        
+
         // Helper function to calculate intensity percentage for a given set
         func intensityPercentage(for setNumber: Int, totalSets: Int) -> Double {
             // If topSet is .allSets or setStructure is .fixed, use fixed intensity
             if topSet == .allSets || setStructure == .fixed {
                 return fixedIntensityPct
             }
-            
+
             // For single set, use max intensity
             guard totalSets > 1 else { return maxIntensityPct }
-            
+
             switch topSet {
             case .firstSet:
                 // First set = max, last set = min, interpolate in between
@@ -444,7 +444,7 @@ extension Exercise {
                 return fixedIntensityPct
             }
         }
-        
+
         for n in 1...numSets {
             let load: SetLoad
             let planned: SetMetric
@@ -456,7 +456,7 @@ extension Exercise {
             case .maxHold(let ts):
                 let maxSec = max(1, ts.inSeconds)
                 let sec: Int
-                
+
                 // Combine set structure with intensity settings
                 switch setStructure {
                 case .pyramid:
@@ -477,14 +477,14 @@ extension Exercise {
                     // Fixed: use fixed intensity
                     sec = max(1, Int(round(Double(maxSec) * fixedIntensityPct)))
                 }
-                
+
                 load = .none // should change if we add weighted isometric
                 planned = .hold(TimeSpan(seconds: sec))
 
             // ───────── bodyweight reps: drive off saved max reps ─────────
             case .maxReps(let maxReps):
                 let reps: Int
-                
+
                 // Combine set structure with intensity settings
                 switch setStructure {
                 case .pyramid:
@@ -493,19 +493,19 @@ extension Exercise {
                     let maxRepsAtIntensity = max(1, Int(round(Double(maxReps) * maxIntensityPct)))
                     let progress = (intensityPct - minIntensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
                     reps = max(1, min(maxReps, minReps + Int(round(Double(maxRepsAtIntensity - minReps) * progress))))
-                    
+
                 case .reversePyramid:
                     // Reverse pyramid: start at max intensity, decrease to min intensity
                     let maxRepsAtIntensity = max(1, Int(round(Double(maxReps) * maxIntensityPct)))
                     let minReps = max(1, Int(round(Double(maxReps) * minIntensityPct)))
                     let progress = (maxIntensityPct - intensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
                     reps = max(1, min(maxReps, maxRepsAtIntensity - Int(round(Double(maxRepsAtIntensity - minReps) * progress))))
-                    
+
                 case .fixed:
                     // Fixed: use fixed intensity
                     reps = max(1, Int(round(Double(maxReps) * fixedIntensityPct)))
                 }
-                
+
                 load = .none
                 planned = .reps(reps)
 
@@ -513,7 +513,7 @@ extension Exercise {
             case .oneRepMax(let oneRM):
                 // Calculate target 1RM based on intensity percentage
                 let target1RM = oneRM.inKg * intensityPct
-                
+
                 // Determine reps based on set structure (pyramid/reverse pyramid/fixed)
                 let reps: Int
                 switch setStructure {
@@ -524,23 +524,23 @@ extension Exercise {
                 case .fixed:
                     reps = (range.lowerBound + range.upperBound) / 2
                 }
-                
+
                 // Calculate weight such that weight × reps estimates to target1RM
                 // Formula: 1RM = weight / percent(at: reps)  =>  weight = 1RM * percent(at: reps)
                 let formula = OneRMFormula.canonical
                 let percentAtReps = formula.percent(at: reps)
                 let targetWeight = Mass(kg: target1RM * percentAtReps)
                 let roundedWeight = equipmentData.roundWeight(targetWeight, for: equipmentRequired, rounding: rounding)
-                
+
                 load = .weight(roundedWeight)
                 planned = .reps(max(1, reps))
-            
+
             // TODO: .hold30sLoad and carry50mLoad logic is basically identical, use single source of truth
             case .hold30sLoad(let l30):
                 // Plan: constant 30s holds; vary load by set structure and intensity.
                 let tRefSec = WeightedHoldFormula.canonical.inSeconds
                 let targetKg: Double
-                
+
                 // Combine set structure with intensity settings
                 switch setStructure {
                 case .pyramid:
@@ -549,28 +549,28 @@ extension Exercise {
                     let maxKgAtIntensity = max(0.0, l30.inKg * maxIntensityPct)
                     let progress = (intensityPct - minIntensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
                     targetKg = minKg + (maxKgAtIntensity - minKg) * progress
-                    
+
                 case .reversePyramid:
                     // Reverse pyramid: start at max intensity, decrease to min intensity
                     let maxKgAtIntensity = max(0.0, l30.inKg * maxIntensityPct)
                     let minKg = max(0.0, l30.inKg * minIntensityPct)
                     let progress = (maxIntensityPct - intensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
                     targetKg = maxKgAtIntensity - (maxKgAtIntensity - minKg) * progress
-                    
+
                 case .fixed:
                     // Fixed: use fixed intensity
                     targetKg = max(0.0, l30.inKg * fixedIntensityPct)
                 }
-                
+
                 let rounded = equipmentData.roundWeight(Mass(kg: targetKg), for: equipmentRequired, rounding: rounding)
                 load = .weight(rounded)
                 planned = .hold(TimeSpan(seconds: tRefSec))
-            
+
             case .carry50mLoad(let l50):
                 // Plan: constant 50m carries; vary load by set structure and intensity.
                 let dRefMeters = WeightedCarryFormula.canonical
                 let targetKg: Double
-                
+
                 // Combine set structure with intensity settings
                 switch setStructure {
                 case .pyramid:
@@ -579,35 +579,35 @@ extension Exercise {
                     let maxKgAtIntensity = max(0.0, l50.inKg * maxIntensityPct)
                     let progress = (intensityPct - minIntensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
                     targetKg = minKg + (maxKgAtIntensity - minKg) * progress
-                    
+
                 case .reversePyramid:
                     // Reverse pyramid: start at max intensity, decrease to min intensity
                     let maxKgAtIntensity = max(0.0, l50.inKg * maxIntensityPct)
                     let minKg = max(0.0, l50.inKg * minIntensityPct)
                     let progress = (maxIntensityPct - intensityPct) / max(0.01, maxIntensityPct - minIntensityPct)
                     targetKg = maxKgAtIntensity - (maxKgAtIntensity - minKg) * progress
-                    
+
                 case .fixed:
                     // Fixed: use fixed intensity
                     targetKg = max(0.0, l50.inKg * fixedIntensityPct)
                 }
-                
+
                 let rounded = equipmentData.roundWeight(Mass(kg: targetKg), for: equipmentRequired, rounding: rounding)
                 load = .weight(rounded)
                 planned = .carry(dRefMeters)
-            
+
             // TODO: implement for cardio exercises
             case .none:
                 load = loadMetric
                 planned = plannedMetric
             }
-            
+
             details.append(SetDetail(setNumber: n, load: load, planned: planned))
         }
 
         setDetails = details
     }
-    
+
     mutating func createWarmupDetails(equipmentData: EquipmentData, userData: UserData) {
         guard let baseline = setDetails.first else { return }
 
@@ -618,23 +618,23 @@ extension Exercise {
 
         let warmupSettings = userData.workoutPrefs.warmupSettings
         guard warmupSettings.exerciseSelection.isCompatible(exercise: self) else { return }
-        
+
         let rounding = userData.workoutPrefs.roundingPreference
-        
+
         // Calculate warmup set count based on working set count
         let workingSets = setDetails.count
         let totalWarmUpSets = warmupSettings.setCountModifier.warmupSetCount(for: workingSets)
         guard totalWarmUpSets > 0 else { return }
-        
+
         // Extract intensity settings
         let minIntensityPct = Double(warmupSettings.minIntensity) / 100.0
         let maxIntensityPct = Double(warmupSettings.maxIntensity) / 100.0
-        
+
         // Helper function to calculate intensity percentage for a given warmup set
         func intensityPercentage(for setNumber: Int, totalSets: Int) -> Double {
             // For single warmup set, use min intensity
             guard totalSets > 1 else { return minIntensityPct }
-            
+
             // Interpolate from min (first set) to max (last set)
             if setNumber == 1 {
                 return minIntensityPct
@@ -645,18 +645,18 @@ extension Exercise {
                 return minIntensityPct + (maxIntensityPct - minIntensityPct) * progress
             }
         }
-        
+
         var details: [SetDetail] = []
         let baseKg = firstSetWeight.inKg
 
         for i in 0..<totalWarmUpSets {
             let idx = i + 1
             let intensityPct = intensityPercentage(for: idx, totalSets: totalWarmUpSets)
-            
+
             // Apply intensity to first working set's weight
             let targetKg = baseKg * intensityPct
             let roundedWeight = equipmentData.roundWeight(Mass(kg: targetKg), for: equipmentRequired, rounding: rounding)
-            
+
                 details.append(
                     SetDetail(
                         setNumber: idx,
@@ -673,21 +673,21 @@ extension Exercise {
 extension Exercise {
     var primaryMuscleEngagements: [MuscleEngagement] { muscles.primary }
     var secondaryMuscleEngagements: [MuscleEngagement] { muscles.secondary }
-    
+
     var primaryMuscles: [Muscle]   { muscles.primaryMuscles }
     var secondaryMuscles: [Muscle] { muscles.secondaryMuscles }
     var allMuscles: [Muscle]       { muscles.allMuscles }
-    
+
     var primarySubMuscles: [SubMuscles]?   { muscles.primary.allSubMuscles.nilIfEmpty }
     var secondarySubMuscles: [SubMuscles]? { muscles.secondary.allSubMuscles.nilIfEmpty }
     var allSubMuscles: [SubMuscles]?       { muscles.allSubMuscles.nilIfEmpty }
-    
+
     /// Highest-engagement primary muscle (nil if none)
     var topPrimaryMuscle: Muscle? { muscles.topPrimaryMuscle }
-    
+
     /// Auto-derived split category from dominant prime mover
     var splitCategory: SplitCategory? { topPrimaryMuscle?.splitCategory }
-    
+
     /// Legacy no-arg property (uses non-generation mapping).
     var groupCategory: SplitCategory? {
         groupCategory(forGeneration: false)
@@ -762,5 +762,3 @@ extension Exercise {
         }
     }
 }
-
-

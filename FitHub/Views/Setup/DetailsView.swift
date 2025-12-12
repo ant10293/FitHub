@@ -18,14 +18,14 @@ struct DetailsView: View {
         _weight = State(initialValue: Mass(kg: userData.currentMeasurementValue(for: .weight).actualValue))
         _selectedGender = State(initialValue: userData.physical.gender)
     }
-    
+
     var body: some View {
         VStack {
             heightCard
             weightCard
             dobCard
             genderSection
-                
+
             Spacer()
             continueButton
             Spacer()
@@ -34,12 +34,12 @@ struct DetailsView: View {
         .navigationTitle("Hello \(userData.profile.firstName)")
         .navigationBarBackButtonHidden(true)
     }
-    
+
     private var unitPicker: some View {
         VStack {
             Text(unit.desc)
                 .font(.subheadline)
-            
+
             Picker("Unit of Measurement", selection: $unit) {
                 ForEach(UnitSystem.allCases, id: \.self) { unit in
                     Text(unit.rawValue).tag(unit)
@@ -49,7 +49,7 @@ struct DetailsView: View {
             .padding(.horizontal)
         }
     }
-    
+
     // MARK: - Height
     private var heightCard: some View {
         MeasurementCard(
@@ -115,13 +115,13 @@ struct DetailsView: View {
                 Text("Select your Gender")
                     .font(.title2)
                     .padding(.vertical)
-                
+
                 HStack {
                     Button(action: { selectedGender = .male }) {
                         GenderButton(gender: .male, isSelected: selectedGender == .male)
                     }
                     .padding(.trailing)
-                    
+
                     Button(action: { selectedGender = .female }) {
                         GenderButton(gender: .female, isSelected: selectedGender == .female)
                     }
@@ -140,7 +140,7 @@ struct DetailsView: View {
         .clipShape(Capsule())
         .padding(.horizontal)
     }
-    
+
     private func GenderButton(gender: Gender, isSelected: Bool) -> some View {
         Image(gender == .male ? "Male" : "Female")
         .resizable()
@@ -159,11 +159,11 @@ struct DetailsView: View {
     private func toggle(_ picker: ActivePicker) {
         activePicker = activePicker == picker ? .none : picker
     }
-    
+
     private func closePicker() { activePicker = .none }
-    
+
     private enum ActivePicker { case none, height, dob, weight }
-    
+
     private func saveUserData() {
         userData.checkAndUpdateAge()
         // 1️⃣ Update everything in memory first
@@ -174,34 +174,33 @@ struct DetailsView: View {
         if let gender = selectedGender {
             userData.physical.gender = gender
         }
-        
+
         userData.saveToFile()
     }
-     
+
     private var canContinue: Bool {
         // Ensure a gender is selected
         guard let gender = selectedGender, gender != .notSet else {
             return false
         }
-        
+
         // Check that height is selected and not at some default or invalid value
         // Assuming heightFeet or heightInches being > 0 is a valid selection
         guard height.displayValue > 0 else {
             return false
         }
-        
+
         // Check that a weight is selected and not at some default or invalid value
         guard weight.displayValue > 0 else {
             return false
         }
-        
+
         // Check DOB is selected and not the default value if applicable
         guard !CalendarUtility.shared.isDate(dob, inSameDayAs: Date()) else {
             return false
         }
-        
+
         // If all conditions are met, return true
         return true
     }
 }
-

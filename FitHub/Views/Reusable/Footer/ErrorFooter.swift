@@ -30,11 +30,11 @@ struct ErrorFooter: View {
         self.showImage = showImage
         self.width = width
     }
-    
+
     var body: some View {
         /// never show image unless there is a message to go along with it
         let resolvedShowImage: Bool = message == nil ? false : showImage
-        
+
         HStack(spacing: 6) {
             if resolvedShowImage {
                 Image(systemName: image)

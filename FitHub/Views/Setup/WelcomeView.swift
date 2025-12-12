@@ -29,7 +29,7 @@ struct WelcomeView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(maxWidth: logoW)
-                    
+
                     Spacer(minLength: 30)
 
                     AuthProviderButtons(
@@ -77,7 +77,7 @@ struct WelcomeView: View {
                     ctx.userData.setup.setupState = .healthKitView
                 }
             }
-            
+
             // MARK: Affiliate System guard
             guard useAffiliateSystem else { return }
 
@@ -97,7 +97,7 @@ struct WelcomeView: View {
             // 4. Claim pending affiliate link if user came from affiliate link (grants premium)
             await AffiliateAttributor().claimIfNeeded(deviceFingerprint: deviceFingerprint)
         }
-        
+
         ctx.userData.saveToFile()
     }
 }

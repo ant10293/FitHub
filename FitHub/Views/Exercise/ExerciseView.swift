@@ -15,10 +15,10 @@ struct ExerciseView: View {
         VStack {
             SplitCategoryPicker(userData: ctx.userData, selectedCategory: $selectedCategory)
                 .padding(.bottom, -5)
-            
+
             SearchBar(text: $searchText, placeholder: "Search Exercises")
                 .padding(.horizontal)
-            
+
             exerciseListView
         }
         .navigationBarTitle("Exercises", displayMode: .inline)
@@ -46,7 +46,7 @@ struct ExerciseView: View {
             }
         }
     }
-    
+
     private var filteredExercises: [Exercise] {
         ctx.exercises.filteredExercises(
             searchText: searchText,
@@ -56,7 +56,7 @@ struct ExerciseView: View {
             equipmentData: ctx.equipment
         )
     }
-    
+
     private var exerciseListView: some View {
         List {
             if filteredExercises.isEmpty {
@@ -67,7 +67,7 @@ struct ExerciseView: View {
                 Section {
                     ForEach(filteredExercises, id: \.self) { exercise in
                         let favState = FavoriteState.getState(for: exercise, userData: ctx.userData)
-                        
+
                         ExerciseRow(
                             exercise,
                             heartOverlay: favState != .unmarked,

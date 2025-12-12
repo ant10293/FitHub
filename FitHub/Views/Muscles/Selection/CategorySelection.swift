@@ -74,7 +74,7 @@ struct CategorySelection: View {
             }
         }
     }
-    
+
     private func saveExitAction() {
         vm.saveIfNeeded(singleSave: onSave)
         donePressed = true
@@ -101,4 +101,3 @@ extension View {
             .opacity(disabled ? 0.6 : 1.0)
     }
 }
-

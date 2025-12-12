@@ -21,7 +21,7 @@ struct CalendarView: View {
         Array(repeating: GridItem(.flexible(), spacing: 0, alignment: .center), count: 7)
     }
 
-    private let weekdayHeaders = ["SUN","MON","TUE","WED","THU","FRI","SAT"] 
+    private let weekdayHeaders = ["SUN","MON","TUE","WED","THU","FRI","SAT"]
 
     var body: some View {
         VStack {
@@ -32,14 +32,14 @@ struct CalendarView: View {
                         Image(systemName: "arrow.left").bold()
                             .contentShape(Rectangle())
                     }
-                    
+
                     Spacer()
-                    
+
                     Text("\(currentMonth.monthName) \(String(year(from: currentMonth)))")
                         .font(.headline)
-                    
+
                     Spacer()
-                    
+
                     if !isNextMonth(currentMonth) {
                         Button(action: moveToNextMonth) {
                             Image(systemName: "arrow.right").bold()
@@ -48,7 +48,7 @@ struct CalendarView: View {
                     }
                 }
                 .padding()
-                
+
                 // ── Headers + Days share the SAME grid ───────────────────────
                 LazyVGrid(columns: columns, spacing: 0) {
                     // Header row
@@ -61,7 +61,7 @@ struct CalendarView: View {
                         }
                     }
                     .padding(.bottom)
-                    
+
                     // Day cells
                     ForEach(offsetDays.indices, id: \.self) { i in
                         dayCell(for: offsetDays[i])
@@ -112,7 +112,7 @@ struct CalendarView: View {
             placeholderDayCell
         }
     }
-    
+
     private func workoutLabel(for workout: CompletedWorkout) -> String {
         let timeString = Format.formatDate(workout.date, dateStyle: .none, timeStyle: .short)
         return "\(workout.template.name) - \(timeString)"

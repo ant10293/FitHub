@@ -49,17 +49,17 @@ struct BFCalculator: View {
                     hipCard
                 }
                 heightCard
-                
+
                 if !kbd.isVisible {
                     Spacer(minLength: height)
-                    
+
                     RectangularButton(
                         title: "Calculate Body Fat %",
                         enabled: isCalculateEnabled,
                         action: calculateAndShow
                     )
                     .padding(.horizontal)
-                    
+
                     Spacer(minLength: height)
                 }
             }
@@ -75,7 +75,7 @@ struct BFCalculator: View {
                     CalcResultView(title: "Body Fat Percentage", singleResult: "\(String(format: "%.2f", computedBF)) %", dismissAction: {
                         showingResult = false
                         dismiss()
-                    }) 
+                    })
                 }
             }
         )
@@ -195,7 +195,7 @@ struct BFCalculator: View {
     private func toggle(_ card: ActiveCard) {
         activeCard = activeCard == card ? .none : card
     }
-    
+
     private func closePicker() {
         kbd.dismiss()
         activeCard = .none

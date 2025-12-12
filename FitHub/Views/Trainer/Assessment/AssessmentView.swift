@@ -15,25 +15,25 @@ struct AssessmentView: View {
         NavigationStack(path: $navPath) {
             VStack(alignment: .center, spacing: 20) {
                 let width = screenWidth * 0.8
-                                
+
                 Text("Tailor Your Workouts")
                     .font(.largeTitle)
                     .bold()
                     .padding(.top)
-                
+
                 Text("To ensure that your workouts are best tailored to you, please complete one or both of the options below:")
                     .font(.body)
                     .multilineTextAlignment(.center)
                     .frame(width: width)
                     .padding(.bottom)
-                
+
                 VStack(spacing: 16) {
                     if !ctx.userData.setup.maxRepsEntered {
                         NavigationLink(value: ViewOption.enterMaxReps) {
                             RectangularLabel(title: "Enter Max Reps", systemImage: "flame.fill", bgColor: .red, fgColor: .white, fontWeight: .bold)
                         }
                     }
-                    
+
                     if !ctx.userData.setup.oneRepMaxesEntered {
                         NavigationLink(value: ViewOption.enterOneRepMaxes) {
                             RectangularLabel(title: "Enter One Rep Maxes", systemImage: "dumbbell", bgColor: .blue, fgColor: .white, fontWeight: .bold)
@@ -41,7 +41,7 @@ struct AssessmentView: View {
                     }
                 }
                 .padding(.horizontal)
-                                
+
                 Spacer(minLength: 24)
 
                 // NEW: warning if neither input was provided
@@ -51,7 +51,7 @@ struct AssessmentView: View {
                         width: width
                     )
                 }
-                                
+
                 skipOrContinueButton
 
                 Spacer()
@@ -70,7 +70,7 @@ struct AssessmentView: View {
             }
         }
     }
-    
+
     private var skipOrContinueButton: some View {
         RectangularButton(
             title: isContinue ? "Continue" : "Skip",
@@ -79,17 +79,17 @@ struct AssessmentView: View {
         )
         .padding(.horizontal)
     }
-    
+
     private var isContinue: Bool {
         ctx.userData.setup.maxRepsEntered || ctx.userData.setup.oneRepMaxesEntered
     }
-    
+
     private var needsEstimate: Bool {
         !ctx.userData.setup.oneRepMaxesEntered && !ctx.userData.setup.maxRepsEntered
     }
-    
+
     private enum ViewOption: Hashable { case enterMaxReps, enterOneRepMaxes }
-    
+
     private func handleCompletion() {
         ctx.userData.setup.infoCollected = true
         let shouldEstimate = needsEstimate
@@ -108,25 +108,25 @@ struct AssessmentView: View {
                 exerciseData.seedEstimatedMaxes(userData: userData)
             }
         }
-        
+
         ctx.userData.saveToFile()
     }
-    
+
     private func checkCompletion() {
         if ctx.userData.setup.oneRepMaxesEntered && ctx.userData.setup.maxRepsEntered {
             handleCompletion()
         }
     }
-    
+
     func calculateFitnessLevel(for userData: UserData) -> StrengthLevel {
         let bmi = userData.currentMeasurementValue(for: .bmi).displayValue
         let bfPct = userData.currentMeasurementValue(for: .bodyFatPercentage).displayValue
         let gender = userData.physical.gender
         let questionAnswers = userData.setup.questionAnswers
-        
+
         // Reset fitness level score
         var score = 0
-        
+
         // Familiarity with gym equipment and techniques
         if let gymFamiliarity = questionAnswers[safe: 0] {
             if gymFamiliarity == "Yes" {
@@ -137,7 +137,7 @@ struct AssessmentView: View {
                 score -= 1
             }
         }
-        
+
         // Training Experience
         if let experience = questionAnswers[safe: 1] {
             if experience == "< 3 months" {
@@ -152,7 +152,7 @@ struct AssessmentView: View {
                 score += 4
             }
         }
-        
+
         // Currently following a structured workout program
         if let workoutHabit = questionAnswers[safe: 2] {
             if workoutHabit.starts(with: "Yes, I am currently following a structured workout program") {
@@ -165,13 +165,13 @@ struct AssessmentView: View {
                 score -= 1
             }
         }
-        
+
         let isHealthyBMI = bmi > 18.5 && bmi < 25
         let isHealthyBodyFat = (gender == .male && bfPct <= 24) || (gender == .female && bfPct <= 31)
-        
+
         if isHealthyBMI { score += 1 }
         if isHealthyBodyFat, bfPct > 0 { score += 1 }
-        
+
         // Max = 11
         let strengthLvl: StrengthLevel
         switch score {
@@ -181,7 +181,7 @@ struct AssessmentView: View {
         case 7...9: strengthLvl = .advanced
         default: strengthLvl = .elite
         }
-        
+
         return strengthLvl
     }
 }

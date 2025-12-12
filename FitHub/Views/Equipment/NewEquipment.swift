@@ -13,7 +13,7 @@ struct NewEquipment: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
     @EnvironmentObject var ctx: AppContext
-    
+
     // ────────── Local state
     @StateObject private var kbd = KeyboardManager.shared
     @State private var equipmentCreated: Bool = false
@@ -25,7 +25,7 @@ struct NewEquipment: View {
     @State private var draft: InitEquipment
     let initialDraft: InitEquipment
     let original: GymEquipment?
-    
+
     init(original: GymEquipment? = nil) {
         self.original = original
         if let ori = original {
@@ -46,7 +46,7 @@ struct NewEquipment: View {
             self.initialDraft = initEq
         }
     }
-    
+
     // ────────── View
     var body: some View {
         NavigationStack {
@@ -61,28 +61,28 @@ struct NewEquipment: View {
                         alternativeSection
                         categoryPicker
                             .disabled(isReadOnly)
-                        
+
                         if EquipmentCategory.platedCats.contains(draft.equCategory) {
                             pegCountPicker
                             implementationPicker
                         }
-                        
+
                         AdjustmentPicker(adjustments: $draft.adjustments)
-                        
+
                         if EquipmentCategory.platedCats.contains(draft.equCategory) {
                             baseWeightField
                         }
-                        
+
                         if !isReadOnly {
                             ImageField(initialFilename: draft.image, onImageUpdate: { name in
                                 draft.image = name
                             })
-                            
+
                             descriptionField
                         }
                     }
                     .padding(.bottom)
-                    
+
                     if !kbd.isVisible {
                         RectangularButton(
                             title: isEditing ? "Save & Exit" : "Create Equipment",
@@ -91,13 +91,13 @@ struct NewEquipment: View {
                         ) {
                             equipmentCreated = true
                             draft.name = draft.name.trimmed
-                            
+
                             ctx.equipment.updateEquipment(equipment: equipment)
-                            
+
                             dismiss()
                         }
                         .padding(.vertical)
-                
+
                         if isEditing {
                             switch ctx.equipment.getEquipmentLocation(equipment) {
                             case .user:
@@ -164,18 +164,18 @@ struct NewEquipment: View {
             Text("This will discard your changes and reload the original equipment.")
         }
     }
-    
+
     private var isBundledOverride: Bool { ctx.equipment.isOverridenEquipment(equipment) }
-    
+
     private var isEditing: Bool { original != nil }
-    
+
     private var isReadOnly: Bool {
         if let ori = original { return !ctx.equipment.isUserEquipment(ori) }
         return false
     }
-    
+
     private var equipment: GymEquipment { GymEquipment(from: draft) }  // convert from initEquipment
-        
+
     // ────────── Sub-views ------------------------------------------------
     private var alternativeSection: some View {
         let alt = draft.alternativeEquipment ?? []
@@ -192,9 +192,9 @@ struct NewEquipment: View {
     private var categoryPicker: some View {
         HStack {
             Text("Category").font(.headline)
-            
+
             Spacer()
-            
+
             Picker("Category", selection: $draft.equCategory) {
                 ForEach(EquipmentCategory.allCases.filter { $0 != .all }, id: \.self) {
                     Text($0.rawValue).tag($0)
@@ -203,11 +203,11 @@ struct NewEquipment: View {
             .pickerStyle(.menu)
         }
     }
-    
+
     private var baseWeightField: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Base Weight (\(UnitSystem.current.weightUnit))").font(.headline)
-            
+
             TextField("Optional", text: Binding(
                 get: { draft.baseWeight?.resolvedMass.displayString ?? "" },
                 set: { input in
@@ -219,7 +219,7 @@ struct NewEquipment: View {
             .inputStyle()
         }
     }
-    
+
     private var pegCountPicker: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Plate pegs").font(.headline)
@@ -228,7 +228,7 @@ struct NewEquipment: View {
                 get: { draft.pegCount ?? .none },
                 set: { draft.pegCount = $0 }
             )
-            
+
             Picker("Plate pegs", selection: pegs) {   // draft.pegCount: Int
                 ForEach(PegCountOption.allCases, id: \.self) { option in
                     Text(option.label).tag(option.rawValue)      // tag: Int
@@ -241,7 +241,7 @@ struct NewEquipment: View {
                 .foregroundStyle(.secondary)
         }
     }
-    
+
     private var implementationPicker: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Implement Type").font(.headline)
@@ -250,7 +250,7 @@ struct NewEquipment: View {
                 get: { draft.implementation ?? .unified },
                 set: { draft.implementation = $0 }
             )
-            
+
             Picker("Implement Type", selection: implementation) {
                 ForEach(ImplementationType.allCases, id: \.self) { option in
                     Text(option.rawValue).tag(option.rawValue)
@@ -263,7 +263,7 @@ struct NewEquipment: View {
                 .foregroundStyle(.secondary)
         }
     }
-    
+
     private var descriptionField: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Description").font(.headline)
@@ -277,14 +277,14 @@ struct NewEquipment: View {
                 .scrollContentBackground(.hidden)
         }
     }
-    
+
     private var isDuplicateName: Bool {
         ctx.equipment.allEquipment.contains {
             $0.id != original?.id &&                       // ← ignore self
             $0.name.caseInsensitiveCompare(draft.name) == .orderedSame
         }
     }
-    
+
     private var nameError: String? {
         guard !equipmentCreated else { return nil }
         if draft.name.isEmpty { return "Field is required." }
@@ -292,14 +292,14 @@ struct NewEquipment: View {
         if isDuplicateName { return "Name already exists." }
         return nil
     }
-    
+
     private var isInputValid: Bool {
         !draft.name.isEmpty &&
         InputLimiter.isValidInput(draft.name) &&
         !isDuplicateName &&
         draft != initialDraft
     }
-    
+
     private func setEquipment(selection: [GymEquipment]) {
         draft.alternativeEquipment = selection.map(\.name)
         alternativeEquipment = ctx.equipment.getEquipment(from: draft.alternativeEquipment ?? [])

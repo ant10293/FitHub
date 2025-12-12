@@ -13,7 +13,7 @@ enum SetMetric: Codable, Equatable, Hashable {
     case hold(TimeSpan)   // isometric: time under tension
     case carry(Meters)  // carry: distance covered
     case cardio(TimeOrSpeed)
-    
+
     var fieldString: String {
         switch self {
         case .reps(let r): return r > 0 ? String(r) : ""
@@ -22,7 +22,7 @@ enum SetMetric: Codable, Equatable, Hashable {
         case .cardio(let tos): return tos.fieldString
         }
     }
-    
+
     var actualValue: Double {
         switch self {
         case .reps(let r): return Double(r)
@@ -31,7 +31,7 @@ enum SetMetric: Codable, Equatable, Hashable {
         case .cardio(let ts): return ts.actualValue
         }
     }
-    
+
     var label: String {
         switch self {
         case .reps: return "Reps"
@@ -40,7 +40,7 @@ enum SetMetric: Codable, Equatable, Hashable {
         case .cardio(let ts): return ts.label
         }
     }
-    
+
     var zeroValue: Self {
         switch self {
         case .reps: return .reps(0)
@@ -49,7 +49,7 @@ enum SetMetric: Codable, Equatable, Hashable {
         case .cardio: return .cardio(.init())
         }
     }
-    
+
     var unit: UnitCategory {
         switch self {
         case .reps: return .reps
@@ -58,7 +58,7 @@ enum SetMetric: Codable, Equatable, Hashable {
         case .cardio(let tos): return tos.unit
         }
     }
-    
+
     var displayString: String {
         switch self {
         case .reps(let r): return String(r)
@@ -67,7 +67,7 @@ enum SetMetric: Codable, Equatable, Hashable {
         case .cardio(let tos): return tos.displayString
         }
     }
-    
+
    var formattedText: Text {
        switch self {
        case .reps: return Text(displayString)
@@ -83,22 +83,22 @@ extension SetMetric {
         if case .reps(let n) = self { return n }
         return nil
     }
-    
+
     var holdTime: TimeSpan? {
         if case .hold(let t) = self { return t }
         return nil
     }
-    
+
     var timeSpeed: TimeOrSpeed? {
         if case .cardio(let tos) = self { return tos }
         return nil
     }
-    
+
     var metersValue: Meters? {
         if case .carry(let m) = self { return m }
         return nil
     }
-    
+
     var secondsValue: Int? {
         switch self {
         case .cardio(let ts): return ts.time.inSeconds
@@ -116,18 +116,18 @@ extension SetMetric {
             let reps = r * repsMul
             let kg   = weightKg * weightMul
             return (kg * Double(reps), reps)
-            
+
         case .hold:
             return (weightKg, 0)
-        
+
         case .carry:
             return (weightKg, 0)
-                
+
         case .cardio:
             return (0, 0)
         }
     }
-    
+
     // for progression
     func scaling(by factor: Double) -> SetMetric {
         switch self {

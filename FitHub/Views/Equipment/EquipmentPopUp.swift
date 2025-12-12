@@ -14,7 +14,7 @@ struct EquipmentPopupView: View {
     var onClose: () -> Void
     var onContinue: () -> Void = {}
     var onEdit: () -> Void = {}
-    
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -44,13 +44,13 @@ struct EquipmentPopupView: View {
             }
         }
     }
-    
+
     private var EquipmentList: some View {
         List(selectedEquipment, id: \.id) { gymEquip in
             HStack {
                 gymEquip.fullImageView
                     .frame(width: screenWidth * 0.15)
-                
+
                 Text(gymEquip.name)
 
                 Spacer()

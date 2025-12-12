@@ -15,7 +15,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
     case hold30sLoad(Mass)
     case carry50mLoad(Mass)
     case none
-    
+
     var actualValue: Double {
         switch self {
         case .oneRepMax(let mass): return mass.inKg
@@ -26,7 +26,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
         case .none: return 0
         }
     }
-    
+
     var displayValue: Double {
         switch self {
         case .oneRepMax(let mass): return mass.displayValue
@@ -36,7 +36,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
         case .none: return self.actualValue
         }
     }
-    
+
     var displayString: String {
         switch self {
         case .oneRepMax(let mass): return mass.displayString
@@ -47,7 +47,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
         case .none: return ""
         }
     }
-    
+
     var unitLabel: String? {
         switch self {
         case .oneRepMax, .hold30sLoad, .carry50mLoad: return UnitSystem.current.weightUnit
@@ -67,7 +67,7 @@ enum PeakMetric: Codable, Equatable, Hashable {
         case .none: return ""
         }
     }
-    
+
     var percentileHeader: String {
         let base = "Use this table to determine your working "
         let suffix: String
@@ -96,27 +96,27 @@ extension PeakMetric {
         case .maxHold, .maxReps, .none: return nil
         }
     }
-    
+
     var labeledText: Text {
         let base = Text(displayString)
         guard let label = displayLabel, !label.isEmpty else { return base }
         return base + Text(" ") + Text(label).fontWeight(.light)
     }
-    
+
     var formattedText: Text {
         return Text("\(performanceTitle): ").bold() + labeledText
     }
-    
+
     var placeholder: String {
         let base: String = "Enter"
-        
+
         if let placeholderLabel {
             return base + " (\(placeholderLabel))"
         } else {
             return base + " value"
         }
     }
-    
+
     private var placeholderLabel: String? {
         switch self {
         case .maxHold: return "h:m:s"
@@ -134,7 +134,7 @@ extension Optional where Wrapped == PeakMetric {
 
 enum ExerciseUnit: String, Codable, CaseIterable {
     case weightXreps, repsOnly, timeOnly, weightXtime, weightXdistance, distanceXtimeOrSpeed
-    
+
     func getPeakMetric(metricValue: Double) -> PeakMetric {
         switch self {
         case .weightXreps:
@@ -151,7 +151,7 @@ enum ExerciseUnit: String, Codable, CaseIterable {
             return .none
         }
     }
-    
+
     // MARK: no support for weighted hold and cardio exercises
     var supportsPR: Bool {
         let peak = getPeakMetric(metricValue: 0)
@@ -160,7 +160,7 @@ enum ExerciseUnit: String, Codable, CaseIterable {
         default: return true
         }
     }
-    
+
     var displayName: String {
         switch self {
         case .weightXreps: return "Weight × Reps"
@@ -186,7 +186,7 @@ struct ExercisePerformance: Identifiable, Codable {
     var estimatedValue: PeakMetric?     // csv
     var currentMax: MaxRecord?     // curent
     var pastMaxes: [MaxRecord]?     // past
-    
+
     init(exerciseId: UUID) {
         self.id = exerciseId
     }
@@ -194,7 +194,7 @@ struct ExercisePerformance: Identifiable, Codable {
 
 struct PerformanceUpdates: Codable, Hashable {
     var updatedMax: [PerformanceUpdate] = []
-    
+
     var prExerciseIDs: [UUID] { updatedMax.map(\.exerciseId) }
 
     mutating func updatePerformance(_ update: PerformanceUpdate) {
@@ -224,7 +224,7 @@ struct PerformanceUpdate: Codable, Hashable {
 struct LoadXMetric: Codable, Hashable {
     let load: SetLoad
     let metric: SetMetric
-    
+
     func formattedText(simple: Bool = false) -> Text {
         SetDetail.formatLoadMetric(load: load, metric: metric, simple: simple)
     }

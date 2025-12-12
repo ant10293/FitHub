@@ -13,11 +13,11 @@ enum AssetPath: String, CaseIterable, Codable {
     case muscle = "Muscle"
     case split = "Split"
     case tap = "Tap"
-    
+
     static let basePath: String = "FitHubAssets/Images/"
     static let pathMale: String = basePath + "Male/"
     static let pathFemale: String = basePath + "Female/"
-    
+
     static func getImagePath(for asset: AssetPath, isfront: Bool, isBlank: Bool = false, isColored: Bool = false, gender: Gender) -> String {
         var front = "Front/"
         var rear = "Rear/"
@@ -57,64 +57,64 @@ enum AssetPath: String, CaseIterable, Codable {
             return fullPath
         }
     }
-    
+
     static func getSplitImages(category: SplitCategory, isTarget: Bool = false, gender: Gender) -> [String] {
         let basePathFront = getImagePath(for: .split, isfront: true, gender: gender)
         let basePathRear = getImagePath(for: .split, isfront: false, gender: gender)
-        
+
         let imageName = category.rawValue.replacingOccurrences(of: " ", with: "-").lowercased()
         var images: [String] = []
-        
+
         if SplitCategory.hasFrontImages.contains(category) {
             images.append(basePathFront + imageName + (isTarget ? "-target" : ""))
         }
-        
+
         if SplitCategory.hasRearImages.contains(category) {
             images.append(basePathRear + imageName + (isTarget ? "-target" : ""))
         }
         return images
     }
-    
+
     /*
     static func getMuscleImages(category: Muscle, gender: Gender) -> [String] {
         let basePathFront = getImagePath(for: .muscle, isfront: true, gender: gender)
         let basePathRear = getImagePath(for: .muscle, isfront: false, gender: gender)
-        
+
         let imageName = category.rawValue.replacingOccurrences(of: " ", with: "-").lowercased()
         var images: [String] = []
-        
+
         if Muscle.hasFrontImages.contains(category) {
             images.append(basePathFront + imageName)
         }
-        
+
         if Muscle.hasRearImages.contains(category) {
             images.append(basePathRear + imageName)
         }
         return images
     }
-    
+
     static func getDetailedMuscleImages(category: SubMuscles, gender: Gender) -> [String] {
         let basePathFront = getImagePath(for: .detailedMuscle, isfront: true, gender: gender)
         let basePathRear = getImagePath(for: .detailedMuscle, isfront: false, gender: gender)
-        
+
         let imageName = category.rawValue.replacingOccurrences(of: " ", with: "-").lowercased()
         var images: [String] = []
-        
+
         if SubMuscles.hasFrontImages.contains(category) {
             images.append(basePathFront + imageName)
         }
-        
+
         if SubMuscles.hasRearImages.contains(category) {
             images.append(basePathRear + imageName)
         }
         return images
     }
-    
+
     static func getTapImage(muscle: Muscle, showFrontView: Bool, gender: Gender) -> String? {
         let basePath = getImagePath(for: .tap, isfront: showFrontView, gender: gender)
-        
+
         let imageName = muscle.rawValue.replacingOccurrences(of: " ", with: "-").lowercased()
-        
+
         if (showFrontView && Muscle.hasFrontImages.contains(muscle)) || (!showFrontView && Muscle.hasRearImages.contains(muscle)) {
             return basePath + imageName
         }
@@ -123,4 +123,3 @@ enum AssetPath: String, CaseIterable, Codable {
     }
     */
 }
-

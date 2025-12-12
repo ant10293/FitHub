@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SetDetailSettings: View {
     @ObservedObject var userData: UserData
-    
+
     var body: some View {
         List {
             Section {
@@ -17,13 +17,13 @@ struct SetDetailSettings: View {
             } footer: {
                 Text("Removes the RPE control so you’re not prompted to rate effort during/after sets.")
             }
-            
+
             Section {
                 Toggle("Hide Completed Input", isOn: $userData.settings.hideCompletedInput)
             } footer: {
                 Text("Hides the “Completed” fields (reps, time). When a set is marked finished, its completed values will automatically match the planned ones.")
             }
-            
+
             Section {
                 Toggle("Hide Exercise Image", isOn: $userData.settings.hideExerciseImage)
             } footer: {
@@ -40,17 +40,16 @@ struct SetDetailSettings: View {
              }
          }
     }
-    
+
     var isDefault: Bool {
         userData.settings.hideRpeSlider == false
         && userData.settings.hideCompletedInput == false
         && userData.settings.hideExerciseImage == false
     }
-    
+
     func resetAll() {
         userData.settings.hideRpeSlider = false
         userData.settings.hideCompletedInput = false
         userData.settings.hideExerciseImage = false
     }
 }
-

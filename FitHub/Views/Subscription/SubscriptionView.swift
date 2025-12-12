@@ -13,7 +13,7 @@ struct SubscriptionView: View {
         ScrollView {
             VStack(spacing: 20) {
                 Spacer()
-                
+
                 if let banner = lifetimeCancellationBannerConfig {
                     SubscriptionWarningBanner(message: banner.message) {
                         manageSubscriptions(openURL: openURL)
@@ -25,7 +25,7 @@ struct SubscriptionView: View {
                 }
 
                 plansSection
-                
+
                 if let note = autoRenewFootnote {
                     Text(note)
                         .font(.footnote)
@@ -58,7 +58,7 @@ struct SubscriptionView: View {
                         }
                     }
                 }
-                    
+
                 Spacer()
             }
             .padding()
@@ -88,12 +88,12 @@ struct SubscriptionView: View {
     }
 
     // MARK: - Sections
-    
+
     private var referralCodeSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Referral Code")
                 .font(.headline)
-            
+
         TextField("Referral Code (Optional)", text: $referralCode)
             .textContentType(.none)
             .autocapitalization(.allCharacters)
@@ -127,7 +127,7 @@ struct SubscriptionView: View {
         VStack(alignment: .leading, spacing: 14) {
             Text("Choose a plan")
                 .font(.headline)
-            
+
             ForEach(orderedProducts, id: \.id) { p in
                 let mt = PremiumStore.MembershipType.from(productID: p.id)
 
@@ -175,7 +175,7 @@ struct SubscriptionView: View {
     private var lifetimeCancellationBannerConfig: LifetimeCancellationBannerConfig? {
         guard ctx.store.membershipType == .lifetime,
               let overlap = ctx.store.overlappingSubscriptionInfo else { return nil }
-       
+
         guard let willRenew = overlap.willAutoRenew, willRenew else { return nil }
 
         let planName = overlap.type.displayName

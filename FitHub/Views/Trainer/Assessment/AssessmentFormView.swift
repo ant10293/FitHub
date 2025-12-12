@@ -15,7 +15,7 @@ struct AssessmentInputField {
 
 struct AssessmentFormView<AdditionalContent: View>: View {
     @StateObject private var kbd = KeyboardManager.shared
-    
+
     let title: String
     let headline: String
     let subheadline: String
@@ -23,7 +23,7 @@ struct AssessmentFormView<AdditionalContent: View>: View {
     let additionalContent: AdditionalContent
     let submitEnabled: Bool
     let onSubmit: () -> Void
-    
+
     init(
         title: String,
         headline: String,
@@ -41,29 +41,29 @@ struct AssessmentFormView<AdditionalContent: View>: View {
         self.onSubmit = onSubmit
         self.additionalContent = additionalContent()
     }
-    
+
     var body: some View {
         ZStack {
             Color(UIColor.secondarySystemBackground)
                 .ignoresSafeArea(.all)
                 .zIndex(0)
-            
+
             VStack {
                 Text(title)
                     .font(.largeTitle)
                     .bold()
                     .padding(.top)
-                
+
                 Spacer()
-                
+
                 headerView
-                
+
                 additionalContent
-                
+
                 inputFieldsView
-                
+
                 Spacer()
-                
+
                 if !kbd.isVisible {
                     RectangularButton(
                         title: "Submit",
@@ -73,13 +73,13 @@ struct AssessmentFormView<AdditionalContent: View>: View {
                     )
                     .padding()
                 }
-                
+
                 Spacer()
             }
         }
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
     }
-    
+
     private var headerView: some View {
         VStack(spacing: 5) {
             Text(headline)
@@ -92,13 +92,13 @@ struct AssessmentFormView<AdditionalContent: View>: View {
         .multilineTextAlignment(.center)
         .padding(.top)
     }
-    
+
     private var inputFieldsView: some View {
         VStack(spacing: 15) {
             ForEach(Array(inputFields.enumerated()), id: \.offset) { _, field in
                 HStack {
                     Text(field.label)
-                    
+
                     TextField(field.placeholder, text: field.text)
                         .inputStyle(background: Color(.systemBackground), cornerRadius: 8)
                         .keyboardType(.decimalPad)
@@ -108,4 +108,3 @@ struct AssessmentFormView<AdditionalContent: View>: View {
         }
     }
 }
-

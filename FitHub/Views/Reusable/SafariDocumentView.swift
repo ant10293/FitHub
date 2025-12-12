@@ -8,7 +8,7 @@
 import SwiftUI
 import SafariServices
 
-struct LegalSheetDisplay: View {    
+struct LegalSheetDisplay: View {
     @State private var showSheet = false
     let document: LegalURL
     let dismiss: () -> Void
@@ -28,13 +28,13 @@ struct LegalSheetDisplay: View {
 
 struct SafariDocumentView: UIViewControllerRepresentable {
     let url: URL
-    
+
     func makeUIViewController(context: Context) -> SFSafariViewController {
         let controller = SFSafariViewController(url: url)
         controller.dismissButtonStyle = .close
         return controller
     }
-    
+
     func updateUIViewController(_ controller: SFSafariViewController, context: Context) { }
 }
 

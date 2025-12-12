@@ -20,7 +20,7 @@ struct RestTimerSettings: View {
             } footer: {
                 Text("Enable rest timer during workouts.")
             }
-            
+
             if userData.settings.restTimerEnabled {
                 Section {
                     ForEach(RestType.allCases) { kind in
@@ -44,7 +44,7 @@ struct RestTimerSettings: View {
         }
         .onAppear(perform: onAppear)
     }
-    
+
     private func restRow(kind: RestType) -> some View {
         CustomDisclosure(
             title: kind.rawValue,
@@ -66,31 +66,31 @@ struct RestTimerSettings: View {
             }
         )
     }
-    
+
     private var isDefault: Bool {
         userData.workoutPrefs.customRestPeriods == nil
         && userData.settings.restTimerEnabled == true
     }
-    
+
     private func onAppear() {
         initialCustom = userData.workoutPrefs.customRestPeriods
         if let open = activeEditor { loadPicker(from: open) }
     }
-    
+
     private func reset() {
         userData.settings.restTimerEnabled = true
         userData.workoutPrefs.customRestPeriods = nil
         if let open = activeEditor { loadPicker(from: open) }
     }
-    
+
     private var resolved: RestPeriods {
         userData.workoutPrefs.customRestPeriods ?? defaultRest
     }
-    
+
     private var defaultRest: RestPeriods {
        userData.physical.goal.defaultRest
     }
-    
+
     private func toggleEditor(_ kind: RestType) {
         if activeEditor == kind {
             activeEditor = nil
@@ -99,12 +99,12 @@ struct RestTimerSettings: View {
             loadPicker(from: kind)
         }
     }
-    
+
     private func loadPicker(from kind: RestType) {
         let total = max(0, resolved.rest(for: kind)) // seconds
         editTime = TimeSpan(seconds: total)
     }
-    
+
     private func savePicker(into kind: RestType) {
         var custom = resolved
         custom.modify(for: kind, with: editTime.inSeconds)

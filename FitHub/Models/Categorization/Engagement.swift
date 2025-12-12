@@ -12,7 +12,7 @@ struct SubMuscleEngagement: Hashable, Codable {
     var submuscleWorked: SubMuscles
     var engagementPercentage: Double
 }
- 
+
 struct MuscleEngagement: Hashable, Codable {
     var muscleWorked: Muscle
     var engagementPercentage: Double
@@ -25,7 +25,7 @@ extension MuscleEngagement {
     var topSubMuscle: SubMuscles? {
         submusclesWorked?.max { $0.engagementPercentage < $1.engagementPercentage }?.submuscleWorked
     }
-    
+
     /// Dict of submuscles -> engagementPercentage
     var submuscleDict: [SubMuscles: Double] {
         (submusclesWorked ?? []).reduce(into: [:]) { dict, s in
@@ -114,12 +114,39 @@ extension Collection where Element == MuscleEngagement {
             }
         }
 
-        guard sumUnion > 0 else {
-            return 100.0
+        // Also compare submuscles directly across all engagements
+        let submuscleDictA = thisArray.collapsedBySubmuscle()
+        let submuscleDictB = other.collapsedBySubmuscle()
+        let allSubmuscles = Set(submuscleDictA.keys).union(submuscleDictB.keys)
+
+        var submuscleSumWeightedOverlap: Double = 0
+        var submuscleSumUnion: Double = 0
+
+        for submuscle in allSubmuscles {
+            let a = submuscleDictA[submuscle] ?? 0
+            let b = submuscleDictB[submuscle] ?? 0
+
+            let minVal = Swift.min(a, b)
+            let maxVal = Swift.max(a, b)
+            submuscleSumUnion += maxVal
+
+            if maxVal > 0 {
+                // Calculate similarity based on overlap ratio
+                let submuscleSim01 = minVal / maxVal
+                submuscleSumWeightedOverlap += minVal * submuscleSim01
+            }
         }
 
-        let similarity01 = sumWeightedOverlap / sumUnion
-        return (similarity01.clamped01 * 100.0)
+        // Blend muscle-level and submuscle-level similarities
+        let muscleSimilarity01 = (sumUnion > 0) ? (sumWeightedOverlap / sumUnion) : 1.0
+        let submuscleSimilarity01 = (submuscleSumUnion > 0) ? (submuscleSumWeightedOverlap / submuscleSumUnion) : 1.0
+
+        // Weight: 60% muscle-level, 40% submuscle-level
+        let muscleWeight = 0.6
+        let submuscleWeight = 0.4
+        let combinedSimilarity01 = muscleWeight * muscleSimilarity01 + submuscleWeight * submuscleSimilarity01
+
+        return (combinedSimilarity01.clamped01 * 100.0)
     }
 }
 
@@ -146,7 +173,7 @@ extension Sequence where Element == MuscleEngagement {
     var topPrimaryMuscle: Muscle? {
         primary.max { $0.engagementPercentage < $1.engagementPercentage }?.muscleWorked
     }
-    
+
     /// Keeps the entry with the highest engagementPercentage per muscle.
     func collapsedByMuscle() -> [Muscle: MuscleEngagement] {
         reduce(into: [:]) { dict, m in
@@ -159,11 +186,27 @@ extension Sequence where Element == MuscleEngagement {
             }
         }
     }
+
+    /// Collapses all submuscle engagements across all muscle engagements, keeping the highest engagement percentage per submuscle.
+    func collapsedBySubmuscle() -> [SubMuscles: Double] {
+        reduce(into: [:]) { dict, muscleEngagement in
+            guard let submuscles = muscleEngagement.submusclesWorked else { return }
+            for submuscleEngagement in submuscles {
+                let submuscle = submuscleEngagement.submuscleWorked
+                let engagement = submuscleEngagement.engagementPercentage
+                if let existing = dict[submuscle] {
+                    dict[submuscle] = Swift.max(existing, engagement)
+                } else {
+                    dict[submuscle] = engagement
+                }
+            }
+        }
+    }
 }
 
 enum MoverType: String, Codable, Hashable, CaseIterable {
     case primary, secondary, tertiary, stabilizer
-    
+
     var displayName: String {
         switch self {
         case .primary: return "Primary"

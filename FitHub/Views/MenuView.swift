@@ -44,7 +44,7 @@ struct MenuView: View {
                     Label("Modify Goal", systemImage: "target")
                 }
             }
-            
+
             Section(header: Text("Premium")) {
                 NavigationLink(destination: LazyDestination {
                     SubscriptionView()
@@ -52,7 +52,7 @@ struct MenuView: View {
                     Label("FitHub Pro", systemImage: "crown")
                 }
             }
-            
+
             // MARK: Affiliate System guard
             if useAffiliateSystem {
                 Section(header: Text("Partner")) {

@@ -22,7 +22,7 @@ final class ExerciseSelector {
     private let policy: Policy
     private let baseSeed: UInt64
     private var changes: DayChanges
-    
+
     // MARK: Init
     init(
         exerciseData: ExerciseData,
@@ -49,13 +49,13 @@ final class ExerciseSelector {
         self.baseSeed = seed
         self.changes = .init(preseed: days)
     }
-    
+
     // MARK: Policy
     struct Policy {
         var minCount: Int = 1
         var maxCount: Int = 20
     }
-    
+
     // MARK: Immutable catalog snapshot
     private struct ExerciseIndex {
         let allExercisesCount: Int
@@ -64,52 +64,52 @@ final class ExerciseSelector {
         let bySplit: [SplitCategory: [Int]]
         let byGroup: [SplitCategory: [Int]]
         let canPerform: [Bool]
-        
+
         init(data: ExerciseData, equipment: EquipmentData, selection: Set<GymEquipment.ID>) {
             self.allExercisesCount = data.allExercises.count
-            
+
             // TODO: add option to use all exercises instead of just those with data
             self.exercises = data.exercisesWithData
-            
+
             self.exercisesWithDataCount = exercises.count
-            
+
             var split: [SplitCategory: [Int]] = [:]
             var group: [SplitCategory: [Int]] = [:]
             split.reserveCapacity(64)
             group.reserveCapacity(64)
-            
+
             var perf: [Bool] = []
             perf.reserveCapacity(exercises.count)
-            
+
             for (i, ex) in exercises.enumerated() {
                 if let s = ex.splitCategory { split[s, default: []].append(i) }
                 if let g = ex.groupCategory(forGeneration: true) { group[g, default: []].append(i) }
                 perf.append(ex.canPerform(equipmentData: equipment, available: selection))
             }
-            
+
             self.bySplit = split
             self.byGroup = group
             self.canPerform = perf
         }
-        
+
         func union(for categories: [SplitCategory]) -> [Int] {
             guard !categories.isEmpty else { return [] }
             if categories.contains(.all) { return Array(exercises.indices) }
-            
+
             var seen = Set<Int>()
             var out: [Int] = []
-            
+
             for c in categories {
                 if let s = bySplit[c] { for i in s where seen.insert(i).inserted { out.append(i) } }
                 if let g = byGroup[c] { for i in g where seen.insert(i).inserted { out.append(i) } }
             }
             return out
         }
-        
+
         func getAllExercisesCount() -> Int { return allExercisesCount }
         func getExercisesWithDataCount() -> Int { return exercisesWithDataCount }
     }
-    
+
     // MARK: Public API - Simplified & Reliable
     func select(
         dayIndex: Int,
@@ -121,7 +121,7 @@ final class ExerciseSelector {
     ) -> ([Exercise], PoolChanges?) {
         let clampedTotal = max(policy.minCount, min(policy.maxCount, total))
         guard clampedTotal > 0 else { return (existing, nil) }
-        
+
         var rng = seededRNG(for: dayIndex)
         let relaxed = changes.pool(for: dayLabel)?.relaxedFilters ?? []
         var currentRelaxed = Set(relaxed)
@@ -135,7 +135,7 @@ final class ExerciseSelector {
             rng: &rng,
             relaxed: currentRelaxed
         )
-        
+
         // If short, progressively relax one filter at a time and retry
         for f in PoolChanges.RelaxedFilter.ordered(excluding: nonDefaultParams)
         where finalSelection.count < clampedTotal && !currentRelaxed.contains(f) {
@@ -156,7 +156,7 @@ final class ExerciseSelector {
         return (finalSelection.sorted { $0.effort.order < $1.effort.order },
                 changes.pool(for: dayLabel))
     }
-    
+
     private func attemptSelection(
         dayLabel: String,
         categories: [SplitCategory],
@@ -166,7 +166,7 @@ final class ExerciseSelector {
         rng: inout SeededRNG,
         relaxed: Set<PoolChanges.RelaxedFilter>
     ) -> [Exercise] {
-    
+
         var coverage: CoverageState = {
             if let coverage = changes.pool(for: dayLabel)?.coverage {
                 return coverage
@@ -179,7 +179,7 @@ final class ExerciseSelector {
                 return initCoverage
             }
         }()
-        
+
         // Pool width (split vs .all)
         let unionIdxs: [Int] = {
             if relaxed.contains(.split) {
@@ -216,13 +216,13 @@ final class ExerciseSelector {
         for ex in selection {
             coverage.apply(exercise: ex)
         }
-        
+
         // place at the end of func
         changes.updateCoverage(dayRaw: dayLabel, coverage: coverage)
-  
+
         return selection + baseExisting
     }
-    
+
     // TODO: we need to select using SubMuscle, but if the Muscle has no submucles, we use Muscle
     // MARK: - Simplified Distribution Logic
     private func applyDistributionLogic(
@@ -235,15 +235,15 @@ final class ExerciseSelector {
         var selectedExercises: [Exercise] = []
         var remainingExercises = getExercisePool(pool: pool, existing: existing)
         let baseExisting = existing ?? []
-        
+
         // For each effort type, select exercises according to distribution
         for (effort, needed) in countByEffort where needed > 0 {
             let matchingExercises = remainingExercises.filter { $0.effort == effort }
             let take = min(needed, matchingExercises.count) // cap by availability
-            
+
             // Combine base existing with already selected exercises for similarity comparison
             let currentExisting = baseExisting + selectedExercises
-                        
+
             let selected: [Exercise]
             if let best = selectBestForTargets(from: matchingExercises, targets: targets, count: take, existing: currentExisting, rng: &rng) {
                 selected = best
@@ -251,20 +251,20 @@ final class ExerciseSelector {
                 selected = selectRandomExercises(from: matchingExercises, count: take, existing: currentExisting, rng: &rng)
             }
             selectedExercises.append(contentsOf: selected)
-            
+
             // Remove selected exercises from remaining pool to avoid duplicates
             let selectedIds = Set(selected.map(\.id))
             remainingExercises = remainingExercises.filter { !selectedIds.contains($0.id) }
         }
-        
+
         return selectedExercises
     }
-    
+
     private func filterEligibleExercises(
         from indices: [Int],
         rAndS: RepsAndSets,
         dayLabel: String,
-        relaxed: Set<PoolChanges.RelaxedFilter>    
+        relaxed: Set<PoolChanges.RelaxedFilter>
     ) -> [Exercise] {
         var result: [Exercise] = []
 
@@ -310,7 +310,7 @@ final class ExerciseSelector {
                     tooDifficult.insert(ex.id); continue
                 }
             }
-            
+
             result.append(ex)
         }
 
@@ -330,17 +330,17 @@ final class ExerciseSelector {
 extension ExerciseSelector {
     private func getExercisePool(pool: [Exercise], existing: [Exercise]? = nil) -> [Exercise] {
         guard let existing, !existing.isEmpty else { return pool }
-        
+
         let exclude = Set((existing).map(\.id))
         // One pass: skip excluded, keep first occurrence per id
         let remaining: [Exercise] = pool.reduce(into: (seen: Set<Exercise.ID>(), out: [Exercise]())) { acc, ex in
             guard !exclude.contains(ex.id) else { return }
             if acc.seen.insert(ex.id).inserted { acc.out.append(ex) }
         }.out
-        
+
         return remaining
     }
-    
+
     // MARK: - Exercise Selection with Favorite Prioritization
     private func selectRandomExercises(from array: [Exercise], count: Int, existing: [Exercise], rng: inout SeededRNG) -> [Exercise] {
         let actual = min(count, array.count)
@@ -349,24 +349,27 @@ extension ExerciseSelector {
         let favs = array.filter { favorites.contains($0.id) }
         let non  = array.filter { !favorites.contains($0.id) }
 
-        // Prioritize least similar exercises within each group
-        var sortedFavs = favs
-        var sortedNon = non
-        if !existing.isEmpty {
-            sortedFavs.sort { minSimilarityToExisting(exercise: $0, existing: existing) < minSimilarityToExisting(exercise: $1, existing: existing) }
-            sortedNon.sort { minSimilarityToExisting(exercise: $0, existing: existing) < minSimilarityToExisting(exercise: $1, existing: existing) }
+        // First try to fill from favorites using diversity selection
+        var picked: [Exercise] = []
+        var currentExisting = existing
+
+        if !favs.isEmpty {
+            let favCount = min(favs.count, actual)
+            let favPicks = selectDiverseExercises(from: favs, count: favCount, existing: currentExisting, rng: &rng)
+            picked.append(contentsOf: favPicks)
+            currentExisting.append(contentsOf: favPicks)
         }
 
-        let takeFav = min(sortedFavs.count, actual)
-        var picked = Array(sortedFavs.shuffled(using: &rng).prefix(takeFav))
-
-        if picked.count < actual {
+        // Fill remaining from non-favorites if needed
+        if picked.count < actual && !non.isEmpty {
             let need = actual - picked.count
-            picked.append(contentsOf: sortedNon.shuffled(using: &rng).prefix(need))
+            let nonPicks = selectDiverseExercises(from: non, count: need, existing: currentExisting, rng: &rng)
+            picked.append(contentsOf: nonPicks)
         }
+
         return picked
     }
-    
+
     // MARK: Deterministic RNG
     private struct SeededRNG: RandomNumberGenerator {
         private var state: UInt64
@@ -390,7 +393,7 @@ extension ExerciseSelector {
     private func effortExerciseCount(_ exercises: [Exercise]) -> [EffortType: Int] {
         Dictionary(grouping: exercises, by: { $0.effort }).mapValues { $0.count }
     }
-    
+
     private func neededCounts(initialCounts: [EffortType: Int], subtractingSelected selected: [Exercise]) -> [EffortType: Int] {
         guard !selected.isEmpty else { return initialCounts }
         let selectedCounts = effortExerciseCount(selected)
@@ -402,12 +405,51 @@ extension ExerciseSelector {
         }
         return out
     }
-    
-    // MARK: - Similarity Helper
+
+    // MARK: - Similarity Helpers
     /// Returns the minimum similarity percentage to existing exercises (lower = more different = better)
     private func minSimilarityToExisting(exercise: Exercise, existing: [Exercise]) -> Double {
         guard !existing.isEmpty else { return 0.0 }
         return existing.map { exercise.similarityPct(to: $0) }.min() ?? 0.0
+    }
+
+    /// Selects exercises iteratively, always picking the least similar from remaining options
+    private func selectDiverseExercises(
+        from candidates: [Exercise],
+        count: Int,
+        existing: [Exercise],
+        rng: inout SeededRNG
+    ) -> [Exercise] {
+        guard count > 0, !candidates.isEmpty else { return [] }
+
+        var selected: [Exercise] = []
+        var remaining = candidates
+        var currentExisting = existing
+
+        while selected.count < count && !remaining.isEmpty {
+            // Sort by similarity (least similar first)
+            let sorted = remaining.sorted {
+                minSimilarityToExisting(exercise: $0, existing: currentExisting) <
+                minSimilarityToExisting(exercise: $1, existing: currentExisting)
+            }
+
+            // Pick the least similar one (or from top few if there's a tie)
+            let leastSimilar = sorted.first!
+            let leastSimilarity = minSimilarityToExisting(exercise: leastSimilar, existing: currentExisting)
+
+            // If multiple exercises have the same (lowest) similarity, pick randomly from them
+            let topCandidates = sorted.prefix {
+                minSimilarityToExisting(exercise: $0, existing: currentExisting) == leastSimilarity
+            }
+
+            let picked = Array(topCandidates).randomElement(using: &rng) ?? leastSimilar
+
+            selected.append(picked)
+            currentExisting.append(picked)
+            remaining.removeAll { $0.id == picked.id }
+        }
+
+        return selected
     }
 }
 
@@ -482,30 +524,15 @@ extension ExerciseSelector {
         }
         let bandSize = band.count
 
-        // Prioritize least similar exercises within the band
-        if !existing.isEmpty {
-            band.sort { minSimilarityToExisting(exercise: $0, existing: existing) < minSimilarityToExisting(exercise: $1, existing: existing) }
-        }
-        band.shuffle(using: &rng)
+        // Pick from band using diversity selection
+        var picks = selectDiverseExercises(from: band, count: min(count, band.count), existing: existing, rng: &rng)
+        var currentExisting = existing + picks
 
-        var picks: [Exercise] = []
-        var currentExisting = existing
-        while picks.count < count, !band.isEmpty {
-            let picked = band.removeFirst()
-            picks.append(picked)
-            currentExisting.append(picked)
-        }
-
-        // fill from the rest (prioritized by similarity) if needed
+        // Fill from the rest if needed, using diversity selection
         if picks.count < count {
-            var rest = Array(scored.dropFirst(bandSize)).map(\.ex)
-            if !currentExisting.isEmpty {
-                rest.sort { minSimilarityToExisting(exercise: $0, existing: currentExisting) < minSimilarityToExisting(exercise: $1, existing: currentExisting) }
-            }
-            rest.shuffle(using: &rng)
-            while picks.count < count, !rest.isEmpty {
-                picks.append(rest.removeFirst())
-            }
+            let rest = Array(scored.dropFirst(bandSize)).map(\.ex)
+            let additional = selectDiverseExercises(from: rest, count: count - picks.count, existing: currentExisting, rng: &rng)
+            picks.append(contentsOf: additional)
         }
 
         return picks.isEmpty ? nil : picks

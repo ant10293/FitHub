@@ -10,12 +10,12 @@ import SwiftUI
 struct DeloadSettingsView: View {
     @ObservedObject var userData: UserData
     @State private var deloadIntensity: Int
-    
+
     init(userData: UserData) {
         self.userData = userData
         _deloadIntensity = State(initialValue: userData.settings.deloadIntensity)
     }
-    
+
     var body: some View {
         List {
             // ── AUTO DELOAD ────────────────────────────────────────────────
@@ -24,7 +24,7 @@ struct DeloadSettingsView: View {
             } footer: {
                 Text("When Auto-Deload is on, the trainer will inject a lighter “deload” week into your plan whenever your progress stalls.")
             }
-            
+
             // ── DELOAD INTENSITY % ────────────────────────────────────────
             Section {
                 HStack {
@@ -48,7 +48,7 @@ struct DeloadSettingsView: View {
             } footer: {
                 Text("Fraction of your usual training load to apply in a deload week; all working-set weights are multiplied by this value.")
             }
-            
+
             // ── PERIOD UNTIL DELOAD ───────────────────────────────────────
             Section {
                 Stepper(
@@ -72,19 +72,17 @@ struct DeloadSettingsView: View {
             }
         }
     }
-    
+
     private func reset() {
         userData.settings.allowDeloading = true
         userData.settings.periodUntilDeload = 4
         userData.settings.deloadIntensity = 85
         deloadIntensity = 85
     }
-    
+
     private var isDefault: Bool {
         return userData.settings.allowDeloading
         && userData.settings.periodUntilDeload == 4
         && userData.settings.deloadIntensity == 85
     }
 }
-
-

@@ -52,13 +52,13 @@ struct ExerciseChange: Codable, Identifiable {
     let newExercise: Exercise
     let progressionDetails: ProgressionDetails?
     let maxRecordInfo: MaxRecordInfo? // NEW: Add this
-    
+
     enum ChangeType: String, Codable, CaseIterable {
         case new = "New Exercise"
         case kept = "Kept Exercise"
         case replaced = "Replaced Exercise"
         case modified = "Modified Exercise"
-        
+
         var color: Color {
             switch self {
             case .new: return .green
@@ -67,7 +67,7 @@ struct ExerciseChange: Codable, Identifiable {
             case .modified: return .purple
             }
         }
-        
+
         var icon: String {
             switch self {
             case .new: return "plus.circle.fill"
@@ -84,7 +84,7 @@ struct MaxRecordInfo: Codable {
     let csvEstimate: PeakMetric?
     let lastUpdated: Date?
     let daysSinceLastUpdate: Int?
-    
+
     var displayText: Text {
         if let currentMax = currentMax {
             return Text("Current \(currentMax.value.formattedText) (set \(currentMax.date.shortDate))")
@@ -102,7 +102,7 @@ struct ProgressionDetails: Codable {
     let newWeek: Int
     let stagnationWeeks: Int
     let appliedChange: String
-    
+
     enum ProgressionType: String, Codable {
         case progressiveOverload = "Progressive Overload"
         case prUpdate = "PR Update"
@@ -112,7 +112,7 @@ struct ProgressionDetails: Codable {
         case stagnation = "Stagnation"
         case none = "No Change"
     }
-    
+
     var progressionIcon: String {
         switch progressionType {
         case .progressiveOverload: return "arrow.up.circle.fill"
@@ -124,7 +124,7 @@ struct ProgressionDetails: Codable {
         case .none: return "minus.circle.fill"
         }
     }
-    
+
     var progressionColor: Color {
         switch progressionType {
         case .progressiveOverload: return .green

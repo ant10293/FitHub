@@ -34,7 +34,7 @@ struct WeightSelectorView: View {
         var body: some View {
             let height = screenHeight
             let width = screenWidth
-            
+
             GeometryReader { geometry in
                 let size = geometry.size
                 let horizontalPadding = size.width / 2
@@ -130,5 +130,3 @@ struct WeightSelectorView: View {
         }
     }
 }
-
-

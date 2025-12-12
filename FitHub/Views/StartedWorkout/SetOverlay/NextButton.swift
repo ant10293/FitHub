@@ -17,7 +17,7 @@ struct NextButton: View {
     let isDisabled: Bool
     let onButtonPress: () -> Int
     let goToNextSetOrExercise: () -> Void
-        
+
     var body: some View {
         VStack {
             if timerManager.restIsActive {
@@ -56,7 +56,7 @@ struct NextButton: View {
             }
         }
     }
-    
+
     private var buttonInfo: (Label: String, Image: String) {
         if exercise.currentSetIndex < exercise.totalSets - 1 {
             return ("Next Set", "arrow.right.circle.fill")
@@ -66,12 +66,12 @@ struct NextButton: View {
             return ("Next Exercise", "arrowshape.forward.circle.fill")
         }
     }
-    
+
     private func handleButtonPress() {
         let restForSet = onButtonPress()
         proceedToNextStep(restForSet: restForSet)
     }
-    
+
     private func proceedToNextStep(restForSet: Int) {
         isPressed = true
         goToNextSetOrExercise()

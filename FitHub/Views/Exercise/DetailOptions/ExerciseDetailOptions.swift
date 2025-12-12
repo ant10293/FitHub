@@ -20,7 +20,7 @@ struct ExerciseDetailOptions: View {
     let onRemoveExercise: () -> Void
     let onClose: () -> Void
     let onSave: () -> Void
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             if exercise.allowedWarmup {
@@ -31,7 +31,7 @@ struct ExerciseDetailOptions: View {
                     color: .blue
                 )
             }
-            
+
             TextButton(
                 title: "Adjust Rest Timer",
                 systemImage: "timer",
@@ -39,7 +39,7 @@ struct ExerciseDetailOptions: View {
                 color: .blue
             )
             .disabled(exercise.totalSets == 0)
-            
+
             TextButton(
                 title: "Replace Exercise",
                 systemImage: "arrow.triangle.2.circlepath",
@@ -49,7 +49,7 @@ struct ExerciseDetailOptions: View {
                 },
                 color: .blue
             )
-            
+
             TextButton(
                 title: "Remove Exercise",
                 systemImage: "trash",
@@ -77,4 +77,3 @@ struct ExerciseDetailOptions: View {
         )
     }
 }
-

@@ -24,7 +24,7 @@ final class TimerManager: ObservableObject {
         holdTimer?.invalidate()
         print("timer denitialized")
     }
-    
+
     func stopAll() {
         stopRest()
         stopHold()
@@ -47,7 +47,7 @@ final class TimerManager: ObservableObject {
         restTotalSeconds = 0
         restStartAt = nil
     }
-    
+
     func restTimeRemaining(at referenceDate: Date = Date()) -> Int {
         guard restIsActive, let start = restStartAt else { return 0 }
         let elapsed = max(0, Int(referenceDate.timeIntervalSince(start).rounded()))
@@ -103,7 +103,7 @@ final class TimerManager: ObservableObject {
         case dateDriven(startAt: ReferenceWritableKeyPath<TimerManager, Date?>,
                         startDate: Date?)
     }
-    
+
     private func startCountdown(
         seconds: Int,
         initialElapsed: Int = 0,
@@ -119,12 +119,12 @@ final class TimerManager: ObservableObject {
         // seed totals/flags
         self[keyPath: total] = max(1, seconds)
         self[keyPath: isActive] = true
-        
+
         switch mode {
         case .decrementing:
             let clampedElapsed = max(0, min(initialElapsed, self[keyPath: total]))
             self[keyPath: remaining] = max(0, self[keyPath: total] - clampedElapsed)
-            
+
         case .dateDriven(let startAtKeyPath, let startDate):
             self[keyPath: startAtKeyPath] = startDate ?? Date()
             let elapsed = CalendarUtility.secondsSince(self[keyPath: startAtKeyPath])
@@ -134,7 +134,7 @@ final class TimerManager: ObservableObject {
         // schedule ticks
         let t = Timer(timeInterval: 1, repeats: true) { [weak self] timer in
             guard let self else { timer.invalidate(); return }
-            
+
             switch mode {
             case .decrementing:
                 if self[keyPath: remaining] > 0 {
@@ -143,7 +143,7 @@ final class TimerManager: ObservableObject {
                     timer.invalidate()
                     self[keyPath: isActive] = false
                 }
-                
+
             case .dateDriven(let startAtKeyPath, _):
                 let elapsed = CalendarUtility.secondsSince(self[keyPath: startAtKeyPath])
                 self[keyPath: remaining] = max(0, self[keyPath: total] - elapsed)

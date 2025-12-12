@@ -25,7 +25,7 @@ struct ImplementRow: View {
     let pegCount: PegCountOption?
     let showMultiplier: Bool
     let showBaseWeightEditor: () -> Void
-    
+
     private var implementTotal: Mass {
         if showMultiplier {
             // Single implement with multiplier: base × multiplier + plates
@@ -35,7 +35,7 @@ struct ImplementRow: View {
             return Mass(kg: base.inKg + (plan.perSideAchieved.inKg * Double(plan.replicates)))
         }
     }
-    
+
     // Determine if we should use vertical layout (too many plates to fit horizontally)
     private var shouldUseVerticalLayout: Bool {
         guard let pegCount = pegCount, pegCount == .both else { return false }
@@ -43,7 +43,7 @@ struct ImplementRow: View {
         // Use vertical layout if more than 8 plates total (4 per side)
         return totalPlates > 8
     }
-    
+
     var body: some View {
         VStack(spacing: 8) {
             // Title with total weight for multiple implementations
@@ -51,16 +51,16 @@ struct ImplementRow: View {
                 HStack {
                     Text(title)
                         .font(.headline.bold())
-                    
+
                     Spacer()
-                    
+
                     // Show total weight for this implement
                     implementTotal.formattedText()
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
             }
-            
+
             // Conditional layout based on plate count
             if shouldUseVerticalLayout {
                 // Vertical layout: Left, Base, Right stacked
@@ -71,10 +71,10 @@ struct ImplementRow: View {
                         PlateStackColumn(plates: plan.leftSide, isVertical: false)
                             .accessibilityLabel("Left plates")
                     }
-                    
+
                     // Base weight chip
                     baseLabelPair()
-                    
+
                     // Right section
                     VStack(spacing: 4) {
                         labelPair(label: "Right", mass: plan.perSideAchieved)
@@ -102,7 +102,7 @@ struct ImplementRow: View {
                             Spacer()
                         }
                     }
-                    
+
                     // Plate visualization
                     PlateVisualization(plan: plan, pegCount: pegCount)
                 }
@@ -110,7 +110,7 @@ struct ImplementRow: View {
         }
         .padding(.vertical)
     }
-    
+
     private func labelPair(label: String, mass: Mass) -> some View {
         VStack {
             Text(label)
@@ -118,18 +118,18 @@ struct ImplementRow: View {
             mass.formattedText()
         }
     }
-    
+
     private func baseLabelPair() -> some View {
         VStack(spacing: 2) {
             Text("Base")
                 .font(title.isEmpty ? .headline : .subheadline)
-            
+
             if showMultiplier {
                 Text("\(base.formattedText()) × \(plan.baseCount)")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
-            
+
             if showMultiplier {
                 let adjustedBase = Mass(kg: base.inKg * Double(plan.baseCount))
                 baseChip(adjustedBase, showPerSide: false)
@@ -163,7 +163,7 @@ struct ImplementRow: View {
 private struct PlateVisualization: View {
     let plan: Plan
     let pegCount: PegCountOption?
-    
+
     var body: some View {
         if let pegCount = pegCount, pegCount != .none {
             if pegCount == .both {
@@ -171,9 +171,9 @@ private struct PlateVisualization: View {
             HStack(spacing: 24) {
                     PlateStackColumn(plates: plan.leftSide, isVertical: false)
                         .accessibilityLabel("Left plates")
-                
+
                     Spacer()
-                    
+
                     PlateStackColumn(plates: plan.rightSide, isVertical: false)
                         .accessibilityLabel("Right plates")
                 }

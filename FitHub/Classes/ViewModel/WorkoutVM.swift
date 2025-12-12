@@ -40,7 +40,7 @@ final class WorkoutVM: ObservableObject {
             self.updates.updatedMax   = []
         }
     }
-    
+
     // TODO: we only need the setID and exerciseBinding, no need for detailBinding
     // TODO: this shouldnt be called after moving to next set. should be called for entire template once at the end or upon saving workout in progress
     func saveTemplate(userData: UserData, detailBinding: Binding<SetDetail>, exerciseBinding: Binding<Exercise>) {
@@ -48,12 +48,12 @@ final class WorkoutVM: ObservableObject {
         // only pass ID for template and exercise because we ONLY want to update changes to set load and metric
         userData.updateTmplExSet(templateID: template.id, exerciseID: exerciseBinding.wrappedValue.id, setDetail: detailBinding.wrappedValue)
     }
-    
+
     func goToNextSetOrExercise(for exerciseIndex: Int, selectedExerciseIndex: inout Int?) {
         let currentExercise = template.exercises[exerciseIndex]
-        
+
         enum SetAction { case incrementSet, setCompleted }
-        
+
         // Helper to allocate time when truly leaving an exercise
         func allocateTimeToCurrentExercise(index: Int, exercise: Exercise) {
             let timeSpent = secondsElapsed - (currentExerciseState?.startTime ?? 0)
@@ -61,7 +61,7 @@ final class WorkoutVM: ObservableObject {
             currentExerciseState = CurrentExerciseState(id: exercise.id, name: exercise.name, index: index, startTime: secondsElapsed)
             //print("⏱  Allocated \(timeSpent)s to "\(exercise.name)", new exerciseState=\(currentExerciseState!)")
         }
-        
+
         // Helper to update currentExerciseState after switching to a new exercise
         func updateStateForNewExercise(from oldIndex: Int) {
             if let newExerciseIndex = selectedExerciseIndex, newExerciseIndex != oldIndex {
@@ -69,19 +69,19 @@ final class WorkoutVM: ObservableObject {
                 currentExerciseState = CurrentExerciseState(id: newExercise.id, name: newExercise.name, index: newExerciseIndex, startTime: secondsElapsed)
             }
         }
-        
+
         // Helper to handle set progression and move to next exercise
         func handleSetProgression(exerciseIndex: Int, action: SetAction, after searchIndex: Int) {
             allocateTimeToCurrentExercise(index: exerciseIndex, exercise: currentExercise)
-            
+
             switch action {
             case .incrementSet: template.exercises[exerciseIndex].currentSet += 1
             case .setCompleted: template.exercises[exerciseIndex].isCompleted = true
             }
-            
+
             moveToNextIncompleteExercise(after: searchIndex, selectedExerciseIndex: &selectedExerciseIndex)
             updateStateForNewExercise(from: exerciseIndex)
-            
+
             if case .setCompleted = action, showWorkoutSummary { return }
         }
 
@@ -130,7 +130,7 @@ final class WorkoutVM: ObservableObject {
             return
         }
     }
-    
+
     var noSetsCompleted: Bool { template.noSetsCompleted }
     var completedExercisesCount: Int { template.exercises.filter { $0.isCompleted }.count }
     var totalExercises: Int { template.numExercises }
@@ -153,14 +153,14 @@ final class WorkoutVM: ObservableObject {
     func calculateWorkoutSummary() -> WorkoutSummaryData {
         template.calculateWorkoutSummary(completionDuration: completionDuration ?? 0, updates: updates)
     }
-    
+
     private var secondsElapsed: Int { CalendarUtility.secondsSince(startDate) }
-    
+
     func performSetup(userData: UserData) -> Int {
         if !userData.isWorkingOut { userData.isWorkingOut = true }
         return getExerciseIndex()
     }
-    
+
     private func getExerciseIndex() -> Int {
         if let state = currentExerciseState, template.exercises.indices.contains(state.index) {
             let resumeIdx = state.index
@@ -175,9 +175,9 @@ final class WorkoutVM: ObservableObject {
             return 0
         }
     }
-    
+
     func updatePerformance(_ update: PerformanceUpdate) { updates.updatePerformance(update) }
-    
+
     @MainActor
     func saveWorkoutInProgress(userData: UserData) {
         // Create a WorkoutInProgress object to store the current state
@@ -187,7 +187,7 @@ final class WorkoutVM: ObservableObject {
             dateStarted: startDate,
             updatedMax: updates.updatedMax
         )
-        
+
         // Save this to userData
         userData.sessionTracking.activeWorkout = workoutInProgress
         userData.saveToFile()
@@ -197,38 +197,38 @@ final class WorkoutVM: ObservableObject {
     func finishWorkoutAndDismiss(ctx: AppContext, completion: () -> Void) {
         let now = Date()
         let roundedDate = CalendarUtility.shared.startOfDay(for: now)
-        
+
         // Calculate duration if not already set (e.g., when user exits via back button)
         let finalDuration = completionDuration ?? secondsElapsed
-                
+
         // Check if there was a workout completed today
         let completedToday = ctx.userData.workoutPlans.completedWorkouts.contains { workout in
             CalendarUtility.shared.isDate(workout.date, inSameDayAs: roundedDate)
         }
-        
+
         if !completedToday { ctx.userData.incrementWorkoutStreak() }
-        
+
         ctx.userData.removePlannedWorkoutDate(templateID: template.id, date: roundedDate)
-                        
+
         let completedWorkout = CompletedWorkout(template: template, updatedMax: updates.updatedMax, duration: finalDuration, date: now)
         ctx.userData.workoutPlans.completedWorkouts.append(completedWorkout)
-        
+
         endWorkoutAndDismiss(ctx: ctx, completion: completion)
     }
-        
+
     @MainActor
     func endWorkoutAndDismiss(ctx: AppContext, completion: () -> Void) {
         // ensure that this workout cannot be set as active workout
         workoutEnded = true
-        
+
         // update exercise performance
         ctx.exercises.applyPerformanceUpdates(updates: updates.updatedMax, csvEstimate: false)
-        
+
         // CRITICAL: Reset all workout state atomically
         ctx.userData.resetWorkoutSession()
-        
+
         ctx.userData.saveToFile()
-        
+
         completion()
     }
 }

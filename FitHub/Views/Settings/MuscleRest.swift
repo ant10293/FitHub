@@ -9,12 +9,12 @@ import SwiftUI
 
 struct MuscleRest: View {
     @ObservedObject var userData: UserData
-        
+
     var body: some View {
         VStack {
             Stepper("Rest Duration: \(userData.settings.muscleRestDuration) hours", value: $userData.settings.muscleRestDuration, in: 24...168)
                 .padding()
-            
+
             Text("The typical rest duration is 48 hours, but you can adjust it to suit your recovery needs.")
                 .font(.subheadline)
                 .foregroundStyle(.gray)
@@ -34,7 +34,7 @@ struct MuscleRest: View {
             }
         }
     }
-    
+
     private var isDefault: Bool { userData.settings.muscleRestDuration == 48 }
 }
 */

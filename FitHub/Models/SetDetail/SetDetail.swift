@@ -16,17 +16,17 @@ struct SetDetail: Identifiable, Hashable, Codable {
     var completed: SetMetric?
     var rpe: Double?
     var restPeriod: Int?
-    
+
     init(id: UUID? = nil, setNumber: Int, load: SetLoad, planned: SetMetric) {
         self.id = id ?? UUID()
         self.setNumber = setNumber
         self.load = load
         self.planned = planned
     }
-    
+
     func completedPeakMetric(peak: PeakMetric) -> PeakMetric? {
         let metric = completed ?? planned
-        
+
         switch peak {
         case .maxReps: if let reps = metric.repsValue { return .maxReps(reps) }
         case .maxHold: if let held = metric.holdTime { return .maxHold(held) }
@@ -48,10 +48,10 @@ struct SetDetail: Identifiable, Hashable, Codable {
         case .none:
             return nil
         }
-        
+
         return nil
     }
-    
+
     mutating func updateCompletedMetrics(currentBest: PeakMetric) -> (newMax: PeakMetric?, lxm: LoadXMetric?) {
         // If nothing was logged, persist the planned as the completion.
         if completed == nil { completed = planned } // MARK: Essential for updating peakMetric
@@ -71,17 +71,17 @@ struct SetDetail: Identifiable, Hashable, Codable {
             guard let reps = metric.repsValue, reps > 0, let weight = load.weight else { return (nil, nil) }
             guard let candidate = recalculate1RM(best: best1RM, completedWeight: weight, completedReps: reps) else { return (nil, nil) }
             return (.oneRepMax(candidate), LoadXMetric(load: .weight(weight), metric: .reps(reps)))
-        
+
         case .hold30sLoad(let bestLoad):
             guard let held = metric.holdTime, held.inSeconds > 0, let weight = load.weight else { return (nil, nil) }
             guard let candidate = recalculateHoldLoad(best: bestLoad, weight: weight, duration: held) else { return (nil, nil) }
             return (.hold30sLoad(candidate), LoadXMetric(load: .weight(weight), metric: .hold(held)))
-        
+
         case .carry50mLoad(let bestLoad):
             guard let meters = metric.metersValue, meters.inM > 0, let weight = load.weight else { return (nil, nil) }
             guard let candidate = recalculateCarryLoad(best: bestLoad, weight: weight, distance: meters) else { return (nil, nil) }
             return (.carry50mLoad(candidate), LoadXMetric(load: .weight(weight), metric: .carry(meters)))
-            
+
         case .none:
             return (nil, nil)
         }
@@ -107,7 +107,7 @@ struct SetDetail: Identifiable, Hashable, Codable {
         // Only return if it truly beats the current 1RM
         return adjusted.inKg > best.inKg ? adjusted : nil
     }
-    
+
     /// Multiplier that *reduces* the estimated 1 RM as RPE drops:
     /// RPE 10 → 100 %   (×1.00)
     /// RPE  9 →  97 %   (×0.97)
@@ -116,24 +116,24 @@ struct SetDetail: Identifiable, Hashable, Codable {
         let clamped = min(max(rpe, 1), 10)
         return 1.0 - 0.03 * (10.0 - clamped)
     }
-    
+
     /// Convert (weight × time) hold to an equivalent load at reference time.
     func recalculateHoldLoad(best: Mass, weight: Mass, duration: TimeSpan) -> Mass? {
         let new = WeightedHoldFormula.equivalentHoldLoad(
             weight: weight,
             duration: duration
         )
-        
+
         return new.inKg > best.inKg ? new : nil
     }
-    
+
     /// Convert (weight × distance) carry to an equivalent load at reference distance.
     func recalculateCarryLoad(best: Mass, weight: Mass, distance: Meters) -> Mass? {
         let new = WeightedCarryFormula.equivalentCarryLoad(
             weight: weight,
             distance: distance
         )
-        
+
         return new.inKg > best.inKg ? new : nil
     }
 
@@ -141,7 +141,7 @@ struct SetDetail: Identifiable, Hashable, Codable {
         let p = formula.percent(at: max(1, reps))   // %1RM fraction
         return Mass(kg: oneRm.inKg * p)
     }
-    
+
     mutating func bumpPlanned(by steps: Int) {
         switch planned {
         case .reps(let r):
@@ -193,7 +193,7 @@ extension SetDetail {
             return Text("—")
         }
     }
-    
+
     var formattedCompletedText: Text {
         SetDetail.formatLoadMetric(load: load, metric: completed ?? planned.zeroValue)
     }
@@ -201,9 +201,9 @@ extension SetDetail {
     var formattedPlannedText: Text {
         SetDetail.formatLoadMetric(load: load, metric: planned)
     }
-    
+
     static let secPerMeter: Double = 1.5
-    
+
     static func secPerRep(for reps: Int, isWarm: Bool) -> Int {
         guard reps > 0 else { return 2 }
 
@@ -224,7 +224,7 @@ extension SetDetail {
         let adjusted = isWarm ? base * 0.75 : base
         return Int(round(adjusted))
     }
-    
+
     static let secPerSetup: Int = 90
     static let extraSecPerDiff: Int = 10
     static let secPerStep: Int = 5 // conversion for time-based sets
@@ -233,7 +233,7 @@ extension SetDetail {
 
 enum TopSetOption: String, Codable, Equatable, CaseIterable {
     case firstSet, lastSet, allSets
-    
+
     var displayName: String {
         switch self {
         case .firstSet: return "First Set"
@@ -241,7 +241,7 @@ enum TopSetOption: String, Codable, Equatable, CaseIterable {
         case .allSets: return "All Sets"
         }
     }
-    
+
     var footerText: String {
         switch self {
         case .firstSet:

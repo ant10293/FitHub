@@ -136,7 +136,7 @@ struct SimilarExercises: View {
             searchText: "" // empty → use similarity tiers
         )
     }
-    
+
     private var otherList: [Exercise] {
         let simIDs = Set(similarList.map(\.id))
 
@@ -157,19 +157,19 @@ private struct SimilarExerciseRow: View {
     let baseExercise: Exercise          // used only for %-match math
     let width: CGFloat
     let onReplace: () -> Void
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // ── top line ───────────────────────────────────────────────
             HStack(spacing: 12) {
                 exercise.fullImageView(favState: FavoriteState.getState(for: exercise, userData: userData))
                     .frame(width: width * 0.125)
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(exercise.name)
                         .font(.headline)
                         .minimumScaleFactor(0.75)
-                    
+
                     // %-similar badge
                     Text("\(similarityPercent)% similarity")
                         .font(.caption2.weight(.semibold))
@@ -178,9 +178,9 @@ private struct SimilarExerciseRow: View {
                         .background(Color.blue.opacity(0.15))
                         .clipShape(Capsule())
                 }
-                
+
                 Spacer()
-                
+
                 Button(action: onReplace) {              // <-- ONLY this triggers replace
                     Image(systemName: "arrow.triangle.2.circlepath")
                         .padding(8)
@@ -190,7 +190,7 @@ private struct SimilarExerciseRow: View {
                 }
                 .buttonStyle(.borderless)                // don’t steal tap-area from row
             }
-            
+
             // ── expanded details ───────────────────────────────────────
             if showDetails {
                 Text("\(exercise.musclesTextFormatted)")
@@ -198,7 +198,7 @@ private struct SimilarExerciseRow: View {
                     .foregroundStyle(Color.secondary)
                     .transition(.opacity.combined(with: .slide))
             }
-            
+
             // “View more / Hide details” toggle
             Button(showDetails ? "Hide details" : "View more") {
                 withAnimation { showDetails.toggle() }
@@ -209,7 +209,7 @@ private struct SimilarExerciseRow: View {
         }
         .padding(.vertical, 4)
     }
-    
+
     // quick similarity heuristic: (# shared muscles) / (# union) × 100
     private var similarityPercent: Int {
         let sharedPrimaries   = exercise.primaryMuscles == baseExercise.primaryMuscles
@@ -218,7 +218,7 @@ private struct SimilarExerciseRow: View {
         let shared  = sharedPrimaries + sharedSecondaries
         let union   = Set(exercise.primaryMuscles + exercise.secondaryMuscles
                         + baseExercise.primaryMuscles + baseExercise.secondaryMuscles).count
-        
+
         return union == 0 ? 0 : Int((Double(shared) / Double(union)) * 100.0)
     }
 }

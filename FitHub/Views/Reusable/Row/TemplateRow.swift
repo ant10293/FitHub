@@ -16,7 +16,7 @@ struct TemplateRow: View {
     let hideEditButton: Bool
     let onSelect: (SelectedTemplate) -> Void
     let onEdit: (SelectedTemplate) -> Void
-    
+
     init(
         template: WorkoutTemplate,
         index: Int,
@@ -45,7 +45,7 @@ struct TemplateRow: View {
                 .contentShape(Rectangle()) // Make the entire area tappable
             }
             .buttonStyle(PlainButtonStyle())
-            
+
             if location != .trainer && !hideEditButton {
                 // Dedicated button for rename/delete actions
                 Button(action: { onEdit(selectedTemplate) } ) {
@@ -57,7 +57,7 @@ struct TemplateRow: View {
         }
         .disabled(disabled)
     }
-    
+
     private var selectedTemplate: SelectedTemplate {
         .init(template: template, location: location, mode: mode)
     }
@@ -65,7 +65,7 @@ struct TemplateRow: View {
 
 struct TemplateLabel: View {
     let template: WorkoutTemplate
-    
+
     var body: some View {
         HStack {
             VStack(alignment: .leading) {

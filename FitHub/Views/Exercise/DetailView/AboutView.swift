@@ -22,7 +22,7 @@ struct AboutView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     ExEquipImage(image: exercise.fullImage, button: .expand)
                         .centerHorizontally()
-                    
+
                     RatingIcon(
                         exercise: exercise,
                         favState: FavoriteState.getState(for: exercise, userData: ctx.userData),
@@ -74,7 +74,7 @@ struct AboutView: View {
                             .multilineTextAlignment(.leading)
                     }
                 }
-      
+
                 // EQUIPMENT REQUIRED
                 if !exercise.equipmentRequired.isEmpty {
                     let equipment = ctx.equipment.equipmentForExercise(

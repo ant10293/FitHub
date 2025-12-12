@@ -8,25 +8,25 @@ struct AuthProviderButtons: View {
     var buttonHeight: CGFloat = 50
     var onSuccess: () -> Void
     var onFailure: (Error) -> Void
-    
+
     @Environment(\.colorScheme) private var colorScheme
     @State private var showGuestFlow = false
     @State private var showEmailFlow = false
     @State private var isProcessing = false
-    
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
                 appleButton
-                
+
                 emailButton
-                
+
                 if showGuestButton {
                     // ───────── OR divider ───────
                     HStack { Line(); Text("or").bold(); Line() }
                         .frame(maxWidth: buttonWidth)
                         .padding(.vertical, 4)
-                    
+
                     guestButton
                 }
             }
@@ -67,14 +67,14 @@ struct AuthProviderButtons: View {
             }
         }
     }
-    
+
     private var showGuestButton: Bool {
         if userData.setup.setupState == .welcomeView {
             return true
         }
         return !AuthService.isAnonymous()
     }
-    
+
     private var appleButton: some View {
         SignInWithAppleButton(.signIn) { request in
             // Show progress view immediately when button is pressed
@@ -104,7 +104,7 @@ struct AuthProviderButtons: View {
         .frame(maxWidth: buttonWidth == nil ? .infinity : nil)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
-    
+
     private var emailButton: some View {
         AppleButton(
             title: "Sign in with Email",
@@ -117,7 +117,7 @@ struct AuthProviderButtons: View {
             }
         )
     }
-    
+
     private var guestButton: some View {
         AppleButton(
             title: "Continue without Account",
@@ -139,7 +139,7 @@ private struct AppleButton: View {
     let bgColor: Color
     let fgColor: Color
     let buttonAction: () -> Void
-    
+
     init(
         title: String,
         imageName: String? = nil,
@@ -157,7 +157,7 @@ private struct AppleButton: View {
         self.fgColor = fgColor
         self.buttonAction = buttonAction
     }
-    
+
     var body: some View {
         let fontSize = buttonHeight * 0.38
 

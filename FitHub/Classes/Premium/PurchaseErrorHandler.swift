@@ -22,7 +22,7 @@ final class PurchaseErrorHandler {
         case entitlementRefreshFailed
         case referralTrackingFailed
         case unknown(Error)
-        
+
         var errorDescription: String? {
             switch self {
             case .networkUnavailable:
@@ -44,30 +44,30 @@ final class PurchaseErrorHandler {
             }
         }
     }
-    
+
     /// Processes a purchase error and returns a user-friendly message
     /// - Parameter error: The error that occurred during purchase
     /// - Returns: A user-friendly error message, or nil if no message should be shown
     static func handlePurchaseError(_ error: Error) -> String? {
         let purchaseError = categorizeError(error)
-        
+
         // Log error for debugging
         print("⚠️ [PurchaseErrorHandler] Purchase error: \(String(describing: purchaseError)) - \(error.localizedDescription)")
-        
+
         // Return user-friendly message
         return purchaseError.errorDescription
     }
-    
+
     /// Categorizes an error into a specific purchase error type
     private static func categorizeError(_ error: Error) -> PurchaseError {
         let nsError = error as NSError
         let errorDescription = error.localizedDescription.lowercased()
-        
+
         // Check for StoreKit 2 errors
         if let storeKitError = error as? StoreKit.StoreKitError {
             return handleStoreKitError(storeKitError)
         }
-        
+
         // Check error domain
         switch nsError.domain {
         case "NSURLErrorDomain":
@@ -77,7 +77,7 @@ final class PurchaseErrorHandler {
                nsError.code == NSURLErrorTimedOut {
                 return .networkUnavailable
             }
-            
+
         case "SKErrorDomain":
             // StoreKit error codes
             switch nsError.code {
@@ -102,7 +102,7 @@ final class PurchaseErrorHandler {
             default:
                 return .unknown(error)
             }
-            
+
         default:
             // Check error message for common patterns
             if errorDescription.contains("network") ||
@@ -110,27 +110,27 @@ final class PurchaseErrorHandler {
                errorDescription.contains("connection") {
                 return .networkUnavailable
             }
-            
+
             if errorDescription.contains("payment") ||
                errorDescription.contains("declined") ||
                errorDescription.contains("invalid card") {
                 return .paymentDeclined
             }
-            
+
             if errorDescription.contains("unavailable") ||
                errorDescription.contains("not found") {
                 return .productUnavailable
             }
-            
+
             if errorDescription.contains("cancelled") ||
                errorDescription.contains("canceled") {
                 return .purchaseCancelled
             }
         }
-        
+
         return .unknown(error)
     }
-    
+
     /// Handles StoreKit 2 errors specifically
     private static func handleStoreKitError(_ error: StoreKit.StoreKitError) -> PurchaseError {
         switch error {
@@ -152,33 +152,32 @@ final class PurchaseErrorHandler {
             return .unknown(error)
         }
     }
-    
+
     /// Handles transaction verification errors
     static func handleVerificationError(_ error: Error) -> String {
         print("⚠️ [PurchaseErrorHandler] Transaction verification failed: \(error.localizedDescription)")
-        
+
         return PurchaseError.transactionVerificationFailed.errorDescription ?? "Transaction verification failed"
     }
-    
+
     /// Handles referral tracking errors (non-blocking)
     static func handleReferralTrackingError(_ error: Error) {
         // Log but don't show to user - referral tracking shouldn't block purchases
         print("⚠️ [PurchaseErrorHandler] Referral tracking failed (non-blocking): \(error.localizedDescription)")
     }
-    
+
     /// Handles entitlement refresh errors
     static func handleEntitlementRefreshError(_ error: Error) -> String {
         print("⚠️ [PurchaseErrorHandler] Entitlement refresh failed: \(error.localizedDescription)")
-        
+
         return PurchaseError.entitlementRefreshFailed.errorDescription ?? "Unable to refresh subscription status"
     }
-    
+
     /// Handles product loading errors
     static func handleProductLoadingError(_ error: Error) -> String {
         print("⚠️ [PurchaseErrorHandler] Product loading failed: \(error.localizedDescription)")
-        
+
         let purchaseError = categorizeError(error)
         return purchaseError.errorDescription ?? "Failed to load products. Please try again later."
     }
 }
-

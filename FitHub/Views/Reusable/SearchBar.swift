@@ -19,7 +19,7 @@ import SwiftUI
 struct SearchBar: View {
     @Binding var text: String
     let placeholder: String
-    
+
     init(
         text: Binding<String>,
         placeholder: String = "Search"

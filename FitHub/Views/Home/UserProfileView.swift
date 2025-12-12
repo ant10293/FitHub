@@ -14,10 +14,10 @@ struct UserProfileView: View {
     //@State private var draftUserName: String = ""
     @State private var draftFirstName: String = ""
     @State private var draftLastName: String = ""
-    
+
     // MARK: – FocusState flags
     @FocusState private var focusedField: Field?
-    
+
     var body: some View {
         ZStack {
             Color(isAuthenticated
@@ -25,7 +25,7 @@ struct UserProfileView: View {
                   : UIColor.secondarySystemBackground
             )
             .ignoresSafeArea()
-            
+
             VStack {
                 // 1) Show any banner (for username/first/last update)
                 if toast.showingSaveConfirmation {
@@ -36,7 +36,7 @@ struct UserProfileView: View {
                             : Color.red
                     )
                 }
-                
+
                 if isAuthenticated  {
                     Form {
                         // MARK: — Name Section
@@ -49,7 +49,7 @@ struct UserProfileView: View {
                                         commitFirstName()
                                     }
                                 }
-                            
+
                             TextField("Last Name", text: $draftLastName)
                                 .focused($focusedField, equals: .lastName)
                                 .onSubmit(commitLastName)
@@ -61,7 +61,7 @@ struct UserProfileView: View {
                         } header: {
                             Text("Name")
                         }
-                        
+
                         Section {
                             Text(ctx.userData.profile.email)
                                 .foregroundStyle(Color.secondary)
@@ -70,7 +70,7 @@ struct UserProfileView: View {
                         } header: {
                             Text("Email")
                         }
-                        
+
                         // MARK: — Footer Section with Account Creation and Logout
                         Section {
                             EmptyView()
@@ -81,7 +81,7 @@ struct UserProfileView: View {
                                         .font(.caption)
                                         .foregroundStyle(Color.secondary)
                                 }
-                                
+
                                 RectangularButton(title: "Logout", bgColor: .blue, action: handleSignOut)
                                 RectangularButton(title: "Delete Account", bgColor: .red, action: {
                                     showingDeleteConfirmation = true
@@ -101,7 +101,7 @@ struct UserProfileView: View {
                     VStack {
                         Text("Please sign in to continue")
                             .font(.title)
-                        
+
                         AuthProviderButtons(
                             userData: ctx.userData,
                             buttonWidth: btnW,
@@ -131,51 +131,51 @@ struct UserProfileView: View {
             Text("This will permanently remove all of your data from FitHub and log you out on this device. This action cannot be undone.")
         }
     }
-    
+
     private var isAuthenticated: Bool {
         authService.isAuthenticated && !AuthService.isAnonymous()
     }
-    
+
     private enum Field: Hashable { case firstName, lastName }
-    
+
     // MARK: – Populate drafts from userData
     private func populateDrafts() {
        // draftUserName  = ctx.userData.profile.userName
         draftFirstName = ctx.userData.profile.firstName
         draftLastName  = ctx.userData.profile.lastName
     }
-    
+
     // MARK: – Commit Helpers
-    
+
     /// Commit firstName locally, update Firebase displayName, then show a banner.
     private func commitFirstName() {
         let trimmed = draftFirstName.trimmed
         guard trimmed != ctx.userData.profile.firstName else { return }
-        
+
         ctx.userData.profile.firstName = trimmed
         commitDisplayName()
-        
+
         alertMessage = "First name updated"
         toast.showSaveConfirmation(duration: 2.0)
     }
-    
+
     /// Commit lastName locally, update Firebase displayName, then show a banner.
     private func commitLastName() {
         let trimmed = draftLastName.trimmed
         guard trimmed != ctx.userData.profile.lastName else { return }
-        
+
         ctx.userData.profile.lastName = trimmed
         commitDisplayName()
-        
+
         alertMessage = "Last name updated"
         toast.showSaveConfirmation(duration: 2.0)
     }
-    
+
     /// Update Firebase displayName using combined first and last name.
     private func commitDisplayName() {
         let displayName = ctx.userData.profile.displayName(.full)
         guard !displayName.isEmpty else { return }
-        
+
         authService.updateDisplayName(to: displayName) { result in
             switch result {
             case .success:
@@ -187,14 +187,14 @@ struct UserProfileView: View {
             }
         }
     }
-    
+
     // MARK: — Handle Logout/Login Button
-    
+
     private func handleSignOut() {
         guard let accountID = AuthService.getUid() else { return }
         kbd.dismiss()
         ctx.userData.saveToFile()
-        
+
         do {
             try AccountDataStore.shared.backupActiveData(for: accountID)
             try AccountDataStore.shared.clearActiveData()
@@ -203,7 +203,7 @@ struct UserProfileView: View {
             toast.showSaveConfirmation(duration: 2.0)
             return
         }
-        
+
         AuthService.shared.signOut(userData: ctx.userData) { result in
             switch result {
             case .success:
@@ -217,11 +217,11 @@ struct UserProfileView: View {
             toast.showSaveConfirmation(duration: 2.0)
         }
     }
-    
+
     private func handleDeletion() {
         guard let accountID = AuthService.getUid() else { return }
         kbd.dismiss()
-        
+
         AuthService.shared.deleteCurrentAccount(userData: ctx.userData) { result in
             switch result {
             case .success:
@@ -238,4 +238,3 @@ struct UserProfileView: View {
         }
     }
 }
-

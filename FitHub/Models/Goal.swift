@@ -28,19 +28,19 @@ enum FitnessGoal: String, Codable, CaseIterable {
         case .athleticPerformance: return "Sport-specific training"
         }
     }
-    
+
     var detailDescription: String {
         let rAndS = defaultRepsAndSets
         return String("Reps: \(Format.formatRange(range: rAndS.repRange)), Sets: \(Format.formatRange(range: rAndS.setRange)), Rest: \(Format.formatRange(range: rAndS.restRange))s")
     }
-    
+
     static let primaryGoals: [FitnessGoal] = [.buildMuscle, .loseWeight, .getStronger]
 }
 extension FitnessGoal {
     var defaultRepsAndSets: RepsAndSets {
         RepsAndSets(reps: defaultReps, sets: defaultSets, rest: defaultRest, distribution: defaultDistribution)
     }
-    
+
     var defaultRest: RestPeriods {
         switch self {
         case .buildMuscle:
@@ -59,7 +59,7 @@ extension FitnessGoal {
             return RestPeriods(distribution: [.warmup: 60, .working: 120, .superset: 60])
         }
     }
-    
+
     var defaultSets: SetDistribution {
         switch self {
         case .buildMuscle:
@@ -113,7 +113,7 @@ extension FitnessGoal {
             ])
         }
     }
-    
+
     var defaultReps: RepDistribution {
         switch self {
         case .buildMuscle:
@@ -160,7 +160,7 @@ extension FitnessGoal {
             ])
         }
     }
-    
+
     var defaultDistribution: EffortDistribution {
         switch self {
         case .buildMuscle:
@@ -207,7 +207,7 @@ extension FitnessGoal {
             ])
         }
     }
-    
+
     private var maintenanceMultiplier: ClosedRange<Double> {
         switch self {
         case .buildMuscle:            return 1.05...1.10   // modest surplus

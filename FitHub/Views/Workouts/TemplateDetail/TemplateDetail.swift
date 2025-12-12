@@ -32,19 +32,19 @@ struct TemplateDetail: View {
     @StateObject private var toast = ToastManager()
     private let modifier = ExerciseModifier()
     var isArchived: Bool = false
-    
+
     var body: some View {
         ZStack {
             Color(UIColor.systemGroupedBackground)
                 .edgesIgnoringSafeArea(.all) // Ensures the background color covers the entire view
                 .zIndex(0)  // Ensures the overlay is below all other content
-            
+
             VStack {
                 if isEditing { editToolBar }
                 if toast.showingSaveConfirmation { InfoBanner(title: "Template Saved Successfully!").zIndex(1) }
-                
+
                 Spacer()
-                
+
                 if isArchived {
                     Label("Editing Locked for Archived Templates", systemImage: "exclamationmark.triangle.fill")
                         .font(.headline)
@@ -54,7 +54,7 @@ struct TemplateDetail: View {
                         .symbolVariant(.fill)            // ensures filled triangle
                         .imageScale(.medium)
                 }
-                
+
                 if !template.exercises.isEmpty {
                     setDetailList
                 }
@@ -102,7 +102,7 @@ struct TemplateDetail: View {
         }
         .navigationBarTitle(template.name, displayMode: .inline)
     }
-    
+
     private var setDetailList: some View {
         let sw = screenWidth
         return List {
@@ -133,7 +133,7 @@ struct TemplateDetail: View {
             }
             .onDelete { offsets in captureSnapshot(); deleteExercise(at: offsets) }
             .onMove { source, destination in captureSnapshot(); moveExercise(from: source, to: destination) }
-            
+
             // Spacer row at the end
             Color.clear
                 .frame(height: screenHeight * 0.0625)
@@ -143,7 +143,7 @@ struct TemplateDetail: View {
         .listStyle(PlainListStyle())
         .scrollIndicators(.visible)
     }
-            
+
     private var editToolBar: some View {
         HStack {
             Button(action: { undoAction() }) {
@@ -155,7 +155,7 @@ struct TemplateDetail: View {
                 .foregroundStyle(undoStack.isEmpty ? .gray : .blue) // Gray out if disabled
             }
             .disabled(undoStack.isEmpty)
-            
+
             Button(action: { redoAction() }) {
                 HStack {
                     Image(systemName: "arrow.uturn.forward").imageScale(.large)
@@ -164,9 +164,9 @@ struct TemplateDetail: View {
                 .foregroundStyle(redoStack.isEmpty ? .gray : .blue) // Gray out if disabled
             }
             .disabled(redoStack.isEmpty)
-            
+
             Spacer()
-            
+
             Button(action: { isCollapsed.toggle() }) {
                 HStack {
                     Text(isCollapsed ? "Expand" : "Collapse")
@@ -178,7 +178,7 @@ struct TemplateDetail: View {
         .padding()
         .background(Color(UIColor.secondarySystemBackground))
     }
-    
+
     private var exerciseSelectionSheet: some View {
         ExerciseSelection(
             selectedExercises: template.exercises,
@@ -200,12 +200,12 @@ struct TemplateDetail: View {
                 let orderedExercises = finalSelection.compactMap { finalEx in
                     template.exercises.first { $0.id == finalEx.id }
                 }
-                
+
                 template.exercises = orderedExercises
             }
         )
     }
-    
+
     @ViewBuilder
     private func emptyView() -> some View {
        // EmptyState(systemName: "exclamationmark.circle", title: "No exercises added", subtitle: "Press + to add an exercise to the workout.")
@@ -231,9 +231,9 @@ struct TemplateDetail: View {
         .scaleEffect(pulsate ? 1.05 : 1.0)
         .animation(Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: pulsate)
     }
-    
+
     private enum ActiveAlert: Identifiable { case delete, replace; var id: Int { hashValue } }
-    
+
     private func performCallBackAction(action: CallBackAction, exercise: Binding<Exercise>) {
         switch action {
         case .addSet: captureSnapshot(); modifier.addNewSet(exercise.wrappedValue, from: &template, user: ctx.userData)
@@ -245,39 +245,39 @@ struct TemplateDetail: View {
         case .saveTemplate: break // no need. template is a binding and json is saved onChange(of: scenePhase)
         }
     }
-    
+
     private func handleSheetDismiss() {
         showingDetailView ? showingDetailView = false : (showingAdjustmentsView ? showingAdjustmentsView = false : nil)
         selectedExercise = nil
     }
-    
+
     // When a deletion is attempted, set the pending exercise and show the confirmation alert.
     private func confirmDeleteExercise(_ exercise: Exercise) {
         exercisePendingDeletion = exercise
         activeAlert = .delete
     }
-        
+
     private func captureSnapshot() {
         undoStack.append(template)
         redoStack.removeAll()  // Clear the redo stack whenever a new snapshot is captured
     }
-    
+
     private func undoAction() {
         guard let lastUndo = undoStack.popLast() else { return }
         redoStack.append(template)  // Save the current state before applying the undo
         template = lastUndo  // Load the last template state from the undo stack
     }
-    
+
     private func redoAction() {
         guard let lastRedo = redoStack.popLast() else { return }
         undoStack.append(template)  // Save the current state before applying the redo
         template = lastRedo  // Load the template state from the redo stack
     }
-    
+
     private func moveExercise(from source: IndexSet, to destination: Int) {
         template.exercises.move(fromOffsets: source, toOffset: destination)
     }
-    
+
     private func replaceExercise(_ exercise: Exercise) {
         captureSnapshot() // only capture if changes will be made
         isReplacing = true
@@ -303,7 +303,7 @@ struct TemplateDetail: View {
             }
         )
     }
-    
+
     private func addExercise(_ exercise: Exercise) {
         captureSnapshot() // Capture the state before adding
         var exercise = exercise
@@ -316,17 +316,15 @@ struct TemplateDetail: View {
         )
         template.exercises.append(exercise)
     }
-    
+
     private func removeExercise(_ exercise: Exercise) {
         captureSnapshot() // Capture the state before removing
         _ = modifier.remove(exercise, from: &template, user: ctx.userData)
     }
-    
+
     private func deleteExercise(at offsets: IndexSet) {
         for index in offsets {
             _ = modifier.remove(template.exercises[index], from: &template, user: ctx.userData)
         }
     }
 }
-
-

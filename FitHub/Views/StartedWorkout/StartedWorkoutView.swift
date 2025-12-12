@@ -35,9 +35,9 @@ struct StartedWorkoutView: View {
                     }
                 )
                 .padding()
-               
+
                 Divider()
-               
+
                 exerciseList
             }
             // Overlay content
@@ -61,13 +61,13 @@ struct StartedWorkoutView: View {
             }
         }
     }
-    
+
     private func performSetup() {
         if selectedExerciseIndex == nil {
             selectedExerciseIndex = viewModel.performSetup(userData: ctx.userData)
         }
     }
-    
+
     private var exerciseList: some View {
         TemplateExerciseList(
             template: viewModel.template,
@@ -88,7 +88,7 @@ struct StartedWorkoutView: View {
         .opacity((viewModel.isOverlayVisible || viewModel.showWorkoutSummary) ? 0.6 : 1.0)
         .disabled(viewModel.isOverlayVisible)
     }
-    
+
     private var rpePromptOverlay: some View {
         RPEPrompt(
             onSelect: { hideRPE in
@@ -97,7 +97,7 @@ struct StartedWorkoutView: View {
             }
         )
     }
-    
+
     private var workoutSummaryOverlay: some View {
         WorkoutSummary(
             summary: viewModel.calculateWorkoutSummary(),
@@ -107,7 +107,7 @@ struct StartedWorkoutView: View {
             }
         )
     }
-    
+
     @ViewBuilder private var exerciseSetOverlay: some View {
         if let selectedExerciseIdx = selectedExerciseIndex {
             ExerciseSetOverlay(
@@ -154,7 +154,7 @@ struct StartedWorkoutView: View {
             .padding(.horizontal, 5)
         }
     }
-    
+
     private var backButton: some View {
         Button(action: {
             if viewModel.noSetsCompleted {

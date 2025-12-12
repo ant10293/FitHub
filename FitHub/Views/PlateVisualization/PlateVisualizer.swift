@@ -38,9 +38,9 @@ struct PlateVisualizer: View {
             // Total system weight
             (Text("Total: ") + spec.displayTotal.formattedText().bold())
                 .font(.largeTitle)
-            
+
             Text("Equipment: \(equip.name)")
-            
+
             Spacer()
 
             // Implement visualization
@@ -79,7 +79,7 @@ struct PlateVisualizer: View {
                     .foregroundStyle(.orange)
                     .font(.footnote)
             }
-            
+
             Spacer()
         }
         .padding()
@@ -122,7 +122,7 @@ struct PlateVisualizer: View {
 
             let mass = bw.resolvedMass
             var movementCount = impl.getMovementCount(for: movement)
-            
+
             // Override implementsUsed and baseWeightMultiplier if implementCount is specified
             // and this equipment is .individual
             if let implementCount = exercise.implementCount, g.implementation == .individual {
@@ -131,8 +131,8 @@ struct PlateVisualizer: View {
                     baseWeightMultiplier: implementCount,
                     pegMultiplier: movementCount.pegMultiplier
                 )
-            }            
-            
+            }
+
             let weightMultiplier = movementCount.baseWeightMultiplier
             let totalBaseWeight = mass.inKg * Double(weightMultiplier)
             let totalWeight: Mass = .init(kg: weight.inKg * Double(weightMultiplier))
@@ -186,13 +186,13 @@ struct PlateVisualizer: View {
         let final = Int(Double(combined) * movementPegMultiplier)
         return PegCountOption.getOption(for: final)
     }
-    
+
     private func computePlateSpec(for exercise: Exercise, input: Mass, base: Mass, baseCount: Int, implementsCount: Int, pegCount: PegCountOption?) -> PlateSpec {
         let needsMultipleImplements = implementsCount > 1
         let replicates = needsMultipleImplements ? implementsCount : 1
         let totalTargetKg: Double = input.inKg
         let totalPlatesNeededKg = max(0, totalTargetKg - (base.inKg * Double(baseCount)))
-   
+
         let perSideTargetKg: Double
         if let pegCount = pegCount {
             switch pegCount {
@@ -206,7 +206,7 @@ struct PlateVisualizer: View {
         } else {
             perSideTargetKg = totalPlatesNeededKg / Double(2 * replicates)
         }
-        
+
         let spec = PlateSpec(
             displayTotal: Mass(kg: totalTargetKg),
             perSideTarget: Mass(kg: perSideTargetKg),
@@ -215,7 +215,7 @@ struct PlateVisualizer: View {
 
         return spec
     }
-        
+
     private func computePlan(perSideTarget: Mass, base: Mass, baseCount: Int, denominations: [Mass], replicates: Int, pegCount: PegCountOption?) -> Plan {
         let sideTargetKg = perSideTarget.inKg
         let denoms = WeightPlates.sortedPlates(denominations, ascending: false)
@@ -236,7 +236,7 @@ struct PlateVisualizer: View {
         // Calculate system totals based on peg count
         let achievedTotalKg: Double
         let displayTotalKg: Double
-        
+
         if let pegCount = pegCount {
             switch pegCount {
             case .both:

@@ -96,7 +96,7 @@ struct TimeEntryField: UIViewRepresentable {
             isUpdatingFromSwiftUI = false
             parent.onCommit?(compact)
         }
-              
+
         /// Keep only digits, rebuild as m:ss or h:mm:ss. If empty or all zeros, return "".
         private static func sanitize(_ raw: String) -> String {
             let digitsAll = raw.filter(\.isNumber)
@@ -147,4 +147,3 @@ private extension String {
 }
 
 enum TextFieldVisualStyle { case plain, rounded }
-

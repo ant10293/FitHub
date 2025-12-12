@@ -28,7 +28,7 @@ struct EquipmentDetail: View {
                         .multilineTextAlignment(.center)
                         .lineLimit(3)
                         .minimumScaleFactor(0.7)
-                    
+
                     /*if let alternative = alternative {
                         ScrollView {
                             EquipmentScrollRow(equipment: alternative, title: "Alternative Equipment")
@@ -67,13 +67,13 @@ struct EquipmentDetail: View {
             }
         }
     }
-    
+
     private var exercisesForEquipment: [Exercise] {
         allExercises.filter { isExerciseCompatibleWithEquipment($0, using: equipment) }
     }
-    
+
     private var exerciseCount: Int { exercisesForEquipment.count }
-    
+
     /// Checks if a single piece of equipment (and its alternatives) can fulfill the exercise.
     private func isExerciseCompatibleWithEquipment(_ exercise: Exercise, using equipment: GymEquipment) -> Bool {
         let name = equipment.name

@@ -18,7 +18,7 @@ final class WorkoutGenerator {
     var resetExercises: Set<Exercise.ID> = []
     var maxUpdates: Set<Exercise.ID> = []
     var changes: WorkoutChanges = .init()
-    
+
     // •–––––––––  Inputs  –––––––––•
     struct Input {
         let user: UserData  // read-only snapshot
@@ -38,7 +38,7 @@ final class WorkoutGenerator {
         var changelog: WorkoutChangelog? // NEW
         var changes: WorkoutChanges?
     }
-    
+
     struct GenerationParameters {
         var duration: TimeSpan
         var repsAndSets: RepsAndSets
@@ -56,10 +56,10 @@ final class WorkoutGenerator {
     // MARK: – Public façade
     func generate(from input: Input) -> Output {
         let creationDate: Date = Date()
-  
+
         //  Derive all knobs the old method used
         let params = deriveParameters(input: input)
-        
+
         let selector = ExerciseSelector(
             exerciseData: input.exerciseData,
             equipmentData: input.equipmentData,
@@ -69,7 +69,7 @@ final class WorkoutGenerator {
             policy: .init(minCount: 1, maxCount: 20),
             seed: UInt64(max(1, Int(creationDate.timeIntervalSince1970))) // deterministic per run
         )
-        
+
         // Early-exit guard
         guard !params.days.isEmpty else {
             return Output(trainerTemplates: [],
@@ -87,7 +87,7 @@ final class WorkoutGenerator {
                 dayIndex: idx,
                 params: params,
                 input: input,
-                selector: selector,                
+                selector: selector,
                 maxUpdated: { update in
                     csvUpdates.updatePerformance(update)
                 }
@@ -95,7 +95,7 @@ final class WorkoutGenerator {
                 templates.append(tpl)
             }
         }
-        
+
         // �� GENERATE CHANGELOG HERE
         let changelog = generateChangelog(
             input: input,
@@ -103,7 +103,7 @@ final class WorkoutGenerator {
             templates: templates,
             generationStartTime: creationDate
         )
-        
+
         resetSets() // Clear tracking sets AFTER changelog generation
 
         return Output(
@@ -130,7 +130,7 @@ extension WorkoutGenerator {
         let customDist = input.user.workoutPrefs.customDistribution
         let resistance = input.user.workoutPrefs.resistance
         let supersetting = input.user.workoutPrefs.supersetSettings
-        
+
         let workoutWeek = WorkoutWeek.determineSplit(
             customSplit: customSplit,
             daysPerWeek: daysPerWeek
@@ -159,14 +159,14 @@ extension WorkoutGenerator {
             customWorkoutDays: input.user.workoutPrefs.customWorkoutDays,
             workoutDaysPerWeek: daysPerWeek
         )
-        
+
         var customParms: Set<PoolChanges.RelaxedFilter> = []
         if let customDist, customDist != repsAndSets.distribution { customParms.insert(.effort) }
         if let customSplit, customSplit != workoutWeek { customParms.insert(.split) }
         if resistance != .any { customParms.insert(.resistance) }
-  
+
         let categoriesPerDay = (0..<dayIndices.count).map { workoutWeek.categoryForDay(index: $0) }
-        
+
         // ---------------- Week roll-over logic ----------------
         let today = Date()
         var start = CalendarUtility.shared.startOfWeek(for: today) ?? today
@@ -181,7 +181,7 @@ extension WorkoutGenerator {
                 weekDays = CalendarUtility.shared.datesInWeek(startingFrom: start)
             }
         }
-        
+
         let days = dayIndices.map { DaysOfWeek.orderedDays[$0] }
         let dates = dayIndices.map { weekDays[$0] }
 
@@ -199,14 +199,14 @@ extension WorkoutGenerator {
             nonDefaultParameters: customParms
         )
     }
-    
+
     func getCompleted(
         savedID: UUID,
         input: Input
     ) -> CompletedWorkout? {
         // Gather all completed workouts matching this template ID
         let matchingCompleted: [CompletedWorkout] = input.user.workoutPlans.completedWorkouts.filter { $0.template.id == savedID }
-        
+
         // If multiple matches, pick the one with highest updatedMax.count
         let testCompleted: CompletedWorkout? = {
             if matchingCompleted.count > 1 {
@@ -215,10 +215,10 @@ extension WorkoutGenerator {
                 return matchingCompleted.first
             }
         }()
-        
+
         return testCompleted
     }
-    
+
     // Selection via engine
     func makeWorkoutTemplate(
         day: DaysOfWeek,
@@ -228,11 +228,11 @@ extension WorkoutGenerator {
         selector: ExerciseSelector,
         maxUpdated: @escaping (PerformanceUpdate) -> Void
     ) -> WorkoutTemplate? {
-        
+
         guard let categoriesForDay = params.categoriesPerDay[safe: dayIndex],
               var workoutDate: Date = params.dates[safe: dayIndex]
         else { return nil }
-        
+
         let dayName = day.rawValue
         let savedDay: OldTemplate = input.saved[safe: dayIndex] ?? OldTemplate()
         let dayHasExercises: Bool = dayIndex < input.saved.count && !savedDay.exercises.isEmpty
@@ -242,7 +242,7 @@ extension WorkoutGenerator {
         let completed: CompletedWorkout = testCompleted ?? CompletedWorkout()
         let restPeriods: RestPeriods = params.repsAndSets.rest
         let supersetting: SupersetSettings = params.supersetting
-     
+
         if !input.user.settings.useDateOnly {
             // Prefer per-day custom time → then user default → then 11:00
             let comps: DateComponents =
@@ -254,7 +254,7 @@ extension WorkoutGenerator {
                 workoutDate = CalendarUtility.shared.date(bySettingHour: h, minute: m, second: 0, of: workoutDate) ?? workoutDate
             }
         }
-        
+
         var tpl = WorkoutTemplate(
             name: "\(dayName) Workout",
             exercises: initialExercises,
@@ -263,12 +263,12 @@ extension WorkoutGenerator {
             date: workoutDate,
             restPeriods: restPeriods
         )
-        
+
         func getExercisesForTemplate(status: TimeSpan.Fit, existingPicked: [Exercise]) -> ([Exercise], [PoolChanges.RelaxedFilter]?) {
             let (exercises, dayChanges): ([Exercise], PoolChanges?) = {
                 let existingCount = existingPicked.count
                 let newCount = status.newCount(existingCount: existingCount)
-                
+
                 let targetCount = max(0, newCount)
                 if targetCount == existingCount { return (existingPicked, nil) }
                 if targetCount < existingCount {
@@ -276,7 +276,7 @@ extension WorkoutGenerator {
                     let trimmed = intelligentlyTrim(existingPicked, to: targetCount, mustHit: categoriesForDay)
                     return (trimmed, nil)
                 }
-                
+
                 // Selector enforces exact `exercisesPerWorkout` when the pool allows.
                 let (picked, dayChanges) = selector.select(
                     dayIndex: dayIndex,
@@ -286,13 +286,13 @@ extension WorkoutGenerator {
                     rAndS: params.repsAndSets,
                     existing: existingPicked
                 )
-                
+
                 return (picked, dayChanges)
             }()
-          
+
             if let dayChanges { changes.record(templateID: tpl.id, newPool: dayChanges) }
             if exercises.isEmpty { return ([], dayChanges?.relaxedFilters) }
-            
+
             // [2] Detail each exercise (aggregate timing, plus per-ex timing with threshold)
             let detailedExercises: [Exercise] = exercises.map { ex in
                 let completedExercise = completed.byID[ex.id]
@@ -321,13 +321,13 @@ extension WorkoutGenerator {
                         userData: input.user
                     )
                 }
-                
+
                 return exStep2
             }
-            
+
             return (detailedExercises, dayChanges?.relaxedFilters)
         }
-                
+
         let maxAttempts: Int = 20
         let step: () -> Bool = {
             let status = (tpl.estimatedCompletionTime ?? .init(seconds: 0)).fit(against: params.duration)
@@ -348,16 +348,16 @@ extension WorkoutGenerator {
         for _ in 0..<maxAttempts {
             if step() { break }
         }
-        
+
         // ---------------- Superset pairing & reordering ----------------
         tpl.exercises = applySupersetting(
             to: tpl.exercises,
             settings: supersetting
         )
-        
+
         return tpl
     }
-    
+
     func calculateDetailedExercise(
         input: Input,
         exercise: Exercise,
@@ -367,7 +367,7 @@ extension WorkoutGenerator {
     ) -> (Exercise, Bool) {
         var ex  = exercise
         var preventedRegression = false
-        
+
         if let max = input.exerciseData.peakMetric(for: ex.id), max.actualValue > 0 {
             ex.draftMax = max
         } else if let estMax = input.exerciseData.estimatedPeakMetric(for: ex.id), estMax.actualValue > 0 {
@@ -376,13 +376,13 @@ extension WorkoutGenerator {
             ex.draftMax = calcMax
             maxUpdated(PerformanceUpdate(exerciseId: ex.id, value: calcMax))
         }
-        
+
         // —— Prevent regression: if user performed >= planned on top set, don't regress max ————————————————
         if let newDraftMax = ex.draftMax,
            let completedEx = completedExercise,
            let oldDraftMax = completedEx.draftMax,
            oldDraftMax.actualValue > newDraftMax.actualValue {
-            
+
             // Find the top set (highest equivalent max from completed sets only)
             // Use oldDraftMax as peakType since that's what we're preserving
             if let topSet = findTopSetFromCompletedSets(exercise: completedEx, peakType: oldDraftMax),
@@ -395,10 +395,10 @@ extension WorkoutGenerator {
 
         // —— Set details ————————————————————————————
         ex.createSetDetails(repsAndSets: repsAndSets, userData: input.user, equipmentData: input.equipmentData)
-        
+
         return (ex, preventedRegression)
     }
-    
+
     /// Find the set with the highest equivalent max from completed working sets only
     /// Returns the set with the highest equivalent max, or nil if no completed sets exist
     private func findTopSetFromCompletedSets(
@@ -407,12 +407,12 @@ extension WorkoutGenerator {
     ) -> SetDetail? {
         var topSet: SetDetail? = nil
         var highestMax: Double = 0.0
-        
+
         // Only check working sets (not warmup)
         for set in exercise.setDetails {
             // Only consider sets that have been completed
             if set.completed == nil { continue }
-            
+
             // Calculate the equivalent max from this completed set
             if let calculatedMax = set.completedPeakMetric(peak: peakType) {
                 if calculatedMax.actualValue > highestMax {
@@ -421,16 +421,16 @@ extension WorkoutGenerator {
                 }
             }
         }
-        
+
         return topSet
     }
-    
+
     /// Check if the user performed at or above what was planned for the top set
     private func didUserPerformAtOrAbovePlanned(topSet: SetDetail) -> Bool {
         guard let completed = topSet.completed else { return false }
         return completed.actualValue >= topSet.planned.actualValue
     }
-    
+
     func handleExerciseProgression(
         input: Input,
         exercise: Exercise,
@@ -510,7 +510,7 @@ extension WorkoutGenerator {
 
         // 1️⃣ Skip if last week’s template wasn’t completed.
         guard templateCompleted else { return ex }
-        
+
         // 2️⃣ Prevent overload immediately after deload.
         if completedExercise?.isDeloading == true {
             ex.isDeloading = false
@@ -529,7 +529,7 @@ extension WorkoutGenerator {
 
         return ex
     }
-    
+
     // MARK: - PR window helper (use same logic everywhere)
     private func newPRSincePlanCreation(input: Input, exerciseID: UUID) -> Bool {
         guard let creation = input.user.workoutPlans.workoutsCreationDate else { return false }
@@ -543,7 +543,7 @@ extension WorkoutGenerator {
         let maxDay = cal.startOfDay(for: max.date)
         return maxDay >= windowStart
     }
-    
+
     private func resetSets() {
         deloadingExercises.removeAll()
         endedDeloadExercises.removeAll()
@@ -600,20 +600,20 @@ extension WorkoutGenerator {
         pickedIdx.sort()
         return pickedIdx.map { existing[$0] }
     }
-    
+
     /// Applies supersetting logic to reorder and pair exercises based on settings
     private func applySupersetting(
         to exercises: [Exercise],
         settings: SupersetSettings
     ) -> [Exercise] {
         guard settings.enabled else { return exercises }
-        
+
         let workingExercises = exercises.map { ex in
             var copy = ex
             copy.isSupersettedWith = nil
             return copy
         }
-        
+
         func muscleCompatible(_ lhs: Exercise, _ rhs: Exercise) -> Bool {
             switch settings.muscleOption {
             case .anyMuscle:
@@ -627,7 +627,7 @@ extension WorkoutGenerator {
                 return lhs.topPrimaryMuscle != nil && lhs.topPrimaryMuscle == rhs.topPrimaryMuscle
             }
         }
-        
+
         func equipmentCompatible(_ lhs: Exercise, _ rhs: Exercise) -> Bool {
             switch settings.equipmentOption {
             case .anyEquipment:
@@ -638,15 +638,15 @@ extension WorkoutGenerator {
                 return !lhsSet.isDisjoint(with: rhsSet)
             }
         }
-        
+
         let maxSupersettedExercises = Int(round(Double(workingExercises.count) * Double(settings.ratio) / 100.0))
         let pairBudget = min(workingExercises.count / 2, maxSupersettedExercises / 2)
         guard pairBudget > 0 else { return workingExercises }
-        
+
         var paired = Array(repeating: false, count: workingExercises.count)
         var pairsMade = 0
         var reordered: [Exercise] = []
-        
+
         for i in workingExercises.indices {
             if paired[i] { continue }
             if pairsMade >= pairBudget {
@@ -654,7 +654,7 @@ extension WorkoutGenerator {
                 paired[i] = true
                 continue
             }
-            
+
             var partnerIndex: Int?
             for j in (i + 1)..<workingExercises.count where !paired[j] {
                 if !muscleCompatible(workingExercises[i], workingExercises[j]) { continue }
@@ -662,16 +662,16 @@ extension WorkoutGenerator {
                 partnerIndex = j
                 break
             }
-            
+
             if let j = partnerIndex {
                 var first = workingExercises[i]
                 var second = workingExercises[j]
                 first.isSupersettedWith = second.id.uuidString
                 second.isSupersettedWith = first.id.uuidString
-                
+
                 reordered.append(first)
                 reordered.append(second)
-                
+
                 paired[i] = true
                 paired[j] = true
                 pairsMade += 1
@@ -680,8 +680,7 @@ extension WorkoutGenerator {
                 paired[i] = true
             }
         }
-        
+
         return reordered
     }
 }
-

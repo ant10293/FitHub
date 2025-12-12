@@ -11,7 +11,7 @@ struct InfoBanner: View {
     // MARK: – Public API
     let title: String
     let bgColor: Color
-    
+
     init(
         title: String,
         bgColor: Color = .blue
@@ -19,7 +19,7 @@ struct InfoBanner: View {
         self.title = title
         self.bgColor = bgColor
     }
-    
+
     var body: some View {
         RectangularLabel(title: title, bgColor: bgColor, width: .fit)
             .shadow(radius: 10)

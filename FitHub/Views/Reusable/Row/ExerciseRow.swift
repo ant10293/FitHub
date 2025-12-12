@@ -34,7 +34,7 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
     let accessory: () -> Accessory
     let detail:    () -> Detail
     let onTap: () -> Void
-    
+
     // ------------------------------------------------------------------
     // Designated init  (only one — keep it simple)
     // ------------------------------------------------------------------
@@ -62,12 +62,12 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
         self.detail    = detail
         self.onTap     = onTap
     }
-    
+
     private var resolvedState: FavoriteState {
         if !heartOverlay { return .unmarked }
         else { return favState }
     }
-    
+
     // ------------------------------------------------------------------
     // Body
     // ------------------------------------------------------------------
@@ -82,10 +82,10 @@ struct ExerciseRow<Accessory: View, Detail: View>: View {
                         .font(secondary ? .subheadline : .headline)
                         .lineLimit(lineLimit)
                         .minimumScaleFactor(0.7)
-                    
+
                     detail()                   // empty → auto-disappears
                 }
-                
+
                 Spacer(minLength: 8)
                 accessory()                   // empty → auto-disappears
             }
@@ -102,7 +102,7 @@ struct ExerciseRowDetails: View {
     let exercise: Exercise
     let peak: PeakMetric?
     let showAliases: Bool
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             if showAliases, let aliases = exercise.aliases, !aliases.isEmpty {
@@ -115,7 +115,7 @@ struct ExerciseRowDetails: View {
                 )
                 .font(.caption)
             }
-            
+
             // 🏆 1RM
             if let peak {
                 (
@@ -128,5 +128,3 @@ struct ExerciseRowDetails: View {
         }
     }
 }
-
-

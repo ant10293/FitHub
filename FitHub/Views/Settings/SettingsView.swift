@@ -4,7 +4,7 @@ import UserNotifications
 struct SettingsView: View {
     @EnvironmentObject private var ctx: AppContext
     @State private var isNotificationsExpanded = false
-    
+
     var body: some View {
         List {
             generalSettingsSection()
@@ -14,7 +14,7 @@ struct SettingsView: View {
         }
         .navigationTitle("Settings")
     }
-    
+
     private func generalSettingsSection() -> some View {
         Section {
             navigationLink("timer", "Rest Timer") { RestTimerSettings(userData: ctx.userData) }
@@ -27,7 +27,7 @@ struct SettingsView: View {
             Text("General")
         }
     }
- 
+
     private func advancedWorkoutSection() -> some View {
         Section {
             navigationLink("gearshape.2", "Workout Generation") { WorkoutCustomization() }
@@ -41,7 +41,7 @@ struct SettingsView: View {
             Text("Workout")
         }
     }
-    
+
     /*
     private func healthSection() -> some View {
         Section {
@@ -51,7 +51,7 @@ struct SettingsView: View {
         }
     }
     */
-    
+
     private func legalSection() -> some View {
          Section {
              navigationLink("shield", LegalURL.privacyPolicy.title) { PrivacyPolicy() }
@@ -64,7 +64,7 @@ struct SettingsView: View {
              Text("Legal")
          }
      }
-    
+
     // need to use LazyDestination
     private func navigationLink<Destination: View>(
         _ imageName: String,
@@ -82,19 +82,3 @@ struct SettingsView: View {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

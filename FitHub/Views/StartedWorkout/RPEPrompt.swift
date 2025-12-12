@@ -19,12 +19,12 @@ struct RPEPrompt: View {
 
             VStack {
                 Spacer()
-                
+
                 VStack(spacing: 12) {
                     Text("Do you want to log RPE?")
                         .font(.title2)
                         .multilineTextAlignment(.center)
-                    
+
                     Group {
                         Text("RPE (Rate of Perceived Exertion) is a 1–10 scale you can record after each set to track effort and fatigue.")
                             .foregroundStyle(.secondary)
@@ -32,7 +32,7 @@ struct RPEPrompt: View {
                     }
                     .font(.subheadline)
                     .multilineTextAlignment(.center)
-                    
+
                     HStack {
                         RectangularButton(title: "Not Now", bgColor: .gray) {
                             onSelect(true)
@@ -45,10 +45,9 @@ struct RPEPrompt: View {
                 }
                 .cardContainer(cornerRadius: 10, shadowRadius: 10)
                 .frame(width: screenWidth * 0.8)
-                
+
                 Spacer()
             }
         }
     }
 }
-

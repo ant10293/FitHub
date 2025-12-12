@@ -74,7 +74,7 @@ struct OptionalDatePicker: View {
             onDateChange(nil)
         }
     }
-    
+
     var resolvedDate: Date {
         let date = date ?? Date()
         if useDateOnly {

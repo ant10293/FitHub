@@ -46,15 +46,15 @@ enum InputLimiter {
         let trimmed = digits.trimLeadingZeros()
         return String(trimmed.prefix(3))
     }
-    
+
     static func isValidInput(_ input: String) -> Bool {
         // first trim trailing whitespaces
         // Check if the name is empty or contains only whitespace
         guard !input.isEmptyAfterTrim else { return false }
-        
+
         // Define a character set of valid characters (letters, numbers, spaces)
         let allowedCharacters = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789- ")
-        
+
         // Check if the name contains only allowed characters
         return input.rangeOfCharacter(from: allowedCharacters.inverted) == nil
     }
@@ -62,7 +62,7 @@ enum InputLimiter {
 
 enum Format {
     // MARK: - Number Formatting
-    
+
     /// Formats a `Double` by rounding to two decimal places and dropping trailing zeros.
     /// - Parameter value: The value to format.
     /// - Returns: A string with no decimal if integer, or up to two decimal places.
@@ -85,7 +85,7 @@ enum Format {
 
         return s
     }
-    
+
     /// Formats a `Date` into a localized string (e.g., “Jun 3, 2025 at 2:30 PM”).
     /// - Parameters:
     ///   - date: The date to format.
@@ -105,7 +105,7 @@ enum Format {
         formatter.timeZone = timeZone
         return formatter.string(from: date)
     }
-    
+
     /// Converts a total number of seconds into an “HH:mm:ss” or “mm:ss” string.
     /// - Parameter totalSeconds: Total seconds to format.
     /// - Returns: A string like “1:05:30” or “05:30” if under an hour.
@@ -113,29 +113,29 @@ enum Format {
         let (h, m, s) = secondsToHMS(totalSeconds)
         return formatDurationCompact(h: h, m: m, s: s)
     }
-    
+
     static func secondsToHMS(_ seconds: Int) -> (h: Int, m: Int, s: Int) {
         let hours = seconds / 3600
         let minutes = (seconds % 3600) / 60
         let secondsPart = seconds % 60
         return (h: hours, m: minutes, s: secondsPart)
     }
-    
+
     static func formatTimeComponents(_ components: DateComponents) -> String {
         guard let date = CalendarUtility.shared.date(from: components) else { return "--:--" }
-        
+
         let formatter = DateFormatter()
         formatter.dateFormat = "h:mm a"
         formatter.locale = Locale(identifier: "en_US_POSIX") // Force 12-hour format
 
         return formatter.string(from: date)
     }
-    
+
     static func formatTimeInterval(_ timeInterval: TimeInterval) -> String {
         let totalSeconds = Int(timeInterval)
         return formatDuration(totalSeconds, roundSeconds: true)
     }
-    
+
     static func formatDuration(_ seconds: Int, roundSeconds: Bool = false) -> String {
         // 1️⃣  Decide the base value to format
         let totalSeconds: Int = { guard roundSeconds else { return seconds }
@@ -157,7 +157,7 @@ enum Format {
 
         return parts.isEmpty ? "0 sec" : parts.joined(separator: " ")
     }
-    
+
     static func formatDurationCompact(h: Int, m: Int, s: Int, roundSeconds: Bool = false) -> String {
         let hh = max(0, h), mm = max(0, m), ss = max(0, s)
         var totalSeconds = hh * 3_600 + mm * 60 + ss
@@ -171,7 +171,7 @@ enum Format {
             ? String(format: "%d:%02d:%02d", h, m, s)
             : String(format: "%d:%02d", m, s)
     }
-    
+
     static func formatRange(range: ClosedRange<Double>) -> String {
         if range.lowerBound == range.upperBound {
             "\(Format.smartFormat(range.lowerBound))"
@@ -179,13 +179,13 @@ enum Format {
             "\(Format.smartFormat(range.lowerBound))-\(Format.smartFormat(range.upperBound))"
         }
     }
-    
+
     static func formatRange(range: ClosedRange<Int>) -> String {
         let min = Double(range.lowerBound)
         let max = Double(range.upperBound)
         return Format.formatRange(range: min...max)
     }
-    
+
     /// Returns "N exercise(s)" with optional capitalization of the leading "e".
     static func countText(_ count: Int, base: String = "exercise", capitalize: Bool = false) -> String {
         let base = "\(count) \(base)" + (count == 1 ? "" : "s")

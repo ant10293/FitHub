@@ -13,7 +13,7 @@ struct Questionnaire: View {
     @State private var currentQuestionIndex: Int = 0
     @State private var answers: [String] = ["", "", "", "", ""]
     @State private var showingPopup: Bool = false
-    
+
     let questions = [
         "Are you familiar with gym equipment and exercise techniques?",
         "How long have you been training (consistently)?",
@@ -21,7 +21,7 @@ struct Questionnaire: View {
         "How many days per week do you plan on exercising?",
         "What equipment do you have access to?"
     ]
-    
+
     let options = [
         ["Yes", "Somewhat", "No"],
         ["< 3 months", "3–12 months", "1–3 years", "3–5 years", "5+ years"],
@@ -29,7 +29,7 @@ struct Questionnaire: View {
         ["3", "4", "5", "6"],
         ["All (Gym Membership)", "Some (Home Gym)", "None (Bodyweight Only)"]
     ]
-    
+
     var body: some View {
         VStack {
             Text("Question \(currentQuestionIndex + 1) of \(questions.count)")
@@ -38,7 +38,7 @@ struct Questionnaire: View {
                 .font(.title)
                 .padding()
                 .multilineTextAlignment(.center)
-            
+
             ForEach(options[currentQuestionIndex], id: \.self) { option in
                 Button(action: {
                     answers[currentQuestionIndex] = option
@@ -50,7 +50,7 @@ struct Questionnaire: View {
                             .background(Color.blue)
                             .foregroundStyle(Color.white)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
-                        
+
                         Spacer()
                         if answers[currentQuestionIndex] == option {
                             Image(systemName: "checkmark")
@@ -75,7 +75,7 @@ struct Questionnaire: View {
                     }
                 }
                 .disabled(currentQuestionIndex == 0)
-                
+
                 Spacer()
                 Button(action: {
                     if currentQuestionIndex < questions.count - 1 {
@@ -85,7 +85,7 @@ struct Questionnaire: View {
                             if let firstAnswer = answers.first {
                                 ctx.userData.evaluation.isFamiliarWithGym = firstAnswer == "Yes"
                             }
-                            
+
                             case 3: // "How many days per week do you plan on exercising?"
                                 if answers.count > 3, let workoutDays = Int(answers[3]) {
                                     ctx.userData.workoutPrefs.workoutDaysPerWeek = workoutDays
@@ -108,13 +108,13 @@ struct Questionnaire: View {
                     }
                 }
                 .disabled(answers[currentQuestionIndex].isEmpty) // Disable button if no answer is selected
-                
+
             }
             .padding()
         }
         .padding()
         .onAppear(perform: initializeQuestions)
-        .sheet(isPresented: $showingPopup) {            
+        .sheet(isPresented: $showingPopup) {
             EquipmentPopupView(
                 selectedEquipment: ctx.equipment.equipmentObjects(for: ctx.userData.evaluation.availableEquipment),
                 onClose: {
@@ -132,7 +132,7 @@ struct Questionnaire: View {
             )
         }
     }
-    
+
     private func initializeQuestions() {
         // already answered
         if ctx.userData.setup.questionAnswers.count == questions.count {
@@ -142,18 +142,16 @@ struct Questionnaire: View {
             showingPopup = true
         }
     }
-    
+
     private func updateSelectedEquipment() {
         if answers.count > 4 {
             let equipment = ctx.equipment.selectEquipment(basedOn: answers[4])
             ctx.userData.evaluation.availableEquipment = Set(equipment.map(\.id))
         }
     }
-    
+
     private func handleNavigation() {
         ctx.userData.setup.questionsAnswered = true
         ctx.userData.saveToFile()
     }
 }
-
-

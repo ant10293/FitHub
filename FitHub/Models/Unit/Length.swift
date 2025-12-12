@@ -12,7 +12,7 @@ import SwiftUI
 struct Length: Codable, Equatable, Hashable {
     /// Canonical backing-store in **centimeters**.
     private var cm: Double
-    
+
     // MARK: – Inits
     init(cm: Double) { self.cm = cm }
     init(inch: Double) { self.cm = UnitSystem.INtoCM(inch) }
@@ -20,30 +20,30 @@ struct Length: Codable, Equatable, Hashable {
         self.cm = 0
         self.set(length)
     }
-    
+
     // MARK: – Accessors
     var inCm: Double { cm }
     var inInch: Double { UnitSystem.CMtoIN(cm) }
-    
+
     // MARK: – Display
     var displayValue: Double { UnitSystem.current == .imperial ? inInch : inCm }
     var displayString: String { Format.smartFormat(displayValue) }
     var fieldString: String { cm > 0 ? displayString : "" }
-    
+
     // MARK: - Mutating setters
     mutating func setCm(_ cm: Double) { self.cm = cm }
     mutating func setIn(_ inch: Double) { self.cm = UnitSystem.INtoCM(inch) }
     mutating func set(_ value: Double) { /// Convenience: update using the caller’s preferred unit system.
         self.cm = UnitSystem.current == .imperial ? UnitSystem.INtoCM(value) : value
     }
-    
+
     // MARK: – Unit
     var unit: UnitCategory { .size }
 }
 
 extension Length {
     var totalInches: Int { return Int(round(inInch)) }
-    
+
     var heightFormatted: Text {
         if UnitSystem.current == .imperial {
             Text("\(totalInches / 12)")

@@ -28,7 +28,7 @@ struct PlannedTimerRing: View {
             }
         )
     }
-    
+
     // MARK: - Private
     private func completedFromTimer(_ seconds: Int) -> SetMetric? {
         let elapsed = TimeSpan(seconds: max(0, seconds))
@@ -53,7 +53,7 @@ private struct TimerRing: View {
     let plannedSeconds: Int
     let initialElapsedSeconds: Int
     let onCompletion: (Int) -> Void
-    
+
     var body: some View {
         VStack(spacing: 12) {
             ZStack {
@@ -62,20 +62,20 @@ private struct TimerRing: View {
                     .stroke(lineWidth: 20)
                     .opacity(0.25)
                     .foregroundStyle(.gray)
-                
+
                 // Progress
                 Circle()
                     .trim(from: 0, to: progress)
                     .stroke(.blue, style: StrokeStyle(lineWidth: 20, lineCap: .round))
                     .rotationEffect(.degrees(-90))
                     .animation(.linear, value: progress)
-                
+
                 Text("\(Format.timeString(from: manager.holdTimeRemaining))")
                     .font(.largeTitle).bold()
                     .monospacedDigit()
             }
             .padding(.horizontal)
-            
+
             // Controls
             HStack(spacing: 12) {
                 Button {
@@ -88,7 +88,7 @@ private struct TimerRing: View {
                         .padding(.vertical, 10)
                         .background(Capsule().fill(isRunning ? Color.gray.opacity(0.2) : Color.blue.opacity(0.2)))
                 }
-                
+
                 Button {
                     showingResetAlert = true
                 } label: {
@@ -101,7 +101,7 @@ private struct TimerRing: View {
                 }
                 .disabled(isIdle)
                 .opacity(isIdle ? 0.5 : 1.0)
-                
+
                 Button(role: .destructive) {
                     fireCompletionIfNeeded()
                 } label: {
@@ -134,7 +134,7 @@ private struct TimerRing: View {
             }
         }
     }
-    
+
     // Progress for the HOLD countdown
     private var progress: CGFloat {
         guard manager.holdTotalSeconds > 0 else { return 0 }
@@ -157,7 +157,7 @@ private struct TimerRing: View {
             manager.startHold(totalSeconds: plannedSeconds, initialElapsed: initialElapsedSeconds)
         }
     }
-    
+
     /// Call this everywhere you "finish" the timer: stop button, auto-complete, disappear
     private func fireCompletionIfNeeded() {
         // If you *don't* want to record 0-second holds, keep this guard:
@@ -166,7 +166,7 @@ private struct TimerRing: View {
         onCompletion(secElapsed)
         manager.stopHold()
     }
-    
+
     /// Reset the timer to the beginning
     private func resetTimer() {
         manager.stopHold()

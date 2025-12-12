@@ -8,7 +8,7 @@ struct HomeView: View {
     @State private var selectedExercise: Exercise.ID?
     @State private var selectedMeasurement: MeasurementType = .weight
     @State private var selectedView: GraphView = .exercisePerformance
-    
+
     var body: some View {
         NavigationStack {
             List {
@@ -23,13 +23,13 @@ struct HomeView: View {
             )
         }
     }
-    
+
     private func initializeVariables() {
         selectedExercise = ctx.userData.sessionTracking.selectedExercise
         selectedMeasurement = ctx.userData.sessionTracking.selectedMeasurement
         selectedView = ctx.userData.sessionTracking.selectedView
     }
-    
+
     private var unwrappedExercise: Exercise? {
         if let exerciseId = selectedExercise {
             return ctx.exercises.exercise(for: exerciseId)
@@ -37,7 +37,7 @@ struct HomeView: View {
             return ctx.exercises.exercise(named: "Bench Press")
         }
     }
-    
+
     private var profileSection: some View {
         Section {
             HStack {
@@ -45,14 +45,14 @@ struct HomeView: View {
                     Image(systemName: "person.crop.circle")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: screenWidth * 0.125) 
+                        .frame(width: screenWidth * 0.125)
                         .foregroundStyle(colorScheme == .dark ? .gray : .black)
-                    
+
                     VStack(alignment: .leading) {
                         Text(ctx.userData.profile.displayName(.full))
                             .font(.title2)
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
-                        
+
                         Text("\(ctx.userData.sessionTracking.totalNumWorkouts) workouts")
                             .font(.subheadline)
                             .foregroundStyle(colorScheme == .dark ? .gray : .black)
@@ -61,7 +61,7 @@ struct HomeView: View {
                 }
             }
             .padding()
-            
+
             Button(action: { showingFavoriteExercises = true }) {
                 HStack {
                     Text("Favorite Exercises")
@@ -81,7 +81,7 @@ struct HomeView: View {
         }
         .background(Color.clear)
     }
-    
+
     private var graphSection: some View {
         Section {
             VStack {
@@ -95,7 +95,7 @@ struct HomeView: View {
                 .onChange(of: selectedView) { oldValue, newValue in
                     ctx.userData.sessionTracking.selectedView = newValue
                 }
-                
+
                 switch selectedView {
                 case .exercisePerformance:
                     performanceGraphSection
@@ -106,7 +106,7 @@ struct HomeView: View {
         }
         .background(Color.clear)
     }
-    
+
     private var performanceGraphSection: some View {
         GraphSectionView(
             label: "Exercise",
@@ -141,7 +141,7 @@ struct HomeView: View {
             )
         }
     }
-    
+
     private var measurementsGraphSection: some View {
         GraphSectionView(
             label: "Measurement",

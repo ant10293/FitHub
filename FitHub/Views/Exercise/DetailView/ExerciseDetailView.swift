@@ -26,11 +26,11 @@ struct ExerciseDetailView: View {
         _editingExercise = State(initialValue: false)
         _loadedExercises = State(initialValue: nil)
     }
-    
+
     var body: some View {
         VStack {
             if viewingAsSheet { workoutToolbar }
-            
+
             Picker("View", selection: $selectedView) {
                 ForEach(Views.allCases) { v in
                     Text(v.rawValue).tag(v)
@@ -38,7 +38,7 @@ struct ExerciseDetailView: View {
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding(.horizontal)
-            
+
             Group {
                 switch selectedView {
                 case .about:
@@ -55,7 +55,7 @@ struct ExerciseDetailView: View {
                 }
             }
             .padding()
-            
+
             Spacer()
         }
         .navigationBarTitle(exercise.name, displayMode: .inline)
@@ -70,16 +70,16 @@ struct ExerciseDetailView: View {
             }
         }
     }
-    
+
     private enum Views: String, CaseIterable, Identifiable {
         case about = "About"
         case history = "History"
         case prs = "PRs"
         case percentile = "Percentile"
-        
+
         var id: String { self.rawValue }
     }
-        
+
     private var workoutToolbar: some View {
         CenteredOverlayHeader(
             center: {

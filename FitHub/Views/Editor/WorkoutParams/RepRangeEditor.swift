@@ -20,7 +20,7 @@ struct RepRangeEditor: View {
             set: { reps.modify(for: effort, with: $0) }
         )
     }
-    
+
     var body: some View {
         VStack(spacing: 14) {
             // Visible rows only

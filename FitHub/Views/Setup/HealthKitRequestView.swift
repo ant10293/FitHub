@@ -11,7 +11,7 @@ struct HealthKitRequestView: View {
         VStack {
             Text("Loading...")
                 .font(.headline)
-            
+
             Image("Logo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)

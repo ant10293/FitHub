@@ -50,11 +50,11 @@ struct WorkoutPreferences: Codable, Equatable {
     var setStructure: SetStructures = .pyramid
     var customDuration: TimeSpan?
     var customDistribution: EffortDistribution?
-    
+
     var maxBwRepCapMultiplier: Double = 2.0 // MARK: no editing implemented yet
     //var minHoldTime: TimeSpan = .init(seconds: 30)
     //var maxHoldTime: TimeSpan = .init(minutes: 5)
-    
+
     var supersetSettings: SupersetSettings = SupersetSettings()
     var roundingPreference: RoundingPreference = .init()
     var setIntensity: SetIntensitySettings = .init()
@@ -82,29 +82,29 @@ struct Settings: Codable, Equatable {
     var allowDeloading: Bool = true
     var periodUntilDeload: Int = 4
     var deloadIntensity: Int = 85
-    
+
     var userLanguage: Languages = .english
     var selectedTheme: Themes = .defaultMode // Default style
     var muscleRestDuration: Int = 48 // Default to 48 hours
-    
+
     var useDateOnly: Bool = true // If true, only the date is considered
     var defaultWorkoutTime: DateComponents?  // Default workout time, [.hour, .minute]
 
     var workoutReminders: Bool = true
     var notifications: Notifications = .init()
-    
+
     var enableSortPicker: Bool = true // disable ExerciseSortOptions picker
     var saveSelectedSort: Bool = false // save selections as new exerciseSortOption
     var sortByTemplateCategories: Bool = true // sort by template categories when editing a template with categories
     var hideUnequippedExercises: Bool = false // hide exercises that the user DOES NOT have equipment for in exercise selection or or exercise view
     var hideDifficultExercises: Bool = false // hide exercises that would be too difficult for the user
     var hideDislikedExercises: Bool = false // hide exercises that the user has disliked
-    
+
     var restTimerEnabled: Bool = true
     var hideRpeSlider: Bool = false
     var hideCompletedInput: Bool = false
     var hideExerciseImage: Bool = false
-    
+
     //var hiddenExercises: Set<Exercise.ID> = []
     //var monthlyStrengthUpdate: Bool = true
 }

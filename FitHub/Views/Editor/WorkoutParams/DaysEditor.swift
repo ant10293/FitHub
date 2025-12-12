@@ -9,12 +9,12 @@ import SwiftUI
 
 // must change to account for more day options
 struct DaysEditor: View {
-    @Environment(\.dismiss) private var dismiss 
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) var colorScheme // Environment value for color scheme
     @Binding var selectedDays: [DaysOfWeek]
     @Binding var numDays: Int
     @State private var showingAlert = false // State variable for showing the alert
-    
+
     var body: some View {
         NavigationStack {
             List {
@@ -31,7 +31,7 @@ struct DaysEditor: View {
                             HStack {
                                 Text(day.rawValue)
                                     .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
-                                
+
                                 Spacer()
                                 if selectedDays.contains(day) {
                                     Image(systemName: "checkmark")

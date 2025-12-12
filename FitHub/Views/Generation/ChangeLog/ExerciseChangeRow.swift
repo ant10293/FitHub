@@ -48,26 +48,26 @@ struct ExerciseChangeRow: View {
 
 private struct MaxRecordInfoRow: View {
     let maxRecordInfo: MaxRecordInfo
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Image(systemName: "trophy.fill")
                     .foregroundStyle(Color.gold)
                     .font(.caption)
-                
+
                 Text("Max Record Info")
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundStyle(Color.gold)
-                
+
                 Spacer()
             }
-            
+
             maxRecordInfo.displayText
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            
+
             if let daysSince = maxRecordInfo.daysSinceLastUpdate {
                 Text(sinceString(fromDays: daysSince))
                     .font(.caption2)
@@ -79,7 +79,7 @@ private struct MaxRecordInfoRow: View {
         .background(Color.gold.opacity(0.1))
         .clipShape(RoundedRectangle(cornerRadius: 6))
     }
-    
+
     private func sinceString(fromDays days: Int) -> String {
         if days == 0 { return "Updated today" }
         if days <= 6 { return "Last updated \(Format.countText(days, base: "day")) ago" }
@@ -90,16 +90,16 @@ private struct MaxRecordInfoRow: View {
 
 private struct ProgressionDetailsRow: View {
     let progression: ProgressionDetails
-    
+
     var body: some View {
         HStack {
             Image(systemName: progression.progressionIcon)
                 .foregroundStyle(progression.progressionColor)
-            
+
             Text(progression.appliedChange)
                 .font(.caption)
                 .foregroundStyle(progression.progressionColor)
-            
+
             Spacer()
         }
         .padding(.horizontal, 8)

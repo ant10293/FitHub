@@ -60,7 +60,7 @@ struct WeekWorkout: View {
             }
         }
     }
-    
+
     // MARK: - Single‑day card ---------------------------------------------
 
     struct DayWorkout: View {
@@ -118,7 +118,7 @@ struct WeekWorkout: View {
         private var cardBackground: Color {
             colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : .white
         }
-        
+
         private var cardBorder: Color { colorForStatus(info.status) }
 
         private func colorForStatus(_ s: DayInfo.Status) -> Color {
@@ -131,4 +131,3 @@ struct WeekWorkout: View {
         }
     }
 }
-

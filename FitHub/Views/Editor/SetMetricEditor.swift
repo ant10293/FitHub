@@ -13,7 +13,7 @@ struct SetMetricEditor: View {
     let hideTOSMenu: Bool
     let load: SetLoad
     let style: TextFieldVisualStyle
-    
+
     init(
         planned: Binding<SetMetric>,
         showing: Binding<TimeOrSpeed.InputKey?> = .constant(nil),

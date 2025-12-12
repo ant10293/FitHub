@@ -15,9 +15,9 @@ enum ActivityLevel: String, Codable, CaseIterable, Identifiable {
     case moderatelyActive = "Moderately active"
     case veryActive = "Very active"
     case superActive = "Super active"
-    
+
     var id: String { self.rawValue }
-    
+
     var multiplier: Double {
         switch self {
         case .sedentary: return 1.2
@@ -28,7 +28,7 @@ enum ActivityLevel: String, Codable, CaseIterable, Identifiable {
         case .select: return 1.0 // Default value for 'select', though it might not be used
         }
     }
-    
+
     var estimatedSteps: Int {
         switch self {
         case .sedentary: return 3000
@@ -39,7 +39,7 @@ enum ActivityLevel: String, Codable, CaseIterable, Identifiable {
         case .select: return 0
         }
     }
-    
+
     var description: String {
         switch self {
         case .sedentary:
@@ -64,7 +64,7 @@ enum StrengthLevel: String, CaseIterable, Codable {
     case intermediate = "Int."
     case advanced = "Adv."
     case elite = "Elite"
-    
+
     var strengthValue: Int {
         switch self {
         case .beginner: return 1
@@ -74,7 +74,7 @@ enum StrengthLevel: String, CaseIterable, Codable {
         case .elite: return 5
         }
     }
-    
+
     var percentile: Double {
         switch self {
         case .beginner: return 0.2
@@ -84,7 +84,7 @@ enum StrengthLevel: String, CaseIterable, Codable {
         case .elite: return 1.0
         }
     }
-    
+
     var fullName: String {
         switch self {
         case .beginner: return "Beginner"
@@ -94,7 +94,7 @@ enum StrengthLevel: String, CaseIterable, Codable {
         case .elite: return "Elite"
         }
     }
-    
+
     static let categories: [String] = StrengthLevel.allCases.map(\.rawValue)
 }
 
@@ -111,9 +111,9 @@ enum ExEquipLocation: String {
 // landers unused
 enum OneRMFormula {
     case epleys, landers, brzycki, oconnor
-    
+
     static let canonical: OneRMFormula = .brzycki
-    
+
     @inline(__always)
     func percent(at reps: Int) -> Double {
         let r = max(1, reps) // clamp to sane range
@@ -132,13 +132,13 @@ enum OneRMFormula {
             return 1.0 / (1.0 + 0.025 * Double(r))
         }
     }
-    
+
     static func calculateOneRepMax(weight: Mass, reps: Int, formula: OneRMFormula = canonical) -> Mass {
         guard weight.inKg > 0, reps > 1 else { return weight }
         let p = formula.percent(at: reps) // %1RM fraction
         return Mass(kg: weight.inKg / p)
     }
-    
+
     /// Calculate approximate reps for a given percentage of 1RM
     /// This is the inverse of `percent(at:)`
     @inline(__always)
@@ -180,7 +180,7 @@ enum OneRMFormula {
 
 enum WeightedHoldFormula {
     static let canonical: TimeSpan = .init(seconds: 30)
-    
+
     /// Convert (weight × time) hold to an equivalent load at reference time.
     static func equivalentHoldLoad(
         weight: Mass,                  // effective kg for the hold
@@ -197,7 +197,7 @@ enum WeightedHoldFormula {
 
 enum WeightedCarryFormula {
     static let canonical: Meters = Meters(meters: 50) // 50 meters
-    
+
     /// Convert (weight × distance) carry to an equivalent load at reference distance.
     static func equivalentCarryLoad(
         weight: Mass,                  // effective kg for the carry
@@ -216,11 +216,11 @@ enum BMI {
     static func calculateBMI(heightCm: Double, weightKg: Double) -> Double {
         let heightM = heightCm / 100.0                     // convert to metres
         guard heightM > 0 else { return 0 }                // avoid div‑by‑zero
-        
+
         let bmi = weightKg / (heightM * heightM)
         return (bmi * 10).rounded() / 10                   // 1 decimal place
     }
-    
+
     static func recommendGoalBasedOnBMI(bmi: Double) -> FitnessGoal {
         switch bmi {
         case ..<18.5:
@@ -254,9 +254,9 @@ enum RestType: String, CaseIterable, Identifiable, Hashable, Codable {
     case warmup = "Warm-up"
     case working = "Working"
     case superset = "Superset"
-    
+
     var id: String { rawValue }
-    
+
     var note: String {
         switch self {
         case .warmup:   "Rest between warm-up sets"
@@ -268,13 +268,13 @@ enum RestType: String, CaseIterable, Identifiable, Hashable, Codable {
 
 enum LegalURL {
     static let urlPrefix = "https://ant10293.github.io/fithub-legal/"
-    
+
     case privacyPolicy, termsOfService, affiliateTerms
-    
+
     var rawURL: String {
         LegalURL.urlPrefix + urlSuffix + "/"
     }
-    
+
     var urlSuffix: String {
         switch self {
         case .privacyPolicy: "privacy"
@@ -282,7 +282,7 @@ enum LegalURL {
         case .affiliateTerms: "affiliate-terms"
         }
     }
-    
+
     var title: String {
         switch self {
         case .privacyPolicy: "Privacy Policy"

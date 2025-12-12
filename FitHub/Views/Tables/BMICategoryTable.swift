@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BMICategoryTable: View {
     let userBMI: Double
-    
+
     // Define BMI categories, ranges, and colors
     let categories: [(name: String, displayRange: String, color: Color)] = [
         ("Underweight", "<18.5", .blue),
@@ -18,7 +18,7 @@ struct BMICategoryTable: View {
         ("Obese\n", "30.0 - 34.9", .orange),
         ("Extremely Obese", "35<", .red)
     ]
-    
+
     var body: some View {
         GeometryReader { geometry in
             HStack(spacing: 0) {
@@ -29,7 +29,7 @@ struct BMICategoryTable: View {
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .multilineTextAlignment(.center)
-                        
+
                         Text(category.displayRange)
                             .font(.caption2)
                             .foregroundStyle(.white)
@@ -44,7 +44,7 @@ struct BMICategoryTable: View {
                 GeometryReader { innerGeometry in
                     let categoryIndex = getBMICategoryIndex()
                     let columnWidth = innerGeometry.size.width / CGFloat(categories.count)
-                    
+
                     // Gray overlay for user's category
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.gray.opacity(0.5))

@@ -27,11 +27,11 @@ struct WorkoutCustomization: View {
     @State private var selectedSetStructure: SetStructures = .pyramid
     @State private var duration: TimeSpan = .hrMinToSec(hours: 1, minutes: 0)
     @StateObject private var toast = ToastManager()
-    
+
     var body: some View {
         VStack {
             if toast.showingSaveConfirmation { InfoBanner(title: "Restored Default Preferences!") }
-            
+
             Form {
                 // Section 1: Generation Parameters
                 Section {
@@ -42,7 +42,7 @@ struct WorkoutCustomization: View {
                 } header: {
                     Text("General")
                 }
-               
+
                 // Section 2: Schedule
                 Section {
                     splitSelector
@@ -53,7 +53,7 @@ struct WorkoutCustomization: View {
                 } header: {
                     Text("Scheduling")
                 }
-                
+
                 // Section 3: Set Configuration
                 Section {
                     distributionSelector
@@ -93,7 +93,7 @@ struct WorkoutCustomization: View {
             Text("This will reset all workout customization preferences to their default values. This action cannot be undone.")
         }
     }
-    
+
     private var daysOfWeekSelector: some View {
         Picker("Workout Days per Week", selection: $daysPerWeek) {
             ForEach(1...6, id: \.self) {
@@ -133,7 +133,7 @@ struct WorkoutCustomization: View {
         }
         .tint(.gray)
     }
-    
+
     private var repsSelector: some View {
         let defaultRange = defaultRepsAndSets.reps
         let binding = Binding(
@@ -177,7 +177,7 @@ struct WorkoutCustomization: View {
             }
         }
     }
-        
+
     private var resistanceTypeSelector: some View {
         let showWarning = (paramsBeforeSwitch?.contains(.resistance) == true)
 
@@ -199,7 +199,7 @@ struct WorkoutCustomization: View {
             }
         }
     }
-    
+
     private var distributionSelector: some View {
         let defaultDist = ctx.userData.physical.goal.defaultDistribution
         let showWarning = (paramsBeforeSwitch?.contains(.distribution) == true)
@@ -240,7 +240,7 @@ struct WorkoutCustomization: View {
                 ctx.userData.workoutPrefs.customDuration = newDuration
             }
         )
-        
+
         return DisclosureGroup(isExpanded: $isDurationExpanded) {
             DurationPicker(time: binding, hourRange: 0...2, minuteStep: 15)
                 .listRowSeparator(.hidden, edges: .top)
@@ -262,12 +262,12 @@ struct WorkoutCustomization: View {
         }
         .tint(.gray) // makes the disclosure arrow gray
     }
-    
+
     private var keepCurrentExercisesToggle: some View {
         VStack {
             Toggle("Keep current Exercises", isOn: $keepCurrentExercises) // Add this line
                 .disabled(ctx.userData.workoutPlans.trainerTemplates.isEmpty)
-            
+
             if let params = paramsBeforeSwitch, !params.isEmpty {
                 WarningFooter(message: "Changes made since last generation. Toggle off to implement parameter changes.")
             }
@@ -278,7 +278,7 @@ struct WorkoutCustomization: View {
             }
         }
     }
-    
+
     private var splitSelector: some View {
         let splitWarning = WorkoutWeek.splitWarning(
             customSplit: ctx.userData.workoutPrefs.customWorkoutSplit,
@@ -301,7 +301,7 @@ struct WorkoutCustomization: View {
             }
         }
     }
-    
+
     private var workoutDaysSelector: some View {
         VStack(alignment: .leading) {
             Button(action: { showingDayPicker = true }) {
@@ -327,7 +327,7 @@ struct WorkoutCustomization: View {
             }
         }
     }
-    
+
     private var workoutTimesSelector: some View {
         VStack(alignment: .leading) {
             Button(action: { showingTimePicker = true }) {
@@ -341,7 +341,7 @@ struct WorkoutCustomization: View {
             }
         }
     }
-    
+
     private var setIntensitySelector: some View {
         VStack(alignment: .leading) {
             Button(action: { showingSetIntensity = true }) {
@@ -360,7 +360,7 @@ struct WorkoutCustomization: View {
             .buttonStyle(.plain)
         }
     }
-    
+
     private var warmupSettingsSelector: some View {
         VStack(alignment: .leading) {
             Button(action: { showingWarmupSettings = true }) {
@@ -383,7 +383,7 @@ struct WorkoutCustomization: View {
             .buttonStyle(.plain)
         }
     }
-    
+
     private var roundingSelector: some View {
         VStack(alignment: .leading) {
             Button(action: { showingWeightIncrementation = true }) {
@@ -402,7 +402,7 @@ struct WorkoutCustomization: View {
             .buttonStyle(.plain)
         }
     }
-    
+
     private var supersetSettingsSelector: some View {
         VStack(alignment: .leading) {
             Button(action: { showingSupersetSettings = true }) {
@@ -421,16 +421,16 @@ struct WorkoutCustomization: View {
             .buttonStyle(.plain)
         }
     }
-    
+
     private var paramsBeforeSwitch: Set<ParamsBeforeSwitch.ParamsChanged>? {
         guard keepCurrentExercises, let params = ctx.userData.workoutPrefs.paramsBeforeSwitch else { return nil }
         return params.getChanges(resistance: selectedResistanceType, distribution: ctx.userData.workoutPrefs.customDistribution)
     }
-    
+
     private var distribution: EffortDistribution {
         ctx.userData.workoutPrefs.customDistribution ?? defaultRepsAndSets.distribution
     }
-    
+
     private var defaultRepsAndSets: RepsAndSets { RepsAndSets.defaultRepsAndSets(for: ctx.userData.physical.goal) }
 
     private func initializeVariables() {
@@ -440,7 +440,7 @@ struct WorkoutCustomization: View {
         selectedResistanceType = ctx.userData.workoutPrefs.resistance
         selectedSetStructure = ctx.userData.workoutPrefs.setStructure
     }
-    
+
     private func resetToDefaults() {
         ctx.userData.workoutPrefs.customRepsRange = nil
         ctx.userData.workoutPrefs.customSets = nil
@@ -452,17 +452,17 @@ struct WorkoutCustomization: View {
         ctx.userData.workoutPrefs.customDuration = nil
         ctx.userData.workoutPrefs.customDistribution = nil
         ctx.userData.workoutPrefs.customWorkoutTimes = nil
-        
+
         ctx.userData.workoutPrefs.warmupSettings = WarmupSettings()
         ctx.userData.workoutPrefs.setIntensity = SetIntensitySettings()
         ctx.userData.workoutPrefs.roundingPreference = RoundingPreference()
         ctx.userData.workoutPrefs.supersetSettings = SupersetSettings()
-        
+
         initializeVariables()
 
         toast.showSaveConfirmation()
     }
-    
+
     private var isDefault: Bool {
         let pref = ctx.userData.workoutPrefs
         return (
@@ -483,4 +483,3 @@ struct WorkoutCustomization: View {
         )
     }
 }
-

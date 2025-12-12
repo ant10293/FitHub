@@ -9,13 +9,13 @@ struct ConsistencyGraph: View {
     @State private var selectedYear: Int = CalendarUtility.shared.currentYear
     let workoutDates: [Date]
     let workoutDaysPerWeek: Int
-    
+
     var body: some View {
         VStack {
             Text("Workouts Per Week")
                 .font(.headline)
                 .padding(.top)
-            
+
             ScrollViewReader { proxy in
                 ScrollView(.horizontal) {
                     HStack(spacing: 0) {
@@ -52,13 +52,13 @@ struct ConsistencyGraph: View {
                                     .multilineTextAlignment(.center)
                             }
                         }
-                        
+
                         Color.clear.frame(width: 0.1).id("END")   // sentinel at far right
                     }
                 }
                 .onAppear { proxy.scrollTo("END", anchor: .trailing) }
             }
-        
+
             // Picker for Time Range
             Picker("Select Time Range", selection: $selectedTimeRange) {
                 ForEach(TimeRange.allCases) { range in
@@ -73,13 +73,13 @@ struct ConsistencyGraph: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .padding(.horizontal)
     }
-    
+
     private struct WorkoutData {
         let week: Date
         let formattedWeek: String
         let workoutCount: Int
     }
-    
+
     // Filter workoutDates based on selected time range
     private var filteredWorkoutDates: [Date] {
         switch selectedTimeRange {
@@ -104,7 +104,7 @@ struct ConsistencyGraph: View {
             return workoutDates
         }
     }
-    
+
     // Generate workout data using filtered dates
     private var workoutData: [WorkoutData] {
         let weeks = CalendarUtility.shared.generateWeeklyIntervals(for: filteredWorkoutDates)
@@ -115,4 +115,3 @@ struct ConsistencyGraph: View {
         }
     }
 }
-

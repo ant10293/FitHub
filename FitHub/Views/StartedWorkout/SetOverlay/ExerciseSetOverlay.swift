@@ -27,13 +27,13 @@ struct ExerciseSetOverlay: View {
     var body: some View {
         VStack {
             exerciseToolbar
-            
+
             if let detail = currentSetBinding {
                 if !showPicker {
                     // Equipment Adjustments + Info button
                     adjustmentsSection
                 }
-                                
+
                 // Display the set editor
                 ExerciseSetDisplay(
                     setDetail: detail,
@@ -44,7 +44,7 @@ struct ExerciseSetOverlay: View {
                     hideCompleted: params.hideCompleted,
                     exercise: exercise
                 )
-                
+
                 if !showPicker {
                     NextButton(
                         timerManager: timerManager,
@@ -116,10 +116,10 @@ struct ExerciseSetOverlay: View {
                 }
                 .buttonStyle(.plain)
             }
-        ) 
+        )
         .padding(.bottom)
     }
-    
+
     private var adjustmentsSection: some View {
         VStack {
             HStack {
@@ -135,11 +135,11 @@ struct ExerciseSetOverlay: View {
             }
         }
     }
-    
+
     private var currentSetBinding: Binding<SetDetail>? {
         let i = exercise.currentSetIndex              // 0-based
         guard exercise.allSetDetails.indices.contains(i) else { return nil }
-        
+
         return Binding(
             get: { exercise.allSetDetails[i] },
             set: { newVal in
@@ -151,12 +151,12 @@ struct ExerciseSetOverlay: View {
             }
         )
     }
-    
+
     private func handleButtonPress(setDetail: Binding<SetDetail>) -> Int {
         let priorMax = getPriorMax(exercise.id)
         let defaultRest = exercise.getRestPeriod(isWarm: exercise.isWarmUp, rest: params.restPeriods)
         let restForSet = setDetail.wrappedValue.restPeriod ?? defaultRest
-        
+
         // ── A) Repetition-driven sets (compound/isolation) ─────────────────────
         let best: PeakMetric = priorMax ?? exercise.getPeakMetric(metricValue: 0)
         let result = setDetail.wrappedValue.updateCompletedMetrics(currentBest: best)
@@ -169,8 +169,7 @@ struct ExerciseSetOverlay: View {
             ))
         }
         saveTemplate(setDetail, $exercise)
-        
+
         return restForSet
     }
 }
-

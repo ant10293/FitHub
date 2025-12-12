@@ -11,7 +11,7 @@ import Foundation
 struct ParamsBeforeSwitch: Codable, Equatable {
     var resistance: ResistanceType
     var distribution: EffortDistribution?
-    
+
     init(
         resistance: ResistanceType,
         customDistribution: EffortDistribution?
@@ -19,9 +19,9 @@ struct ParamsBeforeSwitch: Codable, Equatable {
         self.resistance = resistance
         self.distribution = customDistribution
     }
-    
+
     enum ParamsChanged: String { case resistance, distribution }
-    
+
     func getChanges(resistance: ResistanceType, distribution: EffortDistribution?) -> Set<ParamsChanged> {
         var changed: Set<ParamsChanged> = []
         if self.resistance != resistance { changed.insert(.resistance) }
@@ -44,7 +44,7 @@ enum WorkoutParams {
             return defaultWorkoutDuration(age: age, frequency: frequency, strengthLevel: strengthLevel, goal: goal)
         }
     }
-    
+
     /// Heuristic workout duration (minutes) based on user profile.
     /// Returns a value rounded to the nearest 5 and clamped to 25…90.
     static func defaultWorkoutDuration(
@@ -71,7 +71,7 @@ enum WorkoutParams {
         case 5: minutes -= 5
         default: minutes -= 10   // 6–7 days → shorter sessions
         }
-        
+
         switch max(1, min(frequency, 7)) {
         case 1: minutes += 30
         case 2: minutes += 20
@@ -114,7 +114,7 @@ enum WorkoutParams {
         } else {
             minutes -= remainder          // round down
         }
-        
+
         return TimeSpan(minutes: minutes)
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ChangeTheme: View {
     @ObservedObject var userData: UserData
-    
+
     var body: some View {
         VStack {
             Picker("Theme", selection: $userData.settings.selectedTheme) {
@@ -19,7 +19,7 @@ struct ChangeTheme: View {
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding()
-            
+
             Text("Default mode will follow the device's theme settings.")
                 .font(.subheadline)
                 .foregroundStyle(.gray)

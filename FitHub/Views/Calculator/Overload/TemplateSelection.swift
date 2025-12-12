@@ -12,7 +12,7 @@ struct TemplateSelection: View {
     @State private var navigateToOverload: Bool = false
     let userTemplates: [WorkoutTemplate]
     let trainerTemplates: [WorkoutTemplate]
-    
+
     var body: some View {
         workoutList
             .navigationDestination(isPresented: $navigateToOverload) {
@@ -25,9 +25,9 @@ struct TemplateSelection: View {
             }
             .navigationBarTitle("Select Template", displayMode: .inline)
     }
-    
+
     private var allTemplates: [WorkoutTemplate] { userTemplates + trainerTemplates }
-    
+
     @ViewBuilder private var workoutList: some View {
         if userTemplates.isEmpty && trainerTemplates.isEmpty {
             EmptyState(
@@ -52,7 +52,7 @@ struct TemplateSelection: View {
             }
         }
     }
-    
+
     private func templatesSection(templates: [WorkoutTemplate], location: TemplateLocation) -> some View {
         Section {
             ForEach(templates.indices, id: \.self) { index in
@@ -62,7 +62,7 @@ struct TemplateSelection: View {
             Text(location.label)
         }
     }
-    
+
     private func templateButton(for index: Int, location: TemplateLocation, template: WorkoutTemplate) -> some View {
         TemplateRow(
             template: template,

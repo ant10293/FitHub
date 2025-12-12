@@ -16,7 +16,7 @@ struct GenericEditor: View {
     let initialValue: String
     let onSave: (Double) -> Void
     let onExit: () -> Void
-    
+
     init(
         title: String,
         placeholder: String,
@@ -29,7 +29,7 @@ struct GenericEditor: View {
         self.initialValue = initialValue
         self.onSave = onSave
         self.onExit = onExit
-        
+
         _inputValue = State(initialValue: initialValue)
     }
 
@@ -93,26 +93,26 @@ struct GenericEditWrapper<Content: View, Extra: View>: View {
                 .padding(8)
                 .roundedBackground()
                 .padding(.horizontal)
-            
+
             additionalContent()
-            
+
             HStack(spacing: 20) {
                 Spacer()
-                
+
                 LabelButton(
                     title: "Cancel",
                     systemImage: "xmark",
                     tint: .red,
                     action: onCancel
                 )
-                
+
                 LabelButton(
                     title: "Save",
                     systemImage: "checkmark",
                     tint: .green,
                     action: onSave
                 )
-                
+
                 Spacer()
             }
             .padding()
@@ -124,4 +124,3 @@ struct GenericEditWrapper<Content: View, Extra: View>: View {
         .onAppear { if autoFocus { isFocused = true } }
     }
 }
-

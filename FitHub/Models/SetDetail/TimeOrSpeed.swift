@@ -14,7 +14,7 @@ struct TimeOrSpeed: Codable, Equatable, Hashable {
     var showing: InputKey = .speed
     var time: TimeSpan
     var speed: Speed
-    
+
     // MARK: - Inits
     init(showing: InputKey, time: TimeSpan, speed: Speed) {
         self.showing = showing
@@ -36,7 +36,7 @@ struct TimeOrSpeed: Codable, Equatable, Hashable {
         self.time = .init(seconds: 0)
         self.speed = .init(kmh: 0)
     }
-    
+
     enum InputKey: String, Codable, Equatable, CaseIterable { case time, speed }
 
     // MARK: - Mutating setters
@@ -58,7 +58,7 @@ struct TimeOrSpeed: Codable, Equatable, Hashable {
             time = Speed.timeFromSpeed(newSpeed, distance: distance)
         }
     }
-    
+
     // MARK: – Unit
     var unit: UnitCategory {
         switch showing {
@@ -75,7 +75,7 @@ extension TimeOrSpeed {
         case .time: return Text(time.displayStringCompact)
         }
     }
-    
+
     var displayString: String {
         switch showing {
         case .speed: return speed.displayString
@@ -89,14 +89,14 @@ extension TimeOrSpeed {
         case .time: return "Time"
         }
     }
-    
+
     var fieldString: String {
         switch showing {
         case .speed: return speed.fieldString
         case .time: return time.fieldString
         }
     }
-    
+
     var actualValue: Double {
         switch showing {
         case .speed: return Double(speed.inKmH)

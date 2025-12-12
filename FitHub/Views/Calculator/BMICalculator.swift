@@ -17,7 +17,7 @@ struct BMICalculator: View {
     @State private var showingResult: Bool = false
     @State private var isButtonPressed: Bool = false
     @State private var activeCard: ActiveCard = .none
-    
+
     init(userData: UserData) {
         _userData = ObservedObject(wrappedValue: userData)
         // Initialize with existing user data if available
@@ -25,7 +25,7 @@ struct BMICalculator: View {
         _weight = State(initialValue: Mass(kg: weight))
         _height = State(initialValue: userData.physical.height)
     }
-    
+
     var body: some View {
         let height = screenHeight * 0.1
 
@@ -34,8 +34,8 @@ struct BMICalculator: View {
                 weightCard
                     .padding(.top)
                 heightCard
-                
-                
+
+
                 if !kbd.isVisible {
                     Spacer(minLength: height)
 
@@ -48,7 +48,7 @@ struct BMICalculator: View {
                         }
                     )
                     .padding(.horizontal)
-                    
+
                     Spacer(minLength: height)
                 }
             }
@@ -73,20 +73,20 @@ struct BMICalculator: View {
         )
         .navigationBarTitle("BMI Calculator", displayMode: .inline)
     }
-    
+
     private var isCalculateEnabled: Bool { return weight.inKg > 0 && height.inCm > 0 }
 
     private func calculateAndUpdateBMI() {
         bmi = BMI.calculateBMI(heightCm: height.inCm, weightKg: weight.inKg)
-        
+
         userData.updateMeasurementValue(for: .bmi, with: bmi)
         userData.updateMeasurementValue(for: .weight, with: weight.inKg)
 
         userData.physical.height = height
     }
-    
+
     // MARK: - Cards
-    
+
     private var weightCard: some View {
         MeasurementCard(
             title: "Weight",
@@ -122,16 +122,16 @@ struct BMICalculator: View {
         let value = mass.displayString
         return value.isEmpty ? "—" : "\(value) \(unit)"
     }
-    
+
     private func toggle(_ card: ActiveCard) {
         activeCard = activeCard == card ? .none : card
     }
-    
+
     private func closePicker() {
         kbd.dismiss()
         activeCard = .none
     }
-    
+
     private enum ActiveCard {
         case none, weight, height
     }

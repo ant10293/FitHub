@@ -13,7 +13,7 @@ struct ExercisePerformanceGraph: View {
     // MARK: – Inputs
     let exercise: Exercise
     let performance: ExercisePerformance?
-    
+
     var body: some View {
         VStack {
             Text("\(exercise.name) \(exercise.performanceTitle(includeInstruction: true))")
@@ -21,7 +21,7 @@ struct ExercisePerformanceGraph: View {
                 .centerHorizontally()
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
-            
+
             ScrollViewReader { proxy in
                 ScrollView(.horizontal) {
                     HStack(spacing: 0) {
@@ -35,7 +35,7 @@ struct ExercisePerformanceGraph: View {
                                             y: .value("Value", record.value.displayValue)
                                         )
                                         .foregroundStyle(.blue)
-                                        
+
                                         PointMark(
                                             x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
                                             y: .value("Value", record.value.displayValue)
@@ -62,7 +62,7 @@ struct ExercisePerformanceGraph: View {
                                         .multilineTextAlignment(.center)
                                 }
                             }
-                            
+
                             if !sortedRecords.isEmpty, let unit = exercise.getPeakMetric(metricValue: 0).unitLabel {
                                 Text(unit)
                                     .font(.caption)
@@ -70,13 +70,13 @@ struct ExercisePerformanceGraph: View {
                             }
                         }
                         .frame(width: max(CGFloat(sortedRecords.count) * 60, screenWidth - 40), height: screenHeight * 0.33)
-                        
+
                         Color.clear.frame(width: 0.1).id("END")   // sentinel at far right
                     }
                 }
                 .onAppear { proxy.scrollTo("END", anchor: .trailing) }
             }
-            
+
             Picker("Select Time Range", selection: $selectedTimeRange) {
                 ForEach(TimeRange.allCases, id: \.self) { range in
                     Text(range.rawValue.capitalized).tag(range)
@@ -86,13 +86,13 @@ struct ExercisePerformanceGraph: View {
             .padding()
         }
     }
-    
+
     private func recordBadge(_ record: MaxRecord) -> String {
         let rhs = record.value.displayString
         let prefix = (record.loadXmetric != nil) ? "≈ " : ""
         return prefix + rhs
     }
-    
+
     // MARK: – Derived helpers
     private var allRecords: [MaxRecord] {
         guard let perf = performance else { return [] }
@@ -100,11 +100,11 @@ struct ExercisePerformanceGraph: View {
         if let current = perf.currentMax { recs.append(current) }
         return recs
     }
-    
+
     /// Records after time‑range filtering and per‑day de‑duplication.
     private var sortedRecords: [MaxRecord] {
         guard !allRecords.isEmpty else { return [] }
-        
+
         let filtered: [MaxRecord] = {
             switch selectedTimeRange {
             case .month:
@@ -126,7 +126,7 @@ struct ExercisePerformanceGraph: View {
                 return allRecords
             }
         }()
-        
+
         // keep highest per calendar day
         var highestPerDay: [Date: MaxRecord] = [:]
         for rec in filtered {
@@ -139,22 +139,19 @@ struct ExercisePerformanceGraph: View {
                 highestPerDay[day] = rec
             }
         }
-        
+
         return highestPerDay.values.sorted { $0.date < $1.date }
     }
-    
+
     private var minValue: Double {
         if exercise.usesWeight { return sortedRecords.map { $0.value.displayValue }.min() ?? 100 }
         return sortedRecords.map { $0.value.displayValue }.min() ?? 0
     }
-    
+
     private var maxValue: Double {
         if exercise.usesWeight { return sortedRecords.map { $0.value.displayValue }.max() ?? 300 }
         return sortedRecords.map { $0.value.displayValue }.max() ?? 50
     }
-    
+
     private var yAxisRange: ClosedRange<Double> { return minValue - (minValue * 0.2)...maxValue + (maxValue * 0.2) }
 }
-    
-
-

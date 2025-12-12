@@ -12,55 +12,55 @@ final class AdjustmentsData: ObservableObject {
     static let equipmentAdjustmentsKey: String = "equipmentAdjustments.json"
     @Published var exerciseAdjustments: [Exercise.ID: ExerciseAdjustments] = [:] // Store adjustments using a dictionary for fast lookups
     @Published var equipmentAdjustments: [GymEquipment.ID: [EquipmentAdjustment]] = [:] // Store equipment-level images
-    
+
     init() {
         exerciseAdjustments = AdjustmentsData.loadExerciseAdjustments()
         equipmentAdjustments = AdjustmentsData.loadEquipmentAdjustments()
     }
-    
+
     // MARK: – Persistence Logic
     static func loadExerciseAdjustments() -> [Exercise.ID: ExerciseAdjustments] {
         JSONFileManager.shared.loadExerciseAdjustments(from: AdjustmentsData.exerciseAdjustmentsKey) ?? [:]
     }
-    
+
     static func loadEquipmentAdjustments() -> [GymEquipment.ID: [EquipmentAdjustment]] {
         JSONFileManager.shared.loadEquipmentAdjustments(from: AdjustmentsData.equipmentAdjustmentsKey) ?? [:]
     }
-    
+
     // Load adjustments for all exercises
     func loadAllAdjustments(for exercises: [Exercise], equipment: EquipmentData, availableEquipment: Set<GymEquipment.ID>) {
         for exercise in exercises {
             loadAdjustments(for: exercise, equipment: equipment, availableEquipment: availableEquipment)
         }
     }
-    
+
     func loadAdjustments(for exercise: Exercise, equipment: EquipmentData, availableEquipment: Set<GymEquipment.ID>) {
         let requiredKeys = categoriesForExercise(exercise, equipment: equipment, availableEquipment: availableEquipment)
-        
+
         // Start from existing or create empty container
         var localAdjustments = exerciseAdjustments[exercise.id] ?? ExerciseAdjustments(
             id: exercise.id,
             entries: [],
             sorted: false
         )
-        
+
         // Track what we already have
         var seen = Set(
             localAdjustments.entries.map {
                 AdjustmentKey(equipmentID: $0.equipmentID, category: $0.category)
             }
         )
-        
+
         // Ensure each required key has an entry
         for key in requiredKeys where !seen.contains(key) {
             localAdjustments.entries.append(.empty(for: key))
             seen.insert(key)
         }
-        
+
         localAdjustments.setSorted()
         exerciseAdjustments[exercise.id] = localAdjustments
     }
-    
+
     // MARK: saving logic
     func saveAdjustmentsToFile() {
         JSONFileManager.shared.save(exerciseAdjustments, to: AdjustmentsData.exerciseAdjustmentsKey)
@@ -73,21 +73,21 @@ extension AdjustmentsData {
     func deleteAdjustments(for exercise: Exercise, shouldSave: Bool = true) {
         // Guard: nothing to delete
          guard hasAdjustments(for: exercise) else { return }
-    
+
         // 1. Remove the top-level entry
         exerciseAdjustments.removeValue(forKey: exercise.id)
 
         // 2. Persist (optional)
         if shouldSave { saveAdjustmentsToFile() }
     }
-    
+
     func deleteAdjustment(exercise: Exercise, category: AdjustmentCategory) {
         guard var adjustments = exerciseAdjustments[exercise.id] else { return }
         adjustments.entries.removeAll { $0.category == category }
         self.exerciseAdjustments[exercise.id] = adjustments
         saveAdjustmentsToFile() // Save changes
     }
-    
+
     func clearAdjustmentValue(exercise: Exercise, for category: AdjustmentCategory, in adjustment: ExerciseAdjustments) {
         updateAdjustmentValue(for: exercise, category: category, newValue: .string(""))
     }
@@ -119,30 +119,30 @@ extension AdjustmentsData {
             newEntry.value = newValue
             adjustment.entries.append(newEntry)
         }
-        
+
         adjustment.setSorted()
         exerciseAdjustments[exercise.id] = adjustment
 
         // Sync the TextField cache
         if shouldSave { saveAdjustmentsToFile() }
     }
-    
+
     func addAdjustmentCategory(_ exercise: Exercise, category: AdjustmentCategory) {
         updateAdjustmentValue(for: exercise, category: category, newValue: .string(""))
     }
-    
+
     func updateAdjustmentImage(for exercise: Exercise, category: AdjustmentCategory, newImageName: String?, storageLevel: ImageStorageLevel = .equipment, shouldSave: Bool = true) {
         guard var adjustment = exerciseAdjustments[exercise.id],
               let index = adjustment.entries.firstIndex(where: { $0.category == category }) else {
             print("⚠️ [AdjustmentsData] Cannot update image - adjustment entry not found for \(exercise.name), category: \(category.rawValue)")
             return
         }
-        
+
         let entry = adjustment.entries[index]
         let equipmentID = entry.equipmentID
         let normalizedImage = newImageName?.isEmpty == false ? newImageName : nil
         let isRemoving = normalizedImage == nil
-        
+
         if isRemoving {
             // Removing an image
             switch storageLevel {
@@ -150,7 +150,7 @@ extension AdjustmentsData {
                 // Check if there's an equipment-level image
                 let equipmentImage = getEquipmentImage(for: equipmentID, category: category)
                 let hasEquipmentImage = equipmentImage?.isEmpty == false
-                
+
                 if hasEquipmentImage, let imageName = equipmentImage {
                     // Store the equipment image name so this exercise will ignore this specific image
                     // Also clear any exercise-specific override
@@ -198,7 +198,7 @@ extension AdjustmentsData {
                 adjustment.entries[index] = updatedEntry
             }
         }
-        
+
         exerciseAdjustments[exercise.id] = adjustment
         if shouldSave { saveAdjustmentsToFile() }
     }
@@ -206,14 +206,14 @@ extension AdjustmentsData {
 
 extension AdjustmentsData {
     // MARK: – Helpers
-    
+
     /// Resolves image with priority: exercise-specific → equipment-level → default
     func resolvedImage(for entry: AdjustmentEntry) -> String {
         // 1. Check exercise-specific override
         if let exerciseImage = entry.image, !exerciseImage.isEmpty {
             return exerciseImage
         }
-        
+
         // 2. Check equipment-level
         if let equipmentImage = getEquipmentImage(for: entry.equipmentID, category: entry.category),
            !equipmentImage.isEmpty {
@@ -225,11 +225,11 @@ extension AdjustmentsData {
             // Equipment image exists and is not ignored, use it
             return equipmentImage
         }
-        
+
         // 4. Default
         return entry.category.image
     }
-    
+
     /// Gets equipment-level image for a category
     private func getEquipmentImage(for equipmentID: GymEquipment.ID?, category: AdjustmentCategory) -> String? {
         guard let equipmentID = equipmentID,
@@ -238,19 +238,19 @@ extension AdjustmentsData {
         }
         return adjustments.first { $0.category == category }?.image
     }
-    
+
     /// Checks if there's an existing equipment-level image (public helper for UI)
     func hasEquipmentLevelImage(for equipmentID: GymEquipment.ID, category: AdjustmentCategory) -> Bool {
         let image = getEquipmentImage(for: equipmentID, category: category)
         return image?.isEmpty == false
     }
-    
+
     /// Sets equipment-level image for a category
     private func setEquipmentImage(for equipmentID: GymEquipment.ID, category: AdjustmentCategory, image: String?) {
         if equipmentAdjustments[equipmentID] == nil {
             equipmentAdjustments[equipmentID] = []
         }
-        
+
         var adjustments = equipmentAdjustments[equipmentID]!
         if let index = adjustments.firstIndex(where: { $0.category == category }) {
             adjustments[index].image = image
@@ -264,7 +264,7 @@ extension AdjustmentsData {
         }
         equipmentAdjustments[equipmentID] = adjustments
     }
-    
+
     /// Finds the equipment ID for a category in an exercise (helper for fallback scenarios)
     private func findEquipmentID(for exercise: Exercise, category: AdjustmentCategory) -> GymEquipment.ID? {
         // This is a fallback - in practice entries should be created via loadAdjustments
@@ -277,26 +277,26 @@ extension AdjustmentsData {
         }
         return nil
     }
-    
+
     private func categoriesForExercise(_ exercise: Exercise, equipment: EquipmentData, availableEquipment: Set<GymEquipment.ID>) -> [AdjustmentKey] {
         var result: [AdjustmentKey] = []
         var seen = Set<AdjustmentKey>()
-        
+
         // Use dynamic equipment selection to get available equipment (including alternatives)
         let gear = equipment.equipmentForExercise(exercise, inclusion: .dynamic, available: availableEquipment)
-        
+
         for gearItem in gear {
             guard let gearAdjustments = gearItem.adjustments else { continue }
-            
+
             for category in gearAdjustments {
                 let key = AdjustmentKey(equipmentID: gearItem.id, category: category)
                 guard !seen.contains(key) else { continue }
-                
+
                 seen.insert(key)
                 result.append(key)
             }
         }
-        
+
         return result
     }
 
@@ -306,13 +306,13 @@ extension AdjustmentsData {
         }
         return nil
     }
-    
+
     func adjustmentsEntry(for exercise: Exercise) -> ExerciseAdjustments {
         if let existing = exerciseAdjustments[exercise.id] {
             return existing.normalized()
         }
         return ExerciseAdjustments(id: exercise.id, entries: [], sorted: true)
     }
-    
+
     func hasAdjustments(for exercise: Exercise) -> Bool { exerciseAdjustments[exercise.id]?.entries.isEmpty == false }
 }

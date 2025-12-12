@@ -16,7 +16,7 @@ struct WeekView: View {
             Text("This Week's Workouts")
                 .font(.headline)
                 .padding(.leading)
-            
+
             Rectangle()
                 .fill(Color.gray.opacity(0.3))
                 .frame(height: screenHeight * 0.25)
@@ -28,7 +28,7 @@ struct WeekView: View {
                 }
         }
     }
-    
+
     private var weekLegend: some View {
         HStack(spacing: 15) {
             LegendItem(color: .blue, label: "Planned")
@@ -37,14 +37,14 @@ struct WeekView: View {
         }
         .padding()
     }
-    
+
     private struct LegendItem: View {
         var color: Color
         var label: String
-        
+
         var body: some View {
             let size = screenWidth * 0.03
-            
+
             HStack(spacing: 4) {
                 RoundedRectangle(cornerRadius: 2)
                     .fill(color)

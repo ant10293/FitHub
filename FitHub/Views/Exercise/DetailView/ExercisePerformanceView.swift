@@ -5,7 +5,7 @@ struct ExercisePerformanceView: View {
     // MARK: – Inputs
     let exercise: Exercise
     let performance: ExercisePerformance?     // ← optional wrapper
-    var onDelete: (MaxRecord.ID) -> Void 
+    var onDelete: (MaxRecord.ID) -> Void
     var onSetMax: (MaxRecord.ID) -> Void
 
     var body: some View {
@@ -37,11 +37,11 @@ struct ExercisePerformanceView: View {
                                 Image(systemName: "star.fill")
                                     .foregroundStyle(Color.gold)
                             }
-                            
+
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Date: ").bold()
                                 + Text(Format.formatDate(record.date, dateStyle: .short, timeStyle: .none))
-                                
+
                                 record.value.formattedText
 
                                 if let loadXmetric = record.loadXmetric {
@@ -50,7 +50,7 @@ struct ExercisePerformanceView: View {
                             }
 
                             Spacer()
-                            
+
                             Menu {
                                 Button {
                                     onSetMax(record.id)
@@ -109,4 +109,3 @@ struct ExercisePerformanceView: View {
             .sorted { $0.date > $1.date }
     }
 }
-

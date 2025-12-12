@@ -13,7 +13,7 @@ struct AffiliateRegistrationView: View {
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
     @StateObject private var admin = ReferralCodeAdmin()
-    
+
     @State private var anonAcctBlocker: Bool = false
     @State private var fullName: String = ""
     @State private var email: String = ""
@@ -29,13 +29,13 @@ struct AffiliateRegistrationView: View {
     @State private var stripeStatus: StripeAffiliateStatus = .empty
     @State private var codeNotFound: Bool = false
     @State private var stripeConnectKey: Int = 0
-    
+
     @State private var acceptedTerms: Bool = false
     @State private var showingTerms: Bool = false
     @State private var acceptedTermsVersion: String? = nil
     @State private var currentTermsVersion: String? = nil
     @State private var needsTermsAcceptance: Bool = false
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -46,12 +46,12 @@ struct AffiliateRegistrationView: View {
                             VStack(spacing: 20) {
                                 Text("Terms and Conditions Update")
                                     .font(.title2.bold())
-                                
+
                                 Text("The Affiliate Program Terms and Conditions have been updated. Please review and accept the new terms to continue.")
                                     .font(.body)
                                     .foregroundStyle(.secondary)
                                     .multilineTextAlignment(.center)
-                                
+
                                 termsAcceptanceButton(action: {
                                     acceptedTerms.toggle()
                                     if acceptedTerms {
@@ -66,11 +66,11 @@ struct AffiliateRegistrationView: View {
                             VStack(alignment: .leading, spacing: 16) {
                                 Text("Code Not Found")
                                     .font(.headline)
-                                
+
                                 Text("Referral code '\(code)' not found in our servers. Please generate a new code or contact support.")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
-                                
+
                                 RectangularButton(
                                     title: "Start Over",
                                     enabled: true,
@@ -84,7 +84,7 @@ struct AffiliateRegistrationView: View {
                             VStack(alignment: .leading, spacing: 12) {
                                 Text("Your Referral Code")
                                     .font(.headline)
-                                
+
                                 ZStack {
                                     Text(code)
                                         .font(.system(.title, design: .monospaced, weight: .bold))
@@ -114,7 +114,7 @@ struct AffiliateRegistrationView: View {
                                     .buttonStyle(.plain)
                                     .animation(.easeInOut(duration: 0.2), value: codeCopied)
                                 }
-                                
+
                                 Button {
                                     UIPasteboard.general.string = generateAppStoreLink(with: code)
                                     linkCopied = true
@@ -128,16 +128,16 @@ struct AffiliateRegistrationView: View {
                                 }
                                 .buttonStyle(.borderedProminent)
                                 .animation(.easeInOut(duration: 0.2), value: linkCopied)
-                                
+
                                 ShareLink(item: generateShareText(code: code)) {
                                     Label("Share Referral Code", systemImage: "square.and.arrow.up")
                                         .frame(maxWidth: .infinity)
                                 }
                                 .buttonStyle(.bordered)
-                                
+
                                 StripeConnect(stripeStatus: $stripeStatus, referralCode: code, refreshStripeStatus: refreshStripeStatus)
                                     .id(stripeConnectKey) // Force reset by changing key
-                                
+
                                 ReferralStats(isLoadingStats: isLoadingStats, codeStats: codeStats)
                             }
                         }
@@ -157,10 +157,10 @@ struct AffiliateRegistrationView: View {
                                 allowEditEmail: true,
                                 emailErrorMessage: emailValidationError(email)
                             )
-                            
+
                             Text("Create Custom Code")
                                 .font(.headline)
-                            
+
                             VStack(alignment: .leading, spacing: 4) {
                                 TextField("Custom code (optional)", text: $customCode)
                                     .textInputAutocapitalization(.characters)
@@ -171,44 +171,44 @@ struct AffiliateRegistrationView: View {
                                             errorMessage = nil
                                         }
                                     }
-                                
+
                                 ErrorFooter(message: customCodeValidationError(customCode))
                             }
-                            
+
                             // Terms acceptance for new users
                             if needsTermsAcceptance {
                                 Text("Terms and Conditions")
                                     .font(.headline)
-                                
+
                                 termsAcceptanceButton(action: {
                                     acceptedTerms.toggle()
                                 })
                             }
-                            
+
                             Spacer()
-                            
+
                             Group {
                                 if let error = errorMessage {
                                     ErrorFooter(message: error.localizedDescription)
                                 }
-                                
+
                                 if isGenerating { ProgressView() }
                             }
                             .centerHorizontally()
-                            
+
                             RectangularButton(
                                 title: buttonTitle,
                                 enabled: isButtonEnabled,
                                 fontWeight: .bold,
                                 action: generateCode
                             )
-                            
+
                             Text("Your referral code will be generated from your name and stored so signups can be attributed.")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
                     }
-                    
+
                     Spacer(minLength: 0)
                 }
                 .padding()
@@ -228,7 +228,7 @@ struct AffiliateRegistrationView: View {
             }
         }
     }
-    
+
     private func termsAcceptanceButton(action: @escaping () -> Void) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Button {
@@ -239,7 +239,7 @@ struct AffiliateRegistrationView: View {
                     .foregroundStyle(acceptedTerms ? .blue : .secondary)
             }
             .buttonStyle(.plain)
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 (Text("I have read and agree to the ")
                  + Text("Affiliate Terms and Conditions")
@@ -252,17 +252,17 @@ struct AffiliateRegistrationView: View {
         .frame(maxWidth: .infinity)
         .inputStyle()
     }
-    
+
     private func initializeFromUserData() {
         fullName = ctx.userData.profile.displayName(.full)
         email = ctx.userData.profile.email
-        
+
         // only initialize data if account is not anonymous
         guard !AuthService.isAnonymous() else {
             anonAcctBlocker = true
             return
         }
-        
+
         Task {
             currentTermsVersion = await AffiliateTermsConstants.getCurrentVersion()
             if let existingCode = ctx.userData.profile.referralCode, !existingCode.isEmpty {
@@ -273,24 +273,24 @@ struct AffiliateRegistrationView: View {
             }
         }
     }
-    
+
     private func checkTermsAcceptance() {
         guard let currentVersion = currentTermsVersion else {
             needsTermsAcceptance = true
             return
         }
-        
+
         if let acceptedVersion = acceptedTermsVersion {
             needsTermsAcceptance = acceptedVersion != currentVersion
         } else {
             needsTermsAcceptance = true
         }
-        
+
         if !needsTermsAcceptance {
             acceptedTerms = true
         }
     }
-    
+
     private func updateTermsAcceptance(code: String) async {
         guard let currentVersion = currentTermsVersion else { return }
         do {
@@ -307,7 +307,7 @@ struct AffiliateRegistrationView: View {
             }
         }
     }
-    
+
     private func loadAffiliateInfo(showStatsLoader: Bool = true) async {
         func resetStatsForError(codeNotFound: Bool) {
             isLoadingStats = false
@@ -315,7 +315,7 @@ struct AffiliateRegistrationView: View {
             stripeStatus   = .empty
             self.codeNotFound = codeNotFound
         }
-        
+
         guard let code = generatedCode else { return }
 
         if showStatsLoader { isLoadingStats = true }
@@ -350,14 +350,14 @@ struct AffiliateRegistrationView: View {
             }
         }
     }
-    
+
     // MARK: - Computed Properties
-    
+
     private var buttonTitle: String {
         if isGenerating { return "Generating…" }
         return customCode.trimmed.isEmpty ? "Generate My Referral Code" : "Create Referral Code"
     }
-    
+
     private var isButtonEnabled: Bool {
         guard !isGenerating else { return false }
         guard !fullName.trimmed.isEmpty else { return false }
@@ -372,12 +372,12 @@ struct AffiliateRegistrationView: View {
     private func refreshStripeStatus() {
         Task { await loadAffiliateInfo(showStatsLoader: false) }
     }
-    
+
     private func startOver() {
         // Clear referral code from user data
         ctx.userData.profile.referralCode = nil
         ctx.userData.saveToFile()
-        
+
         // Reset state to allow access to input state
         generatedCode = nil
         codeNotFound = false
@@ -386,10 +386,10 @@ struct AffiliateRegistrationView: View {
         isLoadingStats = false
         acceptedTermsVersion = nil
         acceptedTerms = false
-        
+
         // Reset StripeConnect internal state by changing its key
         stripeConnectKey += 1
-        
+
         // Recheck terms acceptance for new user flow
         checkTermsAcceptance()
     }
@@ -400,22 +400,22 @@ struct AffiliateRegistrationView: View {
             errorMessage = ReferralError.invalidEmailFormat
             return
         }
-        
+
         let trimmedCustomCode = customCode.trimmed
         let trimmedName = fullName.trimmed
-        
+
         isGenerating = true
         errorMessage = nil
         stripeStatus = .empty
-        
+
         stripeConnectKey += 1
-        
+
         guard let currentVersion = currentTermsVersion else { return }
-        
+
         Task {
             do {
                 let code: String
-                
+
                 if !trimmedCustomCode.isEmpty {
                     try await admin.createReferralCode(
                         code: trimmedCustomCode,
@@ -431,7 +431,7 @@ struct AffiliateRegistrationView: View {
                         acceptedTermsVersion: currentVersion
                     )
                 }
-                
+
                 await MainActor.run {
                     generatedCode = code
                     ctx.userData.profile.referralCode = code
@@ -440,9 +440,9 @@ struct AffiliateRegistrationView: View {
                     isGenerating = false
                     showSuccess = true
                 }
-                
+
                 await loadAffiliateInfo(showStatsLoader: true)
-                
+
             } catch {
                 await MainActor.run {
                     isGenerating = false
@@ -451,18 +451,18 @@ struct AffiliateRegistrationView: View {
             }
         }
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func generateShareText(code: String) -> String {
         let appStoreLink = generateAppStoreLink(with: code)
         return """
         Join me on FitHub! Use my referral code: \(code)
-        
+
         Download FitHub: \(appStoreLink)
         """
     }
-    
+
     /// Generates an App Store link with referral code
     /// Format: Universal link that captures referral code when app opens
     /// This link will:

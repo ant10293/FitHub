@@ -10,7 +10,7 @@ import SwiftUI
 struct InlineDeletion: View {
     let isEditing: Bool
     let delete: () -> Void
-    
+
     var body: some View {
         if isEditing {
             Button(role: .destructive) {

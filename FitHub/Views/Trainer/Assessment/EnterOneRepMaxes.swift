@@ -20,7 +20,7 @@ struct EnterOneRepMaxes: View {
     var squat: Exercise? = nil
     var deadlift: Exercise? = nil
     let onFinish: () -> Void
-    
+
     init(
         userData: UserData,
         exerciseData: ExerciseData,
@@ -29,21 +29,21 @@ struct EnterOneRepMaxes: View {
         self.userData = userData
         self.exerciseData = exerciseData
         self.onFinish = onFinish
-        
+
         if let bench = exerciseData.exercise(named: "Bench Press") { self.bench = .init(bench) }
         if let squat = exerciseData.exercise(named: "Back Squat") { self.squat = .init(squat) }
         if let deadlift = exerciseData.exercise(named: "Deadlift") { self.deadlift = .init(deadlift) }
-        
+
         if let bench = self.bench, let peak = exerciseData.peakMetric(for: bench.id),
            case .oneRepMax(let mass) = peak {
             _benchPressMax = .init(initialValue: mass)
         }
-        
+
         if let squat = self.squat, let peak = exerciseData.peakMetric(for: squat.id),
            case .oneRepMax(let mass) = peak {
             _squatMax = .init(initialValue: mass)
         }
-        
+
         if let deadlift = self.deadlift, let peak = exerciseData.peakMetric(for: deadlift.id),
            case .oneRepMax(let mass) = peak {
             _deadliftMax = .init(initialValue: mass)
@@ -131,4 +131,3 @@ struct EnterOneRepMaxes: View {
     }
 
 }
-

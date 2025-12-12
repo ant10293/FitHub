@@ -11,7 +11,7 @@ import SwiftUI
 struct OverloadSettingsView: View {
     @ObservedObject var userData: UserData
     var fromCalculator: Bool = false
-    
+
     var body: some View {
         List {
             if !fromCalculator {
@@ -21,7 +21,7 @@ struct OverloadSettingsView: View {
                     Text("When enabled, trainer templates will be automatically updated weekly based on your performance.")
                 }
             }
-            
+
             Section {
                 Picker("Style", selection: $userData.settings.progressiveOverloadStyle) {
                     ForEach(ProgressiveOverloadStyle.allCases, id: \.self) { style in
@@ -38,7 +38,7 @@ struct OverloadSettingsView: View {
                     Text(userData.settings.progressiveOverloadStyle.desc)
                 }
             }
-            
+
             /*
              Section {
              let factor = Binding(
@@ -47,20 +47,20 @@ struct OverloadSettingsView: View {
              userData.settings.customOverloadFactor = (newFactor == defaultFactor) ? nil : newFactor
              }
              )
-             
+
              HStack {
              Text("\(intensityPercent)")
                 .monospacedDigit()
              Slider(value: factor, in: 0.5...1.5, step: 0.05)
              }
-             
+
              } header: {
              Text("Overload Intensity")
              } footer: {
              Text("Scales how aggressive weekly changes are. Nil or 100% is baseline.")
              }
              */
-            
+
             Section {
                 Stepper("\(userData.settings.progressiveOverloadPeriod) weeks", value: $userData.settings.progressiveOverloadPeriod, in: 2...12)
             } header: {
@@ -92,13 +92,13 @@ struct OverloadSettingsView: View {
             }
         }
     }
-    
+
     private var intensityPercent: String {
         let raw = userData.settings.customOverloadFactor ?? 1.0
         let pct = Int((raw * 100).rounded())
         return "\(pct)%"
     }
-   
+
     private var styleWarning: String? {
         let overloadStyle = userData.settings.progressiveOverloadStyle
         guard overloadStyle == .decreaseReps else { return nil }
@@ -107,7 +107,7 @@ struct OverloadSettingsView: View {
         let reps = userData.workoutPrefs.customRepsRange ?? rsDefault.reps
         let rs = RepsAndSets(reps: reps, sets: rsDefault.sets, rest: rsDefault.rest, distribution:  dist)
         let range = reps.overallRange(filteredBy: dist)
-        
+
         let isIncompatible = ProgressiveOverloadStyle.incompatibleOverloadStyle(
             overloadStyle: overloadStyle,
             overloadPeriod: userData.settings.progressiveOverloadPeriod,
@@ -119,7 +119,7 @@ struct OverloadSettingsView: View {
             return nil
         }
     }
-    
+
     private func reset() {
         userData.settings.progressiveOverload = true
         userData.settings.progressiveOverloadStyle = .dynamic
@@ -127,7 +127,7 @@ struct OverloadSettingsView: View {
         //userData.settings.stagnationPeriod = 4
         userData.settings.customOverloadFactor = nil
     }
-    
+
     private var isDefault: Bool {
         return userData.settings.progressiveOverloadStyle == .dynamic
         && userData.settings.progressiveOverload

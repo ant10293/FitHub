@@ -55,7 +55,7 @@ struct ExInstructionsEditor: View {
                                 })
                                 Text("\(i + 1).")
                                     .foregroundStyle(.secondary)
-                                
+
                                 TextField(
                                     "Step #\(instructions.newStepNumber) Instructions",
                                     text: binding(for: i),
@@ -101,19 +101,19 @@ struct ExInstructionsEditor: View {
     }
 
     private var trimmed: String { newStep.trimmed }
-    
+
     private var isNewValid: Bool {
         InputLimiter.isValidInput(trimmed)
         && !trimmed.isEmpty
     }
-    
+
     private func addStep() {
         kbd.dismiss()
         guard isNewValid else { return }
         instructions.add(trimmed)
         newStep = ""
     }
-    
+
     private func deleteIndex(_ i: Int) {
         kbd.dismiss()
         instructions.remove(at: i)

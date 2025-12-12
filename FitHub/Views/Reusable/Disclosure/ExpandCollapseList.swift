@@ -11,7 +11,7 @@ struct ExpandCollapseList: View {
     @Binding var expandList: Bool
     let expandText: String
     let collapseText: String
-    
+
     init(
         expandList: Binding<Bool>,
         expandText: String = "Expand List",
@@ -21,7 +21,7 @@ struct ExpandCollapseList: View {
         self.expandText = expandText
         self.collapseText = collapseText
     }
-    
+
     var body: some View {
         Button(action: {
             withAnimation { expandList.toggle() }
@@ -38,4 +38,3 @@ struct ExpandCollapseList: View {
         }
     }
 }
-

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SortSettings: View {
     @ObservedObject var userData: UserData
-    
+
     var body: some View {
         List {
             // ───────── Disable Picker ─────────
@@ -19,12 +19,12 @@ struct SortSettings: View {
             } footer: {
                 Text("When disabled, the Sort picker in the exercise category selection bar is hidden.")
             }
-            
+
             // ───────── Save as Default ─────────
             Section {
                 // option to save new selections as default
                 Toggle("Save New Selection as Default", isOn: $userData.settings.saveSelectedSort)
-                
+
                 // Only show the default-category picker when NOT saving current selection
                 if !userData.settings.saveSelectedSort {
                     // if save new selections is false, show setDefault options
@@ -42,7 +42,7 @@ struct SortSettings: View {
                     : "Choose a default category that will always be pre-selected when you open the exercise list."
                 )
             }
-            
+
             // ───────── Sort by Template Categories ─────────
             Section {
                 // option to sort by template categories by default when editing a template with categories
@@ -50,7 +50,7 @@ struct SortSettings: View {
             } footer: {
                 Text("If a workout template has its own category list, enabling this will automatically filter exercises to match those categories.")
             }
-            
+
             // ───────── Visibility Filters ─────────
             Section {
                 // ── Hide Unequipped ─────────────────────────────
@@ -89,7 +89,7 @@ struct SortSettings: View {
              }
          }
     }
-    
+
     private func resetAll() {
         userData.settings.saveSelectedSort = false
         userData.settings.enableSortPicker = true
@@ -111,5 +111,3 @@ struct SortSettings: View {
             && !userData.settings.hideDislikedExercises
     }
 }
-
-

@@ -12,7 +12,7 @@ struct MeasurementEditor: View {
     let measurementType: MeasurementType
     let onSave: ((Double) -> Void)?
     let onExit: () -> Void
-    
+
     var body: some View {
         GenericEditor(
             title: "Edit \(measurementType.rawValue)",

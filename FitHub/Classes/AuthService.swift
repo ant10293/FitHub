@@ -18,11 +18,11 @@ import GoogleSignIn
 /// A self-contained service for “Sign in with Apple → Firebase → UserData” logic.
 final class AuthService: ObservableObject {
     static let shared = AuthService()
-    
+
     @Published private(set) var isAuthenticated: Bool = (Auth.auth().currentUser != nil)
-    
+
     private var authListenerHandle: AuthStateDidChangeListenerHandle?
-    
+
     private init() {
         // Start listening right away
         authListenerHandle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
@@ -31,13 +31,13 @@ final class AuthService: ObservableObject {
             }
         }
     }
-    
+
     deinit {
         if let handle = authListenerHandle { Auth.auth().removeStateDidChangeListener(handle) }
     }
-    
+
     static func getUid() -> String? { return Auth.auth().currentUser?.uid }
-        
+
     /// Returns the primary authentication provider ID for the current user.
     /// Common values: "password" (email/password), "google.com", "apple.com"
     /// Returns `nil` if no user is signed in.
@@ -45,18 +45,18 @@ final class AuthService: ObservableObject {
         guard let user = Auth.auth().currentUser else { return nil }
         return user.providerData.first?.providerID
     }
-    
+
     static func isAnonymous() -> Bool {
         return Auth.auth().currentUser?.isAnonymous ?? false
     }
-    
+
     /// Delete current user if anonymous, then call completion.
     private func deleteAnonymousIfPresent(completion: @escaping () -> Void) {
         guard let current = Auth.auth().currentUser, current.isAnonymous else {
             completion()
             return
         }
-        
+
         current.delete { error in
             if let error = error {
                 print("⚠️ Failed to delete anonymous user: \(error.localizedDescription)")
@@ -65,7 +65,7 @@ final class AuthService: ObservableObject {
             completion()
         }
     }
-    
+
     /// Sign-in flow that *first* deletes any anonymous user, then runs `performSignIn`.
     private func signInReplacingAnonymous(
         _ performSignIn: @escaping (@escaping (AuthDataResult?, Error?) -> Void) -> Void,
@@ -76,16 +76,16 @@ final class AuthService: ObservableObject {
                 let code  = AuthErrorCode.Code(rawValue: error.code)
                 let domain = error.domain
                 print("❌ [AuthService] signInReplacingAnonymous: performSignIn failed. domain=\(domain) code=\(String(describing: code)) msg=\(error.localizedDescription)")
-                
+
                 // Optional: special-case duplicate credential so you can see it clearly
                 if error.localizedDescription.contains("Duplicate credential received") {
                     print("⚠️ [AuthService] Duplicate credential error – Apple/Firebase is rejecting reuse of this credential. User must retry Apple sign-in to get a fresh credential.")
                 }
-                
+
                 completion(.failure(error))
                 return
             }
-            
+
             guard let user = result?.user else {
                 print("❌ [AuthService] signInReplacingAnonymous: AuthDataResult had no user")
                 completion(.failure(AuthServiceError.firebaseSignInFailed("No user in auth result")))
@@ -94,7 +94,7 @@ final class AuthService: ObservableObject {
             print("✅ [AuthService] signInReplacingAnonymous: sign-in success, uid=\(user.uid) isAnonymous=\(user.isAnonymous)")
             completion(.success(user))
         }
-        
+
         print("ℹ️ [AuthService] signInReplacingAnonymous: calling deleteAnonymousIfPresent()")
         deleteAnonymousIfPresent {
             print("ℹ️ [AuthService] signInReplacingAnonymous: deleteAnonymousIfPresent() finished, calling performSignIn")
@@ -115,23 +115,23 @@ final class AuthService: ObservableObject {
             signInReplacingAnonymous(fallbackSignIn, completion: completion)
             return
         }
-        
+
         print("🔗 [AuthService] upgradeAnonymousUser: attempting link(for anonymous user uid=\(current.uid))")
         current.link(with: credential) { [weak self] result, error in
             guard let self = self else {
                 print("⚠️ [AuthService] upgradeAnonymousUser: self deallocated before link completion")
                 return
             }
-            
+
             if let error = error as NSError? {
                 let code = AuthErrorCode.Code(rawValue: error.code)
                 print("❌ [AuthService] upgradeAnonymousUser: link failed with code=\(String(describing: code)) error=\(error.localizedDescription)")
-                
+
                 if let code = code,
                    code == .credentialAlreadyInUse ||
                    code == .emailAlreadyInUse ||
                    code == .accountExistsWithDifferentCredential {
-                    
+
                     // 🔁 IMPORTANT PART:
                     // Firebase may give us a *new* credential to use for sign-in.
                     if let updated = error.userInfo[AuthErrorUserInfoUpdatedCredentialKey] as? AuthCredential {
@@ -146,23 +146,23 @@ final class AuthService: ObservableObject {
                     }
                     return
                 }
-                
+
                 // Some other link error (including 'Duplicate credential' if it ever happens here)
                 completion(.failure(error))
                 return
             }
-            
+
             guard let user = result?.user else {
                 print("❌ [AuthService] upgradeAnonymousUser: link result had no user")
                 completion(.failure(AuthServiceError.firebaseSignInFailed("No user in link result")))
                 return
             }
-            
+
             print("✅ [AuthService] upgradeAnonymousUser: link succeeded, upgraded uid=\(user.uid) isAnonymous=\(user.isAnonymous)")
             completion(.success(user))
         }
     }
-    
+
     private func updateUserData(
         for user: User,
         userData: UserData,
@@ -200,10 +200,10 @@ final class AuthService: ObservableObject {
             completion(.failure(AuthServiceError.noCurrentUser))
             return
         }
-        
+
         let db = Firestore.firestore()
         let referralCode = userData.profile.referralCode?.trimmed.uppercased()
-        
+
         func deleteAuthUser() {
             user.delete { error in
                 if let error = error {
@@ -213,13 +213,13 @@ final class AuthService: ObservableObject {
                 completion(.success(()))
             }
         }
-        
+
         func deleteReferralCodeIfNeeded(completion: @escaping (Result<Void, Error>) -> Void) {
             guard let code = referralCode, !code.isEmpty else {
                 completion(.success(()))
                 return
             }
-            
+
             db.collection("referralCodes").document(code).delete { error in
                 if let error = error as NSError? {
                     if error.domain == FirestoreErrorDomain, error.code == FirestoreErrorCode.notFound.rawValue {
@@ -232,7 +232,7 @@ final class AuthService: ObservableObject {
                 }
             }
         }
-        
+
         deleteReferralCodeIfNeeded { referralResult in
             switch referralResult {
             case .failure(let error):
@@ -242,9 +242,9 @@ final class AuthService: ObservableObject {
             }
         }
     }
-    
+
     // MARK: — Update only the Firebase displayName
-    
+
     /// Updates the current Firebase user's displayName to the given `newName`.
     /// Calls `completion(Result<Void,Error>)` when done.
     func updateDisplayName(to newName: String, completion: @escaping (Result<Void, Error>) -> Void) {
@@ -257,7 +257,7 @@ final class AuthService: ObservableObject {
             completion(.failure(err))
             return
         }
-        
+
         setDisplayName(for: user, to: newName) { error in
             if let error = error {
                 completion(.failure(error))
@@ -266,7 +266,7 @@ final class AuthService: ObservableObject {
             }
         }
     }
-    
+
     private func setDisplayName(
         for user: User,
         to newName: String,
@@ -278,9 +278,9 @@ final class AuthService: ObservableObject {
             completion?(error)
         }
     }
-    
+
     // MARK: — Sign out
-    
+
     /// Signs out the current Firebase user. Clears local `UserData` fields as needed.
     func signOut(userData: UserData, completion: @escaping (Result<Void, Error>) -> Void) {
         do {
@@ -290,9 +290,9 @@ final class AuthService: ObservableObject {
             completion(.failure(error))
         }
     }
-    
+
     // MARK: — Auth state listener
-    
+
     /// Starts a Firebase AuthStateDidChangeListener. Returns the listener handle.
     /// `onChange` is called whenever auth state changes, passing the optional new `User`.
     private func addStateDidChangeListener(onChange: @escaping (User?) -> Void) -> AuthStateDidChangeListenerHandle {
@@ -300,7 +300,7 @@ final class AuthService: ObservableObject {
             onChange(user)
         }
     }
-    
+
     /// Removes the given listener handle.
     private func removeStateDidChangeListener(_ handle: AuthStateDidChangeListenerHandle) {
         Auth.auth().removeStateDidChangeListener(handle)
@@ -319,7 +319,7 @@ extension AuthService {
             applyData(for: current)
             return
         }
-        
+
         // Otherwise, "sign in as normal" (this will fail if Firebase doesn’t allow anon sign-in
         // while a real user is signed in, but that’s exactly what you’re requesting)
         Auth.auth().signInAnonymously { authResult, error in
@@ -328,17 +328,17 @@ extension AuthService {
                 completion(.failure(AuthServiceError.firebaseSignInFailed(error.localizedDescription)))
                 return
             }
-            
+
             guard let user = authResult?.user else {
                 print("❌ Anonymous sign-in returned no user")
                 completion(.failure(AuthServiceError.firebaseSignInFailed("No user in auth result")))
                 return
             }
-            
+
             print("✅ Anonymous sign-in successful. uid=\(user.uid)")
             applyData(for: user)
         }
-        
+
         func applyData(for user: User) {
             Task { @MainActor in
                 userData.profile.firstName = firstName
@@ -347,7 +347,7 @@ extension AuthService {
                 userData.profile.userId = user.uid
                 // Do NOT touch name/email here; those will be set when they upgrade
             }
-            
+
             completion(.success(()))
         }
     }
@@ -381,7 +381,7 @@ extension AuthService {
                completion(.failure(AuthServiceError.missingIdentityToken))
                return
             }
-            
+
             guard let identityToken = appleIDCredential.identityToken else {
                 print("❌ Unable to fetch identity token")
                 completion(.failure(AuthServiceError.missingIdentityToken))
@@ -402,11 +402,11 @@ extension AuthService {
                 fallbackSignIn: { handler in Auth.auth().signIn(with: credential, completion: handler) },
                 completion: { [weak self] result in
                     guard let self = self else { return }
-                    
+
                     switch result {
                     case .failure(let error):
                         completion(.failure(AuthServiceError.firebaseSignInFailed(error.localizedDescription)))
-                        
+
                     case .success(let user):
                         updateUserData(
                             for: user,
@@ -435,7 +435,7 @@ extension AuthService {
             { handler in Auth.auth().signIn(withEmail: email, password: password, completion: handler) },
             completion: { [weak self] result in
                 guard let self = self else { return }
-                
+
                 switch result {
                 case .failure(let error):
                     completion(.failure(error))
@@ -467,11 +467,11 @@ extension AuthService {
             fallbackSignIn: { handler in Auth.auth().createUser(withEmail: email, password: password, completion: handler) },
             completion: { [weak self] result in
                 guard let self = self else { return }
-                
+
                 switch result {
                 case .failure(let error):
                     completion(.failure(error))
-                    
+
                 case .success(let user):
                     if let displayName = Name.getDisplayName(firstName: firstName, lastName: lastName) {
                         self.setDisplayName(for: user, to: displayName) { error in
@@ -480,7 +480,7 @@ extension AuthService {
                             }
                         }
                     }
-                    
+
                     updateUserData(
                         for: user,
                         userData: userData,

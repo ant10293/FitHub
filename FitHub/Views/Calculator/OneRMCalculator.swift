@@ -13,7 +13,7 @@ struct OneRMCalculator: View {
     @StateObject private var toast = ToastManager()
     @StateObject private var kbd = KeyboardManager.shared
     @State private var weightLifted: Mass = .init(kg: 0)   // canonical
-    @State private var repsText: String = ""              
+    @State private var repsText: String = ""
     @State private var exerciseToSave: Exercise?
     @State private var tappedExercise: Exercise?
     @State private var calculatedOneRepMax: Mass?
@@ -26,7 +26,7 @@ struct OneRMCalculator: View {
             if toast.showingSaveConfirmation {
                 InfoBanner(title: "1RM Saved Successfully!").zIndex(1)
             }
-            
+
             Form {
                 if !isCalculated {
                     // ─── Inputs ─────────────────────────────────────────────
@@ -38,7 +38,7 @@ struct OneRMCalculator: View {
                             .textCase(.none)
                             .font(.headline)
                     }
-                    
+
                     Section {
                         TextField("Enter Reps", text: $repsText)
                             .keyboardType(.numberPad)
@@ -169,7 +169,7 @@ struct OneRMCalculator: View {
             formula: .brzycki
         )
         calculatedOneRepMax = oneRMKg
-        
+
         isCalculated = true
     }
 
@@ -191,4 +191,3 @@ struct OneRMCalculator: View {
         exerciseToSave = nil
     }
 }
-

@@ -11,7 +11,7 @@ struct EmptyState: View {
     let systemName: String
     let title: String
     let subtitle: String?
-    
+
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: systemName)
@@ -22,7 +22,7 @@ struct EmptyState: View {
             Text(title)
                 .font(.title3.weight(.semibold))
                 .multilineTextAlignment(.center)
-            
+
             if let subtitle {
                 Text(subtitle)
                     .font(.callout)
@@ -34,4 +34,3 @@ struct EmptyState: View {
         .padding()
     }
 }
-

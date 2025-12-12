@@ -12,7 +12,7 @@ struct FreePlanLimitView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showingSubscription: Bool = false
     let feature: BlockedFeature
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -22,12 +22,12 @@ struct FreePlanLimitView: View {
                         Image(systemName: "lock.fill")
                             .font(.system(size: 50))
                             .foregroundStyle(.orange)
-                        
+
                         Text(feature.title)
                             .font(.title2)
                             .fontWeight(.bold)
                             .multilineTextAlignment(.center)
-                        
+
                         Text(feature.body)
                             .font(.body)
                             .foregroundStyle(.secondary)
@@ -35,7 +35,7 @@ struct FreePlanLimitView: View {
                             .padding(.horizontal)
                     }
                     .padding(.top)
-                    
+
                     // Upgrade message
                     VStack(spacing: 8) {
                         Text("Upgrade your membership to access all features")
@@ -45,10 +45,10 @@ struct FreePlanLimitView: View {
                     }
                     .padding()
                     .background(.blue.opacity(0.1), in: RoundedRectangle(cornerRadius: 12))
-                    
+
                     // Features section
                     featuresSection
-                    
+
                     // Upgrade button
                     RectangularButton(
                         title: "Upgrade to Premium",
@@ -64,7 +64,7 @@ struct FreePlanLimitView: View {
                         }
                     )
                     .padding(.horizontal)
-                    
+
                     Spacer()
                 }
                 .padding()
@@ -87,21 +87,21 @@ struct FreePlanLimitView: View {
             }
         }
     }
-    
+
     // MARK: - FeatureRow
-    
+
     private var featuresSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             FeatureRow(icon: "chart.bar", title: "Automatic Overloading & Deloading", description: "Automatically adjust weights based on performance.")
-            
+
             FeatureRow(icon: "wand.and.stars", title: "Automated Workout Generation", description: "Personalized plans tailored to your goals.")
-            
+
             FeatureRow(icon: "chart.line.uptrend.xyaxis", title: "Progress Charts", description: "Visualize strength and volume trends.")
-            
+
             FeatureRow(icon: "ruler", title: "Body Measurements", description: "Track your physique changes.")
-            
+
             // FeatureRow(icon: "figure.wave", title: "Recovery Visualization", description: "Manage fatigue across muscle groups.")
-            
+
             Text("And much more…")
                 .fontWeight(.semibold)
                 .padding(.top, 4)
@@ -109,23 +109,23 @@ struct FreePlanLimitView: View {
         .padding()
         .background(.background, in: RoundedRectangle(cornerRadius: 12))
     }
-    
+
     private struct FeatureRow: View {
         let icon: String
         let title: String
         let description: String
-        
+
         var body: some View {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: icon)
                     .foregroundStyle(.blue)
                     .imageScale(.medium)
                     .padding(.top, 5)
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .fontWeight(.semibold)
-                    
+
                     Text(description)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -139,9 +139,9 @@ struct FreePlanLimitView: View {
 
 enum BlockedFeature: String, Identifiable {
     case generationLimit, templateLimit, overloadAccess
-    
+
     var id: String { self.rawValue }
-    
+
     var title: String {
         switch self {
         case .generationLimit:
@@ -152,7 +152,7 @@ enum BlockedFeature: String, Identifiable {
             return "Overload Calculator Requires Premium"
         }
     }
-    
+
     var body: String {
         switch self {
         case .generationLimit:

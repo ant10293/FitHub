@@ -88,13 +88,13 @@ struct WeightIncrementation: View {
             }
         }
     }
-    
+
     struct EquipSheet: Identifiable {
         let id = UUID()
         let category: RoundingCategory
         let categories: [EquipmentCategory]
     }
-    
+
     private func initializeVariables() {
         let rounding = ctx.userData.workoutPrefs.roundingPreference
         platedRounding.set(rounding.getRounding(for: .plated))
@@ -110,7 +110,7 @@ private struct RoundingSection: View {
     let title: String
     let onUpdate: (Double) -> Void
     let onInfoTap: () -> Void
-    
+
     var body: some View {
         Section {
             TextField("Rounding Increment", text: $value.asText())

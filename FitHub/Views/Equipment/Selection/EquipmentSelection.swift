@@ -49,7 +49,7 @@ struct EquipmentSelection: View {
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .onDisappear { if !donePressed { onDone(selection) } }
     }
-    
+
     private func isSelected(_ ge: GymEquipment) -> Bool {
         selection.contains(where: { $0.id == ge.id })
     }
@@ -62,6 +62,3 @@ struct EquipmentSelection: View {
         }
     }
 }
-
-
-

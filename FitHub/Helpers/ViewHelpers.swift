@@ -12,7 +12,7 @@ import SwiftUI
 extension View {
     /// Screen width helper
     var screenWidth: CGFloat { UIScreen.main.bounds.width }
-    
+
     /// Screen height helper
     var screenHeight: CGFloat { UIScreen.main.bounds.height }
 }
@@ -26,22 +26,22 @@ func getFullImage(_ imageName: String, _ fullPath: String) -> Image {
     if UIImage(named: fullPath) != nil {
         return Image(fullPath)
     }
-    
+
     // 2️⃣ Fallback to file in Documents
     if let documentsURL = FileManager.default
         .urls(for: .documentDirectory, in: .userDomainMask).first {
-        
+
         let url = documentsURL.appendingPathComponent(imageName)
         if let uiImg = UIImage(contentsOfFile: url.path) {
             return Image(uiImage: uiImg)
         }
     }
-    
+
     // 3️⃣ Fallback to "placeholder" asset
     if let placeholder = UIImage(named: "placeholder") {
         return Image(uiImage: placeholder)
     }
-    
+
     // 4️⃣ Final fallback
     return Image(systemName: "photo")
 }
@@ -107,7 +107,7 @@ extension View {
     func centerVertically() -> some View {
         self.modifier(CenterVerticallyModifier())
     }
-    
+
     func centerHorizontally() -> some View {
         self.frame(maxWidth: .infinity, alignment: .center)
     }
@@ -200,7 +200,7 @@ struct IconButtonModifier: ViewModifier {
             }
 
             content
-            
+
             if position == .trailing, isShowing {
                 Spacer()
                 iconView

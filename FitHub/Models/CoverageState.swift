@@ -13,7 +13,7 @@ struct TargetSpec {
 
 struct CoverageState {
     var muscleCoverage: [MuscleCoverage] = []
-    
+
     init(categories: [SplitCategory]) {
         let coverageWeights = buildCoverageWeights(categories: categories)
         for (muscle, weight) in coverageWeights {
@@ -28,7 +28,7 @@ struct CoverageState {
             )
         }
     }
-        
+
     struct MuscleCoverage {
         var muscle: Muscle
         var weight: Double               // e.g., 2.0 for “primary/weighted”, 1.0 for “group/secondary”
@@ -46,14 +46,14 @@ struct CoverageState {
             let covered = subNeeded.intersection(subCovered).count
             return Double(covered) / Double(subNeeded.count)
         }
-        
+
         mutating func incrementCount() { count += 1 }
-        
+
         mutating func markCovered(_ subs: [SubMuscles]) {
             for s in subs { subCovered.insert(s) }
         }
     }
-    
+
     // MARK: - Helpers
 
     /// Returns the weighted muscle whose count equals the **lowest** non-weighted count (if any).
@@ -85,7 +85,7 @@ struct CoverageState {
 
 extension CoverageState {
     // MARK: - Next-target policy
-  
+
     /// Previously returned a list; keep it for internal use.
     func missingSubmuscles(for muscle: Muscle) -> [SubMuscles] {
         guard let idx = muscleCoverage.firstIndex(where: { $0.muscle == muscle }) else { return [] }
@@ -126,7 +126,7 @@ extension CoverageState {
         // 3) otherwise just pick the lowest, preferring weighted via helper
         return lowestCountPrefWeighted()
     }
-    
+
     func orderedTargetSpecs() -> [TargetSpec] {
         var result: [TargetSpec] = []
 
@@ -274,25 +274,25 @@ extension CoverageState {
     private func deriveTargetMuscles(from categories: [SplitCategory]) -> (target: [Muscle], group: [Muscle]) {
         var targetMuscles: Set<Muscle> = []
         var groupMuscles: Set<Muscle> = []
-        
+
         for category in categories {
             if let muscles = SplitCategory.muscles[category] { targetMuscles.formUnion(muscles) }
             if let groups = SplitCategory.groups(forGeneration: true)[category] { groupMuscles.formUnion(groups) }
         }
-        
+
         return (Array(targetMuscles), Array(groupMuscles))
     }
 
     private func deriveTargetSubmuscles(from muscles: [Muscle]) -> [SubMuscles] {
         var targetSubmuscles: Set<SubMuscles> = []
-        
+
         for muscle in muscles {
             if let submuscles = Muscle.subMuscles[muscle] { targetSubmuscles.formUnion(submuscles) }
         }
-        
+
         return Array(targetSubmuscles)
     }
-    
+
     func buildCoverageWeights(
         categories: [SplitCategory],
         primaryWeight: Double = 2.0,

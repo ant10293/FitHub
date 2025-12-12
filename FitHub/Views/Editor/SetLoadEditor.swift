@@ -9,13 +9,13 @@ import SwiftUI
 struct SetLoadEditor: View {
     @Binding var load: SetLoad
     @State var localText: String = ""
-    
+
     var body: some View {
         switch load {
         case .none:
             // Nothing to edit visually for no-load sets
             EmptyView()
-            
+
         case .weight, .distance:
             if let binding = textBinding {
                 TextField(placeholder, text: binding)
@@ -24,7 +24,7 @@ struct SetLoadEditor: View {
             }
         }
     }
-    
+
     private var textBinding: Binding<String>? {
         switch load {
         case .weight(let mass):
@@ -37,7 +37,7 @@ struct SetLoadEditor: View {
                     load = .weight(Mass(weight: val))
                 }
             )
-            
+
         case .distance(let dist):
             return Binding<String>(
                 get: { localText.isEmpty ? dist.fieldString : localText },
@@ -49,12 +49,12 @@ struct SetLoadEditor: View {
                     load = .distance(Distance(distance: val))
                 }
             )
-            
+
         case .none:
             return nil
         }
     }
-    
+
     private var placeholder: String {
         switch load {
         case .weight:   return "wt."

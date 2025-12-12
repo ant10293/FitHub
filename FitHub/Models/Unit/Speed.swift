@@ -36,7 +36,7 @@ struct Speed: Codable, Equatable, Hashable {
     var displayValue: Double { UnitSystem.current == .imperial ? inMPH : inKmH }
     var displayString: String { Format.smartFormat(displayValue) }
     var fieldString: String { kmh > 0 ? displayString : "" }
-    
+
     // MARK: – Unit
     var unit: UnitCategory { .speed }
 }
@@ -55,28 +55,28 @@ extension Speed {
     // MARK: - Conversion Methods
     static func speedFromTime(_ time: TimeSpan, distance: Distance) -> Speed {
         guard time.inSeconds > 0 else { return Speed(kmh: 0) }
-        
+
         // Convert distance to km and time to hours
         let distanceKm = distance.inKm
         let timeHours = Double(time.inSeconds) / 3600.0
-        
+
         // Speed = Distance / Time
         let speedKmH = distanceKm / timeHours
         return Speed(kmh: speedKmH)
     }
-    
+
     static func timeFromSpeed(_ speed: Speed, distance: Distance) -> TimeSpan {
         guard speed.kmh > 0 else { return TimeSpan(seconds: 0) }
-        
+
         // Convert distance to km and speed to km/h
         let distanceKm = distance.inKm
         let speedKmH = speed.kmh
-        
+
         // Time = Distance / Speed (in hours)
         let timeHours = distanceKm / speedKmH
         let timeSeconds = Int(timeHours * 3600.0)
-        
+
         return TimeSpan(seconds: timeSeconds)
     }
-    
+
 }

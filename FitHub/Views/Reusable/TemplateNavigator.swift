@@ -15,7 +15,7 @@ enum NavigationMode {
 private struct WorkoutRoute: Identifiable, Hashable {
     let id: UUID
     let sel: SelectedTemplate
-    
+
     static func == (lhs: WorkoutRoute, rhs: WorkoutRoute) -> Bool { lhs.id == rhs.id }
     func hash(into hasher: inout Hasher) { hasher.combine(id) }
 }
@@ -23,15 +23,15 @@ private struct WorkoutRoute: Identifiable, Hashable {
 struct TemplateNavigator<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var userData: UserData
-    
+
     @Binding var selectedTemplate: SelectedTemplate?
     @State private var navigateToTemplateDetail: Bool = false
     @State private var currentTemplate: SelectedTemplate? = nil
-    
+
     @State private var workoutRoute: WorkoutRoute? = nil
-    
+
     let content: () -> Content
-    
+
     init(
         userData: UserData,
         selectedTemplate: Binding<SelectedTemplate?>,
@@ -41,7 +41,7 @@ struct TemplateNavigator<Content: View>: View {
         self._selectedTemplate = selectedTemplate
         self.content = content
     }
-    
+
     var body: some View {
         ZStack {
             content()
@@ -52,12 +52,12 @@ struct TemplateNavigator<Content: View>: View {
                 .navigationDestination(item: $workoutRoute) { route in
                     startedWorkoutView(route: route)
                 }
-            
+
             // Popup overlay with proper centering
             if shouldShowPopup {
                 Color.black.opacity(0.3)
                     .ignoresSafeArea()
-                
+
                 templatePopupOverlay
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .ignoresSafeArea()
@@ -67,15 +67,15 @@ struct TemplateNavigator<Content: View>: View {
              handleTemplateSelection(newValue)
          }
     }
-    
+
     // MARK: - Template Selection Logic
-    
+
     private func handleTemplateSelection(_ template: SelectedTemplate?) {
         guard let template = template else { return }
-        
+
         // Store the current template for navigation
         currentTemplate = template
-        
+
         switch template.mode {
         case .popupOverlay: break
         case .directToDetail: navigateToTemplateDetail = true
@@ -83,10 +83,10 @@ struct TemplateNavigator<Content: View>: View {
             workoutRoute = WorkoutRoute(id: UUID(), sel: template)
         }
     }
-    
+
     private var shouldShowPopup: Bool { selectedTemplate?.mode == .popupOverlay && selectedTemplate != nil }
     private var shouldDisableContent: Bool { return shouldShowPopup }
-    
+
     // MARK: - Navigation Destinations
     private func templateBinding(for sel: SelectedTemplate) -> Binding<WorkoutTemplate>? {
         switch sel.location {
@@ -117,7 +117,7 @@ struct TemplateNavigator<Content: View>: View {
             exitView
         }
     }
-    
+
     // MARK: using template direct navigation
     @ViewBuilder
     private func startedWorkoutView(route: WorkoutRoute) -> some View {
@@ -133,7 +133,7 @@ struct TemplateNavigator<Content: View>: View {
             }
         )
     }
-    
+
     // MARK: - Popup Overlay
     // TODO: add a stroke around this
     @ViewBuilder
@@ -142,7 +142,7 @@ struct TemplateNavigator<Content: View>: View {
             let newSel = SelectedTemplate(template: tpl, location: sel.location, mode: sel.mode)
             VStack {
                 Spacer()
-                
+
                 TemplatePopup(
                     userData: userData,
                     template: tpl,
@@ -165,14 +165,14 @@ struct TemplateNavigator<Content: View>: View {
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .shadow(radius: 20)
                 .transition(.scale)
-                
+
                 Spacer()
             }
         } else {
             exitView
         }
     }
-    
+
     private var exitView: some View {
         Color.clear.onAppear {
             navigateToTemplateDetail = false

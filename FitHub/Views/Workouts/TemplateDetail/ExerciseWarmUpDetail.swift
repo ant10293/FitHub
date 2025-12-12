@@ -16,7 +16,7 @@ private struct WarmUpRowVM: Identifiable {
         load      = detail.load
         planned   = detail.planned
     }
-    
+
     func toDetail() -> SetDetail {
         SetDetail(
             id: id,
@@ -166,7 +166,7 @@ struct ExerciseWarmUpDetail: View {
         .padding(.top)
         .listRowSeparator(.hidden)
     }
-    
+
     // MARK: Row mutators
     private func addRow() {
         kbd.dismiss()
@@ -191,8 +191,8 @@ struct ExerciseWarmUpDetail: View {
         exercise.warmUpDetails = rows.map { $0.toDetail() }
         onSave()
     }
-    
+
     private func saveAndDismiss() { save(); dismiss() }
-    
+
     private func saveIfNeeded() { save() }
 }

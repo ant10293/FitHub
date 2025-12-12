@@ -19,7 +19,7 @@ struct SplitCategoryPicker: View {
     let saveSelectedSort: Bool
     let templateCategories: [SplitCategory]?
     let onChange: (ExerciseSortOption) -> Void
-    
+
     let sortByTemplateCategories: Bool
 
     private let templateSortingEnabled: Bool
@@ -49,13 +49,13 @@ struct SplitCategoryPicker: View {
         }
         self.onChange = onChange
     }
-    
+
     var body: some View {
         HStack(spacing: 7.5) {
             if enableSortPicker {
                 SortButton // Filter button to open full category menu
             }
-            
+
             CategoryScroller
         }
         .padding([.horizontal, .bottom])
@@ -80,7 +80,7 @@ struct SplitCategoryPicker: View {
             .presentationDragIndicator(.visible)
         }
     }
-    
+
     private var SortButton: some View {
         Button {
             showSortSheet = true
@@ -168,11 +168,11 @@ struct SplitCategoryPicker: View {
                     }
                 }
             }
-            
+
             .onChange(of: sortOption) { selectedCategory = sortOption.getDefaultSelection(templateCategories: templateCategories) }
         }
     }
-    
+
     struct PillButton: View {
         let text: String
         let isSelected: Bool

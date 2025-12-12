@@ -33,7 +33,7 @@ struct MeasurementsView: View {
             } header: {
                 Text("CORE")
             }
-            
+
             Section {
                 ForEach(MeasurementType.bodyPartMeasurements, id: \.self) { measurement in
                     MeasurementRow(
@@ -95,7 +95,7 @@ struct MeasurementsView: View {
             }
         }
     }
-    
+
     // Computed binding: only return measurement type when in graph mode
     private var graphMeasurementType: Binding<MeasurementType?> {
         Binding(
@@ -106,12 +106,12 @@ struct MeasurementsView: View {
             }
         )
     }
-    
+
     private func closeEditor() {
         currentMeasurementType = nil
         showMeasurementEditor = false
     }
-    
+
     private func handleSelection(type: MeasurementType) {
         currentMeasurementType = type
         if showGraph {
@@ -136,7 +136,7 @@ struct MeasurementsView: View {
                     HStack {
                         measurement.formattedText
                             .foregroundStyle(.gray)
-                        
+
                         if showGraph {
                             Image(systemName: "chevron.right")
                                 .foregroundStyle(.blue)
@@ -150,7 +150,7 @@ struct MeasurementsView: View {
                             return "plus"
                         }
                     }()
-                    
+
                     Image(systemName: imageName)
                         .foregroundStyle(.blue)
                 }
@@ -160,5 +160,3 @@ struct MeasurementsView: View {
         }
     }
 }
-
-

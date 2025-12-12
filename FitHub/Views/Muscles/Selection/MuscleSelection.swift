@@ -20,7 +20,7 @@ struct MuscleSelection: View {
     let toggle: (SplitCategory) -> Void                       // vm.toggle(…)
     let shouldDisable: (SplitCategory) -> Bool                // vm.shouldDisable(…)
     let shouldShow:  (SplitCategory, [SplitCategory]) -> Bool // vm.shouldShow(…)
-    
+
     // MARK: ‑ Layout
     var body: some View {
         VStack {
@@ -30,7 +30,7 @@ struct MuscleSelection: View {
                     ForEach(SplitCategory.columnGroups[col], id: \.self) { cat in
                         let selected = selectedCategories.contains(cat)
                         let disabled = shouldDisable(cat)
-                        
+
                         if shouldShow(cat, selectedCategories) {
                             Button(displayName(cat)) { toggle(cat) }
                                 .muscleButton(selected: selected, disabled: disabled)
@@ -39,7 +39,7 @@ struct MuscleSelection: View {
                 }
                 .padding(.horizontal, -10)
             }
-            
+
             // 2️⃣ Body overlay + flip view toggle
             ZStack {
                 SimpleMuscleGroupsView(
@@ -47,7 +47,7 @@ struct MuscleSelection: View {
                     gender: .male,
                     selectedSplit: selectedCategories
                 )
-                
+
                 VStack {
                     Spacer()
                     HStack {
@@ -58,7 +58,7 @@ struct MuscleSelection: View {
             }
         }
     }
-    
+
     private var flipButton: some View {
         FloatingButton(image: "arrow.2.circlepath", action: { showFront.toggle() })
             .padding(.trailing)
@@ -70,7 +70,7 @@ struct MuscleSelection: View {
 private struct MuscleButtonStyle: ViewModifier {
     let selected: Bool
     let disabled: Bool
-    
+
     func body(content: Content) -> some View {
         content
             .padding(5)
@@ -94,4 +94,3 @@ private extension View {
         modifier(MuscleButtonStyle(selected: selected, disabled: disabled))
     }
 }
-

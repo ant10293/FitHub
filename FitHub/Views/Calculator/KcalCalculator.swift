@@ -45,18 +45,18 @@ struct KcalCalculator: View {
                 weightCard
                 heightCard
                 stepsCard
-                
-                
+
+
                 if !kbd.isVisible {
                     Spacer(minLength: height)
-                    
+
                     RectangularButton(
                         title: "Calculate Daily Caloric Intake",
                         enabled: isCalculateEnabled,
                         action: calculateAndShow
                     )
                     .padding(.horizontal)
-                    
+
                     Spacer(minLength: height)
                 }
             }
@@ -72,7 +72,7 @@ struct KcalCalculator: View {
                     persistInputs()
                     showingResult = false
                     dismiss()
-                }) 
+                })
             }
         }
     }

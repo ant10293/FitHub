@@ -12,7 +12,7 @@ struct ExerciseHistory: View {
     @State private var showingGraph: Bool = false
     let exercise: Exercise
     let completedWorkouts: [CompletedWorkout]
-    
+
     var body: some View {
         VStack {
             if showingGraph {
@@ -20,7 +20,7 @@ struct ExerciseHistory: View {
             } else {
                 SetDetailHistory(exerciseId: exercise.id, completedWorkouts: completedWorkouts)
             }
-            
+
             HStack {
                 FloatingButton(
                     image: showingGraph ? "list.bullet.rectangle" : "chart.bar",

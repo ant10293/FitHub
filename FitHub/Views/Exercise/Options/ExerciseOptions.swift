@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ExerciseOptions: View {    
+struct ExerciseOptions: View {
     @EnvironmentObject private var ctx: AppContext
     @Binding var showAlert: Bool
     @Binding var alertMessage: String
@@ -18,14 +18,14 @@ struct ExerciseOptions: View {
     var exercise: Exercise
     var onClose: () -> Void
     private let modifier = ExerciseModifier()
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
                 Text("\(exercise.name)")
                     .font(.headline)
                     .padding(.horizontal)
-                
+
                 Spacer()
                 Button(action: onClose) {
                     Image(systemName: "xmark.circle.fill")
@@ -34,7 +34,7 @@ struct ExerciseOptions: View {
                 }
                 .padding()
             }
-            
+
             VStack(alignment: .leading, spacing: 10) {
                 Button(action: { modifier.toggleFavorite(for: exercise.id, userData: ctx.userData) }) {
                     HStack {
@@ -47,7 +47,7 @@ struct ExerciseOptions: View {
                     .font(.subheadline)
                     .foregroundStyle(.gray)
                     .padding(.bottom)
-                
+
                 Button(action: { modifier.toggleDislike(for: exercise.id, userData: ctx.userData) }) {
                     HStack {
                         Image(systemName: ctx.userData.evaluation.dislikedExercises.contains(exercise.id) ? "hand.thumbsdown.fill" : "hand.thumbsdown")
@@ -59,7 +59,7 @@ struct ExerciseOptions: View {
                     .font(.subheadline)
                     .foregroundStyle(.gray)
                     .padding(.bottom)
-                
+
                 // add an alert when replacing or deleting exercises
                 // if exercise is not disliked, provide a prompt to dislike the exercise
                 Button(action: { replaceExercise() }) {
@@ -73,7 +73,7 @@ struct ExerciseOptions: View {
                     .font(.subheadline)
                     .foregroundStyle(.gray)
                     .padding(.bottom)
-                
+
                 /*
                 Button(action: { showSimilarExercises = true }) {
                     HStack {
@@ -87,7 +87,7 @@ struct ExerciseOptions: View {
                     .foregroundStyle(.gray)
                     .padding(.bottom)
                 */
-                
+
                 Button(action: { removeExercise() }) {
                     HStack {
                         Image(systemName: "trash")
@@ -115,7 +115,7 @@ struct ExerciseOptions: View {
         }
         */
     }
-    
+
     private func replaceExercise() {
         isReplacing = true
         modifier.replaceInBackground(
@@ -139,7 +139,7 @@ struct ExerciseOptions: View {
         )
         onClose()
     }
-    
+
     private func removeExercise() {
         let exerciseName = modifier.remove(exercise, from: &template, user: ctx.userData)
         alertMessage = "Removed '\(exerciseName)' from \(template.name)."
@@ -147,4 +147,3 @@ struct ExerciseOptions: View {
         onClose()
     }
 }
-

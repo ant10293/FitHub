@@ -17,7 +17,7 @@ struct EnterMaxReps: View {
     var squat: Exercise? = nil
     var pushup: Exercise? = nil
     let onFinish: () -> Void
-    
+
     init(
         userData: UserData,
         exerciseData: ExerciseData,
@@ -26,19 +26,19 @@ struct EnterMaxReps: View {
         self.userData = userData
         self.exerciseData = exerciseData
         self.onFinish = onFinish
-        
+
         if let situp = exerciseData.exercise(named: "Sit-Up") { self.situp = .init(situp) }
         if let pushup = exerciseData.exercise(named: "Push-Up") { self.pushup = .init(pushup) }
         if let squat = exerciseData.exercise(named: "Bodyweight Squat") { self.squat = .init(squat) }
-        
+
         if let situp = self.situp, let max = exerciseData.peakMetric(for: situp.id) {
             _situpReps = .init(initialValue: max.displayString)
         }
-        
+
         if let pushup = self.pushup, let max = exerciseData.peakMetric(for: pushup.id) {
             _pushupReps = .init(initialValue: max.displayString)
         }
-        
+
         if let squat = self.squat, let max = exerciseData.peakMetric(for: squat.id) {
             _squatReps = .init(initialValue: max.displayString)
         }
@@ -56,35 +56,34 @@ struct EnterMaxReps: View {
             ],
             submitEnabled: submitEnabled,
             onSubmit: handleSubmit
-        ) 
+        )
     }
-    
+
     private var submitEnabled: Bool { !pushupReps.isEmpty && !situpReps.isEmpty && !squatReps.isEmpty }
 
     private func handleSubmit() {
         var maxValuesEntered = false
-        
+
         if let situps = Int(situpReps), let situp = situp {
             exerciseData.updateExercisePerformance(for: situp, newValue: .maxReps(situps))
             maxValuesEntered = true
         }
-        
+
         if let pushups = Int(pushupReps), let pushup = pushup {
             exerciseData.updateExercisePerformance(for: pushup, newValue: .maxReps(pushups))
             maxValuesEntered = true
         }
-        
+
         if let squats = Int(squatReps), let squat = squat {
             exerciseData.updateExercisePerformance(for: squat, newValue: .maxReps(squats))
             maxValuesEntered = true
         }
-        
+
         if maxValuesEntered {
             exerciseData.savePerformanceData()
             userData.setup.maxRepsEntered = true
             onFinish()
         }
     }
-    
-}
 
+}

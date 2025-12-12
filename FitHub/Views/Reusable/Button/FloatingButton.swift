@@ -14,7 +14,7 @@ struct FloatingButton: View {
     var disabled: Bool = false
     var size: CGFloat = 24        // icon size   (optional)
     var action: () -> Void            // button tap
-    
+
     var body: some View {
         Button(action: action) {
             Image(systemName: image)

@@ -22,7 +22,7 @@ struct MinSecPicker: View {
             }
         )
     }
-       
+
     private var secondsBinding: Binding<Int> {
         Binding(
             get: { time.components.s },

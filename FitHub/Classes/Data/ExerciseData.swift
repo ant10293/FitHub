@@ -12,22 +12,22 @@ final class ExerciseData: ObservableObject {
     static let bundledOverridesFilename: String = "exercise_overrides.json"
     static let userExercisesFileName: String = "user_exercises.json"
     static let performanceFileName: String = "performance.json"
-    
+
     private var bundledExercises: [Exercise]
     @Published private(set) var userExercises: [Exercise]  // can mutate & save
     @Published var bundledOverrides: [UUID: Exercise]
-   
+
     // MARK: - Public unified view
     var allExercises: [Exercise] { bundledExercises + userExercises }
-       
+
     @Published var allExercisePerformance: [UUID: ExercisePerformance] = [:]
-    
+
     var exercisesWithData: [Exercise] {
         allExercises.compactMap { ex in
             hasPerformanceData(exercise: ex)
         }
     }
-   
+
     init() {
         let overrides = ExerciseData.loadBundledOverrides()
         bundledExercises = ExerciseData.loadBundledExercises(overrides: overrides)
@@ -35,7 +35,7 @@ final class ExerciseData: ObservableObject {
         bundledOverrides = overrides
         loadPerformanceData(from: ExerciseData.performanceFileName)
     }
-    
+
     // MARK: – Persistence Logic
     private static func loadBundledExercises(overrides: [UUID: Exercise]) -> [Exercise] {
         do {
@@ -63,28 +63,28 @@ final class ExerciseData: ObservableObject {
             )
         }
     }
-    
+
     private func loadPerformanceData(from fileName: String) {
         allExercisePerformance = JSONFileManager.shared.loadPerformanceData(from: fileName) ?? [:]
     }
-    
+
     // MARK: saving logic
     func savePerformanceData() {
         JSONFileManager.shared.save(Array(allExercisePerformance.values), to: ExerciseData.performanceFileName, dateEncoding: true)
     }
-    
+
     private static func loadUserExercises(from file: String) -> [Exercise] {
         return JSONFileManager.shared.loadUserExercises(from: file) ?? []
     }
-    
+
     private func persistUserExercises() {
         JSONFileManager.shared.save(userExercises, to: ExerciseData.userExercisesFileName)
     }
-    
+
     private static func loadBundledOverrides() -> [UUID: Exercise] {
         return JSONFileManager.shared.loadExerciseOverrides(from: ExerciseData.bundledOverridesFilename) ?? [:]
     }
-    
+
     private func persistOverrides() {
         JSONFileManager.shared.save(bundledOverrides, to: ExerciseData.bundledOverridesFilename)
     }
@@ -95,15 +95,15 @@ extension ExerciseData {
     func isUserExercise(_ exercise: Exercise) -> Bool {
         return userExercises.contains(where: { $0.id == exercise.id })
     }
-    
+
     func isBundledExercise(_ exercise: Exercise) -> Bool {
         return bundledExercises.contains(where: { $0.id == exercise.id })
     }
-    
+
     func isOverriddenExercise(_ exercise: Exercise) -> Bool {
         return bundledOverrides[exercise.id] != nil
     }
-    
+
     func getExerciseLocation(_ exercise: Exercise) -> ExEquipLocation {
         if isUserExercise(exercise) {
             return .user
@@ -122,7 +122,7 @@ extension ExerciseData {
         userExercises.append(newExercise)
         persistUserExercises()
     }
-    
+
     func removeExercise(_ exercise: Exercise) {
         userExercises.removeAll { $0.id == exercise.id }
         persistUserExercises()
@@ -138,13 +138,13 @@ extension ExerciseData {
             addExercise(exercise)
         }
     }
-    
+
     private func updateUserExercise(_ exercise: Exercise) {
         userExercises.removeAll { $0.id == exercise.id }
         userExercises.append(exercise)
         persistUserExercises()
     }
-    
+
     private func updateBundledExercise(_ exercise: Exercise) {
         bundledOverrides[exercise.id] = exercise
         if let index = bundledExercises.firstIndex(where: { $0.id == exercise.id }) {
@@ -158,7 +158,7 @@ extension ExerciseData {
         bundledOverrides.removeValue(forKey: exercise.id)
         persistOverrides()
     }
-    
+
     func restoreBundledExercise(_ exercise: Exercise) -> Exercise? {
         deleteBundledOverride(exercise)
         // rebuild bundledExercises from disk using the reduced override map
@@ -211,13 +211,13 @@ extension ExerciseData {
             }
             print("\(exercise.name) max: \(max.displayValue)")
         }
-        
+
         if !skipped.isEmpty {
             var oneRms: Set<Exercise> = []
             var maxReps: Set<Exercise> = []
             var maxHolds: Set<Exercise> = []
             var hold30sLoads: Set<Exercise> = []
-            
+
             print("------------------ total skipped: \(skipped.count)/\(allExercises.count) ------------------")
             for exercise in skipped {
                 switch exercise.getPeakMetric(metricValue: 0) {
@@ -228,28 +228,28 @@ extension ExerciseData {
                 case .none: break
                 }
             }
-            
+
             if !oneRms.isEmpty {
                 print("------------------ One Rep Maxes ------------------")
                 for ex in oneRms {
                     print("\(ex.name) has no CSV data")
                 }
             }
-            
+
             if !maxReps.isEmpty {
                 print("------------------ Max Reps ------------------")
                 for ex in maxReps {
                     print("\(ex.name) has no CSV data")
                 }
             }
-            
+
             if !maxHolds.isEmpty {
                 print("------------------ Max Holds ------------------")
                 for ex in maxHolds {
                     print("\(ex.name) has no CSV data")
                 }
             }
-            
+
             if !hold30sLoads.isEmpty {
                 print("------------------ Max Load 30s ------------------")
                 for ex in hold30sLoads {
@@ -264,13 +264,13 @@ extension ExerciseData {
 extension ExerciseData {
     private func hasPerformanceData(exercise: Exercise) -> Exercise? {
         let best = peakMetric(for: exercise.id).valid ?? estimatedPeakMetric(for: exercise.id).valid
-           
+
         guard let max = best else { return nil }
         var ex = exercise
         ex.draftMax = max
         return ex
     }
-    
+
     func updateExercisePerformance(
          for exerciseId: UUID,
          newValue: PeakMetric,
@@ -290,7 +290,7 @@ extension ExerciseData {
              )
          }
     }
-    
+
     func updateExercisePerformance(
         for exercise: Exercise,
         newValue: PeakMetric,
@@ -374,7 +374,7 @@ extension ExerciseData {
         print("Performance data for \(exercise.name) saved.")
         if shouldSave { savePerformanceData() }
     }
-    
+
     func applyPerformanceUpdates(updates: [PerformanceUpdate]?, csvEstimate: Bool) {
         if let updates = updates, !updates.isEmpty {
             for update in updates {
@@ -383,7 +383,7 @@ extension ExerciseData {
             savePerformanceData()
         }
     }
-    
+
     func applyPerformanceUpdate(update: PerformanceUpdate, csvEstimate: Bool, shouldSave: Bool) {
         updateExercisePerformance(
             for: update.exerciseId,
@@ -393,7 +393,7 @@ extension ExerciseData {
         )
         if shouldSave { savePerformanceData() }
     }
-    
+
     // Delete a record by id. If it's the current max, promote the best remaining past record.
     // If nothing remains, remove the performance entry entirely.
     func deleteEntry(id: MaxRecord.ID, exercise: Exercise) {
@@ -433,7 +433,7 @@ extension ExerciseData {
         } else {
             allExercisePerformance[exercise.id] = perf
         }
-        
+
         savePerformanceData()
     }
 
@@ -465,19 +465,19 @@ extension ExerciseData {
         allExercisePerformance[exercise.id] = perf
         savePerformanceData()
     }
-    
+
     func estimatedPeakMetric(for exerciseId: UUID) -> PeakMetric? { allExercisePerformance[exerciseId]?.estimatedValue }
-    
+
     func getMax(for exerciseId: UUID) -> MaxRecord? { allExercisePerformance[exerciseId]?.currentMax }
-    
+
     func peakMetric(for exerciseId: UUID) -> PeakMetric? { getMax(for: exerciseId)?.value }
-            
+
     func getPastMaxes(for exerciseId: UUID) -> [MaxRecord] { allExercisePerformance[exerciseId]?.pastMaxes ?? [] }
-    
+
     func getDateForMax(for exerciseId: UUID) -> Date? { getMax(for: exerciseId)?.date }
-    
+
     func exercise(named name: String) -> Exercise? { allExercises.first { $0.name == name } }
-    
+
     func exercise(for id: UUID) -> Exercise? { allExercises.first { $0.id == id } }
 }
 
@@ -487,7 +487,7 @@ extension ExerciseData {
         let removing = TextFormatter.searchStripSet
         return raw.normalized(removing: removing)
     }
-    
+
     private func matchesQuery(_ ex: Exercise, normalizedQuery: String) -> Bool {
         guard !normalizedQuery.isEmpty else { return true }
         let removing = TextFormatter.searchStripSet
@@ -497,7 +497,7 @@ extension ExerciseData {
         } ?? false
         return nameNorm.contains(normalizedQuery) || aliasHit
     }
-    
+
     private func sortByPrefix(_ items: inout [Exercise], normalizedQuery: String) {
         guard !normalizedQuery.isEmpty else {
             items.sort { $0.name < $1.name }
@@ -513,7 +513,7 @@ extension ExerciseData {
             return na < nb
         }
     }
-    
+
     func filteredExercises(
         searchText: String,
         selectedCategory: CategorySelections,
@@ -524,27 +524,27 @@ extension ExerciseData {
         userData: UserData,
         equipmentData: EquipmentData
     ) -> [Exercise] {
-        
+
         // ── 0. Cached constants ───────────────────────────────────────────────
         let q = normalizedSearch(searchText)  // <— shared
         let favoriteSet = userData.evaluation.favoriteExercises
         let dislikedSet = userData.evaluation.dislikedExercises
-        
+
         let hideUnequipped = userData.settings.hideUnequippedExercises
         let hideDisliked   = userData.settings.hideDislikedExercises
         let hideDifficult  = userData.settings.hideDifficultExercises
         let maxStrength    = userData.evaluation.strengthLevel.strengthValue
-        
+
         // ── Category matcher (pulled out of the hot loop) ─────────────────────
         func matchesCategory(_ ex: Exercise) -> Bool {
             switch selectedCategory {
-                
+
                 // -------- Split selections ---------------------------------------
             case .split(let splitCat):
                 let cat = ex.splitCategory ?? ex.groupCategory ?? .all
                 let usingTempl = templateFilter
                 let templates  = templateCategories ?? []
-                             
+
                 if splitCat == .all {
                     return usingTempl ? templates.contains(cat) : true
                 }
@@ -561,17 +561,17 @@ extension ExerciseData {
                         return false
                     }
                 }
-                
+
                 return cat == splitCat || (usingTempl && templates.contains(cat))
-                
+
                 // -------- Muscle selections --------------------------------------
             case .muscle(let m):
                 return m == .all || ex.primaryMuscles.contains(m)
-                
+
                 // -------- Upper / Lower selections -------------------------------
             case .upperLower(let ul):
                 return ul == .upperBody ? ex.isUpperBody : ex.isLowerBody
-                
+
                 // -------- Push / Pull / Legs selections --------------------------
             case .pushPull(let pp):
                 switch pp {
@@ -579,33 +579,33 @@ extension ExerciseData {
                 case .pull: return ex.isPull
                 case .legs: return ex.isLowerBody
                 }
-                
+
                 // -------- Difficulty selections ----------------------------------
             case .difficulty(let diff):
                 return ex.difficulty == diff
-                
+
                 // -------- Exercise-type selections -------------------------------
             case .resistanceType(let type):
                 return ex.resistanceOK(type)
-                
+
             case .effortType(let type):
                 return ex.effort == type
-                
+
             case .limbMovement(let type):
                 return ex.limbMovementType == type
             }
         }
-        
+
         // ── 1. Filter pass ───────────────────────────────────────────────────
         var results: [Exercise] = []
         results.reserveCapacity(allExercises.count)
-        
+
         for ex in allExercises {
             // a) Fav / disliked quick gates
             let isFavorite = favoriteSet.contains(ex.id)
             let isDisliked = dislikedSet.contains(ex.id)
             if favoritesOnly && !isFavorite { continue }
-            
+
             // Keep only disliked when dislikedOnly == true.
             // Otherwise (normal mode), optionally hide disliked if hideDisliked == true.
             if dislikedOnly {
@@ -613,7 +613,7 @@ extension ExerciseData {
             } else if hideDisliked && isDisliked {
                 continue
             }
-            
+
             // b) Equipment / difficulty gates
             if hideUnequipped &&
                 !ex.canPerform(
@@ -621,23 +621,23 @@ extension ExerciseData {
                     available: userData.evaluation.availableEquipment
                 ) { continue }
             if hideDifficult && !ex.difficultyOK(maxStrength) { continue }
-            
+
             // c) Category gate
             guard matchesCategory(ex) else { continue }
-            
+
             // d) Search-text gate
             guard matchesQuery(ex, normalizedQuery: q) else { continue }
-            
+
             // Passed all gates → keep it
             results.append(ex)
         }
-        
+
         // ── 2. Sort (items that *start* with query bubble to top) ─────────────
         sortByPrefix(&results, normalizedQuery: q)
-        
+
         return results
     }
-    
+
     func similarExercises(
         to exercise: Exercise,
         equipmentData: EquipmentData,

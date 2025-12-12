@@ -11,7 +11,7 @@ enum ImplementationType: String, Codable, Hashable, CaseIterable {
     case unified = "Unified"         // One implement, shared load (barbell, pin-loaded machines)
     case divided = "Divided"         // One implement, load divided per limb (lever machines)
     case individual = "Individual"   // Individual implements per limb (dumbbells, kettlebells)
-    
+
     var helpText: String {
         switch self {
         case .unified:
@@ -22,13 +22,13 @@ enum ImplementationType: String, Codable, Hashable, CaseIterable {
             return "Individual implements per limb. Each limb works with its own separate implement (dumbbells, kettlebells)."
         }
     }
-    
+
     func getMovementCount(for movementType: LimbMovementType) -> MovementCount {
         switch (self, movementType) {
         // MARK: – Unified
         case (.unified, .bilateralDependent), (.unified, .bilateralIndependent), (.unified, .unilateral):
             return MovementCount(implementsUsed: 1, baseWeightMultiplier: 1, pegMultiplier: .none)
-        
+
         // MARK: – Divided
         case (.divided, .bilateralDependent):
             return MovementCount(implementsUsed: 1, baseWeightMultiplier: 1, pegMultiplier: .none)
@@ -36,7 +36,7 @@ enum ImplementationType: String, Codable, Hashable, CaseIterable {
             return MovementCount(implementsUsed: 1, baseWeightMultiplier: 1, pegMultiplier: .half)
         case (.divided, .bilateralIndependent):
             return MovementCount(implementsUsed: 1, baseWeightMultiplier: 2, pegMultiplier: .none)
-            
+
         // MARK: – Individual
         case (.individual, .bilateralDependent), (.individual, .unilateral):
             return MovementCount(implementsUsed: 1, baseWeightMultiplier: 1, pegMultiplier: .none)
@@ -55,7 +55,7 @@ struct MovementCount: Codable, Equatable, Hashable {
 enum PegModifier: Double, Codable, CaseIterable {
     case none = 1
     case half = 0.5
-    
+
     var count: Double { rawValue }
 }
 
@@ -63,14 +63,14 @@ struct BaseWeight: Codable, Equatable, Hashable {
     // MARK: – Per Implement
     var lb: Double
     var kg: Double
-    
+
     var resolvedMass: Mass {
         switch UnitSystem.current {
         case .imperial: return .init(lb: lb)
         case .metric: return .init(kg: kg)
         }
     }
-    
+
     mutating func setWeight(_ weight: Double) {
         switch UnitSystem.current {
         case .imperial:
@@ -79,7 +79,7 @@ struct BaseWeight: Codable, Equatable, Hashable {
         case .metric:
             kg = weight
             lb = UnitSystem.KGtoLB(weight)
-            
+
         }
     }
 }
@@ -91,7 +91,7 @@ enum PegCountOption: Int, Codable, CaseIterable {
     case both = 2      // Plates loaded on both sides
 
     var count: Int { rawValue }
-    
+
     static func getOption(for count: Int) -> PegCountOption {
         switch count {
         case -1: return .uses
@@ -101,7 +101,7 @@ enum PegCountOption: Int, Codable, CaseIterable {
         default: return .both
         }
     }
-    
+
     var label: String {
         switch self {
         case .uses:   return "Uses peg"
@@ -110,7 +110,7 @@ enum PegCountOption: Int, Codable, CaseIterable {
         case .both:   return "Both sides"
         }
     }
-    
+
     var helpText: String {
         switch self {
         case .uses:

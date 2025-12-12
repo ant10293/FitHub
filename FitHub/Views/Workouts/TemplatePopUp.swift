@@ -19,13 +19,13 @@ struct TemplatePopup: View {
     var body: some View {
         VStack {
             headerToolbar
-            
+
             if let completionTime = template.estimatedCompletionTime, !template.exercises.isEmpty {
                 Text("Est. Duration: \(Format.formatDuration(completionTime.inSeconds, roundSeconds: true))")
                     .font(.caption)
                     .foregroundStyle(.gray)
             }
-                      
+
             if template.exercises.isEmpty {
                 emptyView
             } else {
@@ -44,7 +44,7 @@ struct TemplatePopup: View {
             }
 
             Spacer()
-            
+
             if disableTemplate, !template.exercises.isEmpty {
                 Text(disableMessage)
                     .font(.caption)
@@ -52,7 +52,7 @@ struct TemplatePopup: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
             }
-            
+
             RectangularButton(
                 title: "Begin Workout",
                 enabled: !disableTemplate && !userData.isWorkingOut,
@@ -63,9 +63,9 @@ struct TemplatePopup: View {
         .padding()
         .background(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground).opacity(0.6))
     }
-    
+
     private var disableTemplate: Bool { template.shouldDisableTemplate  }
-    
+
     private var emptyView: some View {
         List {
             EmptyState(
@@ -77,7 +77,7 @@ struct TemplatePopup: View {
             .background(RoundedRectangle(cornerRadius: 12).fill(Color(colorScheme == .dark ? UIColor.secondarySystemBackground : UIColor.systemBackground)))
         }
     }
-    
+
     private var headerToolbar: some View {
         CenteredOverlayHeader(
             leading: {

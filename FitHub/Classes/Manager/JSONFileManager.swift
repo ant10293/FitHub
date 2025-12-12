@@ -10,17 +10,17 @@ import Foundation
 /// Centralized JSON file management to prevent race conditions
 final class JSONFileManager {
     static let shared = JSONFileManager()
-    
+
     let saveQueue = DispatchQueue(label: "com.FitHubApp.JSONFileManager", qos: .userInitiated)
     private let fileManager = FileManager.default
-    
+
     // MARK: - Debouncing support
     private let debounceQueue = DispatchQueue(label: "com.FitHubApp.JSONFileManager.debounce")
     private var pendingFullSaves: [String: DispatchWorkItem] = [:]
     private var lastSavedData: [String: Data] = [:]   // <- per file
-    
+
     private init() {}
-    
+
     private static func parseJSONArray<T>(
         from data: Data,
         filename: String,
@@ -32,10 +32,10 @@ final class JSONFileManager {
             print("❌ Couldn't parse \(filename) as JSON array")
             return []
         }
-        
+
         var validItems: [T] = []
         var skippedCount = 0
-        
+
         for (index, jsonDict) in jsonArray.enumerated() {
             do {
                 let item = try decoder(jsonDict)
@@ -47,17 +47,17 @@ final class JSONFileManager {
                 continue
             }
         }
-        
+
         if skippedCount > 0 {
             print("⚠️ Skipped \(skippedCount) invalid \(itemType) out of \(jsonArray.count) total")
         }
-        
+
         if validItems.isEmpty {
             print("❌ No valid \(itemType) could be loaded from \(filename)")
         } else {
             print("✅ Successfully loaded \(validItems.count) \(itemType) from \(filename)")
         }
-        
+
         return validItems
     }
 
@@ -73,7 +73,7 @@ final class JSONFileManager {
             print("❌ Couldn't read \(filename).json")
             return []
         }
-        
+
         return parseJSONArray(
             from: data,
             filename: "\(filename).json",
@@ -81,7 +81,7 @@ final class JSONFileManager {
             decoder: decoder
         )
     }
-    
+
     func loadFromDocuments<T: Decodable>(
         _ type: T.Type,
         from filename: String,
@@ -90,17 +90,17 @@ final class JSONFileManager {
     ) -> T? {
         do {
             let url = getDocumentsDirectory().appendingPathComponent(filename)
-            
+
             guard fileManager.fileExists(atPath: url.path) else {
                 print("⚠️ File \(filename) doesn't exist yet (first run)")
                 return nil
             }
-            
+
             let data = try Data(contentsOf: url)
             let decoder = JSONDecoder()
             if dateDecoding { decoder.dateDecodingStrategy = .iso8601 }
             let result = try decoder.decode(type, from: data)
-            
+
             let itemDescription = itemType ?? String(describing: type)
             if let array = result as? [Any] {
                 print("✅ Successfully loaded \(array.count) \(itemDescription) from \(filename)")
@@ -109,44 +109,44 @@ final class JSONFileManager {
             } else {
                 print("✅ Successfully loaded \(itemDescription) from \(filename)")
             }
-            
+
             return result
-            
+
         } catch {
             print("❌ Failed to load \(filename): \(error)")
             return nil
         }
     }
-    
+
     // MARK: - Specific Load Methods for Different Data Types
     func loadUserExercises(from filename: String) -> [Exercise]? {
         return loadFromDocuments([Exercise].self, from: filename, itemType: "user exercises")
     }
-        
+
     func loadExerciseAdjustments(from filename: String) -> [UUID: ExerciseAdjustments]? {
         return loadFromDocuments([UUID: ExerciseAdjustments].self, from: filename, itemType: "exercise adjustments")
     }
-    
+
     func loadEquipmentAdjustments(from filename: String) -> [UUID: [EquipmentAdjustment]]? {
         return loadFromDocuments([GymEquipment.ID: [EquipmentAdjustment]].self, from: filename, itemType: "equipment adjustments")
     }
-    
+
     func loadEquipmentOverrides(from filename: String) -> [UUID: GymEquipment]? {
         return loadFromDocuments([UUID: GymEquipment].self, from: filename, itemType: "equipment overrides")
     }
-    
+
     func loadExerciseOverrides(from filename: String) -> [UUID: Exercise]? {
         return loadFromDocuments([UUID: Exercise].self, from: filename, itemType: "exercise overrides")
     }
-    
+
     func loadUserEquipment(from filename: String) -> [GymEquipment]? {
         return loadFromDocuments([GymEquipment].self, from: filename, itemType: "user equipment")
     }
-    
+
     func loadUserData(from filename: String) -> UserData? {
         return loadFromDocuments(UserData.self, from: filename, itemType: "userData")
     }
-        
+
     func loadPerformanceData(from filename: String) -> [UUID: ExercisePerformance]? {
         guard let array = loadFromDocuments(
             [ExercisePerformance].self,
@@ -154,7 +154,7 @@ final class JSONFileManager {
             itemType: "performance entries",
             dateDecoding: true
         ) else { return nil }
-        
+
         return Dictionary(uniqueKeysWithValues: array.map { ($0.id, $0) })
     }
 
@@ -166,17 +166,17 @@ final class JSONFileManager {
         dateEncoding: Bool = false
     ) {
         pendingFullSaves[filename]?.cancel()
-        
+
         let work = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
             self.save(data, to: filename, dateEncoding: dateEncoding)
             self.pendingFullSaves[filename] = nil
         }
-        
+
         pendingFullSaves[filename] = work
         debounceQueue.asyncAfter(deadline: .now() + delay, execute: work)
     }
-    
+
     // MARK: - Generic Save Method (ONE method for everything)
     func save<T: Encodable>(_ data: T, to filename: String, dateEncoding: Bool = false) {
         do {

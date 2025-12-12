@@ -17,14 +17,14 @@ struct ExerciseSetDetail: View {
 
     @State private var showSupersetOptions: Bool = false
     @State private var tosInputKey: TimeOrSpeed.InputKey?
-    
+
     let isCollapsed: Bool
     let keyboardVisible: Bool
     let hasEquipmentAdjustments: Bool
     let perform: (CallBackAction) -> Void
     let onSuperset: (String) -> Void
     let screenWidth: CGFloat?
-    
+
     // MARK: - Init
     init(
         template: Binding<WorkoutTemplate>,
@@ -40,14 +40,14 @@ struct ExerciseSetDetail: View {
         _template          = template
         _exercise          = exercise
         _isShowingOptions  = isShowingOptions
-                
+
         let wrappedEx = exercise.wrappedValue
         _showSupersetOptions = State(initialValue: wrappedEx.isSupersettedWith != nil)
-        
+
         if let set = wrappedEx.setDetails.first, let tos = set.planned.timeSpeed {
             _tosInputKey = State(initialValue: tos.showing)
         }
-        
+
         self.isCollapsed = isCollapsed
         self.keyboardVisible = keyboardVisible
         self.hasEquipmentAdjustments = hasEquipmentAdjustments
@@ -149,7 +149,7 @@ struct ExerciseSetDetail: View {
         }
         .padding(.top, 5)
     }
-    
+
     // MARK: - Superset
     @ViewBuilder
     private var superSetOptions: some View {
@@ -189,7 +189,7 @@ struct ExerciseSetDetail: View {
             .padding(.top, -10)
         }
     }
-    
+
     // MARK: - Options overlay
     @ViewBuilder private var exerciseDetailOptions: some View {
         ZStack {

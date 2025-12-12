@@ -24,7 +24,7 @@ struct TemplateArchives: View {
         })
         .navigationBarTitle("Manage Templates", displayMode: .inline)
     }
-    
+
     // MARK: – List / empty‑state wrapper
     private var workoutList: some View {
         ZStack {
@@ -41,7 +41,7 @@ struct TemplateArchives: View {
             }
         }
     }
-    
+
     private func templatesSection(templates: [WorkoutTemplate]) -> some View {
         Section {
             ForEach(templates.indices, id: \.self) { index in
@@ -51,7 +51,7 @@ struct TemplateArchives: View {
             Text("Archived Templates")
         }
     }
-    
+
     private func templateButton(for index: Int, template: WorkoutTemplate) -> some View {
         TemplateRow(
             template: template,
@@ -69,17 +69,17 @@ struct TemplateArchives: View {
             }
         )
     }
-    
+
     private func actionOverlay(template: WorkoutTemplate) -> some View {
         VStack {
             Text("Template Actions")
                 .font(.title2)
-            
+
             Text("Selected: ") +
             Text("\(template.name)")
                 .foregroundStyle(Color.secondary)
                 .italic()
-      
+
             LabelButton(
                 title: "Unarchive",
                 systemImage: "tray.full",
@@ -90,7 +90,7 @@ struct TemplateArchives: View {
                 }
             )
             .padding(.top)
-            
+
             HStack {
                 LabelButton(
                     title: "Delete",
@@ -101,7 +101,7 @@ struct TemplateArchives: View {
                         deleteTemplate(template: template)
                     }
                 )
-                
+
                 LabelButton(
                     title: "Cancel",
                     systemImage: "xmark",
@@ -118,7 +118,7 @@ struct TemplateArchives: View {
         .shadow(radius: 10)
         .padding()
     }
-    
+
     private func moveTemplateBack(template: WorkoutTemplate) {
         deleteArchived(at: template.id)
         var template = template
@@ -131,11 +131,11 @@ struct TemplateArchives: View {
         deleteArchived(at: template.id)
         resetEditing()
     }
-    
+
     private func deleteArchived(at id: UUID) {
         userData.workoutPlans.archivedTemplates.removeAll { $0.id == id }
     }
-    
+
     private func resetEditing() {
         showingActionOverlay = false
         editingTemplate = nil

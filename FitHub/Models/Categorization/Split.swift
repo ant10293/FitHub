@@ -14,7 +14,7 @@ enum SplitCategory: String, CaseIterable, Identifiable, Codable {
     case back = "Back"
     case legs = "Legs"
     case arms = "Arms"
-    
+
     case abs = "Abs"
     case shoulders = "Shoulders"
     case chest = "Chest"
@@ -23,11 +23,11 @@ enum SplitCategory: String, CaseIterable, Identifiable, Codable {
     case quads = "Quads"
     case hamstrings = "Hamstrings"
     case glutes = "Glutes"
-    
+
     // MARK: - Accessory Groups
     case calves = "Calves"
     case forearms = "Forearms"
-    
+
     var id: String { self.rawValue }
 }
 
@@ -38,7 +38,7 @@ extension SplitCategory {
     static let pull: Set<SplitCategory> = [.back, .biceps]
     static let armsFocus: Set<SplitCategory> = [.biceps, .triceps, .forearms]
     static let legsFocus: Set<SplitCategory> = [.quads, .hamstrings, .glutes, .calves]
-    
+
     static let muscles: [SplitCategory: [Muscle]] = [
         .all: [.all],
         .abs: [.abdominals],
@@ -52,7 +52,7 @@ extension SplitCategory {
         .glutes: [.gluteus],
         .calves: [.calves]
     ]
-    
+
     static func groups(forGeneration: Bool) -> [SplitCategory: [Muscle]] {
         var map: [SplitCategory: [Muscle]] = [
             .back: [.trapezius, .latissimusDorsi, .erectorSpinae],
@@ -68,7 +68,7 @@ extension SplitCategory {
 
         return map
     }
-    
+
     static var columnGroups: [[SplitCategory]] {
         [
             [.all, .shoulders, .back, .abs, .chest],
@@ -80,11 +80,11 @@ extension SplitCategory {
     static let hasFrontImages: Set<SplitCategory> = [
         .all, .legs, .arms, .abs, .chest, .shoulders, .biceps, .triceps, .forearms, .quads, .calves
     ]
-    
+
     static let hasRearImages: Set<SplitCategory> = [
         .all, .legs, .arms, .shoulders, .back, .triceps, .forearms, .hamstrings, .glutes, .calves
     ]
-    
+
     static let hasBothImages: Set<SplitCategory> = hasFrontImages.intersection(hasRearImages)
 }
 
@@ -98,12 +98,12 @@ extension SplitCategory {
         default: return nil
         }
     }
-    
+
     static func legFocusCategories(_ categories: [SplitCategory]) -> [SplitCategory] {
         guard categories.contains(.legs) else { return [] }
         return categories.filter { legsFocus.contains($0) }
     }
-    
+
     static func concatenateCategories(for categories: [SplitCategory]) -> String {
         // 1) “All” → “Full Body”
         if categories.contains(.all) { return "Full Body" }
@@ -150,9 +150,9 @@ enum SplitType: String, CaseIterable, Identifiable, Codable {
     case arnoldSplit = "Arnold Split"
     case antagonistSplit = "Antagonist Split"
     case torsoLimb = "Torso / Limb"
-    
+
     var id: String { self.rawValue }
-    
+
     var frequencyRange: ClosedRange<Int> {
         switch self {
         case .fullBody: return 2...4
@@ -169,7 +169,7 @@ enum SplitType: String, CaseIterable, Identifiable, Codable {
     var minimumDaysRequired: Int {
         frequencyRange.lowerBound
     }
-    
+
     var description: String {
         switch self {
         case .fullBody:

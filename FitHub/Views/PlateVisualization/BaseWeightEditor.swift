@@ -12,7 +12,7 @@ struct BaseWeightEditor: View {
     let gymEquip: GymEquipment
     var onSave: (Double) -> Void
     var onExit: () -> Void
-    
+
     var body: some View {
         GenericEditor(
             title: "Set Base Weight for \(gymEquip.name)",

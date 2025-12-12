@@ -19,12 +19,12 @@ struct TimeSpan: Codable, Equatable, Hashable {
         self.seconds = TimeSpan.fromMinutes(minutes).inSeconds
     }
     init() { self.seconds = 0 }
-    
+
     // MARK: – Convenience accessors
     var inSeconds: Int { seconds }
     var inMinutes: Int { seconds / 60 }
     var inHours:   Int { seconds / 3_600 }
-    
+
     // MARK: – Display
     var displayString: String { return Format.formatDuration(seconds) }
     var displayStringCompact: String {
@@ -33,7 +33,7 @@ struct TimeSpan: Codable, Equatable, Hashable {
     }
     var fieldString: String { seconds > 0 ? displayStringCompact : "" }
     var components: (h: Int, m: Int, s: Int) { Format.secondsToHMS(seconds) }
-    
+
     // MARK: - Mutating setters
     mutating func setMin(minutes m: Int) {
         self.seconds = TimeSpan.fromMinutes(m).inSeconds
@@ -59,9 +59,9 @@ extension TimeSpan {
     static func fromMinSec(minutes m: Int, seconds s: Int) -> TimeSpan {
         TimeSpan(seconds: (m * 60) + s)
     }
-    
+
     private static func fromMinutes(_ m: Int) -> TimeSpan { TimeSpan(seconds: m * 60) }
-    
+
     /// Parse "mm:ss" or "ss" (and "h:mm:ss") into seconds.
     static func seconds(from text: String) -> TimeSpan {
         // Keep only digits and colons so we don't choke on accidental characters.
@@ -96,7 +96,7 @@ extension TimeSpan {
         default:
             seconds = 0
         }
-        
+
         return TimeSpan(seconds: seconds)
     }
 }
@@ -115,7 +115,7 @@ extension TimeSpan {
         var isWithin: Bool { if case .within = self { return true } else { return false } }
         var isUnder:  Bool { if case .under = self  { return true } else { return false } }
         var isOver:   Bool { if case .over  = self  { return true } else { return false } }
-        
+
         func newCount(existingCount: Int) -> Int {
             switch self {
             case .over: return existingCount - 1

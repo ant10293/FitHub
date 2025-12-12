@@ -24,7 +24,7 @@ struct UploadImage: View {
 
     var body: some View {
         let height = screenHeight
-        
+
         VStack(spacing: 20) {
             if let uiImage = selectedImage {
                 Image(uiImage: uiImage)
@@ -35,7 +35,7 @@ struct UploadImage: View {
                 VStack {
                     Text("No image selected")
                         .foregroundStyle(Color.secondary)
-                    
+
                     Button("Add Photo") {
                         showingSourceChooser = true
                     }

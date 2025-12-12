@@ -33,7 +33,7 @@ struct TemplateOverload: View {
                         ForEach(processedExercises) { exercise in
                             let oldExercise = previousWeekExercises?
                                 .first(where: { $0.id == exercise.id })
-                            
+
                             ExerciseSetChange(newExercise: exercise, oldExercise: oldExercise)
                         }
                     }
@@ -47,10 +47,10 @@ struct TemplateOverload: View {
 struct ExerciseSetChange: View {
     let newExercise: Exercise
     let oldExercise: Exercise?
-    
+
     var body: some View {
         let firstSet = newExercise.setDetails.first
-        
+
         VStack(alignment: .leading, spacing: 10) {
             Text(newExercise.name)
                 .font(.headline)
@@ -73,7 +73,7 @@ struct ExerciseSetChange: View {
             .font(.caption)
             .fontWeight(.semibold)
             .foregroundStyle(.gray)
-            
+
             // Rows
             LazyVGrid(
                 columns: [
@@ -107,7 +107,7 @@ struct ExerciseSetChange: View {
                         if let prevPlanned = prevSet?.planned, prevPlanned != set.planned  {
                             let curVal = set.planned.actualValue
                             let prevVal = prevPlanned.actualValue
-                            
+
                             HStack(spacing: 2) {
                                 Text(prevPlanned.displayString).foregroundStyle(.gray)
                                 Text("→")
@@ -129,4 +129,3 @@ struct ExerciseSetChange: View {
         .padding(.horizontal)
     }
 }
-

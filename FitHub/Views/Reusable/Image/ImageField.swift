@@ -10,13 +10,13 @@ import SwiftUI
 struct ImageField: View {
     var initialFilename: String? = nil
     var onImageUpdate: (String) -> Void = { _ in }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             // Header
             Text("Image")
                 .font(.headline)
-            
+
             Group {
                 // Picker
                 UploadImage(initialFilename: initialFilename) { name in

@@ -11,7 +11,7 @@ import Foundation
 /// Thread-safe implementation with serial queue to prevent race conditions.
 final class AccountDataStore {
     static let shared = AccountDataStore()
-    
+
     private let fileManager = FileManager.default
     private let dataFilenames = [
         UserData.jsonKey,
@@ -23,31 +23,31 @@ final class AccountDataStore {
         AdjustmentsData.exerciseAdjustmentsKey,
         AdjustmentsData.equipmentAdjustmentsKey
     ]
-    
+
     // Serial queue for all file operations to prevent race conditions
     private let operationQueue = DispatchQueue(
         label: "com.FitHub.AccountDataStore",
         qos: .userInitiated
     )
-    
+
     // Track ongoing operations per account to prevent concurrent operations on same account
     private var activeOperations: Set<String> = []
     private let operationsLock = NSLock()
-    
+
     private init() {}
-    
+
     private var documentsDirectory: URL { getDocumentsDirectory() }
-    
+
     private var accountsDirectory: URL {
         documentsDirectory.appendingPathComponent("Accounts", isDirectory: true)
     }
-    
+
     private func directory(for accountID: String) -> URL {
         accountsDirectory.appendingPathComponent(accountID, isDirectory: true)
     }
-    
+
     // MARK: - Public API
-    
+
     /// Backs up active data for the given account ID.
     /// Thread-safe: Uses serial queue to prevent race conditions.
     /// - Parameter accountID: The account ID to backup data for
@@ -56,13 +56,13 @@ final class AccountDataStore {
         try performOperation(for: accountID) {
             try self.ensureBaseDirectories(accountID: accountID)
             let accountDir = self.directory(for: accountID)
-            
+
             for filename in self.dataFilenames {
                 let source = self.documentsDirectory.appendingPathComponent(filename)
                 guard self.fileManager.fileExists(atPath: source.path) else { continue }
-                
+
                 let destination = accountDir.appendingPathComponent(filename)
-                
+
                 // Atomic operation: remove existing file if present, then copy
                 if self.fileManager.fileExists(atPath: destination.path) {
                     try self.fileManager.removeItem(at: destination)
@@ -71,7 +71,7 @@ final class AccountDataStore {
             }
         }
     }
-    
+
     /// Restores data for the given account ID if available.
     /// Thread-safe: Uses serial queue to prevent race conditions.
     /// - Parameter accountID: The account ID to restore data for
@@ -83,14 +83,14 @@ final class AccountDataStore {
             guard self.fileManager.fileExists(atPath: accountDir.path) else {
                 return false
             }
-            
+
             var restored = false
             for filename in self.dataFilenames {
                 let source = accountDir.appendingPathComponent(filename)
                 guard self.fileManager.fileExists(atPath: source.path) else { continue }
-                
+
                 let destination = self.documentsDirectory.appendingPathComponent(filename)
-                
+
                 // Atomic operation: remove existing file if present, then copy
                 if self.fileManager.fileExists(atPath: destination.path) {
                     try self.fileManager.removeItem(at: destination)
@@ -101,7 +101,7 @@ final class AccountDataStore {
             return restored
         }
     }
-    
+
     /// Clears all active data files.
     /// Thread-safe: Uses serial queue to prevent race conditions.
     /// - Throws: File system errors
@@ -115,7 +115,7 @@ final class AccountDataStore {
             }
         }
     }
-    
+
     /// Deletes backup for the given account ID.
     /// Thread-safe: Uses serial queue to prevent race conditions.
     /// - Parameter accountID: The account ID to delete backup for
@@ -128,9 +128,9 @@ final class AccountDataStore {
             }
         }
     }
-    
+
     // MARK: - Thread Safety
-    
+
     /// Performs an operation on the serial queue with account-level locking.
     /// Prevents concurrent operations on the same account.
     /// - Parameters:
@@ -153,7 +153,7 @@ final class AccountDataStore {
             activeOperations.insert(accountID)
             operationsLock.unlock()
         }
-        
+
         defer {
             if let accountID = accountID {
                 operationsLock.lock()
@@ -161,13 +161,13 @@ final class AccountDataStore {
                 operationsLock.unlock()
             }
         }
-        
+
         // Perform operation on serial queue
         return try operationQueue.sync {
             try operation()
         }
     }
-    
+
     /// Checks if a backup exists for the given account ID.
     /// Thread-safe: Uses serial queue to prevent race conditions.
     /// - Parameter accountID: The account ID to check
@@ -178,9 +178,9 @@ final class AccountDataStore {
             return self.fileManager.fileExists(atPath: accountDir.path)
         }
     }
-    
+
     // MARK: - Helpers
-    
+
     private func ensureBaseDirectories(accountID: String) throws {
         if !fileManager.fileExists(atPath: accountsDirectory.path) {
             try fileManager.createDirectory(at: accountsDirectory, withIntermediateDirectories: true)

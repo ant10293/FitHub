@@ -16,34 +16,34 @@ struct CompletedEntry: View {
     @Binding var showPicker: Bool
     @Binding var completed: SetMetric
     @Binding var rpe: Double
-    
+
     private var isCardio: Bool { planned.timeSpeed != nil }
-    
+
     var body: some View {
         VStack {
             if !hideCompleted {
                 switch planned {
                 case .reps(let plannedReps):
                     repsField(plannedReps: plannedReps)
-                    
+
                 case .hold(let plannedTime):
                     holdField(plannedTime: plannedTime)
-                    
+
                 case .carry(let plannedMeters):
                     distanceField(plannedMeters: plannedMeters)
-                    
+
                 case .cardio(let plannedTOS):
                     cardioField(plannedTOS: plannedTOS)
                 }
             }
-            
+
             if !showPicker, !hideRPE, !isCardio {
                 rpeEntry
             }
         }
         .padding(.horizontal)
     }
-    
+
     @ViewBuilder private func repsField(plannedReps: Int) -> some View {
         let completedLocal = completed.repsValue ?? plannedReps
         let completedBinding = Binding<Int>(
@@ -52,7 +52,7 @@ struct CompletedEntry: View {
                 completed = SetMetric.reps(newValue)
             }
         )
-        
+
         HStack {
             Text("Reps Completed:").fontWeight(.bold)
             Spacer()
@@ -60,7 +60,7 @@ struct CompletedEntry: View {
                 .foregroundStyle(completedLocal < plannedReps ? .red :
                                     (completedLocal > plannedReps ? .green : .primary))
             Spacer()
-            
+
             Stepper(
                 "",
                 value: completedBinding,
@@ -70,7 +70,7 @@ struct CompletedEntry: View {
             .labelsHidden()
         }
     }
-    
+
     @ViewBuilder private func holdField(plannedTime: TimeSpan) -> some View {
         let completedLocal = completed.holdTime ?? plannedTime
         let completedBinding = Binding<TimeSpan>(
@@ -79,10 +79,10 @@ struct CompletedEntry: View {
                 completed = SetMetric.hold(newValue)
             }
         )
-        
+
         timeCompletedField(planned: plannedTime, timeBinding: completedBinding)
     }
-    
+
     @ViewBuilder private func distanceField(plannedMeters: Meters) -> some View {
         let completedLocal = completed.metersValue ?? plannedMeters
         let completedBinding = Binding<Double>(
@@ -91,7 +91,7 @@ struct CompletedEntry: View {
                 completed = SetMetric.carry(Meters(meters: newValue))
             }
         )
-        
+
         HStack {
             Text("Meters Completed:").fontWeight(.bold)
             Spacer()
@@ -99,7 +99,7 @@ struct CompletedEntry: View {
                 .foregroundStyle(completedLocal.inM < plannedMeters.inM ? .red :
                                     (completedLocal.inM > plannedMeters.inM ? .green : .primary))
             Spacer()
-            
+
             Stepper(
                 "",
                 value: completedBinding,
@@ -109,7 +109,7 @@ struct CompletedEntry: View {
             .labelsHidden()
         }
     }
-    
+
     @ViewBuilder private func cardioField(plannedTOS: TimeOrSpeed) -> some View {
         let completedLocal = completed.timeSpeed?.time ?? plannedTOS.time
         let completedBinding = Binding<TimeSpan>(
@@ -120,10 +120,10 @@ struct CompletedEntry: View {
                 completed = SetMetric.cardio(newTOS)
             }
         )
-        
+
         timeCompletedField(planned: plannedTOS.time, timeBinding: completedBinding)
     }
-    
+
     // MARK: - Reusable time field (accepts a Binding directly)
     @ViewBuilder
     private func timeCompletedField(
@@ -154,7 +154,7 @@ struct CompletedEntry: View {
             }
         }
     }
-    
+
     @ViewBuilder private var rpeEntry: some View {
         if !isWarm {
             HStack(spacing: 0) {
@@ -183,4 +183,3 @@ struct CompletedEntry: View {
         }
     }
 }
-

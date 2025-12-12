@@ -12,10 +12,10 @@ import SwiftUI
 struct WorkoutWeek: Identifiable, Codable, Equatable {
     var id = UUID()
     var categories: [[SplitCategory]]
-    
+
     static func createSplit(forDays days: Int) -> WorkoutWeek {
         var workoutWeek = WorkoutWeek(categories: [])
-        
+
         switch days {
         case 1...3:
             workoutWeek.categories = Array(repeating: [.all], count: days)
@@ -47,16 +47,16 @@ struct WorkoutWeek: Identifiable, Codable, Equatable {
             // Rest or custom split, use a sensible default or empty
             workoutWeek.categories = Array(repeating: [.all], count: days)
         }
-        
+
         return workoutWeek
     }
-    
+
     func categoryForDay(index: Int) -> [SplitCategory] {
         // Ensure we loop around if the index exceeds the length of the categories array
         if categories.isEmpty { return [] }
         return categories[index % categories.count]
     }
-    
+
     static func determineSplit(customSplit: WorkoutWeek?, daysPerWeek: Int) -> WorkoutWeek {
         let defaultSplit = WorkoutWeek.createSplit(forDays: daysPerWeek)
         guard let customSplit else { return defaultSplit }
@@ -66,7 +66,7 @@ struct WorkoutWeek: Identifiable, Codable, Equatable {
             return customSplit
         }
     }
-    
+
     static func splitWarning(customSplit: WorkoutWeek?, daysPerWeek: Int) -> String? {
         let split = WorkoutWeek.determineSplit(customSplit: customSplit, daysPerWeek: daysPerWeek)
         if let customSplit = customSplit, customSplit != split {
@@ -90,7 +90,7 @@ enum DaysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
     case friday = "Friday"
     case saturday = "Saturday"
     case sunday = "Sunday"
-    
+
     var shortName: String {
         switch self {
         case .monday: return "Mon"
@@ -102,16 +102,16 @@ enum DaysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
         case .sunday: return "Sun"
         }
     }
-    
+
     // Explicitly define the order of the week days
     static let orderedDays: [DaysOfWeek] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
-    
+
     static func < (lhs: DaysOfWeek, rhs: DaysOfWeek) -> Bool {
         guard let lIdx = orderedDays.firstIndex(of: lhs), let rIdx = orderedDays.firstIndex(of: rhs)
         else { return false }
         return lIdx < rIdx
     }
-    
+
     static func defaultDays(for workoutDaysPerWeek: Int) -> [DaysOfWeek] {
         switch workoutDaysPerWeek {
         case 1:
@@ -131,7 +131,7 @@ enum DaysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
             return Array(orderedDays.prefix(workoutDaysPerWeek))
         }
     }
-    
+
     static func getWorkoutDayIndexes(for frequency: Int) -> [Int] {
         // Default days calculation based on frequency
         switch frequency {
@@ -151,7 +151,7 @@ enum DaysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
             return []
         }
     }
-    
+
     static func calculateWorkoutDayIndexes(customWorkoutDays: [DaysOfWeek]?, workoutDaysPerWeek: Int) -> [Int] {
         if let customDays = customWorkoutDays, !customDays.isEmpty {
             // Use custom workout days if they are set
@@ -161,13 +161,13 @@ enum DaysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
             return getWorkoutDayIndexes(for: workoutDaysPerWeek)
         }
     }
-    
+
     static func resolvedWorkoutDays(customWorkoutDays: [DaysOfWeek]?, workoutDaysPerWeek: Int) -> [DaysOfWeek] {
         // ❶ Start with any custom days the user already chose
         var result = (customWorkoutDays ?? [])
             .uniqued()            // remove accidental duplicates while preserving order
             .sorted()             // Monday→Sunday, thanks to Comparable conformance
-        
+
         // ❷ If the user picked fewer days than the new frequency,
         //    append defaults until we hit the target
         if result.count < workoutDaysPerWeek {
@@ -176,17 +176,17 @@ enum DaysOfWeek: String, CaseIterable, Codable, Comparable, Equatable {
                 if result.count == workoutDaysPerWeek { break }
             }
         }
-        
+
         // ❸ If they picked more days than the new frequency,
         //    keep the first *n* days in week order
         if result.count > workoutDaysPerWeek {
             result = Array(result.prefix(workoutDaysPerWeek))
         }
-        
+
         // ❹ Final guarantee: sorted & sized correctly
         return result.sorted()
     }
-    
+
     /// Returns a single `Text` containing all day short-names, comma-separated and bold.
     static func dayListText(_ days: [DaysOfWeek]) -> Text {
         let pieces = days
@@ -208,17 +208,17 @@ struct WorkoutSchedule: Codable {
     var customWorkoutDays: [DaysOfWeek]? // Optional array to store custom days of the week
     var workoutDaysPerWeek: Int = 3 // days per week user wants to work out
     var customWorkoutSplit: WorkoutWeek? // Optional custom split, overrides default logic based on days per week
-    
+
     // Helper to get workout time for a specific day
     func workoutTime(for day: DaysOfWeek) -> DateComponents? {
         return customWorkoutTimes[day]
     }
-    
+
     // Helper to check if a day has a scheduled workout
     func hasWorkoutScheduled(for day: DaysOfWeek) -> Bool {
         return customWorkoutTimes[day] != nil
     }
-    
+
     // Helper to get all scheduled workout days
     var scheduledDays: [DaysOfWeek] { return Array(customWorkoutTimes.keys) }
 }

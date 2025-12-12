@@ -16,13 +16,13 @@ struct DistributionEditor: View {
                             .fontWeight(.semibold)
                             .lineLimit(1)
                             .layoutPriority(1)
-                        
+
                         Slider(
                             value: sliderBinding(for: effort),
                             in: 0...100,
                             step: 1
                         )
-                        
+
                         Text("\(pctInt) %")
                             .monospacedDigit()
                             .lineLimit(1)
@@ -30,7 +30,7 @@ struct DistributionEditor: View {
                             .foregroundStyle(.secondary)
                     }
                     .contentShape(Rectangle())
-                    
+
                     if let recPct = effort.recommenedPct {
                         if pctInt > recPct.upperBound {
                             // Over the recommended cap → show max only
@@ -57,12 +57,12 @@ struct DistributionEditor: View {
         .frame(maxWidth: .infinity)
         .padding(.trailing)
     }
-    
+
 
     // MARK: helpers
     private var total: Double { distribution.total }
     private var totalPct: Int { Int((total * 100).rounded()) }
-    
+
     private func sliderBinding(for effort: EffortType) -> Binding<Double> {
         Binding(
             get: { distribution.percentage(for: effort) * 100 },

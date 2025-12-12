@@ -17,7 +17,7 @@ struct OverloadCalculator: View {
         ZStack {
               Color(UIColor.secondarySystemBackground)
                 .ignoresSafeArea()
-                
+
             VStack {
                 // Week Picker
                 HStack {
@@ -25,7 +25,7 @@ struct OverloadCalculator: View {
                         .fontWeight(.semibold)
                         .font(.subheadline)
                         .padding(.leading)
-                    
+
                     Picker("Select Week", selection: $selectedWeek) {
                         ForEach(1...ctx.userData.settings.progressiveOverloadPeriod, id: \.self) { week in
                             Text("\(week)")
@@ -37,7 +37,7 @@ struct OverloadCalculator: View {
                     .onChange(of: ctx.userData.settings) { updateProcessedExercises(changed: true) }
                     .onChange(of: ctx.userData.workoutPlans) { updateProcessedExercises(changed: true) }
                 }
-                
+
                 if let processedExercises = weekExerciseMap[selectedWeek] {
                     let previousWeekExercises = weekExerciseMap[selectedWeek - 1] ?? [] // Safely fetch previous week
                     TemplateOverload(processedExercises: processedExercises, previousWeekExercises: previousWeekExercises, templateName: template.name)
@@ -55,7 +55,7 @@ struct OverloadCalculator: View {
             }
         }
     }
-    
+
     private func updateProcessedExercises(changed: Bool = false) {
         if changed { weekExerciseMap.removeAll() }
         // Initialize week 0 with the base exercises if it hasn't been initialized yet
@@ -67,24 +67,24 @@ struct OverloadCalculator: View {
                 return baseExercise
             }
         }
-        
+
         // Process all weeks up to the selected week
         for week in 1...selectedWeek {
             //print("\nDebug: Processing week \(week)")
-            
+
             // Only process if not already cached
             if weekExerciseMap[week] == nil {
                 //print("Debug: No cached data for week \(week), processing...")
-                
+
                 //weekExerciseMap[week] = template.exercises.map { exercise in
                 if let weekZeroExercises = weekExerciseMap[0] {
                     weekExerciseMap[week] = weekZeroExercises.map { exercise in
                     var newExercise = exercise
-                                                        
+
                     // Update overload progress based on the week
                     newExercise.overloadProgress = week
                     //print("Debug: Updated overloadProgress for exercise \(exercise.name) to \(week)")
-                    
+
                     // Apply progressive overload to set details
                     _ = newExercise.applyProgressiveOverload(
                         equipmentData: ctx.equipment,
@@ -94,7 +94,7 @@ struct OverloadCalculator: View {
                         overloadFactor: ctx.userData.settings.customOverloadFactor ?? 1.0
                     )
                     //print("Debug: Applied progressive overload to \(exercise.name), new set details: \(newExercise.setDetails)")
-                    
+
                     return newExercise
                     }
                 }

@@ -17,7 +17,7 @@ struct ExerciseModifier {
         let updatedTemplate: WorkoutTemplate
         let updatedReplaced: [String]
     }
-    
+
     func replaceInBackground(
         target: Exercise,
         template: WorkoutTemplate,
@@ -92,7 +92,7 @@ struct ExerciseModifier {
         template.exercises[idx] = detailed
         ctx.userData.updateTemplate(template: template)
     }
-    
+
     @MainActor static func detailed(
         exercise: Exercise,
         exerciseData: ExerciseData,
@@ -106,7 +106,7 @@ struct ExerciseModifier {
             nextWeek: false
         )
     }
-    
+
     @MainActor static func detailed(exercise: Exercise, ctx: AppContext) -> Exercise {
         return ctx.userData.calculateDetailedExercise(
             exerciseData: ctx.exercises,
@@ -123,7 +123,7 @@ struct ExerciseModifier {
         user.updateTemplate(template: template)
         return exercise.name
     }
-    
+
     private func removeSupersetForDeletedExercise(_ deletedExercise: Exercise, from template: inout WorkoutTemplate) {
         let deletedID = deletedExercise.id.uuidString
 
@@ -151,7 +151,7 @@ struct ExerciseModifier {
             userData.evaluation.dislikedExercises.insert(exerciseId)
         }
     }
-    
+
     /// Establish / clear a 2‑way superset relationship and keep the paired
     /// exercises adjacent. The *edited* exercise stays where it is; the
     /// partner is moved next to it (before if the partner originally came
@@ -168,10 +168,10 @@ struct ExerciseModifier {
         }
         let myID  = exercise.id.uuidString
         var me    = template.exercises[myIdx]   // working copy
-        
+
         // Normalize partner selection
         let newPartnerID: String? = (newValue == "None") ? nil : newValue
-        
+
         // ------------------------------------------------------------------
         // Break OLD link if it's changing
         // ------------------------------------------------------------------
@@ -181,12 +181,12 @@ struct ExerciseModifier {
             }
             me.isSupersettedWith = nil
         }
-        
+
         // Also clear any stray reverse link pointing *to me* unless it matches newPartnerID
         for i in template.exercises.indices where template.exercises[i].isSupersettedWith == myID && template.exercises[i].id.uuidString != newPartnerID {
             template.exercises[i].isSupersettedWith = nil
         }
-        
+
         // ------------------------------------------------------------------
         // Clearing case → done
         // ------------------------------------------------------------------
@@ -195,7 +195,7 @@ struct ExerciseModifier {
             exercise = me
             return
         }
-        
+
         // Prevent self‑link
         if partnerID == myID {
             print("⚠️ Attempted to superset exercise with itself; ignoring.")
@@ -203,7 +203,7 @@ struct ExerciseModifier {
             exercise = me
             return
         }
-        
+
         // ------------------------------------------------------------------
         // Find partner
         // ------------------------------------------------------------------
@@ -214,7 +214,7 @@ struct ExerciseModifier {
             return
         }
         var partner = template.exercises[partnerIdx0]
-        
+
         // Break partner's old link if not me
         if let pOld = partner.isSupersettedWith, pOld != myID {
             if let otherIdx = template.exercises.firstIndex(where: { $0.id.uuidString == pOld }) {
@@ -222,27 +222,27 @@ struct ExerciseModifier {
             }
             partner.isSupersettedWith = nil
         }
-        
+
         // ------------------------------------------------------------------
         // Link the two in local copies
         // ------------------------------------------------------------------
         me.isSupersettedWith      = partnerID
         partner.isSupersettedWith = myID
-        
+
         // ------------------------------------------------------------------
         // Reorder so pair is adjacent (move partner next to me)
         // ------------------------------------------------------------------
         var exercises = template.exercises   // temp working array
-        
+
         // Remove partner at its original index
         let removed = exercises.remove(at: partnerIdx0)
-        
+
         if partnerIdx0 < myIdx {
             // Partner was *before* me → insert BEFORE current me index (which shifted -1 after removal)
             // After removal, my exercise has slid back by 1.
             let newMyIdx = myIdx - 1
             exercises.insert(removed, at: newMyIdx)
-            
+
             // After insert: partner at newMyIdx, me at newMyIdx + 1
         } else if partnerIdx0 > myIdx {
             // Partner was *after* me → insert AFTER me (index myIdx + 1; unaffected by removal)
@@ -252,7 +252,7 @@ struct ExerciseModifier {
             // Should never happen (same index), but guard anyway
             exercises.insert(removed, at: myIdx + 1)
         }
-        
+
         // ------------------------------------------------------------------
         // Write updated copies back into their final slots
         // ------------------------------------------------------------------
@@ -265,15 +265,15 @@ struct ExerciseModifier {
             print("Superset: lost track of partner after reorder.")
             return
         }
-        
+
         exercises[finalMyIdx]      = me
         exercises[finalPartnerIdx] = partner
-        
+
         // Commit back to template & caller
         template.exercises = exercises
         exercise = me
     }
-    
+
     func addNewSet(_ exercise: Exercise, from template: inout WorkoutTemplate, user: UserData) {
         if let index = template.exercises.firstIndex(where: { $0.id == exercise.id }) {
             let newSetNumber = template.exercises[index].workingSets + 1
@@ -286,7 +286,7 @@ struct ExerciseModifier {
             user.updateTemplate(template: template)
         }
     }
-    
+
     func deleteSet(_ exercise: Exercise, from template: inout WorkoutTemplate, user: UserData) {
         if let index = template.exercises.firstIndex(where: { $0.id == exercise.id }) {
             guard !template.exercises[index].setDetails.isEmpty else { return }
@@ -295,5 +295,3 @@ struct ExerciseModifier {
         }
     }
 }
-
-

@@ -33,7 +33,7 @@ struct SetDetailHistory: View {
                     .pickerStyle(MenuPickerStyle())
                 }
                 .centerHorizontally()
-                
+
                 ScrollView {
                     ForEach(sortedExercise, id: \.self) { workout in
                         VStack(alignment: .leading) {
@@ -63,7 +63,7 @@ struct SetDetailHistory: View {
         let filteredWorkouts = completedWorkouts.filter { workout in
             workout.template.exercises.contains(where: { $0.id == exerciseId })
         }
-        
+
         switch selectedSortOption {
         case .mostRecent:
             return filteredWorkouts.sorted { $0.date > $1.date }

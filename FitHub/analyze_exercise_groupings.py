@@ -25,7 +25,7 @@ def extract_movement_pattern(name: str) -> Tuple[str, str]:
     Returns (base_movement, equipment_type)
     """
     name_lower = normalize_name(name)
-    
+
     # Equipment indicators
     equipment_keywords = {
         'barbell': 'barbell',
@@ -52,13 +52,13 @@ def extract_movement_pattern(name: str) -> Tuple[str, str]:
         't-bar': 't-bar',
         't bar': 't-bar',
     }
-    
+
     equipment = 'free-weight'  # default
     for keyword, eq_type in equipment_keywords.items():
         if keyword in name_lower:
             equipment = eq_type
             break
-    
+
     # Base movement patterns (order matters - more specific first)
     movements = {
         # Bench press variations (group together)
@@ -266,13 +266,13 @@ def extract_movement_pattern(name: str) -> Tuple[str, str]:
         'weighted dead hang': 'hang',
         'single-arm dead hang': 'hang',
     }
-    
+
     base_movement = 'other'
     for pattern, movement in sorted(movements.items(), key=lambda x: -len(x[0])):
         if pattern in name_lower:
             base_movement = movement
             break
-    
+
     return (base_movement, equipment)
 
 
@@ -283,24 +283,24 @@ def analyze_exercises():
     if not EXERCISES_PATH.exists():
         print(f"❌ {EXERCISES_PATH} not found")
         sys.exit(1)
-    
+
     try:
         with EXERCISES_PATH.open("r", encoding="utf-8") as f:
             exercises = json.load(f)
     except Exception as e:
         print(f"❌ Failed to read {EXERCISES_PATH}: {e}")
         sys.exit(1)
-    
+
     if not isinstance(exercises, list):
         print(f"❌ Expected exercises.json to be a list, got {type(exercises)}")
         sys.exit(1)
-    
+
     print(f"📊 Analyzing {len(exercises)} exercises...\n")
-    
+
     # Group by movement pattern only (ignore equipment and muscle)
     groups: Dict[str, List[Dict]] = defaultdict(list)
     ungrouped: List[Dict] = []
-    
+
     # Specific fixes for exercises that need special handling
     specific_fixes = {
         'glute-ham raise': 'glute-bridge',
@@ -312,35 +312,35 @@ def analyze_exercises():
         'bench pin press': 'bench-press',
         'jm press': 'bench-press',
     }
-    
+
     for exercise in exercises:
         name = exercise.get('name', '').strip()
         if not name:
             continue
-        
+
         # Check for specific fixes first
         name_lower = normalize_name(name)
         movement = None
-        
+
         for fix_name, fix_movement in specific_fixes.items():
             if fix_name in name_lower:
                 movement = fix_movement
                 break
-        
+
         # If no specific fix, extract movement pattern
         if not movement:
             movement, _ = extract_movement_pattern(name)
-        
+
         # Group by movement pattern only
         if movement == 'other':
             ungrouped.append(exercise)
         else:
             groups[movement].append(exercise)
-    
+
     # Filter groups - only keep groups with 2+ exercises
     meaningful_groups = {k: v for k, v in groups.items() if len(v) >= 2}
     single_exercises = {k: v[0] for k, v in groups.items() if len(v) == 1}
-    
+
     # Define similar groups that should be adjacent
     similar_groups = {
         'bench-press': ['bench-press', 'chest-press', 'floor-press'],
@@ -352,11 +352,11 @@ def analyze_exercises():
         'hold': ['hold', 'plank'],  # Hold, then Plank
         'shoulder-press': ['shoulder-press', 'shoulder-rotation', 'shoulder-raise', 'face-pull', 'shrug'],  # Shoulder groups in order
     }
-    
+
     # Create ordered list of groups (similar ones together)
     ordered_groups = []
     processed = set()
-    
+
     # First, add groups with similar counterparts
     for main_group, similar_list in similar_groups.items():
         if main_group in meaningful_groups:
@@ -367,12 +367,12 @@ def analyze_exercises():
                 if similar != main_group and similar in meaningful_groups and similar not in processed:
                     ordered_groups.append((similar, meaningful_groups[similar]))
                     processed.add(similar)
-    
+
     # Add remaining groups
     for movement, group_exercises in sorted(meaningful_groups.items()):
         if movement not in processed:
             ordered_groups.append((movement, group_exercises))
-    
+
     # Print results
     print("=" * 80)
     print("EXERCISE GROUPINGS")
@@ -385,7 +385,7 @@ def analyze_exercises():
     print("-> New Name will be renamed later.")
     print("=" * 80)
     print()
-    
+
     # Read existing file to preserve user's manual markers (do this once before printing groups)
     existing_markers = {}
     try:
@@ -423,7 +423,7 @@ def analyze_exercises():
                         existing_markers[exercise_name] = 'rename:<<PLACEHOLDER>>'
     except FileNotFoundError:
         pass  # File doesn't exist yet, that's okay
-    
+
     group_num = 1
     for movement, group_exercises in ordered_groups:
         # Special handling for group names
@@ -441,11 +441,11 @@ def analyze_exercises():
         # AB ROLLOUT group name stays as is
         print(f"Group {group_num}: {group_name}")
         print(f"  Exercises ({len(group_exercises)}):")
-        
+
         # Smart sorting: group similar exercises together
         def smart_sort_key(ex):
             name = ex.get('name', '').lower()
-            
+
             # Define base type order (lower number = earlier in sort)
             base_type_order = {
                 'lateral raise': 0,
@@ -454,12 +454,12 @@ def analyze_exercises():
                 'external rotation': 3,
                 'internal rotation': 4,
             }
-            
+
             # Extract base movement type (e.g., "lateral raise", "front raise", "y raise")
             # Check for specific patterns in order of specificity
             base_type = None
             base_type_rank = 999
-            
+
             if 'lateral raise' in name:
                 base_type = 'lateral raise'
                 base_type_rank = base_type_order.get('lateral raise', 999)
@@ -478,7 +478,7 @@ def analyze_exercises():
             else:
                 # For other exercises, use the full name for alphabetical sorting
                 base_type_rank = 999
-            
+
             # For rotation exercises: special grouping
             # Cable External goes first, then group all External together, then all Internal together
             if base_type in ['external rotation', 'internal rotation']:
@@ -492,12 +492,12 @@ def analyze_exercises():
                     rotation_group = 999
                 # Within each rotation group, sort alphabetically
                 return (base_type_rank, rotation_group, name)
-            
+
             # For other exercises, sort alphabetically within each base type
             # Return tuple: (base_type_rank, full_name)
             # This groups by base type first, then alphabetically within each group
             return (base_type_rank, name)
-        
+
         for ex in sorted(group_exercises, key=smart_sort_key):
             name = ex.get('name', '')
             # Check for existing markers from the file
@@ -551,17 +551,17 @@ def analyze_exercises():
                 print(f"    - {name}")
         print()
         group_num += 1
-    
+
     print("=" * 80)
     print("EXERCISES THAT DON'T FIT INTO GROUPS")
     print("=" * 80)
     print()
-    
+
     # Combine single exercises and ungrouped
     all_ungrouped = list(single_exercises.values()) + ungrouped
     for ex in sorted(all_ungrouped, key=lambda x: x.get('name', '')):
         print(f"  - {ex.get('name')}")
-    
+
     print()
     print("=" * 80)
     print("SUMMARY")
@@ -575,4 +575,3 @@ def analyze_exercises():
 
 if __name__ == "__main__":
     analyze_exercises()
-

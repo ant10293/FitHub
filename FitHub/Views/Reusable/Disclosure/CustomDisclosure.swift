@@ -42,7 +42,7 @@ struct CustomDisclosure<ValueView: View, ExtraView: View, Content: View>: View {
 
     var body: some View {
         let padding = usePadding ? screenWidth * 0.04 : 0
-        
+
         return VStack(spacing: 0) {
             Button(action: onTap) {
                 HStack {

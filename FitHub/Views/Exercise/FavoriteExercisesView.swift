@@ -15,7 +15,7 @@ struct FavoriteExercisesView: View {
             VStack {
                 SearchBar(text: $searchText, placeholder: "Search Exercises")
                     .padding(.horizontal)
-                
+
                 Picker("Filter", selection: $selectedFilter) {
                     ForEach(ExerciseFilter.allCases) { filter in
                         Text(filter.rawValue).tag(filter)
@@ -24,7 +24,7 @@ struct FavoriteExercisesView: View {
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
                 .padding(.top, 8)
-                
+
                 List {
                     if filteredExercises.isEmpty {
                         // Display a message if no exercises match the filter
@@ -88,24 +88,24 @@ struct FavoriteExercisesView: View {
             }
         }
     }
-    
+
     enum ExerciseFilter: String, CaseIterable, Identifiable {
         case favorites = "Favorites"
         case disliked = "Disliked"
         case all = "All Exercises"
-        
+
         var id: String { self.rawValue }
     }
-    
+
     private func emptyLists() -> Bool {
         return ctx.userData.evaluation.favoriteExercises.isEmpty && ctx.userData.evaluation.dislikedExercises.isEmpty
     }
-    
+
     private func removeAll() {
         ctx.userData.evaluation.favoriteExercises.removeAll()
         ctx.userData.evaluation.dislikedExercises.removeAll()
     }
-    
+
     private var filteredExercises: [Exercise] {
         ctx.exercises.filteredExercises(
             searchText: searchText,
@@ -125,7 +125,7 @@ struct RatingIcon: View {
     let size: Image.Scale
     let onFavorite: () -> Void
     let onDislike: () -> Void
-    
+
     init(
         exercise: Exercise,
         favState: FavoriteState,

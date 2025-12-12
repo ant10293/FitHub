@@ -25,9 +25,9 @@ struct GymEquipment: Identifiable, Hashable, Codable {
 }
 extension GymEquipment {
     var fullImagePath: String { return "Equipment/\(image)" }
-    
+
     var fullImage: Image { getFullImage(image, fullImagePath) }
-    
+
     var fullImageView: some View {
         fullImage
             .resizable()
@@ -47,7 +47,7 @@ extension GymEquipment {
             return nil
         }
     }
-    
+
     static var defaultEquipment: GymEquipment {
         return .init(
             id: UUID(),
@@ -95,17 +95,15 @@ enum EquipmentCategory: String, CaseIterable, Identifiable, Codable {
     case cardioMachines = "Cardio Machines"
     case attachments = "Attachments"
     case other = "Other"
-    
+
     var id: String { self.rawValue }
-    
+
     // Function to concatenate EquipmentCategory names
     static func concatenateEquipCategories(for categories: [EquipmentCategory]) -> String {
         return categories.map { $0.rawValue }.joined(separator: ", ")
     }
-    
+
     static let machineCats: Set<EquipmentCategory> = [.platedMachines, .weightMachines, .cableMachines, .cardioMachines]
     static let freeWeightCats: Set<EquipmentCategory> = [.smallWeights, .barsPlates]
     static let platedCats: Set<EquipmentCategory> = [.platedMachines, .smallWeights, .barsPlates]
 }
-
-

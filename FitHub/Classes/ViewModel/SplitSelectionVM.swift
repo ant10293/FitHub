@@ -23,7 +23,7 @@ final class SplitSelectionVM: ObservableObject {
 
     // Keep a copy so we know when the user really changed something
     private var originalSelections: [DaysOfWeek: [SplitCategory]] = [:]
-    
+
     var hasUnsavedChanges: Bool { selections != originalSelections }
 
 
@@ -68,10 +68,10 @@ final class SplitSelectionVM: ObservableObject {
             set: { self.selections[key] = $0 }
         )
     }
-    
+
     /// Returns true when `cat` should be drawn as a button.
     func shouldShow(_ cat: SplitCategory, in list: [SplitCategory]) -> Bool {
-        let legFocused = list.contains(.legs) && SplitCategory.legsFocus.contains(cat) 
+        let legFocused = list.contains(.legs) && SplitCategory.legsFocus.contains(cat)
         return !(legFocused && list.contains(cat))
     }
 
@@ -120,10 +120,10 @@ final class SplitSelectionVM: ObservableObject {
         if list.contains(.legs)  {
             return "Legs: " + focusFormatted.joined(separator: ", ") + " focus"
         }
-        
+
         return category.rawValue
     }
-    
+
     // (single-day mode only)
     func saveIfNeeded(singleSave: (([SplitCategory]) -> Void)? = nil) {
         // • multi-day mode keeps the old code unchanged
@@ -156,7 +156,7 @@ final class SplitSelectionVM: ObservableObject {
     }
 
     func clearDay(_ day: DaysOfWeek? = nil) { binding(for: day).wrappedValue.removeAll() }
-    
+
     func clearAll() { for day in workoutDays { selections[day] = [] } }
 
     func revertChanges() { selections = originalSelections }

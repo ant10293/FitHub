@@ -74,8 +74,8 @@ struct EquipmentSelectionContent: View {
             .padding([.horizontal, .bottom])
         }
     }
-    
-    
+
+
     private var filtered: [GymEquipment] {
         let cat: EquipmentCategory? = (selectedCategory == .all ? nil : selectedCategory)
         return ctx.equipment.filteredEquipment(searchText: searchText, category: cat)

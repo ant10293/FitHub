@@ -17,7 +17,7 @@ enum CategorySelections: Hashable {
     case resistanceType(ResistanceType)
     case effortType(EffortType)
     case limbMovement(LimbMovementType)
-  
+
     var title: String {
         switch self {
         case .split(let s): return s.rawValue
@@ -36,12 +36,12 @@ enum FavoriteState: String, CaseIterable {
     case favorite = "Favorite"
     case disliked = "Disliked"
     case unmarked = "Unmarked"
-    
+
     static func getState(for exercise: Exercise, userData: UserData) -> FavoriteState {
         return userData.evaluation.favoriteExercises.contains(exercise.id) ? .favorite
         : (userData.evaluation.dislikedExercises.contains(exercise.id) ? .disliked : .unmarked)
     }
-    
+
     var systemImageName: (String?, Color?) {
         switch self {
         case .favorite: ("heart.fill", .red)
@@ -64,26 +64,26 @@ enum PushPull: String, Codable, CaseIterable {
 
 enum ExerciseSortOption: String, Codable, CaseIterable, Equatable {
     case simple = "Simple"     // Sort by Simple: All, Back, Legs, Arms, Abs, Shoulders, Chest, Biceps, Triceps
-    
+
     case moderate = "Moderate"     // Sort by Moderate: All, Back, Quads, Calves, Hamstrings, Glutes, Abs, Shoulders, Chest, Biceps, Triceps, Forearms
-    
+
     case complex = "Complex"     // Sort by Complex: All, Abs, Chest, Shoulders, Biceps, Triceps, Trapezius, Latissimus Dorsi, Erector Spinae, Quadriceps, Gluteus, Hamstrings, Hip Flexors, Stabilizers, Calves, Forearms, Neck
-    
+
     case upperLower = "Upper/Lower"     // Sort by Upper Lower: Upper Body, Lower Body
-    
+
     case pushPull = "Push/Pull/Legs"     // Sort by Push Pull: Push, Pull, Legs
-    
+
     case difficulty = "Difficulty" // Sort by Beginner, Novice, Intermediate, Advanced, Elite
-    
+
     case resistanceType = "Resistance Type" // Sort by Bodyweight, Weighted, Free Weight, Machine*
-    
+
     case effortType = "Effort Type" // Sort by Bodyweight, Weighted, Free Weight, Machine*
-    
+
     case limbMovement = "Limb Movement"
-    
+
     // Sort by template categories ([SplitCategory])
     case templateCategories = "Template Categories" // removes exercises and categories that are not in the template categories
-    
+
     func getDefaultSelection(templateCategories: [SplitCategory]?) -> CategorySelections {
         switch self {
         case .simple, .moderate: return .split(.all)
@@ -113,10 +113,10 @@ enum ResistanceType: String, CaseIterable, Identifiable, Codable {
     case bodyweight = "Bodyweight"
     case freeWeight = "Free Weight"
     case machine = "Machine"
-    case banded = "Banded" 
-    
+    case banded = "Banded"
+
     var id: String { self.rawValue }
-  
+
     static let forExercises: [ResistanceType] = [
         .freeWeight, .bodyweight, .machine, .banded
     ]
@@ -141,7 +141,7 @@ enum LimbMovementType: String, Codable, CaseIterable {
     case unilateral = "Unilateral" // One limb working at a time (e.g., glute kickbacks)
     case bilateralIndependent = "Bilateral Independent" // Both limbs work separately but simultaneously (e.g., dumbbell shoulder press)
     case bilateralDependent = "Bilateral Dependent" // Both limbs work together (e.g., bench press, squat)
-    
+
     var description: String {
         switch self {
         case .unilateral:
@@ -152,12 +152,12 @@ enum LimbMovementType: String, Codable, CaseIterable {
             return "Both limbs working together at the same time"
         }
     }
-    
+
     var displayInfoText: Text {
         Text("Limb movement: ").bold() + Text(self.rawValue) + Text("\n ") +
         Text(self.description).foregroundStyle(.secondary).font(.caption)
     }
-    
+
     // for volume calculations
     var repsMultiplier: Int { switch self { case .unilateral: 2; default: 1 } }
     var weightMultiplier: Double { switch self { case .bilateralIndependent: 2; default: 1 } }
@@ -169,11 +169,11 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
     case isometric  = "Isometric"   // joint angle static, time-based load
     case plyometric = "Plyometric"
     case cardio     = "Cardio"      // primarily metabolic
-    
+
     var id: String { self.rawValue }
-    
+
     static let strengthTypes: [EffortType] = [.compound, .isolation, .isometric, .plyometric]
-        
+
     var usesReps: Bool {
         switch self {
         case .compound, .isolation, .plyometric:
@@ -182,7 +182,7 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
             return false
         }
     }
-    
+
     // TODO: order in which the exercise with type should occur in the generated workout
     var order: Int {
         switch self {
@@ -193,7 +193,7 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
         case .cardio: return 5
         }
     }
-    
+
     var recommenedPct: ClosedRange<Int>? {
         switch self {
         case .compound: return 30...100
@@ -217,7 +217,7 @@ struct ExerciseInstructions: Codable, Hashable {
     init(steps: [String] = []) { self.steps = steps }
 
     var count: Int { steps.count }
-    
+
     var newStepNumber: Int { count + 1 }
 
     func step(at index: Int) -> String? {
@@ -263,7 +263,7 @@ struct RPEentry: Hashable, Codable {
 
 struct RPEentries: Hashable, Codable {
     var entries: [RPEentry]
-    
+
     var avgRPE: Double? {
         guard !entries.isEmpty else { return nil }
         let sum = entries.reduce(0.0) { $0 + $1.rpe }

@@ -12,7 +12,7 @@ struct AddCategoryPicker: View {
     let exercise: Exercise
     let existingCategories: Set<AdjustmentCategory>
     let onAddCategory: (AdjustmentCategory) -> Void
-    
+
     var body: some View {
         NavigationStack {
             List {
@@ -25,7 +25,7 @@ struct AddCategoryPicker: View {
                             VStack(alignment: .leading) {
                                 Text(category.rawValue)
                                     .foregroundStyle(Color.primary)
-                                
+
                                 // Adjustment image
                                 Image(category.image)
                                     .resizable()
@@ -33,9 +33,9 @@ struct AddCategoryPicker: View {
                                     .frame(height: screenHeight * 0.1)
                                     .clipShape(RoundedRectangle(cornerRadius: 6))
                             }
-                            
+
                             Spacer()
-                            
+
                             Image(systemName: "plus.circle")
                                 .foregroundStyle(Color.secondary)
                         }
@@ -52,7 +52,7 @@ struct AddCategoryPicker: View {
             }
         }
     }
-    
+
     var availableCategories: [AdjustmentCategory] {
         AdjustmentCategory.allCases.filter { !existingCategories.contains($0) }
     }

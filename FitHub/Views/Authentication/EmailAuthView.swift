@@ -17,7 +17,7 @@ struct EmailAuthView: View {
     @FocusState private var focusedField: Field?
     let onSuccess: () -> Void
     let onFailure: (Error) -> Void
-    
+
     var body: some View {
         Form {
             switch flowStep {
@@ -33,20 +33,20 @@ struct EmailAuthView: View {
         .disabled(isProcessing)
         .overlay { if isProcessing { ProgressView() } }
     }
-    
+
     // MARK: - Shared footer
-    
+
     private var footerContent: some View {
         VStack(alignment: .leading, spacing: 8) {
             ErrorFooter(message: errorMessage)
 
-            
+
             RectangularButton(
                 title: flowStep.buttonTitle,
                 enabled: !isProcessing,
                 action: handlePrimaryAction
             )
-            
+
             if flowStep.showsAlternateEmailOption {
                 Button("Use a different email") {
                     resetToEmailEntry()
@@ -59,9 +59,9 @@ struct EmailAuthView: View {
         .padding(.top)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
-    
+
     // MARK: - Sections
-    
+
     private var emailEntrySection: some View {
         Section {
             TextField("Email", text: $email)
@@ -79,14 +79,14 @@ struct EmailAuthView: View {
             footerContent
         }
     }
-    
+
     private var existingAccountSection: some View {
         Group {
             emailSection
-            
+
             Section {
                 passwordField
-                
+
                 Button("Forgot password?") {
                     sendPasswordReset()
                 }
@@ -102,11 +102,11 @@ struct EmailAuthView: View {
             }
         }
     }
-    
+
     private var newAccountSection: some View {
         Group {
             emailSection
-            
+
             Section {
                 passwordField
                 SecureField("Confirm Password", text: $confirmPassword)
@@ -119,12 +119,12 @@ struct EmailAuthView: View {
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
             }
-            
+
             Section {
                 TextField("First Name", text: $firstName)
                     .textContentType(.givenName)
                     .focused($focusedField, equals: .firstName)
-                
+
                 TextField("Last Name", text: $lastName)
                     .textContentType(.familyName)
                     .focused($focusedField, equals: .lastName)
@@ -138,9 +138,9 @@ struct EmailAuthView: View {
             }
         }
     }
-    
+
     // MARK: - Actions (unchanged)
-    
+
     private func handlePrimaryAction() {
         switch flowStep {
         case .emailEntry:
@@ -151,11 +151,11 @@ struct EmailAuthView: View {
             handleCreateAccount()
         }
     }
-    
+
     private func handleEmailContinue() {
         focusedField = nil
         errorMessage = nil
-        
+
         let normalizedEmail = email.trimmed.lowercased()
         guard !normalizedEmail.isEmpty else {
             errorMessage = "Email is required."
@@ -167,7 +167,7 @@ struct EmailAuthView: View {
             focusedField = .email
             return
         }
-        
+
         isProcessing = true
         Task {
             do {
@@ -175,7 +175,7 @@ struct EmailAuthView: View {
                 let result = try await callable.call(["email": normalizedEmail])
                 let data = result.data as? [String: Any]
                 let exists = data?["exists"] as? Bool ?? false
-                
+
                 await MainActor.run {
                     isProcessing = false
                     email = normalizedEmail
@@ -184,7 +184,7 @@ struct EmailAuthView: View {
                     firstName = ""
                     lastName = ""
                     errorMessage = nil
-                    
+
                     if exists {
                         flowStep = .existingAccount
                         focusedField = .password
@@ -201,46 +201,46 @@ struct EmailAuthView: View {
             }
         }
     }
-    
+
     private func handleSignIn() {
         focusedField = nil
         errorMessage = nil
-        
+
         let normalizedEmail = email.trimmed.lowercased()
         let trimmedPassword = password.trimmed
-        
+
         guard !trimmedPassword.isEmpty else {
             errorMessage = "Password is required."
             focusedField = .password
             return
         }
-        
+
         isProcessing = true
         signIn(email: normalizedEmail, password: trimmedPassword)
     }
-    
+
     private func handleCreateAccount() {
         focusedField = nil
         errorMessage = nil
-        
+
         let normalizedEmail = email.trimmed.lowercased()
         let trimmedPassword = password.trimmed
         let trimmedConfirm = confirmPassword.trimmed
         let trimmedFirst = firstName.trimmed
         let trimmedLast = lastName.trimmed
-        
+
         guard trimmedPassword.count >= 6 else {
             errorMessage = "Password must be at least 6 characters."
             focusedField = .password
             return
         }
-        
+
         guard trimmedPassword == trimmedConfirm else {
             errorMessage = "Passwords do not match."
             focusedField = .confirmPassword
             return
         }
-        
+
         isProcessing = true
         register(
             email: normalizedEmail,
@@ -249,7 +249,7 @@ struct EmailAuthView: View {
             lastName: trimmedLast
         )
     }
-    
+
     private func resetToEmailEntry() {
         flowStep = .emailEntry
         password = ""
@@ -259,7 +259,7 @@ struct EmailAuthView: View {
         errorMessage = nil
         focusedField = .email
     }
-    
+
     private func signIn(email: String, password: String) {
         AuthService.shared.signInWithEmail(email: email, password: password, into: userData) { result in
             DispatchQueue.main.async {
@@ -295,7 +295,7 @@ struct EmailAuthView: View {
             }
         }
     }
-    
+
     private func register(email: String, password: String, firstName: String, lastName: String) {
         AuthService.shared.registerWithEmail(
             email: email,
@@ -317,7 +317,7 @@ struct EmailAuthView: View {
             }
         }
     }
-    
+
     private func sendPasswordReset() {
         let normalizedEmail = email.trimmed.lowercased()
         guard !normalizedEmail.isEmpty else {
@@ -325,7 +325,7 @@ struct EmailAuthView: View {
             focusedField = .email
             return
         }
-        
+
         isProcessing = true
         Auth.auth().sendPasswordReset(withEmail: normalizedEmail) { error in
             DispatchQueue.main.async {
@@ -339,7 +339,7 @@ struct EmailAuthView: View {
             }
         }
     }
-    
+
     private var emailSection: some View {
         Section {
             Text(email)
@@ -353,9 +353,9 @@ struct EmailAuthView: View {
                 .foregroundStyle(.secondary)
         }
     }
-    
+
     // MARK: - Password field (no label now; label is Section header)
-    
+
     private var passwordField: some View {
         Group {
             if isPasswordVisible {
@@ -375,12 +375,12 @@ struct EmailAuthView: View {
             action: { isPasswordVisible.toggle() }
         )
     }
-    
+
     // MARK: - Types
-    
+
     private enum FlowStep {
         case emailEntry, existingAccount, newAccount
-        
+
         var buttonTitle: String {
             switch self {
             case .emailEntry: return "Continue"
@@ -388,7 +388,7 @@ struct EmailAuthView: View {
             case .newAccount: return "Create Account"
             }
         }
-        
+
         var navBarTitle: String {
             switch self {
             case .emailEntry, .existingAccount:
@@ -397,12 +397,12 @@ struct EmailAuthView: View {
                 return "Create Account"
             }
         }
-        
+
         var showsAlternateEmailOption: Bool {
             self != .emailEntry
         }
     }
-    
+
     private enum Field {
         case email, password, confirmPassword, firstName, lastName
     }

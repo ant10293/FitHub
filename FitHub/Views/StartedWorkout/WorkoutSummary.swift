@@ -50,7 +50,7 @@ struct WorkoutSummary: View {
         private var maxSeconds: Int {
             exercises.compactMap { timeByExercise[$0.id] }.max() ?? 0
         }
-        
+
         private var useSeconds: Bool { maxSeconds < 60 }
 
         private var chartData: [Double] {
@@ -107,7 +107,7 @@ struct WorkoutSummary: View {
                     }
                 }
                 .frame(height: screenWidth * 0.33)
-                
+
                 // Show exercise names below chart with vertically aligned indexes
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(alignment: .top, spacing: screenWidth * 0.04) {

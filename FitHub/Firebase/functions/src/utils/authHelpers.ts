@@ -42,6 +42,3 @@ export function requireString(value: string, fieldName: string): void {
     throw new functions.https.HttpsError("invalid-argument", `${fieldName} is required`);
   }
 }
-
-
-

@@ -10,7 +10,7 @@ import SwiftUI
 enum ImageStorageLevel: String, CaseIterable {
     case equipment = "Equipment Level"
     case exercise = "Exercise Level"
-    
+
     func description(hasExistingEquipmentImage: Bool, associatedEquipment: GymEquipment?) -> String {
         switch self {
         case .equipment:
@@ -20,7 +20,7 @@ enum ImageStorageLevel: String, CaseIterable {
             } else {
                equipmentLabel = "this equipment"
             }
-            
+
             if hasExistingEquipmentImage {
                 return "This will overwrite the existing equipment-level image shared across all exercises using \(equipmentLabel)."
             } else {
@@ -38,7 +38,7 @@ struct AdjustmentImageUpload: View {
     var hasExistingEquipmentImage: Bool = false
     let associatedEquipment: GymEquipment?
     var onImagePicked: (String, ImageStorageLevel) -> Void
-        
+
     var body: some View {
         VStack(spacing: 20) {
             // Storage level picker
@@ -50,7 +50,7 @@ struct AdjustmentImageUpload: View {
                         }
                     }
                     .pickerStyle(.segmented)
-                    
+
                     WarningFooter(
                         message: storageLevel.description(
                             hasExistingEquipmentImage: hasExistingEquipmentImage,
@@ -63,7 +63,7 @@ struct AdjustmentImageUpload: View {
                 }
                 .padding(.horizontal)
             }
-            
+
             // Wrapped UploadImage
             UploadImage(initialFilename: initialFilename) { filename in
                 // if we aren't showing storage level equipment, its because theres no associated equipment
@@ -73,13 +73,12 @@ struct AdjustmentImageUpload: View {
             }
         }
     }
-    
+
     private var showStorageLevelPicker: Bool {
         associatedEquipment != nil
     }
-    
+
     private var isWarning: Bool {
         hasExistingEquipmentImage && storageLevel == .equipment
     }
 }
-

@@ -41,7 +41,7 @@ final class AppContext: ObservableObject {
         stitch(exercises)
         stitch(equipment)
         stitch(store)
-        
+
         // Kick StoreKit once at startup
         Task { await store.configure() }
     }
@@ -65,7 +65,7 @@ final class AppContext: ObservableObject {
         let blankAdjustments = AdjustmentsData()
         let blankExercises = ExerciseData()
         let blankEquipment = EquipmentData()
-        
+
         replaceData(
             userData: blankUserData,
             adjustments: blankAdjustments,
@@ -79,14 +79,14 @@ final class AppContext: ObservableObject {
         let loadedAdjustments = AdjustmentsData()
         let loadedExercises = ExerciseData()
         let loadedEquipment = EquipmentData()
-        
+
         replaceData(
             userData: loadedUserData,
             adjustments: loadedAdjustments,
             exercises: loadedExercises,
             equipment: loadedEquipment
         )
-        
+
         replaceNotifications()
     }
 
@@ -109,7 +109,7 @@ final class AppContext: ObservableObject {
         stitch(equipment)
         stitch(store)
     }
-    
+
     private func replaceNotifications() {
         for template in userData.workoutPlans.allTemplates {
             var template = template
@@ -118,13 +118,12 @@ final class AppContext: ObservableObject {
             userData.updateTemplate(template: template)
         }
     }
-    
+
     var disableCreateWorkout: Bool {
         store.membershipType == .free && userData.workoutPlans.userTemplates.count >= 4
     }
-    
+
     var disableCreatePlan: Bool {
         store.membershipType == .free && userData.workoutPlans.workoutPlansGenerated >= 1
     }
 }
-

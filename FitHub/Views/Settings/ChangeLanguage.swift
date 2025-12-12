@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ChangeLanguage: View {
     @ObservedObject var userData: UserData
-    
+
     var body: some View {
         VStack {
             Picker("Language", selection: $userData.settings.userLanguage) {

@@ -12,7 +12,7 @@ struct SimilarExercisesRow: View {
     @State private var isLoading: Bool = false
     @Binding var loadedExercises: [Exercise]?
     let exercise: Exercise
-    
+
     var body: some View {
         Group {
             if let exercises = loadedExercises {
@@ -39,11 +39,11 @@ struct SimilarExercisesRow: View {
             }
         }
     }
-    
+
     private func loadIfNeeded() {
         guard !isLoading, loadedExercises == nil else { return }
         isLoading = true
-        
+
         // If you want this completely off the main thread, you can move the
         // heavy work into a detached Task; but often just doing it here is fine
         Task {
@@ -54,7 +54,7 @@ struct SimilarExercisesRow: View {
                 needPerformanceData: false,
                 canPerformRequirement: false
             )
-            
+
             await MainActor.run {
                 self.loadedExercises = result   // cache
                 self.isLoading = false

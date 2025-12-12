@@ -15,7 +15,7 @@ struct PercentileView: View {
     var body: some View {
         let maxValue = ctx.exercises.peakMetric(for: exercise.id) ?? exercise.getPeakMetric(metricValue: 0)
         let bw = Mass(kg: ctx.userData.currentMeasurementValue(for: .weight).actualValue)
-        
+
         VStack {
             switch selectedView {
             case .standards:
@@ -29,22 +29,22 @@ struct PercentileView: View {
                     maxValuesBW: CSVLoader.getMaxValues(for: exercise, key: .bodyweight, value: bw.inKg, userData: ctx.userData),
                     percentile: CSVLoader.calculateExercisePercentile(for: exercise, maxValue: maxValue.actualValue, userData: ctx.userData)
                 )
-                
+
             case .percentages:
                 Text("\(exercise.performanceTitle(includeInstruction: false)) Percentages")
                     .font(.title2)
                     .padding(.vertical)
-                
+
                 Text(maxValue.percentileHeader)
                     .font(.subheadline)
                     .foregroundStyle(.gray)
                     .multilineTextAlignment(.center)
                     .padding([.bottom, .horizontal])
-                
+
                 MaxTable(peak: maxValue)
                     .padding(.vertical)
             }
-            
+
             Picker("Options", selection: $selectedView) {
                 ForEach(ViewOption.allCases) { v in
                     Text(v.rawValue).tag(v)
@@ -54,11 +54,11 @@ struct PercentileView: View {
             .padding()
         }
     }
-    
+
     private enum ViewOption: String, CaseIterable, Identifiable {
         case standards = "Standards"
         case percentages = "Percentages"
-        
+
         var id: String { self.rawValue }
     }
 }

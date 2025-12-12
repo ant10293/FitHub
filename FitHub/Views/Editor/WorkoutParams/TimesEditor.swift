@@ -48,11 +48,11 @@ struct TimesEditor: View {
             }
         }
     }
-    
+
     private var isDefault: Bool {
         userData.workoutPrefs.customWorkoutTimes == nil
     }
-    
+
     // Fallback time used when no custom is set yet
     private var defaultComponents: DateComponents {
         userData.settings.defaultWorkoutTime ?? DateComponents(hour: 11, minute: 0)
@@ -86,7 +86,7 @@ struct TimesEditor: View {
         let h = comps.hour ?? 0
         let m = comps.minute ?? 0
         let base = CalendarUtility.shared.startOfDay(for: Date())
-        
+
         return CalendarUtility.shared.date(bySettingHour: h, minute: m, second: 0, of: base) ?? base
     }
 }

@@ -18,29 +18,27 @@ enum ReferralRetriever {
             .whereField("createdBy", isEqualTo: userId)
             .limit(to: 1)
             .getDocuments()
-        
+
         guard let code = snapshot.documents.first?.documentID else { return nil }
         print("✅ User \(userId) has referral code: \(code)")
         return code.trimmed.uppercased()
     }
-    
+
     static func getClaimedCode() async -> String? {
         guard let userId = AuthService.getUid() else { return nil }
-        
+
         do {
             let db = Firestore.firestore()
             let userRef = db.collection("users").document(userId)
             let userDoc = try await userRef.getDocument()
-            
+
             if let referralCode = userDoc.data()?["referralCode"] as? String, !referralCode.isEmpty {
                 return referralCode.trimmed.uppercased()
             }
         } catch {
             print("⚠️ Failed to retrieve referral code from Firestore: \(error.localizedDescription)")
         }
-        
+
         return nil
     }
 }
-
-

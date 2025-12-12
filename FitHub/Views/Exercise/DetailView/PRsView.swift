@@ -32,7 +32,7 @@ struct PRsView: View {
                     }
                 )
             }
-            
+
             if !showingUpdate1RMView {
                 RectangularButton(
                     title: "Update Max",

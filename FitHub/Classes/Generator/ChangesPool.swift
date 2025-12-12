@@ -14,14 +14,14 @@ struct PoolChanges  {
     var reasons: [ReasoningCount]
     var coverage: CoverageState?
     var relaxedFilters: [RelaxedFilter] = []
-    
+
     init() {
         self.reasons = ReductionReason.allCases.map { ReasoningCount(reason: $0) }
     }
-    
+
     enum RelaxedFilter: String, CaseIterable, Comparable {
         case resistance, effort, repCap, split, difficulty
-        
+
         /// Lower number = relaxed earlier
         var order: Int {
             switch self {
@@ -32,15 +32,15 @@ struct PoolChanges  {
             case .split:      return 4
             }
         }
-        
+
         static func ordered(excluding delayed: Set<RelaxedFilter>) -> [RelaxedFilter] {
             let base = Self.defaultOrder
             // Partition so that delayed types are moved last
             let (priority, postponed) = base.partitioned { !delayed.contains($0) }
-            
+
             return priority + postponed
         }
-        
+
         var label: String {
             switch self {
             case .difficulty: return "Difficulty"
@@ -50,7 +50,7 @@ struct PoolChanges  {
             case .split:      return "Split"
             }
         }
-        
+
         var correspondingReduction: ReductionReason {
             switch self {
             case .difficulty: return .tooDifficult
@@ -60,21 +60,21 @@ struct PoolChanges  {
             case .split: return .split
             }
         }
-        
+
         /// Convenience: canonical ordered list
         static var defaultOrder: [RelaxedFilter] {
             Self.allCases.sorted { $0.order < $1.order }
         }
-        
+
         static func < (lhs: RelaxedFilter, rhs: RelaxedFilter) -> Bool {
             lhs.order < rhs.order
         }
     }
-    
+
     enum ReductionReason: String, CaseIterable {
         // Filtering / eligibility removals
         case cannotPerform, disliked, resistance, effort, sets, repCap, repMin, split, noData, tooDifficult
-        
+
         var description: String {
             switch self {
             case .cannotPerform: return "Missing Required Equipment"
@@ -89,7 +89,7 @@ struct PoolChanges  {
             case .tooDifficult: return "Difficulty exceeds current level"
             }
         }
-        
+
         var hasAction: Bool {
             switch self {
             case .disliked, .resistance, .effort, .sets:
@@ -98,7 +98,7 @@ struct PoolChanges  {
                 return false
             }
         }
-        
+
         /*
          var recommenedAction: String {
          switch self {
@@ -114,7 +114,7 @@ struct PoolChanges  {
          }
          }
          */
-        
+
         var icon: String {
             switch self {
             case .cannotPerform: return "wrench.and.screwdriver"
@@ -129,7 +129,7 @@ struct PoolChanges  {
             case .tooDifficult:  return "chart.line.uptrend.xyaxis"
             }
         }
-        
+
         var tint: Color {
             switch self {
             case .noData:        .orange
@@ -145,23 +145,23 @@ struct PoolChanges  {
             }
         }
     }
-    
+
     struct ReasoningCount {
         let reason: ReductionReason
         var exerciseIDs: Set<Exercise.ID> = []
         var beforeCount: Int?
         var afterCount: Int?
-        
+
         var removed: Int? {
             guard let beforeCount, let afterCount else { return nil }
             return beforeCount - afterCount
         }
     }
-    
+
     mutating func updateCoverage(coverage: CoverageState) {
         self.coverage = coverage
     }
-    
+
     // NEW: bulk record
     mutating func record(
         reason: ReasoningCount? = nil,
@@ -173,7 +173,7 @@ struct PoolChanges  {
         if let before = reason.beforeCount { reasons[idx].beforeCount = before } // overwrite only when provided
         if let after = reason.afterCount { reasons[idx].afterCount = after }
     }
-    
+
     // MARK: - Clear (requested)
      /// Clears the collected IDs for a reason. Optionally clears the `removed` count too.
      mutating func clear(_ reason: ReductionReason) {
@@ -195,16 +195,16 @@ struct PoolChanges  {
 
 struct WorkoutChanges {
     private(set) var pool: [WorkoutTemplate.ID: PoolChanges] = [:]
-    
+
     /// True if ANY template relaxed at least one filter
     var didRelaxFilters: Bool {
         pool.values.contains { !$0.relaxedFilters.isEmpty }
     }
-    
+
     func pool(for id: WorkoutTemplate.ID) -> PoolChanges? {
         pool[id]
     }
-    
+
     mutating func record(
         templateID: WorkoutTemplate.ID,
         newPool: PoolChanges
@@ -226,12 +226,12 @@ struct DayChanges {
         guard let day = DaysOfWeek(rawValue: raw) else { return nil }
         return pool(for: day)
     }
-    
+
     /// Read-only view without creating
     func pool(for day: DaysOfWeek) -> PoolChanges? {
         pool[day]
     }
-    
+
     mutating func updateCoverage(
         dayRaw: DaysOfWeek.RawValue,
         coverage: CoverageState
@@ -239,7 +239,7 @@ struct DayChanges {
         guard let day = DaysOfWeek(rawValue: dayRaw) else { return }
         updateCoverage(day: day, coverage: coverage)
     }
-    
+
     mutating func updateCoverage(
         day: DaysOfWeek,
         coverage: CoverageState
@@ -248,7 +248,7 @@ struct DayChanges {
         reduction.updateCoverage(coverage: coverage)
         pool[day] = reduction
     }
-    
+
     // MARK: - Record by enum
     mutating func record(
         day: DaysOfWeek,
@@ -276,10 +276,9 @@ struct DayChanges {
         reduction.clear(reasons)
         pool[day] = reduction
     }
-    
+
     mutating func clear(dayRaw: DaysOfWeek.RawValue, reasons: [PoolChanges.ReductionReason]) {
         guard let day = DaysOfWeek(rawValue: dayRaw) else { return }
         clear(day: day, reasons: reasons)
     }
 }
-

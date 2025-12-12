@@ -43,27 +43,27 @@ struct RestTimeEditor: View {
                             .padding()
                     } else {
                         let width = calculateTextWidth(text: "00:00", minWidth: screenWidth * 0.2, maxWidth: screenWidth * 0.267)
-                        
+
                         ForEach(selectedSets.indices, id: \.self) { index in
                             VStack {
                                 HStack {
                                     Text("Set \(index + 1)")
                                     Spacer()
-                                    
+
                                     Button(action: { initializePicker(for: index) }) {
                                         let seconds = isActive(idx: index) ? pickerTime.inSeconds : effectiveRestSeconds(for: index)
-                                 
+
                                         FieldChrome(width: width) {
                                             Text(Format.timeString(from: seconds))
                                         }
                                     }
                                 }
                                 .padding()
-                                
+
                                 if isActive(idx: index) {
                                     Text("Adjust Rest Period for Set \(index + 1)")
                                         .font(.headline)
-                                    
+
                                     MinSecPicker(time: $pickerTime)
 
                                     HStack {
@@ -76,7 +76,7 @@ struct RestTimeEditor: View {
                                         }
                                     }
                                 }
-                                
+
                                 Divider()
                             }
                         }
@@ -92,7 +92,7 @@ struct RestTimeEditor: View {
             }
         }
     }
-    
+
     private func isActive(idx: Int) -> Bool {
         return showingRestPicker && currentRestSetIndex == idx
     }

@@ -19,12 +19,12 @@ struct ExerciseSetDisplay: View {
     @State private var planned: SetMetric = .reps(0)
     @State private var completed: SetMetric = .reps(0)
     @State private var rpe: Double = 1.0
-    
+
     let timerManager: TimerManager
     let hideRPE: Bool
     let hideCompleted: Bool
     let exercise: Exercise
-    
+
     var body: some View {
         VStack(alignment: .center) {
             // ── Top line (label + inputs) – visuals unchanged ───────────────
@@ -36,7 +36,7 @@ struct ExerciseSetDisplay: View {
                     // Metric input (reps or hold) – same visual container as reps
                     metricSection
                 }
-                
+
                 if !hideStartButton, let seconds = planned.secondsValue {
                     let completedSec = completed.secondsValue ?? 0
                     let isResume = completedSec > 0 && completedSec < seconds
@@ -53,7 +53,7 @@ struct ExerciseSetDisplay: View {
                     .padding(.top)
                 }
             }
-            
+
             if !hideCompletedEntry, !timerManager.restIsActive, !shouldDisableNext {
                 CompletedEntry(
                     isWarm: exercise.isWarmUp,
@@ -99,11 +99,11 @@ struct ExerciseSetDisplay: View {
             .presentationDragIndicator(.visible)
         }
     }
-    
+
     private var hideCompletedEntry: Bool {
         planned.secondsValue != nil && !hideStartButton
     }
-    
+
     private func toggleHideStartIfNeeded() {
         if let plannedSec = planned.secondsValue, let completedSec = completed.secondsValue {
             if completedSec >= plannedSec {
@@ -113,7 +113,7 @@ struct ExerciseSetDisplay: View {
             }
         }
     }
-    
+
     @ViewBuilder private var setLabel: some View {
         VStack(alignment: .leading, spacing: 2) {
             if exercise.isWarmUp {
@@ -131,7 +131,7 @@ struct ExerciseSetDisplay: View {
         if load != .none {
             let width = calculateTextWidth(text: load.fieldString, minWidth: screenWidth * 0.16, maxWidth: screenWidth * 0.267)
             let isZero = load.actualValue == 0
-            
+
             FieldChrome(width: width, isZero: isZero) {
                 SetLoadEditor(
                     load: Binding(
@@ -156,7 +156,7 @@ struct ExerciseSetDisplay: View {
             .padding(.trailing, 2.5)
         }
     }
-    
+
     @ViewBuilder private var metricSection: some View {
         let width  = calculateTextWidth(text: planned.fieldString, minWidth: screenWidth * 0.16, maxWidth: screenWidth * 0.267)
         let isZero = planned.actualValue == 0
@@ -193,13 +193,13 @@ struct ExerciseSetDisplay: View {
             }
         }
     }
-    
+
     // MARK: - Helpers
     private func resetInputs() {
         initializeVariables()
         validateSet()
     }
-    
+
     private func initializeVariables() {
         rpe = setDetail.rpe ?? 1
         load = setDetail.load
@@ -217,7 +217,7 @@ struct ExerciseSetDisplay: View {
             }
         }
     }
-    
+
     private func validateSet() {
         shouldDisableNext = planned.actualValue <= 0 || (load != .none && load.actualValue <= 0)
     }

@@ -36,13 +36,13 @@ enum MeasurementType: String, Codable, CaseIterable, Identifiable, Hashable, Equ
     case rightThigh = "Right Thigh"
     case leftCalf = "Left Calf"
     case rightCalf = "Right Calf"
-    
+
     var id: String { rawValue }
-    
+
     static let coreMeasurements: [MeasurementType] = [
         .weight, .bodyFatPercentage, .caloricIntake, .bmi
     ]
-    
+
     static let bodyPartMeasurements: [MeasurementType] = [
         .neck, .shoulders, .chest, .leftBicep, .rightBicep,
         .leftForearm, .rightForearm, .upperAbs, .waist,
@@ -54,7 +54,7 @@ extension MeasurementType {
     var unitLabel: String? {
         getMeasurmentValue(value: 0).unitLabel
     }
-    
+
     var placeholder: String {
         var base: String = "Enter"
         if MeasurementType.bodyPartMeasurements.contains(self) {
@@ -66,7 +66,7 @@ extension MeasurementType {
             return base + " value"
         }
     }
-    
+
     func valueCategory(value: Double) -> MeasurementValue {
         switch self {
         case .weight: return .weight(Mass(kg: value))
@@ -76,7 +76,7 @@ extension MeasurementType {
         default: return .size(Length(cm: value))
         }
     }
-    
+
     func getMeasurmentValue(value: Double) -> MeasurementValue {
         valueCategory(value: value)
     }
@@ -88,7 +88,7 @@ enum MeasurementValue: Codable, Equatable {
     case percentage(Double)
     case calories(Int)
     case bmi(Double)
-    
+
     // body part
     case size(Length)
 
@@ -101,7 +101,7 @@ enum MeasurementValue: Codable, Equatable {
         case .percentage, .calories, .bmi: return actualValue
         }
     }
-    
+
     /// always in metric (kg/cm)
     var actualValue: Double {
         switch self {
@@ -112,7 +112,7 @@ enum MeasurementValue: Codable, Equatable {
         case .bmi(let bmi): return bmi
         }
     }
-    
+
     var displayString: String { Format.smartFormat(displayValue) }
     var fieldString: String { actualValue > 0 ? displayString : "" }
 }
@@ -129,7 +129,7 @@ extension MeasurementValue {
             return value
         }
     }
-    
+
     var unitLabel: String? {
         switch self {
         case .weight:     return UnitSystem.current.weightUnit
@@ -146,7 +146,7 @@ extension MeasurementValue {
         if case .size(let length) = self { return length }
         return nil
     }
-    
+
     var asMass: Mass? {
         if case .weight(let mass) = self { return mass }
         return nil

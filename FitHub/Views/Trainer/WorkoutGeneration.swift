@@ -30,10 +30,10 @@ struct WorkoutGeneration: View {
             ZStack {
                 Color(UIColor.systemGroupedBackground)
                     .edgesIgnoringSafeArea(.all)
-                
+
                 VStack {
                     if toast.showingSaveConfirmation { InfoBanner(title: "Workout Plan Generated!").zIndex(1) }
-                    
+
                     selectionBar
                     HStack {
                         ExpandCollapseList(expandList: $expandList)
@@ -51,10 +51,10 @@ struct WorkoutGeneration: View {
                         .padding(.top)
                     }
                     .padding(.horizontal)
-                    
+
                     exerciseList
                     manageSection
-                        
+
                     Spacer()
                 }
                 .disabled(showingExerciseOptions)
@@ -73,7 +73,7 @@ struct WorkoutGeneration: View {
             }
         }
     }
-    
+
     @ViewBuilder private var exerciseOptions: some View {
         if let exercise = selectedExercise {
             ExerciseOptions(
@@ -89,7 +89,7 @@ struct WorkoutGeneration: View {
             )
         }
     }
-    
+
     private var selectionBar: some View {
         HStack {
             Button(action: previousTemplate) {
@@ -97,7 +97,7 @@ struct WorkoutGeneration: View {
                     .contentShape(Rectangle())
             }
             .disabled(templates[safe: currentTemplateIndex - 1] == nil)
-            
+
             VStack(spacing: 4) {
                 let template = templates[safe: currentTemplateIndex]
                 Text(template?.name ?? "No Template")
@@ -114,7 +114,7 @@ struct WorkoutGeneration: View {
             }
             .frame(alignment: .center)
             .padding(.horizontal)
-                
+
             Button(action: nextTemplate) {
                 Image(systemName: "arrow.right").bold()
                     .contentShape(Rectangle())
@@ -122,7 +122,7 @@ struct WorkoutGeneration: View {
             .disabled(templates[safe: currentTemplateIndex + 1] == nil)
         }
     }
-    
+
     private var exerciseList: some View {
         Group {
             if let template = templates[safe: currentTemplateIndex] {
@@ -161,7 +161,7 @@ struct WorkoutGeneration: View {
         .frame(maxHeight: !expandList ? screenHeight * 0.66 : .infinity)
         .padding(.bottom)
     }
-    
+
     @ViewBuilder private var manageSection: some View {
         if !expandList {
             RectangularButton(
@@ -181,7 +181,7 @@ struct WorkoutGeneration: View {
                     )
                 }
             )
-            
+
             if let creationDate = ctx.userData.workoutPlans.workoutsCreationDate {
                 Text("Last Generated on: \(Format.formatDate(creationDate))")
                     .font(.caption)
@@ -190,11 +190,11 @@ struct WorkoutGeneration: View {
             }
         }
     }
-    
+
     private var templates: [WorkoutTemplate] {
         ctx.userData.workoutPlans.trainerTemplates
     }
-    
+
     private func previousTemplate() {
         if currentTemplateIndex > 0 {
             currentTemplateIndex -= 1
@@ -202,7 +202,7 @@ struct WorkoutGeneration: View {
             currentTemplateIndex = ctx.userData.workoutPlans.trainerTemplates.count - 1
         }
     }
-    
+
     // Navigate to the next template
     private func nextTemplate() {
         if currentTemplateIndex < (ctx.userData.workoutPlans.trainerTemplates.count - 1) {

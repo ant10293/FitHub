@@ -29,7 +29,7 @@ enum ProgressiveOverloadStyle: String, CaseIterable, Codable {
     case increaseReps = "Increase Reps"
     case decreaseReps = "Decrease Reps"
     case dynamic = "Dynamic"
-    
+
     var desc: String {
         switch self {
         case .increaseWeight:
@@ -42,7 +42,7 @@ enum ProgressiveOverloadStyle: String, CaseIterable, Codable {
             return "Reps will be increased each week. Once halfway through period, reps will return to original value and weight will be increased slightly. For remainder of weeks, reps will remain the same while weight increases."
         }
     }
-    
+
     static func determineStyle(
         overloadStyle: ProgressiveOverloadStyle,
         overloadPeriod: Int,
@@ -53,10 +53,10 @@ enum ProgressiveOverloadStyle: String, CaseIterable, Codable {
             overloadPeriod: overloadPeriod,
             rAndS: rAndS
         )
-        
+
         return incompatible ? .dynamic : overloadStyle
     }
-    
+
     static func incompatibleOverloadStyle(
         overloadStyle: ProgressiveOverloadStyle,
         overloadPeriod: Int,
@@ -76,9 +76,9 @@ enum SetStructures: String, CaseIterable, Codable, Identifiable {
     case pyramid = "Pyramid" // default: start with lowest weight and increase per set
     case reversePyramid = "Reverse Pyramid" // start with highest weight and decrease per set
     case fixed = "Fixed" // same weight and reps across all sets
-    
+
     var id: String { self.rawValue }
-    
+
     var desc: String {
         switch self {
         case .pyramid:
@@ -96,7 +96,7 @@ struct SupersetSettings: Codable, Hashable {
     var equipmentOption: SupersetEquipmentOption = .sameEquipment
     var muscleOption: SupersetMuscleOption = .anyMuscle
     var ratio: Int = 30 // pct of exercises that can be supersetted
-    
+
     var summary: String {
         guard enabled else { return "Disabled" }
         return "\(ratio)%"
@@ -106,7 +106,7 @@ struct SupersetSettings: Codable, Hashable {
 enum SupersetEquipmentOption: String, CaseIterable, Codable {
     case sameEquipment = "Same Equipment"
     case anyEquipment = "Any Equipment"
-    
+
     var description: String {
         switch self {
         case .sameEquipment: "Supersetted exercises must use the same equipment."
@@ -119,7 +119,7 @@ enum SupersetMuscleOption: String, CaseIterable, Codable {
     case sameMuscle = "Same Muscle"
     case relatedMuscle = "Related Muscle"
     case anyMuscle = "Any Muscle"
-    
+
     var description: String {
         switch self {
         case .sameMuscle: "Supersetted exercises target the same muscle group."
@@ -164,7 +164,7 @@ struct SetIntensitySettings: Codable, Hashable {
     var maxIntensity: Int = 90
     var fixedIntensity: Int = 80
     var topSet: TopSetOption = .lastSet
-    
+
     func summary(setStructure: SetStructures) -> String {
         if setStructure == .fixed || topSet == .allSets {
             return "\(fixedIntensity)%"
@@ -180,14 +180,14 @@ struct WarmupSettings: Codable, Hashable {
     var maxIntensity: Int = 75
     var setCountModifier: WarmupSetCountModifier = .oneHalf
     var exerciseSelection: WarmupExerciseSelection = .compoundWeighted
-    
+
     func summary(setDistribution: SetDistribution, effortDistribution: EffortDistribution) -> String {
         guard self.includeSets else { return "None" }
-        
+
         let range = setDistribution.overallRange(filteredBy: effortDistribution)
         let minWarmupSets = self.setCountModifier.warmupSetCount(for: range.lowerBound)
         let maxWarmupSets = self.setCountModifier.warmupSetCount(for: range.upperBound)
-        
+
         return Format.formatRange(range: minWarmupSets...maxWarmupSets)
     }
 }
@@ -197,9 +197,9 @@ enum WarmupSetCountModifier: String, Codable, Equatable, CaseIterable {
     case oneHalf = "1/2"
     case threeQuarters = "3/4"
     case oneToOne = "1/1"
-    
+
     var displayName: String { rawValue }
-    
+
     var fraction: Double {
         switch self {
         case .oneQuarter: return 0.25
@@ -208,7 +208,7 @@ enum WarmupSetCountModifier: String, Codable, Equatable, CaseIterable {
         case .oneToOne: return 1.0
         }
     }
-    
+
     /// Calculate the number of warmup sets based on working set count
     func warmupSetCount(for workingSets: Int) -> Int {
         max(1, Int(round(Double(workingSets) * fraction)))
@@ -218,14 +218,14 @@ enum WarmupSetCountModifier: String, Codable, Equatable, CaseIterable {
 enum WarmupExerciseSelection: String, Codable, Equatable, CaseIterable {
     case compoundWeighted = "Compound Weighted"
     case allWeighted = "All Weighted"
-    
+
     var description: String {
         switch self {
         case .compoundWeighted: "Only compound weighted rep-based exercises will include warmup sets."
         case .allWeighted: "All weighted rep-based exercises will include warmup sets."
         }
     }
-    
+
     func isCompatible(exercise: Exercise) -> Bool {
         guard exercise.allowedWarmup else { return false }
         switch self {

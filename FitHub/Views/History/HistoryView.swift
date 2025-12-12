@@ -9,12 +9,12 @@ struct HistoryView: View {
     @State private var showCalendar: Bool = true
     @State private var workoutDates: [Date] = []
     @State private var plannedWorkoutDates: [Date] = []
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 headerSection
-                
+
                 if showCalendar {
                     CalendarView(
                         currentMonth: $currentMonth,
@@ -28,10 +28,10 @@ struct HistoryView: View {
                         workoutDaysPerWeek: userData.workoutPrefs.workoutDaysPerWeek
                     )
                 }
-                
+
                 LegendView
                     .padding()
-                
+
                 Spacer()
             }
             .background(Color(UIColor.systemGroupedBackground))
@@ -42,12 +42,12 @@ struct HistoryView: View {
             )
         }
     }
-    
+
     private func onAppearAction() {
         workoutDates = userData.getWorkoutDates()
         plannedWorkoutDates = userData.getPlannedWorkoutDates()
     }
-    
+
     // MARK: – Header
     private var headerSection: some View {
         let count = userData.sessionTracking.workoutStreak
@@ -90,7 +90,7 @@ struct HistoryView: View {
 
     private var LegendView: some View {
         let width = screenWidth
-        
+
         return VStack(spacing: 10) {
             if showCalendar {
                 HStack {
@@ -121,7 +121,7 @@ struct HistoryView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(PlainButtonStyle())
-            
+
             HStack {
                 VStack {
                     Text("Last Month")
@@ -130,7 +130,7 @@ struct HistoryView: View {
                     Text("\(workoutCountForLastMonth)")
                 }
                 .padding()
-                
+
                 VStack {
                     Text("This Month")
                         .font(.subheadline)
@@ -146,14 +146,14 @@ struct HistoryView: View {
         .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
-    
+
     private var workoutCountForLastMonth: Int {
         if let lastMonth = CalendarUtility.shared.previousMonth(from: currentMonth) {
             return workoutDates.filter { CalendarUtility.shared.isDate($0, equalTo: lastMonth, toGranularity: .month) }.count
         }
         return 0
     }
-    
+
     private var workoutCountForCurrentMonth: Int {
         return workoutDates.filter { CalendarUtility.shared.isDate($0, equalTo: currentMonth, toGranularity: .month) }.count
     }
@@ -164,7 +164,7 @@ extension Calendar {
     func generateDates(inside interval: DateInterval, matching components: DateComponents) -> [Date] {
         var dates: [Date] = []
         dates.append(interval.start)
-        
+
         enumerateDates(
             startingAfter: interval.start,
             matching: components,
@@ -178,12 +178,11 @@ extension Calendar {
                 }
             }
         }
-        
+
         return dates
     }
-    
+
     func isSameDay(_ date1: Date, _ date2: Date) -> Bool {
         return self.isDate(date1, inSameDayAs: date2)
     }
 }
-

@@ -9,26 +9,26 @@ struct StrengthPercentileView: View {
     let maxValuesAge: [String: PeakMetric]
     let maxValuesBW: [String: PeakMetric]
     let percentile: Int?
-    
+
     var body: some View {
         VStack {
             Text("Strength Standards")
                 .font(.title2)
                 .padding(.vertical)
-            
+
             // dont have any strength standards for isometric or cardio exercises
             maxView
 
             Text(exercise.performanceTitle(includeInstruction: true))
                 .font(.headline)
                 .padding(.top)
-            
+
             ageBasedStats
                 .padding(.bottom)
             weightBasedStats
         }
     }
-    
+
     // MARK: - Subviews
     private var maxView: some View {
         let performanceTitle = exercise.performanceTitle(includeInstruction: false)
@@ -59,7 +59,7 @@ struct StrengthPercentileView: View {
             )
         }
     }
-    
+
     // NOTE: Titles were already correct; these sections just show the table and a gray detail.
     private var ageBasedStats: some View {
         statSection(
@@ -72,7 +72,7 @@ struct StrengthPercentileView: View {
                 .foregroundStyle(.gray)
         )
     }
-    
+
     private var weightBasedStats: some View {
         statSection(
             title: "Based on Age",
@@ -84,7 +84,7 @@ struct StrengthPercentileView: View {
                 .foregroundStyle(.gray)
         )
     }
-    
+
     private func statSection(title: String, key: CSVColumn, detail: Text? = nil) -> some View {
         VStack(alignment: .leading) {
             // Header
@@ -107,18 +107,18 @@ struct StrengthPercentileView: View {
         }
         .cardContainer(cornerRadius: 8, backgroundColor: Color(UIColor.secondarySystemBackground))
     }
-    
+
     // MARK: - Helper Methods
-    
+
     // Return only the *category* thresholds as PeakMetric, in display order.
     private func get1RMValues(key: CSVColumn) -> [(key: String, value: PeakMetric)]? {
         var values: [String: PeakMetric] = [:]
-        
+
         switch key {
         case .age: values = maxValuesAge
         case .bodyweight: values = maxValuesBW
         }
-        
+
         if values.isEmpty { return nil }
 
         // Only include strength categories (no "Age"/"BW" cells in the table)
@@ -133,14 +133,14 @@ struct StrengthPercentileView: View {
                 (wanted.firstIndex(of: lhs.0) ?? .max) < (wanted.firstIndex(of: rhs.0) ?? .max)
             }
     }
-    
+
     private struct HorizontalTableView: View {
         var values: [(key: String, value: PeakMetric)]
         var maxValue: Double
-            
+
         var body: some View {
             let userCategory = maxValue > 0 ? findUserCategory(maxValue, values: values) : nil
-            
+
             HStack {
                 ForEach(values, id: \.key) { category, metric in
                     VStack {
@@ -159,7 +159,7 @@ struct StrengthPercentileView: View {
                 }
             }
         }
-        
+
         private func findUserCategory(_ maxValue: Double, values: [(key: String, value: PeakMetric)]) -> String {
             let rm = round(maxValue)
 

@@ -79,7 +79,7 @@ struct StripeConnect: View {
         }
         .cardContainer(cornerRadius: 12, backgroundColor: Color(UIColor.secondarySystemBackground))
     }
-    
+
     private func connectStripe(for code: String) {
         guard !isRequestingStripeOnboardingLink else { return }
         isRequestingStripeOnboardingLink = true
@@ -150,4 +150,3 @@ struct StripeConnect: View {
         }
     }
 }
-

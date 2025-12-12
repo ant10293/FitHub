@@ -254,7 +254,7 @@ def gather_candidates_for_target(term: str, target_label: str, exercise_tokens: 
                 extra_tokens = label_tokens - exercise_tokens
                 penalty = EXTRA_PENALTY_PER_WORD * len(extra_tokens)
                 score = max(base_score - penalty, 0.0)
-                # -------------------------------------------------------------------------- 
+                # --------------------------------------------------------------------------
 
                 is_gif = ".gif" in src.lower()
 

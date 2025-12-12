@@ -18,7 +18,7 @@ struct MenuPickerRow<Selection: Hashable, Options: View>: View {
     var body: some View {
         VStack(spacing: 0) {
             if showDivider { Divider() }
-            
+
             ZStack(alignment: .trailing) {
                 // base row with padding → controls height
                 HStack {
@@ -39,7 +39,7 @@ struct MenuPickerRow<Selection: Hashable, Options: View>: View {
                 .padding(.trailing, insets.trailing)
                 .padding(.vertical, insets.top) // keep it vertically comfortable
             }
-            
+
             // Description text (if provided)
             if let description = description {
                 HStack {

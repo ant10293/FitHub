@@ -18,7 +18,7 @@ struct NewExercise: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
     @EnvironmentObject var ctx: AppContext
-    
+
     // ────────── Local state
     @StateObject private var kbd = KeyboardManager.shared
     @State private var exerciseCreated: Bool = false
@@ -57,7 +57,7 @@ struct NewExercise: View {
             self.initialDraft = initEx
         }
     }
-    
+
     // ────────── View
     var body: some View {
         NavigationStack {
@@ -67,27 +67,27 @@ struct NewExercise: View {
                         .disabled(isReadOnly)
 
                     AliasesField(aliases: draft.aliases, readOnly: isReadOnly, onEdit: { showingAliasEditor = true })
-                    
+
                     muscleField
                     equipmentSection
-                              
+
                     if !equipmentRequired.isEmpty, ctx.equipment.hasEquipmentAdjustments(for: equipmentRequired) {
                         adjustmentsField
                     }
-                    
+
                     instructionsSection
-                              
+
                     if !isReadOnly {
                         ImageField(initialFilename: draft.image, onImageUpdate: { name in
                             draft.image = name
                         })
                     }
-                    
+
                     difficultySection
                     classificationPickers
                 }
                 .padding(.bottom)
-                                                
+
                 if !kbd.isVisible {
                     RectangularButton(
                         title: isEditing ? "Save & Exit" : "Create Exercise",
@@ -96,13 +96,13 @@ struct NewExercise: View {
                     ) {
                         exerciseCreated = true
                         draft.name = draft.name.trimmed
-        
+
                         ctx.exercises.updateExercise(exercise)
-                        
+
                         dismiss()
                     }
                     .padding(.vertical)
-                    
+
                     if isEditing {
                         switch ctx.exercises.getExerciseLocation(exercise) {
                         case .user:
@@ -121,7 +121,7 @@ struct NewExercise: View {
                         case .none:
                             EmptyView()
                         }
-                    } 
+                    }
                 }
             }
             .padding()
@@ -189,24 +189,24 @@ struct NewExercise: View {
             draft.unitType = computedUnitType
         }
     }
-    
+
     private var isBundledOverride: Bool { ctx.exercises.isOverriddenExercise(exercise) }
-    
+
     private var isEditing: Bool { original != nil }
-    
+
     private var isReadOnly: Bool {
         if let ori = original { return !ctx.exercises.isUserExercise(ori) }
         return false
     }
-    
+
     private func disappearAction() { if !exerciseCreated { ctx.adjustments.deleteAdjustments(for: exercise) } }
-     
+
     private func setEquipment(selection: [GymEquipment]) {
         draft.equipmentRequired = selection.map(\.name)
         equipmentRequired = ctx.equipment.getEquipment(from: draft.equipmentRequired)
         if let newResistance = determineType() { draft.resistance = newResistance }
     }
-    
+
     private func determineType() -> ResistanceType? {
         if equipmentRequired.contains(where: { EquipmentCategory.machineCats.contains($0.equCategory) }){
             return .machine
@@ -220,7 +220,7 @@ struct NewExercise: View {
             return nil
         }
     }
-    
+
     // FIXME: doesnt accomodate others like per peg, etc
     private func determineWeightInstruction() -> WeightInstruction? {
         if let movement = draft.limbMovementType, movement != .bilateralDependent {
@@ -234,7 +234,7 @@ struct NewExercise: View {
         }
         return nil
     }
-    
+
     private var muscleField: some View {
         FieldEditor(
             title: "Muscles Worked",
@@ -264,8 +264,8 @@ struct NewExercise: View {
     }
 
     private var instructionsSection: some View {
-        let text = draft.instructions.steps.isEmpty 
-            ? "None" 
+        let text = draft.instructions.steps.isEmpty
+            ? "None"
             : "\n" + draft.instructions.steps.enumerated().map { "\($0.offset + 1). \($0.element)" }.joined(separator: "\n")
         return FieldEditor(
             title: "Instructions",
@@ -276,7 +276,7 @@ struct NewExercise: View {
             onEdit: { showingInstructionEditor = true }
         )
     }
-    
+
     private var adjustmentsField: some View {
         AdjustmentsSection(
             showingAdjustmentsView: $showingAdjustmentsView,
@@ -289,12 +289,12 @@ struct NewExercise: View {
             bodyColor: .blue
         )
     }
-    
+
     private var difficultySection: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Difficulty")
                 .font(.headline)
-            
+
             Picker("Difficulty", selection: $draft.difficulty) {
                 ForEach(StrengthLevel.allCases, id: \.self) {
                     Text($0.rawValue).tag($0)
@@ -303,13 +303,13 @@ struct NewExercise: View {
             .pickerStyle(.segmented)
         }
     }
-    
+
     // MARK: – Classification (inset-grouped look, no List)
     private var classificationPickers: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Classification")
                 .font(.headline)
-    
+
             VStack(spacing: 0) {
                 Group {
                     // Resistance Type (exclude .weighted)
@@ -318,21 +318,21 @@ struct NewExercise: View {
                             Text($0.rawValue).tag($0)
                         }
                     }
-                    
+
                     // Effort Type
                     MenuPickerRow(title: "Effort Type", selection: $draft.effort) {
                         ForEach(EffortType.allCases, id: \.self) {
                             Text($0.rawValue).tag($0)
                         }
                     }
-                    
+
                     // Unit Type
                     MenuPickerRow(title: "Unit Type", selection: $draft.unitType) {
                         ForEach(ExerciseUnit.allCases, id: \.self) {
                             Text($0.displayName).tag($0)
                         }
                     }
-                    
+
                     // Limb Movement (Optional)
                     MenuPickerRow(
                         title: "Limb Movement",
@@ -366,7 +366,7 @@ struct NewExercise: View {
                         }
                     }
                 }
-                
+
                 // Implement Count (Optional, conditional - only for .individual equipment)
                 if let individualEquipment = individualEquipment {
                     MenuPickerRow(
@@ -393,7 +393,7 @@ struct NewExercise: View {
             .padding(.top, 4)
         }
     }
-    
+
     private var exercise: Exercise { Exercise(from: draft) }
 
     private var nameError: String? {
@@ -403,26 +403,26 @@ struct NewExercise: View {
         if isDuplicateName { return "Name already exists." }
         return nil
     }
-    
+
     private var isInputValid: Bool {
         !draft.name.isEmpty &&
         InputLimiter.isValidInput(draft.name) &&
         !isDuplicateName &&
         draft != initialDraft
     }
-    
+
     private var isDuplicateName: Bool {
         ctx.exercises.allExercises.contains {
             $0.id != original?.id &&                       // ← ignore self
             $0.name.caseInsensitiveCompare(draft.name) == .orderedSame
         }
     }
-    
+
     // MARK: - Implement Count Helpers
     private var individualEquipment: GymEquipment? {
         equipmentRequired.first(where: { $0.implementation == .individual })
     }
-    
+
     private var defaultImplementCount: Int {
         let movement = draft.limbMovementType ?? .bilateralDependent
         guard let individualEquip = individualEquipment,
@@ -432,7 +432,7 @@ struct NewExercise: View {
         let movementCount = impl.getMovementCount(for: movement)
         return movementCount.implementsUsed
     }
-    
+
     private var computedUnitType: ExerciseUnit {
         switch exercise.effort {
         case .cardio:

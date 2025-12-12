@@ -9,7 +9,7 @@ This document provides a comprehensive analysis of the FitHub iOS app codebase, 
 **Issue**: Multiple classes implement similar file saving/loading patterns
 **Locations**:
 - `UserData.swift` (lines 88, 132)
-- `ExerciseData.swift` (lines 94, 129) 
+- `ExerciseData.swift` (lines 94, 129)
 - `EquipmentData.swift` (line 77)
 - `AdjustmentsData.swift` (line 124)
 
@@ -106,8 +106,8 @@ var displayValue: Double {
 **Similar Pattern**:
 ```swift
 func formattedText() -> Text {
-    Text(Format.smartFormat(displayValue)) + 
-    Text(" ") + 
+    Text(Format.smartFormat(displayValue)) +
+    Text(" ") +
     Text(unitLabel).fontWeight(.light)
 }
 ```
@@ -245,7 +245,7 @@ protocol Persistable {
 class ExerciseData: ObservableObject {
     private let fileService: FilePersistenceService
     private let exerciseService: ExerciseService
-    
+
     init(fileService: FilePersistenceService, exerciseService: ExerciseService) {
         self.fileService = fileService
         self.exerciseService = exerciseService
@@ -316,4 +316,4 @@ These changes will result in:
 - **Reduced complexity**: Clear separation of concerns
 - **Better performance**: Optimized algorithms and caching strategies
 
-The refactoring should be done incrementally, starting with the high-impact, low-risk changes and gradually moving toward the more complex architectural improvements. 
+The refactoring should be done incrementally, starting with the high-impact, low-risk changes and gradually moving toward the more complex architectural improvements.

@@ -15,7 +15,7 @@ struct SetDetailIntensity: View {
     @State private var maxIntensity: Int
     @State private var fixedIntensity: Int
     @State private var topSet: TopSetOption
-    
+
     init(userData: UserData) {
         self.userData = userData
         _setStructure = State(initialValue: userData.workoutPrefs.setStructure)
@@ -77,7 +77,7 @@ struct SetDetailIntensity: View {
                     } footer: {
                         Text("Lowest percentage of your max used for working sets.")
                     }
-                    
+
                     // ── MAX INTENSITY ────────────────────────────────────────────────
                     Section {
                         HStack {
@@ -103,7 +103,7 @@ struct SetDetailIntensity: View {
                         Text("Highest percentage of your max used for your top set.")
                     }
                 }
-                
+
                 // ── TOP SET ───────────────────────────────────────────────────────
                 Section {
                     Picker("Top Set", selection: $topSet) {
@@ -139,4 +139,3 @@ struct SetDetailIntensity: View {
         }
     }
 }
-

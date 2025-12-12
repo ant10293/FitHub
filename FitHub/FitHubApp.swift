@@ -17,7 +17,7 @@ struct FitHubApp: App {
     let persistenceController = PersistenceController.shared
     @StateObject private var ctx = AppContext()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
+
     var body: some Scene {
         WindowGroup {
             ContentView()

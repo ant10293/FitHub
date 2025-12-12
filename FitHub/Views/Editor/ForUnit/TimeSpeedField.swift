@@ -13,10 +13,10 @@ struct TimeSpeedField: View {
     let distance: Distance
     let hideMenuButton: Bool
     let style: TextFieldVisualStyle
-    
+
     var body: some View {
         let height = screenHeight * 0.0425
-        
+
         Group {
             switch showingResolved {
             case .time:
@@ -33,7 +33,7 @@ struct TimeSpeedField: View {
                 )
                 .frame(height: height)
                 .overlay(alignment: .bottomTrailing) { if !hideMenuButton { menuButton } }
-  
+
             case .speed:
                 TextField("spd.", text: Binding(
                     get: { localText.isEmpty ? tos.speed.fieldString : localText },
@@ -71,12 +71,12 @@ struct TimeSpeedField: View {
             }
         }
     }
-    
+
     private var showingResolved: TimeOrSpeed.InputKey { showing ?? tos.showing }
-    
+
     private var menuButton: some View {
         let size = screenWidth * 0.05
-        
+
         return Menu {
             ForEach(TimeOrSpeed.InputKey.allCases, id: \.self) { key in
                 Button {

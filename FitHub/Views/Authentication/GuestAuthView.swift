@@ -22,7 +22,7 @@ struct GuestAuthView: View {
             Section {
                 TextField("First Name", text: $firstName)
                     .textContentType(.givenName)
-                
+
                 TextField("Last Name", text: $lastName)
                     .textContentType(.familyName)
             } header: {
@@ -33,11 +33,11 @@ struct GuestAuthView: View {
         }
         .overlay { if isProcessing { ProgressView() } }
     }
-    
+
     private var footerContent: some View {
         VStack(alignment: .leading, spacing: 8) {
             ErrorFooter(message: errorMessage)
-            
+
             RectangularButton(title: "Continue") {
                 signIn(firstName: firstName.trimmed, lastName: lastName.trimmed)
             }
@@ -45,7 +45,7 @@ struct GuestAuthView: View {
         .padding(.top)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
-    
+
     private func signIn(firstName: String, lastName: String) {
         isProcessing = true
         AuthService.shared.signInAnonymously(into: userData, firstName: firstName, lastName: lastName, completion: { result in

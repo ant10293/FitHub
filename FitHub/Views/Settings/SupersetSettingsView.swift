@@ -17,18 +17,18 @@ struct SupersetSettingsView: View {
     @State private var restTime: TimeSpan
     @State private var showRestPicker: Bool = false
     let supersetRest: RestType = .superset
-    
+
     init(userData: UserData) {
         self.userData = userData
         _enabled = State(initialValue: userData.workoutPrefs.supersetSettings.enabled)
         _equipmentOption = State(initialValue: userData.workoutPrefs.supersetSettings.equipmentOption)
         _muscleOption = State(initialValue: userData.workoutPrefs.supersetSettings.muscleOption)
         _ratio = State(initialValue: userData.workoutPrefs.supersetSettings.ratio)
-        
+
         let resolved = userData.workoutPrefs.customRestPeriods ?? userData.physical.goal.defaultRest
         _restTime = State(initialValue: TimeSpan(seconds: resolved.rest(for: .superset)))
     }
-    
+
     var body: some View {
         NavigationStack {
             List {
@@ -41,7 +41,7 @@ struct SupersetSettingsView: View {
                 } footer: {
                     Text("Enable superset pairing in workout generation.")
                 }
-                
+
                 if enabled {
                     // ── EQUIPMENT OPTION ────────────────────────────────────────────────
                     Section {
@@ -61,7 +61,7 @@ struct SupersetSettingsView: View {
                     } footer: {
                         Text(equipmentOption.description)
                     }
-                    
+
                     // ── MUSCLE OPTION ────────────────────────────────────────────────
                     Section {
                         Picker("Muscle Targeting", selection: $muscleOption) {
@@ -80,7 +80,7 @@ struct SupersetSettingsView: View {
                     } footer: {
                         Text(muscleOption.description)
                     }
-                    
+
                     // ── RATIO ───────────────────────────────────────────────────────
                     Section {
                         HStack {
@@ -104,7 +104,7 @@ struct SupersetSettingsView: View {
                     } footer: {
                         Text("Maximum percentage of exercises that can be supersetted. For example, with 10 exercises and 20% selected, up to 2 exercises can be supersetted (1 pair).")
                     }
-                    
+
                     // ── REST PERIOD ─────────────────────────────────────────────────
                     Section {
                         CustomDisclosure(
@@ -141,7 +141,7 @@ struct SupersetSettingsView: View {
             }
         }
     }
-    
+
     private func updateRestPeriod() {
         var custom = userData.workoutPrefs.customRestPeriods ?? userData.physical.goal.defaultRest
         custom.modify(for: supersetRest, with: restTime.inSeconds)
@@ -152,4 +152,3 @@ struct SupersetSettingsView: View {
         }
     }
 }
-

@@ -10,7 +10,7 @@ import SwiftUI
 struct WorkoutChangelogView: View {
     let changelog: WorkoutChangelog
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -29,26 +29,26 @@ struct WorkoutChangelogView: View {
             }
         }
     }
-    
+
     private var headerSection: some View {
         VStack(spacing: 12) {
             HStack {
                 Image(systemName: "arrow.clockwise.circle.fill")
                     .foregroundStyle(.blue)
                     .font(.title2)
-                
+
                 VStack(alignment: .leading) {
                     Text("New Workout Plan Generated")
                         .font(.title2)
                         .fontWeight(.bold)
-                    
+
                     Text("Week starting \(changelog.weekStartDate.shortDate)")
                         .foregroundStyle(.secondary)
                 }
-                
+
                 Spacer()
             }
-            
+
             if changelog.isNextWeek {
                 HStack {
                     Image(systemName: "calendar.badge.plus")
@@ -65,13 +65,13 @@ struct WorkoutChangelogView: View {
         }
         .cardContainer()
     }
-    
+
     private var statsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Generation Summary")
                 .font(.headline)
                 .fontWeight(.semibold)
-            
+
             LazyVGrid(columns: [
                 GridItem(.flexible()),
                 GridItem(.flexible())
@@ -82,21 +82,21 @@ struct WorkoutChangelogView: View {
                     icon: "clock",
                     color: .blue
                 )
-                
+
                 StatCard(
                     title: "Deloads Applied",
                     value: "\(changelog.generationStats.deloadsApplied)",
                     icon: "chart.line.downtrend.xyaxis",
                     color: .red
                 )
-                
+
                 StatCard(
                     title: "Progressive Overload",
                     value: "\(changelog.generationStats.progressiveOverloadApplied)",
                     icon: "arrow.up.circle.fill",
                     color: .orange
                 )
-                
+
                 StatCard(
                     title: "Performance Updates",
                     value: "\(changelog.generationStats.performanceUpdates)",
@@ -107,13 +107,13 @@ struct WorkoutChangelogView: View {
         }
         .cardContainer()
     }
-    
+
     private var templatesSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Workout Changes")
                 .font(.headline)
                 .fontWeight(.semibold)
-            
+
             ForEach(changelog.templates) { template in
                 TemplateChangeLogCard(template: template)
             }
@@ -126,17 +126,17 @@ private struct StatCard: View {
     let value: String
     let icon: String
     let color: Color
-    
+
     var body: some View {
         VStack(spacing: 8) {
             Image(systemName: icon)
                 .foregroundStyle(color)
                 .font(.title2)
-            
+
             Text(value)
                 .font(.headline)
                 .fontWeight(.bold)
-            
+
             Text(title)
                 .font(.caption)
                 .foregroundStyle(.secondary)

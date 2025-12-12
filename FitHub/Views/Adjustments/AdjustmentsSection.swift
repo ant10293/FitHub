@@ -11,15 +11,15 @@ struct AdjustmentsSection: View {
     @EnvironmentObject var ctx: AppContext
     @Binding var showingAdjustmentsView: Bool
     @Binding var showingPlateVisualizer: Bool
-    
+
     let hidePlateVisualizer: Bool
     let exercise: Exercise
-    
+
     var titleFont: Font = .caption
     var titleColor: Color = .blue
     var bodyFont: Font = .caption
     var bodyColor: Color = .secondary
-    
+
     var body: some View {
         VStack {
             if ctx.equipment.hasEquipmentAdjustments(for: exercise) {
@@ -36,7 +36,7 @@ struct AdjustmentsSection: View {
                     .minimumScaleFactor(0.8)
                 }
             }
-            
+
             if !hidePlateVisualizer, exercise.usesPlates(equipmentData: ctx.equipment) {
                 Button(action: { showingPlateVisualizer.toggle() }) {
                     Text("Plate Loading Visualizer")
@@ -50,21 +50,21 @@ struct AdjustmentsSection: View {
             }
         }
     }
-    
+
     private var titleText: Text {
         Text("Equipment Adjustments\n")
             .font(titleFont)
             .bold()
             .foregroundStyle(titleColor)
     }
-    
+
     private var addAdjustmentPlaceholder: Text {
         (Text(Image(systemName: "plus"))
         + Text("Add Adjustment"))
         .font(bodyFont)
         .foregroundStyle(bodyColor)
     }
-    
+
     private var adjustmentsText: Text? {
         guard let adjustments = ctx.adjustments.getEquipmentAdjustments(for: exercise) else {
             return nil
@@ -90,4 +90,3 @@ struct AdjustmentsSection: View {
         }
     }
 }
-

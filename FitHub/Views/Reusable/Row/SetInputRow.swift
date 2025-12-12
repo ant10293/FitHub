@@ -10,7 +10,7 @@ struct SetInputRow<LoadField: View, MetricField: View>: View {
     // Inject the actual field content
     let loadField: () -> LoadField
     let metricField: () -> MetricField
-    
+
     // Optional screen width - if not provided, compute it
     let providedScreenWidth: CGFloat?
 
@@ -87,7 +87,7 @@ private extension SetInputRow {
         }
         .frame(width: fieldColWidth)
     }
-    
+
     var repsHeader: some View {
         VStack(spacing: 0) {
             Text(metric.label)
@@ -102,4 +102,3 @@ private extension SetInputRow {
         .frame(width: fieldColWidth)
     }
 }
-

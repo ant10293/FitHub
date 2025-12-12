@@ -10,12 +10,12 @@ import Foundation
 // create separate split category enum
 enum Muscle: String, CaseIterable, Identifiable, Codable {
     case all = "All"
-    
+
     // MARK: - Independent
     case abdominals = "Abdominals"
     case pectorals = "Pectorals"
     case deltoids = "Deltoids"
-    
+
     // MARK: - Part of Muscle Group
     case biceps = "Biceps"
     case triceps = "Triceps"
@@ -25,7 +25,7 @@ enum Muscle: String, CaseIterable, Identifiable, Codable {
     case quadriceps = "Quadriceps" // legs - quad focused
     case gluteus = "Gluteus" // legs - glute focused
     case hamstrings = "Hamstrings" // legs - hamstring focused
-    
+
     // MARK: - Accessory
     case calves = "Calves" // accessory
     case forearms = "Forearms" // accessory
@@ -33,7 +33,7 @@ enum Muscle: String, CaseIterable, Identifiable, Codable {
     case adductors = "Adductors"
     case abductors = "Abductors"
     case tibialis = "Tibialis"
-    
+
     var id: String { self.rawValue }
 }
 
@@ -51,7 +51,7 @@ extension Muscle {
         default: return self.rawValue
         }
     }
-    
+
     var simpleName: String {
         switch self {
         case .pectorals: return "Chest"
@@ -80,7 +80,7 @@ extension Muscle {
         .tibialis: [.tibialisAnterior, .tibialisPosterior],
         .cervicalSpine: [.infrahyoid, .sternocleidomastoid, .scalenes, .longusFlexors]
     ]
-    
+
     static func getSubMuscles(for category: Muscle) -> [SubMuscles] {
         return subMuscles[category] ?? []
     }
@@ -91,13 +91,13 @@ extension Muscle {
     static let hasFrontImages: Set<Muscle> = [
         .all, .abdominals, .pectorals, .trapezius, .deltoids, .biceps, .triceps, .quadriceps, .calves, .forearms, .cervicalSpine, .hipComplex
     ]
-    
+
     static let hasRearImages: Set<Muscle> = [
         .all, .deltoids, .triceps, .trapezius, .latissimusDorsi, .erectorSpinae, .hamstrings, .gluteus, .calves, .forearms, .scapularRetractors
     ]
-    
+
     static let hasBothImages: Set<Muscle> = hasFrontImages.intersection(hasRearImages)
-    
+
     static func getButtonForCategory(_ category: Muscle, gender: Gender) -> Image {
         let startPath = "Button/\(gender == .male ? "Male" : "Female")/"
         let imageName = category.rawValue.replacingOccurrences(of: " ", with: "-")
@@ -105,9 +105,9 @@ extension Muscle {
         return Image(fullPath)
     }
     */
-    
+
     var splitCategory: SplitCategory? { SplitCategory.muscles.first { _, muscles in muscles.contains(self) }?.key }
-    
+
     /// Returns the parent SplitCategory for this muscle.
     /// - Parameter forGeneration: If true, uses the generation map (no calves/forearms).
     func groupCategory(forGeneration: Bool = false) -> SplitCategory? {
@@ -115,4 +115,3 @@ extension Muscle {
         return map.first(where: { $0.value.contains(self) })?.key
     }
 }
-

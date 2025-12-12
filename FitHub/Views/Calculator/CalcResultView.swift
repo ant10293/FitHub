@@ -14,7 +14,7 @@ struct CalcResultView<Content: View>: View {
     let buttonLabel: String
     let dismissAction: () -> Void
     @ViewBuilder var content: () -> Content
-    
+
     init(
         title: String,
         singleResult: String? = nil,

@@ -11,21 +11,21 @@ struct AdjustmentsView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
-    
+
     @State private var showAddCategoryPicker = false
     @State private var donePressed: Bool = false
     @State private var local: ExerciseAdjustments
     @State private var activeImageCategory: AdjustmentCategory? = nil
     @State private var categoryPendingRemoval: AdjustmentCategory? = nil
     @State private var isRemovingEquipmentLevelImage: Bool = false
-    
+
     let exercise: Exercise
 
     init(exercise: Exercise) {
         self.exercise = exercise
         _local = State(initialValue: ExerciseAdjustments(id: exercise.id, entries: [], sorted: true))
     }
-    
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -60,12 +60,12 @@ struct AdjustmentsView: View {
                 let entry = local.adjustment(for: category)
                 let resolvedImageName = entry.flatMap { ctx.adjustments.resolvedImage(for: $0) }
                 let initialFilename = (resolvedImageName != category.image && resolvedImageName != nil) ? resolvedImageName : entry?.image
-                
+
                 // Check if there's an existing equipment-level image (even if this exercise is ignoring it)
-                let hasExistingEquipmentImage = entry.flatMap { 
+                let hasExistingEquipmentImage = entry.flatMap {
                     ctx.adjustments.hasEquipmentLevelImage(for: $0.equipmentID, category: category)
                 } ?? false
-                                
+
                 AdjustmentImageUpload(
                     initialFilename: initialFilename,
                     hasExistingEquipmentImage: hasExistingEquipmentImage,
@@ -119,26 +119,26 @@ struct AdjustmentsView: View {
             }
         }
     }
-    
+
     // MARK: – Header
     private var headerSection: some View {
         let imageSize = screenHeight * 0.14
-        
+
         return HStack {
             Text(exercise.name.isEmpty ? "Unnamed\nExercise" : exercise.name)
                 .font(.title2)
                 .padding(.trailing, 8)
                 .multilineTextAlignment(.center)
-            
+
             exercise.fullImageView(favState: FavoriteState.getState(for: exercise, userData: ctx.userData))
                 .frame(width: imageSize, height: imageSize)
         }
     }
-    
+
     // MARK: – List
     private func adjustmentList(for adjustments: [AdjustmentEntry]) -> some View {
         let sortedAdjustments = ExerciseAdjustments.sorted(adjustments)
-        
+
         return List {
             Section {
                 if sortedAdjustments.isEmpty {
@@ -170,7 +170,7 @@ struct AdjustmentsView: View {
         }
         .listStyle(.insetGrouped)
     }
-    
+
     // MARK: – Row
     private func adjustmentRow(for adjustment: AdjustmentEntry) -> some View {
         let fieldSize = screenWidth * 0.2
@@ -178,16 +178,16 @@ struct AdjustmentsView: View {
         return VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text(adjustment.category.rawValue)
-                
+
                 Spacer()
-                
+
                 TextField("Value", text: bindingForCategory(adjustment.category))
                     .keyboardType(adjustment.value.keyboardType)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .frame(width: fieldSize)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled(true)
-                
+
                 Button {
                     clearValue(for: adjustment.category)
                 } label: {
@@ -196,7 +196,7 @@ struct AdjustmentsView: View {
                 }
                 .buttonStyle(.borderless)
             }
-            
+
             imagePreview(for: adjustment)
                 .overlay(alignment: .topTrailing) {
                     imageButton(for: adjustment)
@@ -204,14 +204,14 @@ struct AdjustmentsView: View {
                 }
         }
     }
-    
+
     private func associatedEquipment(entry: AdjustmentEntry?) -> GymEquipment? {
         guard let entry else { return nil }
         return ctx.equipment.equipment(for: entry.equipmentID)
     }
-    
+
     private var existingCategories: Set<AdjustmentCategory> { local.categories }
-    
+
     // MARK: – Bindings & Mutations
     private func bindingForCategory(_ category: AdjustmentCategory) -> Binding<String> {
         Binding(
@@ -219,27 +219,27 @@ struct AdjustmentsView: View {
             set: { local.setValue(AdjustmentValue.from($0), for: category) }
         )
     }
-    
+
     private func addAdjustmentCategory(_ category: AdjustmentCategory) {
         local.addCategory(category)
         commitChangesIfNeeded()
     }
-    
+
     private func removeAdjustment(_ category: AdjustmentCategory) { local.removeCategory(category) }
-    
+
     private func clearValue(for category: AdjustmentCategory) { local.clearValue(for: category) }
-    
+
     private func updateImage(for category: AdjustmentCategory, filename: String?, storageLevel: ImageStorageLevel = .equipment) {
         // Update the equipment-level or exercise-specific image storage
         ctx.adjustments.updateAdjustmentImage(for: exercise, category: category, newImageName: filename, storageLevel: storageLevel)
         // Sync local state with what was actually stored
         local = ctx.adjustments.adjustmentsEntry(for: exercise)
     }
-    
+
     // MARK: – Image Helpers
     private func imagePreview(for adjustment: AdjustmentEntry) -> some View {
         let width = screenWidth * 0.2
-        
+
         return displayImage(for: adjustment)
             .resizable()
             .scaledToFit()
@@ -251,11 +251,11 @@ struct AdjustmentsView: View {
             )
             .allowsHitTesting(false)
     }
-    
+
     private func imageButton(for adjustment: AdjustmentEntry) -> some View {
-        let hasAnyCustomImage = adjustment.hasCustomImage || 
+        let hasAnyCustomImage = adjustment.hasCustomImage ||
             (ctx.adjustments.resolvedImage(for: adjustment) != adjustment.category.image)
-        
+
         return Button {
             handleImageButtonTap(for: adjustment.category)
         } label: {
@@ -266,11 +266,11 @@ struct AdjustmentsView: View {
         .buttonStyle(.plain)
         .contentShape(Rectangle())
     }
-    
+
     private func displayImage(for adjustment: AdjustmentEntry) -> Image {
         // Use resolved image with priority: exercise → equipment → default
         let resolvedImageName = ctx.adjustments.resolvedImage(for: adjustment)
-        
+
         // Check if it's a custom image (not the default)
         if resolvedImageName != adjustment.category.image,
            let uiImage = UIImage(contentsOfFile: getDocumentsDirectory().appendingPathComponent(resolvedImageName).path) {
@@ -278,17 +278,17 @@ struct AdjustmentsView: View {
         }
         return Image(adjustment.category.image)
     }
-    
+
     private func handleImageButtonTap(for category: AdjustmentCategory) {
         // Check if there's any custom image (exercise-specific or equipment-level)
         guard let entry = local.adjustment(for: category) else { return }
-        let hasAnyCustomImage = entry.hasCustomImage || 
+        let hasAnyCustomImage = entry.hasCustomImage ||
             (ctx.adjustments.resolvedImage(for: entry) != entry.category.image)
-        
+
         if hasAnyCustomImage {
             // Determine if we're removing equipment-level or exercise-specific
             let hasExerciseOverride = entry.hasCustomImage
-            let hasEquipmentImage = !hasExerciseOverride && 
+            let hasEquipmentImage = !hasExerciseOverride &&
                 (ctx.adjustments.resolvedImage(for: entry) != entry.category.image)
             isRemovingEquipmentLevelImage = hasEquipmentImage
             categoryPendingRemoval = category
@@ -296,36 +296,35 @@ struct AdjustmentsView: View {
             activeImageCategory = category
         }
     }
-    
+
     private var removalAlertBinding: Binding<Bool> {
         Binding(
             get: { categoryPendingRemoval != nil },
-            set: { 
-                if !$0 { 
+            set: {
+                if !$0 {
                     categoryPendingRemoval = nil
                     isRemovingEquipmentLevelImage = false
                 }
             }
         )
     }
-    
+
     // MARK: – Lifecycle
     private func onAppear() {
         ctx.adjustments.loadAdjustments(for: exercise, equipment: ctx.equipment, availableEquipment: ctx.userData.evaluation.availableEquipment)
         local = ctx.adjustments.adjustmentsEntry(for: exercise)
     }
-    
+
     private func commitIfDismissedWithoutClose() {
         guard !donePressed else { return }
         commitChangesIfNeeded()
     }
-    
+
     private func commitChangesIfNeeded() {
         let normalizedLocal = local.normalized()
         let original = ctx.adjustments.adjustmentsEntry(for: exercise)
         guard original != normalizedLocal else { return }
-        
+
         ctx.adjustments.overwriteAdjustments(for: exercise, new: normalizedLocal)
     }
 }
-

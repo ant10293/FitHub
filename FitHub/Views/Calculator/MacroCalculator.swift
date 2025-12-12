@@ -43,8 +43,8 @@ struct MacroCalculator: View {
                 weightCard
                 heightCard
                 activityCard
-                
-                
+
+
                 if !kbd.isVisible {
                     Spacer(minLength: height)
 
@@ -54,7 +54,7 @@ struct MacroCalculator: View {
                         action: calculate
                     )
                     .padding(.horizontal)
-                    
+
                     Spacer(minLength: height)
                 }
             }
@@ -215,7 +215,7 @@ struct MacroCalculator: View {
     private func toggle(_ card: ActiveCard) {
         activeCard = activeCard == card ? .none : card
     }
-    
+
     private func closePicker() {
         kbd.dismiss()
         activeCard = .none
@@ -254,7 +254,7 @@ struct MacroCalculator: View {
                 .padding(.vertical)
             })
         }
-        
+
         private func customText(for label: String, value: Double, unit: String) -> Text {
             Text("\(label): \(Int(round(value)))") + Text(" \(unit)").fontWeight(.light)
         }

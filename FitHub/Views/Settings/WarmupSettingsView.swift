@@ -15,7 +15,7 @@ struct WarmupSettingsView: View {
     @State private var maxIntensity: Int
     @State private var setCountModifier: WarmupSetCountModifier
     @State private var exerciseSelection: WarmupExerciseSelection
-    
+
     init(userData: UserData) {
         self.userData = userData
         _includeSets = State(initialValue: userData.workoutPrefs.warmupSettings.includeSets)
@@ -24,7 +24,7 @@ struct WarmupSettingsView: View {
         _setCountModifier = State(initialValue: userData.workoutPrefs.warmupSettings.setCountModifier)
         _exerciseSelection = State(initialValue: userData.workoutPrefs.warmupSettings.exerciseSelection)
     }
-    
+
     var body: some View {
         NavigationStack {
             List {
@@ -37,7 +37,7 @@ struct WarmupSettingsView: View {
                 } footer: {
                     Text("Enable warmup sets in workout generation.")
                 }
-                
+
                 if includeSets {
                     // ── MIN INTENSITY ────────────────────────────────────────────────
                     Section {
@@ -66,7 +66,7 @@ struct WarmupSettingsView: View {
                             Text("Lowest percentage of the first working set's weight used for the first warmup set. Reps remain the same as the first working set.")
                         }
                     }
-                    
+
                     // ── MAX INTENSITY ────────────────────────────────────────────────
                     Section {
                         HStack {
@@ -94,7 +94,7 @@ struct WarmupSettingsView: View {
                             Text("Highest percentage of the first working set's weight used for the last warmup set. Reps remain the same as the first working set.")
                         }
                     }
-                    
+
                     // ── SET COUNT MODIFIER ───────────────────────────────────────────
                     Section {
                         Picker("Proportion of working sets", selection: $setCountModifier) {
@@ -113,7 +113,7 @@ struct WarmupSettingsView: View {
                     } footer: {
                         Text("Fraction of working sets to use for warmup. For example, with 4 working sets and 1/2 selected, you'll have 2 warmup sets.")
                     }
-                    
+
                     // ── EXERCISE SELECTION ───────────────────────────────────────────
                     Section {
                         Picker("Exercise Selection", selection: $exerciseSelection) {
@@ -147,4 +147,3 @@ struct WarmupSettingsView: View {
         }
     }
 }
-

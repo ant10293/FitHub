@@ -3,7 +3,7 @@ import SwiftUI
 
 struct StatsView: View {
     @ObservedObject var userData: UserData
-    
+
     var body: some View {
         let height = screenHeight
         let bmi = userData.currentMeasurementValue(for: .bmi).displayValue
@@ -12,7 +12,7 @@ struct StatsView: View {
         let fats = userData.physical.fats
         let proteins = userData.physical.proteins
         let total = carbs + fats + proteins
-        
+
         ScrollView {
             VStack {
                 metricRow(
@@ -23,12 +23,12 @@ struct StatsView: View {
                         BMICalculator(userData: userData)
                     }
                 )
-                
+
                 if bmi > 0 {
                     BMICategoryTable(userBMI: bmi)
                         .frame(height: height * 0.1)
                 }
-                
+
                 metricRow(
                     label: "Body Fat",
                     value: userData.currentMeasurementValue(for: .bodyFatPercentage).displayValue,
@@ -38,7 +38,7 @@ struct StatsView: View {
                         BFCalculator(userData: userData)
                     }
                 )
-                
+
                 metricRow(
                     label: "Caloric Intake",
                     value: calories,
@@ -49,7 +49,7 @@ struct StatsView: View {
                         KcalCalculator(userData: userData)
                     }
                 )
-                
+
                 metricRow(
                     label: "Daily Macronutrients",
                     value: total == 0 ? total : -1,
@@ -58,11 +58,11 @@ struct StatsView: View {
                         MacroCalculator(userData: userData)
                     }
                 )
-                
+
                 macroRow(name: "Carbs", value: carbs)
                 macroRow(name: "Fats", value: fats)
                 macroRow(name: "Proteins", value: proteins)
-                
+
                 RingView(
                     kcal: calories,
                     carbs: carbs,
@@ -75,7 +75,7 @@ struct StatsView: View {
         .padding()
         .navigationTitle("\(userData.profile.displayName(.title))'s Stats")
     }
-    
+
     private func macroRow(name: String, value: Double) -> Text {
         // build one Text
         let text: Text = {
@@ -89,7 +89,7 @@ struct StatsView: View {
                     + Text("N/A").foregroundStyle(.secondary)
             }
         }()
-        
+
         return text
     }
 
@@ -101,7 +101,7 @@ struct StatsView: View {
         linkText: String,
         destination: @escaping () -> Destination
     ) -> some View {
-        
+
         HStack {
             if value == 0 {
                 // label + link, still single line visually
@@ -116,7 +116,7 @@ struct StatsView: View {
                 let display: Text = {
                     let base = Text("\(label): ").bold()
                     let main = formatted ?? Format.smartFormat(value)
-                    
+
                     if let u = unit {
                         return base
                             + Text(main)
@@ -125,7 +125,7 @@ struct StatsView: View {
                         return base + Text(main)
                     }
                 }()
-                
+
                 display
             }
         }

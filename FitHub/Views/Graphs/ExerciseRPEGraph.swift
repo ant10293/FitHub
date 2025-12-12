@@ -22,7 +22,7 @@ struct ExerciseRPEGraph: View {
                 .centerHorizontally()
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
-            
+
             ScrollViewReader { proxy in
                 ScrollView(.horizontal) {
                     HStack(spacing: 0) {
@@ -32,13 +32,13 @@ struct ExerciseRPEGraph: View {
                                     // RPE Line and Points
                                     ForEach(sortedRecords) { record in
                                         let isLatest = record.date == latestRecord?.date
-                                        
+
                                         LineMark(
                                             x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
                                             y: .value("RPE", record.rpe)
                                         )
                                         .foregroundStyle(isLatest ? .green : .blue)
-                                        
+
                                         PointMark(
                                             x: .value("Date", Format.formatDate(record.date, dateStyle: .short, timeStyle: .none)),
                                             y: .value("RPE", record.rpe)
@@ -55,7 +55,7 @@ struct ExerciseRPEGraph: View {
                                         .multilineTextAlignment(.center)
                                 }
                             }
-                            
+
                             if !sortedRecords.isEmpty {
                                 Text("RPE")
                                     .font(.caption)
@@ -63,13 +63,13 @@ struct ExerciseRPEGraph: View {
                             }
                         }
                         .frame(width: max(CGFloat(sortedRecords.count) * 60, screenWidth - 40), height: screenHeight * 0.33)
-                        
+
                         Color.clear.frame(width: 0.1).id("END")   // sentinel at far right
                     }
                 }
                 .onAppear { proxy.scrollTo("END", anchor: .trailing) }
             }
-            
+
             Picker("Select Time Range", selection: $selectedTimeRange) {
                 ForEach(TimeRange.allCases, id: \.self) { range in
                     Text(range.rawValue.capitalized).tag(range)
@@ -79,29 +79,29 @@ struct ExerciseRPEGraph: View {
             .padding()
         }
     }
-    
+
     // MARK: – RPE Record Structure
     private struct RPERecord: Identifiable {
         let id: UUID = UUID()
         let date: Date
         let rpe: Double
     }
-    
+
     // MARK: – Data Processing
     /// Extract all RPE records from completed workouts
     private var allRecords: [RPERecord] {
         var records: [RPERecord] = []
-        
+
         // Find all workouts where this exercise was performed
         for workout in completedWorkouts {
             // Check if the exercise exists in this workout's template
             if let workoutExercise = workout.template.exercises.first(where: { $0.id == exercise.id }) {
                 // Get all setDetails for this exercise
                 let allSets = workoutExercise.setDetails
-                
+
                 // Filter sets that have RPE values and calculate average
                 let rpeValues = allSets.compactMap { $0.rpe }
-                
+
                 // Only create a record if there are RPE values
                 if !rpeValues.isEmpty {
                     let averageRPE = rpeValues.reduce(0, +) / Double(rpeValues.count)
@@ -109,14 +109,14 @@ struct ExerciseRPEGraph: View {
                 }
             }
         }
-        
+
         return records
     }
-    
+
     /// Records after time‑range filtering and per‑day de‑duplication.
     private var sortedRecords: [RPERecord] {
         guard !allRecords.isEmpty else { return [] }
-        
+
         let filtered: [RPERecord] = {
             switch selectedTimeRange {
             case .month:
@@ -138,7 +138,7 @@ struct ExerciseRPEGraph: View {
                 return allRecords
             }
         }()
-        
+
         // Keep average RPE per calendar day (if multiple workouts on same day, average them)
         var rpePerDay: [Date: [Double]] = [:]
         for rec in filtered {
@@ -148,24 +148,24 @@ struct ExerciseRPEGraph: View {
             }
             rpePerDay[day]?.append(rec.rpe)
         }
-        
+
         // Convert to records with averaged RPE per day
         let dailyRecords = rpePerDay.compactMap { (date, rpeValues) -> RPERecord? in
             guard !rpeValues.isEmpty else { return nil }
             let averageRPE = rpeValues.reduce(0, +) / Double(rpeValues.count)
             return RPERecord(date: date, rpe: averageRPE)
         }
-        
+
         return dailyRecords.sorted { $0.date < $1.date }
     }
-    
+
     /// The latest (most recent) RPE record
     private var latestRecord: RPERecord? { sortedRecords.last }
-    
+
     private var minValue: Double { sortedRecords.map { $0.rpe }.min() ?? 0 }
-    
+
     private var maxValue: Double { sortedRecords.map { $0.rpe }.max() ?? 10 }
-    
+
     private var yAxisRange: ClosedRange<Double> {
         let adjustedMin = min(minValue, 0)
         let adjustedMax = max(maxValue, 10)

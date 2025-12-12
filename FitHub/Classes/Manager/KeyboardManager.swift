@@ -37,13 +37,13 @@ final class KeyboardManager: ObservableObject {
         if let s = willShow { NotificationCenter.default.removeObserver(s) }
         if let h = willHide { NotificationCenter.default.removeObserver(h) }
     }
-    
+
     func dismiss() {
         KeyboardManager.dismissKeyboard()
         // Update the published state so any listeners refresh right away.
         isVisible = false
     }
-    
+
     static func dismissKeyboard() {
         UIApplication.shared.endEditing()
     }

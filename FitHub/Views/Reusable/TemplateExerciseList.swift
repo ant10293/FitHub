@@ -21,7 +21,7 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
     let accessory: (Exercise) -> Accessory
     let detail: (Exercise) -> Detail
     let onTap: (Exercise, Int) -> Void
-    
+
     init(
         template: WorkoutTemplate,
         userData: UserData,
@@ -47,9 +47,9 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
         self.detail = detail
         self.onTap = onTap
     }
-    
+
     enum TapAction { case showOverlay, viewDetail }
-    
+
     var body: some View {
         List {
             Section {
@@ -66,7 +66,7 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
                         return template.supersetFor(exercise: exercise) == previous ||
                         template.supersetFor(exercise: previous) == exercise
                     }()
-                    
+
                     // Regular exercise row
                     let baseRow = ExerciseRow(
                         exercise,
@@ -92,13 +92,13 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
                             }
                         }
                     )
-                    
+
                     let modifiedRow = baseRow
                         .id(exercise.id)
                         .disabled(exercise.isCompleted)
                         .opacity(exercise.isCompleted ? 0.25 : 1.0)
                         .listRowSeparator(isFirstInSuperset ? .hidden : .automatic, edges: isFirstInSuperset ? .bottom : .all)
-                    
+
                     // Apply negative padding to reduce spacing for supersetted exercises
                     if isFirstInSuperset {
                         // First exercise: reduce bottom spacing
@@ -111,7 +111,7 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
                     } else {
                         modifiedRow
                     }
-                    
+
                     // Superset badge row - inserted between the two supersetted exercises
                     if isFirstInSuperset {
                         HStack(spacing: 4) {
@@ -143,4 +143,3 @@ struct TemplateExerciseList<Accessory: View, Detail: View>: View {
         }
     }
 }
-

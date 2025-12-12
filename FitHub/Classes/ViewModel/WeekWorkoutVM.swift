@@ -23,7 +23,7 @@ final class WeekWorkoutVM: ObservableObject {
 
     init(userData: UserData) {
         self.userData = userData
-        
+
         let wpPublisher = userData.$workoutPlans          // Published<WorkoutPlans>.Publisher
 
         Publishers.CombineLatest4(
@@ -105,4 +105,3 @@ final class WeekWorkoutVM: ObservableObject {
         earliestFutureDate = dayInfos.first(where: { $0.id >= today })?.id ?? today
     }
 }
-

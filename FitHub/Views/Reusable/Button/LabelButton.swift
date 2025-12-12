@@ -11,10 +11,10 @@ struct LabelButton: View {
     let title: String
     let systemImage: String
     let tint: Color
-    let controlSize: ControlSize 
+    let controlSize: ControlSize
     let width: WidthStyle
     let action: () -> Void
-    
+
     init(
         title: String,
         systemImage: String,
@@ -42,5 +42,3 @@ struct LabelButton: View {
         .controlSize(controlSize)
     }
 }
-
-

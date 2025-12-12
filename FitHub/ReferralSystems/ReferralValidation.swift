@@ -15,7 +15,7 @@ import Foundation
 func isValidEmail(_ email: String) -> Bool {
     let trimmed = email.trimmingCharacters(in: .whitespaces)
     guard !trimmed.isEmpty else { return false }
-    
+
     // Basic email validation: something@something.something
     // Pattern: at least one character before @, at least one character after @, then a dot, then at least one character
     let emailRegex = "^[^@]+@[^@]+\\.[^@]+$"
@@ -75,14 +75,14 @@ enum ReferralError: Error {
     case uidHasCodeAlready
     case unableToGenerateUniqueCode
     case unknownError(String)
-    
+
     var forCustomCode: Bool {
         switch self {
         case .codeAlreadyTaken, .invalidCodeFormat: return true
         default: return false
         }
     }
-    
+
     var localizedDescription: String {
         switch self {
         case .invalidEmailFormat:
@@ -110,7 +110,7 @@ func referralError(from error: Error) -> ReferralError {
     if let referralError = error as? ReferralError {
         return referralError
     }
-    
+
     // Backwards compatibility: handle old NSError codes
     if let nsError = error as NSError? {
         switch nsError.code {
@@ -128,7 +128,7 @@ func referralError(from error: Error) -> ReferralError {
             return .unknownError(nsError.localizedDescription)
         }
     }
-    
+
     // For any other error type, use unknownError
     return .unknownError(error.localizedDescription)
 }

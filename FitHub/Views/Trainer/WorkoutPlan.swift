@@ -15,7 +15,7 @@ struct WorkoutPlan: View {
     @State private var showingAlert: Bool = false
     @State private var showingSaveConfirmation: Bool = false
     @State private var showingTemplateChoice: Bool = false
-    
+
     var body: some View {
         NavigationStack {
             TemplateNavigator(
@@ -24,9 +24,9 @@ struct WorkoutPlan: View {
             ) {
                 VStack {
                     Spacer()
-                                    
+
                     WeekView(userData: ctx.userData, selectedTemplate: $selectedTemplate)
-                    
+
                     if ctx.userData.workoutPlans.workoutsCreationDate != nil {
                         NavigationLink(destination: LazyDestination { WorkoutGeneration() }) {
                             HStack {
@@ -47,9 +47,9 @@ struct WorkoutPlan: View {
                         }
                         .padding(.horizontal)
                     }
-                    
+
                     Spacer()
-                    
+
                     if ctx.userData.workoutPlans.trainerTemplates.isEmpty {
                         RectangularButton(
                             title: "Generate Workout Plan",
@@ -82,7 +82,7 @@ struct WorkoutPlan: View {
                         )
                         .clipShape(Capsule())
                     }
-                    
+
                     Spacer()
                 }
                 .background(Color(UIColor.systemGroupedBackground))
@@ -123,21 +123,21 @@ struct WorkoutPlan: View {
             }
         }
     }
-    
+
     private var disableWorkoutButton: Bool {
         return ctx.userData.isWorkingOut || ctx.userData.sessionTracking.activeWorkout != nil
     }
-    
+
     private func startWorkoutForDay() {
         // Find templates where `date` is not nil and matches today
         let userTemplate = ctx.userData.workoutPlans.userTemplates.first { template in
             return isTemplateToday(template: template)
         }
-        
+
         let trainerTemplate = ctx.userData.workoutPlans.trainerTemplates.first { template in
             return isTemplateToday(template: template)
         }
-        
+
         // Handle different cases based on whether templates are found
         switch (userTemplate, trainerTemplate) {
         case (let user?, nil):
@@ -154,7 +154,7 @@ struct WorkoutPlan: View {
             showingAlert = true
         }
     }
-    
+
     private func isTemplateToday(template: WorkoutTemplate) -> Bool {
         if let date = template.date {
             if template.shouldDisableTemplate {
@@ -165,7 +165,7 @@ struct WorkoutPlan: View {
         }
         return false
     }
-    
+
     private func proceedToWorkout(location: TemplateLocation) {
         guard let template = selectedWorkoutTemplate else { return }
         selectedTemplate = .init(template: template, location: location, mode: .directToWorkout)

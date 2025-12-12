@@ -15,7 +15,7 @@ struct CompletedWorkouts: View {
     @State private var showingDeleteConfirmation: Bool = false
     @State private var selectedSortOption: CompletedWorkoutSortOption = .mostRecent
     @State private var workoutToDelete: CompletedWorkout?
-    
+
     var body: some View {
         VStack(spacing: 0) {
             if sortedWorkouts.isEmpty {
@@ -39,7 +39,7 @@ struct CompletedWorkouts: View {
                 }
                 .padding(.top)
                 .zIndex(0)
-                
+
                 List {
                     ForEach(sortedWorkouts) { workout in
                         if !workout.template.exercises.isEmpty {
@@ -105,33 +105,33 @@ struct CompletedWorkouts: View {
             }
         }
     }
-    
+
     private var sortedWorkouts: [CompletedWorkout] {
         let workouts: [CompletedWorkout]
-        
+
         switch selectedSortOption {
         case .mostRecent:
             workouts = userData.workoutPlans.completedWorkouts.sorted { $0.date > $1.date }
-            
+
         case .leastRecent:
             workouts = userData.workoutPlans.completedWorkouts.sorted { $0.date < $1.date }
-            
+
         case .thisMonth:
             let currentMonth = CalendarUtility.shared.month(from: Date())
             workouts = userData.workoutPlans.completedWorkouts.filter {
                 CalendarUtility.shared.month(from: $0.date) == currentMonth
             }
-            
+
         case .longestDuration:
             workouts = userData.workoutPlans.completedWorkouts.sorted { $0.duration > $1.duration }
-            
+
         case .shortestDuration:
             workouts = userData.workoutPlans.completedWorkouts.sorted { $0.duration < $1.duration }
         }
-        
+
         return workouts.filter { !$0.template.exercises.isEmpty }
     }
-    
+
     private func deleteWorkout(_ workout: CompletedWorkout) {
         if let index = userData.workoutPlans.completedWorkouts.firstIndex(where: { $0.id == workout.id}) {
             print("Removing workout: \(workout.name)")

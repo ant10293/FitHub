@@ -13,7 +13,7 @@ struct SelectedTemplate: Identifiable, Equatable {
     var template: WorkoutTemplate
     var location: TemplateLocation
     var mode: NavigationMode
-    
+
     init(template: WorkoutTemplate, location: TemplateLocation, mode: NavigationMode) {
         self.id = UUID()
         self.template = template
@@ -24,7 +24,7 @@ struct SelectedTemplate: Identifiable, Equatable {
 
 enum TemplateLocation: String, Codable, CaseIterable {
     case user, trainer, archived, active
-    
+
     var label: String {
         switch self {
         case .user: return "Your Templates"
@@ -44,7 +44,7 @@ struct WorkoutTemplate: Identifiable, Hashable, Codable, Equatable {
     var date: Date?
     var notificationIDs: [String] = [] // Store notification identifiers for removal
     var estimatedCompletionTime: TimeSpan?
-    
+
     init(
         id: UUID? = nil,
         name: String,
@@ -85,14 +85,14 @@ extension WorkoutTemplate {
             let workingSets  = ex.setDetails
             let limbMovement = ex.limbMovementType ?? .bilateralDependent
             let isLastExercise = (exIdx == exercises.indices.last)
-            
+
             var movement = 0
             var restTime = 0
 
             func parseSets(_ sets: [SetDetail], isWarm: Bool) {
                 guard !sets.isEmpty else { return }
                 let restSec = ex.getRestPeriod(isWarm: isWarm, rest: rest)
-                
+
                 for set in sets {
                     switch set.planned {
                     case .reps(let r):
@@ -107,7 +107,7 @@ extension WorkoutTemplate {
                         let secondsPerMeter = SetDetail.secPerMeter
                         movement += Int((m.inM * secondsPerMeter).rounded())
                     }
-                    
+
                     let noRest = isLastExercise && set.setNumber == ex.totalSets
                     if !noRest {
                         restTime += restSec
@@ -125,12 +125,12 @@ extension WorkoutTemplate {
 
         return (total: TimeSpan(seconds: totalSeconds), perExercise: perExercise)
     }
-    
+
     mutating func setEstimatedCompletionTime(rest: RestPeriods) {
         let (total, _) = estimateCompletionTime(rest: rest)
         self.estimatedCompletionTime = total
     }
-    
+
     private func deriveCategories() -> [SplitCategory] {
         let CAP = 4
         var ordered: [SplitCategory] = []
@@ -172,11 +172,11 @@ extension WorkoutTemplate {
 
         return ordered
     }
-    
+
     mutating func setCategories() {
         self.categories = deriveCategories()
     }
-    
+
     static func uniqueTemplateName(initialName: String, from templates: [WorkoutTemplate]) -> String {
         let existing = Set(templates.map { $0.name })
         // 1️⃣  If the candidate is free, keep it
@@ -201,7 +201,7 @@ extension WorkoutTemplate {
             i += 1
         }
     }
-    
+
     func calculateWorkoutSummary(
         completionDuration: Int = 0,
         updates: PerformanceUpdates = .init()
@@ -231,7 +231,7 @@ extension WorkoutTemplate {
                 }
                 totalReps += reps
             }
-            
+
             // Track time spent per exercise
             if exercise.timeSpent > 0 {
                 timeByExercise[exercise.id] = exercise.timeSpent
@@ -247,18 +247,18 @@ extension WorkoutTemplate {
             timeByExercise: timeByExercise
         )
     }
-    
+
     var noSetsCompleted: Bool { exercises.allSatisfy(\.noSetsCompleted) }
-    
+
     var shouldDisableTemplate: Bool {
         exercises.isEmpty || exercises.contains { $0.setDetails.isEmpty }
     }
-    
+
     // List of UUID of exercises already in the template for quick lookup
     var exerciseIDs: Set<Exercise.ID> { Set(exercises.map { $0.id }) }
-    
+
     var numExercises: Int { exercises.count }
-    
+
     func supersetFor(exercise: Exercise) -> Exercise? {
         guard let supersettedWith = exercise.isSupersettedWith else { return nil }
         return exercises.first(where: { $0.id.uuidString == supersettedWith })
@@ -272,9 +272,9 @@ struct CompletedWorkout: Identifiable, Hashable, Codable {
     var updatedMax: [PerformanceUpdate]
     var duration: Int
     var date: Date
-    
+
     let byID: [UUID: Exercise]
-    
+
     init(
         template: WorkoutTemplate = .init(name: "", exercises: []),
         updatedMax: [PerformanceUpdate] = [],
@@ -329,7 +329,7 @@ struct OldTemplate: Identifiable {
         self.id = template.id
         self.exercises = template.exercises
     }
-        
+
     /// Generic initializer + empty singleton
     init(id: UUID = UUID(), exercises: [Exercise] = []) {
         self.id = id

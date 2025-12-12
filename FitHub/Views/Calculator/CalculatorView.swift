@@ -13,7 +13,7 @@ struct CalculatorView: View {
                     } label: {
                         CalculatorRow(title: "1 Rep Max Calculator", systemName: "scalemass")
                     }
-                    
+
                     // MARK: premium feature only
                     Button {
                         if ctx.store.membershipType == .free {
@@ -82,7 +82,7 @@ struct CalculatorView: View {
             }
         }
     }
-    
+
     private enum CalculatorRoute: Hashable {
         case oneRepMax, progressiveOverload, bmi, kcal, bodyFat, macros
     }
@@ -98,13 +98,3 @@ struct CalculatorView: View {
         .padding(.vertical, 8)
     }
 }
-
-
-
-
-
-
-
-
-
-

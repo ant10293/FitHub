@@ -14,7 +14,7 @@ struct ExerciseSelection: View {
     let templateCategories: [SplitCategory]?
     let mode: SelectionMode     /// Controls behavior / presentation style for this selector.
     let onDone: ([Exercise]) -> Void     /// Called when the user finishes selection.
-    
+
     // MARK: - Init
     init(
         selectedExercises: [Exercise] = [],
@@ -33,13 +33,13 @@ struct ExerciseSelection: View {
         self.mode = mode
         self.onDone = onDone
     }
-    
+
     // MARK: - Derived Mode Flags
     private var isPerformanceMode: Bool { mode == .performanceView }
     private var isOneRMMode: Bool { mode == .oneRMCalculator }
     /// In these modes we immediately resolve selection on tap and dismiss.
     private var isSingleSelectImmediate: Bool { mode.isSingleSelectImmediate }
-    
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -58,11 +58,11 @@ struct ExerciseSelection: View {
                     )
                     .padding(.bottom, -5)
                 }
-               
+
                 // Search bar
                 SearchBar(text: $searchText, placeholder: "Search Exercises")
                     .padding(.horizontal)
-                
+
                 // The List of Exercises
                 List {
                     if filteredExercises.isEmpty {
@@ -73,7 +73,7 @@ struct ExerciseSelection: View {
                         Section {
                             ForEach(filteredExercises, id: \.id) { exercise in
                                 let favState = FavoriteState.getState(for: exercise, userData: ctx.userData)
-                                
+
                                 ExerciseRow(
                                     exercise,
                                     heartOverlay: true,
@@ -127,18 +127,18 @@ struct ExerciseSelection: View {
             }
         }
     }
-    
+
     private func disappearAction() {
         // For multi-select modes, ensure the caller still receives the final selection
         if !donePressed && !isSingleSelectImmediate {
             onDone(selectedExercises)
         }
     }
-    
+
     private var filterTemplateCats: Bool { ctx.userData.sessionTracking.exerciseSortOption == .templateCategories || templateFilter }
-    
+
     private var templateSortingEnabled: Bool { ctx.userData.settings.sortByTemplateCategories && !(templateCategories?.isEmpty ?? true) }
-    
+
     private var filteredExercises: [Exercise] {
         let base = ctx.exercises.filteredExercises(
             searchText: searchText,
@@ -149,7 +149,7 @@ struct ExerciseSelection: View {
             userData: ctx.userData,
             equipmentData: ctx.equipment
         )
-        
+
         guard isPerformanceMode else { return base }
 
 
@@ -170,7 +170,7 @@ struct ExerciseSelection: View {
             return da > db
         }
     }
-    
+
     // MARK: - Helpers
     private func handleTap(on exercise: Exercise) {
         if isSingleSelectImmediate {
@@ -184,7 +184,7 @@ struct ExerciseSelection: View {
             }
         }
     }
-    
+
     @ViewBuilder
     private func detailView(for exercise: Exercise) -> some View {
         switch mode {
@@ -198,10 +198,10 @@ struct ExerciseSelection: View {
             EmptyView()
         }
     }
-    
+
     enum SelectionMode {
         case performanceView, oneRMCalculator, templateSelection
-        
+
         var isSingleSelectImmediate: Bool {
             switch self {
             case .performanceView, .oneRMCalculator: return true
@@ -210,5 +210,3 @@ struct ExerciseSelection: View {
         }
     }
 }
-
-

@@ -10,11 +10,11 @@ import SwiftUI
 struct ResumeWorkoutOverlay: View {
     let cancel: () -> Void
     let resume: () -> Void
-    
+
     var body: some View {
         VStack {
             Spacer()
-            
+
             VStack {
                 Text("You still have a workout in progress.")
                     .font(.title2)
@@ -25,7 +25,7 @@ struct ResumeWorkoutOverlay: View {
                     .foregroundStyle(Color.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
-                
+
                 HStack {
                     RectangularButton(title: "Cancel", bgColor: .red, action: cancel)
                     RectangularButton(title: "Resume", bgColor: .blue, action: resume)
@@ -34,11 +34,9 @@ struct ResumeWorkoutOverlay: View {
             }
             .cardContainer(cornerRadius: 10, shadowRadius: 10)
             .frame(width: screenWidth * 0.8)
-            
+
             Spacer()
         }
         .ignoresSafeArea(.all)
     }
 }
-
-

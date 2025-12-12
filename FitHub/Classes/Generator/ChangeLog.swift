@@ -14,12 +14,12 @@ extension WorkoutGenerator {
         templates: [WorkoutTemplate],
         generationStartTime: Date
     ) -> WorkoutChangelog? {
-        
+
         // Only generate changelog for next week workouts
         guard input.nextWeek else { return nil }
-        
+
         let generationTime = Date().timeIntervalSince(generationStartTime)
-        
+
         let templateChangelogs = templates.enumerated().map { index, newTemplate in
             createTemplateChangelog(
                 dayIndex: index,
@@ -28,7 +28,7 @@ extension WorkoutGenerator {
                 input: input
             )
         }
-        
+
         let stats = GenerationStats(
             totalGenerationTime: generationTime,
             exercisesSelected: templates.flatMap { $0.exercises }.count,
@@ -38,7 +38,7 @@ extension WorkoutGenerator {
             progressiveOverloadApplied: overloadingExercises.count, // Use tracked state
             deloadsApplied: deloadingExercises.count // Use tracked state
         )
-        
+
         return WorkoutChangelog(
             generationDate: Date(),
             weekStartDate: params.startDate,
@@ -47,14 +47,14 @@ extension WorkoutGenerator {
             generationStats: stats
         )
     }
-    
+
     private func createTemplateChangelog(
         dayIndex: Int,
         newTemplate: WorkoutTemplate,
         previousTemplate: WorkoutTemplate?,
         input: Input
     ) -> TemplateChangelog {
-        
+
         let changes = newTemplate.exercises.map { newExercise in
             createExerciseChange(
                 newExercise: newExercise,
@@ -62,14 +62,14 @@ extension WorkoutGenerator {
                 input: input
             )
         }
-        
+
         let metadata = TemplateMetadata(
             estimatedDuration: newTemplate.estimatedCompletionTime,
             totalSets: newTemplate.exercises.flatMap { $0.setDetails }.count,
             totalVolume: calculateTotalVolume(newTemplate),
             categories: newTemplate.categories
         )
-        
+
         return TemplateChangelog(
             dayName: newTemplate.name,
             dayIndex: dayIndex,
@@ -79,20 +79,20 @@ extension WorkoutGenerator {
             metadata: metadata
         )
     }
-    
+
     // Update your existing createExerciseChange method:
     private func createExerciseChange(
         newExercise: Exercise,
         previousExercise: Exercise?,
         input: Input
     ) -> ExerciseChange {
-        
+
         let changeType = determineChangeType(new: newExercise, previous: previousExercise)
         let progressionDetails = createProgressionDetails(new: newExercise, input: input)
-        
+
         // NEW: Add max record information
         let maxRecordInfo = createMaxRecordInfo(exercise: newExercise, input: input)
-        
+
         return ExerciseChange(
             exerciseName: newExercise.name,
             changeType: changeType,
@@ -126,10 +126,10 @@ extension WorkoutGenerator {
             daysSinceLastUpdate: daysSinceLastUpdate
         )
     }
-    
+
     private func determineChangeType(new: Exercise, previous: Exercise?) -> ExerciseChange.ChangeType {
         guard let previous = previous else { return .new }
-        
+
         if new.name == previous.name {
             // Same exercise, check if modified
             return hasSignificantChanges(new: new, previous: previous) ? .modified : .kept
@@ -144,10 +144,10 @@ extension WorkoutGenerator {
     // Helper to get previous template for comparison
     private func getPreviousTemplate(for dayIndex: Int, from saved: [OldTemplate]) -> WorkoutTemplate? {
         guard dayIndex < saved.count else { return nil }
-        
+
         let exercises = saved[dayIndex].exercises
         guard !exercises.isEmpty else { return nil }
-        
+
         // Create a minimal template for comparison
         return WorkoutTemplate(
             name: "Previous \(dayIndex + 1)",
@@ -156,10 +156,10 @@ extension WorkoutGenerator {
             dayIndex: dayIndex
         )
     }
-    
+
     // Count exercises that were changed/replaced
     private enum CountVariants { case kept, changed }
-    
+
     private func countExercises(for type: CountVariants, templates: [WorkoutTemplate], saved: [OldTemplate]) -> Int {
         var count = 0
         for (index, template) in templates.enumerated() {
@@ -175,23 +175,23 @@ extension WorkoutGenerator {
         }
         return count
     }
-    
+
     // Find previous exercise for comparison
     private func findPreviousExercise(_ newExercise: Exercise, in previousTemplate: WorkoutTemplate?) -> Exercise? {
         guard let previous = previousTemplate else { return nil }
         return previous.exercises.first { $0.id == newExercise.id }
     }
-    
+
     // Check if exercise has significant changes
     private func hasSignificantChanges(new: Exercise, previous: Exercise) -> Bool {
         // Compare set details
         if new.setDetails.count != previous.setDetails.count { return true }
-        
+
         for (newSet, prevSet) in zip(new.setDetails, previous.setDetails) {
             if newSet.load != prevSet.load { return true }
             if newSet.planned.actualValue != prevSet.planned.actualValue { return true }
         }
-        
+
         return false
     }
 
@@ -200,7 +200,7 @@ extension WorkoutGenerator {
         let summary = template.calculateWorkoutSummary()
         return summary.totalVolume
     }
-    
+
     // Create progression details
     private func createProgressionDetails(new: Exercise, input: Input) -> ProgressionDetails? {
         let s = input.user.settings

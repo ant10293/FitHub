@@ -18,10 +18,10 @@ struct Notification: Codable, Identifiable {
 struct Notifications: Codable, Hashable {
     var intervals: [TimeInterval] = []
     var times: [DateComponents] = []
-    
+
     func contains(_ comps: DateComponents) -> Bool { times.contains(comps) }
     func contains(_ int: TimeInterval) -> Bool { intervals.contains(int) }
-    
+
     @discardableResult
     mutating func addInterval(totalSeconds: Int) -> Bool {
         guard totalSeconds > 0 else { return false }

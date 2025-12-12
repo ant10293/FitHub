@@ -14,10 +14,10 @@ enum Name {
         let displayName = [formattedFirst, formattedLast]
             .filter { !$0.isEmpty }
             .joined(separator: " ")
-        
+
         return displayName.isEmpty ? nil : displayName
     }
-    
+
     static func parseName(
         preferredFirstName: String?,
         preferredLastName: String?,
@@ -26,13 +26,13 @@ enum Name {
     ) -> (firstName: String, lastName: String) {
         let trimmedFirst = (preferredFirstName?.trimmed ?? "")
         let trimmedLast = (preferredLastName?.trimmed ?? "")
-        
+
         if !trimmedFirst.isEmpty || !trimmedLast.isEmpty {
             let first = trimmedFirst.formatName()
             let last = trimmedLast.formatName()
             return (first, last)
         }
-        
+
         let bestDisplay = [fallbackDisplayName, firebaseDisplayName]
             .compactMap { $0?.trimmed }
             .first(where: { !$0.isEmpty }) ?? ""

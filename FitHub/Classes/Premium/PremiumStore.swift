@@ -64,7 +64,7 @@ final class PremiumStore: ObservableObject {
         listenForTransactionChanges()
         setupAppLifecycleObservers()
     }
-    
+
     deinit {
         if let observer = foregroundObserver {
             NotificationCenter.default.removeObserver(observer)
@@ -118,7 +118,7 @@ final class PremiumStore: ObservableObject {
 
     enum MembershipType: String, CaseIterable, Comparable {
         case free, monthly, yearly, lifetime
-        
+
         private var rank: Int {
             switch self {
             case .free:     return 0
@@ -220,7 +220,7 @@ final class PremiumStore: ObservableObject {
             case .success(let verification):
                 do {
                     let transaction = try verify(verification)
-                    
+
                     // MARK: Affiliate System guard
                     if useAffiliateSystem {
                         // Track referral purchase if user has a referral code (non-blocking)
@@ -234,7 +234,7 @@ final class PremiumStore: ObservableObject {
                             )
                         }
                     }
-                    
+
                     await transaction.finish()
                     await refreshEntitlementWithRetry()
                 } catch {
@@ -299,13 +299,13 @@ final class PremiumStore: ObservableObject {
     }
 
     // MARK: - Error Recovery Methods
-    
+
     /// Refreshes entitlement with retry logic and fallback to cached state
     private func refreshEntitlementWithRetry() async {
         retryCount = 0
         await refreshEntitlementWithRetryInternal()
     }
-    
+
     private func refreshEntitlementWithRetryInternal() async {
         do {
             try await refreshEntitlement()
@@ -314,12 +314,12 @@ final class PremiumStore: ObservableObject {
             cacheEntitlement()
         } catch {
             print("⚠️ [PremiumStore] Entitlement refresh failed (attempt \(retryCount + 1)/\(maxRetries)): \(error.localizedDescription)")
-            
+
             if retryCount < maxRetries {
                 // Retry with exponential backoff
                 retryCount += 1
                 let delay = min(Double(retryCount) * 2.0, 10.0) // Max 10 seconds
-                
+
                 try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
                 await refreshEntitlementWithRetryInternal()
             } else {
@@ -330,7 +330,7 @@ final class PremiumStore: ObservableObject {
             }
         }
     }
-    
+
     /// Refreshes entitlement - can throw errors
     @MainActor
     private func refreshEntitlement() async throws {
@@ -345,7 +345,7 @@ final class PremiumStore: ObservableObject {
         // currentEntitlements should complete after enumerating all current entitlements
         // We add a timeout as a safety net in case StoreKit hangs
         typealias EntitlementResult = (lifetimeID: UInt64?, bestEntitlement: PremiumEntitlement, bestMembership: MembershipType, overlap: OverlappingSubscriptionInfo?)
-        
+
         let entitlementTask = Task<EntitlementResult, Error> {
             var localLifetimeID: UInt64?
             var localBestEntitlement = PremiumEntitlement(isPremium: false, source: nil)
@@ -354,7 +354,7 @@ final class PremiumStore: ObservableObject {
 
         for await result in SKTransaction.currentEntitlements {
                 try Task.checkCancellation()
-                
+
             guard case .verified(let t) = result else { continue }
             guard t.revocationDate == nil else { continue }
 
@@ -402,16 +402,16 @@ final class PremiumStore: ObservableObject {
                 break
             }
         }
-            
+
             return (localLifetimeID, localBestEntitlement, localBestMembership, localOverlap)
         }
-        
+
         // Timeout safety net (30 seconds)
         let timeoutTask = Task {
             try await Task.sleep(nanoseconds: 30_000_000_000)
             entitlementTask.cancel()
         }
-        
+
         // Wait for entitlement processing or timeout
         let result: EntitlementResult
         do {
@@ -427,7 +427,7 @@ final class PremiumStore: ObservableObject {
                 throw error
             }
         }
-        
+
         lifetimeTransactionID = result.lifetimeID
         bestEntitlement = result.bestEntitlement
         bestMembership = result.bestMembership
@@ -444,7 +444,7 @@ final class PremiumStore: ObservableObject {
         entitlement = bestEntitlement
         membershipType = bestMembership
     }
-    
+
     /// Falls back to cached entitlement when validation fails
     private func fallbackToCachedEntitlement() {
         // Helper to check if subscription expired
@@ -458,7 +458,7 @@ final class PremiumStore: ObservableObject {
             }
             return false
         }
-        
+
         if let cached = lastKnownEntitlement, cached.isPremium, !isExpired() {
             entitlement = cached
             membershipType = lastKnownMembershipType
@@ -475,16 +475,16 @@ final class PremiumStore: ObservableObject {
             membershipType = .free
         }
     }
-    
+
     /// Caches current entitlement state
     private func cacheEntitlement() {
         lastKnownEntitlement = entitlement
         lastKnownMembershipType = membershipType
         userDefaults.set(Date(), forKey: lastValidationKey)
-        
+
         // Cache membership type as string
         userDefaults.set(membershipType.rawValue, forKey: membershipCacheKey)
-        
+
         // Cache expiration date if available (for grace period validation)
         if let source = entitlement.source,
            case .subscription(let expiration, _, _) = source {
@@ -497,7 +497,7 @@ final class PremiumStore: ObservableObject {
             userDefaults.removeObject(forKey: lastExpirationKey)
         }
     }
-    
+
     /// Loads cached entitlement on startup
     private func loadCachedEntitlement() {
         if let cachedTypeString = userDefaults.string(forKey: membershipCacheKey),
@@ -511,7 +511,7 @@ final class PremiumStore: ObservableObject {
             }
         }
     }
-    
+
     /// Sets up observers for app lifecycle events to retry validation
     private func setupAppLifecycleObservers() {
         foregroundObserver = NotificationCenter.default.addObserver(
@@ -536,7 +536,7 @@ final class PremiumStore: ObservableObject {
             let statuses = try await withTimeout(seconds: 10) {
                 try await sub.status
             }
-            
+
             let matched = statuses.first(where: { status in
                 if case .verified(let tx) = status.transaction { return tx.id == transaction.id }
                 return false
@@ -553,19 +553,19 @@ final class PremiumStore: ObservableObject {
             return nil
         }
     }
-    
+
     /// Helper to add timeout to async operations
     private func withTimeout<T>(seconds: Double, operation: @escaping () async throws -> T) async throws -> T {
         try await withThrowingTaskGroup(of: T.self) { group in
             group.addTask {
                 try await operation()
             }
-            
+
             group.addTask {
                 try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
                 throw NSError(domain: "PremiumStore", code: -1, userInfo: [NSLocalizedDescriptionKey: "Operation timed out"])
             }
-            
+
             guard let result = try await group.next() else {
                 group.cancelAll()
                 throw NSError(domain: "PremiumStore", code: -1, userInfo: [NSLocalizedDescriptionKey: "Task group returned no result"])

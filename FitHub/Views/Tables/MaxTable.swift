@@ -66,7 +66,7 @@ struct MaxTable: View {
             }
         }
     }
-    
+
     // Rendered percent steps (shared across all modes)
     private let percents = Array(stride(from: 100, through: 50, by: -5))
 
@@ -111,5 +111,3 @@ private struct ThreeColumnRow<Left: View, Center: View, Right: View>: View {
         }
     }
 }
-
-

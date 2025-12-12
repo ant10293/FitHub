@@ -12,17 +12,17 @@ struct RingView: View {
     let carbs: Double
     let fats: Double
     let proteins: Double
-    
+
     var body: some View {
         let height = screenHeight
-        
+
         VStack {
             ZStack {
                 if carbs == 0 && fats == 0 && proteins == 0 {
                     Circle()
                         .stroke(Color.gray, lineWidth: 20)
                         .rotationEffect(.degrees(-90))
-                    
+
                     kcalLabel
                 } else {
                     Circle()
@@ -37,12 +37,12 @@ struct RingView: View {
                         .trim(from: CGFloat(carbsRatio + fatsRatio), to: 1)
                         .stroke(Color.red, lineWidth: 20)
                         .rotationEffect(.degrees(-90))
-                    
+
                     kcalLabel
                 }
             }
             .frame(height: height * 0.25)
-            
+
             HStack {
                 legendLabel(label: "Carbs", color: .blue)
                 legendLabel(label: "Fats", color: .yellow)
@@ -61,10 +61,10 @@ struct RingView: View {
                 .font(.subheadline)
         }
     }
-    
+
     private func legendLabel(label: String, color: Color) -> some View {
         let size = screenWidth * 0.05
-        
+
         return VStack {
             Circle()
                 .fill(color)
@@ -73,7 +73,7 @@ struct RingView: View {
                 .font(.caption)
         }
     }
-    
+
     private var carbsCalories: Double { return carbs * 4 }
     private var fatsCalories: Double { return fats * 9 }
     private var proteinsCalories: Double { return proteins * 4 }

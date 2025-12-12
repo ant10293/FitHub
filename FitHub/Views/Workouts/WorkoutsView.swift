@@ -8,7 +8,7 @@ struct WorkoutsView: View {
     @State private var showingTemplateEditor: Bool = false
     @State private var selectedTemplate: SelectedTemplate?
     @State private var editingTemplateIndex: Int?
-    
+
     var body: some View {
         NavigationStack {
             TemplateNavigator(
@@ -28,7 +28,7 @@ struct WorkoutsView: View {
             }
         }
     }
-    
+
     private var resumeWorkoutOverlay: some View {
         ResumeWorkoutOverlay(
             cancel: {
@@ -44,13 +44,13 @@ struct WorkoutsView: View {
             }
         )
     }
-    
+
     private var shouldDisableWorkoutButton: Bool {
         return ctx.userData.isWorkingOut || activeWorkout != nil
     }
-    
+
     private var activeWorkout: WorkoutInProgress? { return ctx.userData.sessionTracking.activeWorkout }
-    
+
     private var workoutList: some View {
         List {
             if !ctx.userData.workoutPlans.trainerTemplates.isEmpty {
@@ -59,7 +59,7 @@ struct WorkoutsView: View {
             templatesSection(templates: ctx.userData.workoutPlans.userTemplates, location: .user)
         }
     }
-    
+
     private func templatesSection(templates: [WorkoutTemplate], location: TemplateLocation) -> some View {
         Section {
             ForEach(templates.indices, id: \.self) { index in
@@ -72,7 +72,7 @@ struct WorkoutsView: View {
                     ctx.userData.deleteTrainerTemplate(at: offset)
                 }
             }
-            
+
             // MARK: premium feature > 4 templates
             if location == .user {
                 Button(action: {
@@ -90,7 +90,7 @@ struct WorkoutsView: View {
             Text(location.label)
         }
     }
-    
+
     private func templateButton(for index: Int, location: TemplateLocation, template: WorkoutTemplate) -> some View {
         TemplateRow(
             template: template,
@@ -108,7 +108,7 @@ struct WorkoutsView: View {
             }
         )
     }
-    
+
     private var templateCreationView: some View {
         NewTemplate(
             template: WorkoutTemplate(name: uniqueTemplateName, exercises: [], categories: []),
@@ -125,7 +125,7 @@ struct WorkoutsView: View {
             }
         )
     }
-    
+
     @ViewBuilder private var templateEditorView: some View {
         if let index = editingTemplateIndex, let currentTemplate = ctx.userData.workoutPlans.userTemplates[safe: index] {
             EditTemplate(
@@ -154,7 +154,7 @@ struct WorkoutsView: View {
             )
         }
     }
-    
+
     private var uniqueTemplateName: String {
         return WorkoutTemplate.uniqueTemplateName(initialName: "New Template", from: ctx.userData.workoutPlans.userTemplates)
     }

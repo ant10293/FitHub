@@ -13,13 +13,13 @@ import FirebaseCore
 /// Handles calling backend Cloud Functions that orchestrate Stripe Connect payouts.
 struct StripeAffiliateService {
     static let shared = StripeAffiliateService()
-    
+
     private enum ServiceError: LocalizedError {
         case unauthenticated
         case invalidResponse
         case missingURL
         case server(String)
-        
+
         var errorDescription: String? {
             switch self {
             case .unauthenticated:
@@ -33,20 +33,20 @@ struct StripeAffiliateService {
             }
         }
     }
-    
+
     private struct CloudFunctionEnvelope<T: Decodable>: Decodable {
         let result: T
     }
-    
+
     private struct CloudFunctionErrorEnvelope: Decodable {
         struct Payload: Decodable {
             let status: String?
             let message: String
         }
-        
+
         let error: Payload
     }
-    
+
     struct OnboardingLink: Decodable {
         let accountId: String
         let url: String
@@ -55,7 +55,7 @@ struct StripeAffiliateService {
         let detailsSubmitted: Bool?
         let payoutsEnabled: Bool?
     }
-    
+
     struct DashboardLink: Decodable {
         let accountId: String
         let url: String
@@ -63,7 +63,7 @@ struct StripeAffiliateService {
         let createdAt: Int?
         let payoutsEnabled: Bool?
     }
-    
+
     struct PayoutResult: Decodable {
         let accountId: String
         let transferId: String
@@ -72,24 +72,24 @@ struct StripeAffiliateService {
         let destination: String?
         let livemode: Bool?
     }
-    
+
     private let session: URLSession = {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.timeoutIntervalForRequest = 30
         configuration.timeoutIntervalForResource = 30
         return URLSession(configuration: configuration)
     }()
-    
+
     private var projectID: String {
         FirebaseApp.app()?.options.projectID ?? "fithubv1-d3c91"
     }
-    
+
     private let region = "us-central1"
-    
+
     private init() { }
-    
+
     // MARK: - Public API
-    
+
     func createOnboardingLink(referralCode: String, country: String? = nil) async throws -> OnboardingLink {
         var payload: [String: Any] = ["referralCode": referralCode]
         if let country, !country.isEmpty {
@@ -97,11 +97,11 @@ struct StripeAffiliateService {
         }
         return try await callFunction(named: "createAffiliateOnboardingLink", payload: payload)
     }
-    
+
     func createDashboardLink(referralCode: String) async throws -> DashboardLink {
         try await callFunction(named: "getAffiliateDashboardLink", payload: ["referralCode": referralCode])
     }
-    
+
     func createPayout(referralCode: String, amountCents: Int, currency: String = "usd", description: String? = nil, note: String? = nil) async throws -> PayoutResult {
         var payload: [String: Any] = [
             "referralCode": referralCode,
@@ -114,17 +114,17 @@ struct StripeAffiliateService {
         if let note, !note.isEmpty {
             payload["note"] = note
         }
-        
+
         return try await callFunction(named: "createAffiliatePayout", payload: payload)
     }
-    
+
     // MARK: - Core request helper
-    
+
     private func callFunction<T: Decodable>(named name: String, payload: [String: Any]) async throws -> T {
         guard let user = Auth.auth().currentUser else {
             throw ServiceError.unauthenticated
         }
-        
+
         let token = try await fetchIDToken(for: user)
         let url = try endpointURL(for: name)
         var request = URLRequest(url: url)
@@ -132,19 +132,19 @@ struct StripeAffiliateService {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONSerialization.data(withJSONObject: ["data": payload], options: [])
-        
+
         let (data, response) = try await session.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse else {
             throw ServiceError.invalidResponse
         }
-        
+
         guard (200..<300).contains(httpResponse.statusCode) else {
             if let serverError = try? JSONDecoder().decode(CloudFunctionErrorEnvelope.self, from: data) {
                 throw ServiceError.server(serverError.error.message)
             }
             throw ServiceError.server("Server returned status code \(httpResponse.statusCode).")
         }
-        
+
         do {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -154,7 +154,7 @@ struct StripeAffiliateService {
             throw ServiceError.invalidResponse
         }
     }
-    
+
     private func endpointURL(for function: String) throws -> URL {
         var components = URLComponents()
         components.scheme = "https"
@@ -165,7 +165,7 @@ struct StripeAffiliateService {
         }
         return url
     }
-    
+
     private func fetchIDToken(for user: User) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
             user.getIDToken { token, error in
@@ -182,4 +182,3 @@ struct StripeAffiliateService {
         }
     }
 }
-

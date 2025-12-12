@@ -41,6 +41,3 @@ export function handleFunctionError(
     `${logPrefix} ${error.message || String(error)}`
   );
 }
-
-
-

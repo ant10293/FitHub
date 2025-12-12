@@ -8,7 +8,7 @@ final class NotificationManager: ObservableObject {
     static let shared = NotificationManager()          // ← no @MainActor
 
     private var bag = Set<AnyCancellable>()
-    
+
     // published so UI toggles can bind to it
     @Published private(set) var isAuthorized: Bool = false
 
@@ -90,7 +90,7 @@ final class NotificationManager: ObservableObject {
                 } else {
                     print("🕒 Skipped \(Format.formatDate(workoutDate, dateStyle: .none, timeStyle: .short)) notification for \(workoutTemplate.name) – date has passed.")
                 }
-                
+
                 if let oneHourBeforeDate = CalendarUtility.shared.date(byAdding: .hour, value: -1, to: workoutDate) {
                     if oneHourBeforeDate > now {
                         notificationIDs.append(schedule(noti: Notification(

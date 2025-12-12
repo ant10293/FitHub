@@ -50,7 +50,7 @@ struct AliasesEditorSheet: View {
                 } footer: {
                     ErrorFooter(message: duplicateEror)
                 }
-                
+
                 Section {
                     if aliases.isEmpty {
                         Text("No aliases yet")
@@ -97,26 +97,26 @@ struct AliasesEditorSheet: View {
         if isDuplicateName { return "Alias already exists" }
         return nil
     }
-    
+
     private var isDuplicateName: Bool {
         aliases.contains { $0.caseInsensitiveCompare(trimmed) == .orderedSame }
     }
-    
+
     private var trimmed: String { newAlias.trimmed }
-    
+
     private var isNewValid: Bool {
         InputLimiter.isValidInput(trimmed)
         && !trimmed.isEmpty
         && !isDuplicateName
     }
-    
+
     private func addAlias() {
         kbd.dismiss()
         guard isNewValid else { return }
         aliases.append(trimmed)
         newAlias = ""
     }
-    
+
     private func deleteIndex(_ i: Int) {
         kbd.dismiss()
         guard aliases.indices.contains(i) else { return }

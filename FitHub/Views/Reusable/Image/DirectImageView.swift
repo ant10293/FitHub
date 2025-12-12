@@ -11,7 +11,7 @@ import Foundation
 
 struct DirectImageView: View {
     let imageName: String
-    
+
     var body: some View {
         if let image = load(fullPath: imageName) {
             image.resizable().scaledToFit()
@@ -20,7 +20,7 @@ struct DirectImageView: View {
                 .foregroundStyle(.red)
         }
     }
-    
+
     private func load(fullPath: String) -> Image? {
         guard let url = Bundle.main.resourceURL?
             .appendingPathComponent(fullPath)
@@ -32,4 +32,3 @@ struct DirectImageView: View {
         return Image(uiImage: ui)
     }
 }
-

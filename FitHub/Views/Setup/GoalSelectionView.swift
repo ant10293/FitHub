@@ -6,12 +6,12 @@ struct GoalSelectionView: View {
     @State private var bmi: Double = 0
     @State private var alertType: AlertType?
     @State private var showAllGoals: Bool = false
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             bmiGoalSection
             selectGoalSection
-            
+
             RectangularButton(
                 title: userData.setup.setupState == .finished ? "Update Goal" : "Complete Setup",
                 enabled: userGoal != nil,
@@ -48,11 +48,11 @@ struct GoalSelectionView: View {
             }
         }
     }
-    
+
     private var goalsToShow: [FitnessGoal] {
         showAllGoals ? Array(FitnessGoal.allCases) : FitnessGoal.primaryGoals
     }
-    
+
     private func appearAction() {
         if userData.setup.setupState == .goalView {
             bmi = BMI.calculateBMI(
@@ -61,12 +61,12 @@ struct GoalSelectionView: View {
             )
         }
     }
-    
+
     @ViewBuilder private var bmiGoalSection: some View {
         if userData.setup.setupState == .goalView {
             Text("Your BMI is: \(Format.smartFormat(bmi))")
                 .font(.headline)
-            
+
             BMICategoryTable(userBMI: bmi)
                 .frame(maxHeight: screenHeight * 0.1)  // ≈ 1/3 screen
 
@@ -75,7 +75,7 @@ struct GoalSelectionView: View {
                 .padding(.vertical, 8)
                 .background(Color.gray.opacity(0.2))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
-            
+
         } else if userData.setup.setupState == .finished {
             Text("  Current goal: \(userData.physical.goal.rawValue)  ")
                 .font(.subheadline)
@@ -84,16 +84,16 @@ struct GoalSelectionView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
         }
     }
-    
+
     @ViewBuilder private var selectGoalSection: some View {
         Text("Please select a goal:")
             .font(.callout)
             .fontWeight(.semibold)
             .padding(.top)
-        
+
         ScrollView {
             ExpandCollapseList(expandList: $showAllGoals, expandText: "Show All Goals", collapseText: "Show Less Goals")
-            
+
             ForEach(goalsToShow, id: \.self) { goal in
                 GoalButton(
                     goal: goal,
@@ -103,13 +103,13 @@ struct GoalSelectionView: View {
         }
         .frame(maxHeight: screenHeight * 0.5)  // ≈ 1/2 screen
     }
-    
+
     private enum AlertType: Identifiable {
         case complete, update
-        
+
         var id: Int { self.hashValue }
     }
-    
+
     private func updateUserGoal() {
         if let goal = userGoal {
             userData.physical.goal = goal
@@ -118,14 +118,14 @@ struct GoalSelectionView: View {
         userData.setup.setupState = .finished
         userData.saveToFile()
     }
-    
+
     private var recommendedGoal: FitnessGoal { BMI.recommendGoalBasedOnBMI(bmi: bmi) }
-    
+
     struct GoalButton: View {
         var goal: FitnessGoal
         var isSelected: Bool
         var action: () -> Void
-        
+
         var body: some View {
             Button(action: action) {
                 VStack(alignment: .leading) {
@@ -133,11 +133,11 @@ struct GoalSelectionView: View {
                         .fontWeight(.bold)
                         .foregroundStyle(isSelected ? .white : .blue)
                         .centerHorizontally()
-                    
+
                     Text(goal.shortDescription)
                         .foregroundStyle(isSelected ? .white : .blue)
                         .centerHorizontally()
-                    
+
                     Text(goal.detailDescription)
                         .font(.caption)
                         .foregroundStyle(isSelected ? .black : .gray)
@@ -151,9 +151,3 @@ struct GoalSelectionView: View {
         }
     }
 }
-
-
-
-
-
-

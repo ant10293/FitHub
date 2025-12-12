@@ -16,7 +16,7 @@ struct UpdateMaxEditor: View {
     let exercise: Exercise
     let onSave: (PeakMetric, Date?) -> Void
     let onCancel: () -> Void
-    
+
     init(
         exercise: Exercise,
         onSave: @escaping (PeakMetric, Date?) -> Void,
@@ -27,13 +27,13 @@ struct UpdateMaxEditor: View {
         self.onSave = onSave
         self.onCancel = onCancel
     }
-    
+
     var body: some View {
         NavigationStack {
             VStack {
                 NewPeakEntry(newPeak: $peak, focus: $isFocused)
                     .padding(.vertical)
-                
+
                 OptionalDatePicker(
                     initialDate: plannedDate,
                     label: "Custom Date",
@@ -42,9 +42,9 @@ struct UpdateMaxEditor: View {
                         plannedDate = newDate
                     }
                 )
-                
+
                 Spacer()
-                
+
                 if !kbd.isVisible {
                     RectangularButton(
                         title: "Save",
@@ -55,7 +55,7 @@ struct UpdateMaxEditor: View {
                             onSave(peak, plannedDate)
                         }
                     )
-                    
+
                     RectangularButton(
                         title: "Cancel",
                         systemImage: "xmark",
@@ -66,7 +66,7 @@ struct UpdateMaxEditor: View {
                         }
                     )
                 }
-                
+
                 Spacer()
             }
             .padding()
@@ -81,7 +81,7 @@ private struct NewPeakEntry: View {
     @Binding var newPeak: PeakMetric
     @State private var localText: String = ""
     let focus: FocusState<Bool>.Binding   // <<< receive focus
-    
+
     var body: some View {
         Group {
             switch newPeak {
@@ -91,15 +91,15 @@ private struct NewPeakEntry: View {
                         .textFieldStyle(.roundedBorder)
                         .keyboardType(.numberPad)
                         .multilineTextAlignment(.center)
-                        .focused(focus) 
+                        .focused(focus)
                 }
-                
+
             case .maxHold:
                 if let binding = textBinding {
                     TimeEntryField(text: binding, placeholder: newPeak.placeholder, style: .rounded)
                         .focused(focus)
                 }
-                
+
             case .none:
                 EmptyView()
             }
@@ -118,7 +118,7 @@ private struct NewPeakEntry: View {
                     newPeak = .oneRepMax(Mass(weight: val))
                 }
             )
-            
+
         case .maxReps(let r):
             return Binding<String>(
                 get: { localText.isEmpty ? (r > 0 ? String(r) : "") : localText  },
@@ -129,7 +129,7 @@ private struct NewPeakEntry: View {
                     newPeak = .maxReps(val)
                 }
             )
-        
+
         case .maxHold(let h):
             return Binding<String>(
                 get: { localText.isEmpty ? h.fieldString: localText },
@@ -139,7 +139,7 @@ private struct NewPeakEntry: View {
                     newPeak = .maxHold(ts)
                 }
             )
-            
+
         case .hold30sLoad(let h30l):
             return Binding<String>(
                 get: { h30l.fieldString },
@@ -150,7 +150,7 @@ private struct NewPeakEntry: View {
                     newPeak = .hold30sLoad(Mass(weight: val))
                 }
             )
-        
+
         case .carry50mLoad(let c50l):
             return Binding<String>(
                 get: { c50l.fieldString },
@@ -161,11 +161,9 @@ private struct NewPeakEntry: View {
                     newPeak = .carry50mLoad(Mass(weight: val))
                 }
             )
-            
+
         case .none:
             return nil
         }
     }
 }
-
-

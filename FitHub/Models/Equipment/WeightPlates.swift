@@ -14,14 +14,14 @@ struct WeightPlates: Hashable, Codable {
     // default options (lb, kg)
     var lb: [Mass] = .init(WeightPlates.defaultLbPlates)
     var kg: [Mass] = .init(WeightPlates.defaultKgPlates)
-    
+
     var resolvedPlates: [Mass] {
         switch UnitSystem.current {
         case .imperial: return lb
         case .metric: return kg
         }
     }
-    
+
     mutating func setPlates(_ plates: [Mass]) {
         switch UnitSystem.current {
         case .imperial: self.lb = plates
@@ -48,7 +48,7 @@ extension WeightPlates {
         }
         return .secondary
     }
-    
+
     static func sortedPlates(_ plates: [Mass], ascending: Bool) -> [Mass] {
         return plates
             .map { Mass(kg: $0.inKg) }
@@ -59,11 +59,11 @@ extension WeightPlates {
     static func defaultOptions() -> [Mass] {
         UnitSystem.current == .imperial ? defaultLbPlates : defaultKgPlates
     }
-    
+
     private static let defaultLbPlates: [Mass] = [
         Mass(lb: 2.5), Mass(lb: 5), Mass(lb: 10), Mass(lb: 25), Mass(lb: 45)
     ]
-    
+
     private static let defaultKgPlates: [Mass] = [
         Mass(kg: 1.25), Mass(kg: 2.5), Mass(kg: 5), Mass(kg: 10), Mass(kg: 15), Mass(kg: 20), Mass(kg: 25)
     ]
@@ -72,11 +72,11 @@ extension WeightPlates {
     static func allOptions() -> [Mass] {
         UnitSystem.current == .imperial ? allLbPlates : allKgPlates
     }
-    
+
     private static let allLbPlates: [Mass] = [
         Mass(lb: 2.5), Mass(lb: 5), Mass(lb: 10), Mass(lb: 25), Mass(lb: 35), Mass(lb: 45), Mass(lb: 100)
     ]
-    
+
     private static let allKgPlates: [Mass] = [
         Mass(kg: 1.25), Mass(kg: 2.5), Mass(kg: 5), Mass(kg: 10), Mass(kg: 15), Mass(kg: 20), Mass(kg: 25)
     ]

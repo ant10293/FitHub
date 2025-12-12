@@ -23,7 +23,7 @@ final class EquipmentData: ObservableObject {
 
     // MARK: – Public unified view
     var allEquipment: [GymEquipment] { bundledEquipment + userEquipment }
-    
+
     // MARK: – Init
     init() {
         let overrides = EquipmentData.loadBundledOverrides()
@@ -34,7 +34,7 @@ final class EquipmentData: ObservableObject {
         self.bundledEquipment = bundled
         self.userEquipment    = user
     }
-    
+
     // MARK: – Persistence Logic
     private static func loadBundledEquipment(overrides: [UUID: GymEquipment]) -> [GymEquipment] {
         do {
@@ -66,16 +66,16 @@ final class EquipmentData: ObservableObject {
     private static func loadUserEquipment(from file: String) -> [GymEquipment] {
         return JSONFileManager.shared.loadUserEquipment(from: file) ?? []
     }
-    
+
     // MARK: saving logic
     private func persistUserEquipment() {
         JSONFileManager.shared.save(userEquipment, to: EquipmentData.userEquipmentFilename)
     }
-    
+
     private static func loadBundledOverrides() -> [UUID: GymEquipment] {
         return JSONFileManager.shared.loadEquipmentOverrides(from: EquipmentData.bundledOverridesFilename) ?? [:]
     }
-    
+
     private func persistOverrides() {
         JSONFileManager.shared.save(bundledOverrides, to: EquipmentData.bundledOverridesFilename)
     }
@@ -86,15 +86,15 @@ extension EquipmentData {
     func isUserEquipment(_ equipment: GymEquipment) -> Bool {
         userEquipment.contains(where: { $0.id == equipment.id })
     }
-    
+
     func isBundledEquipment(_ equipment: GymEquipment) -> Bool {
         bundledEquipment.contains(where: { $0.id == equipment.id })
     }
-    
+
     func isOverridenEquipment(_ equipment: GymEquipment) -> Bool {
         bundledOverrides[equipment.id] != nil
     }
-    
+
     func getEquipmentLocation(_ equipment: GymEquipment) -> ExEquipLocation {
         if isUserEquipment(equipment) {
             return .user
@@ -113,12 +113,12 @@ extension EquipmentData {
         userEquipment.append(newEquipment)
         persistUserEquipment()
     }
-    
+
     func removeEquipment(_ equipment: GymEquipment) {
         userEquipment.removeAll { $0.id == equipment.id }
         persistUserEquipment()
     }
-    
+
     func updateEquipment(equipment: GymEquipment) {
         switch getEquipmentLocation(equipment) {
         case .user:
@@ -129,13 +129,13 @@ extension EquipmentData {
             addEquipment(equipment)
         }
     }
-    
+
     private func updateUserEquipment(_ equipment: GymEquipment) {
         userEquipment.removeAll { $0.id == equipment.id }
         userEquipment.append(equipment)
         persistUserEquipment()
     }
-    
+
     private func updateBundledEquipment(_ equipment: GymEquipment) {
         bundledOverrides[equipment.id] = equipment
         if let index = bundledEquipment.firstIndex(where: { $0.id == equipment.id }) {
@@ -149,7 +149,7 @@ extension EquipmentData {
         bundledOverrides.removeValue(forKey: equipment.id)
         persistOverrides()
     }
-    
+
     func restoreBundledEquipment(_ equipment: GymEquipment) -> GymEquipment? {
         deleteBundledOverride(equipment)
         // rebuild bundledExercises from disk using the reduced override map
@@ -189,25 +189,25 @@ extension EquipmentData {
         // ── 0. Cached constants (mirror exercises) ───────────────────────────────
         let removingSet      = TextFormatter.searchStripSet
         let normalizedSearch = searchText.normalized(removing: removingSet)
-        
+
         // ── 1. Filter pass ───────────────────────────────────────────────────────
         var results: [GymEquipment] = []
         results.reserveCapacity(allEquipment.count)
-        
+
         for item in allEquipment {
             // a) Category gate
             if let category, category != item.equCategory { continue }
-            
+
             // b) Search-text gate
             if !normalizedSearch.isEmpty {
                 let nameKey   = item.name.normalized(removing: removingSet)
                 let aliasHit  = (item.aliases ?? []).contains { $0.normalized(removing: removingSet).contains(normalizedSearch) }
                 if !(nameKey.contains(normalizedSearch) || aliasHit) { continue }
             }
-            
+
             results.append(item)
         }
-        
+
         // ── 2. Sort: prefix matches first, then alphabetical ─────────────────────
         if !normalizedSearch.isEmpty {
             results.sort { a, b in
@@ -221,7 +221,7 @@ extension EquipmentData {
         } else {
             results.sort { $0.name < $1.name }
         }
-        
+
         return results
     }
 
@@ -292,7 +292,7 @@ extension EquipmentData {
     }
 
     func equipment(for id: UUID) -> GymEquipment? { allEquipment.first { $0.id == id } }
-    
+
     func equipmentObjects(for selection: Set<GymEquipment.ID>) -> [GymEquipment] {
         selection.compactMap { equipment(for: $0) }
             .sorted { $0.name < $1.name }
@@ -301,11 +301,11 @@ extension EquipmentData {
     func equipmentForCategory(for rounding: RoundingCategory) -> [GymEquipment] {
         allEquipment.filter { $0.roundingCategory == rounding }
     }
-    
+
     func alternativesFor(equipment: [GymEquipment]) -> [GymEquipment] {
         return getEquipment(from: Array(altFromOwned(equipment)))
     }
-    
+
     func altFromOwned(_ equipment: [GymEquipment]) -> Set<String> {
         return Set(
             equipment
@@ -314,16 +314,16 @@ extension EquipmentData {
                 .map { $0.normalize() }
         )
     }
-     
+
     func hasEquipmentAdjustments(for exercise: Exercise) -> Bool {
         let equipment = getEquipment(from: exercise.equipmentRequired)
         return hasEquipmentAdjustments(for: equipment)
     }
-    
+
     func hasEquipmentAdjustments(for equipment: [GymEquipment]) -> Bool {
         equipment.contains { $0.adjustments?.isEmpty == false }
     }
-    
+
     func incrementForEquipment(names: [String], rounding p: RoundingPreference) -> Mass {
         let pref = (UnitSystem.current == .imperial) ? p.lb : p.kg
 
@@ -335,7 +335,7 @@ extension EquipmentData {
 
         return pref[cat ?? .plated] ?? Mass(kg: 0)
     }
-    
+
     // MARK: Weight rounding with string names
     func roundWeight(_ weight: Mass, for equipmentNames: [String], rounding p: RoundingPreference) -> Mass {
         let increment = incrementForEquipment(names: equipmentNames, rounding: p)
@@ -345,12 +345,10 @@ extension EquipmentData {
         case .imperial:
             let roundedLb = (weight.inLb / increment.inLb).rounded() * increment.inLb
             return Mass(lb: roundedLb)
-            
+
         case .metric:
             let roundedKg = (weight.inKg / increment.inKg).rounded() * increment.inKg
             return Mass(kg: roundedKg)
         }
     }
 }
-
-

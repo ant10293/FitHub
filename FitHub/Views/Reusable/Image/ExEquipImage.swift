@@ -14,7 +14,7 @@ struct ExEquipImage: View {
     let size: CGFloat              // collapsed % of screen width
     let button: ButtonOption
     let onTap: () -> Void         // used for .info / .none
-    
+
     init(
         image: Image,
         size: CGFloat = 0.44,
@@ -26,7 +26,7 @@ struct ExEquipImage: View {
         self.button = button
         self.onTap = onTap
     }
-        
+
     var body: some View {
         Button(action: handleTap) {
             image
@@ -40,7 +40,7 @@ struct ExEquipImage: View {
         .buttonStyle(.plain)
         .allowsHitTesting(button != .none)
     }
-    
+
     // MARK: Overlay
     @ViewBuilder
     private var overlayIcon: some View {
@@ -65,22 +65,22 @@ struct ExEquipImage: View {
             EmptyView()
         }
     }
-    
+
     private var width: CGFloat { screenWidth }
-    
+
     // Collapsed width in points
     private var collapsedWidth: CGFloat { screenWidth * size }
-    
+
     // Expanded = 2× collapsed, but don't blow past screen (leave tiny margin)
     private var expandedWidth: CGFloat {
         let maxWidth = screenWidth * 0.98
         return min(collapsedWidth * 2.0, maxWidth)
     }
-    
+
     private var currentWidth: CGFloat { isExpanded ? expandedWidth : collapsedWidth }
-    
+
     enum ButtonOption { case info, expand, none }
-    
+
     // MARK: Tap routing
     private func handleTap() {
         switch button {
@@ -93,4 +93,3 @@ struct ExEquipImage: View {
         }
     }
 }
-

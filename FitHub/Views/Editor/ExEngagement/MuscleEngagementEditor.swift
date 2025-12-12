@@ -36,8 +36,8 @@ struct MuscleEngagementEditor: View {
                         }
                         .padding(.top)      // keeps it clear of nav bar
                         .onChange(of: selectedMuscle) {
-                            if editingIndex == nil { 
-                                pct = remainingForNew 
+                            if editingIndex == nil {
+                                pct = remainingForNew
                                 subEng.removeAll()  // Only clear when adding new, not editing
                             }
                         }
@@ -49,17 +49,17 @@ struct MuscleEngagementEditor: View {
                                     Text("Engagement: \(Int(pct)) %")
                                         .monospacedDigit()
                                     Slider(value: $pct, in: 0...100, step: 1)
-                                    
+
                                     if pct <= 0 {
                                         ErrorFooter(message: "Engagement percentage must be greater than 0%.", showImage: true)
                                     }
                                 }
-                                
+
                                 // ── Overall-total warning ──────────────────────
                                 if !muscleEngagements.isEmpty && effectiveTotal != 100 {
                                     ErrorFooter(message: "Overall total is \(Int(effectiveTotal)) %. Must equal 100 %.", showImage: true)
                                 }
-                                
+
                                 VStack(alignment: .leading, spacing: 8) {
                                     Text("Mover Type")
                                     Picker("Mover Type", selection: $moverType) {
@@ -70,9 +70,9 @@ struct MuscleEngagementEditor: View {
                                     .pickerStyle(.segmented)
                                 }
                             }
-                            
+
                             Divider()
-                            
+
                             SubMuscleEditor(muscle: muscle, subEng: $subEng)
                         }
 
@@ -125,9 +125,9 @@ struct MuscleEngagementEditor: View {
             }
         }
     }
-    
+
     private var invalidEngagement: Bool { pct <= 0 || selectedMuscle == nil || effectiveTotal > 100 }
-    
+
     private var effectiveTotal: Double {
         if let idx = editingIndex {                     // editing existing
             return totalUsed                             // current saved total
@@ -140,7 +140,7 @@ struct MuscleEngagementEditor: View {
 
     // ────────── Helpers
     private var totalUsed: Double { muscleEngagements.reduce(0) { $0 + $1.engagementPercentage } }
-    
+
     private var remainingForNew: Double {
         max(0, 100 - totalUsed + (editingIndex.map { muscleEngagements[$0].engagementPercentage } ?? 0))
     }
@@ -171,7 +171,7 @@ struct MuscleEngagementEditor: View {
         )
         reset()
     }
-    
+
     private func save() {
         guard let idx = editingIndex, let m = selectedMuscle else { return }
         muscleEngagements[idx] = MuscleEngagement(
@@ -182,7 +182,7 @@ struct MuscleEngagementEditor: View {
         )
         reset()
     }
-    
+
     private func loadForEdit(_ idx: Int) {
         let me = muscleEngagements[idx]
         selectedMuscle = me.muscleWorked
@@ -191,7 +191,7 @@ struct MuscleEngagementEditor: View {
         subEng        = me.submusclesWorked ?? []
         editingIndex  = idx
     }
-    
+
     private func reset() {
         selectedMuscle = nil
         pct = 0

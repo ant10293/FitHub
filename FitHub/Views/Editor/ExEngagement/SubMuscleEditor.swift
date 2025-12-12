@@ -47,7 +47,7 @@ struct SubMuscleEditor: View {
                             Spacer()
                             Text("\(Int(s.engagementPercentage)) %")
                                 .font(.subheadline)
-                            
+
                             Menu {
                                 Button {
                                     // Start editing this row (only one can be edited at a time)
@@ -60,7 +60,7 @@ struct SubMuscleEditor: View {
                                 } label: {
                                     Label("Edit", systemImage: "pencil")
                                 }
-                                
+
                                 Button(role: .destructive) {
                                     // Delete this submuscle engagement
                                     subEng.remove(at: idx)
@@ -158,9 +158,9 @@ struct SubMuscleEditor: View {
             }
         }
     }
-    
+
     private var invalidEngagement: Bool { pct <= 0 || chosen == nil || effectiveTotal > 100 }
-    
+
     // Calculate effective total including any in-progress edits
     private var effectiveTotal: Double {
         if let idx = editingIndex {
@@ -177,7 +177,7 @@ struct SubMuscleEditor: View {
             return totalUsed + (chosen != nil ? pct : 0)
         }
     }
-        
+
     // add-new action
     private func add() {
         guard let s = chosen, pct > 0 else { return }
@@ -186,5 +186,3 @@ struct SubMuscleEditor: View {
         pct = 0
     }
 }
-
-

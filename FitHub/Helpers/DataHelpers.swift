@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-    
+
 func getDocumentsDirectory() -> URL {
     let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     guard let firstPath = paths.first else {
@@ -39,7 +39,7 @@ extension Bundle {
 extension Collection {
     /// Return `nil` if empty; otherwise the collection.
     var nilIfEmpty: Self? { isEmpty ? nil : self }
-    
+
     // A safe subscript to prevent out of range errors.
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
@@ -76,7 +76,7 @@ extension Array {
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
     }
-    
+
     // Small safety helpers
     subscript(safeEdit index: Index) -> Element? {
         get { indices.contains(index) ? self[index] : nil }
@@ -89,14 +89,14 @@ extension Array {
             }
         }
     }
-    
+
     // Splits an array into chunks of a given size.
     func chunked(into size: Int) -> [[Element]] {
         stride(from: 0, to: count, by: size).map {
             Array(self[$0..<Swift.min($0 + size, count)])
         }
     }
-    
+
     // MARK: - Array Extension for Shuffling with RNG - ExerciseSelector()
     func shuffled<T: RandomNumberGenerator>(using generator: inout T) -> [Element] {
         var array = self
@@ -106,7 +106,7 @@ extension Array {
         }
         return array
     }
-    
+
     func partitioned(by predicate: (Element) -> Bool) -> ([Element], [Element]) {
         var matching: [Element] = []
         var nonMatching: [Element] = []
@@ -148,21 +148,21 @@ extension String {
         if result.isEmpty { return emptyAsZero ? "0" : "" }
         return String(result)
     }
-    
+
     /// Returns a trimmed version of the string (whitespace removed)
     var trimmed: String { trimmingCharacters(in: .whitespaces) }
     /// Returns `true` if the string is empty after trimming whitespace
     var isEmptyAfterTrim: Bool { trimmed.isEmpty }
-    
+
     func formatName() -> String {
         return (self.prefix(1).uppercased() + self.dropFirst().lowercased()).trimmed
     }
-    
+
     @inline(__always)
     func normalize() -> String {
         self.trimmed.lowercased()
     }
-    
+
     @inline(__always)
     func normalized(removing: CharacterSet) -> String {
         unicodeScalars
@@ -170,7 +170,7 @@ extension String {
             .reduce(into: "") { $0.append(Character($1)) }
             .lowercased()
     }
-    
+
     func capitalizeFirstLetter() -> String {
         guard let idx = self.firstIndex(where: { $0.isLetter }) else { return self }
         var result = self
@@ -178,7 +178,7 @@ extension String {
         result.replaceSubrange(idx...idx, with: upper)
         return result
     }
-    
+
     var formattedRequirement: String {
         self.replacingOccurrences(of: "_", with: " ").capitalized
     }
@@ -191,25 +191,25 @@ extension Date {
         formatter.dateFormat = "M/d"
         return formatter.string(from: self)
     }
-    
+
     var shortDate: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d"
         return formatter.string(from: self)
     }
-    
+
     var fullDate: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM d, yyyy"
         return formatter.string(from: self)
     }
-     
+
     var dayOfWeek: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE"
         return formatter.string(from: self)
     }
-    
+
     var monthName: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM"
