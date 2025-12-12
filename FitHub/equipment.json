@@ -856,6 +856,14 @@
         "equCategory": "Resistance Bands"
     },
     {
+        "name": "Battle Ropes",
+        "id": "8A1F3C5B-6F8B-4D90-9A37-39A4E1B8F2C7",
+        "image": "battle_ropes",
+        "aliases": ["conditioning ropes", "heavy ropes", "training ropes"],
+        "description": "Weighted ropes anchored to a point for wave and slam variations that build power and endurance.",
+        "equCategory": "Other"
+    },
+    {
         "name": "Ab Wheel",
         "id": "C8AC5403-480E-4066-99F6-78966CEB71DC",
         "image": "ab_wheel",

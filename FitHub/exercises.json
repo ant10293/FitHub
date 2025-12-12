@@ -11205,6 +11205,7 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Independent",
       "resistance": "Free Weight",
+      "imageUrl": "https://gymvisual.com/animated-gifs/6702-strongman-barbell-farmers-walk.html#/47-style_type-basic_grey",
       "unitType": "weightXdistance"
     },
     {
@@ -11252,29 +11253,7 @@
       "limbMovementType": "Unilateral",
       "resistance": "Free Weight",
       "repsInstruction": "Per Arm",
-      "unitType": "weightXdistance"
-    },
-    {
-      "name": "Barbell Front Rack Carry",
-      "id": "F6A7B8C9-D0E1-4F2A-3B4C-5D6E7F8A9B0C",
-      "image": "front_rack_carry",
-      "aliases": [ "Front Carry", "Barbell Front Carry" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Barbell" ],
-      "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-            { "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
-            { "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
-        ] },
-        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Trapezius", "submusclesWorked": [
-            { "engagementPercentage": 70, "submuscleWorked": "Upper Traps" },
-            { "engagementPercentage": 30, "submuscleWorked": "Middle Traps" }
-        ] }
-      ],
-      "difficulty": "Int.",
-      "effort": "Compound",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Free Weight",
+      "imageUrl": "https://gymvisual.com/animated-gifs/6724-dumbbell-suitcase-carry.html#/47-style_type-basic_grey",
       "unitType": "weightXdistance"
     },
     {
@@ -11301,6 +11280,7 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
+      "imageUrl": "https://gymvisual.com/animated-gifs/6727-dumbbell-overhead-carry.html#/47-style_type-basic_grey",
       "unitType": "weightXdistance"
     },
     {
@@ -11326,6 +11306,7 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
+      "imageUrl": "https://gymvisual.com/animated-gifs/16515-power-sled-push-male.html#/47-style_type-basic_grey",
       "unitType": "weightXdistance"
     },
     {
@@ -11334,7 +11315,7 @@
       "image": "sled_pull",
       "aliases": [ "Prowler Pull", "Sled Drag" ],
       "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Prowler Sled" ],
+      "equipmentRequired": [ "Prowler Sled", "Battle Ropes" ],
       "muscles": [
         { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
             { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" },
@@ -11350,6 +11331,7 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
+      "imageUrl": "https://gymvisual.com/animated-gifs/22710-power-sled-pull-male.html#/47-style_type-basic_grey",
       "unitType": "weightXdistance"
     }
 ]
