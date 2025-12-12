@@ -710,55 +710,40 @@ extension Exercise {
 
 extension Exercise {
     // MARK: – Public computed properties
-    var musclesTextFormatted: Text { formattedMuscles(from: primaryMuscleEngagements + secondaryMuscleEngagements) }
-    var primaryMusclesFormatted: Text {
-        formattedMuscles(from: primaryMuscleEngagements, showHeader: true, header: "Primary Muscles")
+    var primaryMusclesFormatted: some View {
+        formattedMusclesView(from: primaryMuscleEngagements, showHeader: true, header: "Primary Muscles")
     }
-
-    var secondaryMusclesFormatted: Text {
-        formattedMuscles(from: secondaryMuscleEngagements, showHeader: true, header: "Secondary Muscles")
+    
+    var secondaryMusclesFormatted: some View {
+        formattedMusclesView(from: secondaryMuscleEngagements, showHeader: true, header: "Secondary Muscles")
     }
-
-    private func formattedMuscles(
+    
+    @ViewBuilder
+    private func formattedMusclesView(
         from engagements: [MuscleEngagement],
         showHeader: Bool = false,
         header: String = ""
-    ) -> Text {
-        // Build a bullet-point line for every engagement
-        let lines: [Text] = engagements.map { e in
-            let subs = e.allSubMuscles
-                .map { $0.simpleName }
-                .joined(separator: ", ")
+    ) -> some View {
 
-            let base = "• \(e.muscleWorked.rawValue)"
-
-            if subs.isEmpty {
-                // No submuscles → no colon
-                return Text(base).bold()
-            } else {
-                // Has submuscles → add colon + list
-                return Text(base + ": ").bold() + Text(subs)
+        let items: [String] = engagements
+            .map { e in
+                let subs = e.allSubMuscles.map(\.simpleName).joined(separator: ", ")
+                let base = e.muscleWorked.rawValue
+                return subs.isEmpty ? base : "\(base): \(subs)"
             }
-        }
 
-        // no muscles
-        guard let first = lines.first else {
-            let body = Text("• None")
-            return showHeader
-                ? Text(header).bold() + Text("\n") + body
-                : body
-        }
+        let displayItems = items.isEmpty ? ["None"] : items
 
-        let body = lines
-            .dropFirst()
-            .reduce(first) { $0 + Text("\n") + $1 }
+        let body = NumberedListView(items: displayItems, numberingStyle: .bullet, spacing: 2)
             .font(.caption)
-            .foregroundStyle(.secondary)
 
         if showHeader {
-            return Text(header).bold() + Text("\n") + body
+            VStack(alignment: .leading, spacing: 4) {
+                Text(header).bold()
+                body
+            }
         } else {
-            return body
+            body
         }
     }
 }

@@ -7,7 +7,6 @@
 
 import Foundation
 
-// TODO: remove workoutTimer
 final class TimerManager: ObservableObject {
     // MARK: - Rest (countdown by date)
     @Published var restIsActive: Bool = false

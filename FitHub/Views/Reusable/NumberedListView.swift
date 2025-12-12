@@ -33,9 +33,9 @@ struct NumberedListView: View {
         items: [String],
         prefix: String = "",
         numberingStyle: NumberingStyle = .oneDot,
-        spacing: CGFloat = 4
+        spacing: CGFloat = 6
     ) {
-        self.items = items.filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+        self.items = items.filter { !$0.isEmptyAfterTrim }
         self.prefix = prefix
         self.numberingStyle = numberingStyle
         self.spacing = spacing
@@ -49,18 +49,10 @@ struct NumberedListView: View {
                     index: idx + 1,
                     prefix: prefix,
                     numberingStyle: numberingStyle,
-                    maxNumberWidth: maxNumberWidth
+                    spacing: spacing
                 )
             }
         }
-    }
-
-    private var maxNumberWidth: CGFloat {
-        let maxNumber = items.count
-        let maxLabel = numberingStyle.label(for: maxNumber)
-        let maxPrefix = "\(prefix)\(maxLabel) "
-        // Estimate width: roughly 8 points per character for system font
-        return CGFloat(maxPrefix.count) * 8
     }
 }
 
@@ -69,8 +61,8 @@ private struct NumberedItemView: View {
     let index: Int
     let prefix: String
     let numberingStyle: NumberingStyle
-    let maxNumberWidth: CGFloat
-
+    let spacing: CGFloat
+    
     var body: some View {
         let lines = text.components(separatedBy: .newlines)
             .map { $0.trimmingCharacters(in: .whitespaces) }
@@ -84,31 +76,30 @@ private struct NumberedItemView: View {
         let numberLabel = numberingStyle.label(for: index)
 
         return AnyView(
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: spacing) {
                 // First line with number
-                HStack(alignment: .top, spacing: 4) {
-                    Text("\(prefix)\(numberLabel)")
-                        .foregroundStyle(.secondary)
-                        .frame(width: maxNumberWidth, alignment: .leading)
-
-                    Text(firstLine)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-
+                row(numberLabel: numberLabel, line: firstLine, isFirst: true)
+                
                 // Continuation lines with indentation
                 if !continuationLines.isEmpty {
                     ForEach(continuationLines, id: \.self) { line in
-                        HStack(alignment: .top, spacing: 4) {
-                            // Spacer to match the width of the number prefix
-                            Spacer()
-                                .frame(width: maxNumberWidth)
-
-                            Text(line)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
+                        row(numberLabel: numberLabel, line: line, isFirst: false)
+                        
                     }
                 }
             }
         )
+    }
+    
+    private func row(numberLabel: String, line: String, isFirst: Bool) -> some View {
+        HStack(alignment: .top, spacing: 4) {
+            Text("\(prefix)\(numberLabel)")
+                .monospacedDigit()
+                .bold(numberingStyle == .bullet)
+                .foregroundStyle(isFirst ? Color.secondary : .clear)
+
+            Text(line)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 }

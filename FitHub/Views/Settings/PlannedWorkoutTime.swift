@@ -236,7 +236,6 @@ private extension PlannedWorkoutTime {
 
         if isPickerExpanded {
             pickerContent()
-                .padding(.vertical, 5)
         }
     }
 

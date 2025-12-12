@@ -117,7 +117,7 @@ final class ExerciseSelector {
         categories: [SplitCategory],
         total: Int,
         existing: [Exercise],
-        previous: [Exercise] // TODO: need to actually implement this
+        previous: [Exercise] 
     ) -> ([Exercise], PoolChanges?) {
         let clampedTotal = max(policy.minCount, min(policy.maxCount, total))
         guard clampedTotal > 0 else { return (existing, nil) }

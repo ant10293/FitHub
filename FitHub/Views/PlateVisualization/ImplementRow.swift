@@ -8,7 +8,6 @@
 import SwiftUI
 
 /*
- TODO: we need to accomodate bilateral independent exercises that use divided equipment.
  needs to look like old setup, except the base weight chip needs to be on each side
  ex:
  Left

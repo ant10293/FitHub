@@ -67,11 +67,9 @@ struct AboutView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     if !exercise.primaryMuscleEngagements.isEmpty {
                         exercise.primaryMusclesFormatted
-                            .multilineTextAlignment(.leading)
                     }
                     if !exercise.secondaryMuscleEngagements.isEmpty {
                         exercise.secondaryMusclesFormatted
-                            .multilineTextAlignment(.leading)
                     }
                 }
 

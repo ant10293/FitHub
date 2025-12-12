@@ -39,7 +39,7 @@
       "id": "C52E6249-F5FD-4E6E-A455-E3D38861C444",
       "image": "bench_pin_press",
       "csvKey": "bench-pin-press",
-      "aliases": [ "Pin Press", "Rack Bench Press" ],
+      "aliases": [ "Barbell Bench Pin Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell", "Flat Bench", "Squat Rack" ],
       "muscles": [
@@ -1933,7 +1933,6 @@
       "name": "Hip Thrust",
       "id": "7A61A3F0-6C5C-4A20-BF1A-1C9325563B98",
       "image": "hip_thrust",
-      "aliases": [ "Hip Thrust" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Flat Bench" ],
       "muscles": [
@@ -1983,7 +1982,6 @@
       "id": "CDD41D98-51AA-4D4A-9D1F-A117C2F41E59",
       "image": "hip_thrust",
       "csvKey": "hip-thrust",
-      "aliases": [ "Barbell Hip Thrust" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell", "Flat Bench" ],
       "muscles": [
@@ -2010,9 +2008,8 @@
       "name": "Barbell Hip Thrust Hold",
       "id": "C1D2E3F4-A5B6-47C8-9D0E-1F2A3B4C5D6E",
       "image": "hip_thrust_top_hold",
-      "aliases": [ "Glute Bridge Top Hold" ],
       "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Flat Bench" ],
+      "equipmentRequired": [ "Flat Bench", "Barbell" ],
       "muscles": [
         { "engagementPercentage": 65, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 85, "submuscleWorked": "Gluteus Maximus" },
@@ -2029,11 +2026,11 @@
             { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
         ] }
       ],
-      "difficulty": "Beg.",
+      "difficulty": "Nov.",
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
-      "resistance": "Bodyweight",
-      "unitType": "timeOnly"
+      "resistance": "Free Weight",
+      "unitType": "weightXtime"
     },
     {
       "name": "Banded Hip Thrust",
@@ -2067,7 +2064,6 @@
       "id": "44B25D0F-9B7D-4CBD-B4DF-D2FF9C4E6309",
       "image": "glute_bridge",
       "csvKey": "glute-bridge",
-      "aliases": [ "Bodyweight Bridge" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
       "muscles": [
@@ -2117,7 +2113,6 @@
       "id": "C5F6D76E-4AA3-4E47-8A49-8F490D2A6C97",
       "image": "barbell_glute_bridge",
       "csvKey": "barbell-glute-bridge",
-      "aliases": [ "Weighted Glute Bridge", "Barbell Hip Bridge" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
       "muscles": [
@@ -2135,31 +2130,6 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/6489-barbell-glute-bridge-hands-on-bar.html?search_query=barbell+glute+bridge&results=13",
-      "unitType": "weightXreps"
-    },
-    {
-      "name": "Glute-Ham Raise",
-      "id": "10AFFC85-3B47-4B80-B9AF-9CB5E1A6B772",
-      "image": "glute_ham_raise",
-      "csvKey": "glute-ham-raise",
-      "aliases": [ "GHR", "Glute Ham Developer Raise" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Glute Ham Raise Bench" ],
-      "muscles": [
-        { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 28, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 14, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 28, "submuscleWorked": "Biceps Femoris" }
-        ] },
-        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-            { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-        ] }
-      ],
-      "difficulty": "Int.",
-      "effort": "Compound",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Machine",
-      "imageUrl": "https://gymvisual.com/animated-gifs/10998-glute-ham-raise-version-2.html?search_query=glute+ham+raise&results=25",
       "unitType": "weightXreps"
     },
     {
@@ -2187,10 +2157,35 @@
         ] }
       ],
       "difficulty": "Beg.",
-      "effort": "Isometric",
+      "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
-      "unitType": "timeOnly"
+      "unitType": "repsOnly"
+    },
+    {
+      "name": "Glute-Ham Raise",
+      "id": "10AFFC85-3B47-4B80-B9AF-9CB5E1A6B772",
+      "image": "glute_ham_raise",
+      "csvKey": "glute-ham-raise",
+      "aliases": [ "GHR", "Glute Ham Developer Raise" ],
+      "instructions": { "steps": [ ] },
+      "equipmentRequired": [ "Glute Ham Raise Bench" ],
+      "muscles": [
+        { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+            { "engagementPercentage": 28, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 14, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 28, "submuscleWorked": "Biceps Femoris" }
+        ] },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+            { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+        ] }
+      ],
+      "difficulty": "Int.",
+      "effort": "Compound",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Machine",
+      "imageUrl": "https://gymvisual.com/animated-gifs/10998-glute-ham-raise-version-2.html?search_query=glute+ham+raise&results=25",
+      "unitType": "weightXreps"
     },
     {
       "name": "Pull-Up",
