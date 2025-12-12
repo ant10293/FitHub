@@ -125,12 +125,14 @@ final class ExerciseSelector {
         var rng = seededRNG(for: dayIndex)
         let relaxed = changes.pool(for: dayLabel)?.relaxedFilters ?? []
         var currentRelaxed = Set(relaxed)
+        
         // Attempt once with currentRelaxed
         var finalSelection = attemptSelection(
             dayLabel: dayLabel,
             categories: categories,
             clampedTotal: clampedTotal,
             baseExisting: existing,
+            previous: previous,
             rng: &rng,
             relaxed: currentRelaxed
         )
@@ -146,6 +148,7 @@ final class ExerciseSelector {
                 categories: categories,
                 clampedTotal: clampedTotal,
                 baseExisting: existing,
+                previous: previous,
                 rng: &rng,
                 relaxed: currentRelaxed
             )
@@ -160,6 +163,7 @@ final class ExerciseSelector {
         categories: [SplitCategory],
         clampedTotal: Int,
         baseExisting: [Exercise],
+        previous: [Exercise],
         rng: inout SeededRNG,
         relaxed: Set<PoolChanges.RelaxedFilter>
     ) -> [Exercise] {
@@ -204,6 +208,7 @@ final class ExerciseSelector {
         let selection = applyDistributionLogic(
             pool: eligible,
             existing: baseExisting,
+            previous: previous,
             targets: targets,
             countByEffort: withExisting,
             rng: &rng
@@ -223,16 +228,26 @@ final class ExerciseSelector {
     private func applyDistributionLogic(
         pool: [Exercise],
         existing: [Exercise],
+        previous: [Exercise],
         targets: [TargetSpec],
         countByEffort: [EffortType: Int],
         rng: inout SeededRNG
     ) -> [Exercise] {
         var selectedExercises: [Exercise] = []
-        var remainingExercises = getExercisePool(pool: pool, existing: existing)
+        var remainingExercises = getExercisePool(pool: pool, existing: existing, previous: previous)
+        var useRelaxedPrevious = false  // Track if we've relaxed for previous
         
         // For each effort type, select exercises according to distribution
         for (effort, needed) in countByEffort where needed > 0 {
-            let matchingExercises = remainingExercises.filter { $0.effort == effort }
+            var matchingExercises = remainingExercises.filter { $0.effort == effort }
+            
+            // If not enough for this effort type, relax previous filter
+            if matchingExercises.count < needed && !useRelaxedPrevious {
+                remainingExercises = getExercisePool(pool: pool, existing: existing, previous: [])
+                matchingExercises = remainingExercises.filter { $0.effort == effort }
+                useRelaxedPrevious = true
+            }
+            
             let take = min(needed, matchingExercises.count) // cap by availability
                         
             let selected: [Exercise]
@@ -304,31 +319,40 @@ final class ExerciseSelector {
             result.append(ex)
         }
 
-        if !isDisliked.isEmpty        { changes.record(dayRaw: dayLabel, reason: .init(reason: .disliked,    exerciseIDs: isDisliked)) }
-        if !invalidResistance.isEmpty { changes.record(dayRaw: dayLabel, reason: .init(reason: .resistance,  exerciseIDs: invalidResistance)) }
+        if !isDisliked.isEmpty        { changes.record(dayRaw: dayLabel, reason: .init(reason: .disliked,      exerciseIDs: isDisliked)) }
+        if !invalidResistance.isEmpty { changes.record(dayRaw: dayLabel, reason: .init(reason: .resistance,    exerciseIDs: invalidResistance)) }
         if !cannotPerform.isEmpty     { changes.record(dayRaw: dayLabel, reason: .init(reason: .cannotPerform, exerciseIDs: cannotPerform)) }
-        if !invalidEffort.isEmpty     { changes.record(dayRaw: dayLabel, reason: .init(reason: .effort,      exerciseIDs: invalidEffort)) }
-        if !invalidSets.isEmpty       { changes.record(dayRaw: dayLabel, reason: .init(reason: .sets,        exerciseIDs: invalidSets)) }
-        if !exceedsRepCap.isEmpty     { changes.record(dayRaw: dayLabel, reason: .init(reason: .repCap,      exerciseIDs: exceedsRepCap)) }
-        if !missesRepMin.isEmpty      { changes.record(dayRaw: dayLabel, reason: .init(reason: .repMin,      exerciseIDs: missesRepMin)) }
-        if !tooDifficult.isEmpty      { changes.record(dayRaw: dayLabel, reason: .init(reason: .tooDifficult, exerciseIDs: tooDifficult)) }
+        if !invalidEffort.isEmpty     { changes.record(dayRaw: dayLabel, reason: .init(reason: .effort,        exerciseIDs: invalidEffort)) }
+        if !invalidSets.isEmpty       { changes.record(dayRaw: dayLabel, reason: .init(reason: .sets,          exerciseIDs: invalidSets)) }
+        if !exceedsRepCap.isEmpty     { changes.record(dayRaw: dayLabel, reason: .init(reason: .repCap,        exerciseIDs: exceedsRepCap)) }
+        if !missesRepMin.isEmpty      { changes.record(dayRaw: dayLabel, reason: .init(reason: .repMin,        exerciseIDs: missesRepMin)) }
+        if !tooDifficult.isEmpty      { changes.record(dayRaw: dayLabel, reason: .init(reason: .tooDifficult,  exerciseIDs: tooDifficult)) }
 
         return result
     }
 }
 
 extension ExerciseSelector {
-    private func getExercisePool(pool: [Exercise], existing: [Exercise]) -> [Exercise] {
-        guard !existing.isEmpty else { return pool }
-        
-        let exclude = Set((existing).map(\.id))
-        // One pass: skip excluded, keep first occurrence per id
+    private func getExercisePool(
+        pool: [Exercise], 
+        existing: [Exercise], 
+        previous: [Exercise]
+    ) -> [Exercise] {
+        // Hard filter: exclude existing (already picked in THIS workout)
+        let exclude = Set(existing.map(\.id))
         let remaining: [Exercise] = pool.reduce(into: (seen: Set<Exercise.ID>(), out: [Exercise]())) { acc, ex in
             guard !exclude.contains(ex.id) else { return }
             if acc.seen.insert(ex.id).inserted { acc.out.append(ex) }
         }.out
         
-        return remaining
+        // Soft filter: exclude previous (from LAST workout)
+        // If previous is empty, return remaining (no previous to filter)
+        guard !previous.isEmpty else { return remaining }
+        
+        let previousIds = Set(previous.map(\.id))
+        let filtered = remaining.filter { !previousIds.contains($0.id) }
+        
+        return filtered  // Exclude previous exercises
     }
     
     // MARK: - Exercise Selection with Favorite Prioritization
