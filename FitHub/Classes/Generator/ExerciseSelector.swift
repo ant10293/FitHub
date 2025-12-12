@@ -13,6 +13,7 @@ final class ExerciseSelector {
     private let idx: ExerciseIndex
     private let favorites: Set<Exercise.ID>
     private let disliked: Set<Exercise.ID>
+    private let rAndS: RepsAndSets
     private let strengthCeiling: Int
     private let resistance: ResistanceType
     private let allowDisliked: Bool
@@ -27,15 +28,14 @@ final class ExerciseSelector {
         exerciseData: ExerciseData,
         equipmentData: EquipmentData,
         userData: UserData,
-        days: [DaysOfWeek],
-        nonDefaultParams: Set<PoolChanges.RelaxedFilter>,
+        params: WorkoutGenerator.Parameters,
         policy: Policy = Policy(),
         seed: UInt64 = 0
     ) {
         self.idx = ExerciseIndex(
             data: exerciseData,
             equipment: equipmentData,
-            selection: userData.evaluation.availableEquipment
+            available: userData.evaluation.availableEquipment
         )
         self.favorites = userData.evaluation.favoriteExercises
         self.disliked = userData.evaluation.dislikedExercises
@@ -43,10 +43,11 @@ final class ExerciseSelector {
         self.resistance = userData.workoutPrefs.resistance
         self.allowDisliked = userData.allowDisliked
         self.repCapMultiplier = userData.workoutPrefs.maxBwRepCapMultiplier
-        self.nonDefaultParams = nonDefaultParams
         self.policy = policy
         self.baseSeed = seed
-        self.changes = .init(preseed: days)
+        self.rAndS = params.repsAndSets
+        self.nonDefaultParams = params.nonDefaultParameters
+        self.changes = .init(preseed: params.days)
     }
     
     // MARK: Policy
@@ -64,7 +65,7 @@ final class ExerciseSelector {
         let byGroup: [SplitCategory: [Int]]
         let canPerform: [Bool]
         
-        init(data: ExerciseData, equipment: EquipmentData, selection: Set<GymEquipment.ID>) {
+        init(data: ExerciseData, equipment: EquipmentData, available: Set<GymEquipment.ID>) {
             self.allExercisesCount = data.allExercises.count
             
             // TODO: add option to use all exercises instead of just those with data
@@ -83,7 +84,7 @@ final class ExerciseSelector {
             for (i, ex) in exercises.enumerated() {
                 if let s = ex.splitCategory { split[s, default: []].append(i) }
                 if let g = ex.groupCategory(forGeneration: true) { group[g, default: []].append(i) }
-                perf.append(ex.canPerform(equipmentData: equipment, available: selection))
+                perf.append(ex.canPerform(equipmentData: equipment, available: available))
             }
             
             self.bySplit = split
@@ -115,8 +116,8 @@ final class ExerciseSelector {
         dayLabel: String,
         categories: [SplitCategory],
         total: Int,
-        rAndS: RepsAndSets,
-        existing: [Exercise]
+        existing: [Exercise],
+        previous: [Exercise] // TODO: need to actually implement this
     ) -> ([Exercise], PoolChanges?) {
         let clampedTotal = max(policy.minCount, min(policy.maxCount, total))
         guard clampedTotal > 0 else { return (existing, nil) }
@@ -129,7 +130,6 @@ final class ExerciseSelector {
             dayLabel: dayLabel,
             categories: categories,
             clampedTotal: clampedTotal,
-            rAndS: rAndS,
             baseExisting: existing,
             rng: &rng,
             relaxed: currentRelaxed
@@ -145,7 +145,6 @@ final class ExerciseSelector {
                 dayLabel: dayLabel,
                 categories: categories,
                 clampedTotal: clampedTotal,
-                rAndS: rAndS,
                 baseExisting: existing,
                 rng: &rng,
                 relaxed: currentRelaxed
@@ -160,7 +159,6 @@ final class ExerciseSelector {
         dayLabel: String,
         categories: [SplitCategory],
         clampedTotal: Int,
-        rAndS: RepsAndSets,
         baseExisting: [Exercise],
         rng: inout SeededRNG,
         relaxed: Set<PoolChanges.RelaxedFilter>
@@ -194,7 +192,6 @@ final class ExerciseSelector {
         // 1) Eligibility filtering (gates read `relaxed`)
         let eligible = filterEligibleExercises(
             from: unionIdxs,
-            rAndS: rAndS,
             dayLabel: dayLabel,
             relaxed: relaxed
         )
@@ -222,11 +219,10 @@ final class ExerciseSelector {
         return selection + baseExisting
     }
     
-    // TODO: we need to select using SubMuscle, but if the Muscle has no submucles, we use Muscle
     // MARK: - Simplified Distribution Logic
     private func applyDistributionLogic(
         pool: [Exercise],
-        existing: [Exercise]? = nil,
+        existing: [Exercise],
         targets: [TargetSpec],
         countByEffort: [EffortType: Int],
         rng: inout SeededRNG
@@ -257,7 +253,6 @@ final class ExerciseSelector {
     
     private func filterEligibleExercises(
         from indices: [Int],
-        rAndS: RepsAndSets,
         dayLabel: String,
         relaxed: Set<PoolChanges.RelaxedFilter>
     ) -> [Exercise] {
@@ -323,8 +318,8 @@ final class ExerciseSelector {
 }
 
 extension ExerciseSelector {
-    private func getExercisePool(pool: [Exercise], existing: [Exercise]? = nil) -> [Exercise] {
-        guard let existing, !existing.isEmpty else { return pool }
+    private func getExercisePool(pool: [Exercise], existing: [Exercise]) -> [Exercise] {
+        guard !existing.isEmpty else { return pool }
         
         let exclude = Set((existing).map(\.id))
         // One pass: skip excluded, keep first occurrence per id
@@ -392,12 +387,13 @@ extension ExerciseSelector {
 }
 
 extension ExerciseSelector {
-    private func score(_ ex: Exercise,
-                       target: TargetSpec,
-                       primaryWeight: Double = 1.0,
-                       secondaryWeight: Double = 0.50,
-                       nonTargetPenaltyPerSub: Double = 0.25) -> Double
-    {
+    private func score(
+        _ ex: Exercise,
+        target: TargetSpec,
+        primaryWeight: Double = 1.0,
+        secondaryWeight: Double = 0.50,
+        nonTargetPenaltyPerSub: Double = 0.25
+    ) -> Double {
         // Sum engagement on the target muscle.
         // If a specific submuscle is provided, sum only that sub.
         // Otherwise (nil), sum ALL submuscles for that muscle (muscle-level scoring).
@@ -492,8 +488,7 @@ extension ExerciseSelector {
 
             print("  🔍 trying target: \(t.muscle) sub: \(t.submuscle?.rawValue ?? "nil")")
 
-            if let picked = selectBestForSubmuscles(from: pool, target: t, count: count, rng: &localRng),
-               !picked.isEmpty {
+            if let picked = selectBestForSubmuscles(from: pool, target: t, count: count, rng: &localRng), !picked.isEmpty {
                 if let ex = picked.first {
                     print("  ✅ target matched: \(t.muscle) sub: \(t.submuscle?.rawValue ?? "nil") → \(ex.name)")
                 }

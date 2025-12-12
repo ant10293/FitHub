@@ -39,7 +39,7 @@ final class WorkoutGenerator {
         var changes: WorkoutChanges?
     }
 
-    struct GenerationParameters {
+    struct Parameters {
         var duration: TimeSpan
         var repsAndSets: RepsAndSets
         var days: [DaysOfWeek]
@@ -64,9 +64,7 @@ final class WorkoutGenerator {
             exerciseData: input.exerciseData,
             equipmentData: input.equipmentData,
             userData: input.user,
-            days: params.days,
-            nonDefaultParams: params.nonDefaultParameters,
-            policy: .init(minCount: 1, maxCount: 20),
+            params: params,
             seed: UInt64(max(1, Int(creationDate.timeIntervalSince1970))) // deterministic per run
         )
 
@@ -120,7 +118,7 @@ final class WorkoutGenerator {
 // MARK: – Step-specific helpers
 extension WorkoutGenerator {
     // Non-mutating derivations collected in one place
-    func deriveParameters(input: Input) -> GenerationParameters {
+    func deriveParameters(input: Input) -> Parameters {
         let goal = input.user.physical.goal
         let age = input.user.profile.age
         let freq = input.user.workoutPrefs.workoutDaysPerWeek
@@ -185,7 +183,7 @@ extension WorkoutGenerator {
         let days = dayIndices.map { DaysOfWeek.orderedDays[$0] }
         let dates = dayIndices.map { weekDays[$0] }
 
-        return GenerationParameters(
+        return Parameters(
             duration: duration,
             repsAndSets: repsAndSets,
             days: days,
@@ -200,10 +198,7 @@ extension WorkoutGenerator {
         )
     }
 
-    func getCompleted(
-        savedID: UUID,
-        input: Input
-    ) -> CompletedWorkout? {
+    func getCompleted(savedID: UUID, input: Input) -> CompletedWorkout? {
         // Gather all completed workouts matching this template ID
         let matchingCompleted: [CompletedWorkout] = input.user.workoutPlans.completedWorkouts.filter { $0.template.id == savedID }
 
@@ -223,7 +218,7 @@ extension WorkoutGenerator {
     func makeWorkoutTemplate(
         day: DaysOfWeek,
         dayIndex: Int,
-        params: GenerationParameters,
+        params: Parameters,
         input: Input,
         selector: ExerciseSelector,
         maxUpdated: @escaping (PerformanceUpdate) -> Void
@@ -237,6 +232,7 @@ extension WorkoutGenerator {
         let savedDay: OldTemplate = input.saved[safe: dayIndex] ?? OldTemplate()
         let dayHasExercises: Bool = dayIndex < input.saved.count && !savedDay.exercises.isEmpty
         let initialExercises: [Exercise] = (input.keepCurrentExercises && dayHasExercises) ? savedDay.exercises : []
+        let previousExercises: [Exercise] = input.keepCurrentExercises ? [] : savedDay.exercises
         let testCompleted: CompletedWorkout? = getCompleted(savedID: savedDay.id, input: input)
         let wasCompleted: Bool = testCompleted != nil
         let completed: CompletedWorkout = testCompleted ?? CompletedWorkout()
@@ -283,8 +279,8 @@ extension WorkoutGenerator {
                     dayLabel: dayName,
                     categories: categoriesForDay,
                     total: targetCount,
-                    rAndS: params.repsAndSets,
-                    existing: existingPicked
+                    existing: existingPicked,
+                    previous: previousExercises
                 )
 
                 return (picked, dayChanges)

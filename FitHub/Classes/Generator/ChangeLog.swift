@@ -10,7 +10,7 @@ import Foundation
 extension WorkoutGenerator {
     func generateChangelog(
         input: Input,
-        params: GenerationParameters,
+        params: Parameters,
         templates: [WorkoutTemplate],
         generationStartTime: Date
     ) -> WorkoutChangelog? {
