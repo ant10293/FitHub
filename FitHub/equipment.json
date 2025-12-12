@@ -18,7 +18,6 @@
         "aliases": ["k‑bells", "kettle bells", "girya"],
         "description": "A cannonball‑shaped weight with an offset handle that enables ballistic, hinging, and rotational exercises such as swings, cleans, snatches, and Turkish get‑ups.",
         "equCategory": "Small Weights",
-        "alternativeEquipment": ["Adjustable Kettlebells"],
         "implementation": "Individual",
         "weightInstruction": "Per Kettlebell"
     },
@@ -85,6 +84,17 @@
         "baseWeight": { "lb": 20, "kg": 10 },
         "pegCount": 2,
         "implementation": "Unified"
+    },
+    {
+        "name": "Farmer's Walk Handles",
+        "id": "5F2E1A6C-9B07-4C2D-ABF4-13E8C9F4C2D0",
+        "image": "farmers_walk_handles",
+        "description": "Heavy handles used for loaded carries.",
+        "equCategory": "Bars & Plates",
+        "alternativeEquipment": ["Dumbbells", "Kettlebells"],
+        "baseWeight": { "lb": 20, "kg": 10 },
+        "pegCount": 2,
+        "implementation": "Individual"
     },
     {
         "name": "Landmine",
@@ -923,6 +933,16 @@
         "description": "Sturdy household chair leveraged for step‑ups, dips, incline push‑ups, or seated exercises.",
         "equCategory": "Other",
         "alternativeEquipment": ["Plyometric Box"]
+    },
+    {
+        "name": "Prowler Sled",
+        "id": "7C1B8F22-5DA0-4C3F-9A44-0E2B6A1E9F73",
+        "image": "prowler_sled",
+        "description": "A sled used for pushing or pulling drills.",
+        "equCategory": "Bars & Plates",
+        "baseWeight": { "lb": 75, "kg": 35 },
+        "pegCount": 1,
+        "implementation": "Unified"
     },
     {
         "name": "Treadmill",
