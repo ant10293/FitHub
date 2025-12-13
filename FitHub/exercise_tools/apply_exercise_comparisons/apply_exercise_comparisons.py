@@ -157,7 +157,7 @@ def apply_multipliers(dataset_rows, multipliers, first_col_name, round_to_int=Fa
                 # Try to convert to float and apply multiplier
                 try:
                     original_value = float(value_str)
-                    multiplier = multipliers[diff]
+            multiplier = multipliers[diff]
                     result = original_value * multiplier
                     if round_to_int:
                         result = int(round(result))
@@ -195,7 +195,7 @@ def save_dataset_csv(rows, fieldnames, output_path):
                     if value.is_integer():
                         formatted_row[key] = str(int(value))
                     else:
-                        formatted_row[key] = f"{value:.2f}"
+                    formatted_row[key] = f"{value:.2f}"
                 else:
                     formatted_row[key] = value
             writer.writerow(formatted_row)
@@ -254,10 +254,10 @@ def process_exercise(exercise_name, base_name, comparison_file, pct_value, exerc
     multipliers = None
     if comparison_file and comparison_file.strip():
         print(f"  Comparison file: {comparison_file}")
-        try:
-            multipliers = load_comparison_csv(comparison_file)
-        except FileNotFoundError as e:
-            print(f"  ERROR: {e}")
+    try:
+        multipliers = load_comparison_csv(comparison_file)
+    except FileNotFoundError as e:
+        print(f"  ERROR: {e}")
             return False
     elif pct_value and pct_value.strip():
         try:

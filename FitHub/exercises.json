@@ -10996,6 +10996,7 @@
       "name": "Plate Neck Extension",
       "id": "F2A9B3C7-5D4E-4F81-9A6B-7C3D2E1F4A5B",
       "image": "neck_extension",
+      "csvKey": "neck-extension",
       "aliases": [ "Lying Neck Extension" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Flat Bench", "Weight Plate" ],
@@ -11011,7 +11012,7 @@
       "effort": "Isolation",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "imageUrl": "https://gymvisual.com/animated-gifs/23035-seated-neck-flexion-to-extension-on-chair-male.html#/47-style_type-basic_grey",
+      "imageUrl": "https://gymvisual.com/animated-gifs/2511-weighted-lying-neck-extension.html#/47-style_type-basic_grey",
       "unitType": "weightXreps"
     },
     {
