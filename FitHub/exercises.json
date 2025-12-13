@@ -16,8 +16,8 @@
       "equipmentRequired": [ "Flat Bench Rack", "Barbell" ],
       "muscles": [
         { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-            { "engagementPercentage": 100, "submuscleWorked": "Sternocostal Head" },
-            { "engagementPercentage": 10, "submuscleWorked": "Clavicular Head" }
+        { "engagementPercentage": 91, "submuscleWorked": "Sternocostal Head" },
+        { "engagementPercentage": 9, "submuscleWorked": "Clavicular Head" }
         ] },
         { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
             { "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
@@ -560,6 +560,32 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2240-smith-incline-bench-press.html?search_query=smith+incline+bench&results=6",
+      "unitType": "weightXreps"
+    },
+    {
+      "name": "Smith Machine Decline Bench Press",
+      "id": "6F3B4E8A-9C2D-4F6E-8A41-2E9D7B8C5A14",
+      "image": "smith_machine_decline_bench_press",
+      "aliases": [ "Smith Decline Bench" ],
+      "instructions": { "steps": [ ] },
+      "equipmentRequired": [ "Smith Machine", "Adjustable Bench" ],
+      "muscles": [
+        { "engagementPercentage": 65, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+            { "engagementPercentage": 100, "submuscleWorked": "Costal Head" }
+        ] },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+            { "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
+            { "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
+        ] },
+        { "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+            { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
+        ] }
+      ],
+      "difficulty": "Beg.",
+      "effort": "Compound",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Machine",
+      "imageUrl": "https://gymvisual.com/animated-gifs/2236-smith-decline-bench-press.html#/47-style_type-basic_grey",
       "unitType": "weightXreps"
     },
     {
@@ -1937,9 +1963,9 @@
       "equipmentRequired": [ "Flat Bench" ],
       "muscles": [
         { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 24, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 24, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
@@ -1961,9 +1987,9 @@
       "equipmentRequired": [ "Flat Bench" ],
       "muscles": [
         { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 24, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 24, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
@@ -1992,9 +2018,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Rectus Femoris" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Nov.",
@@ -2044,9 +2070,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Rectus Femoris" }
@@ -2067,13 +2093,18 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
       "muscles": [
-        { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
+        ] },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
-        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
+            { "engagementPercentage": 34, "submuscleWorked": "Iliocostalis" },
+            { "engagementPercentage": 33, "submuscleWorked": "Longissimus" },
+            { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
         ] }
       ],
       "difficulty": "Beg.",
@@ -2095,9 +2126,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Nov.",
@@ -2120,9 +2151,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 10, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 5, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 10, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Int.",
@@ -2172,9 +2203,9 @@
       "equipmentRequired": [ "Glute Ham Raise Bench" ],
       "muscles": [
         { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 28, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 14, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 28, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
@@ -2496,10 +2527,10 @@
       "unitType": "repsOnly"
     },
     {
-      "name": "Costal Dip",
+      "name": "Chest Dip",
       "id": "1718181A-6FB6-40FF-A4A3-F7299038CE1E",
-      "image": "costal_dip",
-      "aliases": [ "Lower-Chest Dip" ],
+      "image": "chest_dip",
+      "aliases": [ "Lower-Chest Dip", "Costal Dip" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dip Bar" ],
       "muscles": [
@@ -5357,32 +5388,6 @@
       "unitType": "weightXreps"
     },
     {
-      "name": "Jefferson Curl",
-      "id": "3BE70137-DD4A-4ACF-A5DD-D1E607713B7D",
-      "image": "jefferson_curl",
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Dumbbells" ],
-      "muscles": [
-        { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
-            { "engagementPercentage": 33, "submuscleWorked": "Iliocostalis" },
-            { "engagementPercentage": 34, "submuscleWorked": "Longissimus" },
-            { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
-        ] },
-        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" },
-            { "engagementPercentage": 30, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 30, "submuscleWorked": "Semimembranosus" }
-        ] }
-      ],
-      "difficulty": "Int.",
-      "effort": "Isolation",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Free Weight",
-      "weightInstruction": "Per Dumbbell",
-      "imageUrl": "https://gymvisual.com/animated-gifs/17770-dumbbell-jefferson-curl-male.html?search_query=jefferson+curl&results=4",
-      "unitType": "weightXreps"
-    },
-    {
       "name": "Machine Bicep Curl",
       "id": "F12D5485-540E-4A72-AB33-977F5167D3D2",
       "image": "machine_bicep_curl",
@@ -5639,9 +5644,9 @@
       "equipmentRequired": [ ],
       "muscles": [
         { "engagementPercentage": 30, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 70, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Rectus Femoris" }
@@ -5668,9 +5673,9 @@
             { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
         ] },
         { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
             { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
@@ -5731,9 +5736,9 @@
             { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
         ] },
         { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
             { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
@@ -5797,9 +5802,9 @@
             { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
         ] },
         { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
             { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
@@ -5829,9 +5834,9 @@
             { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
         ] },
         { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
             { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
@@ -5855,12 +5860,12 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
       "muscles": [
-        { "engagementPercentage": 35, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
+        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
             { "engagementPercentage": 34, "submuscleWorked": "Iliocostalis" },
             { "engagementPercentage": 33, "submuscleWorked": "Longissimus" },
             { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
         ] },
-        { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
             { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
             { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
             { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
@@ -5874,6 +5879,32 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14258-barbell-jefferson-deadlift.html?search_query=jefferson+deadlift&results=2",
+      "unitType": "weightXreps"
+    },
+    {
+      "name": "Jefferson Curl",
+      "id": "3BE70137-DD4A-4ACF-A5DD-D1E607713B7D",
+      "image": "jefferson_curl",
+      "instructions": { "steps": [ ] },
+      "equipmentRequired": [ "Dumbbells" ],
+      "muscles": [
+        { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
+            { "engagementPercentage": 33, "submuscleWorked": "Iliocostalis" },
+            { "engagementPercentage": 34, "submuscleWorked": "Longissimus" },
+            { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
+        ] },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" },
+            { "engagementPercentage": 30, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 30, "submuscleWorked": "Semimembranosus" }
+        ] }
+      ],
+      "difficulty": "Int.",
+      "effort": "Isolation",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Free Weight",
+      "weightInstruction": "Per Dumbbell",
+      "imageUrl": "https://gymvisual.com/animated-gifs/17770-dumbbell-jefferson-curl-male.html?search_query=jefferson+curl&results=4",
       "unitType": "weightXreps"
     },
     {
@@ -5907,33 +5938,6 @@
       "unitType": "weightXreps"
     },
     {
-      "name": "Stiff-Legged Deadlift",
-      "id": "D942C43F-CC00-41E8-8AFF-DEB0A56918E9",
-      "image": "stiff_legged_deadlift",
-      "csvKey": "stiff-leg-deadlift",
-      "aliases": [ "Straight-Leg Deadlift" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Barbell" ],
-      "muscles": [
-        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
-            { "engagementPercentage": 34, "submuscleWorked": "Iliocostalis" },
-            { "engagementPercentage": 33, "submuscleWorked": "Longissimus" },
-            { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
-        ] },
-        { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 16, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 16, "submuscleWorked": "Biceps Femoris" }
-        ] }
-      ],
-      "difficulty": "Nov.",
-      "effort": "Compound",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Free Weight",
-      "imageUrl": "https://gymvisual.com/animated-gifs/3409-barbell-stiff-legged-deadlift.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
-    },
-    {
       "name": "Sumo Deadlift",
       "id": "3206FB0D-7981-468F-968E-362BACC5126B",
       "image": "sumo_deadlift",
@@ -5942,19 +5946,13 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
       "muscles": [
-        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
-            { "engagementPercentage": 34, "submuscleWorked": "Iliocostalis" },
-            { "engagementPercentage": 33, "submuscleWorked": "Longissimus" },
-            { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
-        ] },
-        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
-        ] },
-        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+        { "engagementPercentage": 35, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
-        ] }
+        ] },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Adductors", "submusclesWorked": [] },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [] },
+        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [] },
+        { "engagementPercentage": 5, "mover": "stabilizer", "muscleWorked": "Erector Spinae", "submusclesWorked": [] }
       ],
       "difficulty": "Nov.",
       "effort": "Compound",
@@ -5978,9 +5976,9 @@
             { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
         ] },
         { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Beg.",
@@ -6023,6 +6021,33 @@
       "unitType": "weightXreps"
     },
     {
+      "name": "Stiff-Legged Deadlift",
+      "id": "D942C43F-CC00-41E8-8AFF-DEB0A56918E9",
+      "image": "stiff_legged_deadlift",
+      "csvKey": "stiff-leg-deadlift",
+      "aliases": [ "Straight-Leg Deadlift" ],
+      "instructions": { "steps": [ ] },
+      "equipmentRequired": [ "Barbell" ],
+      "muscles": [
+        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
+        ] },
+        { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
+            { "engagementPercentage": 35, "submuscleWorked": "Iliocostalis" },
+            { "engagementPercentage": 32, "submuscleWorked": "Longissimus" },
+            { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
+        ] }
+      ],
+      "difficulty": "Nov.",
+      "effort": "Compound",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Free Weight",
+      "imageUrl": "https://gymvisual.com/animated-gifs/3409-barbell-stiff-legged-deadlift.html#/47-style_type-basic_grey",
+      "unitType": "weightXreps"
+    },
+    {
       "name": "Romanian Deadlift",
       "id": "71ACFCED-5EE5-4EB7-9E04-3E62AB9B9A39",
       "image": "romanian_deadlift",
@@ -6031,15 +6056,15 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
       "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 20, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 10, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 20, "submuscleWorked": "Biceps Femoris" }
+        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
-        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
+        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
             { "engagementPercentage": 34, "submuscleWorked": "Iliocostalis" },
             { "engagementPercentage": 33, "submuscleWorked": "Longissimus" },
             { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
@@ -6061,14 +6086,19 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
       "muscles": [
-        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
+        ] },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 70, "submuscleWorked": "Gluteus Maximus" },
             { "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
         ] },
-        { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 16, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 16, "submuscleWorked": "Biceps Femoris" }
+        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
+            { "engagementPercentage": 34, "submuscleWorked": "Iliocostalis" },
+            { "engagementPercentage": 33, "submuscleWorked": "Longissimus" },
+            { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
         ] }
       ],
       "difficulty": "Int.",
@@ -6091,9 +6121,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Nov.",
@@ -6119,9 +6149,9 @@
             { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
         ] },
         { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
@@ -6164,9 +6194,9 @@
       "equipmentRequired": [ "Glute Ham Raise Bench" ],
       "muscles": [
         { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 16, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 16, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 60, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
@@ -6209,9 +6239,9 @@
       "equipmentRequired": [ "Reverse Hyperextension" ],
       "muscles": [
         { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 16, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 16, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 60, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
@@ -6245,7 +6275,7 @@
       "unitType": "weightXreps"
     },
     {
-      "name": "Cable Glute Kickbacks",
+      "name": "Cable Glute Kickback",
       "id": "B8EC65C3-062F-4389-9337-7FD454FEF343",
       "image": "cable_glute_kickbacks",
       "csvKey": "cable-kickback",
@@ -8867,9 +8897,9 @@
             { "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Nov.",
@@ -8956,9 +8986,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Beg.",
@@ -9092,9 +9122,9 @@
             { "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Nov.",
@@ -9124,9 +9154,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Nov.",
@@ -9212,9 +9242,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Nov.",
@@ -9242,9 +9272,9 @@
             { "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Nov.",
@@ -9273,9 +9303,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Beg.",
@@ -9332,9 +9362,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Int.",
@@ -9362,9 +9392,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Nov.",
@@ -9546,9 +9576,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Nov.",
@@ -10389,9 +10419,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 12, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 6, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Nov.",
@@ -10453,9 +10483,9 @@
             { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 8, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 4, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 8, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] }
       ],
       "difficulty": "Nov.",
@@ -10475,9 +10505,9 @@
       "equipmentRequired": [ "Barbell", "Squat Rack" ],
       "muscles": [
         { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 24, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 12, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 24, "submuscleWorked": "Biceps Femoris" }
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
         ] },
         { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
             { "engagementPercentage": 34, "submuscleWorked": "Iliocostalis" },
@@ -10574,8 +10604,8 @@
       "equipmentRequired": [ "Medicine Ball" ],
       "muscles": [
         { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Abdominals", "submusclesWorked": [
-            { "engagementPercentage": 30, "submuscleWorked": "Upper Abs" },
-            { "engagementPercentage": 30, "submuscleWorked": "Lower Abs" }
+            { "engagementPercentage": 50, "submuscleWorked": "Upper Abs" },
+            { "engagementPercentage": 50, "submuscleWorked": "Lower Abs" }
         ] },
         { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }

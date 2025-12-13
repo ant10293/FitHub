@@ -9,7 +9,8 @@ import csv
 import sys
 from pathlib import Path
 
-SCRIPT_DIR = Path(__file__).resolve().parent
+# Go up two levels since script is in exercise_tools/export_exercises_to_csv/
+SCRIPT_DIR = Path(__file__).resolve().parent.parent.parent
 EXERCISES_PATH = SCRIPT_DIR / "exercises.json"
 OUTPUT_PATH = SCRIPT_DIR / "exercises_export.csv"
 

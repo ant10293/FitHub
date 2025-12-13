@@ -5,6 +5,10 @@ Validate that all equipmentRequired items in exercises.json exist in equipment.j
 
 import json
 from collections import defaultdict
+from pathlib import Path
+
+# Base directory (go up two levels since script is in exercise_tools/validate_equipment/)
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 def load_json(file_path):
     """Load JSON file."""
@@ -41,12 +45,15 @@ def validate_equipment():
     print()
 
     # Load data
+    exercises_path = BASE_DIR / "exercises.json"
+    equipment_path = BASE_DIR / "equipment.json"
+    
     print("Loading exercises.json...")
-    exercises = load_json('exercises.json')
+    exercises = load_json(exercises_path)
     print(f"Loaded {len(exercises)} exercises")
 
     print("Loading equipment.json...")
-    equipment_data = load_json('equipment.json')
+    equipment_data = load_json(equipment_path)
     print(f"Loaded {len(equipment_data)} equipment items")
     print()
 
@@ -166,3 +173,6 @@ def validate_equipment():
 
 if __name__ == '__main__':
     exit(validate_equipment())
+
+
+
