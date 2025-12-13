@@ -104,13 +104,41 @@ def load_dataset_csv(csv_path):
     return rows, fieldnames
 
 
-def apply_multipliers(dataset_rows, multipliers, first_col_name):
+def is_integer_only_dataset(dataset_rows, first_col_name):
+    """Check if all numeric values in the dataset are integers (excluding first column).
+    
+    Args:
+        dataset_rows: List of dicts representing dataset rows
+        first_col_name: Name of the first column (Age or BW) to exclude from check
+    
+    Returns:
+        True if all numeric values are integers, False otherwise
+    """
+    for row in dataset_rows:
+        for key, value in row.items():
+            if key == first_col_name:
+                continue
+            value_str = str(value).strip() if value else ''
+            # Skip non-numeric values
+            if value_str.startswith('<') or value_str.startswith('>') or not value_str.replace('.', '').replace('-', '').isdigit():
+                continue
+            try:
+                float_val = float(value_str)
+                if not float_val.is_integer():
+                    return False
+            except ValueError:
+                continue
+    return True
+
+
+def apply_multipliers(dataset_rows, multipliers, first_col_name, round_to_int=False):
     """Apply multipliers to dataset rows.
     
     Args:
         dataset_rows: List of dicts representing dataset rows
         multipliers: Dict with difficulty levels as keys and multipliers as values
         first_col_name: Name of the first column (Age or BW)
+        round_to_int: If True, round all numeric results to integers
     
     Returns:
         Modified dataset rows
@@ -119,9 +147,34 @@ def apply_multipliers(dataset_rows, multipliers, first_col_name):
     for row in dataset_rows:
         modified_row = {first_col_name: row[first_col_name]}  # Keep first column unchanged
         for diff in DIFFICULTY_COLS:
-            original_value = float(row[diff])
-            multiplier = multipliers[diff]
-            modified_row[diff] = original_value * multiplier
+            value_str = str(row[diff]).strip() if row[diff] else ''
+            
+            # Check if it's a special value (starts with < or >)
+            if value_str.startswith('<') or value_str.startswith('>'):
+                # Keep special values as-is (e.g., '< 1', '> 100', etc.)
+                modified_row[diff] = value_str
+            else:
+                # Try to convert to float and apply multiplier
+                try:
+                    original_value = float(value_str)
+                    multiplier = multipliers[diff]
+                    result = original_value * multiplier
+                    if round_to_int:
+                        result = int(round(result))
+                        # If result rounds to 0, output '< 1' instead of 0
+                        if result == 0:
+                            modified_row[diff] = '< 1'
+                        else:
+                            modified_row[diff] = result
+                    else:
+                        # For non-integer rounding, check if result is less than 1
+                        if result < 1:
+                            modified_row[diff] = '< 1'
+                        else:
+                            modified_row[diff] = result
+                except (ValueError, TypeError):
+                    # Keep as-is if conversion fails (e.g., 'N/A', empty, etc.)
+                    modified_row[diff] = value_str
         modified_rows.append(modified_row)
     
     return modified_rows
@@ -138,19 +191,42 @@ def save_dataset_csv(rows, fieldnames, output_path):
             formatted_row = {}
             for key, value in row.items():
                 if isinstance(value, float):
-                    formatted_row[key] = f"{value:.2f}"
+                    # If it's a whole number, don't include .0
+                    if value.is_integer():
+                        formatted_row[key] = str(int(value))
+                    else:
+                        formatted_row[key] = f"{value:.2f}"
                 else:
                     formatted_row[key] = value
             writer.writerow(formatted_row)
 
 
-def process_exercise(exercise_name, base_name, comparison_file, exercises_dict, overwrite=False):
+def create_multipliers_from_pct(pct_value):
+    """Create multipliers dictionary from a percentage value.
+    
+    Args:
+        pct_value: Percentage value (e.g., 90 for 90%, 110 for 110%)
+    
+    Returns:
+        Dictionary with multipliers for all categories and difficulty levels
+    """
+    multiplier = float(pct_value) / 100.0
+    multipliers = {}
+    for category in CATEGORY_TO_DIR.keys():
+        multipliers[category] = {
+            diff: multiplier for diff in DIFFICULTY_COLS
+        }
+    return multipliers
+
+
+def process_exercise(exercise_name, base_name, comparison_file, pct_value, exercises_dict, overwrite=False):
     """Process a single exercise.
     
     Args:
         exercise_name: The name of the exercise (from the input CSV)
         base_name: The base name to search for in exercises.json
-        comparison_file: The comparison CSV filename
+        comparison_file: The comparison CSV filename (can be empty)
+        pct_value: Percentage value as fallback (can be empty)
         exercises_dict: Dictionary of exercises from exercises.json
         overwrite: If True, overwrite existing files. If False, skip existing files.
     
@@ -159,7 +235,6 @@ def process_exercise(exercise_name, base_name, comparison_file, exercises_dict, 
     """
     print(f"\nProcessing: {exercise_name}")
     print(f"  Base name: {base_name}")
-    print(f"  Comparison file: {comparison_file}")
     
     # Find the base exercise in exercises.json
     if base_name not in exercises_dict:
@@ -175,11 +250,27 @@ def process_exercise(exercise_name, base_name, comparison_file, exercises_dict, 
     
     print(f"  Found csvKey: {csv_key}")
     
-    # Load comparison multipliers
-    try:
-        multipliers = load_comparison_csv(comparison_file)
-    except FileNotFoundError as e:
-        print(f"  ERROR: {e}")
+    # Load comparison multipliers - use comparison file if provided, otherwise use pct
+    multipliers = None
+    if comparison_file and comparison_file.strip():
+        print(f"  Comparison file: {comparison_file}")
+        try:
+            multipliers = load_comparison_csv(comparison_file)
+        except FileNotFoundError as e:
+            print(f"  ERROR: {e}")
+            return False
+    elif pct_value and pct_value.strip():
+        try:
+            # Strip whitespace and remove % symbol if present
+            pct_str = pct_value.strip().rstrip('%')
+            pct = float(pct_str)
+            print(f"  Using percentage: {pct}%")
+            multipliers = create_multipliers_from_pct(pct)
+        except ValueError:
+            print(f"  ERROR: Invalid percentage value: {pct_value}")
+            return False
+    else:
+        print(f"  ERROR: No comparison file or percentage provided")
         return False
     
     # Create output directory
@@ -229,9 +320,14 @@ def process_exercise(exercise_name, base_name, comparison_file, exercises_dict, 
         # Get first column name (Age or BW)
         first_col_name = fieldnames[0]
         
+        # Check if the base dataset only contains integers
+        round_to_int = is_integer_only_dataset(dataset_rows, first_col_name)
+        if round_to_int:
+            print(f"  Base dataset contains only integers - will round all results to integers")
+        
         # Apply multipliers
         category_multipliers = multipliers[category]
-        modified_rows = apply_multipliers(dataset_rows, category_multipliers, first_col_name)
+        modified_rows = apply_multipliers(dataset_rows, category_multipliers, first_col_name, round_to_int)
         
         # Save to output directory
         try:
@@ -304,16 +400,17 @@ def main():
         exercise_name = row.get('name', '').strip()
         base_name = row.get('base name', '').strip()
         comparison_file = row.get('comparison file (CSV)', '').strip()
+        pct_value = row.get('percentage difference', '').strip()
         
         if not exercise_name:
             print(f"\nWARNING: Skipping row with no exercise name")
             continue
         
-        if not comparison_file:
-            print(f"\nWARNING: Skipping '{exercise_name}' - no comparison file specified")
+        if not comparison_file and not pct_value:
+            print(f"\nWARNING: Skipping '{exercise_name}' - no comparison file or percentage specified")
             continue
         
-        if process_exercise(exercise_name, base_name, comparison_file, exercises_dict, args.overwrite):
+        if process_exercise(exercise_name, base_name, comparison_file, pct_value, exercises_dict, args.overwrite):
             successful += 1
         else:
             failed += 1
