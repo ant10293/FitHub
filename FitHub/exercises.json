@@ -427,6 +427,7 @@
       "effort": "Isolation",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
+      "imageUrl": "https://gymvisual.com/animated-gifs/1546-barbell-jm-bench-press.html#/47-style_type-basic_grey",
       "unitType": "weightXreps"
     },
     {
@@ -5003,7 +5004,6 @@
       "name": "Cable Concentration Curl",
       "id": "F7B2331C-6357-4481-B81F-F91C3BA6956A",
       "image": "cable_concentration_curl",
-      "aliases": [ "Kneeling Cable Concentration Curl" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Straight Bar Attachment" ],
       "muscles": [
@@ -5091,6 +5091,7 @@
       "name": "Concentration Curl",
       "id": "443949F2-EE4E-4E61-B690-95AA87F86466",
       "image": "concentration_curl",
+      "csvKey": "dumbbell-concentration-curl",
       "aliases": [ "Seated Concentration Curl" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
@@ -5104,6 +5105,7 @@
       "effort": "Isolation",
       "limbMovementType": "Unilateral",
       "resistance": "Free Weight",
+      "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1790-dumbbell-concentration-curl.html?search_query=dumbbell+concentration+curl&results=21",
       "unitType": "weightXreps"
     },
