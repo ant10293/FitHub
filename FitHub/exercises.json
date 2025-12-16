@@ -3621,6 +3621,30 @@
       "unitType": "weightXreps"
     },
     {
+      "name": "Smith Machine Shoulder Press",
+      "id": "0CA3F4A8-79D0-4DCB-A300-BC56F52A3C1C",
+      "image": "smith_machine_shoulder_press",
+      "aliases": [ "Smith Seated Shoulder Press", "Smith Overhead Press" ],
+      "instructions": { "steps": [ ] },
+      "equipmentRequired": [ "Smith Machine", "Vertical Bench" ],
+      "muscles": [
+        { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+            { "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
+            { "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
+        ] },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+            { "engagementPercentage": 60, "submuscleWorked": "Triceps Long Head" },
+            { "engagementPercentage": 40, "submuscleWorked": "Triceps Lateral Head" }
+        ] }
+      ],
+      "difficulty": "Nov.",
+      "effort": "Compound",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Machine",
+      "imageUrl": "https://gymvisual.com/animated-gifs/2248-smith-seated-shoulder-press.html#/47-style_type-basic_grey",
+      "unitType": "weightXreps"
+    },
+    {
       "name": "Seated Overhead Press",
       "id": "E2D009AA-B5F9-4608-8432-206648921022",
       "image": "seated_barbell_overhead_press",
@@ -4012,7 +4036,7 @@
       "id": "F0C4F1BE-37BF-4347-83FE-4E5DACC9B9C3",
       "image": "prone_y_raise",
       "csvKey": "dumbbell-incline-y-raise",
-      "aliases": [ "Prone Y Raise" ],
+      "aliases": [ "Incline Scaption Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells", "Adjustable Bench" ],
       "muscles": [
@@ -4031,10 +4055,10 @@
       "unitType": "weightXreps"
     },
     {
-      "name": "Scaption Raise",
+      "name": "Y Raise",
       "id": "6A525709-96F4-44BF-A90E-0CADF0436D38",
       "image": "scaption_raise",
-      "aliases": [ "Dumbbell Scaption" ],
+      "aliases": [ "Scaption Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
       "muscles": [
@@ -4048,6 +4072,7 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
+      "imageUrl": "https://gymvisual.com/animated-gifs/1804-dumbbell-full-can-lateral-raise.html#/47-style_type-basic_grey",
       "unitType": "weightXreps"
     },
     {
@@ -5390,44 +5415,17 @@
       "unitType": "weightXreps"
     },
     {
-      "name": "Machine Bicep Curl",
+      "name": "Machine Preacher Curl",
       "id": "F12D5485-540E-4A72-AB33-977F5167D3D2",
       "image": "machine_bicep_curl",
       "csvKey": "machine-bicep-curl",
-      "aliases": [ "Bicep Curl Machine" ],
+      "aliases": [ "Machine Bicep Curl" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Bicep Curl" ],
       "muscles": [
         { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
             { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
             { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-        ] }
-      ],
-      "difficulty": "Beg.",
-      "effort": "Isolation",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Machine",
-      "imageUrl": "https://gymvisual.com/animated-gifs/12122-lever-biceps-curl.html?search_query=machine+bicep+curl&results=23",
-      "unitType": "weightXreps"
-    },
-    {
-      "name": "Machine Preacher Curl",
-      "id": "12A445B6-6E78-4ABC-9AFA-C92801F9C7E3",
-      "image": "placeholder_ex_img",
-      "aliases": [ "preacher curl machine" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Preacher Curl" ],
-      "muscles": [
-        { "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
-            { "engagementPercentage": 25, "submuscleWorked": "Biceps Long Head" },
-            { "engagementPercentage": 35, "submuscleWorked": "Biceps Short Head" },
-            { "engagementPercentage": 40, "submuscleWorked": "Brachialis" }
-        ] },
-        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
-            { "engagementPercentage": 20, "submuscleWorked": "Brachioradialis" },
-            { "engagementPercentage": 40, "submuscleWorked": "Forearm Flexors" },
-            { "engagementPercentage": 25, "submuscleWorked": "Forearm Extensors" },
-            { "engagementPercentage": 15, "submuscleWorked": "Forearm Rotators" }
         ] }
       ],
       "difficulty": "Beg.",
@@ -7530,7 +7528,6 @@
       "id": "C5BBC3F3-1BE6-4296-8411-061199B23A5F",
       "image": "side_lunges_bodyweight",
       "csvKey": "side-lunge",
-      "aliases": [ "Lateral Lunge" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
       "muscles": [
@@ -7551,6 +7548,31 @@
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/6497-side-lunge.html#/47-style_type-basic_grey",
       "unitType": "repsOnly"
+    },
+    {
+      "name": "Barbell Lateral Lunge",
+      "id": "9A4C2F7E-6B1D-4F8A-9E63-1D8B5C2A4F90",
+      "image": "side_lunges",
+      "instructions": { "steps": [ ] },
+      "equipmentRequired": [ ],
+      "muscles": [
+        { "engagementPercentage": 45, "mover": "primary", "muscleWorked": "Adductors", "submusclesWorked": [ ] },
+        { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+            { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+            { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+            { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+        ] },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+            { "engagementPercentage": 100, "submuscleWorked": "Gluteus Maximus" }
+        ] }
+      ],
+      "difficulty": "Int.",
+      "effort": "Compound",
+      "limbMovementType": "Unilateral",
+      "resistance": "Free Weight",
+      "repsInstruction": "Per Leg",
+      "imageUrl": "https://gymvisual.com/animated-gifs/3178-barbell-lateral-lunge.html?search_query=barbell+lateral+lunge&results=6",
+      "unitType": "weightXreps"
     },
     {
       "name": "Close-Grip Lat Pulldown",
@@ -8913,6 +8935,70 @@
       "unitType": "weightXreps"
     },
     {
+      "name": "Dumbbell Bulgarian Split Squat",
+      "id": "C0DBF10F-A778-4C62-9440-6CCEE7AAC272",
+      "image": "dumbbell_bulgarian_split_squat",
+      "csvKey": "dumbbell-bulgarian-split-squat",
+      "aliases": [ "Dumbbell Rear Foot Elevated Squat" ],
+      "instructions": { "steps": [ ] },
+      "equipmentRequired": [ "Flat Bench", "Dumbbells" ],
+      "muscles": [
+        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+            { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+            { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+            { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+        ] },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+            { "engagementPercentage": 70, "submuscleWorked": "Gluteus Maximus" },
+            { "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
+        ] },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
+        ] }
+      ],
+      "difficulty": "Nov.",
+      "effort": "Compound",
+      "limbMovementType": "Unilateral",
+      "resistance": "Free Weight",
+      "weightInstruction": "Per Dumbbell",
+      "repsInstruction": "Per Leg",
+      "imageUrl": "https://gymvisual.com/animated-gifs/4904-dumbbell-bulgarian-split-squat-female.html#/47-style_type-basic_grey",
+      "unitType": "weightXreps"
+    },
+    {
+      "name": "Goblet Bulgarian Split Squat",
+      "id": "0387A7F2-DD70-4EF8-819B-810B58ED06FC",
+      "image": "goblet_bulgarian_split_squat",
+      "aliases": [ "Goblet Rear-Foot Elevated Split Squat" ],
+      "instructions": { "steps": [ ] },
+      "equipmentRequired": [ "Dumbbells", "Flat Bench" ],
+      "muscles": [
+        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+            { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+            { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+            { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+        ] },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+            { "engagementPercentage": 70, "submuscleWorked": "Gluteus Maximus" },
+            { "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
+        ] },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
+        ] }
+      ],
+      "difficulty": "Nov.",
+      "effort": "Compound",
+      "limbMovementType": "Unilateral",
+      "resistance": "Free Weight",
+      "repsInstruction": "Per Leg",
+      "imageUrl": "https://gymvisual.com/animated-gifs/18042-dumbbell-goblet-bulgarian-split-squat.html#/47-style_type-basic_grey",
+      "unitType": "weightXreps"
+    },
+    {
       "name": "Barbell Hack Squat",
       "id": "3A05D7E3-95D0-4713-9649-0838D45159AE",
       "image": "barbell_hack_squat",
@@ -9106,39 +9192,6 @@
       "unitType": "weightXreps"
     },
     {
-      "name": "Dumbbell Bulgarian Split Squat",
-      "id": "C0DBF10F-A778-4C62-9440-6CCEE7AAC272",
-      "image": "dumbbell_bulgarian_split_squat",
-      "csvKey": "dumbbell-bulgarian-split-squat",
-      "aliases": [ "Dumbbell Rear Foot Elevated Squat" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Flat Bench", "Dumbbells" ],
-      "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-            { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-            { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-            { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-        ] },
-        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-            { "engagementPercentage": 70, "submuscleWorked": "Gluteus Maximus" },
-            { "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
-        ] },
-        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
-        ] }
-      ],
-      "difficulty": "Nov.",
-      "effort": "Compound",
-      "limbMovementType": "Unilateral",
-      "resistance": "Free Weight",
-      "weightInstruction": "Per Dumbbell",
-      "repsInstruction": "Per Leg",
-      "imageUrl": "https://gymvisual.com/animated-gifs/4904-dumbbell-bulgarian-split-squat-female.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
-    },
-    {
       "name": "Dumbbell Front Squat",
       "id": "F1E2D3C4-B5A6-4C7D-8E9F-0A1B2C3D4E5F",
       "image": "dumbbell_front_squat",
@@ -9254,37 +9307,6 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1523-barbell-clean-grip-front-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
-    },
-    {
-      "name": "Goblet Bulgarian Split Squat",
-      "id": "0387A7F2-DD70-4EF8-819B-810B58ED06FC",
-      "image": "goblet_bulgarian_split_squat",
-      "aliases": [ "Goblet Rear-Foot Elevated Split Squat" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Dumbbells", "Flat Bench" ],
-      "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-            { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-            { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-            { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-        ] },
-        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-            { "engagementPercentage": 70, "submuscleWorked": "Gluteus Maximus" },
-            { "engagementPercentage": 30, "submuscleWorked": "Gluteus Medius" }
-        ] },
-        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 40, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 20, "submuscleWorked": "Semimembranosus" },
-            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" }
-        ] }
-      ],
-      "difficulty": "Nov.",
-      "effort": "Compound",
-      "limbMovementType": "Unilateral",
-      "resistance": "Free Weight",
-      "repsInstruction": "Per Leg",
-      "imageUrl": "https://gymvisual.com/animated-gifs/18042-dumbbell-goblet-bulgarian-split-squat.html#/47-style_type-basic_grey",
       "unitType": "weightXreps"
     },
     {
@@ -9437,36 +9459,6 @@
       "unitType": "weightXreps"
     },
     {
-      "name": "Overhead Squat",
-      "id": "E60FBD42-E2BC-49A8-97C1-A10F5CD19CB6",
-      "image": "overhead_squat",
-      "csvKey": "overhead-squat",
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Barbell", "Squat Rack" ],
-      "muscles": [
-        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-            { "engagementPercentage": 50, "submuscleWorked": "Rear Delt" },
-            { "engagementPercentage": 50, "submuscleWorked": "Side Delt" }
-        ] },
-        { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-            { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
-            { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-            { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
-        ] },
-        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
-            { "engagementPercentage": 34, "submuscleWorked": "Iliocostalis" },
-            { "engagementPercentage": 33, "submuscleWorked": "Longissimus" },
-            { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
-        ] }
-      ],
-      "difficulty": "Adv.",
-      "effort": "Compound",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Free Weight",
-      "imageUrl": "https://gymvisual.com/animated-gifs/1563-barbell-overhead-squat.html?search_query=overhead+squat&results=52",
-      "unitType": "weightXreps"
-    },
-    {
       "name": "Pendulum Squat",
       "id": "DCD2A61E-A107-4D06-BF40-93DD601A011E",
       "image": "pendulum_squat",
@@ -9496,6 +9488,68 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/12391-lever-pendulum-squat-plate-loaded.html#/47-style_type-basic_grey",
+      "unitType": "weightXreps"
+    },
+    {
+      "name": "V-Squat",
+      "id": "1BE60188-A873-4D7D-B0F4-192D2E47EEE6",
+      "image": "v_squat_machine",
+      "aliases": [ "Hack V-Squat" ],
+      "instructions": { "steps": [ ] },
+      "equipmentRequired": [ "V-Squat" ],
+      "muscles": [
+        { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+            { "engagementPercentage": 30, "submuscleWorked": "Rectus Femoris" },
+            { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+            { "engagementPercentage": 25, "submuscleWorked": "Vastus Medialis" },
+            { "engagementPercentage": 15, "submuscleWorked": "Vastus Intermedius" }
+        ] },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
+            { "engagementPercentage": 80, "submuscleWorked": "Gluteus Maximus" },
+            { "engagementPercentage": 15, "submuscleWorked": "Gluteus Medius" },
+            { "engagementPercentage": 5, "submuscleWorked": "Gluteus Minimus" }
+        ] },
+        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" },
+            { "engagementPercentage": 30, "submuscleWorked": "Semitendinosus" },
+            { "engagementPercentage": 30, "submuscleWorked": "Semimembranosus" }
+        ] }
+      ],
+      "difficulty": "Nov.",
+      "effort": "Compound",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Machine",
+      "imageUrl": "https://gymvisual.com/animated-gifs/4579-lever-squat-plate-loaded.html#/47-style_type-basic_grey",
+      "unitType": "weightXreps"
+    },
+    {
+      "name": "Overhead Squat",
+      "id": "E60FBD42-E2BC-49A8-97C1-A10F5CD19CB6",
+      "image": "overhead_squat",
+      "csvKey": "overhead-squat",
+      "instructions": { "steps": [ ] },
+      "equipmentRequired": [ "Barbell", "Squat Rack" ],
+      "muscles": [
+        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+            { "engagementPercentage": 50, "submuscleWorked": "Rear Delt" },
+            { "engagementPercentage": 50, "submuscleWorked": "Side Delt" }
+        ] },
+        { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+            { "engagementPercentage": 40, "submuscleWorked": "Rectus Femoris" },
+            { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
+            { "engagementPercentage": 30, "submuscleWorked": "Vastus Medialis" }
+        ] },
+        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Erector Spinae", "submusclesWorked": [
+            { "engagementPercentage": 34, "submuscleWorked": "Iliocostalis" },
+            { "engagementPercentage": 33, "submuscleWorked": "Longissimus" },
+            { "engagementPercentage": 33, "submuscleWorked": "Spinalis" }
+        ] }
+      ],
+      "difficulty": "Adv.",
+      "effort": "Compound",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Free Weight",
+      "imageUrl": "https://gymvisual.com/animated-gifs/1563-barbell-overhead-squat.html?search_query=overhead+squat&results=52",
       "unitType": "weightXreps"
     },
     {
@@ -9832,38 +9886,6 @@
       "effort": "Plyometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXreps"
-    },
-    {
-      "name": "V-Squat",
-      "id": "1BE60188-A873-4D7D-B0F4-192D2E47EEE6",
-      "image": "v_squat_machine",
-      "aliases": [ "Hack V-Squat" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "V-Squat" ],
-      "muscles": [
-        { "engagementPercentage": 70, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
-            { "engagementPercentage": 30, "submuscleWorked": "Rectus Femoris" },
-            { "engagementPercentage": 30, "submuscleWorked": "Vastus Lateralis" },
-            { "engagementPercentage": 25, "submuscleWorked": "Vastus Medialis" },
-            { "engagementPercentage": 15, "submuscleWorked": "Vastus Intermedius" }
-        ] },
-        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Gluteus", "submusclesWorked": [
-            { "engagementPercentage": 80, "submuscleWorked": "Gluteus Maximus" },
-            { "engagementPercentage": 15, "submuscleWorked": "Gluteus Medius" },
-            { "engagementPercentage": 5, "submuscleWorked": "Gluteus Minimus" }
-        ] },
-        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Hamstrings", "submusclesWorked": [
-            { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" },
-            { "engagementPercentage": 30, "submuscleWorked": "Semitendinosus" },
-            { "engagementPercentage": 30, "submuscleWorked": "Semimembranosus" }
-        ] }
-      ],
-      "difficulty": "Nov.",
-      "effort": "Compound",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Machine",
-      "imageUrl": "https://gymvisual.com/animated-gifs/4579-lever-squat-plate-loaded.html#/47-style_type-basic_grey",
       "unitType": "weightXreps"
     },
     {

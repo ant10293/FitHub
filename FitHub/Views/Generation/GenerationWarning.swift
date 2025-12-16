@@ -48,9 +48,7 @@ struct GenerationWarning: View {
                 }
 
                 if let msg = adjustmentMessage {
-                    Text(msg)
-                        .font(.footnote)
-                        .foregroundStyle(.orange)
+                    ErrorFooter(message: msg, color: .orange)
 
                     RectangularButton(
                         title: "Regenerate Templates",
@@ -62,7 +60,6 @@ struct GenerationWarning: View {
                                 exerciseData: ctx.exercises,
                                 equipmentData: ctx.equipment,
                                 keepCurrentExercises: false,
-                                nextWeek: false,
                                 generationDisabled: ctx.disableCreatePlan
                             )
                         }

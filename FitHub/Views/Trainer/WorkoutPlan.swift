@@ -62,7 +62,6 @@ struct WorkoutPlan: View {
                                     exerciseData: ctx.exercises,
                                     equipmentData: ctx.equipment,
                                     keepCurrentExercises: false,
-                                    nextWeek: false,
                                     generationDisabled: ctx.disableCreatePlan,
                                     onDone: {
                                         showingSaveConfirmation = true

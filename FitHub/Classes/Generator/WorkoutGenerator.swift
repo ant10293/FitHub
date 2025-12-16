@@ -363,15 +363,8 @@ extension WorkoutGenerator {
     ) -> (Exercise, Bool) {
         var ex  = exercise
         var preventedRegression = false
-
-        if let max = input.exerciseData.peakMetric(for: ex.id), max.actualValue > 0 {
-            ex.draftMax = max
-        } else if let estMax = input.exerciseData.estimatedPeakMetric(for: ex.id), estMax.actualValue > 0 {
-            ex.draftMax = estMax
-        } else if let calcMax = CSVLoader.calculateMaxValue(for: ex, userData: input.user) {
-            ex.draftMax = calcMax
-            maxUpdated(PerformanceUpdate(exerciseId: ex.id, value: calcMax))
-        }
+        
+        ex.seedDraftMax(exerciseData: input.exerciseData, userData: input.user, maxUpdated: maxUpdated)
 
         // —— Prevent regression: if user performed >= planned on top set, don't regress max ————————————————
         if let newDraftMax = ex.draftMax,

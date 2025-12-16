@@ -96,7 +96,7 @@ struct SortSettings: View {
         userData.sessionTracking.exerciseSortOption = .moderate
         userData.settings.sortByTemplateCategories = true
 
-        userData.settings.hideUnequippedExercises = false
+        userData.settings.hideUnequippedExercises = true
         userData.settings.hideDifficultExercises = false
         userData.settings.hideDislikedExercises = false
     }

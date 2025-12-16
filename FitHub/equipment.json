@@ -947,7 +947,7 @@
         "id": "7C1B8F22-5DA0-4C3F-9A44-0E2B6A1E9F73",
         "image": "prowler_sled",
         "description": "A sled used for pushing or pulling drills.",
-        "equCategory": "Bars & Plates",
+        "equCategory": "Other",
         "baseWeight": { "lb": 75, "kg": 35 },
         "pegCount": 1,
         "implementation": "Unified"
@@ -1081,5 +1081,21 @@
       "aliases": ["Leg Strap", "Ankle Cuff"],
       "description": "A padded ankle cuff designed for cable machines to target the legs and glutes with movements such as hip abductions, extensions, kickbacks, and hamstring curls.",
       "equCategory": "Attachments"
+    },
+    {
+      "name": "Gymnastic Rings",
+      "id": "A3B4C5D6-E7F8-9A0B-1C2D-3E4F5A6B7C8D",
+      "image": "gymnastic_rings",
+      "aliases": ["rings", "gymnastics rings", "olympic rings", "suspension rings"],
+      "description": "A pair of circular rings suspended from straps used for advanced bodyweight exercises and various static holds that develop upper body strength, stability, and coordination.",
+      "equCategory": "Other"
+    },
+    {
+      "name": "Suspension Trainer",
+      "id": "B4C5D6E7-F8A9-0B1C-2D3E-4F5A6B7C8D9E",
+      "image": "suspension_trainer",
+      "aliases": ["TRX", "suspension straps", "suspension system", "bodyweight trainer"],
+      "description": "Adjustable straps with handles and foot cradles that use body weight and angle to create resistance for full-body functional training, core stability, and rehabilitation exercises.",
+      "equCategory": "Other"
     }
 ]

@@ -19,6 +19,7 @@ struct SettingsView: View {
         Section {
             navigationLink("timer", "Rest Timer") { RestTimerSettings(userData: ctx.userData) }
             navigationLink("arrow.up.arrow.down", "Exercise Sorting") { SortSettings(userData: ctx.userData) }
+            navigationLink("gauge", "Strength Level") { StrengthLevelView() }
             // navigationLink("calendar", "Start Week On") { StartWeekOn() }
             //navigationLink("globe", "Change Language") { ChangeLanguage(userData: ctx.userData) }
             navigationLink("ruler", "Imperial / Metric") { UnitSelection(userData: ctx.userData) }

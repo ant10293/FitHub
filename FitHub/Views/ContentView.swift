@@ -21,14 +21,14 @@ struct ContentView: View {
                     // should also clear passed planned dates and notis
                     // need to do this on a background thread
                     .onAppear {
-                        //ctx.exercises.testCSVs(userData: ctx.userData)
+                       // ctx.exercises.testCSVs(userData: ctx.userData)
                         notifications.requestIfNeeded(onUpdate: { allowed in
                             ctx.userData.settings.workoutReminders = allowed
                         })
                         NotificationManager.printAllPendingNotifications()
                         ctx.adjustments.loadAllAdjustments(for: ctx.exercises.allExercises, equipment: ctx.equipment, availableEquipment: ctx.userData.evaluation.availableEquipment)
                         if ctx.userData.sessionTracking.activeWorkout != nil { showResumeWorkoutOverlay = true }
-                        if ctx.userData.setup.infoCollected { determineStrengthAndSeedMaxes() }
+                        if ctx.userData.setup.infoCollected { redetermineStrengthLevel() }
                         ctx.userData.checkAndUpdateAge()
                         generateTemplates()
                         ctx.userData.saveToFile()
@@ -49,90 +49,14 @@ struct ContentView: View {
         }
     }
 
-    private func determineStrengthAndSeedMaxes() {
-        let (skipped, oldLvl) = determineUserStrengthLevel()
-        // only if strength level changed. already seeded after assessment
-        if ctx.userData.evaluation.strengthLevel != oldLvl {
-            ctx.exercises.seedEstimatedMaxes(skipped: skipped, userData: ctx.userData)
-        }
-    }
-
-    //  MARK: - Strength / Weakness Assessment
-    // add an option to disable this
-    func determineUserStrengthLevel() -> (Set<Exercise.ID>, StrengthLevel?) {
-        // --- Guard: run at most once every 30 days -----------------------------
+    private func redetermineStrengthLevel() {
         let now = Date()
-        if let last = ctx.userData.evaluation.determineStrengthLevelDate,
-           CalendarUtility.shared.daysBetween(last, and: now) < 30 {
+        if let last = ctx.userData.evaluation.determineStrengthLevelDate, CalendarUtility.shared.daysBetween(last, and: now) < 30 {
             print("⏩ Skipping determination; only \(Int(now.timeIntervalSince(last)/86400)) days since last run.")
-            return ([], nil)
+            return
+        } else {
+            _ = CSVLoader.determineUserStrengthLevel(userData: ctx.userData, exerciseData: ctx.exercises)
         }
-
-        let ogLvl: StrengthLevel = ctx.userData.evaluation.strengthLevel
-
-        // --- Pass 1: tally categories -----------------------------------------
-        var globalCounts: [StrengthLevel: Int] = [:]
-        var muscleCounts: [Muscle: [StrengthLevel: Int]] = [:]
-
-        let (basePathAge, basePathBW) = CSVLoader.getBasePaths(gender: ctx.userData.physical.gender)
-
-        var skippedIDs: Set<UUID> = []
-        for ex in ctx.exercises.allExercises {
-            guard let csvKey = ex.csvKey else { continue }
-            guard let maxValue = ctx.exercises.peakMetric(for: ex.id)?.actualValue, maxValue > 0 else {
-                print("⚠️ \(ex.name) skipped – no PR recorded")
-                skippedIDs.insert(ex.id)
-                continue
-            }
-
-            let level = CSVLoader.calculateFitnessCategory(
-                userData: ctx.userData,
-                basePathAge: basePathAge + csvKey,
-                basePathBW: basePathBW + csvKey,
-                maxValue: maxValue
-            )
-
-            globalCounts[level, default: 0]  += 1
-
-            if let prime = ex.primaryMuscles.first {
-                muscleCounts[prime, default: [:]][level, default: 0] += 1
-            }
-        }
-
-        // --- Pick overall strength level (mode) -------------------------------
-        if let (majorityLevel, _) = globalCounts.max(by: { $0.value < $1.value }) {
-            if majorityLevel != ctx.userData.evaluation.strengthLevel {
-                ctx.userData.evaluation.strengthLevel = majorityLevel
-            }
-            print("🏷 Overall strength level → \(majorityLevel)")
-        }
-
-        // --- Derive strengths / weaknesses per muscle -------------------------
-        var strengthsPerMuscle: [Muscle: StrengthLevel] = [:]
-        var weaknessesPerMuscle: [Muscle: StrengthLevel] = [:]
-
-        for (muscle, counts) in muscleCounts {
-            // Strength = highest count
-            if let top = counts.max(by: { $0.value < $1.value })?.key {
-                strengthsPerMuscle[muscle] = top
-            }
-            // Weakness = lowest count
-            if let low = counts.min(by: { $0.value < $1.value })?.key {
-                weaknessesPerMuscle[muscle] = low
-            }
-        }
-
-        // --- Persist ----------------------------------------------------------------
-        ctx.userData.evaluation.strengths = strengthsPerMuscle
-        ctx.userData.evaluation.weaknesses = weaknessesPerMuscle
-        ctx.userData.evaluation.determineStrengthLevelDate = now
-
-        // --- Debug ------------------------------------------------------------------
-        print("✓ strengths:", strengthsPerMuscle)
-        print("✓ weaknesses:", weaknessesPerMuscle)
-        print("✓ next evaluation eligible after 30 days.")
-
-        return (skippedIDs, ogLvl)
     }
 
     private func generateTemplates() {

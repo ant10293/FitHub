@@ -332,7 +332,7 @@ extension UserData {
         exerciseData: ExerciseData,
         equipmentData: EquipmentData,
         keepCurrentExercises: Bool,
-        nextWeek: Bool,
+        nextWeek: Bool = false,
         shouldSave: Bool = true,
         generationDisabled: Bool,
         onDone: @escaping () -> Void = {}
@@ -342,7 +342,9 @@ extension UserData {
 
         guard !generationDisabled else {
             isGeneratingWorkout = false
-            premiumFeatureBlocked = .generationLimit
+            if !nextWeek {
+                premiumFeatureBlocked = .generationLimit
+            }
             return
         }
 

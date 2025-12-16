@@ -668,6 +668,21 @@ extension Exercise {
 
         warmUpDetails = details
     }
+    
+    mutating func seedDraftMax(
+        exerciseData: ExerciseData,
+        userData: UserData,
+        maxUpdated: @escaping (PerformanceUpdate) -> Void = { _ in }
+    ) {
+        if let max = exerciseData.peakMetric(for: self.id).valid {
+            draftMax = max
+        } else if let estMax = exerciseData.estimatedPeakMetric(for: self.id).valid {
+            draftMax = estMax
+        } else if let calcMax = CSVLoader.calculateMaxValue(for: self, userData: userData).valid {
+            draftMax = calcMax
+            maxUpdated(PerformanceUpdate(exerciseId: self.id, value: calcMax))
+        }
+    }
 }
 
 extension Exercise {

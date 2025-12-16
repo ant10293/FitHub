@@ -96,16 +96,15 @@ struct AssessmentView: View {
         let userData = ctx.userData
         let exerciseData = ctx.exercises
 
-        Task.detached(priority: .userInitiated) {
-            let level: StrengthLevel = if !shouldEstimate {
-                CSVLoader.estimateStrengthCategories(userData: userData, exerciseData: exerciseData)
-            } else {
-                await calculateFitnessLevel(for: userData)
-            }
-
-            await MainActor.run {
-                userData.evaluation.strengthLevel = level
-                exerciseData.seedEstimatedMaxes(userData: userData)
+        if !shouldEstimate {
+            _ = CSVLoader.determineUserStrengthLevel(userData: userData, exerciseData: exerciseData)
+        } else {
+            Task.detached(priority: .userInitiated) {
+                let level: StrengthLevel = await calculateFitnessLevel(for: userData)
+                
+                await MainActor.run {
+                    userData.evaluation.strengthLevel = level
+                }
             }
         }
 
@@ -181,7 +180,7 @@ struct AssessmentView: View {
         case 7...9: strengthLvl = .advanced
         default: strengthLvl = .elite
         }
-
+        
         return strengthLvl
     }
 }

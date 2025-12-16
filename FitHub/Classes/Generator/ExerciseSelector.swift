@@ -35,6 +35,7 @@ final class ExerciseSelector {
         self.idx = ExerciseIndex(
             data: exerciseData,
             equipment: equipmentData,
+            userData: userData,
             available: userData.evaluation.availableEquipment
         )
         self.favorites = userData.evaluation.favoriteExercises
@@ -65,11 +66,16 @@ final class ExerciseSelector {
         let byGroup: [SplitCategory: [Int]]
         let canPerform: [Bool]
         
-        init(data: ExerciseData, equipment: EquipmentData, available: Set<GymEquipment.ID>) {
+        init(
+            data: ExerciseData,
+            equipment: EquipmentData,
+            userData: UserData,
+            available: Set<GymEquipment.ID>
+        ) {
             self.allExercisesCount = data.allExercises.count
             
             // TODO: add option to use all exercises instead of just those with data
-            self.exercises = data.exercisesWithData
+            self.exercises = data.exercisesWithData(userData: userData)
             
             self.exercisesWithDataCount = exercises.count
             

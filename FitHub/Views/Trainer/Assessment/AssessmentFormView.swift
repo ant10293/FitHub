@@ -52,9 +52,7 @@ struct AssessmentFormView<AdditionalContent: View>: View {
                 Text(title)
                     .font(.largeTitle)
                     .bold()
-                    .padding(.top)
-
-                Spacer()
+                    .padding(.vertical)
 
                 headerView
 
@@ -108,3 +106,4 @@ struct AssessmentFormView<AdditionalContent: View>: View {
         }
     }
 }
+

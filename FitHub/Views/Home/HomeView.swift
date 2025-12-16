@@ -119,7 +119,7 @@ struct HomeView: View {
             },
             content: {
                 if let selectedExercise = unwrappedExercise {
-                    let perf = ctx.exercises.allExercisePerformance[selectedExercise.id]
+                    let perf = ctx.exercises.performanceData(for: selectedExercise.id)
                     ExercisePerformanceGraph(exercise: selectedExercise, performance: perf)
                 }
             }

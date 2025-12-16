@@ -15,7 +15,7 @@ struct PRsView: View {
     let exercise: Exercise
 
     var body: some View {
-        let perf = ctx.exercises.allExercisePerformance[exercise.id]
+        let perf = ctx.exercises.performanceData(for: exercise.id)
 
         VStack {
             if !showingList {

@@ -96,7 +96,7 @@ struct Settings: Codable, Equatable {
     var enableSortPicker: Bool = true // disable ExerciseSortOptions picker
     var saveSelectedSort: Bool = false // save selections as new exerciseSortOption
     var sortByTemplateCategories: Bool = true // sort by template categories when editing a template with categories
-    var hideUnequippedExercises: Bool = false // hide exercises that the user DOES NOT have equipment for in exercise selection or or exercise view
+    var hideUnequippedExercises: Bool = true // hide exercises that the user DOES NOT have equipment for in exercise selection or or exercise view
     var hideDifficultExercises: Bool = false // hide exercises that would be too difficult for the user
     var hideDislikedExercises: Bool = false // hide exercises that the user has disliked
 
@@ -116,6 +116,7 @@ struct Evaluation: Codable {
     var isFamiliarWithGym: Bool = false // change this after certain number of completed workouts, or allow manual change
     var strengths: [Muscle: StrengthLevel]?
     var weaknesses: [Muscle: StrengthLevel]?
+    var exerciseLvlMapping: [StrengthLevel: [Exercise.ID]]?
     var availableEquipment: Set<GymEquipment.ID> = []
     var favoriteExercises: Set<Exercise.ID> = []
     var dislikedExercises: Set<Exercise.ID> = []

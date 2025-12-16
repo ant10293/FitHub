@@ -49,6 +49,7 @@ struct ExerciseModifier {
             let candidates = exerciseData.similarExercises(
                 to: target,
                 equipmentData: equipmentData,
+                userData: userData,
                 availableEquipmentIDs: availableEquipmentIDs,
                 existing: workingTemplate.exercises,
                 replaced: Set(workingReplaced)

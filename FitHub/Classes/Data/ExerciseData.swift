@@ -21,10 +21,10 @@ final class ExerciseData: ObservableObject {
     var allExercises: [Exercise] { bundledExercises + userExercises }
 
     @Published var allExercisePerformance: [UUID: ExercisePerformance] = [:]
-
-    var exercisesWithData: [Exercise] {
+    
+    func exercisesWithData(userData: UserData) -> [Exercise] {
         allExercises.compactMap { ex in
-            hasPerformanceData(exercise: ex)
+            hasPerformanceData(exercise: ex, userData: userData)
         }
     }
 
@@ -168,55 +168,26 @@ extension ExerciseData {
 }
 
 extension ExerciseData {
-    func seedEstimatedMaxes(userData: UserData) {
-        for ex in allExercises {
-            if peakMetric(for: ex.id).valid != nil { continue }
-            if estimatedPeakMetric(for: ex.id).valid == nil {
-                seedEstimatedMaxValue(exercise: ex, userData: userData)
-            }
-        }
-        savePerformanceData()
-    }
-
-    func seedEstimatedMaxes(skipped: Set<Exercise.ID>, userData: UserData) {
-        guard !skipped.isEmpty else { return }
-        // Only exercises we actually know about & have CSV URLs for
-        let lookup = Dictionary(uniqueKeysWithValues: allExercises.map { ($0.id, $0) })
-
-        for id in skipped {
-            guard let ex = lookup[id], ex.csvKey != nil else { continue }
-            // Don’t overwrite if user already has any max saved (peak or estimate)
-            if estimatedPeakMetric(for: id).valid == nil {
-                seedEstimatedMaxValue(exercise: ex, userData: userData)
-            }
-        }
-        savePerformanceData()
-    }
-
-    private func seedEstimatedMaxValue(exercise: Exercise, userData: UserData) {
-        let peak = CSVLoader.calculateMaxValue(for: exercise, userData: userData).valid
-        //let peak = exercise.calculateCSVMax(userData: userData).valid
-        guard let max = peak else { return }
-        updateExercisePerformance(for: exercise.id, newValue: max, csvEstimate: true)
-    }
-    /*
     func testCSVs(userData: UserData) {
         var skipped: [Exercise] = []
+        var totalValid: Int = 0
         for exercise in allExercises {
             let peak = CSVLoader.calculateMaxValue(for: exercise, userData: userData).valid
-            //let peak = exercise.calculateCSVMax(userData: userData)
             guard let max = peak else {
                 skipped.append(exercise)
                 continue
             }
+            totalValid += 1
             print("\(exercise.name) max: \(max.displayValue)")
         }
+        print("------------------ valid CSVs: \(totalValid)/\(allExercises.count) ------------------")
 
         if !skipped.isEmpty {
             var oneRms: Set<Exercise> = []
             var maxReps: Set<Exercise> = []
             var maxHolds: Set<Exercise> = []
             var hold30sLoads: Set<Exercise> = []
+            var carry50mLoads: Set<Exercise> = []
 
             print("------------------ total skipped: \(skipped.count)/\(allExercises.count) ------------------")
             for exercise in skipped {
@@ -225,6 +196,7 @@ extension ExerciseData {
                 case .maxReps: maxReps.insert(exercise)
                 case .maxHold: maxHolds.insert(exercise)
                 case .hold30sLoad: hold30sLoads.insert(exercise)
+                case .carry50mLoad: carry50mLoads.insert(exercise)
                 case .none: break
                 }
             }
@@ -258,19 +230,19 @@ extension ExerciseData {
             }
         }
     }
-    */
 }
 
 extension ExerciseData {
-    private func hasPerformanceData(exercise: Exercise) -> Exercise? {
-        let best = peakMetric(for: exercise.id).valid ?? estimatedPeakMetric(for: exercise.id).valid
-
-        guard let max = best else { return nil }
+    private func hasPerformanceData(exercise: Exercise, userData: UserData) -> Exercise? {
         var ex = exercise
-        ex.draftMax = max
-        return ex
+        ex.seedDraftMax(exerciseData: self, userData: userData)
+        if ex.draftMax == nil {
+            return nil
+        } else {
+            return ex
+        }
     }
-
+    
     func updateExercisePerformance(
          for exerciseId: UUID,
          newValue: PeakMetric,
@@ -471,6 +443,8 @@ extension ExerciseData {
     func getMax(for exerciseId: UUID) -> MaxRecord? { allExercisePerformance[exerciseId]?.currentMax }
 
     func peakMetric(for exerciseId: UUID) -> PeakMetric? { getMax(for: exerciseId)?.value }
+    
+    func performanceData(for exerciseId: Exercise.ID) -> ExercisePerformance? { allExercisePerformance[exerciseId] }
 
     func getPastMaxes(for exerciseId: UUID) -> [MaxRecord] { allExercisePerformance[exerciseId]?.pastMaxes ?? [] }
 
@@ -530,7 +504,7 @@ extension ExerciseData {
         let favoriteSet = userData.evaluation.favoriteExercises
         let dislikedSet = userData.evaluation.dislikedExercises
 
-        let hideUnequipped = userData.settings.hideUnequippedExercises
+        let hideUnequipped = userData.setup.isEquipmentSelected ? userData.settings.hideUnequippedExercises : false
         let hideDisliked   = userData.settings.hideDislikedExercises
         let hideDifficult  = userData.settings.hideDifficultExercises
         let maxStrength    = userData.evaluation.strengthLevel.strengthValue
@@ -641,6 +615,7 @@ extension ExerciseData {
     func similarExercises(
         to exercise: Exercise,
         equipmentData: EquipmentData,
+        userData: UserData,
         availableEquipmentIDs: Set<GymEquipment.ID>,
         needPerformanceData: Bool = true,
         canPerformRequirement: Bool = true,
@@ -665,7 +640,11 @@ extension ExerciseData {
         relaxedScored.reserveCapacity(32)
 
         for cand in basePool {
-            if needPerformanceData && hasPerformanceData(exercise: cand) == nil {
+            if needPerformanceData &&
+                hasPerformanceData(
+                    exercise: cand,
+                    userData: userData
+                ) == nil {
                 continue
             }
 
