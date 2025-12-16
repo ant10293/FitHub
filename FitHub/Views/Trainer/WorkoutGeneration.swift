@@ -23,10 +23,7 @@ struct WorkoutGeneration: View {
     @State private var isReplacing: Bool = false
 
     var body: some View {
-        TemplateNavigator(
-            userData: ctx.userData,
-            selectedTemplate: $selectedTemplate
-        ) {
+        TemplateNavigator(selectedTemplate: $selectedTemplate) {
             ZStack {
                 Color(UIColor.systemGroupedBackground)
                     .edgesIgnoringSafeArea(.all)

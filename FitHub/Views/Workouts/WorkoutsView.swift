@@ -11,10 +11,7 @@ struct WorkoutsView: View {
 
     var body: some View {
         NavigationStack {
-            TemplateNavigator(
-                userData: ctx.userData,
-                selectedTemplate: $selectedTemplate
-            ) {
+            TemplateNavigator(selectedTemplate: $selectedTemplate) {
                 workoutList
                 .sheet(isPresented: $showingTemplateCreation) { templateCreationView }
                 .sheet(isPresented: $showingTemplateEditor) { templateEditorView }

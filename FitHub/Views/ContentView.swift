@@ -28,7 +28,6 @@ struct ContentView: View {
                         NotificationManager.printAllPendingNotifications()
                         ctx.adjustments.loadAllAdjustments(for: ctx.exercises.allExercises, equipment: ctx.equipment, availableEquipment: ctx.userData.evaluation.availableEquipment)
                         if ctx.userData.sessionTracking.activeWorkout != nil { showResumeWorkoutOverlay = true }
-                        if ctx.userData.setup.infoCollected { redetermineStrengthLevel() }
                         ctx.userData.checkAndUpdateAge()
                         generateTemplates()
                         ctx.userData.saveToFile()
@@ -46,16 +45,6 @@ struct ContentView: View {
                     }
                 }
             }
-        }
-    }
-
-    private func redetermineStrengthLevel() {
-        let now = Date()
-        if let last = ctx.userData.evaluation.determineStrengthLevelDate, CalendarUtility.shared.daysBetween(last, and: now) < 30 {
-            print("⏩ Skipping determination; only \(Int(now.timeIntervalSince(last)/86400)) days since last run.")
-            return
-        } else {
-            _ = CSVLoader.determineUserStrengthLevel(userData: ctx.userData, exerciseData: ctx.exercises)
         }
     }
 

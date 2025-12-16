@@ -245,83 +245,77 @@ extension CSVLoader {
 
         return (agePercentile + bwPercentile) / 2
     }
-
+    
     static func determineUserStrengthLevel(
         userData: UserData,
         exerciseData: ExerciseData,
-        updateData: Bool = true
-    ) -> StrengthLevel {
-        let ogLvl: StrengthLevel = userData.evaluation.strengthLevel
-        
-        // --- Pass 1: tally categories -----------------------------------------
-        var exerciseLevelMapping: [StrengthLevel: [Exercise.ID]] = [:]
-        var globalCounts: [StrengthLevel: Int] = [:]
-        var muscleCounts: [Muscle: [StrengthLevel: Int]] = [:]
-        
-        let (basePathAge, basePathBW) = CSVLoader.getBasePaths(gender: userData.physical.gender)
-        
-        for ex in exerciseData.allExercises {
-            guard let csvKey = ex.csvKey else { continue }
-            guard let maxValue = exerciseData.peakMetric(for: ex.id)?.actualValue, maxValue > 0 else {
-                print("⚠️ \(ex.name) skipped – no PR recorded")
-                continue
+        updateData: Bool = true,
+        shouldSave: Bool = false
+    ) {
+        Task.detached(priority: .userInitiated) {
+            let ogLvl = userData.evaluation.strengthLevel
+            let gender = userData.physical.gender
+            let (basePathAge, basePathBW) = CSVLoader.getBasePaths(gender: gender)
+
+            var exerciseLevelMapping: [StrengthLevel: [Exercise.ID]] = [:]
+            var globalCounts: [StrengthLevel: Int] = [:]
+            var muscleCounts: [Muscle: [StrengthLevel: Int]] = [:]
+
+            for ex in exerciseData.allExercises {
+                guard let csvKey = ex.csvKey else { continue }
+                guard let maxValue = exerciseData.peakMetric(for: ex.id)?.actualValue, maxValue > 0 else { continue }
+
+                let level = CSVLoader.calculateFitnessCategory(
+                    userData: userData,
+                    basePathAge: basePathAge + csvKey,
+                    basePathBW: basePathBW + csvKey,
+                    maxValue: maxValue
+                )
+
+                exerciseLevelMapping[level, default: []].append(ex.id)
+                globalCounts[level, default: 0] += 1
+
+                if let prime = ex.primaryMuscles.first {
+                    muscleCounts[prime, default: [:]][level, default: 0] += 1
+                }
             }
-            
-            let level = CSVLoader.calculateFitnessCategory(
-                userData: userData,
-                basePathAge: basePathAge + csvKey,
-                basePathBW: basePathBW + csvKey,
-                maxValue: maxValue
-            )
-            
-            if exerciseLevelMapping[level] == nil { exerciseLevelMapping[level] = [] }
-            exerciseLevelMapping[level]?.append(ex.id)
-            globalCounts[level, default: 0]  += 1
-            
-            if let prime = ex.primaryMuscles.first {
-                muscleCounts[prime, default: [:]][level, default: 0] += 1
-            }
-        }
-        
-        // --- Pick overall strength level (mode) -------------------------------
-        var newLvl: StrengthLevel = .beginner
-        if let (majorityLevel, _) = globalCounts.max(by: { $0.value < $1.value }) {
-            if majorityLevel != ogLvl {
+
+            var newLvl: StrengthLevel = ogLvl
+            if let (majorityLevel, _) = globalCounts.max(by: { $0.value < $1.value }) {
                 newLvl = majorityLevel
             }
-            print("🏷 Overall strength level → \(majorityLevel)")
-        }
-        
-        // --- Derive strengths / weaknesses per muscle -------------------------
-        var strengthsPerMuscle: [Muscle: StrengthLevel] = [:]
-        var weaknessesPerMuscle: [Muscle: StrengthLevel] = [:]
-        
-        for (muscle, counts) in muscleCounts {
-            // Strength = highest count
-            if let top = counts.max(by: { $0.value < $1.value })?.key {
-                strengthsPerMuscle[muscle] = top
-            }
-            // Weakness = lowest count
-            if let low = counts.min(by: { $0.value < $1.value })?.key {
-                weaknessesPerMuscle[muscle] = low
-            }
-        }
-        
-        if updateData {
-            // --- Persist ----------------------------------------------------------------
-            userData.evaluation.strengthLevel = newLvl
-            userData.evaluation.exerciseLvlMapping = exerciseLevelMapping
-            userData.evaluation.strengths = strengthsPerMuscle
-            userData.evaluation.weaknesses = weaknessesPerMuscle
-            userData.evaluation.determineStrengthLevelDate = Date()
-        }
 
-        // --- Debug ------------------------------------------------------------------
-        print("✓ strengths:", strengthsPerMuscle)
-        print("✓ weaknesses:", weaknessesPerMuscle)
-        print("✓ next evaluation eligible after 30 days.")
+            var strengthsPerMuscle: [Muscle: StrengthLevel] = [:]
+            var weaknessesPerMuscle: [Muscle: StrengthLevel] = [:]
 
-        return newLvl
+            for (muscle, counts) in muscleCounts {
+                if let top = counts.max(by: { $0.value < $1.value })?.key {
+                    strengthsPerMuscle[muscle] = top
+                }
+                if let low = counts.min(by: { $0.value < $1.value })?.key {
+                    weaknessesPerMuscle[muscle] = low
+                }
+            }
+
+            let result = (
+                level: newLvl,
+                mapping: exerciseLevelMapping,
+                strengths: strengthsPerMuscle,
+                weaknesses: weaknessesPerMuscle,
+                date: Date()
+            )
+
+            if updateData {
+                await MainActor.run {
+                    userData.evaluation.strengthLevel = result.level
+                    userData.evaluation.exerciseLvlMapping = result.mapping
+                    userData.evaluation.strengths = result.strengths
+                    userData.evaluation.weaknesses = result.weaknesses
+                    userData.evaluation.determineStrengthLevelDate = result.date
+                    if shouldSave { userData.saveToFile() }
+                }
+            }
+        }
     }
 
     static func calculateFitnessCategory(userData: UserData, basePathAge: String, basePathBW: String, maxValue: Double) -> StrengthLevel {

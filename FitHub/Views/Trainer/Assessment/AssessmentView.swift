@@ -97,7 +97,7 @@ struct AssessmentView: View {
         let exerciseData = ctx.exercises
 
         if !shouldEstimate {
-            _ = CSVLoader.determineUserStrengthLevel(userData: userData, exerciseData: exerciseData)
+            CSVLoader.determineUserStrengthLevel(userData: userData, exerciseData: exerciseData)
         } else {
             Task.detached(priority: .userInitiated) {
                 let level: StrengthLevel = await calculateFitnessLevel(for: userData)

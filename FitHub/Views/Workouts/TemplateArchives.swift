@@ -14,7 +14,7 @@ struct TemplateArchives: View {
     @State private var editingTemplate: WorkoutTemplate?
 
     var body: some View {
-        TemplateNavigator(userData: userData, selectedTemplate: $selectedTemplate) {
+        TemplateNavigator(selectedTemplate: $selectedTemplate) {
             workoutList
         }
         .overlay(content: {

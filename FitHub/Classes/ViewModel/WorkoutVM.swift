@@ -194,7 +194,7 @@ final class WorkoutVM: ObservableObject {
     }
 
     @MainActor
-    func finishWorkoutAndDismiss(ctx: AppContext, completion: () -> Void) {
+    func finishWorkoutAndDismiss(ctx: AppContext, completion: (Bool) -> Void) {
         let now = Date()
         let roundedDate = CalendarUtility.shared.startOfDay(for: now)
 
@@ -217,7 +217,7 @@ final class WorkoutVM: ObservableObject {
     }
 
     @MainActor
-    func endWorkoutAndDismiss(ctx: AppContext, completion: () -> Void) {
+    func endWorkoutAndDismiss(ctx: AppContext, completion: (Bool) -> Void) {
         // ensure that this workout cannot be set as active workout
         workoutEnded = true
 
@@ -229,6 +229,6 @@ final class WorkoutVM: ObservableObject {
 
         ctx.userData.saveToFile()
 
-        completion()
+        completion(prCount > 0)
     }
 }

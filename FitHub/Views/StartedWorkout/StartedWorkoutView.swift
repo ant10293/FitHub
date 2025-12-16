@@ -10,7 +10,7 @@ struct StartedWorkoutView: View {
     @State private var showingExitConfirmation = false
     @State private var selectedExerciseIndex: Int?
     @State private var showingDetailView: Bool = false
-    var onExit: () -> Void = {}
+    var onExit: (Bool) -> Void = { _ in }
 
     var body: some View {
         ZStack {

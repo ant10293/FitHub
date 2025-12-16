@@ -18,10 +18,7 @@ struct WorkoutPlan: View {
 
     var body: some View {
         NavigationStack {
-            TemplateNavigator(
-                userData: ctx.userData,
-                selectedTemplate: $selectedTemplate
-            ) {
+            TemplateNavigator(selectedTemplate: $selectedTemplate) {
                 VStack {
                     Spacer()
 

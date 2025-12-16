@@ -22,7 +22,8 @@ private struct WorkoutRoute: Identifiable, Hashable {
 
 struct TemplateNavigator<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
-    @ObservedObject var userData: UserData
+    //@ObservedObject var userData: UserData
+    @EnvironmentObject private var ctx: AppContext
 
     @Binding var selectedTemplate: SelectedTemplate?
     @State private var navigateToTemplateDetail: Bool = false
@@ -33,11 +34,9 @@ struct TemplateNavigator<Content: View>: View {
     let content: () -> Content
 
     init(
-        userData: UserData,
         selectedTemplate: Binding<SelectedTemplate?>,
         @ViewBuilder content: @escaping () -> Content
     ) {
-        self.userData = userData
         self._selectedTemplate = selectedTemplate
         self.content = content
     }
@@ -91,17 +90,17 @@ struct TemplateNavigator<Content: View>: View {
     private func templateBinding(for sel: SelectedTemplate) -> Binding<WorkoutTemplate>? {
         switch sel.location {
         case .user:
-            let idx = userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == sel.template.id })
+            let idx = ctx.userData.workoutPlans.userTemplates.firstIndex(where: { $0.id == sel.template.id })
             guard let i = idx else { return nil }
-            return $userData.workoutPlans.userTemplates[safe: i]
+            return $ctx.userData.workoutPlans.userTemplates[safe: i]
         case .trainer:
-            let idx = userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == sel.template.id })
+            let idx = ctx.userData.workoutPlans.trainerTemplates.firstIndex(where: { $0.id == sel.template.id })
             guard let i = idx else { return nil }
-            return $userData.workoutPlans.trainerTemplates[safe: i]
+            return $ctx.userData.workoutPlans.trainerTemplates[safe: i]
         case .archived:
-            let idx = userData.workoutPlans.archivedTemplates.firstIndex(where: { $0.id == sel.template.id })
+            let idx = ctx.userData.workoutPlans.archivedTemplates.firstIndex(where: { $0.id == sel.template.id })
             guard let i = idx else { return nil }
-            return $userData.workoutPlans.archivedTemplates[safe: i]
+            return $ctx.userData.workoutPlans.archivedTemplates[safe: i]
         case .active: return .constant(sel.template)
         }
     }
@@ -124,12 +123,19 @@ struct TemplateNavigator<Content: View>: View {
         StartedWorkoutView(
             viewModel: WorkoutVM(
                 template: route.sel.template,
-                activeWorkout: userData.sessionTracking.activeWorkout
+                activeWorkout: ctx.userData.sessionTracking.activeWorkout
             ),
-            onExit: {
+            onExit: { PRsSet in
                 workoutRoute = nil
                 currentTemplate = nil
                 selectedTemplate = nil
+                if PRsSet {
+                    CSVLoader.determineUserStrengthLevel(
+                        userData: ctx.userData,
+                        exerciseData: ctx.exercises,
+                        shouldSave: true
+                    )
+                }
             }
         )
     }
@@ -144,7 +150,7 @@ struct TemplateNavigator<Content: View>: View {
                 Spacer()
 
                 TemplatePopup(
-                    userData: userData,
+                    userData: ctx.userData,
                     template: tpl,
                     onClose: {
                         selectedTemplate = nil
