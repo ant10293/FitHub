@@ -8169,7 +8169,6 @@
       "id": "2C313E2B-824C-4177-BA2E-F105B75650EC",
       "image": "barbell_upright_row",
       "csvKey": "upright-row",
-      "aliases": [ "Barbell High Pull" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
       "muscles": [
@@ -8217,7 +8216,6 @@
       "id": "F2E1D3C4-B5A6-47F8-9D0E-1A2B3C4D5E6F",
       "image": "cable_upright_row",
       "csvKey": "cable-upright-row",
-      "aliases": [ "Cable High Pull" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Straight Bar Attachment" ],
       "muscles": [
@@ -8366,7 +8364,6 @@
       "id": "0FA6517A-590C-4DCA-91DB-2E1BA7989CEC",
       "image": "dumbbell_upright_row",
       "csvKey": "dumbbell-upright-row",
-      "aliases": [ "Dumbbell High Pull" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
       "muscles": [

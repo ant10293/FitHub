@@ -6,26 +6,13 @@ struct MenuView: View {
 
     var body: some View {
         List {
-            Section(header: Text("Logging")) {
+            Section(header: Text("Editing")) {
                 NavigationLink(destination: LazyDestination {
                     ExerciseView()
                 }) {
                     Label("Exercise Library", systemImage: "list.bullet.rectangle")
                 }
-
-                NavigationLink(destination: LazyDestination {
-                    MeasurementsView(userData: ctx.userData)
-                }) {
-                    Label("Measurements", systemImage: "ruler")
-                }
-                NavigationLink(destination: LazyDestination {
-                    TemplateArchives(userData: ctx.userData)
-                }) {
-                    Label("Archived Templates", systemImage: "archivebox")
-                }
-            }
-
-            Section(header: Text("Setup")) {
+                
                 NavigationLink(destination: LazyDestination {
                     EquipmentManagement()
                 }) {
@@ -33,15 +20,23 @@ struct MenuView: View {
                 }
 
                 NavigationLink(destination: LazyDestination {
-                    StatsView(userData: ctx.userData)
+                    TemplateArchives(userData: ctx.userData)
                 }) {
-                    Label("Statistics", systemImage: "chart.bar")
+                    Label("Archived Templates", systemImage: "archivebox")
+                }
+            }
+
+            Section(header: Text("Tracking")) {
+                NavigationLink(destination: LazyDestination {
+                    MeasurementsView(userData: ctx.userData)
+                }) {
+                    Label("Measurements", systemImage: "ruler")
                 }
 
                 NavigationLink(destination: LazyDestination {
-                    GoalSelectionView(userData: ctx.userData)
+                    StatsView(userData: ctx.userData)
                 }) {
-                    Label("Modify Goal", systemImage: "target")
+                    Label("Statistics", systemImage: "chart.bar")
                 }
             }
 

@@ -570,6 +570,9 @@ extension ExerciseData {
             }
         }
 
+        // MARK: temporary
+        //let allExercises = exercisesWithData(userData: userData)
+        
         // ── 1. Filter pass ───────────────────────────────────────────────────
         var results: [Exercise] = []
         results.reserveCapacity(allExercises.count)

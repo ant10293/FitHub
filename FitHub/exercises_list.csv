@@ -1,6 +1,6 @@
 name,base name,comparison file (CSV),percentage difference
 Bench Pin Press Hold,,,
-Converging Smith Bench Press,,,
+Converging Smith Bench Press,Smith Machine Bench Press,,110%
 Converging Smith Decline Bench Press,,,
 Converging Smith Incline Bench Press,,,
 Dumbbell Squeeze Press,,,
@@ -8,36 +8,36 @@ Reverse-Grip Dumbbell Bench Press,,,
 Single-Arm Dumbbell Bench Press,,,
 Smith Machine Incline Bench Press,Smith Machine Bench Press,incline-bench-press_vs_bench-press,
 Smith Machine Decline Bench Press,Smith Machine Bench Press,decline-bench-press_vs_bench-press,
-Smith Machine Guillotine Press,,,
-Guillotine Press,,,
+Smith Machine Guillotine Press,Smith Machine Bench Press,,70%
+Guillotine Press,Bench Press,,70%
 Machine Incline Chest Press,Machine Chest Press,incline-bench-press_vs_bench-press,
 Plate-Loaded Chest Press,,,
 Plate-Loaded Decline Chest Press,,,
 Plate-Loaded Incline Chest Press,,,
 Standing Cable Chest Press,,,
-High Pull,,,
+High Pull,Clean High Pull,,120%
 Hang Power Snatch,,,
 Power Jerk,,,
 Squat Jerk,,,
 Band Pull-Apart,,,
-High to Low Cable Chest Fly,,,
-Low to High Cable Chest Fly,,,
-Pec Deck Fly,,,
+High to Low Cable Chest Fly,Cable Chest Fly,,105%
+Low to High Cable Chest Fly,Cable Chest Fly,,80%
+Pec Deck Fly,Machine Chest Fly,,150%
 Banded Chest Fly,,,
-Hip Thrust,,,
+Hip Thrust,Glute Bridge,,70%
 Single-Leg Hip Thrust,,,
 Barbell Hip Thrust Hold,,,
 Banded Hip Thrust,,,
 Single-Leg Glute Bridge,Glute Bridge,,50%
-Hamstring Bridge,,,
+Hamstring Bridge,Glute Bridge,,33%
 Towel Pull-Up,,,
 Assisted Pull-Up,,,
 Assisted Neutral-Grip Pull-Up,,,
-Weighted Neutral-Grip Pull-Up,,,
+Weighted Neutral-Grip Pull-Up,Weighted Pull-Up,,110%
 Assisted Chin-Up,,,
-Bench Dips (Feet Elevated),,,
-Costal Dip,,,
-Jackknife Sit-Up,,,
+Bench Dips (Feet Elevated),Bench Dips,,65%
+Chest Dip,Dips,,80%
+Jackknife Sit-Up,Sit-Up,,60%
 Arch Body Hold,,,
 Front Rack Hold,,,
 Handstand Hold,,,
@@ -50,10 +50,10 @@ Kneeling Plank,,,
 Plank,,,
 Reverse Plank Hold,,,
 Side Plank,,,
-Bradford Press,,,
+Bradford Press,Military Press,,60%
 Converging Smith Shoulder Press,,,
 Cuban Press,,,
-Kettlebell Bottoms-Up Press,,,
+Kettlebell Bottoms-Up Press,Dumbbell Shoulder Press,,40%
 Overhead Press Pin Hold,,,
 Plate-Loaded Shoulder Press,,,
 Y Press,,,
@@ -62,10 +62,10 @@ Band External Rotation,,,
 Cable Internal Rotation,,,
 Band Internal Rotation,,,
 Banded Lateral Raise,,,
-Plate Front Raise,,,
+Plate Front Raise,Barbell Front Raise,,70%
 I-Y-T Raise (on Bench),,,
 Scaption Raise,,,
-Stability Ball Roll-Out,,,
+Stability Ball Roll-Out,Ab Wheel Roll-Out,,130%
 Donkey Calf Raise,,,
 Plate-Loaded Standing Calf Raise,,,
 Hack Squat Machine Calf Raise,,,
@@ -76,20 +76,14 @@ Seated Smith Machine Calf Raise,,,
 Seated Banded Calf Raise,,,
 Standing Banded Calf Raise,,,
 Cable Standing Calf Raise,,,
-Elliptical Stride,,,
-Indoor Cycling,,,
-Ladder Climb,,,
-Stair Climb,,,
-Treadmill Walk/Run,,,
 21s Curl,,,
 Band Biceps Curl,,,
 Single-Arm Plate Wrist Curl,,,
-Cable Concentration Curl,,,
-Concentration Curl,,,
+Cable Concentration Curl,Cable Curl With Bar,,80%
 Drag Curl,,,
-EZ-Bar Reverse Curl,,,
+EZ-Bar Reverse Curl,Ez-Bar Curl,reverse-barbell-curl_vs_barbell-curl,
 Jefferson Curl,,,
-Machine Preacher Curl,,,
+Barbell Lateral Lunge,,,
 Reverse Nordic Curl,,,
 Bodyweight Reverse Hyperextension,,,
 Weighted Hyperextension,,,
@@ -115,34 +109,33 @@ Cable Hip Adduction,,,
 Hip Airplane,,,
 Slider Leg Curl,,,
 Stability-Ball Leg Curl,,,
-Compact Leg Press,,,
+Compact Leg Press,Leg Press,,50%
 L-Sit,,,
 Barbell Curtsy Lunge,,,
-Machine Pullover,,,
-Kneeling Close-Grip Push-Up,,,
-Kneeling Push-Up,,,
-Pike Push-Up,,,
-Tate Push-Up,,,
-Wide-Grip Push-Up,,,
-Barbell Rear Delt Row,,,
+Machine Pullover,Barbell Pullover,,150%
+Kneeling Close-Grip Push-Up,Push-Up,,175%
+Kneeling Push-Up,Push-Up,,200%
+Pike Push-Up,Push-Up,,60%
+Tate Push-Up,Push-Up,,50%
+Wide-Grip Push-Up,Push-Up,,90%
+Barbell Rear Delt Row,Barbell Bent-Over Row,,60%
 Chest-Supported T-Bar Row,,,
-Dumbbell Rear Delt Row,,,
-Endurance Row,,,
+Dumbbell Rear Delt Row,Dumbbell Face Pull,,200%
 Landmine Row,,,
 Plate-Loaded High Row,,,
 Plate-Loaded Low Row,,,
-Seal Row,,,
+Seal Row,Barbell Bent-Over Row,,70%
 Towel Row,,,
 Medicine Ball Russian Twist,,,
 Dumbbell Cossack Squat,,,
 Cyclist Squat,,,
-Goblet Bulgarian Split Squat,,,
-Pendulum Squat,,,
-Sissy Hack Squat,,,
+Goblet Bulgarian Split Squat,Barbell Bulgarian Split Squat,,75%
+Pendulum Squat,Machine Hack Squat,,130%
+Sissy Hack Squat,Machine Hack Squat,,60%
 Spanish Squat,,,
 Split-Squat Jump,,,
 Trap Bar Jump Squat,,,
-V-Squat,,,
+V-Squat,Machine Hack Squat,,120%
 Bent-Over Dumbbell Tricep Extension,,,
 Cable Tricep Kickback,,,
 Overhead Rope Tricep Extension,,,
@@ -185,3 +178,4 @@ Suitcase Carry,,,
 Dumbbell Overhead Carry,,,
 Sled Push,,,
 Sled Pull,,,
+Smith Machine Shoulder Press,Seated Overhead Press,,120%

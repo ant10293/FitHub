@@ -22,7 +22,7 @@ struct StrengthPercentileView: View {
             Text(exercise.performanceTitle(includeInstruction: true))
                 .font(.headline)
                 .padding(.top)
-
+            
             ageBasedStats
                 .padding(.bottom)
             weightBasedStats
@@ -109,7 +109,7 @@ struct StrengthPercentileView: View {
     }
 
     // MARK: - Helper Methods
-
+    
     // Return only the *category* thresholds as PeakMetric, in display order.
     private func get1RMValues(key: CSVColumn) -> [(key: String, value: PeakMetric)]? {
         var values: [String: PeakMetric] = [:]

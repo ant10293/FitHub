@@ -35,7 +35,8 @@ struct SortOptionSheet: View {
             List {
                 // Complexity
                 Section("Complexity") {
-                    ForEach(options.filter { [.simple, .moderate, .complex].contains($0) }, id: \.rawValue) { row($0) }
+                    // TODO: removed complex due to unbalanced categories. can add back later
+                    ForEach(options.filter { [.simple, .moderate/*, .complex*/].contains($0) }, id: \.rawValue) { row($0) }
                 }
                 // Template (only if present)
                 if options.contains(.templateCategories) {

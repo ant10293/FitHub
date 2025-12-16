@@ -30,7 +30,8 @@ struct SortSettings: View {
                     // if save new selections is false, show setDefault options
                     // setDefault allows the user to set a category that will always be selected upon viewing exercises
                     Picker("Default Category", selection: $userData.sessionTracking.exerciseSortOption) {
-                        ForEach(ExerciseSortOption.allCases.filter { $0 != .templateCategories }, id: \.self) { option in
+                        // TODO: removed complex due to unbalanced categories. can add back later
+                        ForEach(ExerciseSortOption.allCases.filter { $0 != .templateCategories || $0 != .complex }, id: \.self) { option in
                             Text(option.rawValue).tag(Optional(option))
                         }
                     }

@@ -20,9 +20,11 @@ struct SettingsView: View {
             navigationLink("timer", "Rest Timer") { RestTimerSettings(userData: ctx.userData) }
             navigationLink("arrow.up.arrow.down", "Exercise Sorting") { SortSettings(userData: ctx.userData) }
             navigationLink("gauge", "Strength Level") { StrengthLevelView() }
+            navigationLink("target", "Modify Goal") { GoalSelectionView(userData: ctx.userData) }
             // navigationLink("calendar", "Start Week On") { StartWeekOn() }
             //navigationLink("globe", "Change Language") { ChangeLanguage(userData: ctx.userData) }
             navigationLink("ruler", "Imperial / Metric") { UnitSelection(userData: ctx.userData) }
+            
             //navigationLink("paintbrush", "Change Theme") { ChangeTheme(userData: ctx.userData) }
         } header: {
             Text("General")
