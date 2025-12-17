@@ -169,6 +169,10 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
     case isometric  = "Isometric"   // joint angle static, time-based load
     case plyometric = "Plyometric"
     case cardio     = "Cardio"      // primarily metabolic
+    
+    // MARK: should be
+    // case strength, isometric, plyometric, cardio
+    // then a separate enum with compound and isolation
 
     var id: String { self.rawValue }
 
@@ -277,3 +281,4 @@ struct RPEentries: Hashable, Codable {
         return avg
     }
 }
+

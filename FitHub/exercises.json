@@ -2287,27 +2287,6 @@
       "unitType": "weightXreps"
     },
     {
-      "name": "Assisted Pull-Up",
-      "id": "EDBF39AF-ADFE-465B-B919-7A44DFB4F3AA",
-      "image": "assisted_pull_up",
-      "aliases": [ "Gravitron Pull-Up" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Assisted Machine" ],
-      "muscles": [
-        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-        { "engagementPercentage": 40, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-            { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-            { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-        ] }
-      ],
-      "difficulty": "Beg.",
-      "effort": "Compound",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Machine",
-      "imageUrl": "https://gymvisual.com/animated-gifs/1508-assisted-pull-up.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
-    },
-    {
       "name": "Neutral-Grip Pull-Up",
       "id": "ABAF0756-8ECB-44B6-86EC-AA28FCD7BE4A",
       "image": "neutral_grip_pull_up",
@@ -2328,27 +2307,6 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/13420-shoulder-width-neutral-grip-pull-up.html#/47-style_type-basic_grey",
       "unitType": "repsOnly"
-    },
-    {
-      "name": "Assisted Neutral-Grip Pull-Up",
-      "id": "10ABC801-2B18-401E-B2B7-D75675D67619",
-      "image": "assisted_neutral_grip_pull_up",
-      "aliases": [ "Parallel Grip Pull-Up" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Assisted Machine" ],
-      "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-        { "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-            { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-            { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-        ] }
-      ],
-      "difficulty": "Beg.",
-      "effort": "Compound",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Machine",
-      "imageUrl": "https://gymvisual.com/animated-gifs/1502-assisted-parallel-close-grip-pull-up.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
     },
     {
       "name": "Weighted Neutral-Grip Pull-Up",
@@ -2392,27 +2350,6 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3098-chin-up.html#/47-style_type-basic_grey",
       "unitType": "repsOnly"
-    },
-    {
-      "name": "Assisted Chin-Up",
-      "id": "726CD91A-33F3-4637-8B47-EE76A295E0A4",
-      "image": "assisted_chin_up",
-      "aliases": [ "Underhand Pull-Up" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Assisted Machine" ],
-      "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-        { "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
-            { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
-            { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
-        ] }
-      ],
-      "difficulty": "Beg.",
-      "effort": "Compound",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Machine",
-      "imageUrl": "https://gymvisual.com/animated-gifs/2669-assisted-close-grip-underhand-chin-up.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
     },
     {
       "name": "Weighted Chin-Up",
@@ -4873,7 +4810,7 @@
       "image": "21s_curl",
       "aliases": [ "Twenty Ones Curl" ],
       "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Barbell" ],
+      "equipmentRequired": [ "EZ Bar" ],
       "muscles": [
         { "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
             { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
