@@ -20,8 +20,6 @@ struct SplitCategoryPicker: View {
     let templateCategories: [SplitCategory]?
     let onChange: (ExerciseSortOption) -> Void
 
-    let sortByTemplateCategories: Bool
-
     private let templateSortingEnabled: Bool
 
     init(
@@ -37,7 +35,7 @@ struct SplitCategoryPicker: View {
         // copy the three flags from Settings exactly once
         self.enableSortPicker        = userData.settings.enableSortPicker
         self.saveSelectedSort        = userData.settings.saveSelectedSort
-        self.sortByTemplateCategories = userData.settings.sortByTemplateCategories
+        let sortByTemplateCategories = userData.settings.sortByTemplateCategories
 
         // decide the initial sort-option
         let tplSortEnabled = sortByTemplateCategories && !(templateCategories?.isEmpty ?? true)
@@ -53,29 +51,30 @@ struct SplitCategoryPicker: View {
     var body: some View {
         HStack(spacing: 7.5) {
             if enableSortPicker {
-                SortButton // Filter button to open full category menu
+                SortButton
             }
-
+            
             CategoryScroller
         }
         .padding([.horizontal, .bottom])
         .sheet(isPresented: $showSortSheet) {
             SortOptionSheet(
                 current: sortOption,
-                options: ExerciseSortOption.allCases.filter { $0 != .templateCategories || templateSortingEnabled }
-            ) { picked in
-                sortOption = picked
+                options: ExerciseSortOption.allCases.filter { $0 != .templateCategories || templateSortingEnabled },
+                onPick: { picked in
+                    sortOption = picked
 
-                if saveSelectedSort && userData.sessionTracking.exerciseSortOption != picked {
-                    userData.sessionTracking.exerciseSortOption = picked
+                    if saveSelectedSort && userData.sessionTracking.exerciseSortOption != picked {
+                        userData.sessionTracking.exerciseSortOption = picked
+                    }
+
+                    // keep your existing default selection behavior
+                    selectedCategory = picked.getDefaultSelection(templateCategories: templateCategories)
+
+                    onChange(picked)
+                    showSortSheet = false
                 }
-
-                // keep your existing default selection behavior
-                selectedCategory = picked.getDefaultSelection(templateCategories: templateCategories)
-
-                onChange(picked)
-                showSortSheet = false
-            }
+            )
             .presentationDetents([.fraction(0.9)])
             .presentationDragIndicator(.visible)
         }
@@ -168,8 +167,9 @@ struct SplitCategoryPicker: View {
                     }
                 }
             }
-
-            .onChange(of: sortOption) { selectedCategory = sortOption.getDefaultSelection(templateCategories: templateCategories) }
+            .onChange(of: sortOption) {
+                selectedCategory = sortOption.getDefaultSelection(templateCategories: templateCategories)
+            }
         }
     }
 

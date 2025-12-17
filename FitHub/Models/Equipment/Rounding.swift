@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum RoundingCategory: String, Codable, Equatable {
     case plated = "Plated"
@@ -57,3 +58,18 @@ struct RoundingPreference: Codable, Equatable {
         }
     }
 }
+
+/*
+enum ResistanceBand: Int, Codable, CaseIterable {
+    case extraLight = 1
+    case light = 2
+    case medium = 3
+    case heavy = 4
+    case extraHeavy = 5
+}
+ 
+enum Implements: Codable, Equatable, Hashable {
+    case weights([Mass])
+    case resistanceBands([ResistanceBand])
+}
+*/

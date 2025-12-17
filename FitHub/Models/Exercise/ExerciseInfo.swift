@@ -84,7 +84,7 @@ enum ExerciseSortOption: String, Codable, CaseIterable, Equatable {
     // Sort by template categories ([SplitCategory])
     case templateCategories = "Template Categories" // removes exercises and categories that are not in the template categories
 
-    func getDefaultSelection(templateCategories: [SplitCategory]?) -> CategorySelections {
+    func getDefaultSelection(templateCategories: [SplitCategory]? = nil) -> CategorySelections {
         switch self {
         case .simple, .moderate: return .split(.all)
         case .complex: return .muscle(.all)

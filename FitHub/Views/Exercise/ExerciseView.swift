@@ -7,9 +7,15 @@ struct ExerciseView: View {
     @State private var viewDetail: Bool = false
     @State private var selectedExerciseId: UUID?
     @State private var searchText: String = ""
-    @State private var selectedCategory: CategorySelections = .split(.all)
+    @State private var selectedCategory: CategorySelections 
     @State private var showingFavorites: Bool = false
     @State private var showExerciseCreation: Bool = false
+    
+    init(
+        savedSortOption: ExerciseSortOption,
+    ) {
+        _selectedCategory = State(initialValue: savedSortOption.getDefaultSelection())
+    }
 
     var body: some View {
         VStack {
@@ -19,7 +25,42 @@ struct ExerciseView: View {
             SearchBar(text: $searchText, placeholder: "Search Exercises")
                 .padding(.horizontal)
 
-            exerciseListView
+            List {
+                if filteredExercises.isEmpty {
+                    Text("No exercises available in this category.")
+                        .foregroundStyle(.gray)
+                        .padding()
+                } else {
+                    Section {
+                        ForEach(filteredExercises, id: \.self) { exercise in
+                            let favState = FavoriteState.getState(for: exercise, userData: ctx.userData)
+
+                            ExerciseRow(
+                                exercise,
+                                heartOverlay: true,
+                                favState: favState,
+                                imageSize: 0.2,
+                                detail: {
+                                    ExerciseRowDetails(
+                                        exercise: exercise,
+                                        peak: ctx.exercises.peakMetric(for: exercise.id),
+                                        showAliases: true
+                                    )
+                                },
+                                onTap: {
+                                    kbd.dismiss()
+                                    selectedExerciseId = exercise.id
+                                    viewDetail = true
+                                }
+                            )
+                        }
+                    } footer: {
+                        Text(Format.countText(filteredExercises.count))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.vertical, 8)
+                    }
+                }
+            }
         }
         .navigationBarTitle("Exercises", displayMode: .inline)
         .navigationDestination(isPresented: $viewDetail) {
@@ -55,44 +96,5 @@ struct ExerciseView: View {
             userData: ctx.userData,
             equipmentData: ctx.equipment
         )
-    }
-
-    private var exerciseListView: some View {
-        List {
-            if filteredExercises.isEmpty {
-                Text("No exercises available in this category.")
-                    .foregroundStyle(.gray)
-                    .padding()
-            } else {
-                Section {
-                    ForEach(filteredExercises, id: \.self) { exercise in
-                        let favState = FavoriteState.getState(for: exercise, userData: ctx.userData)
-
-                        ExerciseRow(
-                            exercise,
-                            heartOverlay: favState != .unmarked,
-                            favState: favState,
-                            imageSize: 0.2,
-                            detail: {
-                                ExerciseRowDetails(
-                                    exercise: exercise,
-                                    peak: ctx.exercises.peakMetric(for: exercise.id),
-                                    showAliases: true
-                                )
-                            },
-                            onTap: {
-                                kbd.dismiss()
-                                selectedExerciseId = exercise.id
-                                viewDetail = true
-                            }
-                        )
-                    }
-                } footer: {
-                    Text(Format.countText(filteredExercises.count))
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.vertical, 8)
-                }
-            }
-        }
     }
 }

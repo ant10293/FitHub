@@ -6,29 +6,48 @@ struct ExerciseSelection: View {
     @EnvironmentObject var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
     @State private var selectedExercises: [Exercise]
-    @State private var searchText: String
     @State private var selectedCategory: CategorySelections
-    @State private var showingFavorites: Bool
-    @State private var donePressed: Bool
-    @State private var templateFilter: Bool
+    @State private var searchText: String = ""
+    @State private var showingFavorites: Bool = false
+    @State private var donePressed: Bool = false
+    @State private var templateFilter: Bool = false
+    @State private var filteredExercisesCache: [Exercise] = []
     let templateCategories: [SplitCategory]?
     let mode: SelectionMode     /// Controls behavior / presentation style for this selector.
     let onDone: ([Exercise]) -> Void     /// Called when the user finishes selection.
 
     // MARK: - Init
     init(
+        sortByTemplateCategories: Bool = false,
+        savedSortOption: ExerciseSortOption? = nil,
         selectedExercises: [Exercise] = [],
         templateCategories: [SplitCategory]? = nil,
         initialCategory: CategorySelections? = nil,
+        initialSortOption: ExerciseSortOption? = nil,
         mode: SelectionMode = .templateSelection,
         onDone: @escaping ([Exercise]) -> Void
     ) {
         _selectedExercises = State(initialValue: selectedExercises)
-        _selectedCategory = State(initialValue: initialCategory ?? .split(.all))
-        _searchText = State(initialValue: "")
-        _showingFavorites = State(initialValue: false)
-        _donePressed = State(initialValue: false)
-        _templateFilter = State(initialValue: false)
+                
+        let initialDerived: CategorySelections = {
+            // override
+            if let initialCategory {
+                return initialCategory
+            }
+            // for template detail
+            else if sortByTemplateCategories,
+                        let templateCategories,
+                        let first = templateCategories.first {
+                return .split(first)
+            }
+            else if let saved = savedSortOption {
+                return saved.getDefaultSelection()
+            } else {
+                return .split(.all)
+            }
+        }()
+        _selectedCategory = State(initialValue: initialDerived)
+        
         self.templateCategories = templateCategories
         self.mode = mode
         self.onDone = onDone
@@ -39,6 +58,8 @@ struct ExerciseSelection: View {
     private var isOneRMMode: Bool { mode == .oneRMCalculator }
     /// In these modes we immediately resolve selection on tap and dismiss.
     private var isSingleSelectImmediate: Bool { mode.isSingleSelectImmediate }
+    
+    private var selectedIDs: Set<Exercise.ID> { Set(selectedExercises.map(\.id)) }
 
     var body: some View {
         NavigationStack {
@@ -65,13 +86,13 @@ struct ExerciseSelection: View {
 
                 // The List of Exercises
                 List {
-                    if filteredExercises.isEmpty {
+                    if filteredExercisesCache.isEmpty {
                         Text("No exercises found\(isPerformanceMode ? " with performance data" : "").")
                             .padding()
                             .multilineTextAlignment(.center)
                     } else {
                         Section {
-                            ForEach(filteredExercises, id: \.id) { exercise in
+                            ForEach(filteredExercisesCache, id: \.id) { exercise in
                                 let favState = FavoriteState.getState(for: exercise, userData: ctx.userData)
 
                                 ExerciseRow(
@@ -82,7 +103,7 @@ struct ExerciseSelection: View {
                                         // trailing icon: chevron or checkbox
                                         Image(systemName: isSingleSelectImmediate
                                               ? "chevron.right"
-                                              : (selectedExercises.contains(where: { $0.id == exercise.id })
+                                              : (selectedIDs.contains(exercise.id)
                                                  ? "checkmark.square.fill"
                                                  : "square"))
                                         .foregroundStyle(colorScheme == .dark ? .white : .black)
@@ -96,7 +117,7 @@ struct ExerciseSelection: View {
                                 )
                             }
                         } footer: {
-                            Text(Format.countText(filteredExercises.count))
+                            Text(Format.countText(filteredExercisesCache.count))
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .padding(.vertical, 8)
                         }
@@ -106,12 +127,18 @@ struct ExerciseSelection: View {
             .navigationBarTitle("Select Exercise\(isSingleSelectImmediate ? "" : "s")", displayMode: .inline)
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
             .onDisappear(perform: disappearAction)
+            .onAppear(perform: recomputeFilteredExercises)
+            .onChange(of: searchText) { recomputeFilteredExercises() }
+            .onChange(of: selectedCategory) { recomputeFilteredExercises() }
+            .onChange(of: showingFavorites) { recomputeFilteredExercises() }
+            .onChange(of: templateFilter) { recomputeFilteredExercises() }
+            .onChange(of: filterTemplateCats) { recomputeFilteredExercises() }
+            .onChange(of: templateSortingEnabled) { recomputeFilteredExercises() }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: { showingFavorites.toggle() }) {
                         Image(systemName: "heart.fill")
                             .foregroundStyle(showingFavorites ? .red : .gray)
-                            .padding(10)
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
@@ -121,7 +148,6 @@ struct ExerciseSelection: View {
                         dismiss()
                     }) {
                         Text("Close")
-                            .padding(10)
                     }
                 }
             }
@@ -139,7 +165,7 @@ struct ExerciseSelection: View {
 
     private var templateSortingEnabled: Bool { ctx.userData.settings.sortByTemplateCategories && !(templateCategories?.isEmpty ?? true) }
 
-    private var filteredExercises: [Exercise] {
+    private func recomputeFilteredExercises() {
         let base = ctx.exercises.filteredExercises(
             searchText: searchText,
             selectedCategory: selectedCategory,
@@ -150,8 +176,10 @@ struct ExerciseSelection: View {
             equipmentData: ctx.equipment
         )
 
-        guard isPerformanceMode else { return base }
-
+        guard isPerformanceMode else {
+            filteredExercisesCache = base
+            return
+        }
 
         // Dedupe by ID, preserve order
         var seen = Set<Exercise.ID>()
@@ -164,7 +192,7 @@ struct ExerciseSelection: View {
         }
 
         // ✅ Sort: newest max first (same source of truth)
-        return filtered.sorted { a, b in
+        filteredExercisesCache = filtered.sorted { a, b in
             let da = ctx.exercises.getMax(for: a.id)?.date ?? .distantPast
             let db = ctx.exercises.getMax(for: b.id)?.date ?? .distantPast
             return da > db

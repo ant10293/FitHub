@@ -131,6 +131,8 @@ struct HomeView: View {
         }
         .sheet(isPresented: $showingExerciseSelection) {
             ExerciseSelection(
+                sortByTemplateCategories: ctx.userData.settings.sortByTemplateCategories,
+                savedSortOption: ctx.userData.sessionTracking.exerciseSortOption,
                 mode: .performanceView,
                 onDone: { chosenExercises in
                     if let first = chosenExercises.first {

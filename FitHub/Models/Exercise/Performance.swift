@@ -9,11 +9,12 @@ import Foundation
 import SwiftUI
 
 enum PeakMetric: Codable, Equatable, Hashable {
-    case oneRepMax(Mass)     // e.g. 140 kg
+    case oneRepMax(Mass)   // e.g. 140 kg
     case maxReps(Int)      // e.g. 32 reps
     case maxHold(TimeSpan) // e.g 90 sec or 60 kg for 30 sec
     case hold30sLoad(Mass)
     case carry50mLoad(Mass)
+    // case assistance(Mass)
     case none
 
     var actualValue: Double {

@@ -181,6 +181,8 @@ struct TemplateDetail: View {
 
     private var exerciseSelectionSheet: some View {
         ExerciseSelection(
+            sortByTemplateCategories: ctx.userData.settings.sortByTemplateCategories,
+            savedSortOption: ctx.userData.sessionTracking.exerciseSortOption,
             selectedExercises: template.exercises,
             templateCategories: template.categories,
             mode: .templateSelection,
