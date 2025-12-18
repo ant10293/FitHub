@@ -63,6 +63,17 @@ struct BaseWeight: Codable, Equatable, Hashable {
     // MARK: – Per Implement
     var lb: Double
     var kg: Double
+    
+    init(lb: Double, kg: Double) {
+        self.lb = lb
+        self.kg = kg
+    }
+    
+    init(weight: Double) {
+        let isImperial = UnitSystem.current == .imperial
+        self.lb = isImperial ? weight : UnitSystem.KGtoLB(weight)
+        self.kg = isImperial ? UnitSystem.LBtoKG(weight) : weight
+    }
 
     var resolvedMass: Mass {
         switch UnitSystem.current {
@@ -79,7 +90,6 @@ struct BaseWeight: Codable, Equatable, Hashable {
         case .metric:
             kg = weight
             lb = UnitSystem.KGtoLB(weight)
-
         }
     }
 }

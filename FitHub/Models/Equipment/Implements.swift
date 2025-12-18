@@ -14,7 +14,7 @@ struct Implements: Codable, Equatable, Hashable {
     
     var subtitle: String? {
         if let w = weights, !w.sortedImplements.isEmpty {
-            return w.sortedImplements.map { String($0.resolved) }.joined(separator: ", ")
+            return w.sortedImplements.map { String($0.resolvedMass.displayValue) }.joined(separator: ", ")
         } else if let rb = resistanceBands, !rb.sortedBands.isEmpty {
             return rb.sortedBands.map { $0.level.displayName }.joined(separator: ", ")
         }
@@ -137,7 +137,7 @@ enum ResistanceBand: Int, Codable, CaseIterable, Equatable, Hashable {
 struct ResistanceBandImplement: Codable, Equatable, Hashable {
     let level: ResistanceBand
     var color: ResistanceBandColor?
-    var weight: Weight?
+    var weight: BaseWeight?
     
     var resolvedColor: ResistanceBandColor {
         color ?? level.defaultColor
@@ -180,14 +180,14 @@ struct ResistanceBands: Codable, Equatable, Hashable {
     mutating func updateWeight(_ level: ResistanceBand, weight: Double) {
         var arr = bands ?? []
         if let index = arr.firstIndex(where: { $0.level == level }) {
-            arr[index].weight?.update(weight: weight)
+            if var existingWeight = arr[index].weight {
+                existingWeight.setWeight(weight)
+                arr[index].weight = existingWeight
+            } else {
+                arr[index].weight = BaseWeight(weight: weight)
+            }
         } else {
-            let isImperial = UnitSystem.current == .imperial
-            let newWeight = Weight(
-                lb: isImperial ? weight : UnitSystem.KGtoLB(weight),
-                kg: isImperial ? UnitSystem.LBtoKG(weight) : weight
-            )
-            arr.append(ResistanceBandImplement(level: level, color: nil, weight: newWeight))
+            arr.append(ResistanceBandImplement(level: level, color: nil, weight: BaseWeight(weight: weight)))
         }
         bands = arr
     }
@@ -224,40 +224,40 @@ struct ResistanceBands: Codable, Equatable, Hashable {
 }
 
 struct WeightRange: Codable, Equatable, Hashable {
-    var min: Weight
-    var max: Weight
-    var increment: Weight
+    var min: BaseWeight
+    var max: BaseWeight
+    var increment: BaseWeight
 }
 
 struct Weights: Codable, Equatable, Hashable {
-    var implements: [Weight]? = nil  // The actual stored array of all available weights (can be nil when omitted in JSON)
+    var implements: [BaseWeight]? = nil  // The actual stored array of all available weights (can be nil when omitted in JSON)
     var totalRange: WeightRange  // Metadata for defaults
     
     /// Temporary field decoded from JSON to generate implements; should be discarded after generation.
     var availableRange: WeightRange?
     
-    private func matches(_ a: Weight, _ b: Weight) -> Bool {
-        abs(a.resolved - b.resolved) < 1e-6
+    private func matches(_ a: BaseWeight, _ b: BaseWeight) -> Bool {
+        abs(a.resolvedMass.displayValue - b.resolvedMass.displayValue) < 1e-6
     }
     
-    func isSelected(_ weight: Weight) -> Bool {
+    func isSelected(_ weight: BaseWeight) -> Bool {
         (implements ?? []).contains { matches($0, weight) }
     }
     
-    mutating func toggle(_ weight: Weight) {
+    mutating func toggle(_ weight: BaseWeight) {
         var arr = implements ?? []
         if let index = arr.firstIndex(where: { matches($0, weight) }) {
             arr.remove(at: index)
         } else {
             arr.append(weight)
-            arr.sort { $0.resolved < $1.resolved }
+            arr.sort { $0.resolvedMass.displayValue < $1.resolvedMass.displayValue }
         }
         implements = arr
     }
     
     /// Shared helper to build weights from a range (inclusive of max).
-    private func buildWeights(from range: WeightRange) -> [Weight] {
-        var weights: [Weight] = []
+    private func buildWeights(from range: WeightRange) -> [BaseWeight] {
+        var weights: [BaseWeight] = []
         var currentLb = range.min.lb
         var currentKg = range.min.kg
         let maxLb = range.max.lb
@@ -266,7 +266,7 @@ struct Weights: Codable, Equatable, Hashable {
         
         var safety = 0
         while currentLb <= maxLb + 1e-9 && safety < 100 {
-            weights.append(Weight(lb: currentLb, kg: currentKg))
+            weights.append(BaseWeight(lb: currentLb, kg: currentKg))
             currentLb += incLb
             currentKg += incKg
             safety += 1
@@ -280,34 +280,12 @@ struct Weights: Codable, Equatable, Hashable {
     }
     
     /// All weights based on totalRange (inclusive max).
-    func allWeights() -> [Weight] {
+    func allWeights() -> [BaseWeight] {
         buildWeights(from: totalRange)
     }
     
-    var sortedImplements: [Weight] {
-        (implements ?? []).sorted { $0.resolved < $1.resolved }
-    }
-}
-
-struct Weight: Codable, Equatable, Hashable {
-    var lb: Double
-    var kg: Double
-    var resolved: Double {
-        return UnitSystem.current == .imperial ? lb : kg
-    }
-    
-    var displayString: String {
-        let value = resolved
-        let unit = UnitSystem.current.weightUnit
-        return "\(Format.smartFormat(value)) \(unit)"
-    }
-    
-    mutating func update(weight: Double) {
-        if UnitSystem.current == .imperial {
-            lb = weight
-        } else {
-            kg = weight
-        }
+    var sortedImplements: [BaseWeight] {
+        (implements ?? []).sorted { $0.resolvedMass.displayValue < $1.resolvedMass.displayValue }
     }
 }
 

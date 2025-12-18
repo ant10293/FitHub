@@ -39,6 +39,8 @@ struct EquipmentImplements: View {
                 }
             } header: {
                 Text(equipment.name)
+                    .textCase(.none)
+                    .font(.headline)
             }
         }
         .listStyle(GroupedListStyle())
@@ -58,12 +60,12 @@ struct EquipmentImplements: View {
         }
     }
     
-    private func weightRow(weight: Weight, weights: Weights) -> some View {
+    private func weightRow(weight: BaseWeight, weights: Weights) -> some View {
         let isSelected = weights.isSelected(weight)
         
         return SelectableRow(
             content: {
-                Text(weight.displayString)
+                weight.resolvedMass.formattedText()
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
             },
             isSelected: isSelected,
@@ -153,18 +155,16 @@ struct EquipmentImplements: View {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                         
+                        // FIXME: use a local buffer like SetLoadEditor does to prevent _. -> _
+                        // TOD0: ensure that a lower band level cannot have a higher weight value, also allow 0 values to be set as nil
                         TextField("0", text: Binding(
                             get: {
-                                let weight = bandImpl.weight
-                                return Format.smartFormat(weight?.resolved ?? 0)
+                                return bandImpl.weight?.resolvedMass.fieldString ?? "0"
                             },
                             set: { newValue in
                                 var updated = bands
-                                if let value = Double(newValue) {
-                                    updated.updateWeight(level, weight: value)
-                                } else {
-                                    updated.updateWeight(level, weight: 0)
-                                }
+                                updated.updateWeight(level, weight: Double(newValue) ?? 0)
+                                
                                 var updatedImplements = availableImplements ?? Implements()
                                 updatedImplements.resistanceBands = updated
                                 availableImplements = updatedImplements
