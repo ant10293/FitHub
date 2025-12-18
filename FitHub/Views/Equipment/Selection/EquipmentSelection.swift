@@ -21,6 +21,7 @@ struct EquipmentSelection: View {
                 isSelected: { ge in isSelected(ge) },
                 onToggle: { ge in toggle(ge) },
                 onViewDetail: { id in selectedEquipmentId = id; viewDetail = true },
+                subtitleType: .category,
                 showSaveBanner: false
             )
             .navigationBarTitle("Select Equipment", displayMode: .inline)

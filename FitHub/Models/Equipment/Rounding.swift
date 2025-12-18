@@ -14,7 +14,6 @@ enum RoundingCategory: String, Codable, Equatable {
     case smallWeights = "Small Weights"
 }
 
-// should impact WeightPlates
 struct RoundingPreference: Codable, Equatable {
     var lb: [RoundingCategory: Mass] = [
         .plated: Mass(lb: 5),

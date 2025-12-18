@@ -14,9 +14,13 @@ struct EquipmentSelectionContent: View {
     @Binding var searchText: String
 
     /// Injected behaviors so the base view stays dumb and reusable.
-    var isSelected: (GymEquipment) -> Bool
-    var onToggle: (GymEquipment) -> Void
-    var onViewDetail: (UUID) -> Void
+    let isSelected: (GymEquipment) -> Bool
+    let onToggle: (GymEquipment) -> Void
+    let onViewDetail: (UUID) -> Void
+    var onViewImplements: (UUID) -> Void = { _ in }
+    
+    /// Which subtitle type to display in the row
+    let subtitleType: RowSubtitle
 
     /// Optional banner trigger (shown only in normal view)
     var showSaveBanner: Bool = false
@@ -44,7 +48,9 @@ struct EquipmentSelectionContent: View {
                             EquipmentRow(
                                 gymEquip: ge,
                                 equipmentSelected: isSelected(ge),
+                                subtitle: subtitleType,
                                 viewDetail: { onViewDetail(ge.id) },
+                                viewImplements: { onViewImplements(ge.id) },
                                 toggleSelection: { onToggle(ge) }
                             )
                         }
@@ -84,4 +90,94 @@ struct EquipmentSelectionContent: View {
     private var selectedInFiltered: Int {
         filtered.reduce(0) { $0 + (isSelected($1) ? 1 : 0) }
     }
+}
+
+private struct EquipmentRow: View {
+    let gymEquip: GymEquipment
+    let equipmentSelected: Bool
+    let subtitle: RowSubtitle
+    let viewDetail: () -> Void
+    let viewImplements: () -> Void
+    let toggleSelection: () -> Void
+
+    var body: some View {
+        HStack {
+            ExEquipImage(
+                image: gymEquip.fullImage,
+                size: 0.2,
+                button: .info,
+                onTap: { viewDetail() }
+            )
+
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(gymEquip.name)
+                        .foregroundStyle(.primary)
+                        .font(.headline)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.65)
+                    
+                    subtitleView
+                }
+
+                Spacer()
+
+                Image(systemName: equipmentSelected ? "checkmark.square.fill" : "square")
+                    .foregroundStyle(equipmentSelected ? .blue : .gray)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            .onTapGesture(perform: toggleSelection)
+        }
+        .padding(.vertical, 4)
+    }
+
+    @ViewBuilder
+    var subtitleView: some View {
+        switch subtitle {
+        case .category:
+            categoryLine
+
+        case .implements:
+            implementsLine
+
+        case .both:
+            categoryLine
+            implementsLine
+        }
+    }
+
+    var categoryLine: some View {
+        Text(gymEquip.equCategory.rawValue)
+            .lineLimit(1)
+            .font(.subheadline)
+            .foregroundStyle(.gray)
+    }
+
+    @ViewBuilder
+    var implementsLine: some View {
+        if let impl = gymEquip.availableImplements?.subtitle, !impl.isEmpty {
+            Button(action: viewImplements) {
+                HStack(spacing: 6) {
+                    Text(impl)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    
+                    Text("Edit")
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.blue)
+                        .lineLimit(1)
+                        .contentShape(Rectangle()) // easy tap without padding
+                }
+                .font(.caption)
+                .lineLimit(1)
+                .padding(.trailing)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+}
+
+enum RowSubtitle: String {
+    case category, implements, both
 }

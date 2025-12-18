@@ -12,12 +12,12 @@ struct EquipmentManagement: View {
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
     @StateObject private var toast = ToastManager()
-
     @State private var selectedCategory: EquipmentCategory = .all
     @State private var searchText: String = ""
-    @State private var viewDetail: Bool = false
     @State private var showEquipmentCreation: Bool = false
     @State private var selectedEquipmentId: UUID?
+    @State private var showDetail: Bool = false
+    @State private var showImplements: Bool = false
 
     var body: some View {
         EquipmentSelectionContent(
@@ -25,7 +25,15 @@ struct EquipmentManagement: View {
             searchText: $searchText,
             isSelected: { ge in ctx.userData.evaluation.availableEquipment.contains(ge.id) },
             onToggle: { ge in toggle(ge) },
-            onViewDetail: { id in selectedEquipmentId = id; viewDetail = true },
+            onViewDetail: { id in
+                selectedEquipmentId = id
+                showDetail = true
+            },
+            onViewImplements: { id in
+                selectedEquipmentId = id
+                showImplements = true
+            },
+            subtitleType: .both,
             showSaveBanner: toast.showingSaveConfirmation
         )
         .navigationBarTitle("\(ctx.userData.profile.firstName)'s Gym", displayMode: .inline)
@@ -40,15 +48,32 @@ struct EquipmentManagement: View {
             }
         }
         .sheet(isPresented: $showEquipmentCreation) { NewEquipment() }
-        .navigationDestination(isPresented: $viewDetail) {
-            if let id = selectedEquipmentId,
-               let equipment = ctx.equipment.equipment(for: id) {
-                EquipmentDetail(equipment: equipment,
-                                alternative: ctx.equipment.alternativesFor(equipment: Array(arrayLiteral: equipment)),
-                                allExercises: ctx.exercises.allExercises,
-                                allEquipment: ctx.equipment.allEquipment)
+        .navigationDestination(isPresented: $showDetail) {
+            if let equipment = selectedEquipment {
+                EquipmentDetail(
+                    equipment: equipment,
+                    alternative: ctx.equipment.alternativesFor(equipment: [equipment]),
+                    allExercises: ctx.exercises.allExercises,
+                    allEquipment: ctx.equipment.allEquipment
+                )
             } else {
-                Color.clear.onAppear { selectedEquipmentId = nil; viewDetail = false }
+                closeView
+            }
+        }
+        .navigationDestination(isPresented: $showImplements) {
+            if let equipment = selectedEquipment {
+                EquipmentImplements(
+                    equipment: equipment,
+                    onImplementsChange: { newImplements in
+                        if newImplements != equipment.availableImplements {
+                            var updated = equipment
+                            updated.availableImplements = newImplements
+                            ctx.equipment.updateEquipment(equipment: updated)
+                        }
+                    }
+                )
+            } else {
+                closeView
             }
         }
         .overlay(
@@ -68,6 +93,19 @@ struct EquipmentManagement: View {
             alignment: .bottomTrailing
         )
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+    }
+    
+    private var closeView: some View {
+        Color.clear.onAppear {
+            showDetail = false
+            showImplements = false
+            selectedEquipmentId = nil
+        }
+    }
+    
+    private var selectedEquipment: GymEquipment? {
+        guard let id = selectedEquipmentId, let equipment = ctx.equipment.equipment(for: id) else { return nil }
+        return equipment
     }
 
     private func toggle(_ ge: GymEquipment) {

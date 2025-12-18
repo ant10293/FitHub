@@ -8,26 +8,42 @@
 import Foundation
 import SwiftUI
 
-/*
- MARK: EXTENSIVE ISSUES
- - Implements was an enum with values, but had to make it a stuct instead (not ideal but necessary to prevent manual encoding/decoding)
- 
- Resistance Bands: Handle Bands, Loop Bands, Mini Loop Bands
- - available colors only accounts for available bands. It needs to account for ALL bands.
- - is initialized with no available bands
- 
- Weight Implements: Dumbbells, Kettlebells, Medicine Ball, EZ Bar, Weight Plate
- - total Range doesn't reach max. e.g. stops at 147.5 when it should go up to 150
- - is initialized with no available weights
- - availableRange is NOT supposed to be a variable for the Weight struct, its only used so that we don't have to harcode a huge amount of Weight values
- 
- WE NEED a new way to set this up. In 'equipment.json' we have no clear way to encode this but adding custom encoding/decoding is just so messy.
-*/
-
-/*
 struct Implements: Codable, Equatable, Hashable {
     var weights: Weights?
     var resistanceBands: ResistanceBands?
+    
+    var subtitle: String? {
+        if let w = weights, !w.sortedImplements.isEmpty {
+            return w.sortedImplements.map { String($0.resolved) }.joined(separator: ", ")
+        } else if let rb = resistanceBands, !rb.sortedBands.isEmpty {
+            return rb.sortedBands.map { $0.level.displayName }.joined(separator: ", ")
+        }
+        return nil
+    }
+    
+    /// Apply defaults and drop temporary fields after decoding.
+    mutating func applyDefaults() {
+        if var w = weights {
+            if (w.implements == nil || w.implements?.isEmpty == true) {
+                if let ar = w.availableRange {
+                    w.generateImplements(from: ar)
+                } else {
+                    // Fallback to totalRange if no availableRange was provided
+                    w.generateImplements(from: w.totalRange)
+                }
+            }
+            w.availableRange = nil
+            weights = w
+        }
+        
+        if var rb = resistanceBands {
+            if rb.useAllDefaults == true {
+                rb.populateDefaultsIfNeeded()
+            }
+            rb.useAllDefaults = nil
+            resistanceBands = rb
+        }
+    }
 }
 
 enum ResistanceBandColor: String, Codable, CaseIterable, Equatable, Hashable {
@@ -116,21 +132,6 @@ enum ResistanceBand: Int, Codable, CaseIterable, Equatable, Hashable {
         case .extraHeavy: return .darkGray
         }
     }
-    
-    var weight: Weight {
-        switch self {
-        case .extraLight:
-            return Weight(lb: 7.5, kg: 3.5)
-        case .light:
-            return Weight(lb: 15.0, kg: 7.0)
-        case .medium:
-            return Weight(lb: 25.0, kg: 11.0)
-        case .heavy:
-            return Weight(lb: 40.0, kg: 18.0)
-        case .extraHeavy:
-            return Weight(lb: 65.0, kg: 30.0)
-        }
-    }
 }
 
 struct ResistanceBandImplement: Codable, Equatable, Hashable {
@@ -141,18 +142,15 @@ struct ResistanceBandImplement: Codable, Equatable, Hashable {
     var resolvedColor: ResistanceBandColor {
         color ?? level.defaultColor
     }
-    
-    var resolvedWeight: Weight {
-        weight ?? level.weight
-    }
 }
 
 struct ResistanceBands: Codable, Equatable, Hashable {
-    var bands: [ResistanceBandImplement]
+    var useAllDefaults: Bool?
+    var bands: [ResistanceBandImplement]? = nil
     
     // Helper to find band by level
     func band(for level: ResistanceBand) -> ResistanceBandImplement? {
-        bands.first { $0.level == level }
+        (bands ?? []).first { $0.level == level }
     }
     
     func isAvailable(_ level: ResistanceBand) -> Bool {
@@ -160,50 +158,68 @@ struct ResistanceBands: Codable, Equatable, Hashable {
     }
     
     mutating func toggle(_ level: ResistanceBand) {
-        if let index = bands.firstIndex(where: { $0.level == level }) {
-            bands.remove(at: index)
+        var arr = bands ?? []
+        if let index = arr.firstIndex(where: { $0.level == level }) {
+            arr.remove(at: index)
         } else {
-            bands.append(ResistanceBandImplement(level: level, color: nil, weight: nil))
+            arr.append(ResistanceBandImplement(level: level, color: nil, weight: nil))
         }
+        bands = arr
     }
     
     mutating func updateColor(_ level: ResistanceBand, color: ResistanceBandColor?) {
-        if let index = bands.firstIndex(where: { $0.level == level }) {
-            bands[index].color = color
+        var arr = bands ?? []
+        if let index = arr.firstIndex(where: { $0.level == level }) {
+            arr[index].color = color
         } else {
-            bands.append(ResistanceBandImplement(level: level, color: color, weight: nil))
+            arr.append(ResistanceBandImplement(level: level, color: color, weight: nil))
         }
+        bands = arr
     }
     
-    mutating func updateWeight(_ level: ResistanceBand, weight: Weight?) {
-        if let index = bands.firstIndex(where: { $0.level == level }) {
-            bands[index].weight = weight
+    mutating func updateWeight(_ level: ResistanceBand, weight: Double) {
+        var arr = bands ?? []
+        if let index = arr.firstIndex(where: { $0.level == level }) {
+            arr[index].weight?.update(weight: weight)
         } else {
-            bands.append(ResistanceBandImplement(level: level, color: nil, weight: weight))
+            let isImperial = UnitSystem.current == .imperial
+            let newWeight = Weight(
+                lb: isImperial ? weight : UnitSystem.KGtoLB(weight),
+                kg: isImperial ? UnitSystem.LBtoKG(weight) : weight
+            )
+            arr.append(ResistanceBandImplement(level: level, color: nil, weight: newWeight))
         }
+        bands = arr
     }
     
     func bandImplement(for level: ResistanceBand) -> ResistanceBandImplement {
-        if let existing = band(for: level) {
-            return existing
-        }
+        if let existing = band(for: level) { return existing }
         return ResistanceBandImplement(level: level, color: nil, weight: nil)
     }
     
     func availableColors(for level: ResistanceBand) -> [ResistanceBandColor] {
-        // Get colors already used by other bands (excluding current band)
-        let usedColors = Set(bands
-            .filter { $0.level != level }
-            .compactMap { $0.color ?? $0.level.defaultColor })
+        // Consider all five levels (even if not currently present) so colors stay unique across levels.
+        let usedColors = Set(ResistanceBand.allCases
+            .filter { $0 != level }
+            .map { bandImplement(for: $0).resolvedColor })
         
-        // Get current band's color
-        let currentBand = bandImplement(for: level)
-        let currentColor = currentBand.resolvedColor
+        let currentColor = bandImplement(for: level).resolvedColor
         
-        // Filter available colors - exclude used colors, but always include current band's color
         return ResistanceBandColor.allCases.filter { color in
             color == currentColor || !usedColors.contains(color)
         }
+    }
+    
+    /// Populate defaults for all five levels if needed.
+    mutating func populateDefaultsIfNeeded() {
+        guard bands?.isEmpty ?? true else { return }
+        bands = ResistanceBand.allCases.map { level in
+            ResistanceBandImplement(level: level, color: nil, weight: nil)
+        }
+    }
+    
+    var sortedBands: [ResistanceBandImplement] {
+        (bands ?? []).sorted { $0.level.rawValue < $1.level.rawValue }
     }
 }
 
@@ -214,39 +230,62 @@ struct WeightRange: Codable, Equatable, Hashable {
 }
 
 struct Weights: Codable, Equatable, Hashable {
-    var implements: [Weight]  // The actual stored array of all available weights
+    var implements: [Weight]? = nil  // The actual stored array of all available weights (can be nil when omitted in JSON)
     var totalRange: WeightRange  // Metadata for defaults
-    var availableRange: WeightRange?  // Optional range used to generate implements if not provided
+    
+    /// Temporary field decoded from JSON to generate implements; should be discarded after generation.
+    var availableRange: WeightRange?
+    
+    private func matches(_ a: Weight, _ b: Weight) -> Bool {
+        abs(a.resolved - b.resolved) < 1e-6
+    }
     
     func isSelected(_ weight: Weight) -> Bool {
-        implements.contains { $0.lb == weight.lb && $0.kg == weight.kg }
+        (implements ?? []).contains { matches($0, weight) }
     }
     
     mutating func toggle(_ weight: Weight) {
-        if let index = implements.firstIndex(where: { $0.lb == weight.lb && $0.kg == weight.kg }) {
-            implements.remove(at: index)
+        var arr = implements ?? []
+        if let index = arr.firstIndex(where: { matches($0, weight) }) {
+            arr.remove(at: index)
         } else {
-            implements.append(weight)
-            implements.sort { $0.resolved < $1.resolved }
+            arr.append(weight)
+            arr.sort { $0.resolved < $1.resolved }
         }
+        implements = arr
     }
     
-    func allWeights() -> [Weight] {
+    /// Shared helper to build weights from a range (inclusive of max).
+    private func buildWeights(from range: WeightRange) -> [Weight] {
         var weights: [Weight] = []
-        var currentLb = totalRange.min.lb
-        var currentKg = totalRange.min.kg
-        let maxLb = totalRange.max.lb
-        let maxKg = totalRange.max.kg
-        let incLb = totalRange.increment.lb
-        let incKg = totalRange.increment.kg
+        var currentLb = range.min.lb
+        var currentKg = range.min.kg
+        let maxLb = range.max.lb
+        let incLb = range.increment.lb
+        let incKg = range.increment.kg
         
-        while currentLb <= maxLb && currentKg <= maxKg {
+        var safety = 0
+        while currentLb <= maxLb + 1e-9 && safety < 100 {
             weights.append(Weight(lb: currentLb, kg: currentKg))
             currentLb += incLb
             currentKg += incKg
+            safety += 1
         }
-        
         return weights
+    }
+    
+    /// Generate weights from a range (inclusive of max) and assign to implements.
+    mutating func generateImplements(from range: WeightRange) {
+        implements = buildWeights(from: range)
+    }
+    
+    /// All weights based on totalRange (inclusive max).
+    func allWeights() -> [Weight] {
+        buildWeights(from: totalRange)
+    }
+    
+    var sortedImplements: [Weight] {
+        (implements ?? []).sorted { $0.resolved < $1.resolved }
     }
 }
 
@@ -262,5 +301,13 @@ struct Weight: Codable, Equatable, Hashable {
         let unit = UnitSystem.current.weightUnit
         return "\(Format.smartFormat(value)) \(unit)"
     }
+    
+    mutating func update(weight: Double) {
+        if UnitSystem.current == .imperial {
+            lb = weight
+        } else {
+            kg = weight
+        }
+    }
 }
-*/
+

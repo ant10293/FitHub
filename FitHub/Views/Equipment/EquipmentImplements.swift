@@ -5,41 +5,45 @@
 //  Created by Anthony Cantu on 12/17/25.
 //
 
-/*
 import SwiftUI
 
 struct EquipmentImplements: View {
     @StateObject private var kbd = KeyboardManager.shared
-    let initialImplements: Implements?
+    let equipment: GymEquipment
     let onImplementsChange: (Implements?) -> Void
     
     @State private var availableImplements: Implements?
     @Environment(\.colorScheme) private var colorScheme
     
     init(
-        initialImplements: Implements?,
+        equipment: GymEquipment,
         onImplementsChange: @escaping (Implements?) -> Void = { _ in }
     ) {
-        self.initialImplements = initialImplements
+        self.equipment = equipment
         self.onImplementsChange = onImplementsChange
-        _availableImplements = State(initialValue: initialImplements)
+        _availableImplements = State(initialValue: equipment.availableImplements)
     }
     
     var body: some View {
         List {
-            if let implements = availableImplements {
-                if implements.weights != nil {
-                    weightsView()
-                } else if implements.resistanceBands != nil {
-                    resistanceBandsView()
+            Section {
+                if let implements = availableImplements {
+                    if implements.weights != nil {
+                        weightsView()
+                    } else if implements.resistanceBands != nil {
+                        resistanceBandsView()
+                    }
+                } else {
+                    Text("No implements configured")
+                        .foregroundStyle(.secondary)
                 }
-            } else {
-                Text("No implements configured")
-                    .foregroundStyle(.secondary)
+            } header: {
+                Text(equipment.name)
             }
         }
         .listStyle(GroupedListStyle())
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
+        .navigationBarTitle("Select Available", displayMode: .inline)
     }
     
     // MARK: - Weights View
@@ -151,19 +155,15 @@ struct EquipmentImplements: View {
                         
                         TextField("0", text: Binding(
                             get: {
-                                let weight = bandImpl.resolvedWeight
-                                return Format.smartFormat(weight.resolved)
+                                let weight = bandImpl.weight
+                                return Format.smartFormat(weight?.resolved ?? 0)
                             },
                             set: { newValue in
                                 var updated = bands
                                 if let value = Double(newValue) {
-                                    let newWeight = Weight(
-                                        lb: UnitSystem.current == .imperial ? value : UnitSystem.KGtoLB(value),
-                                        kg: UnitSystem.current == .imperial ? UnitSystem.LBtoKG(value) : value
-                                    )
-                                    updated.updateWeight(level, weight: newWeight)
+                                    updated.updateWeight(level, weight: value)
                                 } else {
-                                    updated.updateWeight(level, weight: nil)
+                                    updated.updateWeight(level, weight: 0)
                                 }
                                 var updatedImplements = availableImplements ?? Implements()
                                 updatedImplements.resistanceBands = updated
@@ -211,4 +211,4 @@ struct EquipmentImplements: View {
         }
     }
 }
-*/
+

@@ -9,7 +9,21 @@
         "baseWeight": { "lb": 5, "kg": 2.5 },
         "pegCount": 2,
         "implementation": "Individual",
-        "weightInstruction": "Per Dumbbell"
+        "weightInstruction": "Per Dumbbell",
+        "availableImplements": {
+            "weights": {
+                "availableRange": {
+                    "min": { "lb": 5.0, "kg": 2.5 },
+                    "max": { "lb": 150.0, "kg": 60.0 },
+                    "increment": { "lb": 5.0, "kg": 2.5 }
+                },
+                "totalRange": {
+                    "min": { "lb": 2.5, "kg": 1.0 },
+                    "max": { "lb": 200.0, "kg": 80.0 },
+                    "increment": { "lb": 2.5, "kg": 1.0 }
+                }
+            }
+        }
     },
     {
         "name": "Kettlebells",
@@ -19,7 +33,21 @@
         "description": "A cannonball-shaped weight with an offset handle that enables ballistic, hinging, and rotational exercises such as swings, cleans, snatches, and Turkish get-ups.",
         "equCategory": "Small Weights",
         "implementation": "Individual",
-        "weightInstruction": "Per Kettlebell"
+        "weightInstruction": "Per Kettlebell",
+        "availableImplements": {
+            "weights": {
+                "availableRange": {
+                    "min": { "lb": 5.0, "kg": 2.5 },
+                    "max": { "lb": 150.0, "kg": 60.0 },
+                    "increment": { "lb": 5.0, "kg": 2.5 }
+                },
+                "totalRange": {
+                    "min": { "lb": 2.5, "kg": 1.0 },
+                    "max": { "lb": 200.0, "kg": 80.0 },
+                    "increment": { "lb": 2.5, "kg": 1.0 }
+                }
+            }
+        }
     },
     {
         "name": "Medicine Ball",
@@ -28,7 +56,21 @@
         "image": "medball_rubber",
         "description": "A weighted ball used for explosive throws, slams, and partner drills that build power, coordination, and core stability.",
         "equCategory": "Small Weights",
-        "implementation": "Unified"
+        "implementation": "Unified",
+        "availableImplements": {
+            "weights": {
+                "availableRange": {
+                    "min": { "lb": 5.0, "kg": 2.5 },
+                    "max": { "lb": 150.0, "kg": 60.0 },
+                    "increment": { "lb": 5.0, "kg": 2.5 }
+                },
+                "totalRange": {
+                    "min": { "lb": 2.5, "kg": 1.0 },
+                    "max": { "lb": 200.0, "kg": 80.0 },
+                    "increment": { "lb": 2.5, "kg": 1.0 }
+                }
+            }
+        }
     },
     {
         "name": "Barbell",
@@ -83,7 +125,21 @@
         "equCategory": "Bars & Plates",
         "baseWeight": { "lb": 20, "kg": 10 },
         "pegCount": 2,
-        "implementation": "Unified"
+        "implementation": "Unified",
+        "availableImplements": {
+            "weights": {
+                "availableRange": {
+                    "min": { "lb": 10.0, "kg": 5.0 },
+                    "max": { "lb": 100.0, "kg": 45.0 },
+                    "increment": { "lb": 10.0, "kg": 5.0 }
+                },
+                "totalRange": {
+                    "min": { "lb": 2.5, "kg": 1.0 },
+                    "max": { "lb": 200.0, "kg": 80.0 },
+                    "increment": { "lb": 2.5, "kg": 1.0 }
+                }
+            }
+        }
     },
     {
         "name": "Farmer's Walk Handles",
@@ -125,7 +181,21 @@
         "image": "weight_plate",
         "description": "Round plates in fixed weights that slide onto barbells or machines to progressively overload movements.",
         "equCategory": "Bars & Plates",
-        "implementation": "Unified"
+        "implementation": "Unified",
+        "availableImplements": {
+            "weights": {
+                "availableRange": {
+                    "min": { "lb": 2.5, "kg": 1.0 },
+                    "max": { "lb": 45.0, "kg": 20.0 },
+                    "increment": { "lb": 2.5, "kg": 1.0 }
+                },
+                "totalRange": {
+                    "min": { "lb": 2.5, "kg": 1.0 },
+                    "max": { "lb": 100.0, "kg": 45.0 },
+                    "increment": { "lb": 2.5, "kg": 1.0 }
+                }
+            }
+        }
     },
     {
         "name": "Pull-Up Bar",
@@ -836,7 +906,12 @@
         "aliases": ["tube bands","handled bands","clip bands","door bands"],
         "image": "handle_bands",
         "description": "Elastic tubes with fixed handles that add variable resistance for strength, mobility, or rehab; can clip to anchors.",
-        "equCategory": "Resistance Bands"
+        "equCategory": "Resistance Bands",
+        "availableImplements": {
+            "resistanceBands": {
+                "useAllDefaults": true
+            }
+        }
     },
     {
         "name": "Mini Loop Bands",
@@ -844,7 +919,12 @@
         "aliases": ["mini bands","glute bands","hip circles","booty bands"],
         "image": "mini_loop_bands",
         "description": "Small continuous loops used around knees or ankles to activate hips and glutes or provide light resistance in rehab.",
-        "equCategory": "Resistance Bands"
+        "equCategory": "Resistance Bands",
+        "availableImplements": {
+            "resistanceBands": {
+                "useAllDefaults": true
+            }
+        }
     },
     {
         "name": "Loop Bands",
@@ -852,7 +932,12 @@
         "aliases": ["power bands","pull-up bands","monster bands","stretch bands"],
         "image": "loop_bands",
         "description": "Long seamless loops offering scalable tension for pull-up assistance, stretching, or resistance exercises.",
-        "equCategory": "Resistance Bands"
+        "equCategory": "Resistance Bands",
+        "availableImplements": {
+            "resistanceBands": {
+                "useAllDefaults": true
+            }
+        }
     },
     {
         "name": "Battle Ropes",
