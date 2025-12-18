@@ -184,11 +184,14 @@
         "implementation": "Unified",
         "availableImplements": {
             "weights": {
-                "availableRange": {
-                    "min": { "lb": 2.5, "kg": 1.0 },
-                    "max": { "lb": 45.0, "kg": 20.0 },
-                    "increment": { "lb": 2.5, "kg": 1.0 }
-                },
+                "implements": [
+                    { "lb": 2.5, "kg": 1 },
+                    { "lb": 5, "kg": 2.5 },
+                    { "lb": 10, "kg": 5 },
+                    { "lb": 25, "kg": 10 },
+                    { "lb": 35, "kg": 15 },
+                    { "lb": 45, "kg": 20 }
+                ],
                 "totalRange": {
                     "min": { "lb": 2.5, "kg": 1.0 },
                     "max": { "lb": 100.0, "kg": 45.0 },
@@ -909,7 +912,13 @@
         "equCategory": "Resistance Bands",
         "availableImplements": {
             "resistanceBands": {
-                "useAllDefaults": true
+                "bandsDict": {
+                    "1": { "lb": 10, "kg": 5 },
+                    "2": { "lb": 20, "kg": 10 },
+                    "3": { "lb": 30, "kg": 15 },
+                    "4": { "lb": 40, "kg": 20 },
+                    "5": { "lb": 50, "kg": 25 }
+                }
             }
         }
     },
@@ -922,7 +931,13 @@
         "equCategory": "Resistance Bands",
         "availableImplements": {
             "resistanceBands": {
-                "useAllDefaults": true
+                "bandsDict": {
+                    "1": { "lb": 5,  "kg": 2 },
+                    "2": { "lb": 10, "kg": 4 },
+                    "3": { "lb": 15, "kg": 7 },
+                    "4": { "lb": 20, "kg": 10 },
+                    "5": { "lb": 30, "kg": 14 }
+                }
             }
         }
     },
@@ -935,7 +950,11 @@
         "equCategory": "Resistance Bands",
         "availableImplements": {
             "resistanceBands": {
-                "useAllDefaults": true
+                "1": { "lb": 15,  "kg": 15 },
+                "2": { "lb": 30,  "kg": 25 },
+                "3": { "lb": 50,  "kg": 35 },
+                "4": { "lb": 80,  "kg": 45 },
+                "5": { "lb": 110, "kg": 60 }
             }
         }
     },

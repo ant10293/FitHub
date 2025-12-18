@@ -24,23 +24,12 @@ struct Implements: Codable, Equatable, Hashable {
     /// Apply defaults and drop temporary fields after decoding.
     mutating func applyDefaults() {
         if var w = weights {
-            if (w.implements == nil || w.implements?.isEmpty == true) {
-                if let ar = w.availableRange {
-                    w.generateImplements(from: ar)
-                } else {
-                    // Fallback to totalRange if no availableRange was provided
-                    w.generateImplements(from: w.totalRange)
-                }
-            }
-            w.availableRange = nil
+            w.applyDefaults()
             weights = w
         }
         
         if var rb = resistanceBands {
-            if rb.useAllDefaults == true {
-                rb.populateDefaultsIfNeeded()
-            }
-            rb.useAllDefaults = nil
+            rb.applyDefaults()
             resistanceBands = rb
         }
     }
@@ -148,6 +137,16 @@ struct ResistanceBands: Codable, Equatable, Hashable {
     var useAllDefaults: Bool?
     var bands: [ResistanceBandImplement]? = nil
     
+    /// Temporary field for manual band entry from JSON: [String: BaseWeight]
+    /// Key is bandLevel as string ("1"-"5"), value is the weight for that band
+    /// This will be converted to bands array in applyDefaults()
+    /// In JSON, use nested structure: "resistanceBands": { "bandsDict": { "1": {...}, "2": {...} } }
+    var bandsDict: [String: BaseWeight]?
+    
+    var sortedBands: [ResistanceBandImplement] {
+        (bands ?? []).sorted { $0.level.rawValue < $1.level.rawValue }
+    }
+    
     // Helper to find band by level
     func band(for level: ResistanceBand) -> ResistanceBandImplement? {
         (bands ?? []).first { $0.level == level }
@@ -211,15 +210,29 @@ struct ResistanceBands: Codable, Equatable, Hashable {
     }
     
     /// Populate defaults for all five levels if needed.
-    mutating func populateDefaultsIfNeeded() {
+    mutating private func populateDefaultsIfNeeded() {
         guard bands?.isEmpty ?? true else { return }
         bands = ResistanceBand.allCases.map { level in
             ResistanceBandImplement(level: level, color: nil, weight: nil)
         }
     }
     
-    var sortedBands: [ResistanceBandImplement] {
-        (bands ?? []).sorted { $0.level.rawValue < $1.level.rawValue }
+    /// Apply defaults and convert bandsDict to bands array if needed.
+    mutating func applyDefaults() {
+        // Convert manually entered bands dictionary to ResistanceBandImplement array
+        if let dict = bandsDict, bands == nil || bands?.isEmpty == true {
+            bands = dict.compactMap { (levelString, weight) -> ResistanceBandImplement? in
+                guard let levelInt = Int(levelString),
+                      let level = ResistanceBand(rawValue: levelInt) else { return nil }
+                return ResistanceBandImplement(level: level, color: nil, weight: weight)
+            }
+            bandsDict = nil
+        }
+        
+        if useAllDefaults == true {
+            populateDefaultsIfNeeded()
+        }
+        useAllDefaults = nil
     }
 }
 
@@ -235,6 +248,10 @@ struct Weights: Codable, Equatable, Hashable {
     
     /// Temporary field decoded from JSON to generate implements; should be discarded after generation.
     var availableRange: WeightRange?
+    
+    var sortedImplements: [BaseWeight] {
+        (implements ?? []).sorted { $0.resolvedMass.displayValue < $1.resolvedMass.displayValue }
+    }
     
     private func matches(_ a: BaseWeight, _ b: BaseWeight) -> Bool {
         abs(a.resolvedMass.displayValue - b.resolvedMass.displayValue) < 1e-6
@@ -274,18 +291,27 @@ struct Weights: Codable, Equatable, Hashable {
         return weights
     }
     
-    /// Generate weights from a range (inclusive of max) and assign to implements.
-    mutating func generateImplements(from range: WeightRange) {
-        implements = buildWeights(from: range)
-    }
-    
     /// All weights based on totalRange (inclusive max).
     func allWeights() -> [BaseWeight] {
         buildWeights(from: totalRange)
     }
     
-    var sortedImplements: [BaseWeight] {
-        (implements ?? []).sorted { $0.resolvedMass.displayValue < $1.resolvedMass.displayValue }
+    /// Generate weights from a range (inclusive of max) and assign to implements.
+    mutating func generateImplements(from range: WeightRange) {
+        implements = buildWeights(from: range)
+    }
+    
+    /// Apply defaults and drop temporary fields after decoding.
+    mutating func applyDefaults() {
+        if implements == nil || implements?.isEmpty == true {
+            if let ar = availableRange {
+                generateImplements(from: ar)
+            } else {
+                // Fallback to totalRange if no availableRange was provided
+                generateImplements(from: totalRange)
+            }
+        }
+        availableRange = nil
     }
 }
 

@@ -72,14 +72,14 @@ struct NewEquipment: View {
                         if EquipmentCategory.platedCats.contains(draft.equCategory) {
                             baseWeightField
                         }
-
-                        if !isReadOnly {
+                        if !isBundledEquipment {
                             ImageField(initialFilename: draft.image, onImageUpdate: { name in
                                 draft.image = name
                             })
-
-                            descriptionField
                         }
+
+                        descriptionField
+                        
                     }
                     .padding(.bottom)
 
@@ -99,7 +99,7 @@ struct NewEquipment: View {
                         .padding(.vertical)
 
                         if isEditing {
-                            switch ctx.equipment.getEquipmentLocation(equipment) {
+                            switch ctx.equipment.getEquipmentLocation(id: draft.id) {
                             case .user:
                                 RectangularButton(title: "Delete Equipment", systemImage: "trash", bgColor: .red) {
                                     showDeleteAlert = true
@@ -165,12 +165,13 @@ struct NewEquipment: View {
         }
     }
 
-    private var isBundledOverride: Bool { ctx.equipment.isOverridenEquipment(equipment) }
+    private var isBundledOverride: Bool { ctx.equipment.isOverridenEquipment(id: draft.id) }
+    private var isBundledEquipment: Bool { ctx.equipment.isBundledEquipment(id: draft.id) }
 
     private var isEditing: Bool { original != nil }
 
     private var isReadOnly: Bool {
-        if let ori = original { return !ctx.equipment.isUserEquipment(ori) }
+        if let ori = original { return !ctx.equipment.isUserEquipment(id: ori.id) }
         return false
     }
 
@@ -205,9 +206,12 @@ struct NewEquipment: View {
     }
 
     private var baseWeightField: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Base Weight (\(UnitSystem.current.weightUnit))").font(.headline)
-
+        HStack {
+            Text("Base Weight (\(UnitSystem.current.weightUnit))")
+                .font(.headline)
+            
+            Spacer(minLength: screenWidth * 0.2)
+            
             TextField("Optional", text: Binding(
                 get: { draft.baseWeight?.resolvedMass.displayString ?? "" },
                 set: { input in
@@ -216,7 +220,8 @@ struct NewEquipment: View {
                 }
             ))
             .keyboardType(.numberPad)
-            .inputStyle()
+            .textFieldStyle(.roundedBorder)
+            .multilineTextAlignment(.center)
         }
     }
 
@@ -269,7 +274,6 @@ struct NewEquipment: View {
             Text("Description").font(.headline)
             TextEditor(text: $draft.description)
                 .frame(minHeight: 60)
-                .inputStyle(cornerRadius: 6)
                 .overlay(
                     RoundedRectangle(cornerRadius: 6)
                         .stroke(Color.secondary.opacity(0.25))

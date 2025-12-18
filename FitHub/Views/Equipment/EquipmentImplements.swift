@@ -171,8 +171,9 @@ struct EquipmentImplements: View {
                                 onImplementsChange(availableImplements)
                             }
                         ))
+                        .multilineTextAlignment(.center)
                         .keyboardType(.decimalPad)
-                        .inputStyle()
+                        .textFieldStyle(.roundedBorder)
                     }
                 }
             },
@@ -200,11 +201,13 @@ struct EquipmentImplements: View {
                 content()
                     .opacity(isSelected ? 1.0 : 0.4)
                 
-                Spacer()
-                
                 Button(action: action) {
-                    Image(systemName: isSelected ? "checkmark.square.fill" : "square")
-                        .foregroundStyle(isSelected ? .blue : .gray)
+                    HStack {
+                        Spacer()
+                        Image(systemName: isSelected ? "checkmark.square.fill" : "square")
+                            .foregroundStyle(isSelected ? .blue : .gray)
+                    }
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
             }

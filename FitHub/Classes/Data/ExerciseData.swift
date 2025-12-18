@@ -92,6 +92,7 @@ final class ExerciseData: ObservableObject {
 
 extension ExerciseData {
     // MARK: – Helpers
+    // TODO: use id instead of exercise
     func isUserExercise(_ exercise: Exercise) -> Bool {
         return userExercises.contains(where: { $0.id == exercise.id })
     }

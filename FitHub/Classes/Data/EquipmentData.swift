@@ -83,22 +83,22 @@ final class EquipmentData: ObservableObject {
 
 extension EquipmentData {
     // MARK: – Helpers
-    func isUserEquipment(_ equipment: GymEquipment) -> Bool {
-        userEquipment.contains(where: { $0.id == equipment.id })
+    func isUserEquipment(id: UUID) -> Bool {
+        userEquipment.contains(where: { $0.id == id })
     }
 
-    func isBundledEquipment(_ equipment: GymEquipment) -> Bool {
-        bundledEquipment.contains(where: { $0.id == equipment.id })
+    func isBundledEquipment(id: UUID) -> Bool {
+        bundledEquipment.contains(where: { $0.id == id })
     }
 
-    func isOverridenEquipment(_ equipment: GymEquipment) -> Bool {
-        bundledOverrides[equipment.id] != nil
+    func isOverridenEquipment(id: UUID) -> Bool {
+        bundledOverrides[id] != nil
     }
 
-    func getEquipmentLocation(_ equipment: GymEquipment) -> ExEquipLocation {
-        if isUserEquipment(equipment) {
+    func getEquipmentLocation(id: UUID) -> ExEquipLocation {
+        if isUserEquipment(id: id) {
             return .user
-        } else if isBundledEquipment(equipment) {
+        } else if isBundledEquipment(id: id) {
             return .bundled
         } else {
             return .none
@@ -120,7 +120,7 @@ extension EquipmentData {
     }
 
     func updateEquipment(equipment: GymEquipment) {
-        switch getEquipmentLocation(equipment) {
+        switch getEquipmentLocation(id: equipment.id) {
         case .user:
             updateUserEquipment(equipment)
         case .bundled:
