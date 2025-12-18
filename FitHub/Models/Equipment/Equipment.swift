@@ -22,6 +22,7 @@ struct GymEquipment: Identifiable, Hashable, Codable {
     let implementation: ImplementationType?
     let weightInstruction: WeightInstruction?
     let description: String
+    //var availableImplements: Implements?
 }
 extension GymEquipment {
     var fullImagePath: String { return "Equipment/\(image)" }
@@ -80,6 +81,7 @@ extension GymEquipment {
         self.implementation       = initEquip.implementation
         self.weightInstruction    = initEquip.weightInstruction
         self.description          = initEquip.description
+        //self.availableImplements  = initEquip.availableImplements
     }
 }
 

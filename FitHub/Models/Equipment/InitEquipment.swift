@@ -20,6 +20,7 @@ struct InitEquipment: Identifiable, Hashable, Codable {
     var implementation: ImplementationType?
     var weightInstruction: WeightInstruction?
     var description: String
+    //var availableImplements: Implements?
 }
 extension InitEquipment {
     /// Convenience init that copies matching properties from a GymEquipment.
@@ -36,5 +37,6 @@ extension InitEquipment {
         self.implementation       = equip.implementation
         self.weightInstruction    = equip.weightInstruction
         self.description          = equip.description
+        //self.availableImplements  = equip.availableImplements
     }
 }

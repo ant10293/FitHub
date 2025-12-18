@@ -258,27 +258,3 @@ struct ExerciseInstructions: Codable, Hashable {
 enum CallBackAction: String {
     case addSet, deleteSet, removeExercise, replaceExercise, viewDetail, viewAdjustments, saveTemplate
 }
-
-struct RPEentry: Hashable, Codable {
-    var id: Date // workout start date
-    var rpe: Double
-    var completion: PeakMetric
-}
-
-struct RPEentries: Hashable, Codable {
-    var entries: [RPEentry]
-
-    var avgRPE: Double? {
-        guard !entries.isEmpty else { return nil }
-        let sum = entries.reduce(0.0) { $0 + $1.rpe }
-        return sum / Double(entries.count)
-    }
-
-    var avgPeakValue: Double? {
-        guard !entries.isEmpty else { return nil }
-        let sum = entries.reduce(0.0) { $0 + $1.completion.actualValue }
-        let avg = sum / Double(entries.count)
-        return avg
-    }
-}
-
