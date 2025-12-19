@@ -156,7 +156,7 @@ private struct EquipmentRow: View {
 
     @ViewBuilder
     var implementsLine: some View {
-        if let impl = gymEquip.availableImplements?.subtitle, !impl.isEmpty {
+        if let impl = gymEquip.availableImplements?.subtitle {
             Button(action: viewImplements) {
                 HStack(spacing: 6) {
                     Text(impl)
@@ -166,8 +166,7 @@ private struct EquipmentRow: View {
                     Text("Edit")
                         .fontWeight(.semibold)
                         .foregroundStyle(.blue)
-                        .lineLimit(1)
-                        .contentShape(Rectangle()) // easy tap without padding
+                        .contentShape(Rectangle())
                 }
                 .font(.caption)
                 .lineLimit(1)

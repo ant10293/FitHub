@@ -72,6 +72,7 @@ struct NewEquipment: View {
                         if EquipmentCategory.platedCats.contains(draft.equCategory) {
                             baseWeightField
                         }
+                        
                         if !isBundledEquipment {
                             ImageField(initialFilename: draft.image, onImageUpdate: { name in
                                 draft.image = name
@@ -272,13 +273,9 @@ struct NewEquipment: View {
     private var descriptionField: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Description").font(.headline)
-            TextEditor(text: $draft.description)
-                .frame(minHeight: 60)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6)
-                        .stroke(Color.secondary.opacity(0.25))
-                )
-                .scrollContentBackground(.hidden)
+            TextField("", text: $draft.description, axis: .vertical)
+                .lineLimit(2...6)
+                .textFieldStyle(.roundedBorder)
         }
     }
 

@@ -292,6 +292,7 @@ extension EquipmentData {
     }
 
     func equipment(for id: UUID) -> GymEquipment? { allEquipment.first { $0.id == id } }
+    func equipment(for name: String) -> GymEquipment? { allEquipment.first { $0.name == name } }
 
     func equipmentObjects(for selection: Set<GymEquipment.ID>) -> [GymEquipment] {
         selection.compactMap { equipment(for: $0) }

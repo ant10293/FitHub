@@ -120,7 +120,6 @@ struct Evaluation: Codable {
     var availableEquipment: Set<GymEquipment.ID> = []
     var favoriteExercises: Set<Exercise.ID> = []
     var dislikedExercises: Set<Exercise.ID> = []
-    var availablePlates: WeightPlates = WeightPlates()
     var askedRPEprompt: Bool = false
 }
 

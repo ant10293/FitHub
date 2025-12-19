@@ -38,14 +38,31 @@ struct EquipmentImplements: View {
                         .foregroundStyle(.secondary)
                 }
             } header: {
-                Text(equipment.name)
-                    .textCase(.none)
-                    .font(.headline)
+                HStack {
+                    Text(equipment.name)
+                    Spacer()
+                    if hasImplements {
+                        Button(availableImplements?.allSelected == true ? "Deselect All" : "Select All") {
+                            if var implements = availableImplements {
+                                implements.toggleAll()
+                                availableImplements = implements
+                                onImplementsChange(availableImplements)
+                            }
+                        }
+                        .foregroundStyle(.blue)
+                    }
+                }
+                .textCase(.none)
+                .font(.headline)
             }
         }
         .listStyle(GroupedListStyle())
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .navigationBarTitle("Select Available", displayMode: .inline)
+    }
+    
+    private var hasImplements: Bool {
+        availableImplements?.weights != nil || availableImplements?.resistanceBands != nil
     }
     
     // MARK: - Weights View

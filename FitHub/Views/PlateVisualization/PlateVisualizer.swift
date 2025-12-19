@@ -25,11 +25,14 @@ struct PlateVisualizer: View {
             implementsCount: implementsCount,
             pegCount: pegCount
         )
+        
+        let weights: Weights? = ctx.equipment.equipment(for: "Weight Plate")?.availableImplements?.weights
+        
         let plan = computePlan(
             perSideTarget: spec.perSideTarget,
             base: base,
             baseCount: baseCount,
-            denominations: ctx.userData.evaluation.availablePlates.resolvedPlates,
+            denominations: weights?.sortedImplements(ascending: false),
             replicates: spec.replicates,
             pegCount: pegCount
         )
@@ -44,40 +47,43 @@ struct PlateVisualizer: View {
             Spacer()
 
             // Implement visualization
-            if implementsCount > 1 {
-                // Multiple implements (e.g., dumbbells)
-                ForEach(0..<implementsCount, id: \.self) { index in
+            if let plan {
+                if implementsCount > 1 {
+                    // Multiple implements (e.g., dumbbells)
+                    ForEach(0..<implementsCount, id: \.self) { index in
+                        ImplementRow(
+                            title: "Implement \(index + 1)",
+                            base: base,
+                            plan: plan,
+                            pegCount: pegCount,
+                            showMultiplier: false,
+                            showBaseWeightEditor: {
+                                showBaseWeightEditor = true
+                            }
+                        )
+                    }
+                } else {
+                    // Single implement (e.g., barbell, machine)
                     ImplementRow(
-                        title: "Implement \(index + 1)",
+                        title: "",
                         base: base,
                         plan: plan,
                         pegCount: pegCount,
-                        showMultiplier: false,
+                        showMultiplier: baseCount > 1,
                         showBaseWeightEditor: {
                             showBaseWeightEditor = true
                         }
                     )
                 }
-            } else {
-                // Single implement (e.g., barbell, machine)
-                ImplementRow(
-                    title: "",
-                    base: base,
-                    plan: plan,
-                    pegCount: pegCount,
-                    showMultiplier: baseCount > 1,
-                    showBaseWeightEditor: {
-                        showBaseWeightEditor = true
-                    }
-                )
-            }
-
-            // Closest match info
-            if !plan.exact {
-                (Text("Closest: ") + plan.achievedTotal.formattedText())
-                (Text("Δ ") + plan.delta.abs.formattedText())
-                    .foregroundStyle(.orange)
-                    .font(.footnote)
+                
+                
+                // Closest match info
+                if !plan.exact {
+                    (Text("Closest: ") + plan.achievedTotal.formattedText())
+                    (Text("Δ ") + plan.delta.abs.formattedText())
+                        .foregroundStyle(.orange)
+                        .font(.footnote)
+                }
             }
 
             Spacer()
@@ -215,19 +221,19 @@ struct PlateVisualizer: View {
 
         return spec
     }
-
-    private func computePlan(perSideTarget: Mass, base: Mass, baseCount: Int, denominations: [Mass], replicates: Int, pegCount: PegCountOption?) -> Plan {
+    
+    private func computePlan(perSideTarget: Mass, base: Mass, baseCount: Int, denominations: [BaseWeight]?, replicates: Int, pegCount: PegCountOption?) -> Plan? {
         let sideTargetKg = perSideTarget.inKg
-        let denoms = WeightPlates.sortedPlates(denominations, ascending: false)
+        guard let denoms = denominations else { return nil }
 
         // Greedy fill for one side
         var remaining = sideTargetKg
         var sidePlates: [Mass] = []
-        for d in denoms where d.inKg > 0 {
-            let n = Int(floor((remaining + 1e-9) / d.inKg))
+        for d in denoms where d.resolvedMass.inKg > 0 {
+            let n = Int(floor((remaining + 1e-9) / d.resolvedMass.inKg))
             if n > 0 {
-                sidePlates.append(contentsOf: Array(repeating: d, count: n))
-                remaining -= Double(n) * d.inKg
+                sidePlates.append(contentsOf: Array(repeating: d.resolvedMass, count: n))
+                remaining -= Double(n) * d.resolvedMass.inKg
             }
         }
 

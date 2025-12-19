@@ -34,7 +34,6 @@ struct SettingsView: View {
     private func advancedWorkoutSection() -> some View {
         Section {
             navigationLink("gearshape.2", "Workout Generation") { WorkoutCustomization() }
-            navigationLink("scalemass", "Available Weight Plates") { PlateSelection(userData: ctx.userData) }
             navigationLink("chart.bar", "Progressive Overload") { OverloadSettingsView(userData: ctx.userData) }
             navigationLink("slider.horizontal.3", "Volume Deloading") { DeloadSettingsView(userData: ctx.userData) }
             //navigationLink("figure.walk", "Muscle Rest Duration") { MuscleRest(userData: ctx.userData) }

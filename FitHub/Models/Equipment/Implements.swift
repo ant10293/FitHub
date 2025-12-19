@@ -13,9 +13,9 @@ struct Implements: Codable, Equatable, Hashable {
     var resistanceBands: ResistanceBands?
     
     var subtitle: String? {
-        if let w = weights, !w.sortedImplements.isEmpty {
-            return w.sortedImplements.map { String($0.resolvedMass.displayValue) }.joined(separator: ", ")
-        } else if let rb = resistanceBands, !rb.sortedBands.isEmpty {
+        if let w = weights {
+            return w.sortedImplements().map { String($0.resolvedMass.displayValue) }.joined(separator: ", ")
+        } else if let rb = resistanceBands {
             return rb.sortedBands.map { $0.level.displayName }.joined(separator: ", ")
         }
         return nil
@@ -30,6 +30,33 @@ struct Implements: Codable, Equatable, Hashable {
         
         if var rb = resistanceBands {
             rb.applyDefaults()
+            resistanceBands = rb
+        }
+    }
+    
+    var allSelected: Bool {
+        if let weights = weights {
+            return weights.allSelected
+        } else if let bands = resistanceBands {
+            return bands.allSelected
+        }
+        return false
+    }
+    
+    mutating func toggleAll() {
+        if var w = weights {
+            if w.allSelected {
+                w.deselectAll()
+            } else {
+                w.selectAll()
+            }
+            weights = w
+        } else if var rb = resistanceBands {
+            if rb.allSelected {
+                rb.deselectAll()
+            } else {
+                rb.selectAll()
+            }
             resistanceBands = rb
         }
     }
@@ -234,6 +261,22 @@ struct ResistanceBands: Codable, Equatable, Hashable {
         }
         useAllDefaults = nil
     }
+    
+    var allSelected: Bool {
+        ResistanceBand.allCases.allSatisfy { isAvailable($0) }
+    }
+    
+    mutating func selectAll() {
+        for level in ResistanceBand.allCases {
+            if !isAvailable(level) {
+                toggle(level)
+            }
+        }
+    }
+    
+    mutating func deselectAll() {
+        bands = []
+    }
 }
 
 struct WeightRange: Codable, Equatable, Hashable {
@@ -249,8 +292,11 @@ struct Weights: Codable, Equatable, Hashable {
     /// Temporary field decoded from JSON to generate implements; should be discarded after generation.
     var availableRange: WeightRange?
     
-    var sortedImplements: [BaseWeight] {
-        (implements ?? []).sorted { $0.resolvedMass.displayValue < $1.resolvedMass.displayValue }
+    func sortedImplements(ascending: Bool = true) -> [BaseWeight] {
+        (implements ?? []).sorted { ascending
+            ? $0.resolvedMass.displayValue < $1.resolvedMass.displayValue
+            : $0.resolvedMass.displayValue > $1.resolvedMass.displayValue
+        }
     }
     
     private func matches(_ a: BaseWeight, _ b: BaseWeight) -> Bool {
@@ -312,6 +358,24 @@ struct Weights: Codable, Equatable, Hashable {
             }
         }
         availableRange = nil
+    }
+    
+    var allSelected: Bool {
+        let allWeights = allWeights()
+        return !allWeights.isEmpty && allWeights.allSatisfy { isSelected($0) }
+    }
+    
+    mutating func selectAll() {
+        let allWeights = allWeights()
+        for weight in allWeights {
+            if !isSelected(weight) {
+                toggle(weight)
+            }
+        }
+    }
+    
+    mutating func deselectAll() {
+        implements = []
     }
 }
 

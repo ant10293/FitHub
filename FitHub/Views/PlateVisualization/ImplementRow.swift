@@ -212,7 +212,7 @@ struct PlateStackColumn: View {
             ForEach(plates.indices, id: \.self) { i in
                 let w = plates[i]
                 RoundedRectangle(cornerRadius: 6)
-                    .fill(WeightPlates.color(for: w, in: plates))
+                    .fill(Color.blue)
                     .frame(width: size(for: w).width, height: size(for: w).height)
                     .overlay(
                         Text(w.displayString)
