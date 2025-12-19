@@ -141,6 +141,10 @@ struct StartedWorkoutView: View {
                 getPriorMax: { id in
                     return ctx.exercises.peakMetric(for: id)
                 },
+                getAvailableImplements: { exercise in
+                    let equipment = ctx.equipment.equipmentForExercise(exercise, inclusion: .dynamic, available: ctx.userData.evaluation.availableEquipment)
+                    return equipment.first(where: { $0.availableImplements != nil })?.availableImplements
+                },
                 onPerformanceUpdate: { update in
                     viewModel.updatePerformance(update)
                 },

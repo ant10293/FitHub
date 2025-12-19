@@ -129,6 +129,16 @@ enum ResistanceBand: Int, Codable, CaseIterable, Equatable, Hashable {
     
     var level: Int { rawValue }
     
+    var shortName: String {
+        switch self {
+        case .extraLight: return "X-Light"
+        case .light: return "Light"
+        case .medium: return "Medium"
+        case .heavy: return "Heavy"
+        case .extraHeavy: return "X-Heavy"
+        }
+    }
+    
     var displayName: String {
         switch self {
         case .extraLight: return "Extra Light"
@@ -153,7 +163,7 @@ enum ResistanceBand: Int, Codable, CaseIterable, Equatable, Hashable {
 struct ResistanceBandImplement: Codable, Equatable, Hashable {
     let level: ResistanceBand
     var color: ResistanceBandColor?
-    var weight: BaseWeight?
+    var weight: BaseWeight
     
     var resolvedColor: ResistanceBandColor {
         color ?? level.defaultColor
@@ -188,7 +198,7 @@ struct ResistanceBands: Codable, Equatable, Hashable {
         if let index = arr.firstIndex(where: { $0.level == level }) {
             arr.remove(at: index)
         } else {
-            arr.append(ResistanceBandImplement(level: level, color: nil, weight: nil))
+            arr.append(ResistanceBandImplement(level: level, color: nil, weight: BaseWeight(weight: 0)))
         }
         bands = arr
     }
@@ -198,7 +208,7 @@ struct ResistanceBands: Codable, Equatable, Hashable {
         if let index = arr.firstIndex(where: { $0.level == level }) {
             arr[index].color = color
         } else {
-            arr.append(ResistanceBandImplement(level: level, color: color, weight: nil))
+            arr.append(ResistanceBandImplement(level: level, color: color, weight: BaseWeight(weight: 0)))
         }
         bands = arr
     }
@@ -206,12 +216,7 @@ struct ResistanceBands: Codable, Equatable, Hashable {
     mutating func updateWeight(_ level: ResistanceBand, weight: Double) {
         var arr = bands ?? []
         if let index = arr.firstIndex(where: { $0.level == level }) {
-            if var existingWeight = arr[index].weight {
-                existingWeight.setWeight(weight)
-                arr[index].weight = existingWeight
-            } else {
-                arr[index].weight = BaseWeight(weight: weight)
-            }
+            arr[index].weight.setWeight(weight)
         } else {
             arr.append(ResistanceBandImplement(level: level, color: nil, weight: BaseWeight(weight: weight)))
         }
@@ -220,7 +225,7 @@ struct ResistanceBands: Codable, Equatable, Hashable {
     
     func bandImplement(for level: ResistanceBand) -> ResistanceBandImplement {
         if let existing = band(for: level) { return existing }
-        return ResistanceBandImplement(level: level, color: nil, weight: nil)
+        return ResistanceBandImplement(level: level, color: nil, weight: BaseWeight(weight: 0))
     }
     
     func availableColors(for level: ResistanceBand) -> [ResistanceBandColor] {
@@ -240,7 +245,7 @@ struct ResistanceBands: Codable, Equatable, Hashable {
     mutating private func populateDefaultsIfNeeded() {
         guard bands?.isEmpty ?? true else { return }
         bands = ResistanceBand.allCases.map { level in
-            ResistanceBandImplement(level: level, color: nil, weight: nil)
+            ResistanceBandImplement(level: level, color: nil, weight: BaseWeight(weight: 0))
         }
     }
     

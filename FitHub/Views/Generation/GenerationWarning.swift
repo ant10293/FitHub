@@ -216,7 +216,13 @@ private struct TemplateReasoning: View {
                 VStack(alignment: .leading) {
                     Text(template.name)
                         .font(.headline)
-
+                    
+                    if !template.categories.isEmpty {
+                        Text(SplitCategory.concatenateCategories(for: template.categories))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    
                     HStack {
                         Text(Format.countText(template.exercises.count, capitalize: true))
                         if let est = template.estimatedCompletionTime {

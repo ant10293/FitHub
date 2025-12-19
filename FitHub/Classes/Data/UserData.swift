@@ -339,7 +339,7 @@ extension UserData {
     ) {
         isGeneratingWorkout = true
         resetWorkoutSession()
-
+        
         guard !generationDisabled else {
             isGeneratingWorkout = false
             if !nextWeek {

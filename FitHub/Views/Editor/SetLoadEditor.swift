@@ -22,6 +22,25 @@ struct SetLoadEditor: View {
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.center)
             }
+            
+        case .band(let currentBand):
+            Menu {
+                ForEach(ResistanceBand.allCases, id: \.self) { band in
+                    Button(action: {
+                        load = .band(band)
+                    }) {
+                        HStack {
+                            Text(band.displayName)
+                            if band == currentBand {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                TextField(placeholder, text: .constant(currentBand.shortName))
+                    .multilineTextAlignment(.center)
+            }
         }
     }
 
@@ -50,7 +69,7 @@ struct SetLoadEditor: View {
                 }
             )
 
-        case .none:
+        case .none, .band:
             return nil
         }
     }
@@ -59,6 +78,7 @@ struct SetLoadEditor: View {
         switch load {
         case .weight:   return "wt."
         case .distance: return "dist."
+        case .band:     return ""
         case .none:     return ""
         }
     }

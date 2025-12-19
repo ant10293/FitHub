@@ -1688,7 +1688,7 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/12292-resistance-band-pull-apart.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Cable Chest Fly",
@@ -1954,7 +1954,7 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/12042-band-chest-fly-male.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Hip Thrust",
@@ -2084,7 +2084,7 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/10117-resistance-band-hip-thrusts.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Glute Bridge",
@@ -3741,7 +3741,7 @@
       "resistance": "Banded",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/2396-band-standing-external-shoulder-rotation.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Seated Dumbbell External Rotation",
@@ -3802,7 +3802,7 @@
       "resistance": "Banded",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/19251-resistance-band-standing-shoulder-internal-rotation-male.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Banded Lateral Raise",
@@ -3821,7 +3821,7 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/2449-band-front-lateral-raise.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Cable Lateral Raise",
@@ -4606,7 +4606,7 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/5491-resistance-band-calf-raise.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Standing Banded Calf Raise",
@@ -4626,7 +4626,7 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/3139-band-two-legs-calf-raise-band-under-both-legs-version-2.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Cable Standing Calf Raise",
@@ -4848,7 +4848,7 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/10130-band-biceps-curl.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Barbell Curl",
@@ -6495,7 +6495,7 @@
       "resistance": "Banded",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/23477-resistance-band-standing-balance-hip-abduction-male.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Band Seated Hip Abduction",
@@ -6512,7 +6512,7 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/17014-resistance-band-seated-hip-abduction-version-2.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Cable Hip Abduction",
@@ -6611,7 +6611,7 @@
       "resistance": "Banded",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/10096-band-hip-adduction-male.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Side Plank Hip Adduction",
@@ -9708,7 +9708,7 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Split-Squat Jump",
@@ -10861,7 +10861,7 @@
       "resistance": "Banded",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/22623-resistance-band-sitting-floor-tibialis-press.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "bandXreps"
     },
     {
       "name": "Smith Machine Reverse Calf Raise",

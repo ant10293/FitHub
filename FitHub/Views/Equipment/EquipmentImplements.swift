@@ -39,7 +39,7 @@ struct EquipmentImplements: View {
                 }
             } header: {
                 HStack {
-                    Text(equipment.name)
+                Text(equipment.name)
                     Spacer()
                     if hasImplements {
                         Button(availableImplements?.allSelected == true ? "Deselect All" : "Select All") {
@@ -52,8 +52,8 @@ struct EquipmentImplements: View {
                         .foregroundStyle(.blue)
                     }
                 }
-                .textCase(.none)
-                .font(.headline)
+                    .textCase(.none)
+                    .font(.headline)
             }
         }
         .listStyle(GroupedListStyle())
@@ -161,10 +161,10 @@ struct EquipmentImplements: View {
                                 Text(bandImpl.resolvedColor.displayName)
                                     .foregroundStyle(colorScheme == .dark ? .white : .black)
                                 Image(systemName: "chevron.up.chevron.down")
-                                    .foregroundStyle(.secondary)
                             }
                         }
                     }
+                    .fixedSize(horizontal: true, vertical: false)
                     
                     // Weight editor - always visible
                     HStack {
@@ -176,7 +176,7 @@ struct EquipmentImplements: View {
                         // TOD0: ensure that a lower band level cannot have a higher weight value, also allow 0 values to be set as nil
                         TextField("0", text: Binding(
                             get: {
-                                return bandImpl.weight?.resolvedMass.fieldString ?? "0"
+                                return bandImpl.weight.resolvedMass.fieldString
                             },
                             set: { newValue in
                                 var updated = bands

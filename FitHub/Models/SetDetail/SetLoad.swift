@@ -11,12 +11,14 @@ import SwiftUI
 enum SetLoad: Codable, Equatable, Hashable {
     case weight(Mass)
     case distance(Distance)
+    case band(ResistanceBand)
     case none
 
     var fieldString: String {
         switch self {
         case .weight(let m): return m.fieldString
         case .distance(let d): return d.fieldString
+        case .band(let b): return b.shortName
         case .none: return ""
         }
     }
@@ -25,6 +27,7 @@ enum SetLoad: Codable, Equatable, Hashable {
         switch self {
         case .weight(let m): return m.inKg
         case .distance(let d): return d.inKm
+        case .band(let b): return Double(b.level)
         case .none: return 0
         }
     }
@@ -33,6 +36,7 @@ enum SetLoad: Codable, Equatable, Hashable {
         switch self {
         case .weight(let m): return m.displayString
         case .distance(let d): return d.displayString
+        case .band(let b): return b.displayName
         case .none: return ""
         }
     }
@@ -41,6 +45,7 @@ enum SetLoad: Codable, Equatable, Hashable {
         switch self {
         case .weight(let m): return m.formattedText()
         case .distance(let d): return d.formattedText
+        case .band(let b): return Text(b.displayName)
         case .none: return Text("Body-weight")
         }
     }
@@ -49,6 +54,7 @@ enum SetLoad: Codable, Equatable, Hashable {
         switch self {
         case .weight: return UnitSystem.current.weightUnit
         case .distance: return UnitSystem.current.distanceUnit
+        case .band: return "Band"
         case .none: return ""
         }
     }
@@ -57,6 +63,7 @@ enum SetLoad: Codable, Equatable, Hashable {
         switch self {
         case .weight: return .weight
         case .distance: return .distance
+        case .band: return nil
         case .none: return nil
         }
     }
@@ -72,6 +79,11 @@ extension SetLoad {
         if case .distance(let d) = self { return d }
         return nil
     }
+    
+    var band: ResistanceBand? {
+        if case .band(let b) = self { return b }
+        return nil
+    }
 }
 
 extension SetLoad {
@@ -79,6 +91,7 @@ extension SetLoad {
         switch self {
         case .weight: return "scalemass"
         case .distance: return "figure.walk"
+        case .band: return "band"
         case .none: return ""
         }
     }

@@ -194,6 +194,8 @@ extension Exercise {
         switch unitType {
         case .weightXreps, .weightXtime, .weightXdistance:
             return .weight(Mass(kg: 0))
+        case .bandXreps:
+            return .band(.extraLight)
         case .distanceXtimeOrSpeed:
             return .distance(Distance(km: 0))
         case .repsOnly, .timeOnly:
@@ -203,7 +205,7 @@ extension Exercise {
 
     var plannedMetric: SetMetric {
         switch unitType {
-        case .weightXreps, .repsOnly:
+        case .weightXreps, .bandXreps, .repsOnly:
             return .reps(0)
         case .timeOnly, .weightXtime:
             return .hold(TimeSpan(seconds: 0))
@@ -311,7 +313,6 @@ extension Exercise {
 
         let kg = equipmentData.incrementForEquipment(names: equipmentRequired, rounding: rounding).inKg
         let kgPerStep = kg * overloadFactor
-       // let secPerStep = SetDetail.secPerStep
         let halfway = max(1, period / 2)
 
         var overloadApplied: Bool = false
@@ -357,6 +358,39 @@ extension Exercise {
                         updated.load = .weight(equipmentData.roundWeight(Mass(kg: newKg), for: equipmentRequired, rounding: rounding))
                     }
                 }
+                
+            case .band(let currentBand):
+                // Bands: calculate new target weight and find matching band level
+                guard let currentBandWeight = getCurrentBandWeight(currentBand, equipmentData: equipmentData) else {
+                    // Fallback: just update reps if we can't find band
+                    updated.bumpPlanned(by: overloadProgress)
+                    break
+                }
+                
+                var targetKg: Double? = nil
+                switch style {
+                case .increaseWeight:
+                    targetKg = currentBandWeight + Double(overloadProgress) * kgPerStep
+                case .increaseReps:
+                    // For increaseReps, keep same band, just increase reps
+                    updated.bumpPlanned(by: overloadProgress)
+                case .decreaseReps:
+                    updated.bumpPlanned(by: -overloadProgress)
+                    targetKg = currentBandWeight + Double(overloadProgress) * kgPerStep
+                case .dynamic:
+                    if overloadProgress <= halfway {
+                        updated.bumpPlanned(by: overloadProgress)
+                    } else {
+                        updated.planned = setDetail.planned
+                        let adj = overloadProgress - halfway
+                        targetKg = currentBandWeight + Double(adj) * kgPerStep
+                    }
+                }
+                
+                if let target = targetKg, let bestBand = findBestBandLevel(for: target, equipmentData: equipmentData) {
+                    updated.load = .band(bestBand)
+                }
+                
             // TODO: implement for distance
             case .distance:
                 break
@@ -382,6 +416,18 @@ extension Exercise {
             case .weight(let weight):
                 let scaledKg = weight.inKg * deloadFactor
                 updated.load = .weight(equipmentData.roundWeight(Mass(kg: scaledKg), for: equipmentRequired, rounding: rounding))
+            case .band(let currentBand):
+                // Bands: calculate scaled weight and find matching band level
+                guard let currentBandWeight = getCurrentBandWeight(currentBand, equipmentData: equipmentData) else {
+                    // Fallback: just scale reps if we can't find band
+                    updated.planned = setDetail.planned.scaling(by: deloadFactor)
+                    break
+                }
+                let scaledKg = currentBandWeight * deloadFactor
+                
+                if let bestBand = findBestBandLevel(for: scaledKg, equipmentData: equipmentData) {
+                    updated.load = .band(bestBand)
+                }
             // TODO: implement for distance
             case .distance:
                 break
@@ -530,9 +576,18 @@ extension Exercise {
                 let formula = OneRMFormula.canonical
                 let percentAtReps = formula.percent(at: reps)
                 let targetWeight = Mass(kg: target1RM * percentAtReps)
-                let roundedWeight = equipmentData.roundWeight(targetWeight, for: equipmentRequired, rounding: rounding)
-
-                load = .weight(roundedWeight)
+                
+                // For bandXreps, find the band level that matches the target weight
+                if unitType == .bandXreps {
+                    let targetKg = targetWeight.inKg
+                    let bestBand = findBestBandLevel(for: targetKg, equipmentData: equipmentData) ?? .extraLight
+                    load = .band(bestBand)
+                } else {
+                    // Standard weight-based
+                    let roundedWeight = equipmentData.roundWeight(targetWeight, for: equipmentRequired, rounding: rounding)
+                    load = .weight(roundedWeight)
+                }
+                
                 planned = .reps(max(1, reps))
 
             // TODO: .hold30sLoad and carry50mLoad logic is basically identical, use single source of truth
@@ -668,7 +723,9 @@ extension Exercise {
 
         warmUpDetails = details
     }
-    
+}
+
+extension Exercise {
     mutating func seedDraftMax(
         exerciseData: ExerciseData,
         userData: UserData,
@@ -682,6 +739,31 @@ extension Exercise {
             draftMax = calcMax
             maxUpdated(PerformanceUpdate(exerciseId: self.id, value: calcMax))
         }
+    }
+    
+    /// Gets the current band weight for a given band level.
+    /// Returns nil if the band is not found in available implements.
+    private func getCurrentBandWeight(_ band: ResistanceBand, equipmentData: EquipmentData) -> Double? {
+        let equipment = equipmentData.equipmentForExercise(self, inclusion: .dynamic, available: [])
+        guard let bands = equipment.first?.availableImplements?.resistanceBands,
+              let bandImpl = bands.band(for: band) else {
+            return nil
+        }
+        return bandImpl.weight.resolvedMass.inKg
+    }
+    
+    /// Finds the best matching resistance band level for a given target weight (in kg).
+    /// Returns nil if no bands are available, otherwise returns the band level closest to the target weight.
+    private func findBestBandLevel(for targetKg: Double, equipmentData: EquipmentData) -> ResistanceBand? {
+        let equipment = equipmentData.equipmentForExercise(self, inclusion: .dynamic, available: [])
+        guard let bands = equipment.first?.availableImplements?.resistanceBands else {
+            return nil
+        }
+        
+        let sortedBands = bands.sortedBands
+        return sortedBands.min(by: {
+            abs($0.weight.resolvedMass.inKg - targetKg) < abs($1.weight.resolvedMass.inKg - targetKg)
+        })?.level
     }
 }
 

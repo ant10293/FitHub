@@ -950,11 +950,13 @@
         "equCategory": "Resistance Bands",
         "availableImplements": {
             "resistanceBands": {
-                "1": { "lb": 15,  "kg": 15 },
-                "2": { "lb": 30,  "kg": 25 },
-                "3": { "lb": 50,  "kg": 35 },
-                "4": { "lb": 80,  "kg": 45 },
-                "5": { "lb": 110, "kg": 60 }
+                "bandsDict": {
+                    "1": { "lb": 15,  "kg": 15 },
+                    "2": { "lb": 30,  "kg": 25 },
+                    "3": { "lb": 50,  "kg": 35 },
+                    "4": { "lb": 80,  "kg": 45 },
+                    "5": { "lb": 110, "kg": 60 }
+                }
             }
         }
     },
