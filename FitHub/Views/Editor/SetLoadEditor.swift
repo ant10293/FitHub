@@ -31,14 +31,8 @@ struct SetLoadEditor: View {
             
             Menu {
                 if availableBands.isEmpty {
-                    // If no bands available, still show the current one (in case it was set before)
-                    Button(action: {}) {
-                        HStack {
-                            Text(currentBandImpl.level.displayName)
-                            Image(systemName: "checkmark")
-                        }
-                    }
-                    .disabled(true)
+                    // Optional: show a disabled “info” item inside the menu too
+                    Text("No bands available. Check your selected equipment.")
                 } else {
                     ForEach(availableBands, id: \.level) { bandImpl in
                         Button(action: {

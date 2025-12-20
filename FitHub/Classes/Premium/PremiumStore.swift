@@ -104,7 +104,6 @@ final class PremiumStore: ObservableObject {
         /// Optional badge for each product id
         static func badge(for productID: String) -> String? {
             switch productID {
-            case yearly:   return "Best Value"
             case lifetime: return "One-Time"
             default:       return nil
             }

@@ -22,12 +22,8 @@ struct RestTimerSettings: View {
             }
 
             if userData.settings.restTimerEnabled {
-                Section {
-                    ForEach(RestType.allCases) { kind in
-                        restRow(kind: kind)
-                    }
-                } header: {
-                    Text("Rest Periods")
+                ForEach(RestType.allCases) { kind in
+                    restRow(kind: kind)
                 }
             }
         }
@@ -46,25 +42,27 @@ struct RestTimerSettings: View {
     }
 
     private func restRow(kind: RestType) -> some View {
-        CustomDisclosure(
-            title: kind.rawValue,
-            note: kind.note,
-            isActive: activeEditor == kind,
-            usePadding: false,
-            onTap: { toggleEditor(kind) },
-            onClose: { activeEditor = nil },
-            valueView: {
-                Text(Format.timeString(from: resolved.rest(for: kind)))
-                    .foregroundStyle(.gray)
-                    .monospacedDigit()
-            },
-            content: {
-                MinSecPicker(time: $editTime)
-                    .onChange(of: editTime) {
-                        savePicker(into: kind)
-                    }
-            }
-        )
+        Section {
+            CustomDisclosure(
+                title: kind.rawValue,
+                note: kind.note,
+                isActive: activeEditor == kind,
+                usePadding: false,
+                onTap: { toggleEditor(kind) },
+                onClose: { activeEditor = nil },
+                valueView: {
+                    Text(Format.timeString(from: resolved.rest(for: kind)))
+                        .foregroundStyle(.gray)
+                        .monospacedDigit()
+                },
+                content: {
+                    MinSecPicker(time: $editTime)
+                        .onChange(of: editTime) {
+                            savePicker(into: kind)
+                        }
+                }
+            )
+        }
     }
 
     private var isDefault: Bool {

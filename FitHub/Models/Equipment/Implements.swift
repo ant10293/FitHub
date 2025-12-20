@@ -122,11 +122,13 @@ enum ResistanceBandColor: String, Codable, CaseIterable, Equatable, Hashable {
 
 enum ResistanceBand: Int, Codable, Equatable, Hashable {
     case unselected = 0
-    case extraLight = 1
-    case light = 2
-    case medium = 3
-    case heavy = 4
-    case extraHeavy = 5
+    case extraExtraLight = 1
+    case extraLight = 2
+    case light = 3
+    case medium = 4
+    case heavy = 5
+    case extraHeavy = 6
+    case extraExtraHeavy = 7
     
     static var allCases: [ResistanceBand] {
         // Dynamically get all cases by iterating through raw values starting at 1
@@ -138,33 +140,39 @@ enum ResistanceBand: Int, Codable, Equatable, Hashable {
     var shortName: String {
         switch self {
         case .unselected: return "Select"
+        case .extraExtraLight: return "XX-Light"
         case .extraLight: return "X-Light"
         case .light: return "Light"
         case .medium: return "Medium"
         case .heavy: return "Heavy"
         case .extraHeavy: return "X-Heavy"
+        case .extraExtraHeavy: return "XX-Heavy"
         }
     }
     
     var displayName: String {
         switch self {
         case .unselected: return "Select Band"
+        case .extraExtraLight: return "Extra Extra Light"
         case .extraLight: return "Extra Light"
         case .light: return "Light"
         case .medium: return "Medium"
         case .heavy: return "Heavy"
         case .extraHeavy: return "Extra Heavy"
+        case .extraExtraHeavy: return "Extra Extra Heavy"
         }
     }
     
     var defaultColor: ResistanceBandColor {
         switch self {
         case .unselected: return .blue
-        case .extraLight: return .yellow
+        case .extraExtraLight: return .yellow
+        case .extraLight: return .orange
         case .light: return .green
         case .medium: return .red
         case .heavy: return .blue
-        case .extraHeavy: return .darkGray
+        case .extraHeavy: return .brown
+        case .extraExtraHeavy: return .darkGray
         }
     }
 }

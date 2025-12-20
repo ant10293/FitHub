@@ -360,7 +360,8 @@ extension UserData {
         )
 
         DispatchQueue.global(qos: .userInitiated).async {
-            let output = generator.generate(from: input)
+            let (output, params) = generator.generate(from: input)
+            guard let output, let params else { return }
 
             DispatchQueue.main.async {
                 // Start from generator output
@@ -391,12 +392,14 @@ extension UserData {
                     self.workoutChanges = changes
                     self.showingGenerationWarning = true
                 }
-
+                
                 self.workoutPrefs.paramsBeforeSwitch = .init(
                     resistance: self.workoutPrefs.resistance,
-                    customDistribution: self.workoutPrefs.customDistribution
+                    distribution: params.repsAndSets.distribution,
+                    split: params.workoutWeek,
+                    duration: params.duration
                 )
-
+                
                 if shouldSave { self.saveToFile() }
 
                 onDone()

@@ -54,7 +54,7 @@ final class WorkoutGenerator {
     }
 
     // MARK: – Public façade
-    func generate(from input: Input) -> Output {
+    func generate(from input: Input) -> (output: Output?, params: Parameters?) {
         let creationDate: Date = Date()
 
         //  Derive all knobs the old method used
@@ -70,9 +70,7 @@ final class WorkoutGenerator {
 
         // Early-exit guard
         guard !params.days.isEmpty else {
-            return Output(trainerTemplates: [],
-                          workoutsStartDate: params.startDate,
-                          workoutsCreationDate: creationDate)
+            return (nil, nil)
         }
 
         // 3️⃣  Build templates day-by-day (selection via selector)
@@ -103,8 +101,8 @@ final class WorkoutGenerator {
         )
 
         resetSets() // Clear tracking sets AFTER changelog generation
-
-        return Output(
+        
+        let output = Output(
             trainerTemplates: templates,
             workoutsStartDate: params.startDate,
             workoutsCreationDate: creationDate,
@@ -112,6 +110,8 @@ final class WorkoutGenerator {
             changelog: changelog,
             changes: changes
         )
+
+        return (output, params)
     }
 }
 

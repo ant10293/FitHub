@@ -20,12 +20,11 @@ struct WorkoutCustomization: View {
     @State private var showingSupersetSettings: Bool = false
     @State private var showAlert: Bool = false
     @State private var keepCurrentExercises: Bool = false
-    @State private var isDurationExpanded = false
+    @State private var isDurationExpanded: Bool = false
     @State private var daysPerWeek: Int = 3
     @State private var selectedResistanceType: ResistanceType = .any
     @State private var selectedDays: [DaysOfWeek] = []
     @State private var selectedSetStructure: SetStructures = .pyramid
-    @State private var duration: TimeSpan = .hrMinToSec(hours: 1, minutes: 0)
     @StateObject private var toast = ToastManager()
 
     var body: some View {
@@ -201,7 +200,7 @@ struct WorkoutCustomization: View {
     }
 
     private var distributionSelector: some View {
-        let defaultDist = ctx.userData.physical.goal.defaultDistribution
+        let defaultDist = defaultRepsAndSets.distribution
         let showWarning = (paramsBeforeSwitch?.contains(.distribution) == true)
 
         return DisclosureGroup {
@@ -228,16 +227,11 @@ struct WorkoutCustomization: View {
     }
 
     private var workoutDurationSelector: some View {
-        let defaultDuration = WorkoutParams.defaultWorkoutDuration(
-            age: ctx.userData.profile.age,
-            frequency: daysPerWeek,
-            strengthLevel: ctx.userData.evaluation.strengthLevel,
-            goal: ctx.userData.physical.goal
-        )
+        let showWarning = (paramsBeforeSwitch?.contains(.duration) == true)
         let binding = Binding<TimeSpan>(
             get: { ctx.userData.workoutPrefs.customDuration ?? defaultDuration },
             set: { newDuration in
-                ctx.userData.workoutPrefs.customDuration = newDuration
+                ctx.userData.workoutPrefs.customDuration = (newDuration == defaultDuration) ? nil : newDuration
             }
         )
 
@@ -252,6 +246,11 @@ struct WorkoutCustomization: View {
                 })
         } label: {
             HStack {
+                if showWarning {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .imageScale(.medium)
+                        .foregroundStyle(.orange)
+                }
                 Text("Workout Duration")
                 Spacer()
                 Text(binding.wrappedValue.inMinutes > 15 ? binding.wrappedValue.displayString : defaultDuration.displayString)
@@ -280,6 +279,7 @@ struct WorkoutCustomization: View {
     }
 
     private var splitSelector: some View {
+        let showWarning = (paramsBeforeSwitch?.contains(.split) == true)
         let splitWarning = WorkoutWeek.splitWarning(
             customSplit: ctx.userData.workoutPrefs.customWorkoutSplit,
             daysPerWeek: daysPerWeek
@@ -288,6 +288,11 @@ struct WorkoutCustomization: View {
             Button(action: { showingSplitSelection = true }) {
                 VStack {
                     HStack {
+                        if showWarning {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .imageScale(.medium)
+                                .foregroundStyle(.orange)
+                        }
                         Text("Customize Split")
                             .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
                         Spacer()
@@ -424,7 +429,16 @@ struct WorkoutCustomization: View {
 
     private var paramsBeforeSwitch: Set<ParamsBeforeSwitch.ParamsChanged>? {
         guard keepCurrentExercises, let params = ctx.userData.workoutPrefs.paramsBeforeSwitch else { return nil }
-        return params.getChanges(resistance: selectedResistanceType, distribution: ctx.userData.workoutPrefs.customDistribution)
+        
+        return params.getChanges(
+            resistance: selectedResistanceType,
+            distribution: distribution,
+            split: WorkoutWeek.determineSplit(
+                customSplit: ctx.userData.workoutPrefs.customWorkoutSplit,
+                daysPerWeek: daysPerWeek
+            ),
+            duration: ctx.userData.workoutPrefs.customDuration ?? defaultDuration
+        )
     }
 
     private var distribution: EffortDistribution {
@@ -432,6 +446,15 @@ struct WorkoutCustomization: View {
     }
 
     private var defaultRepsAndSets: RepsAndSets { RepsAndSets.defaultRepsAndSets(for: ctx.userData.physical.goal) }
+    
+    private var defaultDuration: TimeSpan {
+        return WorkoutParams.defaultWorkoutDuration(
+            age: ctx.userData.profile.age,
+            frequency: daysPerWeek,
+            strengthLevel: ctx.userData.evaluation.strengthLevel,
+            goal: ctx.userData.physical.goal
+        )
+    }
 
     private func initializeVariables() {
         daysPerWeek = ctx.userData.workoutPrefs.workoutDaysPerWeek
