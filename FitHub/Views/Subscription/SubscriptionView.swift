@@ -10,59 +10,47 @@ struct SubscriptionView: View {
     @State private var hasClaimedCode: Bool = false
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                Spacer()
-
-                if let banner = lifetimeCancellationBannerConfig {
-                    SubscriptionWarningBanner(message: banner.message) {
-                        manageSubscriptions(openURL: openURL)
-                    }
+        VStack(spacing: 20) {
+            if let banner = lifetimeCancellationBannerConfig {
+                SubscriptionWarningBanner(message: banner.message) {
+                    manageSubscriptions(openURL: openURL)
                 }
-                // MARK: Affiliate System guard
-                if useAffiliateSystem {
-                    referralCodeSection
-                }
+            }
+            // MARK: Affiliate System guard
+            if useAffiliateSystem {
+                referralCodeSection
+            }
 
-                plansSection
+            plansSection
 
-                if let note = autoRenewFootnote {
-                    Text(note)
+            if let note = autoRenewFootnote {
+                Text(note)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+
+            VStack(spacing: 12) {
+                if isCurrentSelection {
+                    Text("You’re already on this plan.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
                 }
 
-                VStack(spacing: 12) {
-                    if isCurrentSelection {
-                        Text("You’re already on this plan.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
+                RectangularButton(
+                    title: "Continue",
+                    systemImage: "arrow.forward.circle.fill",
+                    enabled: isCheckoutEnabled,
+                    action: purchaseSelected
+                )
 
-                    RectangularButton(
-                        title: "Continue",
-                        systemImage: "arrow.forward.circle.fill",
-                        enabled: isCheckoutEnabled,
-                        action: purchaseSelected
-                    )
-
-                    HStack(spacing: 12) {
-                        // FIXME: this doesnt even do anything. this is likely because we're working with a dev version
-                        Button("Restore") { Task { await ctx.store.restore() } }
-                            .buttonStyle(.bordered)
-
-                        if showsManageButton {
-                            Button("Manage") { manageSubscriptions(openURL: openURL) }
-                                .buttonStyle(.bordered)
-                        }
-                    }
+                if showsManageButton {
+                    Button("Manage") { manageSubscriptions(openURL: openURL) }
+                        .buttonStyle(.bordered)
                 }
-
-                Spacer()
             }
-            .padding()
         }
+        .padding()
         .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
         .navigationBarTitle("FitHub Pro", displayMode: .inline)
         .task {

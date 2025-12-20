@@ -262,11 +262,6 @@ final class PremiumStore: ObservableObject {
         }
     }
 
-    func restore() async {
-        // With StoreKit 2, entitlement refresh generally suffices
-        await refreshEntitlementWithRetry()
-    }
-
     func autoRenewFootnote(for product: Product) -> String? {
         let membership = MembershipType.from(productID: product.id)
         guard membership.isSubscription else { return nil }
