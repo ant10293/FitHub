@@ -16,7 +16,7 @@ struct Implements: Codable, Equatable, Hashable {
         if let w = weights {
             return w.sortedImplements().map { String($0.resolvedMass.displayValue) }.joined(separator: ", ")
         } else if let rb = resistanceBands {
-            return rb.availableBands.map { $0.level.displayName }.joined(separator: ", ")
+            return rb.availableBands.map { $0.level.shortName }.joined(separator: ", ")
         }
         return nil
     }

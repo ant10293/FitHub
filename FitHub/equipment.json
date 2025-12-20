@@ -150,6 +150,7 @@
         "baseWeight": { "lb": 20, "kg": 10 },
         "pegCount": 2,
         "implementation": "Individual",
+        "weightInstruction": "Per Handle",
         "alternativeEquipment": ["Dumbbells","Kettlebells"]
     },
     {

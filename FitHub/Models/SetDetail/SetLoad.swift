@@ -36,7 +36,7 @@ enum SetLoad: Codable, Equatable, Hashable {
         switch self {
         case .weight(let m): return m.displayString
         case .distance(let d): return d.displayString
-        case .band(let b): return b.level.displayName
+        case .band(let b): return b.level.shortName
         case .none: return ""
         }
     }
@@ -45,7 +45,7 @@ enum SetLoad: Codable, Equatable, Hashable {
         switch self {
         case .weight(let m): return m.formattedText()
         case .distance(let d): return d.formattedText
-        case .band(let b): return Text(b.level.displayName)
+        case .band(let b): return Text(b.level.shortName)
         case .none: return Text("Body-weight")
         }
     }
