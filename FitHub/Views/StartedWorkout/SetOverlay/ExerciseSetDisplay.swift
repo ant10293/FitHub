@@ -141,7 +141,8 @@ struct ExerciseSetDisplay: View {
                             setDetail.load = $0
                             validateSet()
                         }
-                    )
+                    ),
+                    exercise: exercise
                 )
                 .id(setDetail.id) // refresh for new set
             }

@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-
 struct Exercise: Identifiable, Hashable, Codable {
     let id: UUID
     let name: String
@@ -195,7 +194,8 @@ extension Exercise {
         case .weightXreps, .weightXtime, .weightXdistance:
             return .weight(Mass(kg: 0))
         case .bandXreps:
-            return .band(.extraLight)
+            // Return band with unselected level to indicate selection needed
+            return .band(ResistanceBandImplement(level: .unselected))
         case .distanceXtimeOrSpeed:
             return .distance(Distance(km: 0))
         case .repsOnly, .timeOnly:
@@ -212,7 +212,7 @@ extension Exercise {
         case .weightXdistance:
             return .carry(Meters(meters: 0))
         case .distanceXtimeOrSpeed:
-            return .cardio(TimeOrSpeed(time: TimeSpan(seconds: 0), distance: Distance(km: 0)))
+            return .cardio(TimeOrSpeed())
         }
     }
 
@@ -359,13 +359,9 @@ extension Exercise {
                     }
                 }
                 
-            case .band(let currentBand):
+            case .band(let currentBandImpl):
                 // Bands: calculate new target weight and find matching band level
-                guard let currentBandWeight = getCurrentBandWeight(currentBand, equipmentData: equipmentData) else {
-                    // Fallback: just update reps if we can't find band
-                    updated.bumpPlanned(by: overloadProgress)
-                    break
-                }
+                let currentBandWeight = currentBandImpl.weight.resolvedMass.inKg
                 
                 var targetKg: Double? = nil
                 switch style {
@@ -387,8 +383,8 @@ extension Exercise {
                     }
                 }
                 
-                if let target = targetKg, let bestBand = findBestBandLevel(for: target, equipmentData: equipmentData) {
-                    updated.load = .band(bestBand)
+                if let target = targetKg, let bestBandImpl = findBestBandImplement(for: target, equipmentData: equipmentData) {
+                    updated.load = .band(bestBandImpl)
                 }
                 
             // TODO: implement for distance
@@ -416,21 +412,20 @@ extension Exercise {
             case .weight(let weight):
                 let scaledKg = weight.inKg * deloadFactor
                 updated.load = .weight(equipmentData.roundWeight(Mass(kg: scaledKg), for: equipmentRequired, rounding: rounding))
-            case .band(let currentBand):
+                
+            case .band(let currentBandImpl):
                 // Bands: calculate scaled weight and find matching band level
-                guard let currentBandWeight = getCurrentBandWeight(currentBand, equipmentData: equipmentData) else {
-                    // Fallback: just scale reps if we can't find band
-                    updated.planned = setDetail.planned.scaling(by: deloadFactor)
-                    break
-                }
+                let currentBandWeight = currentBandImpl.weight.resolvedMass.inKg
                 let scaledKg = currentBandWeight * deloadFactor
                 
-                if let bestBand = findBestBandLevel(for: scaledKg, equipmentData: equipmentData) {
-                    updated.load = .band(bestBand)
+                if let bestBandImpl = findBestBandImplement(for: scaledKg, equipmentData: equipmentData) {
+                    updated.load = .band(bestBandImpl)
                 }
+                
             // TODO: implement for distance
             case .distance:
                 break
+                
             case .none:
                 // Bodyweight: scale planned target
                 updated.planned = setDetail.planned.scaling(by: deloadFactor)
@@ -580,8 +575,9 @@ extension Exercise {
                 // For bandXreps, find the band level that matches the target weight
                 if unitType == .bandXreps {
                     let targetKg = targetWeight.inKg
-                    let bestBand = findBestBandLevel(for: targetKg, equipmentData: equipmentData) ?? .extraLight
-                    load = .band(bestBand)
+                    let bestBandImpl = findBestBandImplement(for: targetKg, equipmentData: equipmentData) ?? 
+                        ResistanceBandImplement(level: .extraLight, color: nil, weight: BaseWeight(weight: 0))
+                    load = .band(bestBandImpl)
                 } else {
                     // Standard weight-based
                     let roundedWeight = equipmentData.roundWeight(targetWeight, for: equipmentRequired, rounding: rounding)
@@ -712,9 +708,9 @@ extension Exercise {
             let targetKg = baseKg * intensityPct
             let roundedWeight = equipmentData.roundWeight(Mass(kg: targetKg), for: equipmentRequired, rounding: rounding)
 
-                details.append(
-                    SetDetail(
-                        setNumber: idx,
+            details.append(
+                SetDetail(
+                    setNumber: idx,
                     load: .weight(roundedWeight),
                     planned: .reps(firstSetReps) // Keep reps the same as first working set
                 )
@@ -741,29 +737,12 @@ extension Exercise {
         }
     }
     
-    /// Gets the current band weight for a given band level.
-    /// Returns nil if the band is not found in available implements.
-    private func getCurrentBandWeight(_ band: ResistanceBand, equipmentData: EquipmentData) -> Double? {
-        let equipment = equipmentData.equipmentForExercise(self, inclusion: .dynamic, available: [])
-        guard let bands = equipment.first?.availableImplements?.resistanceBands,
-              let bandImpl = bands.band(for: band) else {
-            return nil
-        }
-        return bandImpl.weight.resolvedMass.inKg
-    }
-    
-    /// Finds the best matching resistance band level for a given target weight (in kg).
-    /// Returns nil if no bands are available, otherwise returns the band level closest to the target weight.
-    private func findBestBandLevel(for targetKg: Double, equipmentData: EquipmentData) -> ResistanceBand? {
-        let equipment = equipmentData.equipmentForExercise(self, inclusion: .dynamic, available: [])
-        guard let bands = equipment.first?.availableImplements?.resistanceBands else {
-            return nil
-        }
-        
-        let sortedBands = bands.sortedBands
-        return sortedBands.min(by: {
-            abs($0.weight.resolvedMass.inKg - targetKg) < abs($1.weight.resolvedMass.inKg - targetKg)
-        })?.level
+    /// Finds the best matching resistance band implement for a given target weight (in kg).
+    /// Returns nil if no bands are available, otherwise returns the band implement closest to the target weight.
+    private func findBestBandImplement(for targetKg: Double, equipmentData: EquipmentData) -> ResistanceBandImplement? {
+        let available = equipmentData.implementsForExercise(self)
+        guard let bands = available?.resistanceBands else { return nil }
+        return bands.bestBand(for: targetKg)
     }
 }
 

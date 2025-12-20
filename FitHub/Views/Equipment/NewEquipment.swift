@@ -62,16 +62,12 @@ struct NewEquipment: View {
                         categoryPicker
                             .disabled(isReadOnly)
 
-                        if EquipmentCategory.platedCats.contains(draft.equCategory) {
-                            pegCountPicker
-                            implementationPicker
-                        }
+                        pegCountPicker
+                        implementationPicker
 
                         AdjustmentPicker(adjustments: $draft.adjustments)
 
-                        if EquipmentCategory.platedCats.contains(draft.equCategory) {
-                            baseWeightField
-                        }
+                        baseWeightField
                         
                         if !isBundledEquipment {
                             ImageField(initialFilename: draft.image, onImageUpdate: { name in
@@ -217,7 +213,9 @@ struct NewEquipment: View {
                 get: { draft.baseWeight?.resolvedMass.displayString ?? "" },
                 set: { input in
                     let value = Double(input) ?? 0
-                    draft.baseWeight?.setWeight(value)
+                    var weight = draft.baseWeight ?? .init(weight: 0)
+                    weight.setWeight(value)
+                    draft.baseWeight = weight
                 }
             ))
             .keyboardType(.numberPad)

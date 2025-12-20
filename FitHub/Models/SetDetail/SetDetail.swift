@@ -24,23 +24,16 @@ struct SetDetail: Identifiable, Hashable, Codable {
         self.planned = planned
     }
 
-    func completedPeakMetric(peak: PeakMetric, availableImplements: Implements? = nil) -> PeakMetric? {
+    func completedPeakMetric(peak: PeakMetric) -> PeakMetric? {
         let metric = completed ?? planned
 
         switch peak {
         case .maxReps: if let reps = metric.repsValue { return .maxReps(reps) }
         case .maxHold: if let held = metric.holdTime { return .maxHold(held) }
         case .oneRepMax:
-            if let reps = metric.repsValue {
-                if let weight = load.weight {
-                    let oneRM = OneRMFormula.calculateOneRepMax(weight: weight, reps: reps, formula: .brzycki)
-                    return .oneRepMax(oneRM)
-                } else if let band = load.band {
-                    // Band-based 1RM - requires availableImplements context
-                    guard let bandWeight = getBandWeight(band: band, availableImplements: availableImplements) else { return nil }
-                    let oneRM = OneRMFormula.calculateOneRepMax(weight: bandWeight, reps: reps, formula: .brzycki)
-                    return .oneRepMax(oneRM)
-                }
+            if let reps = metric.repsValue, let weight = load.weight {
+                let oneRM = OneRMFormula.calculateOneRepMax(weight: weight, reps: reps, formula: .brzycki)
+                return .oneRepMax(oneRM)
             }
         case .hold30sLoad:
             if let hold = metric.holdTime, let weight = load.weight {
@@ -59,7 +52,7 @@ struct SetDetail: Identifiable, Hashable, Codable {
         return nil
     }
 
-    mutating func updateCompletedMetrics(currentBest: PeakMetric, availableImplements: Implements? = nil) -> (newMax: PeakMetric?, lxm: LoadXMetric?) {
+    mutating func updateCompletedMetrics(currentBest: PeakMetric) -> (newMax: PeakMetric?, lxm: LoadXMetric?) {
         // If nothing was logged, persist the planned as the completion.
         if completed == nil { completed = planned } // MARK: Essential for updating peakMetric
         let metric = completed ?? planned
@@ -74,42 +67,23 @@ struct SetDetail: Identifiable, Hashable, Codable {
             return (.maxHold(held), nil)
 
         case .oneRepMax(let best1RM):
-            guard let reps = metric.repsValue, reps > 0 else { return (nil, nil) }
+            guard let reps = metric.repsValue, reps > 0, let weight = load.weight else { return (nil, nil) }
+            guard let candidate = recalculate1RM(best: best1RM, completedWeight: weight, completedReps: reps) else { return (nil, nil) }
+            return (.oneRepMax(candidate), LoadXMetric(load: load, metric: .reps(reps)))
             
-            if let weight = load.weight {
-                // Standard weight-based 1RM calculation
-                guard let candidate = recalculate1RM(best: best1RM, completedWeight: weight, completedReps: reps) else { return (nil, nil) }
-                return (.oneRepMax(candidate), LoadXMetric(load: .weight(weight), metric: .reps(reps)))
-            } else if let band = load.band {
-                // Band-based 1RM calculation
-                guard let bandWeight = getBandWeight(band: band, availableImplements: availableImplements) else { return (nil, nil) }
-                
-                let candidate = OneRMFormula.calculateOneRepMax(weight: bandWeight, reps: reps, formula: .brzycki)
-                guard candidate.inKg > best1RM.inKg else { return (nil, nil) }
-                return (.oneRepMax(candidate), LoadXMetric(load: .band(band), metric: .reps(reps)))
-            }
-            
-            return (nil, nil)
-
         case .hold30sLoad(let bestLoad):
             guard let held = metric.holdTime, held.inSeconds > 0, let weight = load.weight else { return (nil, nil) }
             guard let candidate = recalculateHoldLoad(best: bestLoad, weight: weight, duration: held) else { return (nil, nil) }
-            return (.hold30sLoad(candidate), LoadXMetric(load: .weight(weight), metric: .hold(held)))
+            return (.hold30sLoad(candidate), LoadXMetric(load: load, metric: .hold(held)))
 
         case .carry50mLoad(let bestLoad):
             guard let meters = metric.metersValue, meters.inM > 0, let weight = load.weight else { return (nil, nil) }
             guard let candidate = recalculateCarryLoad(best: bestLoad, weight: weight, distance: meters) else { return (nil, nil) }
-            return (.carry50mLoad(candidate), LoadXMetric(load: .weight(weight), metric: .carry(meters)))
+            return (.carry50mLoad(candidate), LoadXMetric(load: load, metric: .carry(meters)))
 
         case .none:
             return (nil, nil)
         }
-    }
-
-    private func getBandWeight(band: ResistanceBand, availableImplements: Implements?) -> Mass? {
-        guard let bands = availableImplements?.resistanceBands,
-              let bandImpl = bands.band(for: band) else { return nil }
-        return bandImpl.weight.resolvedMass
     }
     
     private func recalculate1RM(best: Mass, completedWeight: Mass, completedReps: Int) -> Mass? {
@@ -201,7 +175,7 @@ extension SetDetail {
             return W(w) + sepTimes + Text("\(r)") + (simple ? Text("") : light(" reps"))
             
         case(.band(let b), .reps(let r)):
-            return Text(b.displayName) + sepTimes + Text("\(r)") + (simple ? Text("") : light(" reps"))
+            return Text(b.level.displayName) + sepTimes + Text("\(r)") + (simple ? Text("") : light(" reps"))
             
         case (.none, .reps(let r)):
             return Text("\(r)") + (simple ? Text("") : light(" reps"))

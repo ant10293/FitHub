@@ -91,7 +91,7 @@ struct ExerciseWarmUpDetail: View {
                         load: row.load,  // Use actual load from setDetails
                         metric: row.planned,
                         loadField: {
-                            SetLoadEditor(load: $row.load)
+                            SetLoadEditor(load: $row.load, exercise: exercise)
                                 .textFieldStyle(.roundedBorder)
                         },
                         metricField: {

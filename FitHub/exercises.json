@@ -16,8 +16,8 @@
       "equipmentRequired": [ "Flat Bench Rack", "Barbell" ],
       "muscles": [
         { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-        { "engagementPercentage": 91, "submuscleWorked": "Sternocostal Head" },
-        { "engagementPercentage": 9, "submuscleWorked": "Clavicular Head" }
+        { "engagementPercentage": 90, "submuscleWorked": "Sternocostal Head" },
+        { "engagementPercentage": 10, "submuscleWorked": "Clavicular Head" }
         ] },
         { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
             { "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },

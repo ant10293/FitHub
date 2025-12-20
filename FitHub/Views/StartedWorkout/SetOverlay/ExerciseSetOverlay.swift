@@ -21,7 +21,6 @@ struct ExerciseSetOverlay: View {
     let onClose: () -> Void
     let viewDetail: () -> Void
     let getPriorMax: (Exercise.ID) -> PeakMetric?
-    let getAvailableImplements: (Exercise) -> Implements?
     let onPerformanceUpdate: (PerformanceUpdate) -> Void
     let saveTemplate: (Binding<SetDetail>, Binding<Exercise>) -> Void
 
@@ -160,8 +159,7 @@ struct ExerciseSetOverlay: View {
 
         // ── A) Repetition-driven sets (compound/isolation) ─────────────────────
         let best: PeakMetric = priorMax ?? exercise.getPeakMetric(metricValue: 0)
-        let availableImplements = getAvailableImplements(exercise)
-        let result = setDetail.wrappedValue.updateCompletedMetrics(currentBest: best, availableImplements: availableImplements)
+        let result = setDetail.wrappedValue.updateCompletedMetrics(currentBest: best)
         if let newPR = result.newMax {
             onPerformanceUpdate(PerformanceUpdate(
                 exerciseId: exercise.id,

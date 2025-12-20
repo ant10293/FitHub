@@ -94,7 +94,7 @@ struct ExerciseSetDetail: View {
                 metric: set.planned,
                 screenWidth: screenWidth,
                 loadField: {
-                    SetLoadEditor(load: $set.load)
+                    SetLoadEditor(load: $set.load, exercise: exercise)
                         .textFieldStyle(.roundedBorder)
                 },
                 metricField: {

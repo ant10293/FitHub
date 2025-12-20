@@ -16,7 +16,7 @@ struct Implements: Codable, Equatable, Hashable {
         if let w = weights {
             return w.sortedImplements().map { String($0.resolvedMass.displayValue) }.joined(separator: ", ")
         } else if let rb = resistanceBands {
-            return rb.sortedBands.map { $0.level.displayName }.joined(separator: ", ")
+            return rb.availableBands.map { $0.level.displayName }.joined(separator: ", ")
         }
         return nil
     }
@@ -85,7 +85,7 @@ enum ResistanceBandColor: String, Codable, CaseIterable, Equatable, Hashable {
         case .green: return .green
         case .red: return .red
         case .blue: return .blue
-        case .darkGray: return Color(white: 0.13) // #212121
+        case .darkGray: return Color(white: 0.33) // #212121
         case .orange: return .orange
         case .purple: return .purple
         case .pink: return .pink
@@ -120,17 +120,24 @@ enum ResistanceBandColor: String, Codable, CaseIterable, Equatable, Hashable {
     }
 }
 
-enum ResistanceBand: Int, Codable, CaseIterable, Equatable, Hashable {
+enum ResistanceBand: Int, Codable, Equatable, Hashable {
+    case unselected = 0
     case extraLight = 1
     case light = 2
     case medium = 3
     case heavy = 4
     case extraHeavy = 5
     
+    static var allCases: [ResistanceBand] {
+        // Dynamically get all cases by iterating through raw values starting at 1
+        (1...10).compactMap { ResistanceBand(rawValue: $0) }
+    }
+    
     var level: Int { rawValue }
     
     var shortName: String {
         switch self {
+        case .unselected: return "Select"
         case .extraLight: return "X-Light"
         case .light: return "Light"
         case .medium: return "Medium"
@@ -141,6 +148,7 @@ enum ResistanceBand: Int, Codable, CaseIterable, Equatable, Hashable {
     
     var displayName: String {
         switch self {
+        case .unselected: return "Select Band"
         case .extraLight: return "Extra Light"
         case .light: return "Light"
         case .medium: return "Medium"
@@ -151,6 +159,7 @@ enum ResistanceBand: Int, Codable, CaseIterable, Equatable, Hashable {
     
     var defaultColor: ResistanceBandColor {
         switch self {
+        case .unselected: return .blue
         case .extraLight: return .yellow
         case .light: return .green
         case .medium: return .red
@@ -163,7 +172,8 @@ enum ResistanceBand: Int, Codable, CaseIterable, Equatable, Hashable {
 struct ResistanceBandImplement: Codable, Equatable, Hashable {
     let level: ResistanceBand
     var color: ResistanceBandColor?
-    var weight: BaseWeight
+    var weight: BaseWeight = .init(weight: 0)
+    var isAvailable: Bool = true
     
     var resolvedColor: ResistanceBandColor {
         color ?? level.defaultColor
@@ -171,7 +181,6 @@ struct ResistanceBandImplement: Codable, Equatable, Hashable {
 }
 
 struct ResistanceBands: Codable, Equatable, Hashable {
-    var useAllDefaults: Bool?
     var bands: [ResistanceBandImplement]? = nil
     
     /// Temporary field for manual band entry from JSON: [String: BaseWeight]
@@ -180,52 +189,76 @@ struct ResistanceBands: Codable, Equatable, Hashable {
     /// In JSON, use nested structure: "resistanceBands": { "bandsDict": { "1": {...}, "2": {...} } }
     var bandsDict: [String: BaseWeight]?
     
+    func bestBand(for targetKg: Double) -> ResistanceBandImplement? {
+        return availableBands.min(by: {
+            abs($0.weight.resolvedMass.inKg - targetKg) < abs($1.weight.resolvedMass.inKg - targetKg)
+        })
+    }
+    
     var sortedBands: [ResistanceBandImplement] {
-        (bands ?? []).sorted { $0.level.rawValue < $1.level.rawValue }
+        allBands.sorted { $0.level.rawValue < $1.level.rawValue }
+    }
+    
+    var availableBands: [ResistanceBandImplement] {
+        sortedBands.filter { $0.isAvailable }
+    }
+    
+    var allSelected: Bool {
+        allBands.allSatisfy { $0.isAvailable }
+    }
+    
+    private var allBands: [ResistanceBandImplement] {
+        // Lazy initialization: return all 5 levels, creating missing ones on read
+        var result = bands ?? []
+        for level in ResistanceBand.allCases {
+            if result.first(where: { $0.level == level }) == nil {
+                result.append(ResistanceBandImplement(level: level, isAvailable: false))
+            }
+        }
+        return result
     }
     
     // Helper to find band by level
     func band(for level: ResistanceBand) -> ResistanceBandImplement? {
-        (bands ?? []).first { $0.level == level }
+        allBands.first { $0.level == level }
     }
     
     func isAvailable(_ level: ResistanceBand) -> Bool {
-        band(for: level) != nil
+        band(for: level)?.isAvailable ?? false
     }
     
     mutating func toggle(_ level: ResistanceBand) {
-        var arr = bands ?? []
-        if let index = arr.firstIndex(where: { $0.level == level }) {
-            arr.remove(at: index)
-        } else {
-            arr.append(ResistanceBandImplement(level: level, color: nil, weight: BaseWeight(weight: 0)))
+        ensureBandsInitialized()
+        if let index = bands?.firstIndex(where: { $0.level == level }) {
+            bands?[index].isAvailable.toggle()
         }
-        bands = arr
+    }
+    
+    private mutating func ensureBandsInitialized() {
+        if bands == nil {
+            bands = ResistanceBand.allCases.map { level in
+                ResistanceBandImplement(level: level, isAvailable: false)
+            }
+        }
     }
     
     mutating func updateColor(_ level: ResistanceBand, color: ResistanceBandColor?) {
-        var arr = bands ?? []
-        if let index = arr.firstIndex(where: { $0.level == level }) {
-            arr[index].color = color
-        } else {
-            arr.append(ResistanceBandImplement(level: level, color: color, weight: BaseWeight(weight: 0)))
+        ensureBandsInitialized()
+        if let index = bands?.firstIndex(where: { $0.level == level }) {
+            bands?[index].color = color
         }
-        bands = arr
     }
     
     mutating func updateWeight(_ level: ResistanceBand, weight: Double) {
-        var arr = bands ?? []
-        if let index = arr.firstIndex(where: { $0.level == level }) {
-            arr[index].weight.setWeight(weight)
-        } else {
-            arr.append(ResistanceBandImplement(level: level, color: nil, weight: BaseWeight(weight: weight)))
+        ensureBandsInitialized()
+        if let index = bands?.firstIndex(where: { $0.level == level }) {
+            bands?[index].weight.setWeight(weight)
         }
-        bands = arr
     }
     
     func bandImplement(for level: ResistanceBand) -> ResistanceBandImplement {
         if let existing = band(for: level) { return existing }
-        return ResistanceBandImplement(level: level, color: nil, weight: BaseWeight(weight: 0))
+        return ResistanceBandImplement(level: level, isAvailable: false)
     }
     
     func availableColors(for level: ResistanceBand) -> [ResistanceBandColor] {
@@ -241,14 +274,6 @@ struct ResistanceBands: Codable, Equatable, Hashable {
         }
     }
     
-    /// Populate defaults for all five levels if needed.
-    mutating private func populateDefaultsIfNeeded() {
-        guard bands?.isEmpty ?? true else { return }
-        bands = ResistanceBand.allCases.map { level in
-            ResistanceBandImplement(level: level, color: nil, weight: BaseWeight(weight: 0))
-        }
-    }
-    
     /// Apply defaults and convert bandsDict to bands array if needed.
     mutating func applyDefaults() {
         // Convert manually entered bands dictionary to ResistanceBandImplement array
@@ -256,31 +281,31 @@ struct ResistanceBands: Codable, Equatable, Hashable {
             bands = dict.compactMap { (levelString, weight) -> ResistanceBandImplement? in
                 guard let levelInt = Int(levelString),
                       let level = ResistanceBand(rawValue: levelInt) else { return nil }
-                return ResistanceBandImplement(level: level, color: nil, weight: weight)
+                return ResistanceBandImplement(level: level, weight: weight, isAvailable: true)
             }
             bandsDict = nil
         }
         
-        if useAllDefaults == true {
-            populateDefaultsIfNeeded()
-        }
-        useAllDefaults = nil
-    }
-    
-    var allSelected: Bool {
-        ResistanceBand.allCases.allSatisfy { isAvailable($0) }
+        // Ensure all bands exist after applying defaults
+        ensureBandsInitialized()
     }
     
     mutating func selectAll() {
-        for level in ResistanceBand.allCases {
-            if !isAvailable(level) {
-                toggle(level)
-            }
+        ensureBandsInitialized()
+        guard var bands = bands else { return }
+        for index in bands.indices {
+            bands[index].isAvailable = true
         }
+        self.bands = bands
     }
     
     mutating func deselectAll() {
-        bands = []
+        ensureBandsInitialized()
+        guard var bands = bands else { return }
+        for index in bands.indices {
+            bands[index].isAvailable = false
+        }
+        self.bands = bands
     }
 }
 
@@ -296,6 +321,11 @@ struct Weights: Codable, Equatable, Hashable {
     
     /// Temporary field decoded from JSON to generate implements; should be discarded after generation.
     var availableRange: WeightRange?
+    
+    var allSelected: Bool {
+        let allWeights = allWeights()
+        return !allWeights.isEmpty && allWeights.allSatisfy { isSelected($0) }
+    }
     
     func sortedImplements(ascending: Bool = true) -> [BaseWeight] {
         (implements ?? []).sorted { ascending
@@ -363,11 +393,6 @@ struct Weights: Codable, Equatable, Hashable {
             }
         }
         availableRange = nil
-    }
-    
-    var allSelected: Bool {
-        let allWeights = allWeights()
-        return !allWeights.isEmpty && allWeights.allSatisfy { isSelected($0) }
     }
     
     mutating func selectAll() {

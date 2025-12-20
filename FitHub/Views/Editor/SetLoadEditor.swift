@@ -7,8 +7,10 @@
 import SwiftUI
 
 struct SetLoadEditor: View {
+    @EnvironmentObject var ctx: AppContext
     @Binding var load: SetLoad
     @State var localText: String = ""
+    let exercise: Exercise
 
     var body: some View {
         switch load {
@@ -23,22 +25,37 @@ struct SetLoadEditor: View {
                     .multilineTextAlignment(.center)
             }
             
-        case .band(let currentBand):
+        case .band(let currentBandImpl):
+            let available = ctx.equipment.implementsForExercise(exercise)
+            let availableBands = available?.resistanceBands?.availableBands ?? []
+            
             Menu {
-                ForEach(ResistanceBand.allCases, id: \.self) { band in
-                    Button(action: {
-                        load = .band(band)
-                    }) {
+                if availableBands.isEmpty {
+                    // If no bands available, still show the current one (in case it was set before)
+                    Button(action: {}) {
                         HStack {
-                            Text(band.displayName)
-                            if band == currentBand {
-                                Image(systemName: "checkmark")
+                            Text(currentBandImpl.level.displayName)
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                    .disabled(true)
+                } else {
+                    ForEach(availableBands, id: \.level) { bandImpl in
+                        Button(action: {
+                            load = .band(bandImpl)
+                        }) {
+                            HStack {
+                                Text(bandImpl.level.displayName)
+                                if bandImpl.level == currentBandImpl.level {
+                                    Image(systemName: "checkmark")
+                                }
                             }
                         }
                     }
                 }
             } label: {
-                TextField(placeholder, text: .constant(currentBand.shortName))
+                TextField(placeholder, text: .constant(currentBandImpl.level.shortName))
+                    .foregroundStyle(currentBandImpl.resolvedColor.color)
                     .multilineTextAlignment(.center)
             }
         }
