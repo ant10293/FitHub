@@ -11,21 +11,21 @@ import SwiftUI
 /// the result back to *kilograms*.
 
 struct WeightSelectorRow: View {
-    @AppStorage(UnitSystem.storageKey) private var unit: UnitSystem = .metric
+    @EnvironmentObject private var ctx: AppContext
     @Binding var weight: Mass
 
     /// This is the visible binding the wheel sees (kg or lb depending on system)
     private var weightBinding: Binding<CGFloat> {
         Binding(
             get: {
-                if unit == .imperial {
+                if ctx.unitSystem == .imperial {
                     CGFloat(weight.inLb)
                 } else {
                     CGFloat(weight.inKg)
                 }
             },
             set: { newVal in
-                if unit == .imperial {
+                if ctx.unitSystem == .imperial {
                     weight.setLb(newVal)
                 } else {
                     weight.setKg(newVal)

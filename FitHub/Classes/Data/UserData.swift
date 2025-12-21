@@ -24,7 +24,6 @@ final class UserData: ObservableObject, Codable {
 
     // MARK: – Non-persisting variables
     @Published var isWorkingOut: Bool = false
-    @Published var disableTabView: Bool = false
     @Published var isGeneratingWorkout: Bool = false // set it to true before starting, and set it back to false after the background save completes
 
     @Published var showingChangelog: Bool = false

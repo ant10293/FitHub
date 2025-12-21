@@ -14,7 +14,8 @@ enum UnitSystem: String, Codable, CaseIterable {
 
     static let storageKey = "unitSystem"
 
-    static var current: UnitSystem {
+    nonisolated(unsafe) static var current: UnitSystem {
+        // Read from UserDefaults (always in sync because AppContext updates it immediately)
         let raw = UserDefaults.standard.string(forKey: storageKey) ?? UnitSystem.metric.rawValue
         return UnitSystem(rawValue: raw) ?? .metric
     }

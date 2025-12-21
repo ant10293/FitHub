@@ -15,7 +15,7 @@ final class AppContext: ObservableObject {
 
     // MARK: –  App‑wide singletons / services (stateless or long‑lived)
     // ------------------------------------------------------------------
-    let persistence: PersistenceController = .shared       // Core Data wrapper
+    let persistence: PersistenceController = .shared       // Core Data wrapper
 
     // MARK: –  Domain data models that views observe via `@Published`
     // ------------------------------------------------------------------
@@ -24,6 +24,11 @@ final class AppContext: ObservableObject {
     @Published var exercises = ExerciseData()      // Exercise catalogue & stats
     @Published var equipment = EquipmentData()
     @Published var store: PremiumStore
+    @Published var unitSystem: UnitSystem {
+        didSet {
+            UserDefaults.standard.set(unitSystem.rawValue, forKey: UnitSystem.storageKey)
+        }
+    }
 
     // MARK: –  Private
     private var sinks = Set<AnyCancellable>()
@@ -34,6 +39,10 @@ final class AppContext: ObservableObject {
         // Load persisted user‑modifiable models (or fallback to defaults)
         self.userData = UserData.loadFromFile() ?? .init()
         self.store = PremiumStore(appAccountToken: nil)
+        
+        // Load unit system from UserDefaults
+        let raw = UserDefaults.standard.string(forKey: UnitSystem.storageKey) ?? UnitSystem.metric.rawValue
+        self.unitSystem = UnitSystem(rawValue: raw) ?? .metric
 
         // Forward child updates so that *any* change triggers a view refresh
         stitch(userData)
@@ -102,6 +111,7 @@ final class AppContext: ObservableObject {
         self.adjustments = newAdjustments
         self.exercises = newExercises
         self.equipment = newEquipment
+        // Note: unitSystem is not reset here - it persists across sign out
 
         stitch(userData)
         stitch(adjustments)

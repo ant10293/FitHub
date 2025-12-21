@@ -3,8 +3,7 @@ import HealthKit
 
 
 struct HealthKitRequestView: View {
-    @AppStorage(UnitSystem.storageKey) var unit: UnitSystem = .metric
-    @ObservedObject var userData: UserData
+    @EnvironmentObject private var ctx: AppContext
     @StateObject private var healthKit = HealthKitManager()
 
     var body: some View {
@@ -19,8 +18,8 @@ struct HealthKitRequestView: View {
         }
         .navigationBarBackButtonHidden(true) // Hiding the back button
         .onAppear {
-            unit = UnitSystem.preferredUnitSystem()
-            healthKit.requestAuthorization(userData: userData)
+            ctx.unitSystem = UnitSystem.preferredUnitSystem()
+            healthKit.requestAuthorization(userData: ctx.userData)
         }
     }
 }

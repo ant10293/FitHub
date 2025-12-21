@@ -1199,9 +1199,9 @@
 		65CD3BF52DD3C84F00C2B671 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				65CD3BF02DD3C84F00C2B671 /* SettingsView.swift */,
 				65B936E72EE3AC0C00D80950 /* SupersetSettingsView.swift */,
 				658D801D2EDCF8440041FB4D /* WarmupSettingsView.swift */,
-				65CD3BF02DD3C84F00C2B671 /* SettingsView.swift */,
 				65CD3BE82DD3C84F00C2B671 /* ChangeLanguage.swift */,
 				65CD3BE92DD3C84F00C2B671 /* ChangeTheme.swift */,
 				65CD3BEA2DD3C84F00C2B671 /* HealthKitSettings.swift */,

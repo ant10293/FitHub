@@ -3,21 +3,13 @@ import SwiftUI
 
 
 struct DetailsView: View {
-    @AppStorage(UnitSystem.storageKey) private var unit: UnitSystem = .metric
-    @ObservedObject var userData: UserData
+    @EnvironmentObject private var ctx: AppContext
     @State private var selectedGender: Gender?
     @State private var dob: Date = Date()
-    @State private var height: Length
-    @State private var weight: Mass
+    @State private var height: Length = Length(cm: 0)
+    @State private var weight: Mass = Mass(kg: 0)
     @State private var activePicker: ActivePicker = .none
-
-    init(userData: UserData) {
-        self.userData = userData
-        _dob = State(initialValue: userData.profile.dob ?? Date())
-        _height = State(initialValue: userData.physical.height)
-        _weight = State(initialValue: Mass(kg: userData.currentMeasurementValue(for: .weight).actualValue))
-        _selectedGender = State(initialValue: userData.physical.gender)
-    }
+    @State private var hasInitialized = false
 
     var body: some View {
         VStack {
@@ -31,16 +23,25 @@ struct DetailsView: View {
             Spacer()
         }
         .padding(.top)
-        .navigationTitle("Hello \(userData.profile.firstName)")
+        .navigationTitle("Hello \(ctx.userData.profile.firstName)")
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            if !hasInitialized {
+                dob = ctx.userData.profile.dob ?? Date()
+                height = ctx.userData.physical.height
+                weight = Mass(kg: ctx.userData.currentMeasurementValue(for: .weight).actualValue)
+                selectedGender = ctx.userData.physical.gender
+                hasInitialized = true
+            }
+        }
     }
 
     private var unitPicker: some View {
         VStack {
-            Text(unit.desc)
+            Text(ctx.unitSystem.desc)
                 .font(.subheadline)
 
-            Picker("Unit of Measurement", selection: $unit) {
+            Picker("Unit of Measurement", selection: $ctx.unitSystem) {
                 ForEach(UnitSystem.allCases, id: \.self) { unit in
                     Text(unit.rawValue).tag(unit)
                 }
@@ -165,17 +166,17 @@ struct DetailsView: View {
     private enum ActivePicker { case none, height, dob, weight }
 
     private func saveUserData() {
-        userData.checkAndUpdateAge()
+        ctx.userData.checkAndUpdateAge()
         // 1️⃣ Update everything in memory first
-        userData.updateMeasurementValue(for: .weight, with: weight.inKg)
-        userData.setup.setupState = .goalView
-        userData.profile.dob      = dob
-        userData.physical.height  = height
+        ctx.userData.updateMeasurementValue(for: .weight, with: weight.inKg)
+        ctx.userData.setup.setupState = .goalView
+        ctx.userData.profile.dob      = dob
+        ctx.userData.physical.height  = height
         if let gender = selectedGender {
-            userData.physical.gender = gender
+            ctx.userData.physical.gender = gender
         }
 
-        userData.saveToFile()
+        ctx.userData.saveToFile()
     }
 
     private var canContinue: Bool {

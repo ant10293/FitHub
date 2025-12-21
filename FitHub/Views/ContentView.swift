@@ -37,9 +37,9 @@ struct ContentView: View {
                     if ctx.userData.setup.setupState == .welcomeView {
                         WelcomeView()
                     } else if ctx.userData.setup.setupState == .healthKitView {
-                        HealthKitRequestView(userData: ctx.userData)
+                        HealthKitRequestView()
                     } else if ctx.userData.setup.setupState == .detailsView {
-                        DetailsView(userData: ctx.userData)
+                        DetailsView()
                     } else {
                         GoalSelectionView(userData: ctx.userData)
                     }

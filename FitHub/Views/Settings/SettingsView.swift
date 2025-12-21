@@ -23,7 +23,7 @@ struct SettingsView: View {
             navigationLink("target", "Modify Goal") { GoalSelectionView(userData: ctx.userData) }
             // navigationLink("calendar", "Start Week On") { StartWeekOn() }
             //navigationLink("globe", "Change Language") { ChangeLanguage(userData: ctx.userData) }
-            navigationLink("ruler", "Imperial / Metric") { UnitSelection(userData: ctx.userData) }
+            navigationLink("ruler", "Imperial / Metric") { UnitSelection() }
             
             //navigationLink("paintbrush", "Change Theme") { ChangeTheme(userData: ctx.userData) }
         } header: {

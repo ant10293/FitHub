@@ -1,22 +1,13 @@
 import SwiftUI
 
 struct UnitSelection: View {
-    @ObservedObject var userData: UserData
-    @AppStorage(UnitSystem.storageKey) private var unit: UnitSystem = .metric
-    @State private var showRestartNotice = false
-    @State private var initialUnit: UnitSystem = .metric
+    @EnvironmentObject private var ctx: AppContext
 
     var body: some View {
         VStack {
             // Content lives under the pinned header
             descriptionCard
                 .padding(.vertical)
-
-            if showRestartNotice {
-                restartBanner
-                    .padding(.vertical)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-            }
 
             Spacer(minLength: 0)
         }
@@ -29,9 +20,6 @@ struct UnitSelection: View {
                 .padding(.bottom)
         }
         .navigationBarTitle("Unit Selection", displayMode: .inline)
-        .navigationBarBackButtonHidden(showRestartNotice)
-        .animation(.spring(response: 0.28, dampingFraction: 0.9), value: showRestartNotice)
-        .onAppear { initialUnit = unit }
     }
 
     // MARK: - Views
@@ -42,17 +30,12 @@ struct UnitSelection: View {
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Picker("", selection: $unit) {
+            Picker("", selection: $ctx.unitSystem) {
                 ForEach(UnitSystem.allCases, id: \.self) { u in
                     Text(u.displayName).tag(u)
                 }
             }
             .pickerStyle(.segmented)
-            .onChange(of: unit) { _, new in
-                let changed = new != initialUnit
-                showRestartNotice = changed
-                userData.disableTabView = changed
-            }
         }
         .padding(.horizontal)
         .padding(.vertical, 12)
@@ -66,12 +49,12 @@ struct UnitSelection: View {
                 .foregroundStyle(.blue)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(unit.displayName)
+                Text(ctx.unitSystem.displayName)
                     .font(.headline)
-                Text("\(unit.weightUnit) / \(unit.sizeUnit) • \(unit.lengthUnit)")
+                Text("\(ctx.unitSystem.weightUnit) / \(ctx.unitSystem.sizeUnit) • \(ctx.unitSystem.lengthUnit)")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                Text(unit.desc)
+                Text(ctx.unitSystem.desc)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -79,44 +62,5 @@ struct UnitSelection: View {
             Spacer()
         }
         .cardContainer(cornerRadius: 12, backgroundColor: Color(UIColor.secondarySystemBackground))
-    }
-
-    private var restartBanner: some View {
-        VStack(spacing: 12) {
-            HStack(spacing: 8) {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundStyle(.white)
-                    .font(.title3.bold())
-                Text("Restart Required")
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                Spacer()
-            }
-
-            Text("Please restart the app to apply unit changes. Navigation has been temporarily disabled.")
-                .font(.callout)
-                .foregroundStyle(.white.opacity(0.9))
-                .multilineTextAlignment(.leading)
-
-            HStack {
-                Spacer()
-                Button(role: .destructive) {
-                    userData.saveToFile()
-                    exit(0)
-                } label: {
-                    Label("Close App", systemImage: "power")
-                        .fontWeight(.semibold)
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.white.opacity(0.15))
-                Spacer()
-            }
-            .padding(.top, 4)
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.red.gradient)
-        )
     }
 }

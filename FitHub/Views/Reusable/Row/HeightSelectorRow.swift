@@ -1,8 +1,7 @@
 import SwiftUI
 
 struct HeightSelectorRow: View {
-    @AppStorage(UnitSystem.storageKey) private var unit: UnitSystem = .metric
-
+    @EnvironmentObject private var ctx: AppContext
     @Binding var height: Length
 
     @State private var feet: Int   = 0
@@ -15,7 +14,7 @@ struct HeightSelectorRow: View {
 
     var body: some View {
         VStack {
-            if unit == .imperial {
+            if ctx.unitSystem == .imperial {
                 // ft / in wheels
                 HStack(spacing: 0) {
                     Picker("", selection: $feet) {
@@ -64,7 +63,7 @@ struct HeightSelectorRow: View {
         .background(Color(UIColor.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .padding(.horizontal)
-        .onChange(of: unit) { oldUnit, newUnit in
+        .onChange(of: ctx.unitSystem) { oldUnit, newUnit in
             if newUnit == .imperial {
                 syncImperialFromMetric()
             }
