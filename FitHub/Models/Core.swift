@@ -267,7 +267,7 @@ enum RestType: String, CaseIterable, Identifiable, Hashable, Codable {
 }
 
 enum LegalURL {
-    static let urlPrefix = "https://ant10293.github.io/fithub-legal/"
+    static let urlPrefix = "https://legal.fithub-app.com/"
 
     case privacyPolicy, termsOfService, affiliateTerms
 

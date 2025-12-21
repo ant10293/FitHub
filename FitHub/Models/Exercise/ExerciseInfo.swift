@@ -163,6 +163,21 @@ enum LimbMovementType: String, Codable, CaseIterable {
     var weightMultiplier: Double { switch self { case .bilateralIndependent: 2; default: 1 } }
 }
 
+/*
+// TODO: implement these and phase out EffortType
+enum ExerciseComplexity: String, Codable, CaseIterable {
+    case compound
+    case isolation
+}
+
+enum ExerciseModality: String, Codable, CaseIterable {
+    case strength
+    case isometric
+    case plyometric
+    case cardio
+}
+*/
+
 enum EffortType: String, CaseIterable, Identifiable, Codable {
     case compound   = "Compound"    // multi-joint, dynamic
     case isolation  = "Isolation"   // single-joint, dynamic
