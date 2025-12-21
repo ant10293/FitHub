@@ -12,50 +12,41 @@ struct ExerciseView: View {
     @State private var showExerciseCreation: Bool = false
 
     var body: some View {
-        VStack {
-            SplitCategoryPicker(userData: ctx.userData, selectedCategory: $selectedCategory)
-                .padding(.bottom, -5)
-
-            SearchBar(text: $searchText, placeholder: "Search Exercises")
-                .padding(.horizontal)
-
-            List {
-                if filteredExercises.isEmpty {
-                    Text("No exercises available in this category.")
-                        .foregroundStyle(.gray)
-                        .padding()
-                } else {
-                    Section {
-                        ForEach(filteredExercises, id: \.self) { exercise in
-                            let favState = FavoriteState.getState(for: exercise, userData: ctx.userData)
-
-                            ExerciseRow(
-                                exercise,
-                                heartOverlay: true,
-                                favState: favState,
-                                imageSize: 0.2,
-                                detail: {
-                                    ExerciseRowDetails(
-                                        exercise: exercise,
-                                        peak: ctx.exercises.peakMetric(for: exercise.id),
-                                        showAliases: true
-                                    )
-                                },
-                                onTap: {
-                                    kbd.dismiss()
-                                    selectedExerciseId = exercise.id
-                                    viewDetail = true
-                                }
+        FilterableExerciseList(
+            exercises: ctx.exercises,
+            userData: ctx.userData,
+            equipment: ctx.equipment,
+            searchText: $searchText,
+            selectedCategory: $selectedCategory,
+            showingFavorites: $showingFavorites,
+            dislikedOnly: .constant(false),
+            emptyMessage: "No exercises available in this category.",
+            pickerContent: {
+                SplitCategoryPicker(userData: ctx.userData, selectedCategory: $selectedCategory)
+            },
+            exerciseRow: { exercise in
+                AnyView(
+                    ExerciseRow(
+                        exercise,
+                        heartOverlay: true,
+                        favState: FavoriteState.getState(for: exercise, userData: ctx.userData),
+                        imageSize: 0.2,
+                        detail: {
+                            ExerciseRowDetails(
+                                exercise: exercise,
+                                peak: ctx.exercises.peakMetric(for: exercise.id),
+                                showAliases: true
                             )
+                        },
+                        onTap: {
+                            kbd.dismiss()
+                            selectedExerciseId = exercise.id
+                            viewDetail = true
                         }
-                    } footer: {
-                        Text(Format.countText(filteredExercises.count))
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .padding(.vertical, 8)
-                    }
-                }
+                    )
+                )
             }
-        }
+        )
         .onAppear(perform: initializeSelection)
         .navigationBarTitle("Exercises", displayMode: .inline)
         .navigationDestination(isPresented: $viewDetail) {
@@ -81,16 +72,6 @@ struct ExerciseView: View {
                 }
             }
         }
-    }
-
-    private var filteredExercises: [Exercise] {
-        ctx.exercises.filteredExercises(
-            searchText: searchText,
-            selectedCategory: selectedCategory,
-            favoritesOnly: showingFavorites,
-            userData: ctx.userData,
-            equipmentData: ctx.equipment
-        )
     }
     
     private func initializeSelection() {

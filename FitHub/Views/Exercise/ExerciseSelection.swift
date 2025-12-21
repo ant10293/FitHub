@@ -11,7 +11,6 @@ struct ExerciseSelection: View {
     @State private var showingFavorites: Bool = false
     @State private var donePressed: Bool = false
     @State private var templateFilter: Bool = false
-    @State private var filteredExercisesCache: [Exercise] = []
     let templateCategories: [SplitCategory]?
     let mode: SelectionMode     /// Controls behavior / presentation style for this selector.
     let onDone: ([Exercise]) -> Void     /// Called when the user finishes selection.
@@ -59,77 +58,66 @@ struct ExerciseSelection: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
-                if !isOneRMMode {
-                    SplitCategoryPicker(
-                        userData: ctx.userData,
-                        selectedCategory: $selectedCategory,
-                        templateCategories: templateCategories,
-                        onChange: { sortOption in
-                            if sortOption == .templateCategories {
-                                templateFilter = true
-                            } else {
-                                templateFilter = false
+            FilterableExerciseList(
+                exercises: ctx.exercises,
+                userData: ctx.userData,
+                equipment: ctx.equipment,
+                searchText: $searchText,
+                selectedCategory: Binding(
+                    get: { selectedCategory },
+                    set: { selectedCategory = $0 }
+                ),
+                showingFavorites: $showingFavorites,
+                dislikedOnly: .constant(false),
+                templateCategories: templateSortingEnabled ? templateCategories : nil,
+                templateFilter: filterTemplateCats,
+                mode: isPerformanceMode ? .performanceView : .standard,
+                emptyMessage: "No exercises found\(isPerformanceMode ? " with performance data" : "").",
+                showSearchBar: !isOneRMMode,
+                pickerContent: {
+                    if !isOneRMMode {
+                        SplitCategoryPicker(
+                            userData: ctx.userData,
+                            selectedCategory: Binding(
+                                get: { selectedCategory },
+                                set: { selectedCategory = $0 }
+                            ),
+                            templateCategories: templateCategories,
+                            onChange: { sortOption in
+                                templateFilter = (sortOption == .templateCategories)
                             }
-                        }
-                    )
-                    .padding(.bottom, -5)
-                }
-
-                // Search bar
-                SearchBar(text: $searchText, placeholder: "Search Exercises")
-                    .padding(.horizontal)
-
-                // The List of Exercises
-                List {
-                    if filteredExercisesCache.isEmpty {
-                        Text("No exercises found\(isPerformanceMode ? " with performance data" : "").")
-                            .padding()
-                            .multilineTextAlignment(.center)
+                        )
                     } else {
-                        Section {
-                            ForEach(filteredExercisesCache, id: \.id) { exercise in
-                                let favState = FavoriteState.getState(for: exercise, userData: ctx.userData)
-
-                                ExerciseRow(
-                                    exercise,
-                                    heartOverlay: true,
-                                    favState: favState,
-                                    accessory: {
-                                        // trailing icon: chevron or checkbox
-                                        Image(systemName: isSingleSelectImmediate
-                                              ? "chevron.right"
-                                              : (selectedIDs.contains(exercise.id)
-                                                 ? "checkmark.square.fill"
-                                                 : "square"))
-                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                    },
-                                    detail: {
-                                        detailView(for: exercise)
-                                    },
-                                    onTap: {
-                                        handleTap(on: exercise)
-                                    }
-                                )
-                            }
-                        } footer: {
-                            Text(Format.countText(filteredExercisesCache.count))
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .padding(.vertical, 8)
-                        }
+                        EmptyView()
                     }
+                },
+                exerciseRow: { exercise in
+                    AnyView(
+                        ExerciseRow(
+                            exercise,
+                            heartOverlay: true,
+                            favState: FavoriteState.getState(for: exercise, userData: ctx.userData),
+                            accessory: {
+                                Image(systemName: isSingleSelectImmediate
+                                      ? "chevron.right"
+                                      : (selectedIDs.contains(exercise.id)
+                                         ? "checkmark.square.fill"
+                                         : "square"))
+                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                            },
+                            detail: {
+                                detailView(for: exercise)
+                            },
+                            onTap: {
+                                handleTap(on: exercise)
+                            }
+                        )
+                    )
                 }
-            }
+            )
             .navigationBarTitle("Select Exercise\(isSingleSelectImmediate ? "" : "s")", displayMode: .inline)
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
             .onDisappear(perform: disappearAction)
-            .onAppear(perform: recomputeFilteredExercises)
-            .onChange(of: searchText) { recomputeFilteredExercises() }
-            .onChange(of: selectedCategory) { recomputeFilteredExercises() }
-            .onChange(of: showingFavorites) { recomputeFilteredExercises() }
-            .onChange(of: templateFilter) { recomputeFilteredExercises() }
-            .onChange(of: filterTemplateCats) { recomputeFilteredExercises() }
-            .onChange(of: templateSortingEnabled) { recomputeFilteredExercises() }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: { showingFavorites.toggle() }) {
@@ -160,40 +148,6 @@ struct ExerciseSelection: View {
     private var filterTemplateCats: Bool { ctx.userData.sessionTracking.exerciseSortOption == .templateCategories || templateFilter }
 
     private var templateSortingEnabled: Bool { ctx.userData.settings.sortByTemplateCategories && !(templateCategories?.isEmpty ?? true) }
-
-    private func recomputeFilteredExercises() {
-        let base = ctx.exercises.filteredExercises(
-            searchText: searchText,
-            selectedCategory: selectedCategory,
-            templateCategories: templateSortingEnabled ? templateCategories : nil,
-            templateFilter: filterTemplateCats,
-            favoritesOnly: showingFavorites,
-            userData: ctx.userData,
-            equipmentData: ctx.equipment
-        )
-
-        guard isPerformanceMode else {
-            filteredExercisesCache = base
-            return
-        }
-
-        // Dedupe by ID, preserve order
-        var seen = Set<Exercise.ID>()
-        let uniqueBase = base.filter { seen.insert($0.id).inserted }
-
-        // ✅ Filter: must have a peak and its actualValue > 0
-        let filtered = uniqueBase.filter { ex in
-            guard let peak = ctx.exercises.peakMetric(for: ex.id) else { return false }
-            return peak.actualValue > 0
-        }
-
-        // ✅ Sort: newest max first (same source of truth)
-        filteredExercisesCache = filtered.sorted { a, b in
-            let da = ctx.exercises.getMax(for: a.id)?.date ?? .distantPast
-            let db = ctx.exercises.getMax(for: b.id)?.date ?? .distantPast
-            return da > db
-        }
-    }
 
     // MARK: - Helpers
     private func handleTap(on exercise: Exercise) {

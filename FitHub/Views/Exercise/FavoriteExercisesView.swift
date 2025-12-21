@@ -11,57 +11,61 @@ struct FavoriteExercisesView: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
-                filterPicker
-                    .padding(.bottom, -5)
-                
-                SearchBar(text: $searchText, placeholder: "Search Exercises")
-                    .padding(.horizontal)
-
-                List {
-                    if filteredExercises.isEmpty {
-                        // Display a message if no exercises match the filter
-                        Text(selectedFilter.emptyMessage)
-                            .foregroundStyle(.gray)
-                            .padding()
-                    } else {
-                        Section {
-                            ForEach(filteredExercises, id: \.id) { exercise in
-                                ExerciseRow(
-                                    exercise,
-                                    accessory: {
-                                        RatingIcon(
-                                            exercise: exercise,
-                                            favState: FavoriteState.getState(for: exercise, userData: ctx.userData),
-                                            selectedFilter: selectedFilter,
-                                            onFavorite: {
-                                                modifier.toggleFavorite(for: exercise.id, userData: ctx.userData)
-                                            },
-                                            onDislike: {
-                                                modifier.toggleDislike(for: exercise.id, userData: ctx.userData)
-                                            }
-                                        )
+            FilterableExerciseList(
+                exercises: ctx.exercises,
+                userData: ctx.userData,
+                equipment: ctx.equipment,
+                searchText: $searchText,
+                selectedCategory: .constant(.resistanceType(.any)),
+                showingFavorites: Binding(
+                    get: { selectedFilter == .favorites },
+                    set: { if $0 { selectedFilter = .favorites } }
+                ),
+                dislikedOnly: Binding(
+                    get: { selectedFilter == .disliked },
+                    set: { if $0 { selectedFilter = .disliked } }
+                ),
+                emptyMessage: selectedFilter.emptyMessage,
+                pickerContent: {
+                    Picker("Filter", selection: $selectedFilter) {
+                        ForEach(ExerciseFilter.allCases) { filter in
+                            Text(filter.rawValue).tag(filter)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding([.horizontal, .bottom])
+                },
+                exerciseRow: { exercise in
+                    AnyView(
+                        ExerciseRow(
+                            exercise,
+                            accessory: {
+                                RatingIcon(
+                                    exercise: exercise,
+                                    favState: FavoriteState.getState(for: exercise, userData: ctx.userData),
+                                    selectedFilter: selectedFilter,
+                                    onFavorite: {
+                                        modifier.toggleFavorite(for: exercise.id, userData: ctx.userData)
+                                    },
+                                    onDislike: {
+                                        modifier.toggleDislike(for: exercise.id, userData: ctx.userData)
                                     }
                                 )
                             }
-                        } header: {
-                            if selectedFilter != .all {
-                                Text(Format.countText(filteredExercises.count))
-                            }
-                        }
-                    }
+                        )
+                    )
                 }
-            }
+            )
             .onAppear(perform: initializeFilter)
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-            .navigationBarTitle("Favorite Exercises").navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitle("Favorite Exercises", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Reset") {
                         showingResetConfirmation = true
                     }
-                    .foregroundStyle(emptyLists ? Color.gray : Color.red)        // make the label red
-                    .disabled(emptyLists)       // disable when no items
+                    .foregroundStyle(emptyLists ? Color.gray : Color.red)
+                    .disabled(emptyLists)
                 }
             }
             .alert("Remove All Exercises?", isPresented: $showingResetConfirmation) {
@@ -90,30 +94,9 @@ struct FavoriteExercisesView: View {
             }
         }
     }
-    
-    private var filterPicker: some View {
-        Picker("Filter", selection: $selectedFilter) {
-            ForEach(ExerciseFilter.allCases) { filter in
-                Text(filter.rawValue).tag(filter)
-            }
-        }
-        .pickerStyle(SegmentedPickerStyle())
-        .padding([.horizontal, .bottom])
-    }
 
     private var emptyLists: Bool {
         return ctx.userData.evaluation.favoriteExercises.isEmpty && ctx.userData.evaluation.dislikedExercises.isEmpty
-    }
-
-    private var filteredExercises: [Exercise] {
-        ctx.exercises.filteredExercises(
-            searchText: searchText,
-            selectedCategory: .resistanceType(.any),
-            favoritesOnly: selectedFilter == .favorites,
-            dislikedOnly: selectedFilter == .disliked,
-            userData: ctx.userData,
-            equipmentData: ctx.equipment
-        )
     }
     
     private func removeAll() {
