@@ -12,7 +12,7 @@ struct UpdateMaxEditor: View {
     @StateObject private var kbd = KeyboardManager.shared
     @FocusState private var isFocused: Bool
     @State private var peak: PeakMetric
-    @State private var plannedDate: Date?
+    @State private var datePerformed: Date?
     let exercise: Exercise
     let onSave: (PeakMetric, Date?) -> Void
     let onCancel: () -> Void
@@ -34,14 +34,22 @@ struct UpdateMaxEditor: View {
                 NewPeakEntry(newPeak: $peak, focus: $isFocused)
                     .padding(.vertical)
 
-                OptionalDatePicker(
-                    initialDate: plannedDate,
-                    label: "Custom Date",
-                    useDateOnly: true,
-                    onDateChange: { newDate in
-                        plannedDate = newDate
+                Section {
+                    OptionalDatePicker(
+                        initialDate: datePerformed,
+                        label: "Date Performed:",
+                        useDateOnly: true,
+                        onDateChange: { newDate in
+                            datePerformed = newDate
+                        }
+                    )
+                } footer: {
+                    if datePerformed == nil {
+                        Text("Will use today's date if not provided.")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.caption)
                     }
-                )
+                }
 
                 Spacer()
 
@@ -52,7 +60,7 @@ struct UpdateMaxEditor: View {
                         bgColor: .green,
                         action: {
                             kbd.dismiss()
-                            onSave(peak, plannedDate)
+                            onSave(peak, datePerformed)
                         }
                     )
 
