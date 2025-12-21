@@ -21,6 +21,9 @@ struct HomeView: View {
                 settingsDestination: { AnyView(SettingsView()) },
                 menuDestination: { AnyView(MenuView()) }
             )
+            .navigationDestination(isPresented: $showingFavoriteExercises) {
+                FavoriteExercisesView()
+            }
         }
     }
 
@@ -77,7 +80,7 @@ struct HomeView: View {
                 .padding()
                 .background(colorScheme == .dark ? Color(UIColor.secondarySystemBackground) : Color.white)
             }
-            .sheet(isPresented: $showingFavoriteExercises) { FavoriteExercisesView() }
+           // .sheet(isPresented: $showingFavoriteExercises) { FavoriteExercisesView() }
         }
         .background(Color.clear)
     }

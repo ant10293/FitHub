@@ -2,7 +2,6 @@ import SwiftUI
 
 
 struct FavoriteExercisesView: View {
-    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var ctx: AppContext
     @StateObject private var kbd = KeyboardManager.shared
     @State private var searchText: String = ""
@@ -13,16 +12,11 @@ struct FavoriteExercisesView: View {
     var body: some View {
         NavigationStack {
             VStack {
+                filterPicker
+                    .padding(.bottom, -5)
+                
                 SearchBar(text: $searchText, placeholder: "Search Exercises")
                     .padding(.horizontal)
-
-                Picker("Filter", selection: $selectedFilter) {
-                    ForEach(ExerciseFilter.allCases) { filter in
-                        Text(filter.rawValue).tag(filter)
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding(.horizontal)
 
                 List {
                     if filteredExercises.isEmpty {
@@ -53,7 +47,6 @@ struct FavoriteExercisesView: View {
                         } header: {
                             if selectedFilter != .all {
                                 Text(Format.countText(filteredExercises.count))
-                                    .font(.caption)
                             }
                         }
                     }
@@ -63,18 +56,12 @@ struct FavoriteExercisesView: View {
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
             .navigationBarTitle("Favorite Exercises").navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("Reset") {
                         showingResetConfirmation = true
                     }
                     .foregroundStyle(emptyLists ? Color.gray : Color.red)        // make the label red
                     .disabled(emptyLists)       // disable when no items
-                }
-
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Close") {
-                        dismiss()
-                    }
                 }
             }
             .alert("Remove All Exercises?", isPresented: $showingResetConfirmation) {
@@ -102,6 +89,16 @@ struct FavoriteExercisesView: View {
             case .disliked: "No disliked exercises found."
             }
         }
+    }
+    
+    private var filterPicker: some View {
+        Picker("Filter", selection: $selectedFilter) {
+            ForEach(ExerciseFilter.allCases) { filter in
+                Text(filter.rawValue).tag(filter)
+            }
+        }
+        .pickerStyle(SegmentedPickerStyle())
+        .padding([.horizontal, .bottom])
     }
 
     private var emptyLists: Bool {
@@ -172,3 +169,5 @@ struct RatingIcon: View {
         }
     }
 }
+
+
