@@ -23,12 +23,11 @@ struct FavoriteExercisesView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
-                .padding(.top, 8)
 
                 List {
                     if filteredExercises.isEmpty {
                         // Display a message if no exercises match the filter
-                        Text(selectedFilter == .favorites ? "No favorite exercises found." : (selectedFilter == .disliked ? "No disliked exercises found." : "No exercises found."))
+                        Text(selectedFilter.emptyMessage)
                             .foregroundStyle(.gray)
                             .padding()
                     } else {
@@ -60,16 +59,16 @@ struct FavoriteExercisesView: View {
                     }
                 }
             }
+            .onAppear(perform: initializeFilter)
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-            .onAppear { selectedFilter = ctx.userData.evaluation.favoriteExercises.isEmpty ? .all : .favorites } // Conditionally set selectedFilter based on user data
             .navigationBarTitle("Favorite Exercises").navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Reset") {
                         showingResetConfirmation = true
                     }
-                    .foregroundStyle(emptyLists() ? Color.gray : Color.red)        // make the label red
-                    .disabled(emptyLists())       // disable when no items
+                    .foregroundStyle(emptyLists ? Color.gray : Color.red)        // make the label red
+                    .disabled(emptyLists)       // disable when no items
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -95,15 +94,18 @@ struct FavoriteExercisesView: View {
         case all = "All Exercises"
 
         var id: String { self.rawValue }
+        
+        var emptyMessage: String {
+            switch self {
+            case .all: "No exercises found."
+            case .favorites: "No favorite exercises found."
+            case .disliked: "No disliked exercises found."
+            }
+        }
     }
 
-    private func emptyLists() -> Bool {
+    private var emptyLists: Bool {
         return ctx.userData.evaluation.favoriteExercises.isEmpty && ctx.userData.evaluation.dislikedExercises.isEmpty
-    }
-
-    private func removeAll() {
-        ctx.userData.evaluation.favoriteExercises.removeAll()
-        ctx.userData.evaluation.dislikedExercises.removeAll()
     }
 
     private var filteredExercises: [Exercise] {
@@ -115,6 +117,16 @@ struct FavoriteExercisesView: View {
             userData: ctx.userData,
             equipmentData: ctx.equipment
         )
+    }
+    
+    private func removeAll() {
+        ctx.userData.evaluation.favoriteExercises.removeAll()
+        ctx.userData.evaluation.dislikedExercises.removeAll()
+    }
+    
+    private func initializeFilter() {
+        // Conditionally set selectedFilter based on user data
+        selectedFilter = ctx.userData.evaluation.favoriteExercises.isEmpty ? .all : .favorites
     }
 }
 

@@ -30,17 +30,13 @@ struct ExerciseSelection: View {
         _selectedExercises = State(initialValue: selectedExercises)
                 
         let initialDerived: CategorySelections = {
-            // override
             if let initialCategory {
                 return initialCategory
-            }
-            // for template detail
-            else if sortByTemplateCategories,
+            } else if sortByTemplateCategories,
                         let templateCategories,
                         let first = templateCategories.first {
                 return .split(first)
-            }
-            else if let saved = savedSortOption {
+            } else if let saved = savedSortOption {
                 return saved.getDefaultSelection()
             } else {
                 return .split(.all)

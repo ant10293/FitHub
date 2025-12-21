@@ -8,7 +8,7 @@ struct MenuView: View {
         List {
             Section(header: Text("Editing")) {
                 NavigationLink(destination: LazyDestination {
-                    ExerciseView(savedSortOption: ctx.userData.sessionTracking.exerciseSortOption)
+                    ExerciseView()
                 }) {
                     Label("Exercise Library", systemImage: "list.bullet.rectangle")
                 }

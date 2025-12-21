@@ -7,15 +7,9 @@ struct ExerciseView: View {
     @State private var viewDetail: Bool = false
     @State private var selectedExerciseId: UUID?
     @State private var searchText: String = ""
-    @State private var selectedCategory: CategorySelections 
+    @State private var selectedCategory: CategorySelections = .split(.all)
     @State private var showingFavorites: Bool = false
     @State private var showExerciseCreation: Bool = false
-    
-    init(
-        savedSortOption: ExerciseSortOption,
-    ) {
-        _selectedCategory = State(initialValue: savedSortOption.getDefaultSelection())
-    }
 
     var body: some View {
         VStack {
@@ -62,6 +56,7 @@ struct ExerciseView: View {
                 }
             }
         }
+        .onAppear(perform: initializeSelection)
         .navigationBarTitle("Exercises", displayMode: .inline)
         .navigationDestination(isPresented: $viewDetail) {
             if let exerciseId = selectedExerciseId, let exercise = ctx.exercises.exercise(for: exerciseId) {
@@ -96,5 +91,9 @@ struct ExerciseView: View {
             userData: ctx.userData,
             equipmentData: ctx.equipment
         )
+    }
+    
+    private func initializeSelection() {
+        selectedCategory = ctx.userData.sessionTracking.exerciseSortOption.getDefaultSelection()
     }
 }
