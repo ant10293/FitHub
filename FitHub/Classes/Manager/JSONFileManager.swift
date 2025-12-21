@@ -82,7 +82,7 @@ final class JSONFileManager {
         )
     }
 
-    func loadFromDocuments<T: Decodable>(
+    func loadFromDocuments<T: Codable>(
         _ type: T.Type,
         from filename: String,
         itemType: String? = nil,
@@ -99,7 +99,22 @@ final class JSONFileManager {
             let data = try Data(contentsOf: url)
             let decoder = JSONDecoder()
             if dateDecoding { decoder.dateDecodingStrategy = .iso8601 }
-            let result = try decoder.decode(type, from: data)
+            
+            // Try to decode as SchemaVersioned first (new format)
+            // If that fails, try old format (backward compatibility)
+            let result: T
+            if SchemaVersion.isVersioned(filename) {
+                do {
+                    let versioned = try decoder.decode(SchemaVersioned<T>.self, from: data)
+                    result = versioned.data
+                } catch {
+                    // Fallback to old format (no wrapper)
+                    result = try decoder.decode(type, from: data)
+                }
+            } else {
+                // Not a versioned file, decode directly
+                result = try decoder.decode(type, from: data)
+            }
 
             let itemDescription = itemType ?? String(describing: type)
             if let array = result as? [Any] {
@@ -159,7 +174,7 @@ final class JSONFileManager {
     }
 
     // MARK: - Debounced Save Methods
-    func debouncedSave<T: Encodable>(
+    func debouncedSave<T: Codable>(
         _ data: T,
         to filename: String,
         delay: TimeInterval = 0.8,
@@ -178,12 +193,20 @@ final class JSONFileManager {
     }
 
     // MARK: - Generic Save Method (ONE method for everything)
-    func save<T: Encodable>(_ data: T, to filename: String, dateEncoding: Bool = false) {
+    func save<T: Codable>(_ data: T, to filename: String, dateEncoding: Bool = false) {
         do {
             let encoder = JSONEncoder()
             if dateEncoding { encoder.dateEncodingStrategy = .iso8601 }
             encoder.outputFormatting.insert(.sortedKeys)   // <- make dicts deterministic
-            let jsonData = try encoder.encode(data)
+            
+            // Automatically wrap in SchemaVersioned if this file is versioned
+            let jsonData: Data
+            if SchemaVersion.isVersioned(filename) {
+                let wrappedData = SchemaVersioned(filename: filename, data: data)
+                jsonData = try encoder.encode(wrappedData)
+            } else {
+                jsonData = try encoder.encode(data)
+            }
 
             if let last = lastSavedData[filename], last == jsonData {
                 print("⚪️ No changes for \(filename), skipping save")
