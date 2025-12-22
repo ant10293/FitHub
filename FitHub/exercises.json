@@ -83,9 +83,8 @@
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "imageUrl": "https://gymvisual.com/animated-gifs/18266-barbell-pin-bench-press-conventional-grip-male.html#/47-style_type-basic_grey",
       "unitType": "weightXtime",
-      "gifName": "Barbell-Pin-Bench-Press-Conventional-grip-(male)_C_converted.gif"
+      "gifName": ""
     },
     {
       "name": "Wide-Grip Bench Press",
@@ -440,6 +439,24 @@
       "gifName": "Barbell-JM-Bench-Press_Upper-Arms-FIX__converted.gif"
     },
     {
+      "name": "Smith Machine JM Press",
+      "id": "B191EAB0-CA9A-4770-B0AC-E59455057C95",
+      "image": "smith_machine_jm_press",
+      "instructions": { "steps": [ ] },
+      "equipmentRequired": [ "Smith Machine" ],
+      "muscles": [
+          { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Triceps", "submusclesWorked": [
+              { "engagementPercentage": 100, "submuscleWorked": "Triceps Lateral Head" }
+          ] }
+      ],
+      "difficulty": "Int.",
+      "effort": "Compound",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Machine",
+      "unitType": "weightXreps",
+      "gifName": "Smith-JM-Bench-Press_Upper-Arms__converted.gif"
+    },
+    {
       "name": "Reverse-Grip Bench Press",
       "id": "F5DD7891-9C47-4207-9242-25E9B429E2AC",
       "image": "reverse_grip_bench_press",
@@ -603,31 +620,6 @@
       "imageUrl": "https://gymvisual.com/animated-gifs/2236-smith-decline-bench-press.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
       "gifName": "Smith-Decline-Bench-Press_Chest-FIX__converted.gif"
-    },
-    {
-      "name": "Smith Machine Guillotine Press",
-      "id": "B191EAB0-CA9A-4770-B0AC-E59455057C95",
-      "image": "smith_machine_guillotine_press",
-      "aliases": [ "Smith Neck Press" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Smith Machine" ],
-      "muscles": [
-        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-            { "engagementPercentage": 100, "submuscleWorked": "Clavicular Head" }
-        ] },
-        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-            { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-        ] },
-        { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-            { "engagementPercentage": 100, "submuscleWorked": "Triceps Medial Head" }
-        ] }
-      ],
-      "difficulty": "Int.",
-      "effort": "Compound",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Machine",
-      "unitType": "weightXreps",
-      "gifName": ""
     },
     {
       "name": "Guillotine Press",
@@ -827,7 +819,7 @@
       "weightInstruction": "Per Peg",
       "imageUrl": "https://gymvisual.com/animated-gifs/3072-leverage-incline-chest-press.html?search_query=lever+machine+chest+press&results=100",
       "unitType": "weightXreps",
-      "gifName": ""
+      "gifName": "Lever-Incline-Chest-Press_Chest-FIX2__converted.gif"
     },
     {
       "name": "Standing Cable Chest Press",
@@ -2263,7 +2255,7 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "unitType": "repsOnly",
-      "gifName": ""
+      "gifName": "Hamstring-Bridge-(male)_Hips__converted.gif"
     },
     {
       "name": "Glute-Ham Raise",
@@ -2382,7 +2374,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/13420-shoulder-width-neutral-grip-pull-up.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": ""
+      "gifName": "Hammer-Grip-Pull-up-on-Dip-Cage_Back_converted.gif"
     },
     {
       "name": "Weighted Neutral-Grip Pull-Up",
@@ -2674,7 +2666,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2218-sit-up-version-2.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": ""
+      "gifName": "Sit-up-with-Arms-on-Chest_Waist_converted.gif"
     },
     {
       "name": "Decline Sit-Up",
@@ -3471,7 +3463,7 @@
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/21298-landmine-half-kneeling-shoulders-press.html?search_query=landmine+press&results=40",
       "unitType": "weightXreps",
-      "gifName": ""
+      "gifName": "Landmine-Press_Shoulders__converted.gif"
     },
     {
       "name": "Machine Shoulder Press",
@@ -3788,7 +3780,7 @@
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/6687-strongman-viking-press.html?search_query=viking+press&results=5",
       "unitType": "weightXreps",
-      "gifName": ""
+      "gifName": "Lever-Standing-Viking-Press-(male)_Shoulders__converted"
     },
     {
       "name": "Y Press",
@@ -3984,7 +3976,7 @@
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1586-cable-lateral-raise.html?search_query=cable+lateral+raise&results=48",
       "unitType": "weightXreps",
-      "gifName": ""
+      "gifName": "Cable-Single-Arm-Lateral-Raise-(VERSION-2)-(male)__converted"
     },
     {
       "name": "Dumbbell Lateral Raise",
@@ -4138,7 +4130,7 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "unitType": "weightXreps",
-      "gifName": ""
+      "gifName": "Dumbbell-Incline-Y-Raise_Shoulders__converted.gif"
     },
     {
       "name": "Y Raise",
@@ -5129,7 +5121,7 @@
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1573-barbell-revers-wrist-curl-version-2.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": ""
+      "gifName": "Barbell-Reverse-Wrist-Curl_Forearm_converted.gif"
     },
     {
       "name": "Single-Arm Plate Wrist Curl",
@@ -5168,11 +5160,12 @@
       ],
       "difficulty": "Nov.",
       "effort": "Isolation",
-      "limbMovementType": "Bilateral Dependent",
+      "limbMovementType": "Bilateral Independent",
       "resistance": "Machine",
+      "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/3568-cable-concentration-curl.html?search_query=cable+concentration+curl&results=14",
       "unitType": "weightXreps",
-      "gifName": ""
+      "gifName": "Cable-Seated-One-Arm-Concentration-Curl_Upper-Arms_converted"
     },
     {
       "name": "Cable Curl With Bar",
@@ -7345,7 +7338,7 @@
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2222-sled-45-leg-press.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": ""
+      "gifName": "Sled-45-degrees-Leg-Press_Hips-FIX__converted.gif"
     },
     {
       "name": "Single-Leg Press",
@@ -8520,7 +8513,7 @@
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/21301-dumbbell-row-with-chest-supported.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": ""
+      "gifName": "Dumbbell-Incline-Row_Back-FIX2__converted.gif"
     },
     {
       "name": "Chest-Supported T-Bar Row",
@@ -8546,7 +8539,7 @@
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/10129-lever-lying-banded-t-bar-row.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": ""
+      "gifName": "Lever-Lying-T-bar-Row_Back_converted.gif"
     },
     {
       "name": "Dumbbell Bench Pull",
@@ -9153,7 +9146,7 @@
       "repsInstruction": "Per Side",
       "imageUrl": "https://gymvisual.com/animated-gifs/14251-45-degrees-side-bend-male.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": ""
+      "gifName": "45-degree-Side-Bend_Waist-FIX__converted.gif"
     },
     {
       "name": "Back Squat",
@@ -9405,7 +9398,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2648-squat-m.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": ""
+      "gifName": "Bodyweight-Squat-(male)_Thighs-FIX__converted"
     },
     {
       "name": "Box Squat",
@@ -11609,7 +11602,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/6655-chin-tuck.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": ""
+      "gifName": "Chin-Tuck-against-the-Wall-(male)_Neck__converted.gif"
     },
     {
       "name": "Farmer's Walk",

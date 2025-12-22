@@ -70,7 +70,7 @@ final class ExerciseData: ObservableObject {
 
     // MARK: saving logic
     func savePerformanceData() {
-        JSONFileManager.shared.save(Array(allExercisePerformance.values), to: ExerciseData.performanceFileName, dateEncoding: true)
+        JSONFileManager.shared.debouncedSave(Array(allExercisePerformance.values), to: ExerciseData.performanceFileName, dateEncoding: true)
     }
 
     private static func loadUserExercises(from file: String) -> [Exercise] {
@@ -78,7 +78,7 @@ final class ExerciseData: ObservableObject {
     }
 
     private func persistUserExercises() {
-        JSONFileManager.shared.save(userExercises, to: ExerciseData.userExercisesFileName)
+        JSONFileManager.shared.debouncedSave(userExercises, to: ExerciseData.userExercisesFileName)
     }
 
     private static func loadBundledOverrides() -> [UUID: Exercise] {
@@ -86,7 +86,7 @@ final class ExerciseData: ObservableObject {
     }
 
     private func persistOverrides() {
-        JSONFileManager.shared.save(bundledOverrides, to: ExerciseData.bundledOverridesFilename)
+        JSONFileManager.shared.debouncedSave(bundledOverrides, to: ExerciseData.bundledOverridesFilename)
     }
 }
 

@@ -18,6 +18,8 @@ struct AdjustmentsView: View {
     @State private var activeImageCategory: AdjustmentCategory? = nil
     @State private var categoryPendingRemoval: AdjustmentCategory? = nil
     @State private var isRemovingEquipmentLevelImage: Bool = false
+    @State private var isEditMode: Bool = false
+    @State private var categoryPendingDeletion: AdjustmentCategory? = nil
 
     let exercise: Exercise
 
@@ -31,18 +33,17 @@ struct AdjustmentsView: View {
             VStack {
                 headerSection
                 adjustmentList(for: local.entries)
-                Spacer(minLength: 0)
             }
-            .padding()
             .navigationBarTitle("Equipment Adjustments", displayMode: .inline)
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
             .sheet(isPresented: $showAddCategoryPicker) {
                 AddCategoryPicker(
                     exercise: exercise,
-                    existingCategories: existingCategories
-                ) { category in
-                    addAdjustmentCategory(category)
-                }
+                    existingCategories: existingCategories,
+                    onAddCategory: { category in
+                        addAdjustmentCategory(category)
+                    }
+                )
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -69,12 +70,13 @@ struct AdjustmentsView: View {
                 AdjustmentImageUpload(
                     initialFilename: initialFilename,
                     hasExistingEquipmentImage: hasExistingEquipmentImage,
-                    associatedEquipment: associatedEquipment(entry: entry)
-                ) { filename, storageLevel in
-                    let normalized = filename.isEmpty ? nil : filename
-                    updateImage(for: category, filename: normalized, storageLevel: storageLevel)
-                    activeImageCategory = nil
-                }
+                    associatedEquipment: associatedEquipment(entry: entry),
+                    onImagePicked: { filename, storageLevel in
+                        let normalized = filename.isEmpty ? nil : filename
+                        updateImage(for: category, filename: normalized, storageLevel: storageLevel)
+                        activeImageCategory = nil
+                    }
+                )
                 .presentationDragIndicator(.visible)
             }
             .alert("Remove custom image?", isPresented: removalAlertBinding) {
@@ -117,6 +119,25 @@ struct AdjustmentsView: View {
                     Text("This will remove the exercise-specific image and revert to the default illustration.")
                 }
             }
+            .alert("Delete Adjustment?", isPresented: Binding(
+                get: { categoryPendingDeletion != nil },
+                set: { if !$0 { categoryPendingDeletion = nil } }
+            )) {
+                Button("Cancel", role: .cancel) {
+                    categoryPendingDeletion = nil
+                }
+                Button("Delete", role: .destructive) {
+                    if let category = categoryPendingDeletion {
+                        removeAdjustment(category)
+                        commitChangesIfNeeded()
+                        categoryPendingDeletion = nil
+                    }
+                }
+            } message: {
+                if let category = categoryPendingDeletion {
+                    Text("Are you sure you want to delete the \(category.rawValue) adjustment?")
+                }
+            }
         }
     }
 
@@ -133,6 +154,7 @@ struct AdjustmentsView: View {
             exercise.fullImageView(favState: FavoriteState.getState(for: exercise, userData: ctx.userData))
                 .frame(width: imageSize, height: imageSize)
         }
+        .padding([.horizontal, .top])
     }
 
     // MARK: – List
@@ -148,24 +170,21 @@ struct AdjustmentsView: View {
                     ForEach(sortedAdjustments, id: \.category) { adjustment in
                         adjustmentRow(for: adjustment)
                     }
-                    .onDelete { indexSet in
-                        for index in indexSet {
-                            let categoryToDelete = sortedAdjustments[index].category
-                            removeAdjustment(categoryToDelete)
-                        }
-                    }
                 }
-            } footer: {
                 Button {
                     showAddCategoryPicker = true
                 } label: {
-                    Label("Add Adjustment", systemImage: "plus.circle.fill")
-                        .font(.headline)
-                        .foregroundStyle(.blue)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Label("Add Adjustment", systemImage: "plus")
                 }
-                .buttonStyle(.plain)
-                .padding(.vertical, 4)
+            } header: {
+                HStack {
+                    Spacer()
+
+                    Button(isEditMode ? "Done" : "Edit") {
+                        isEditMode.toggle()
+                    }
+                    .textCase(.none)
+                }
             }
         }
         .listStyle(.insetGrouped)
@@ -173,35 +192,46 @@ struct AdjustmentsView: View {
 
     // MARK: – Row
     private func adjustmentRow(for adjustment: AdjustmentEntry) -> some View {
-        let fieldSize = screenWidth * 0.2
-
-        return VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text(adjustment.category.rawValue)
-
-                Spacer()
-
-                TextField("Value", text: bindingForCategory(adjustment.category))
-                    .keyboardType(adjustment.value.keyboardType)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .frame(width: fieldSize)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled(true)
-
+        return HStack {
+            if isEditMode {
                 Button {
-                    clearValue(for: adjustment.category)
+                    categoryPendingDeletion = adjustment.category
                 } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.gray)
+                    Image(systemName: "minus.circle.fill")
+                        .foregroundStyle(.red)
+                        .font(.title3)
                 }
-                .buttonStyle(.borderless)
             }
-
-            imagePreview(for: adjustment)
-                .overlay(alignment: .topTrailing) {
-                    imageButton(for: adjustment)
-                        .allowsHitTesting(true)
+            
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text(adjustment.category.rawValue)
+                        .bold()
+                    
+                    // Value input based on current value type
+                    AdjustmentInputView(
+                        value: valueBinding(for: adjustment.category)
+                    )
                 }
+                
+                HStack {
+                    imagePreview(for: adjustment)
+                        .overlay(alignment: .topTrailing) {
+                            imageButton(for: adjustment)
+                                .allowsHitTesting(true)
+                        }
+                    
+                    // Category picker
+                    Picker("Value Type", selection: categoryBinding(for: adjustment.category)) {
+                        ForEach(AdjustmentValueCategory.allCases, id: \.self) { category in
+                            Text(category.rawValue.capitalized)
+                                .tag(category)
+                                .font(.caption)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+            }
         }
     }
 
@@ -213,10 +243,29 @@ struct AdjustmentsView: View {
     private var existingCategories: Set<AdjustmentCategory> { local.categories }
 
     // MARK: – Bindings & Mutations
-    private func bindingForCategory(_ category: AdjustmentCategory) -> Binding<String> {
+    private func valueBinding(for category: AdjustmentCategory) -> Binding<AdjustmentValue> {
         Binding(
-            get: { local.textValue(for: category) },
-            set: { local.setValue(AdjustmentValue.from($0), for: category) }
+            get: {
+                local.adjustment(for: category)?.value ?? category.defaultValue
+            },
+            set: { newValue in
+                local.setValue(newValue, for: category)
+                commitChangesIfNeeded()
+            }
+        )
+    }
+    
+    private func categoryBinding(for category: AdjustmentCategory) -> Binding<AdjustmentValueCategory> {
+        Binding(
+            get: {
+                local.adjustment(for: category)?.value.category ?? category.defaultValue.category
+            },
+            set: { newCategory in
+                guard let currentValue = local.adjustment(for: category)?.value else { return }
+                let convertedValue = currentValue.converted(to: newCategory)
+                local.setValue(convertedValue, for: category)
+                commitChangesIfNeeded()
+            }
         )
     }
 

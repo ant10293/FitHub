@@ -8,35 +8,88 @@
 import Foundation
 import SwiftUI
 
-// New enum to handle different adjustment values
-enum AdjustmentValue: Codable, Equatable, Hashable {
-    case integer(Int)
-    case string(String)
 
-    var displayValue: String {
+enum AdjustmentValueCategory: String, Codable, CaseIterable {
+    case number, letter, size, degrees
+    
+    var valueType: AdjustmentValue {
         switch self {
-        case .integer(let value): return "\(value)"
-        case .string(let value): return value
+        case .number: return .number(nil)
+        case .letter: return .letter(nil)
+        case .size: return .size(nil)
+        case .degrees: return .degrees(nil)
         }
     }
-
-    var keyboardType: UIKeyboardType {
+    
+    var defaultValue: AdjustmentValue {
         switch self {
-        case .integer: return .numbersAndPunctuation
-        case .string:  return .default
-        }
-    }
-
-    static func from(_ stringValue: String) -> AdjustmentValue {
-        if let intValue = Int(stringValue) {
-            return .integer(intValue)
-        } else {
-            return .string(stringValue)
+        case .number: return .number(0)
+        case .letter: return .letter(.a)
+        case .size: return .size(.xsmall)
+        case .degrees: return .degrees(0)
         }
     }
 }
 
-// TODO: add units for each category (%, Int, Small, etc)
+enum AdjustmentSize: String, Codable, CaseIterable {
+    case xsmall, small, medium, large, xlarge
+}
+
+enum AdjustmentLetter: String, Codable, CaseIterable {
+    case a, b, c, d, e, f, g, h, i, j
+}
+
+enum AdjustmentValue: Codable, Equatable, Hashable {
+    case number(Int?)
+    case letter(AdjustmentLetter?)
+    case size(AdjustmentSize?)
+    case degrees(Int?)
+    
+    var displayValue: String {
+        switch self {
+        case .number(let n): return n.map { "\($0)" } ?? ""
+        case .letter(let l): return l?.rawValue.capitalized ?? ""
+        case .size(let s): return s?.rawValue ?? ""
+        case .degrees(let d): return d.map { "\($0)°" } ?? ""
+        }
+    }
+    
+    var category: AdjustmentValueCategory {
+        switch self {
+        case .number: return .number
+        case .letter: return .letter
+        case .size: return .size
+        case .degrees: return .degrees
+        }
+    }
+    
+    /// Converts the value to a new category, using nil if converting between incompatible types
+    func converted(to category: AdjustmentValueCategory) -> AdjustmentValue {
+        switch category {
+        case .number:
+            switch self {
+            case .number(let n): return .number(n)
+            default: return category.valueType
+            }
+        case .letter:
+            switch self {
+            case .letter(let l): return .letter(l)
+            default: return category.valueType
+            }
+        case .size:
+            switch self {
+            case .size(let s): return .size(s)
+            default: return category.valueType
+            }
+        case .degrees:
+            switch self {
+            case .degrees(let d): return .degrees(d)
+            default: return category.valueType
+            }
+        }
+    }
+}
+
 enum AdjustmentCategory: String, CaseIterable, Identifiable, Codable, Comparable, Equatable, Hashable {
     case seatHeight = "Seat Height"
     case benchAngle = "Bench Angle"
@@ -76,6 +129,30 @@ enum AdjustmentCategory: String, CaseIterable, Identifiable, Codable, Comparable
 
     static func < (lhs: AdjustmentCategory, rhs: AdjustmentCategory) -> Bool {
         return lhs.rawValue < rhs.rawValue
+    }
+    
+    /// Returns the default value for this category (used when switching categories)
+    var defaultValue: AdjustmentValue {
+        switch self {
+        case .seatHeight: return .number(0)
+        case .benchAngle: return .degrees(0)
+        case .rackHeight: return .number(0)
+        case .pulleyHeight: return .number(0)
+        case .padHeight: return .number(0)
+        case .safetyBarHeight: return .number(0)
+        case .backPadDepth: return .number(0)
+        case .backPadAngle: return .degrees(0)
+        case .footPlateHeight: return .number(0)
+        case .legPadPosition: return .size(.xsmall)
+        case .sundialAdjustment: return .letter(.a)
+        case .handlePosition: return .number(0)
+        case .inclineGrade: return .degrees(0)
+        }
+    }
+    
+    /// Returns a nil value for this category (used when creating new entries)
+    var nilValue: AdjustmentValue {
+        defaultValue.category.valueType
     }
 }
 
@@ -118,7 +195,8 @@ struct ExerciseAdjustments: Codable, Identifiable, Equatable, Hashable {
         // This is a fallback - in practice, entries should be created via loadAdjustments
         // which has access to equipment info. For now, create with dummy UUID.
         let dummyAdjustment = EquipmentAdjustment(id: UUID(), category: category)
-        var entry = AdjustmentEntry(adjustment: dummyAdjustment, value: .string(""))
+        // Start with nil value to indicate no value has been set yet
+        var entry = AdjustmentEntry(adjustment: dummyAdjustment, value: category.nilValue)
         update(&entry)
         entries.append(entry)
     }
@@ -138,7 +216,8 @@ struct ExerciseAdjustments: Codable, Identifiable, Equatable, Hashable {
     }
 
     mutating func clearValue(for category: AdjustmentCategory) {
-        setValue(.string(""), for: category)
+        // Set to nil to indicate no value has been set
+        setValue(category.nilValue, for: category)
     }
 
     mutating func normalize() {
@@ -189,14 +268,15 @@ struct AdjustmentEntry: Codable, Equatable, Hashable {
     /// Creates an empty entry for the given key
     /// Note: equipment-level images are stored separately and resolved via AdjustmentsData.resolvedImage
     static func empty(for key: AdjustmentKey) -> AdjustmentEntry {
+        // Start with nil value to indicate no value has been set yet
         guard let equipmentID = key.equipmentID else {
             // Fallback: create with a dummy UUID if equipmentID is nil (shouldn't happen in practice)
             let dummyAdjustment = EquipmentAdjustment(id: UUID(), category: key.category, image: nil)
-            return AdjustmentEntry(adjustment: dummyAdjustment, value: .string(""), ignoredEquipmentLevelImage: nil)
+            return AdjustmentEntry(adjustment: dummyAdjustment, value: key.category.nilValue, ignoredEquipmentLevelImage: nil)
         }
 
         let equipmentAdjustment = EquipmentAdjustment(id: equipmentID, category: key.category, image: nil)
-        return AdjustmentEntry(adjustment: equipmentAdjustment, value: .string(""), ignoredEquipmentLevelImage: nil)
+        return AdjustmentEntry(adjustment: equipmentAdjustment, value: key.category.nilValue, ignoredEquipmentLevelImage: nil)
     }
 }
 

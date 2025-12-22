@@ -63,8 +63,8 @@ final class AdjustmentsData: ObservableObject {
 
     // MARK: saving logic
     func saveAdjustmentsToFile() {
-        JSONFileManager.shared.save(exerciseAdjustments, to: AdjustmentsData.exerciseAdjustmentsKey)
-        JSONFileManager.shared.save(equipmentAdjustments, to: AdjustmentsData.equipmentAdjustmentsKey)
+        JSONFileManager.shared.debouncedSave(exerciseAdjustments, to: AdjustmentsData.exerciseAdjustmentsKey)
+        JSONFileManager.shared.debouncedSave(equipmentAdjustments, to: AdjustmentsData.equipmentAdjustmentsKey)
     }
 }
 
@@ -89,7 +89,7 @@ extension AdjustmentsData {
     }
 
     func clearAdjustmentValue(exercise: Exercise, for category: AdjustmentCategory, in adjustment: ExerciseAdjustments) {
-        updateAdjustmentValue(for: exercise, category: category, newValue: .string(""))
+        updateAdjustmentValue(for: exercise, category: category, newValue: category.defaultValue)
     }
 }
 
@@ -128,7 +128,8 @@ extension AdjustmentsData {
     }
 
     func addAdjustmentCategory(_ exercise: Exercise, category: AdjustmentCategory) {
-        updateAdjustmentValue(for: exercise, category: category, newValue: .string(""))
+        // Start with nil value to indicate no value has been set yet
+        updateAdjustmentValue(for: exercise, category: category, newValue: category.nilValue)
     }
 
     func updateAdjustmentImage(for exercise: Exercise, category: AdjustmentCategory, newImageName: String?, storageLevel: ImageStorageLevel = .equipment, shouldSave: Bool = true) {

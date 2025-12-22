@@ -81,23 +81,3 @@ struct CategorySelection: View {
         dismiss()
     }
 }
-
-extension View {
-    /// Applies the “pill” look you’ve been using for muscle-group buttons.
-    func muscleButtonStyle(selected: Bool, disabled: Bool) -> some View {
-        self
-            .padding(5)
-            .frame(minWidth: 50, minHeight: 35)
-            .lineLimit(1)
-            .minimumScaleFactor(0.5)
-            .background(disabled
-                        ? Color.gray
-                        : (selected ? Color.blue : Color.secondary.opacity(0.8)))
-            .foregroundStyle(disabled
-                             ? Color.white.opacity(0.5)
-                             : Color.white)
-            .disabled(disabled)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .opacity(disabled ? 0.6 : 1.0)
-    }
-}
