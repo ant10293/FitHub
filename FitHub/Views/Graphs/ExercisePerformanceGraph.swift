@@ -85,6 +85,7 @@ struct ExercisePerformanceGraph: View {
             .pickerStyle(SegmentedPickerStyle())
             .padding()
         }
+        .observesUnitSystem()
     }
 
     private func recordBadge(_ record: MaxRecord) -> String {

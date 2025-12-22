@@ -53,6 +53,7 @@ struct PercentileView: View {
             .pickerStyle(SegmentedPickerStyle())
             .padding()
         }
+        .observesUnitSystem()
     }
 
     private enum ViewOption: String, CaseIterable, Identifiable {

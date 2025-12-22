@@ -129,5 +129,6 @@ struct StatsView: View {
                 display
             }
         }
+        .observesUnitSystem()
     }
 }

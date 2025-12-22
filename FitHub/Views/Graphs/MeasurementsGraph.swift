@@ -77,6 +77,7 @@ struct MeasurementsGraph: View {
             .pickerStyle(SegmentedPickerStyle())
             .padding()
         }
+        .observesUnitSystem()
     }
 
     private var sortedMeasurementRecords: [Measurement] {

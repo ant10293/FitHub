@@ -51,6 +51,7 @@ struct MeasurementsView: View {
         }
         .disabled(showMeasurementEditor)
         .navigationTitle("Measurements")
+        .observesUnitSystem()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {

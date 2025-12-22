@@ -27,6 +27,8 @@ final class AppContext: ObservableObject {
     @Published var unitSystem: UnitSystem {
         didSet {
             UserDefaults.standard.set(unitSystem.rawValue, forKey: UnitSystem.storageKey)
+            // Post notification so views using UnitSystem.current can refresh
+            NotificationCenter.default.post(name: Foundation.Notification.Name.unitSystemDidChange, object: nil)
         }
     }
 
