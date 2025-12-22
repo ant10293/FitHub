@@ -130,9 +130,8 @@ struct ExerciseSetDisplay: View {
     @ViewBuilder private var weightSection: some View {
         if load != .none {
             let width = calculateTextWidth(text: load.fieldString, minWidth: screenWidth * 0.16, maxWidth: screenWidth * 0.267)
-            let isZero = load.actualValue == 0
 
-            FieldChrome(width: width, isZero: isZero) {
+            FieldChrome(width: width) {
                 SetLoadEditor(
                     load: Binding(
                         get: { load },
@@ -160,9 +159,8 @@ struct ExerciseSetDisplay: View {
 
     @ViewBuilder private var metricSection: some View {
         let width  = calculateTextWidth(text: planned.fieldString, minWidth: screenWidth * 0.16, maxWidth: screenWidth * 0.267)
-        let isZero = planned.actualValue == 0
 
-        FieldChrome(width: width, isZero: isZero) {
+        FieldChrome(width: width) {
             SetMetricEditor(
                 planned: Binding(
                     get: { planned },

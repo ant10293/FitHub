@@ -49,9 +49,17 @@ struct ExerciseDetailView: View {
                         completedWorkouts: ctx.userData.workoutPlans.completedWorkouts,
                     )
                 case .percentile:
-                    PercentileView(exercise: exercise)
+                    if unsupported {
+                        unsupportedView
+                    } else {
+                        PercentileView(exercise: exercise)
+                    }
                 case .prs:
-                    PRsView(exercise: exercise)
+                    if unsupported {
+                        unsupportedView
+                    } else {
+                        PRsView(exercise: exercise)
+                    }
                 }
             }
             .padding()
@@ -96,5 +104,18 @@ struct ExerciseDetailView: View {
             }
         )
         .padding(.vertical)
+    }
+    
+    private var unsupported: Bool {
+        return exercise.getPeakMetric(metricValue: 0) == .none
+    }
+    
+    private var unsupportedView: some View {
+        EmptyState(
+            systemName: "exclamationmark.circle",
+            title: "No Performance Data",
+            subtitle: "\(exercise.name) does not support performance data tracking."
+        )
+        .centerVertically()
     }
 }

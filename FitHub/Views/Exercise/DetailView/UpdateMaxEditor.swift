@@ -31,8 +31,24 @@ struct UpdateMaxEditor: View {
     var body: some View {
         NavigationStack {
             VStack {
-                NewPeakEntry(newPeak: $peak, focus: $isFocused)
-                    .padding(.vertical)
+                CenteredOverlayHeader(
+                    center: {
+                        Text("Update Max for \(exercise.name)")
+                            .font(.headline)
+                    }
+                )
+                .padding(.bottom)
+                
+                Section {
+                    NewPeakEntry(newPeak: $peak, focus: $isFocused)
+                } header: {
+                    HStack {
+                        Text(exercise.performanceTitle(includeInstruction: true))
+                            .textCase(.none)
+                        
+                        Spacer()
+                    }
+                }
 
                 Section {
                     OptionalDatePicker(
@@ -43,6 +59,7 @@ struct UpdateMaxEditor: View {
                             datePerformed = newDate
                         }
                     )
+                    .padding(.top)
                 } footer: {
                     if datePerformed == nil {
                         Text("Will use today's date if not provided.")
@@ -79,7 +96,6 @@ struct UpdateMaxEditor: View {
             }
             .padding()
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
-            .navigationBarTitle("Update \(exercise.performanceTitle(includeInstruction: false))", displayMode: .inline)
             .onAppear { isFocused = true }
         }
     }
