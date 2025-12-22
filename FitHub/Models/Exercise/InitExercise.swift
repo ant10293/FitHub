@@ -26,6 +26,7 @@ struct InitExercise: Identifiable, Hashable, Codable {
     var weightInstruction: WeightInstruction?
     var imageUrl: String?
     var unitType: ExerciseUnit
+    var gifName: String
     var variationOf: String? // MARK: unused
 }
 extension InitExercise {
@@ -47,6 +48,7 @@ extension InitExercise {
        self.weightInstruction    = ex.weightInstruction
        self.imageUrl             = ex.imageUrl
        self.unitType             = ex.unitType
+       self.gifName              = ex.gifName
        self.variationOf          = ex.variationOf
    }
 }

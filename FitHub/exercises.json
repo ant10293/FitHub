@@ -25,7 +25,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1519-barbell-bench-press.html?search_query=barbell+bench+press&results=136",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Bench Pin Press",
@@ -52,7 +53,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14134-barbell-pin-chest-press.html?search_query=barbell+pin+press&results=12",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Bench Pin Press Hold",
@@ -82,7 +84,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/18266-barbell-pin-bench-press-conventional-grip-male.html#/47-style_type-basic_grey",
-      "unitType": "weightXtime"
+      "unitType": "weightXtime",
+      "gifName": ""
     },
     {
       "name": "Wide-Grip Bench Press",
@@ -108,7 +111,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1620-barbell-wide-bench-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Close-Grip Bench Press",
@@ -132,7 +136,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1524-barbell-close-grip-bench-press.html?search_query=Barbell+close+grip+Bench+Press&results=21",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Close-Grip Incline Bench Press",
@@ -159,7 +164,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3731-barbell-incline-close-grip-bench-press.html?search_query=Barbell+close+grip+Bench+Press&results=21",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Converging Smith Bench Press",
@@ -185,7 +191,8 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Machine",
       "weightInstruction": "Per Peg",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Converging Smith Decline Bench Press",
@@ -211,7 +218,8 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Machine",
       "weightInstruction": "Per Peg",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Converging Smith Incline Bench Press",
@@ -237,7 +245,8 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Machine",
       "weightInstruction": "Per Peg",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Decline Bench Press",
@@ -264,7 +273,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1527-barbell-decline-bench-press.html?search_query=barbell+decline+bench+press&results=12",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Decline Dumbbell Bench Press",
@@ -292,7 +302,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1794-dumbbell-decline-bench-press.html?search_query=decline+dumbbell+bench+press&results=9",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Bench Press",
@@ -320,7 +331,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1782-dumbbell-bench-press.html?search_query=dumbbell+bench+press&results=66",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Squeeze Press",
@@ -346,7 +358,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/9923-dumbbell-squeeze-bench-press.html?search_query=dumbbell+bench+press&results=66",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Incline Bench Press",
@@ -373,7 +386,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1541-barbell-incline-bench-press.html?search_query=barbell+incline+bench+press&results=20",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Incline Dumbbell Bench Press",
@@ -401,7 +415,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1807-dumbbell-incline-bench-press.html?search_query=incline+dumbbell+bench+press&results=12",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "JM Press",
@@ -421,7 +436,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1546-barbell-jm-bench-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Reverse-Grip Bench Press",
@@ -448,7 +464,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/13554-barbell-reverse-grip-bench-press.html?search_query=reverse+grip+bench+press&results=26",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Reverse-Grip Dumbbell Bench Press",
@@ -474,7 +491,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/3562-dumbbell-reverse-bench-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Arm Dumbbell Bench Press",
@@ -501,7 +519,8 @@
       "repsInstruction": "Per Arm",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/9937-dumbbell-alternate-bench-press-high-start.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Smith Machine Bench Press",
@@ -528,7 +547,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2231-smith-bench-press.html?search_query=smith+bench&results=37",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Smith Machine Incline Bench Press",
@@ -554,7 +574,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2240-smith-incline-bench-press.html?search_query=smith+incline+bench&results=6",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Smith Machine Decline Bench Press",
@@ -580,7 +601,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2236-smith-decline-bench-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Smith Machine Guillotine Press",
@@ -604,7 +626,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Guillotine Press",
@@ -629,7 +652,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1539-barbell-guillotine-bench-press.html?search_query=guillotine+press&results=3",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Spoto Press",
@@ -655,7 +679,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Incline Chest Press",
@@ -683,7 +708,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2646-lever-incline-hammer-chest-press.html?search_query=lever+incline+chest+press&results=31",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Chest Press",
@@ -710,7 +736,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2074-lever-chest-press.html?search_query=lever+machine+chest+press&results=100",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Plate-Loaded Chest Press",
@@ -739,7 +766,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Peg",
       "imageUrl": "https://gymvisual.com/animated-gifs/2073-lever-chest-press-plate-loaded.html?search_query=lever+machine+chest+press&results=100",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Plate-Loaded Decline Chest Press",
@@ -768,7 +796,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Peg",
       "imageUrl": "https://gymvisual.com/animated-gifs/3073-lever-decline-chest-press.html?search_query=lever+machine+chest+press&results=100",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Plate-Loaded Incline Chest Press",
@@ -797,7 +826,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Peg",
       "imageUrl": "https://gymvisual.com/animated-gifs/3072-leverage-incline-chest-press.html?search_query=lever+machine+chest+press&results=100",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Standing Cable Chest Press",
@@ -823,7 +853,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Stack",
       "imageUrl": "https://gymvisual.com/animated-gifs/8816-cable-standing-chest-press.html?search_query=standing+cable+chest+press&results=12",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Floor Press",
@@ -848,7 +879,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/8890-dumbbell-lying-on-floor-chest-press.html?search_query=dumbbell+floor+press&results=34",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Floor Press",
@@ -872,7 +904,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/8911-barbell-floor-chest-press.html?search_query=floor+chest+press&results=55",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Clean",
@@ -908,7 +941,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/11460-barbell-full-clean.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Clean and Jerk",
@@ -948,7 +982,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/19622-barbell-clean-and-jerk.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Clean and Press",
@@ -988,7 +1023,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1522-barbell-clean-and-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Clean High Pull",
@@ -1024,7 +1060,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14257-barbell-clean-high-pull.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Clean Pull",
@@ -1060,7 +1097,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3380-barbell-clean-pull.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Clean and Press",
@@ -1101,7 +1139,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/12804-dumbbell-clean-and-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Hang Clean",
@@ -1138,7 +1177,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/12217-dumbbell-hang-clean.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell High Pull",
@@ -1162,7 +1202,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/14155-dumbbell-high-pull.html?search_query=dumbbell+high+pull&results=2",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Hang Clean",
@@ -1197,7 +1238,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3383-barbell-hang-clean.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Hang Power Clean",
@@ -1233,7 +1275,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14256-barbell-hang-power-clean.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "High Pull",
@@ -1255,7 +1298,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/22108-barbell-high-pull-male.html?search_query=barbell+high+pull&results=12",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Power Clean",
@@ -1291,7 +1335,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2141-power-clean.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Snatch",
@@ -1329,7 +1374,8 @@
       "repsInstruction": "Per Arm",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/9063-dumbbell-one-arm-snatch.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Hang Power Snatch",
@@ -1364,7 +1410,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3393-barbell-power-snatch.html?search_query=power+snatch&results=6",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Hang Snatch",
@@ -1399,7 +1446,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3385-barbell-hang-snatch.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Muscle Snatch",
@@ -1429,7 +1477,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3389-barbell-muscle-snatch.html?search_query=muscle+snatch&results=2",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Power Snatch",
@@ -1465,7 +1514,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3393-barbell-power-snatch.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Snatch",
@@ -1501,7 +1551,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3396-barbell-snatch.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Snatch Pull",
@@ -1537,7 +1588,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2259-snatch-pull.html?search_query=snatch+pull&results=5",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Power Jerk",
@@ -1567,7 +1619,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3392-barbell-power-jerk.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Push Jerk",
@@ -1597,7 +1650,8 @@
       "effort": "Plyometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Split Jerk",
@@ -1629,7 +1683,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3404-barbell-split-jerk.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Squat Jerk",
@@ -1659,7 +1714,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2269-squat-jerk.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Band Pull-Apart",
@@ -1681,7 +1737,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/12292-resistance-band-pull-apart.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Chest Fly",
@@ -1702,7 +1759,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Stack",
       "imageUrl": "https://gymvisual.com/animated-gifs/1681-cable-middle-fly.html?search_query=cable+chest+fly&results=78",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "High to Low Cable Chest Fly",
@@ -1722,7 +1780,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Stack",
       "imageUrl": "https://gymvisual.com/animated-gifs/1720-cable-standing-fly.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Low to High Cable Chest Fly",
@@ -1742,7 +1801,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Stack",
       "imageUrl": "https://gymvisual.com/animated-gifs/1672-cable-low-fly.html?search_query=cable+chest+fly&results=78",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Reverse Fly",
@@ -1767,7 +1827,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Stack",
       "imageUrl": "https://gymvisual.com/animated-gifs/20003-cable-45-degrees-reverse-fly-male.html?search_query=cable+reverse+fly&results=22",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Chest Fly",
@@ -1791,7 +1852,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1801-dumbbell-fly.html?search_query=dumbbell+chest+fly&results=100",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Incline Dumbbell Chest Fly",
@@ -1815,7 +1877,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1820-dumbbell-incline-fly.html?search_query=incline+dumbbell+fly&results=36",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Decline Dumbbell Chest Fly",
@@ -1836,7 +1899,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1795-dumbbell-decline-fly.html?search_query=decline+dumbbell+fly&results=13",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Reverse Dumbbell Fly",
@@ -1861,7 +1925,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1884-dumbbell-reverse-fly.html?search_query=reverse+dumbbell+fly&results=19",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Chest Fly",
@@ -1881,7 +1946,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2093-lever-seated-fly.html?search_query=machine+chest+fly&results=21",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Reverse Fly",
@@ -1905,7 +1971,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2099-lever-seated-reverse-fly.html?search_query=machine+reverse+fly&results=10",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Pec Deck Fly",
@@ -1926,7 +1993,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2499-lever-pec-deck-fly.html?search_query=pec+deck&results=6",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Banded Chest Fly",
@@ -1947,7 +2015,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/12042-band-chest-fly-male.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Hip Thrust",
@@ -1970,7 +2039,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/4701-hip-thrusts.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Single-Leg Hip Thrust",
@@ -1995,7 +2065,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/4700-single-leg-hip-thrusts.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Barbell Hip Thrust",
@@ -2022,7 +2093,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2520-barbell-hip-thrust.html?search_query=barbell+hip+thrust&results=18",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Hip Thrust Hold",
@@ -2050,7 +2122,8 @@
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXtime"
+      "unitType": "weightXtime",
+      "gifName": ""
     },
     {
       "name": "Banded Hip Thrust",
@@ -2077,7 +2150,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/10117-resistance-band-hip-thrusts.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Glute Bridge",
@@ -2106,7 +2180,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/5512-glute-bridge-two-legs-on-floor.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Single-Leg Glute Bridge",
@@ -2131,7 +2206,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/15267-single-straight-leg-glute-bridge-hold-left-female.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Barbell Glute Bridge",
@@ -2155,7 +2231,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/6489-barbell-glute-bridge-hands-on-bar.html?search_query=barbell+glute+bridge&results=13",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Hamstring Bridge",
@@ -2185,7 +2262,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Glute-Ham Raise",
@@ -2210,7 +2288,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/10998-glute-ham-raise-version-2.html?search_query=glute+ham+raise&results=25",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Pull-Up",
@@ -2232,7 +2311,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2145-pull-up.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Towel Pull-Up",
@@ -2255,7 +2335,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Weighted Pull-Up",
@@ -2277,7 +2358,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2322-weighted-pull-up.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Neutral-Grip Pull-Up",
@@ -2299,7 +2381,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/13420-shoulder-width-neutral-grip-pull-up.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Weighted Neutral-Grip Pull-Up",
@@ -2320,7 +2403,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/8221-weighted-hammer-grip-pull-up-on-dip-cage.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Chin-Up",
@@ -2342,7 +2426,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3098-chin-up.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Weighted Chin-Up",
@@ -2364,7 +2449,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/10153-weighted-chin-up-male.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Muscle-Up",
@@ -2386,7 +2472,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3171-muscle-up-on-vertical-bar.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Weighted Muscle-Up",
@@ -2408,7 +2495,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/7215-weighted-muscle-up-on-bar.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Bench Dips",
@@ -2428,7 +2516,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/12137-bench-dip-on-floor-version-2.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Bench Dips (Feet Elevated)",
@@ -2455,7 +2544,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2294-triceps-dip-bench-leg.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Chest Dip",
@@ -2480,7 +2570,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1744-chest-dip.html?search_query=chest+dip&results=51",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Dips",
@@ -2503,7 +2594,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2296-triceps-dip.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Weighted Dip",
@@ -2531,7 +2623,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3767-weighted-tricep-dips.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Seated Dip",
@@ -2559,7 +2652,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2924-lever-seated-dip.html?search_query=machine+seated+dip&results=6",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Sit-Up",
@@ -2579,7 +2673,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2218-sit-up-version-2.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Decline Sit-Up",
@@ -2599,7 +2694,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1775-decline-sit-up.html?search_query=decline+sit+up&results=40",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Jackknife Sit-Up",
@@ -2619,7 +2715,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2005-jackknife-sit-up.html?search_query=jackknife+sit+up&results=4",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Bicycle Crunch",
@@ -2642,7 +2739,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Side",
       "imageUrl": "https://gymvisual.com/animated-gifs/15580-bicycle-crunch-male.html?search_query=bicycle+crunch&results=16",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Kneeling Cable Crunch",
@@ -2662,7 +2760,8 @@
       "effort": "Compound",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/14259-cable-kneeling-crunch-version-2.html?search_query=cable+crunch&results=48",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Standing Cable Crunch",
@@ -2681,7 +2780,8 @@
       "effort": "Compound",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2354-cable-standing-crunch-with-rope-attachment.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Cable Crunch",
@@ -2700,7 +2800,8 @@
       "effort": "Compound",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/1705-cable-seated-crunch.html?search_query=cable+crunch&results=48",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Crunch",
@@ -2720,7 +2821,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1767-crunch-floor-m.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Decline Crunch",
@@ -2740,7 +2842,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1770-decline-crunch.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Machine Seated Crunch",
@@ -2760,7 +2863,8 @@
       "effort": "Compound",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2925-lever-seated-crunch.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Reverse Crunch",
@@ -2780,7 +2884,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/10964-reverse-crunch-version-3.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Side Crunch",
@@ -2799,7 +2904,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2196-side-crunch.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Arch Body Hold",
@@ -2828,7 +2934,8 @@
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Front Rack Hold",
@@ -2857,7 +2964,8 @@
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXtime"
+      "unitType": "weightXtime",
+      "gifName": ""
     },
     {
       "name": "Handstand Hold",
@@ -2886,7 +2994,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/16445-handstand-hold-on-wall-male.html#/47-style_type-basic_grey",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Hollow Body Hold",
@@ -2905,7 +3014,8 @@
       "effort": "Isometric",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/4440-hollow-hold.html#/47-style_type-basic_grey",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Overhead Hold",
@@ -2936,7 +3046,8 @@
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXtime"
+      "unitType": "weightXtime",
+      "gifName": ""
     },
     {
       "name": "Thick-Bar Hold",
@@ -2955,7 +3066,8 @@
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXtime"
+      "unitType": "weightXtime",
+      "gifName": ""
     },
     {
       "name": "Trap Bar Hold",
@@ -2987,7 +3099,8 @@
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXtime"
+      "unitType": "weightXtime",
+      "gifName": ""
     },
     {
       "name": "Copenhagen Plank",
@@ -3011,7 +3124,8 @@
       "limbMovementType": "Unilateral",
       "resistance": "Bodyweight",
       "repsInstruction": "Per Side",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Kneeling Plank",
@@ -3031,7 +3145,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/8337-kneeling-plank-male.html#/47-style_type-basic_grey",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Plank",
@@ -3052,7 +3167,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/4402-front-plank.html#/47-style_type-basic_grey",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Reverse Plank Hold",
@@ -3081,7 +3197,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/4419-reverse-plank.html#/47-style_type-basic_grey",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Side Plank",
@@ -3100,7 +3217,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Side",
       "imageUrl": "https://gymvisual.com/animated-gifs/21565-side-plank-rotation.html#/47-style_type-basic_grey",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Arnold Press",
@@ -3126,7 +3244,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/4176-dumbbell-arnold-press.html?search_query=arnold+press&results=31",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Behind the Neck Press",
@@ -3147,7 +3266,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2271-standing-behind-neck-press.html?search_query=barbell+behind+neck+press&results=3",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Bradford Press",
@@ -3169,7 +3289,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1603-barbell-standing-bradford-press.html?search_query=bradford+press&results=4",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Converging Smith Shoulder Press",
@@ -3193,7 +3314,8 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Machine",
       "weightInstruction": "Per Peg",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cuban Press",
@@ -3217,7 +3339,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1792-dumbbell-cuban-press.html?search_query=cuban+press&results=8",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Push Press",
@@ -3243,7 +3366,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/3669-dumbbell-push-press.html?search_query=push+press&results=27",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Shoulder Press",
@@ -3269,7 +3393,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1927-dumbbell-standing-overhead-press.html?search_query=dumbbell+shoulder+press&results=171",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Z Press",
@@ -3294,7 +3419,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/illustrations/14146-dumbbell-z-press.html?search_query=dumbbell+y+press&results=433",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Kettlebell Bottoms-Up Press",
@@ -3318,7 +3444,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/8923-kettlebell-standing-bottoms-up-one-arm-shoulder-press.html?search_query=Kettlebell+Bottoms-Up+Press&results=11",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Landmine Press",
@@ -3343,7 +3470,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/21298-landmine-half-kneeling-shoulders-press.html?search_query=landmine+press&results=40",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Shoulder Press",
@@ -3368,7 +3496,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2927-lever-seated-shoulder-press.html?search_query=machine+shoulder+press&results=63",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Military Press",
@@ -3392,7 +3521,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2620-barbell-standing-military-press-without-rack.html?search_query=barbell+military+press&results=30",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Overhead Press Pin Hold",
@@ -3420,7 +3550,8 @@
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXtime"
+      "unitType": "weightXtime",
+      "gifName": ""
     },
     {
       "name": "Plate-Loaded Shoulder Press",
@@ -3447,7 +3578,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Peg",
       "imageUrl": "https://gymvisual.com/animated-gifs/2349-lever-shoulder-press-plate-loaded-version-2.html?search_query=plate+loaded+shoulder+press&results=21",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Push Press",
@@ -3472,7 +3604,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2651-push-press.html?search_query=push+press&results=27",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Dumbbell Shoulder Press",
@@ -3498,7 +3631,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1906-dumbbell-seated-shoulder-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Overhead Pin Press",
@@ -3523,7 +3657,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14157-barbell-standing-shoulder-pin-press.html?search_query=shoulder+pin+press&results=2",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Overhead Press",
@@ -3548,7 +3683,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/12838-barbell-standing-shoulders-press.html?search_query=barbell+shoulder+press&results=90",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Smith Machine Shoulder Press",
@@ -3572,7 +3708,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2248-smith-seated-shoulder-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Overhead Press",
@@ -3597,7 +3734,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1588-barbell-seated-overhead-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Arm Landmine Press",
@@ -3623,7 +3761,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/8849-landmine-kneeling-one-arm-shoulder-press.html?search_query=landmine+press&results=40",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Viking Press",
@@ -3648,7 +3787,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/6687-strongman-viking-press.html?search_query=viking+press&results=5",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Y Press",
@@ -3671,7 +3811,8 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Z Press",
@@ -3693,7 +3834,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/12382-barbell-z-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable External Rotation",
@@ -3714,7 +3856,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1728-cable-standing-shoulder-external-rotation.html?search_query=cable+external+rotation&results=22",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Band External Rotation",
@@ -3734,7 +3877,8 @@
       "resistance": "Banded",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/2396-band-standing-external-shoulder-rotation.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Dumbbell External Rotation",
@@ -3755,7 +3899,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/12398-dumbbell-seated-external-shoulder-rotation.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Internal Rotation",
@@ -3775,7 +3920,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/13552-cable-shoulder-internal-rotation.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Band Internal Rotation",
@@ -3795,7 +3941,8 @@
       "resistance": "Banded",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/19251-resistance-band-standing-shoulder-internal-rotation-male.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Banded Lateral Raise",
@@ -3814,7 +3961,8 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/2449-band-front-lateral-raise.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Lateral Raise",
@@ -3835,7 +3983,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1586-cable-lateral-raise.html?search_query=cable+lateral+raise&results=48",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Lateral Raise",
@@ -3856,7 +4005,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1835-dumbbell-lateral-raise.html?search_query=dumbbell+lateral+raise&results=133",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Lateral Raise",
@@ -3876,7 +4026,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2081-lever-lateral-raise.html?search_query=machine+lateral+raise&results=16",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Front Raise",
@@ -3896,7 +4047,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1535-barbell-front-raise.html?search_query=barbell+front+raise&results=30",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Front Raise",
@@ -3917,7 +4069,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1803-dumbbell-front-raise.html?search_query=dumbbell+front+raise&results=92",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Plate Front Raise",
@@ -3936,7 +4089,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/12363-weighted-plate-standing-high-front-raise.html?search_query=plate+raise&results=26",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "I-Y-T Raise (on Bench)",
@@ -3959,7 +4113,8 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Incline Y Raise",
@@ -3982,7 +4137,8 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Y Raise",
@@ -4003,7 +4159,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1804-dumbbell-full-can-lateral-raise.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Face Pull",
@@ -4028,7 +4185,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/14154-dumbbell-bent-over-face-pull.html?search_query=dumbbell+face+pull&results=3",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Face Pull",
@@ -4052,7 +4210,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/14130-cable-standing-face-pull-with-rope.html?search_query=face+pull&results=45",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Shrug",
@@ -4072,7 +4231,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1592-barbell-shrug.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Behind the Back Barbell Shrug",
@@ -4092,7 +4252,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/8917-barbell-behind-the-back-shrug.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Shrug",
@@ -4112,7 +4273,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/1713-cable-shrug.html?search_query=cable+shrug&results=14",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Shrug",
@@ -4133,7 +4295,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1907-dumbbell-shrug.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Trap Bar Shrug",
@@ -4153,7 +4316,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/10154-trap-bar-standing-shrug-male.html?search_query=trap+bar+shrug&results=10",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Shrug",
@@ -4176,7 +4340,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2101-lever-shrug-plate-loaded.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Power Shrug",
@@ -4211,7 +4376,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14151-barbell-power-shrug.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Smith Machine Shrug",
@@ -4231,7 +4397,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2250-smith-shrug.html?search_query=smith+machine+shrug&results=14",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Ab Wheel Roll-Out",
@@ -4251,7 +4418,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2338-wheel-rollout.html?search_query=ab+wheel+rollout&results=21",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Stability Ball Roll-Out",
@@ -4271,7 +4439,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/21289-stability-ball-rollout-on-knees-male.html?search_query=stability+ball+rollout&results=12",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Barbell Calf Raise",
@@ -4292,7 +4461,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1606-barbell-standing-leg-calf-raise.html?search_query=barbell+calf+raise&results=27",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Bodyweight Calf Raise",
@@ -4313,7 +4483,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3143-bodyweight-standing-calf-raise.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Donkey Calf Raise",
@@ -4333,7 +4504,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2696-lever-donkey-calf-raise.html?search_query=donkey+calf+raise&results=16",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Calf Raise",
@@ -4355,7 +4527,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1918-dumbbell-standing-calf-raise.html?search_query=dumbbell+calf+raise&results=47",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Walking Calf Raise",
@@ -4378,7 +4551,8 @@
       "weightInstruction": "Per Dumbbell",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/14250-dumbbell-walking-calf-raise.html?search_query=dumbbell+calf+raise&results=47",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Leg Press Calf Raise",
@@ -4399,7 +4573,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/3161-sled-calf-press-on-leg-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Plate-Loaded Standing Calf Raise",
@@ -4419,7 +4594,8 @@
       "effort": "Isolation",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Calf Raise",
@@ -4439,7 +4615,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2091-lever-seated-calf-raise-plate-loaded.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Leg Seated Calf Raise",
@@ -4460,7 +4637,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/2666-lever-seated-one-leg-calf-raise.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Standing Calf Raise",
@@ -4481,7 +4659,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2102-lever-standing-calf-raise.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Hack Squat Machine Calf Raise",
@@ -4501,7 +4680,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/3153-hack-calf-raise.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Seated Calf Raise",
@@ -4520,7 +4700,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1583-barbell-seated-calf-raise.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Leg Bodyweight Calf Raise",
@@ -4541,7 +4722,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/3157-one-leg-floor-calf-raise.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Standing Smith Machine Calf Raise",
@@ -4561,7 +4743,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2256-smith-standing-leg-calf-raise.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Smith Machine Calf Raise",
@@ -4580,7 +4763,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/12153-smith-seated-calf-raise.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Banded Calf Raise",
@@ -4599,7 +4783,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/5491-resistance-band-calf-raise.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Standing Banded Calf Raise",
@@ -4619,7 +4804,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/3139-band-two-legs-calf-raise-band-under-both-legs-version-2.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Standing Calf Raise",
@@ -4639,7 +4825,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/3145-cable-standing-calf-raise.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Elliptical Stride",
@@ -4673,7 +4860,8 @@
       "effort": "Cardio",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/12069-walking-on-elliptical-machine-version-7-female.html#/47-style_type-basic_grey",
-      "unitType": "distanceXtimeOrSpeed"
+      "unitType": "distanceXtimeOrSpeed",
+      "gifName": ""
     },
     {
       "name": "Indoor Cycling",
@@ -4702,7 +4890,8 @@
       "effort": "Cardio",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/9829-bicycle-recline-walk.html#/47-style_type-basic_grey",
-      "unitType": "distanceXtimeOrSpeed"
+      "unitType": "distanceXtimeOrSpeed",
+      "gifName": ""
     },
     {
       "name": "Ladder Climb",
@@ -4731,7 +4920,8 @@
       "difficulty": "Beg.",
       "effort": "Cardio",
       "resistance": "Machine",
-      "unitType": "distanceXtimeOrSpeed"
+      "unitType": "distanceXtimeOrSpeed",
+      "gifName": ""
     },
     {
       "name": "Stair Climb",
@@ -4764,7 +4954,8 @@
       "difficulty": "Beg.",
       "effort": "Cardio",
       "resistance": "Machine",
-      "unitType": "distanceXtimeOrSpeed"
+      "unitType": "distanceXtimeOrSpeed",
+      "gifName": ""
     },
     {
       "name": "Treadmill Walk/Run",
@@ -4795,7 +4986,8 @@
       "effort": "Cardio",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/4766-walking-on-treadmill.html#/47-style_type-basic_grey",
-      "unitType": "distanceXtimeOrSpeed"
+      "unitType": "distanceXtimeOrSpeed",
+      "gifName": ""
     },
     {
       "name": "21s Curl",
@@ -4818,7 +5010,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/13293-ez-bar-21s.html?search_query=21s&results=4",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Band Biceps Curl",
@@ -4841,7 +5034,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/10130-band-biceps-curl.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Curl",
@@ -4865,7 +5059,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1525-barbell-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Reverse Curl",
@@ -4891,7 +5086,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1574-barbell-reverse-curl.html?search_query=barbell+reverse+curl&results=44",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Wrist Curl",
@@ -4911,7 +5107,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1623-barbell-wrist-curl-version-2.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Reverse Wrist Curl",
@@ -4931,7 +5128,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1573-barbell-revers-wrist-curl-version-2.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Arm Plate Wrist Curl",
@@ -4953,7 +5151,8 @@
       "repsInstruction": "Per Arm",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/10263-weighted-seated-one-arm-wrist-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Concentration Curl",
@@ -4972,7 +5171,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/3568-cable-concentration-curl.html?search_query=cable+concentration+curl&results=14",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Curl With Bar",
@@ -4996,7 +5196,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/3567-cable-close-grip-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Hammer Curl",
@@ -5019,7 +5220,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/1658-cable-hammer-curl-with-rope-male.html?search_query=cable+hammer+curl&results=15",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cheat Curl",
@@ -5040,7 +5242,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14248-cheat-curl.html?search_query=cheat+curl&results=3",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Concentration Curl",
@@ -5062,7 +5265,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1790-dumbbell-concentration-curl.html?search_query=dumbbell+concentration+curl&results=21",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Drag Curl",
@@ -5085,7 +5289,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1532-barbell-drag-curl.html?search_query=drag+curl&results=31",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Curl",
@@ -5111,7 +5316,8 @@
       "weightInstruction": "Per Dumbbell",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1778-dumbbell-alternate-biceps-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Reverse Curl",
@@ -5133,7 +5339,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1930-dumbbell-standing-reverse-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Reverse Wrist Curl",
@@ -5154,7 +5361,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1869-dumbbell-over-bench-revers-wrist-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Wrist Curl",
@@ -5175,7 +5383,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1870-dumbbell-over-bench-wrist-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "EZ-Bar Curl",
@@ -5199,7 +5408,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1948-ez-barbell-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "EZ-Bar Reverse Curl",
@@ -5222,7 +5432,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1952-ez-barbell-reverse-grip-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Hammer Curl",
@@ -5247,7 +5458,8 @@
       "weightInstruction": "Per Dumbbell",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1806-dumbbell-hammer-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Lying Cable Curl",
@@ -5271,7 +5483,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/3571-cable-lying-bicep-curl.html?search_query=lying+cable+curl&results=21",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Incline Cable Curl",
@@ -5295,7 +5508,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/14255-cable-incline-biceps-curl.html?search_query=incline+cable+curl&results=8",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Incline Dumbbell Curl",
@@ -5317,7 +5531,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1808-dumbbell-incline-biceps-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Incline Hammer Curl",
@@ -5342,7 +5557,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1821-dumbbell-incline-hammer-curl.html?search_query=incline+hammer+curl&results=18",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Preacher Curl",
@@ -5363,7 +5579,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2089-lever-preacher-curl.html?search_query=machine+preacher+curl&results=29",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Overhead Cable Curl",
@@ -5388,7 +5605,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Stack",
       "imageUrl": "https://gymvisual.com/animated-gifs/3573-cable-overhead-curl.html?search_query=overhead+cable+curl&results=13",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Ez-Bar Preacher Curl",
@@ -5409,7 +5627,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/16019-ez-barbell-preacher-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Dumbbell Curl",
@@ -5431,7 +5650,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1892-dumbbell-seated-curl.html?search_query=seated+dumbbell+curl&results=80",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Arm Cable Bicep Curl",
@@ -5453,7 +5673,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1683-cable-one-arm-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Arm Dumbbell Preacher Curl",
@@ -5475,7 +5696,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1873-dumbbell-preacher-curl.html?search_query=dumbbell+preacher+curl&results=63",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Spider Curl",
@@ -5496,7 +5718,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1955-ez-barbell-spider-curl.html?search_query=spider+curl&results=26",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Strict Curl",
@@ -5517,7 +5740,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14158-barbell-srtict-curl.html?search_query=srtict+curl&results=9",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Zottman Curl",
@@ -5541,7 +5765,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1940-dumbbell-zottman-curl.html?search_query=zottman+curl&results=18",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Nordic Curl",
@@ -5563,7 +5788,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/18424-nordic-hamstring-curl-male.html?search_query=nordic+hamstring+curl&results=6",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Reverse Nordic Curl",
@@ -5586,7 +5812,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Deadlift",
@@ -5618,7 +5845,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1526-barbell-deadlift.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Leg Deadlift",
@@ -5649,7 +5877,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/3768-barbell-single-leg-deadlift.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Deadlift",
@@ -5682,7 +5911,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/11281-dumbbell-deadlift-version-2-male.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Leg Dumbbell Deadlift",
@@ -5715,7 +5945,8 @@
       "weightInstruction": "Per Dumbbell",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/3769-dumbbell-single-leg-deadlift.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Deficit Deadlift",
@@ -5747,7 +5978,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14254-barbell-deadlift-from-deficit.html?search_query=deficit+deadlift&results=12",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Behind the Back Deadlift",
@@ -5779,7 +6011,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14152-barbell-behind-the-back-deadlift.html?search_query=behind+the+back+deadlift&results=2",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Jefferson Deadlift",
@@ -5809,7 +6042,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14258-barbell-jefferson-deadlift.html?search_query=jefferson+deadlift&results=2",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Jefferson Curl",
@@ -5835,7 +6069,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/17770-dumbbell-jefferson-curl-male.html?search_query=jefferson+curl&results=4",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Snatch Grip Deadlift",
@@ -5865,7 +6100,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/17605-barbell-snatch-grip-deadlift-male.html?search_query=snatch+grip+deadlift&results=3",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Sumo Deadlift",
@@ -5889,7 +6125,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1615-barbell-sumo-deadlift.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Trap Bar Deadlift",
@@ -5916,7 +6153,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2293-trap-bar-deadlift.html?search_query=trap+bar+deadlift&results=12",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Zercher Deadlift",
@@ -5948,7 +6186,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14159-barbell-zercher-deadlift.html?search_query=zercher+deadlift&results=2",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Stiff-Legged Deadlift",
@@ -5975,7 +6214,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3409-barbell-stiff-legged-deadlift.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Romanian Deadlift",
@@ -6005,7 +6245,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1579-barbell-romanian-deadlift.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Leg Romanian Deadlift",
@@ -6036,7 +6277,8 @@
       "limbMovementType": "Unilateral",
       "resistance": "Free Weight",
       "repsInstruction": "Per Leg",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Romanian Deadlift",
@@ -6062,7 +6304,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/3206-dumbbell-romanian-deadlift.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Rack Pull",
@@ -6092,7 +6335,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1568-barbell-rack-pull.html?search_query=rack+pull&results=7",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Hyperextension",
@@ -6113,7 +6357,8 @@
       "effort": "Isolation",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1988-hyperextension.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Bodyweight Reverse Hyperextension",
@@ -6136,7 +6381,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Machine Back Extension",
@@ -6157,7 +6403,8 @@
       "effort": "Isolation",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2070-lever-back-extension.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Reverse Hyperextension",
@@ -6182,7 +6429,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2090-lever-reverse-hyperextension-plate-loaded.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Weighted Hyperextension",
@@ -6202,7 +6450,8 @@
       "effort": "Isolation",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/13030-weighted-hyperextension.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Glute Kickback",
@@ -6223,7 +6472,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/11282-cable-kickback-male.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Glute Kickback",
@@ -6244,7 +6494,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/16526-lever-glute-press-male.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Glute Kickback",
@@ -6266,7 +6517,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/8249-bent-leg-kickback-kneeling-male.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Dead Hang",
@@ -6292,7 +6544,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/11528-dead-hang-stretch.html#/47-style_type-basic_grey",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Flexed-Arm Hang",
@@ -6319,7 +6572,8 @@
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Single-Arm Dead Hang",
@@ -6341,7 +6595,8 @@
       "limbMovementType": "Unilateral",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/22858-alternating-dead-hang-male.html#/47-style_type-basic_grey",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Weighted Dead Hang",
@@ -6369,7 +6624,8 @@
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXtime"
+      "unitType": "weightXtime",
+      "gifName": ""
     },
     {
       "name": "Weighted Flexed-Arm Hang",
@@ -6396,7 +6652,8 @@
       "effort": "Isometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXtime"
+      "unitType": "weightXtime",
+      "gifName": ""
     },
     {
       "name": "Bird Dog",
@@ -6423,7 +6680,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Side",
       "imageUrl": "https://gymvisual.com/animated-gifs/2686-bird-dog-male.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Dead Bug",
@@ -6443,7 +6701,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1769-dead-bug.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Side Lying Hip Abduction",
@@ -6466,7 +6725,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/2198-side-hip-abduction.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Band Standing Hip Abduction",
@@ -6488,7 +6748,8 @@
       "resistance": "Banded",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/23477-resistance-band-standing-balance-hip-abduction-male.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Band Seated Hip Abduction",
@@ -6505,7 +6766,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
       "imageUrl": "https://gymvisual.com/animated-gifs/17014-resistance-band-seated-hip-abduction-version-2.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Hip Abduction",
@@ -6527,7 +6789,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/8261-cable-hip-abduction-version-2-male.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Lever Side Hip Abduction",
@@ -6545,7 +6808,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/6120-lever-side-hip-abduction-female.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Side Bridge Hip Abduction",
@@ -6569,7 +6833,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/3812-side-bridge-hip-abduction.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Side Lying Hip Adduction",
@@ -6586,7 +6851,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/2198-side-hip-abduction.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Band Hip Adduction",
@@ -6604,7 +6870,8 @@
       "resistance": "Banded",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/10096-band-hip-adduction-male.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Side Plank Hip Adduction",
@@ -6625,7 +6892,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/8432-side-plank-hip-adduction-bent-knee.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Lever Side Hip Adduction",
@@ -6643,7 +6911,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/2504-lever-side-hip-adduction.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Standing Hip Adduction",
@@ -6661,7 +6930,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/11989-hip-adduction.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Cable Hip Adduction",
@@ -6679,7 +6949,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/1661-cable-hip-adduction.html?search_query=cable+hip+adduction&results=6",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Side Lying Leg Raise",
@@ -6702,7 +6973,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/10118-side-lying-leg-raise.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Kneeling Hip Extension",
@@ -6727,7 +6999,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/8328-straight-leg-kickback-kneeling-male.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Hip Extension",
@@ -6753,7 +7026,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/11990-hip-extension.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Hip Airplane",
@@ -6785,7 +7059,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/14864-warrior-iii-pose-female.html?search_query=warrior+3&results=24",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Machine Hip Abduction",
@@ -6803,7 +7078,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2094-lever-seated-hip-abduction.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Hip Adduction",
@@ -6821,7 +7097,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2095-lever-seated-hip-adduction.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Lying Leg Curl",
@@ -6843,7 +7120,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2083-lever-lying-leg-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Leg Curl",
@@ -6865,7 +7143,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2096-lever-seated-leg-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Slider Leg Curl",
@@ -6886,7 +7165,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/8929-sliding-leg-curl-on-floor-with-towel.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Standing Leg Curl",
@@ -6909,7 +7189,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/12132-lever-standing-leg-curl.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Stability-Ball Leg Curl",
@@ -6930,7 +7211,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/13031-exercise-ball-leg-curl.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Cable Leg Extension",
@@ -6953,7 +7235,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/14153-cable-seated-leg-extension.html?search_query=cable+leg+extension&results=4",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Leg Extension",
@@ -6974,7 +7257,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2082-lever-leg-extension.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Compact Leg Press",
@@ -7006,7 +7290,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/17730-lever-linear-hack-squat-male.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Horizontal Leg Press",
@@ -7036,7 +7321,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/6764-lever-horizontal-leg-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Leg Press",
@@ -7058,7 +7344,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2222-sled-45-leg-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Leg Press",
@@ -7089,7 +7376,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/6003-sled-45-degrees-one-leg-press-female.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Vertical Leg Press",
@@ -7119,7 +7407,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/12118-sled-vertical-leg-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Flutter Kicks",
@@ -7138,7 +7427,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2689-flutter-kicks-version-3.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Hanging Knee Raise",
@@ -7157,7 +7447,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3798-hanging-leg-hip-raise.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Hanging Leg Raise",
@@ -7176,7 +7467,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1971-hanging-leg-raise.html?search_query=hanging+leg+raise&results=38",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "L-Sit",
@@ -7205,7 +7497,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/4448-l-sit.html#/47-style_type-basic_grey",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Lying Leg Raise",
@@ -7224,7 +7517,8 @@
       "effort": "Isolation",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2618-lying-leg-raise.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Scissor Kicks",
@@ -7243,7 +7537,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2117-lying-scissor-kick.html?search_query=scissor+kick&results=3",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Toes to Bar",
@@ -7262,7 +7557,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/10012-hanging-toes-to-bar.html?search_query=toes+to+bar&results=4",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Barbell Lunge",
@@ -7288,7 +7584,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/1548-barbell-lunge.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Reverse Lunge",
@@ -7319,7 +7616,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/1572-barbell-rear-lunge.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Walking Lunge",
@@ -7345,7 +7643,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/16661-barbell-walking-lunge.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Curtsy Lunge",
@@ -7372,7 +7671,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/19080-barbell-curtsey-lunge-female.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Lunge",
@@ -7399,7 +7699,8 @@
       "weightInstruction": "Per Dumbbell",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/1837-dumbbell-lunge.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Lunge",
@@ -7425,7 +7726,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/7606-forward-lunge-male.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Reverse Lunge",
@@ -7451,7 +7753,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/3445-bodyweight-rear-lunge.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Lateral Lunge",
@@ -7477,7 +7780,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/6497-side-lunge.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Barbell Lateral Lunge",
@@ -7502,7 +7806,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/3178-barbell-lateral-lunge.html?search_query=barbell+lateral+lunge&results=6",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Close-Grip Lat Pulldown",
@@ -7531,7 +7836,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2516-cable-close-grip-front-lat-pulldown.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Lat Pulldown",
@@ -7560,7 +7866,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/1643-cable-bar-lateral-pulldown.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Arm Lat Pulldown",
@@ -7590,7 +7897,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/2654-cable-one-arm-lat-pulldown.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Reverse-Grip Lat Pulldown",
@@ -7616,7 +7924,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/11285-cable-reverse-grip-pulldown.html?search_query=reverse+grip++pulldown&results=16",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Straight Arm Lat Pulldown",
@@ -7637,7 +7946,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/1731-cable-straight-arm-pulldown.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Pullover",
@@ -7662,7 +7972,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1567-barbell-pullover.html?search_query=barbell+pullover&results=37",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Bent-Arm Barbell Pullover",
@@ -7687,7 +7998,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/18245-barbell-bent-arm-pullover-male.html?search_query=barbell+pullover&results=37",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Pullover",
@@ -7712,7 +8024,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/15959-dumbbell-pullover-version-2.html?search_query=dumbbell+pullover&results=57",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Pullover",
@@ -7734,7 +8047,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/4788-lever-pullover-plate-loaded.html?search_query=machine+pullover&results=4",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Archer Push-Up",
@@ -7761,7 +8075,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Side",
       "imageUrl": "https://gymvisual.com/animated-gifs/7188-archer-push-up.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Close-Grip Push-Up",
@@ -7784,7 +8099,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1752-close-grip-push-up.html?search_query=close+grip+push+up&results=27",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Decline Push-Up",
@@ -7811,7 +8127,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1772-decline-push-up-m.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Diamond Push-Up",
@@ -7838,7 +8155,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1776-diamond-push-up.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Handstand Push-Up",
@@ -7863,7 +8181,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1970-handstand-push-up.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Incline Push-Up",
@@ -7890,7 +8209,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1992-incline-push-up.html?search_query=incline+push+up&results=44",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Kneeling Close-Grip Push-Up",
@@ -7916,7 +8236,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/5358-close-grip-push-up-on-knees.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Kneeling Push-Up",
@@ -7945,7 +8266,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/6905-kneeling-push-up-male.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Pike Push-Up",
@@ -7967,7 +8289,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/6735-pike-push-up.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Push-Up",
@@ -7994,7 +8317,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2155-push-up-m.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Tate Push-Up",
@@ -8019,7 +8343,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Wide-Grip Push-Up",
@@ -8044,7 +8369,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3084-wide-hand-push-up.html?search_query=wide+push+up&results=18",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Barbell Rear Delt Row",
@@ -8066,7 +8392,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1570-barbell-rear-delt-row.html?search_query=barbell+rear+delt+row&results=7",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Bent-Over Row",
@@ -8092,7 +8419,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1521-barbell-bent-over-row.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Upright Row",
@@ -8115,7 +8443,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1619-barbell-upright-row.html?search_query=barbell+upright+row&results=25",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Bench Pull",
@@ -8139,7 +8468,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/9913-barbell-lying-row-on-rack.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Upright Row",
@@ -8162,7 +8492,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/1739-cable-upright-row.html?search_query=cable+upright+row&results=11",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Chest-Supported Dumbbell Row",
@@ -8188,7 +8519,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/21301-dumbbell-row-with-chest-supported.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Chest-Supported T-Bar Row",
@@ -8213,7 +8545,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/10129-lever-lying-banded-t-bar-row.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Bench Pull",
@@ -8238,7 +8571,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/14249-dumbbell-lying-row-on-rack.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Rear Delt Row",
@@ -8260,7 +8594,8 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/10265-dumbbell-seated-bent-over-rear-delt-row.html?search_query=dumbbell+rear+delt+row&results=14",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Bent-Over Row",
@@ -8287,7 +8622,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1785-dumbbell-bent-over-row.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Upright Row",
@@ -8311,7 +8647,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1938-dumbbell-upright-row.html?search_query=dumbbell+upright+row&results=15",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Endurance Row",
@@ -8344,7 +8681,8 @@
       "effort": "Cardio",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2616-rowing-with-rowing-machine.html#/47-style_type-basic_grey",
-      "unitType": "distanceXtimeOrSpeed"
+      "unitType": "distanceXtimeOrSpeed",
+      "gifName": ""
     },
     {
       "name": "Inverted Row",
@@ -8370,7 +8708,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1998-inverted-row.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Landmine Row",
@@ -8395,7 +8734,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/7155-lever-bent-over-row-with-v-bar-plate-loaded.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Meadows Row",
@@ -8421,7 +8761,8 @@
       "limbMovementType": "Unilateral",
       "resistance": "Free Weight",
       "repsInstruction": "Per Arm",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Pendlay Row",
@@ -8446,7 +8787,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/6574-barbell-pendlay-row.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Plate-Loaded High Row",
@@ -8471,7 +8813,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Peg",
       "imageUrl": "https://gymvisual.com/animated-gifs/2078-lever-high-row-plate-loaded.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Plate-Loaded Low Row",
@@ -8496,7 +8839,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Peg",
       "imageUrl": "https://gymvisual.com/animated-gifs/10244-lever-low-row-plate-loaded.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Renegade Row",
@@ -8526,7 +8870,8 @@
       "weightInstruction": "Per Dumbbell",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/6505-dumbbell-renegade-row.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seal Row",
@@ -8551,7 +8896,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/21577-barbell-lying-seal-row-on-rack.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Cable Row",
@@ -8580,7 +8926,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2342-cable-seated-row.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Single-Arm Cable Row",
@@ -8606,7 +8953,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/22117-cable-seated-single-arm-lats-focused-row.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Machine Row",
@@ -8635,7 +8983,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/3120-lever-seated-row.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "T-Bar Row",
@@ -8661,7 +9010,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2103-lever-t-bar-row-plate-loaded.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Towel Row",
@@ -8688,7 +9038,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Yates Row",
@@ -8711,7 +9062,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Medicine Ball Russian Twist",
@@ -8731,7 +9083,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Side",
       "imageUrl": "https://gymvisual.com/animated-gifs/2691-russian-twist-with-medicine-ball.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Russian Twist",
@@ -8750,7 +9103,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2179-russian-twist.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Side Bend",
@@ -8771,7 +9125,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1908-dumbbell-side-bend.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Roman Chair Side Bend",
@@ -8797,7 +9152,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Side",
       "imageUrl": "https://gymvisual.com/animated-gifs/14251-45-degrees-side-bend-male.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Back Squat",
@@ -8827,7 +9183,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2909-barbell-high-bar-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Bulgarian Split Squat",
@@ -8859,7 +9216,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/1597-barbell-single-leg-split-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Bulgarian Split Squat",
@@ -8892,7 +9250,8 @@
       "weightInstruction": "Per Dumbbell",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/4904-dumbbell-bulgarian-split-squat-female.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Goblet Bulgarian Split Squat",
@@ -8923,7 +9282,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/18042-dumbbell-goblet-bulgarian-split-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Hack Squat",
@@ -8950,7 +9310,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1540-barbell-hack-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Split Squat",
@@ -8981,7 +9342,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/8245-barbell-split-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Belt Squat",
@@ -9011,7 +9373,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/6763-lever-belt-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Bodyweight Squat",
@@ -9041,7 +9404,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2648-squat-m.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Box Squat",
@@ -9066,7 +9430,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/11278-barbell-box-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Cossack Squat",
@@ -9093,7 +9458,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/12286-dumbbell-cossack-squats-male.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cyclist Squat",
@@ -9116,7 +9482,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Front Squat",
@@ -9147,7 +9514,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/6491-dumbbell-front-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Split Squat",
@@ -9179,7 +9547,8 @@
       "weightInstruction": "Per Dumbbell",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/8219-dumbbell-split-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Squat",
@@ -9204,7 +9573,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3420-dumbbell-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Front Squat",
@@ -9234,7 +9604,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1523-barbell-clean-grip-front-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Goblet Squat",
@@ -9264,7 +9635,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3795-dumbbell-goblet-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Half Squat",
@@ -9293,7 +9665,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Jefferson Squat",
@@ -9323,7 +9696,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1545-barbell-jefferson-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Landmine Front Squat",
@@ -9353,7 +9727,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/10270-landmine-front-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Hack Squat",
@@ -9383,7 +9758,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/2226-sled-hack-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Pendulum Squat",
@@ -9415,7 +9791,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/12391-lever-pendulum-squat-plate-loaded.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "V-Squat",
@@ -9447,7 +9824,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/4579-lever-squat-plate-loaded.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Overhead Squat",
@@ -9477,7 +9855,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1563-barbell-overhead-squat.html?search_query=overhead+squat&results=52",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Pin Squat",
@@ -9507,7 +9886,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/14253-barbell-pin-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Pistol Squat",
@@ -9539,7 +9919,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/3794-single-leg-squat-pistolmale.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Safety Bar Squat",
@@ -9569,7 +9950,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/10248-safety-bar-front-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Leg Squat",
@@ -9600,7 +9982,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/18052-bodyweight-single-leg-squat-male.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Sissy Hack Squat",
@@ -9623,7 +10006,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Sissy Squat",
@@ -9648,7 +10032,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/10904-bodyweight-standing-sissy-squat.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Smith Machine Squat",
@@ -9678,7 +10063,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/7175-smith-full-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Spanish Squat",
@@ -9701,7 +10087,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Split-Squat Jump",
@@ -9725,7 +10112,8 @@
       "limbMovementType": "Unilateral",
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Squat Thrust",
@@ -9760,7 +10148,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/8895-squat-thrust.html?search_query=squat+thrust&results=4",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Barbell Sumo Squat",
@@ -9787,7 +10176,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2523-barbell-sumo-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Trap Bar Jump Squat",
@@ -9813,7 +10203,8 @@
       "effort": "Plyometric",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Zercher Squat",
@@ -9843,7 +10234,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/5170-barbell-full-zercher-squat.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Thruster",
@@ -9876,7 +10268,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/6493-dumbbell-thruster.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Thruster",
@@ -9905,7 +10298,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/7199-barbell-thruster.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Bent-Over Dumbbell Tricep Extension",
@@ -9926,7 +10320,8 @@
       "weightInstruction": "Per Dumbbell",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/3753-dumbbell-standing-bent-over-two-arm-triceps-extension.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Tricep Kickback",
@@ -9946,7 +10341,8 @@
       "resistance": "Machine",
       "weightInstruction": "Per Stack",
       "imageUrl": "https://gymvisual.com/animated-gifs/3740-cable-two-arm-tricep-kickback.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Tricep Kickback",
@@ -9967,7 +10363,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1834-dumbbell-kickback.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Lying Barbell Tricep Extension",
@@ -9987,7 +10384,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1555-barbell-lying-triceps-extension.html?search_query=lying+ez+bar+tricep+extension&results=25",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Lying Dumbbell Tricep Extension",
@@ -10007,7 +10405,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1852-dumbbell-lying-triceps-extension.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Lying EZ-Bar Tricep Extension",
@@ -10028,7 +10427,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/21936-ez-barbell-lying-triceps-extension-male.html?search_query=lying+ez+bar+tricep+extension&results=25",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Tricep Extension",
@@ -10050,7 +10450,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/16671-lever-triceps-extension-version-2.html?search_query=machine+tricep+extension&results=24",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Overhead Straight Bar Triceps Extension",
@@ -10069,7 +10470,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/10167-cable-overhead-tricep-extension-straight-bar-male.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Overhead Rope Tricep Extension",
@@ -10087,7 +10489,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/3734-cable-high-pulley-overhead-tricep-extension.html?search_query=overhead+cable+tricep+extension&results=34",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Reverse-Grip Tricep Pushdown",
@@ -10107,7 +10510,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/3470-cable-reverse-grip-triceps-pushdown-sz-bar.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Seated Dumbbell Tricep Extension",
@@ -10127,7 +10531,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/4223-dumbbell-seated-triceps-extension.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Single-Arm Cable Tricep Extension",
@@ -10148,7 +10553,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1724-cable-standing-one-arm-triceps-extension.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Standing Barbell Tricep Extension",
@@ -10168,7 +10574,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1607-barbell-standing-overhead-triceps-extension.html?search_query=standing+barbell+tricep+extension&results=6",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Standing Dumbbell Tricep Extension",
@@ -10189,7 +10596,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1931-dumbbell-standing-triceps-extension.html?search_query=standing+dumbbell+tricep+extension&results=12",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Tate Press",
@@ -10211,7 +10619,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1937-dumbbell-tate-press.html?search_query=tate+press&results=6",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Tricep Pushdown With Bar",
@@ -10232,7 +10641,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/1694-cable-pushdown.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Tricep Pushdown With Rope",
@@ -10253,7 +10663,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/1693-cable-pushdown-with-rope-attachment.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Wall Sit",
@@ -10284,7 +10695,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/18049-wall-sit-narrow-stance-male.html#/47-style_type-basic_grey",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Weighted Wall Sit",
@@ -10315,7 +10727,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/18051-dumbbell-goblet-wall-sit-male.html#/47-style_type-basic_grey",
-      "unitType": "weightXtime"
+      "unitType": "weightXtime",
+      "gifName": ""
     },
     {
       "name": "Burpees",
@@ -10355,7 +10768,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/4343-burpee.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Cable Pull Through",
@@ -10380,7 +10794,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/1689-cable-pull-through-with-rope.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Anti-Rotation Chop",
@@ -10401,7 +10816,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Side",
       "imageUrl": "https://gymvisual.com/animated-gifs/18252-cable-kneeling-high-low-anti-rotation-chop-male.html?search_query=cable+anti+rotation&results=3",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Dragon Flag",
@@ -10420,7 +10836,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Frog Pump",
@@ -10444,7 +10861,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/7068-bodyweight-frog-pump.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Good Morning",
@@ -10471,7 +10889,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1538-barbell-good-morning.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Kettlebell Halo",
@@ -10494,7 +10913,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/23350-kettlebell-half-kneeling-halo-male.html?search_query=kettlebell+halo&results=3",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Kettlebell Swing",
@@ -10523,7 +10943,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2047-kettlebell-swing.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Landmine Anti-Rotation",
@@ -10544,7 +10965,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Medicine Ball Slam",
@@ -10568,7 +10990,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3125-medicine-ball-overhead-slam.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Mountain Climbers",
@@ -10591,7 +11014,8 @@
       "effort": "Compound",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2125-mountain-climber.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Pallof Press",
@@ -10611,7 +11035,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/2652-cable-horizontal-pallof-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Plate Flip",
@@ -10630,7 +11055,8 @@
       "effort": "Isolation",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Plate Pinch",
@@ -10651,7 +11077,8 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2513-plate-pinch.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Rice-Bucket Wrist Twist",
@@ -10670,7 +11097,8 @@
       "effort": "Isolation",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Rotary Torso Twist",
@@ -10699,7 +11127,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Side",
       "imageUrl": "https://gymvisual.com/animated-gifs/2926-lever-seated-twist.html?search_query=lever+seated+twist&results=6",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Stability Ball Pike Push-Up",
@@ -10719,7 +11148,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/3068-exercise-ball-pike-pushup.html?search_query=stability+ball+pike&results=3",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Step Up",
@@ -10750,7 +11180,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/12302-bodyweight-step-up-on-stepbox.html?search_query=step+up&results=503",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Superman",
@@ -10774,7 +11205,8 @@
       "effort": "Isolation",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/8422-superman-male.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Sitting Tibialis Raise",
@@ -10794,7 +11226,8 @@
       "resistance": "Bodyweight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/20497-sitting-floor-tibialis-raise-male.html?search_query=tibialis+raise&results=8",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Kettlebell Seated Tibialis Press",
@@ -10814,7 +11247,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/22624-kettlebell-sitting-tibialis-press.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Seated Tibialis Press",
@@ -10834,7 +11268,8 @@
       "resistance": "Machine",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/16866-seated-tibialis-anterior-press-female.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Band Seated Tibialis Press",
@@ -10854,7 +11289,8 @@
       "resistance": "Banded",
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/22623-resistance-band-sitting-floor-tibialis-press.html#/47-style_type-basic_grey",
-      "unitType": "bandXreps"
+      "unitType": "bandXreps",
+      "gifName": ""
     },
     {
       "name": "Smith Machine Reverse Calf Raise",
@@ -10873,7 +11309,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/3164-smith-reverse-calf-raises.html?search_query=reverse+calf+raise&results=10",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Barbell Standing Rocking Calf Raise",
@@ -10896,7 +11333,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1609-barbell-standing-rocking-leg-calf-raise.html?search_query=rocking+calf+r&results=2",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Wrist Roller",
@@ -10916,7 +11354,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2340-wrist-roller.html?search_query=wrist+roller&results=6",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Plate Neck Flexion",
@@ -10939,7 +11378,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2512-weighted-lying-neck-flexion.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Plate Neck Extension",
@@ -10962,7 +11402,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2511-weighted-lying-neck-extension.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Cable Seated Neck Extension",
@@ -10984,7 +11425,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/5421-cable-seated-neck-extension-with-head-harness.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Weighted Seated Neck Extension",
@@ -11006,7 +11448,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2329-weighted-seated-neck-extension-with-head-harness.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Weighted Lying Neck Extension",
@@ -11028,7 +11471,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/5418-weighted-lying-neck-extension-with-head-harness.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Machine Neck Extension",
@@ -11049,7 +11493,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/4785-lever-neck-extension-plate-loaded.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Prone Neck Extension Hold",
@@ -11071,7 +11516,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/13665-prone-cervical-extension-isometric-hold.html#/47-style_type-basic_grey",
-      "unitType": "timeOnly"
+      "unitType": "timeOnly",
+      "gifName": ""
     },
     {
       "name": "Prone Neck Extension",
@@ -11093,7 +11539,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/13664-prone-cervical-extension.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Prone Neck Bridge",
@@ -11115,7 +11562,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2127-neck-bridge-prone.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Plate Lying Neck Head Twist",
@@ -11137,7 +11585,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/12206-weighted-lying-neck-head-twist.html#/47-style_type-basic_grey",
-      "unitType": "weightXreps"
+      "unitType": "weightXreps",
+      "gifName": ""
     },
     {
       "name": "Chin Tuck",
@@ -11159,7 +11608,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/6655-chin-tuck.html#/47-style_type-basic_grey",
-      "unitType": "repsOnly"
+      "unitType": "repsOnly",
+      "gifName": ""
     },
     {
       "name": "Farmer's Walk",
@@ -11183,7 +11633,8 @@
       "limbMovementType": "Bilateral Independent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/6702-strongman-barbell-farmers-walk.html#/47-style_type-basic_grey",
-      "unitType": "weightXdistance"
+      "unitType": "weightXdistance",
+      "gifName": ""
     },
     {
       "name": "Tip-Toe Farmer's Walk",
@@ -11206,7 +11657,8 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Independent",
       "resistance": "Free Weight",
-      "unitType": "weightXdistance"
+      "unitType": "weightXdistance",
+      "gifName": ""
     },
     {
       "name": "Suitcase Carry",
@@ -11231,7 +11683,8 @@
       "resistance": "Free Weight",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/6724-dumbbell-suitcase-carry.html#/47-style_type-basic_grey",
-      "unitType": "weightXdistance"
+      "unitType": "weightXdistance",
+      "gifName": ""
     },
     {
       "name": "Dumbbell Overhead Carry",
@@ -11258,7 +11711,8 @@
       "resistance": "Free Weight",
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/6727-dumbbell-overhead-carry.html#/47-style_type-basic_grey",
-      "unitType": "weightXdistance"
+      "unitType": "weightXdistance",
+      "gifName": ""
     },
     {
       "name": "Sled Push",
@@ -11284,7 +11738,8 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/16515-power-sled-push-male.html#/47-style_type-basic_grey",
-      "unitType": "weightXdistance"
+      "unitType": "weightXdistance",
+      "gifName": ""
     },
     {
       "name": "Sled Pull",
@@ -11309,6 +11764,7 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/22710-power-sled-pull-male.html#/47-style_type-basic_grey",
-      "unitType": "weightXdistance"
+      "unitType": "weightXdistance",
+      "gifName": ""
     }
 ]
