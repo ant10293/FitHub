@@ -7,6 +7,7 @@ struct FavoriteExercisesView: View {
     @State private var searchText: String = ""
     @State private var selectedFilter: ExerciseFilter = .favorites
     @State private var showingResetConfirmation: Bool = false
+    @State private var hasInitializedCategory: Bool = false
     private let modifier = ExerciseModifier()
 
     var body: some View {
@@ -106,7 +107,9 @@ struct FavoriteExercisesView: View {
     
     private func initializeFilter() {
         // Conditionally set selectedFilter based on user data
+        guard !hasInitializedCategory else { return }
         selectedFilter = ctx.userData.evaluation.favoriteExercises.isEmpty ? .all : .favorites
+        hasInitializedCategory = true
     }
 }
 

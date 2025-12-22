@@ -10,6 +10,7 @@ struct ExerciseView: View {
     @State private var selectedCategory: CategorySelections = .split(.all)
     @State private var showingFavorites: Bool = false
     @State private var showExerciseCreation: Bool = false
+    @State private var hasInitializedCategory: Bool = false
 
     var body: some View {
         FilterableExerciseList(
@@ -73,8 +74,11 @@ struct ExerciseView: View {
             }
         }
     }
-    
+        
     private func initializeSelection() {
+        // Only initialize on first appearance to preserve user's selection when navigating back
+        guard !hasInitializedCategory else { return }
         selectedCategory = ctx.userData.sessionTracking.exerciseSortOption.getDefaultSelection()
+        hasInitializedCategory = true
     }
 }
