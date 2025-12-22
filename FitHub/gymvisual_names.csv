@@ -1,0 +1,413 @@
+exercise_name,gymvisual_name
+Bench Press,Barbell Bench Press
+Bench Pin Press,Barbell Pin Chest Press
+Bench Pin Press Hold,Barbell Pin Bench Press Conventional grip (male)
+Wide-Grip Bench Press,Barbell Wide Bench Press
+Close-Grip Bench Press,Barbell Close Grip Bench Press
+Close-Grip Incline Bench Press,Barbell Incline Close Grip Bench Press
+Decline Bench Press,Barbell Decline Bench Press
+Decline Dumbbell Bench Press,Dumbbell Decline Bench Press
+Dumbbell Bench Press,Dumbbell Bench Press
+Dumbbell Squeeze Press,Dumbbell Squeeze Bench Press
+Incline Bench Press,Barbell Incline Bench Press
+Incline Dumbbell Bench Press,Dumbbell Incline Bench Press
+JM Press,Barbell JM Bench Press
+Reverse-Grip Bench Press,Barbell Reverse Grip Bench Press
+Reverse-Grip Dumbbell Bench Press,Dumbbell Reverse Bench Press
+Single-Arm Dumbbell Bench Press,Dumbbell Alternate Bench Press (high start)
+Smith Machine Bench Press,Smith Bench Press
+Smith Machine Incline Bench Press,Smith Incline Bench Press
+Smith Machine Decline Bench Press,Smith Decline Bench Press
+Guillotine Press,Barbell Guillotine Bench Press
+Machine Incline Chest Press,Lever Incline Hammer Chest Press
+Machine Chest Press,Lever Chest Press
+Plate-Loaded Chest Press,Lever Chest Press (plate loaded)
+Plate-Loaded Decline Chest Press,Lever Decline Chest Press
+Plate-Loaded Incline Chest Press,Leverage Incline Chest Press
+Standing Cable Chest Press,Cable Standing Chest Press
+Dumbbell Floor Press,Dumbbell Lying on Floor Chest Press
+Floor Press,Barbell Floor Chest Press
+Clean,Barbell Full Clean
+Clean and Jerk,Barbell Clean and Jerk
+Clean and Press,Barbell Clean and Press
+Clean High Pull,Barbell Clean High Pull
+Clean Pull,Barbell Clean Pull
+Dumbbell Clean and Press,Dumbbell Clean and Press
+Dumbbell Hang Clean,Dumbbell Hang Clean
+Dumbbell High Pull,Dumbbell High Pull
+Hang Clean,Barbell Hang Clean
+Hang Power Clean,Barbell Hang Power Clean
+High Pull,Barbell High Pull (male)
+Power Clean,Power Clean
+Dumbbell Snatch,Dumbbell One Arm Snatch
+Hang Power Snatch,Barbell Power Snatch
+Hang Snatch,Barbell Hang Snatch
+Muscle Snatch,Barbell Muscle Snatch
+Power Snatch,Barbell Power Snatch
+Snatch,Barbell Snatch
+Snatch Pull,Snatch Pull
+Power Jerk,Barbell Power Jerk
+Split Jerk,Barbell Split Jerk
+Squat Jerk,Squat Jerk
+Band Pull-Apart,Resistance Band Pull Apart
+Cable Chest Fly,Cable Middle Fly
+High to Low Cable Chest Fly,Cable Standing Fly
+Low to High Cable Chest Fly,Cable Low Fly
+Cable Reverse Fly,Cable 45 degrees Reverse Fly (male)
+Dumbbell Chest Fly,Dumbbell Fly
+Incline Dumbbell Chest Fly,Dumbbell Incline Fly
+Decline Dumbbell Chest Fly,Dumbbell Decline Fly
+Reverse Dumbbell Fly,Dumbbell Reverse Fly
+Machine Chest Fly,Lever Seated Fly
+Machine Reverse Fly,Lever Seated Reverse Fly
+Pec Deck Fly,Lever Pec Deck Fly
+Banded Chest Fly,Band Chest Fly (male)
+Hip Thrust,Hip Thrusts
+Single-Leg Hip Thrust,Single Leg Hip Thrusts
+Barbell Hip Thrust,Barbell Hip Thrust
+Banded Hip Thrust,Resistance Band Hip Thrusts
+Glute Bridge,Glute Bridge Two Legs on Floor
+Single-Leg Glute Bridge,Single Straight Leg Glute Bridge Hold (left) (female)
+Barbell Glute Bridge,Barbell Glute Bridge (hands on bar)
+Glute-Ham Raise,Glute Ham Raise (VERSION 2)
+Pull-Up,Pull up
+Weighted Pull-Up,Weighted Pull Up
+Neutral-Grip Pull-Up,Shoulder Width Neutral Grip Pull-up
+Weighted Neutral-Grip Pull-Up,Weighted Hammer Grip Pull up on Dip Cage
+Chin-Up,Chin Up
+Weighted Chin-Up,Weighted Chin-Up (male)
+Muscle-Up,Muscle up (on vertical bar)
+Weighted Muscle-Up,Weighted Muscle-up (on bar)
+Bench Dips,Bench Dip on floor (VERSION 2)
+Bench Dips (Feet Elevated),Triceps Dip (bench leg)
+Chest Dip,Chest Dip
+Dips,Triceps Dip
+Weighted Dip,Weighted Tricep Dips
+Machine Seated Dip,Lever Seated Dip
+Sit-Up,Sit Up (VERSION 2)
+Decline Sit-Up,Decline Sit up
+Jackknife Sit-Up,Jackknife Sit Up
+Bicycle Crunch,Bicycle Crunch (male)
+Kneeling Cable Crunch,Cable Kneeling Crunch (VERSION 2)
+Standing Cable Crunch,Cable Standing Crunch (with rope attachment)
+Seated Cable Crunch,Cable Seated Crunch
+Crunch,Crunch Floor m
+Decline Crunch,Decline Crunch
+Machine Seated Crunch,Lever Seated Crunch
+Reverse Crunch,Reverse Crunch (VERSION 3)
+Side Crunch,Side Crunch
+Handstand Hold,Handstand Hold on Wall (male)
+Hollow Body Hold,Hollow Hold
+Kneeling Plank,Kneeling plank (male)
+Plank,Front Plank
+Reverse Plank Hold,Reverse plank
+Side Plank,Side Plank Rotation
+Arnold Press,Dumbbell Arnold Press
+Behind the Neck Press,Standing Behind Neck Press
+Bradford Press,Barbell Standing Bradford Press
+Cuban Press,Dumbbell Cuban Press
+Dumbbell Push Press,Dumbbell Push Press
+Dumbbell Shoulder Press,Dumbbell Standing Overhead Press
+Dumbbell Z Press,Dumbbell Z Press
+Kettlebell Bottoms-Up Press,Kettlebell Standing Bottoms Up One Arm Shoulder Press
+Landmine Press,Landmine Half Kneeling Shoulders Press
+Machine Shoulder Press,Lever Seated Shoulder Press
+Military Press,Barbell Standing Military Press (without rack)
+Plate-Loaded Shoulder Press,Lever Shoulder Press (plate loaded) (VERSION 2)
+Push Press,Push Press
+Seated Dumbbell Shoulder Press,Dumbbell Seated Shoulder Press
+Overhead Pin Press,Barbell Standing Shoulder Pin Press
+Overhead Press,Barbell Standing Shoulders Press
+Smith Machine Shoulder Press,Smith Seated Shoulder Press
+Seated Overhead Press,Barbell Seated Overhead Press
+Single-Arm Landmine Press,Landmine Kneeling One Arm Shoulder Press
+Viking Press,StrongMan Viking Press
+Z Press,Barbell Z Press
+Cable External Rotation,Cable Standing Shoulder External Rotation
+Band External Rotation,Band standing external shoulder rotation
+Seated Dumbbell External Rotation,Dumbbell Seated External Shoulder Rotation
+Cable Internal Rotation,Cable Shoulder Internal Rotation
+Band Internal Rotation,Resistance Band Standing Shoulder Internal Rotation (male)
+Banded Lateral Raise,Band front lateral raise
+Cable Lateral Raise,Cable Lateral Raise
+Dumbbell Lateral Raise,Dumbbell Lateral Raise
+Machine Lateral Raise,Lever Lateral Raise
+Barbell Front Raise,Barbell Front Raise
+Dumbbell Front Raise,Dumbbell Front Raise
+Plate Front Raise,Weighted Plate Standing High Front Raise
+Y Raise,Dumbbell Full Can Lateral Raise
+Dumbbell Face Pull,Dumbbell Bent Over Face Pull
+Face Pull,Cable Standing Face Pull (with rope)
+Barbell Shrug,Barbell Shrug
+Behind the Back Barbell Shrug,Barbell Behind The Back Shrug
+Cable Shrug,Cable Shrug
+Dumbbell Shrug,Dumbbell Shrug
+Trap Bar Shrug,Trap Bar Standing Shrug (male)
+Machine Shrug,Lever Shrug (plate loaded)
+Power Shrug,Barbell Power Shrug
+Smith Machine Shrug,Smith Shrug
+Ab Wheel Roll-Out,Wheel Rollout
+Stability Ball Roll-Out,Stability Ball Rollout on Knees (male)
+Barbell Calf Raise,Barbell Standing Leg Calf Raise
+Bodyweight Calf Raise,Bodyweight Standing Calf Raise
+Donkey Calf Raise,Lever Donkey Calf Raise
+Dumbbell Calf Raise,Dumbbell Standing Calf Raise
+Dumbbell Walking Calf Raise,Dumbbell Walking Calf Raise
+Leg Press Calf Raise,Sled Calf Press On Leg Press
+Seated Calf Raise,Lever Seated Calf Raise (plate loaded)
+Single-Leg Seated Calf Raise,Lever seated one leg calf raise
+Standing Calf Raise,Lever Standing Calf Raise
+Hack Squat Machine Calf Raise,Hack Calf Raise
+Barbell Seated Calf Raise,Barbell Seated Calf Raise
+Single-Leg Bodyweight Calf Raise,One Leg Floor Calf Raise
+Standing Smith Machine Calf Raise,Smith Standing Leg Calf Raise
+Seated Smith Machine Calf Raise,Smith Seated Calf Raise
+Seated Banded Calf Raise,Resistance Band Calf Raise
+Standing Banded Calf Raise,Band Two Legs Calf Raise - (Band under both legs) VERSION 2
+Cable Standing Calf Raise,Cable Standing Calf Raise
+Elliptical Stride,Walking on Elliptical Machine (VERSION 7) (female)
+Indoor Cycling,Bicycle Recline Walk
+Treadmill Walk/Run,Walking on Treadmill
+21s Curl,EZ-bar 21s
+Band Biceps Curl,Band Biceps Curl
+Barbell Curl,Barbell Curl
+Barbell Reverse Curl,Barbell Reverse Curl
+Barbell Wrist Curl,Barbell Wrist Curl (VERSION 2)
+Reverse Wrist Curl,Barbell Revers Wrist Curl (VERSION 2)
+Single-Arm Plate Wrist Curl,Weighted Seated One Arm Wrist Curl
+Cable Concentration Curl,Cable Concentration Curl
+Cable Curl With Bar,Cable Close Grip Curl
+Cable Hammer Curl,Cable Hammer Curl (with rope) male
+Cheat Curl,Cheat Curl
+Concentration Curl,Dumbbell Concentration Curl
+Drag Curl,Barbell Drag Curl
+Dumbbell Curl,Dumbbell Alternate Biceps Curl
+Dumbbell Reverse Curl,Dumbbell Standing Reverse Curl
+Dumbbell Reverse Wrist Curl,Dumbbell Over Bench Revers Wrist Curl
+Dumbbell Wrist Curl,Dumbbell Over Bench Wrist Curl
+EZ-Bar Curl,EZ Barbell Curl
+EZ-Bar Reverse Curl,EZ Barbell Reverse Grip Curl
+Hammer Curl,Dumbbell Hammer Curl
+Lying Cable Curl,Cable Lying Bicep Curl
+Incline Cable Curl,Cable Incline Biceps Curl
+Incline Dumbbell Curl,Dumbbell Incline Biceps Curl
+Incline Hammer Curl,Dumbbell Incline Hammer Curl
+Machine Preacher Curl,Lever Preacher Curl
+Overhead Cable Curl,Cable Overhead Curl
+Ez-Bar Preacher Curl,EZ Barbell Preacher Curl
+Seated Dumbbell Curl,Dumbbell Seated Curl
+Single-Arm Cable Bicep Curl,Cable One Arm Curl
+Single-Arm Dumbbell Preacher Curl,Dumbbell Preacher Curl
+Spider Curl,EZ Barbell Spider Curl
+Strict Curl,Barbell Srtict Curl
+Zottman Curl,Dumbbell Zottman Curl
+Nordic Curl,Nordic Hamstring Curl (male)
+Deadlift,Barbell Deadlift
+Single-Leg Deadlift,Barbell Single Leg Deadlift
+Dumbbell Deadlift,Dumbbell Deadlift (VERSION 2) (male)
+Single-Leg Dumbbell Deadlift,Dumbbell Single Leg Deadlift
+Deficit Deadlift,Barbell Deadlift from Deficit
+Behind the Back Deadlift,Barbell Behind The Back Deadlift
+Jefferson Deadlift,Barbell Jefferson Deadlift
+Jefferson Curl,Dumbbell Jefferson Curl (male)
+Snatch Grip Deadlift,Barbell Snatch grip Deadlift (male)
+Sumo Deadlift,Barbell Sumo Deadlift
+Trap Bar Deadlift,Trap Bar Deadlift
+Zercher Deadlift,Barbell Zercher Deadlift
+Stiff-Legged Deadlift,Barbell Stiff Legged Deadlift
+Romanian Deadlift,Barbell Romanian Deadlift
+Dumbbell Romanian Deadlift,Dumbbell Romanian Deadlift
+Rack Pull,Barbell Rack Pull
+Hyperextension,Hyperextension
+Machine Back Extension,Lever Back Extension
+Reverse Hyperextension,Lever Reverse Hyperextension (plate loaded)
+Weighted Hyperextension,Weighted Hyperextension
+Cable Glute Kickback,Cable Kickback (male)
+Machine Glute Kickback,Lever Glute Press (male)
+Glute Kickback,Bent Leg Kickback (kneeling) (male)
+Dead Hang,Dead Hang Stretch
+Single-Arm Dead Hang,Alternating Dead Hang (male)
+Bird Dog,Bird Dog male
+Dead Bug,Dead Bug
+Side Lying Hip Abduction,Side Hip Abduction
+Band Standing Hip Abduction,Resistance Band Standing Balance Hip Abduction (male)
+Band Seated Hip Abduction,Resistance Band Seated Hip Abduction (VERSION 2)
+Cable Hip Abduction,Cable hip abduction (version 2) (male)
+Lever Side Hip Abduction,Lever Side Hip Abduction (female)
+Side Bridge Hip Abduction,Side Bridge Hip Abduction
+Side Lying Hip Adduction,Side Hip Abduction
+Band Hip Adduction,Band hip adduction (male)
+Side Plank Hip Adduction,Side Plank Hip Adduction (bent knee)
+Lever Side Hip Adduction,Lever Side Hip Adduction
+Standing Hip Adduction,Hip - Adduction
+Cable Hip Adduction,Cable Hip Adduction
+Side Lying Leg Raise,Side Lying Leg Raise
+Kneeling Hip Extension,Straight Leg Kickback (kneeling) (male)
+Hip Extension,Hip - Extension
+Hip Airplane,Warrior III Pose (female)
+Machine Hip Abduction,Lever Seated Hip Abduction
+Machine Hip Adduction,Lever Seated Hip Adduction
+Lying Leg Curl,Lever Lying Leg Curl
+Seated Leg Curl,Lever Seated Leg Curl
+Slider Leg Curl,Sliding Leg Curl on Floor with Towel
+Standing Leg Curl,Lever Standing Leg Curl
+Stability-Ball Leg Curl,Exercise Ball Leg Curl
+Cable Leg Extension,Cable Seated Leg Extension
+Leg Extension,Lever Leg Extension
+Compact Leg Press,Lever Linear Hack Squat (male)
+Horizontal Leg Press,Lever Horizontal Leg Press
+Leg Press,Sled 45 Leg Press
+Single-Leg Press,Sled 45 degrees One Leg Press (female)
+Vertical Leg Press,Sled Vertical Leg Press
+Flutter Kicks,Flutter Kicks (version 3)
+Hanging Knee Raise,Hanging Leg Hip Raise
+Hanging Leg Raise,Hanging Leg Raise
+L-Sit,L-sit
+Lying Leg Raise,Lying Leg Raise
+Scissor Kicks,Lying Scissor Kick
+Toes to Bar,Hanging Toes to Bar
+Barbell Lunge,Barbell Lunge
+Barbell Reverse Lunge,Barbell Rear Lunge
+Barbell Walking Lunge,Barbell Walking Lunge
+Barbell Curtsy Lunge,Barbell Curtsey Lunge (female)
+Dumbbell Lunge,Dumbbell Lunge
+Lunge,Forward Lunge (male)
+Reverse Lunge,Bodyweight Rear Lunge
+Lateral Lunge,Side Lunge
+Barbell Lateral Lunge,Barbell Lateral Lunge
+Close-Grip Lat Pulldown,Cable Close Grip Front Lat Pulldown
+Lat Pulldown,Cable Bar Lateral Pulldown
+Single-Arm Lat Pulldown,Cable one arm lat pulldown
+Reverse-Grip Lat Pulldown,Cable Reverse Grip Pulldown
+Straight Arm Lat Pulldown,Cable Straight Arm Pulldown
+Barbell Pullover,Barbell Pullover
+Bent-Arm Barbell Pullover,Barbell Bent Arm Pullover (male)
+Dumbbell Pullover,Dumbbell Pullover (VERSION 2)
+Machine Pullover,Lever Pullover (plate loaded)
+Archer Push-Up,Archer Push-up
+Close-Grip Push-Up,Close Grip Push up
+Decline Push-Up,Decline Push Up m
+Diamond Push-Up,Diamond Push up
+Handstand Push-Up,Handstand Push Up
+Incline Push-Up,Incline Push up
+Kneeling Close-Grip Push-Up,Close-grip Push-up (on knees)
+Kneeling Push-Up,Kneeling Push-up (male)
+Pike Push-Up,Pike Push up
+Push-Up,Push up m
+Wide-Grip Push-Up,Wide Hand Push up
+Barbell Rear Delt Row,Barbell Rear Delt Row
+Barbell Bent-Over Row,Barbell Bent Over Row
+Barbell Upright Row,Barbell Upright Row
+Bench Pull,Barbell Lying Row on Rack
+Cable Upright Row,Cable Upright Row
+Chest-Supported Dumbbell Row,Dumbbell Row with Chest Supported
+Chest-Supported T-Bar Row,Lever Lying Banded T bar Row
+Dumbbell Bench Pull,Dumbbell Lying Row on Rack
+Dumbbell Rear Delt Row,Dumbbell Seated Bent Over Rear Delt Row
+Dumbbell Bent-Over Row,Dumbbell Bent over Row
+Dumbbell Upright Row,Dumbbell Upright Row
+Endurance Row,Rowing (with rowing machine)
+Inverted Row,Inverted Row
+Landmine Row,Lever Bent-over Row with V-bar (plate loaded)
+Pendlay Row,Barbell Pendlay Row
+Plate-Loaded High Row,Lever High Row (plate loaded)
+Plate-Loaded Low Row,Lever Low Row (plate loaded)
+Renegade Row,Dumbbell Renegade Row
+Seal Row,Barbell Lying Seal Row on Rack
+Seated Cable Row,Cable seated row
+Seated Single-Arm Cable Row,Cable Seated Single Arm Lats Focused Row
+Seated Machine Row,Lever Seated Row
+T-Bar Row,Lever T bar Row (plate loaded)
+Medicine Ball Russian Twist,Russian Twist (with medicine ball)
+Russian Twist,Russian Twist
+Dumbbell Side Bend,Dumbbell Side Bend
+Roman Chair Side Bend,45 degrees Side Bend (male)
+Back Squat,Barbell High Bar Squat
+Barbell Bulgarian Split Squat,Barbell Single Leg Split Squat
+Dumbbell Bulgarian Split Squat,Dumbbell Bulgarian Split Squat (female)
+Goblet Bulgarian Split Squat,Dumbbell Goblet Bulgarian Split Squat
+Barbell Hack Squat,Barbell Hack Squat
+Barbell Split Squat,Barbell Split Squat
+Belt Squat,Lever Belt Squat
+Bodyweight Squat,Squat m
+Box Squat,Barbell Box Squat
+Dumbbell Cossack Squat,Dumbbell Cossack Squats (male)
+Dumbbell Front Squat,Dumbbell Front Squat
+Dumbbell Split Squat,Dumbbell Split Squat
+Dumbbell Squat,Dumbbell Squat
+Front Squat,Barbell Clean grip Front Squat
+Goblet Squat,Dumbbell Goblet Squat
+Jefferson Squat,Barbell Jefferson Squat
+Landmine Front Squat,Landmine Front Squat
+Machine Hack Squat,Sled Hack Squat
+Pendulum Squat,Lever Pendulum Squat (plate loaded)
+V-Squat,Lever Squat (plate loaded)
+Overhead Squat,Barbell Overhead Squat
+Pin Squat,Barbell Pin Squat
+Pistol Squat,Single Leg Squat (pistol)male
+Safety Bar Squat,Safety Bar Front Squat
+Single-Leg Squat,Bodyweight Single Leg Squat (male)
+Sissy Squat,Bodyweight Standing Sissy Squat
+Smith Machine Squat,Smith Full Squat
+Squat Thrust,Squat Thrust
+Barbell Sumo Squat,Barbell sumo squat
+Zercher Squat,Barbell full Zercher Squat
+Dumbbell Thruster,Dumbbell Thruster
+Barbell Thruster,Barbell Thruster
+Bent-Over Dumbbell Tricep Extension,Dumbbell Standing Bent Over Two Arm Triceps Extension
+Cable Tricep Kickback,Cable Two Arm Tricep Kickback
+Dumbbell Tricep Kickback,Dumbbell Kickback
+Lying Barbell Tricep Extension,Barbell Lying Triceps Extension
+Lying Dumbbell Tricep Extension,Dumbbell Lying Triceps Extension
+Lying EZ-Bar Tricep Extension,EZ Barbell Lying Triceps Extension (male)
+Machine Tricep Extension,Lever Triceps Extension (VERSION 2)
+Overhead Straight Bar Triceps Extension,Cable Overhead Tricep Extension Straight Bar (male)
+Overhead Rope Tricep Extension,Cable High Pulley Overhead Tricep Extension
+Reverse-Grip Tricep Pushdown,Cable Reverse Grip Triceps Pushdown (SZ-bar)
+Seated Dumbbell Tricep Extension,Dumbbell Seated Triceps Extension
+Single-Arm Cable Tricep Extension,Cable Standing One Arm Triceps Extension
+Standing Barbell Tricep Extension,Barbell Standing Overhead Triceps Extension
+Standing Dumbbell Tricep Extension,Dumbbell Standing Triceps Extension
+Tate Press,Dumbbell Tate Press
+Tricep Pushdown With Bar,Cable Pushdown
+Tricep Pushdown With Rope,Cable Pushdown (with rope attachment)
+Wall Sit,Wall sit (narrow stance) (male)
+Weighted Wall Sit,Dumbbell Goblet Wall Sit (male)
+Burpees,Burpee
+Cable Pull Through,Cable Pull Through (with rope)
+Cable Anti-Rotation Chop,Cable Kneeling High Low Anti Rotation Chop (male)
+Frog Pump,Bodyweight Frog Pump
+Good Morning,Barbell Good Morning
+Kettlebell Halo,Kettlebell Half Kneeling Halo (male)
+Kettlebell Swing,Kettlebell Swing
+Medicine Ball Slam,Medicine Ball Overhead Slam
+Mountain Climbers,Mountain Climber
+Pallof Press,Cable horizontal Pallof Press
+Plate Pinch,Plate Pinch
+Rotary Torso Twist,Lever Seated Twist
+Stability Ball Pike Push-Up,Exercise Ball Pike Pushup
+Step Up,Bodyweight Step-up on Stepbox
+Superman,Superman (male)
+Sitting Tibialis Raise,Sitting Floor Tibialis Raise (male)
+Kettlebell Seated Tibialis Press,Kettlebell Sitting Tibialis Press
+Cable Seated Tibialis Press,Seated Tibialis Anterior Press (female)
+Band Seated Tibialis Press,Resistance Band Sitting Floor Tibialis Press
+Smith Machine Reverse Calf Raise,Smith Reverse Calf Raises
+Barbell Standing Rocking Calf Raise,Barbell Standing Rocking Leg Calf Raise
+Wrist Roller,Wrist Roller
+Plate Neck Flexion,Weighted Lying Neck Flexion
+Plate Neck Extension,Weighted Lying Neck Extension
+Cable Seated Neck Extension,Cable Seated Neck Extension (with head harness)
+Weighted Seated Neck Extension,Weighted Seated Neck Extension (with head harness)
+Weighted Lying Neck Extension,Weighted Lying Neck Extension (with head harness)
+Machine Neck Extension,Lever Neck Extension (plate loaded)
+Prone Neck Extension Hold,Prone Cervical Extension Isometric Hold
+Prone Neck Extension,Prone Cervical Extension
+Prone Neck Bridge,Neck Bridge Prone
+Plate Lying Neck Head Twist,Weighted Lying Neck Head Twist
+Chin Tuck,Chin Tuck
+Farmer's Walk,StrongMan Barbell Farmers Walk
+Suitcase Carry,Dumbbell Suitcase Carry
+Dumbbell Overhead Carry,Dumbbell Overhead Carry
+Sled Push,Power Sled Push (male)
+Sled Pull,Power Sled Pull (male)

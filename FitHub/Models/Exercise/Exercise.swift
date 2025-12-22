@@ -26,7 +26,7 @@ struct Exercise: Identifiable, Hashable, Codable {
     let weightInstruction: WeightInstruction?
     let imageUrl: String?
     let unitType: ExerciseUnit
-    let gifName: String
+    let gifName: String?
     let variationOf: String? // MARK: unused
 
     var draftMax: PeakMetric?
