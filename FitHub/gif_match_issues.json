@@ -1,0 +1,859 @@
+[
+  {
+    "exercise_name": "Pull-Up",
+    "gymvisual_name": "Pull up",
+    "current_gif": "Pull-up-(negative)-(male)_Back__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Back",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Pull-up_Back-FIX2__converted.gif",
+        1.0,
+        0,
+        "Back"
+      ],
+      [
+        "Pull-up-(wide-grip)_Back-FIX__converted.gif",
+        1.0,
+        1,
+        "Back"
+      ],
+      [
+        "Pull-up-(negative)-(male)_Back__converted.gif",
+        1.0,
+        2,
+        "Back"
+      ],
+      [
+        "L-Pull-Up_Back_Waist__converted.gif",
+        0.8571428571428571,
+        0,
+        "Waist"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Dumbbell Front Raise",
+    "gymvisual_name": "Dumbbell Front Raise",
+    "current_gif": "Dumbbell-Front-Raise-(version-2)_Shoulders_converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Shoulders",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Dumbbell-Front-Raise_Shoulders_converted.gif",
+        1.0,
+        0,
+        "Shoulders"
+      ],
+      [
+        "Dumbbell-Front-Raise-(version-2)_Shoulders_converted.gif",
+        1.0,
+        2,
+        "Shoulders"
+      ],
+      [
+        "Dumbbell-Front-Raise-(VERSION-3)_Shoulders__converted.gif",
+        1.0,
+        2,
+        "Shoulders"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Face Pull",
+    "gymvisual_name": "Cable Standing Face Pull (with rope)",
+    "current_gif": "Cable-Standing-Face-Pull-(with-rope)_Shoulders_converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Shoulders",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Cable-Standing-Face-Pull_Shoulders__converted.gif",
+        1.0,
+        0,
+        "Shoulders"
+      ],
+      [
+        "Cable-Standing-Face-Pull-(with-rope)_Shoulders_converted.gif",
+        1.0,
+        2,
+        "Shoulders"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Dumbbell Curl",
+    "gymvisual_name": "Dumbbell Alternate Biceps Curl",
+    "current_gif": "Dumbbell-Alternate-Biceps-Curl_Upper-Arms-FIX__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 1,
+    "current_body_part": "Upper-Arms-FIX",
+    "issues": [
+      "Fewer modifiers available: 0 vs 1",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Dumbbell-Alternate-Biceps-Curl_Upper-Arms_converted.gif",
+        1.0,
+        0,
+        "Upper-Arms"
+      ],
+      [
+        "Dumbbell-Alternate-Biceps-Curl_Upper-Arms-FIX__converted.gif",
+        1.0,
+        1,
+        "Upper-Arms-FIX"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Hammer Curl",
+    "gymvisual_name": "Dumbbell Hammer Curl",
+    "current_gif": "Dumbbell-Hammer-Curl-(version-2)_Upper-Arms-FIX__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 3,
+    "current_body_part": "Upper-Arms-FIX",
+    "issues": [
+      "Fewer modifiers available: 0 vs 3",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Dumbbell-Hammer-Curl_Forearms__converted.gif",
+        1.0,
+        0,
+        "Forearms"
+      ],
+      [
+        "Dumbbell-Hammer-Curl-(version-2)_Upper-Arms-FIX__converted.gif",
+        1.0,
+        3,
+        "Upper-Arms-FIX"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Deadlift",
+    "gymvisual_name": "Barbell Deadlift",
+    "current_gif": "Barbell-Deadlift-(side-POV)-(male)_Hips__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Hips",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Barbell-Deadlift_Hips-FIX_converted.gif",
+        1.0,
+        0,
+        "Hips"
+      ],
+      [
+        "Barbell-Deadlift-(360-degrees)_Hips_converted.gif",
+        1.0,
+        1,
+        "Hips"
+      ],
+      [
+        "Barbell-Deadlift-(side-POV)-(male)_Hips__converted.gif",
+        1.0,
+        2,
+        "Hips"
+      ],
+      [
+        "Barbell-Deadlift-(front-POV)-(male)_Hips__converted.gif",
+        1.0,
+        2,
+        "Hips"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Single-Leg Dumbbell Deadlift",
+    "gymvisual_name": "Dumbbell Single Leg Deadlift",
+    "current_gif": "Dumbbell-Single-Leg-Deadlift-(male)_Hips__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 1,
+    "current_body_part": "Hips",
+    "issues": [
+      "Fewer modifiers available: 0 vs 1",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Dumbbell-Single-Leg-Deadlift_Hips_converted.gif",
+        1.0,
+        0,
+        "Hips"
+      ],
+      [
+        "Dumbbell-Single-Leg-Deadlift-(male)_Hips__converted.gif",
+        1.0,
+        1,
+        "Hips"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Hyperextension",
+    "gymvisual_name": "Hyperextension",
+    "current_gif": "Hyperextension-(VERSION-2)_Hips_converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Hips",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Hyperextension_Hips-FIX__converted.gif",
+        1.0,
+        0,
+        "Hips"
+      ],
+      [
+        "Hyperextension-(VERSION-2)_Hips_converted.gif",
+        1.0,
+        2,
+        "Hips"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Machine Back Extension",
+    "gymvisual_name": "Lever Back Extension",
+    "current_gif": "Lever-Back-Extension-(version-2)_Back_converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Back",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Lever-Back-Extension_Waist_converted.gif",
+        1.0,
+        0,
+        "Waist"
+      ],
+      [
+        "Lever-Back-Extension-(version-2)_Back_converted.gif",
+        1.0,
+        2,
+        "Back"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Weighted Hyperextension",
+    "gymvisual_name": "Weighted Hyperextension",
+    "current_gif": "Weighted-Hyperextension-(on-stability-ball)_Waist__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Waist",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Weighted-Hyperextension_Hips__converted.gif",
+        1.0,
+        0,
+        "Hips"
+      ],
+      [
+        "Weighted-Hyperextension-(on-stability-ball)_Waist__converted.gif",
+        1.0,
+        2,
+        "Waist"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Side Plank Hip Adduction",
+    "gymvisual_name": "Side Plank Hip Adduction (bent knee)",
+    "current_gif": "Side-Plank-Hip-Adduction-(bent-knee)_Hips__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 1,
+    "current_body_part": "Hips",
+    "issues": [
+      "Fewer modifiers available: 0 vs 1",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Side-Plank-Hip-Adduction_Hips_converted.gif",
+        1.0,
+        0,
+        "Hips"
+      ],
+      [
+        "Side-Plank-Hip-Adduction-(bent-knee)_Hips__converted.gif",
+        1.0,
+        1,
+        "Hips"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Flutter Kicks",
+    "gymvisual_name": "Flutter Kicks (version 3)",
+    "current_gif": "Flutter-Kicks-(version-2)_Hips_converted 2.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Hips",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Flutter-Kicks_Hips__converted.gif",
+        1.0,
+        0,
+        "Hips"
+      ],
+      [
+        "Flutter-Kicks_Hips__converted 2.gif",
+        1.0,
+        0,
+        "Hips"
+      ],
+      [
+        "Flutter-Kicks-(version-3)_Hips_converted.gif",
+        1.0,
+        2,
+        "Hips"
+      ],
+      [
+        "Flutter-Kicks-(version-2)_Hips_converted.gif",
+        1.0,
+        2,
+        "Hips"
+      ],
+      [
+        "Flutter-Kicks-(version-2)_Hips_converted 2.gif",
+        1.0,
+        2,
+        "Hips"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Barbell Reverse Lunge",
+    "gymvisual_name": "Barbell Rear Lunge",
+    "current_gif": "Barbell-Rear-Lunge-(VERSION-2)_Thighs__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Thighs",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Barbell-Rear-Lunge_Thighs__converted.gif",
+        1.0,
+        0,
+        "Thighs"
+      ],
+      [
+        "Barbell-Rear-Lunge-(VERSION-2)_Thighs__converted.gif",
+        1.0,
+        2,
+        "Thighs"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Straight Arm Lat Pulldown",
+    "gymvisual_name": "Cable Straight Arm Pulldown",
+    "current_gif": "Cable-Straight-Arm-Pulldown-(with-rope-attachment)_converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": null,
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Cable-Straight-Arm-Pulldown_Back-FIX__converted.gif",
+        1.0,
+        0,
+        "Back"
+      ],
+      [
+        "Cable-Straight-Arm-Pulldown-(with-rope)_Back_converted.gif",
+        1.0,
+        2,
+        "Back"
+      ],
+      [
+        "Cable-Straight-Arm-Pulldown-(VERSION-2)_Back__converted.gif",
+        1.0,
+        2,
+        "Back"
+      ],
+      [
+        "Cable-Straight-Arm-Pulldown-(with-rope-attachment)_converted.gif",
+        1.0,
+        2,
+        null
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Dumbbell Pullover",
+    "gymvisual_name": "Dumbbell Pullover (VERSION 2)",
+    "current_gif": "Dumbbell-Pullover-(VERSION-2)_Back__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Back",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available",
+      "Better body part match: Chest (expected Chest) vs Back"
+    ],
+    "better_matches": [
+      [
+        "Dumbbell-Pullover_Chest_converted.gif",
+        1.0,
+        0,
+        "Chest"
+      ],
+      [
+        "Dumbbell-Pullover-(VERSION-2)_Back__converted.gif",
+        1.0,
+        2,
+        "Back"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Close-Grip Push-Up",
+    "gymvisual_name": "Close Grip Push up",
+    "current_gif": "Close-grip-Push-up-(on-knees)_Upper-Arms__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Upper-Arms",
+    "issues": [
+      "Fewer modifiers available: 1 vs 2"
+    ],
+    "better_matches": [
+      [
+        "Close-Grip-Push-up_Upper-Arms-FIX__converted.gif",
+        1.0,
+        1,
+        "Upper-Arms-FIX"
+      ],
+      [
+        "Close-grip-Push-up-(on-knees)_Upper-Arms__converted.gif",
+        1.0,
+        2,
+        "Upper-Arms"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Diamond Push-Up",
+    "gymvisual_name": "Diamond Push up",
+    "current_gif": "Diamond-Push-up-(on-knees)_Upper-Arms_converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Upper-Arms",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Diamond-Push-up_Upper-Arms_converted.gif",
+        1.0,
+        0,
+        "Upper-Arms"
+      ],
+      [
+        "Diamond-Push-up_Upper-Arms_converted 2.gif",
+        1.0,
+        0,
+        "Upper-Arms"
+      ],
+      [
+        "Diamond-Push-up-(on-knees)_Upper-Arms_converted.gif",
+        1.0,
+        2,
+        "Upper-Arms"
+      ],
+      [
+        "Diamond-Push-up-(on-knees)_Upper-Arms_converted 2.gif",
+        1.0,
+        2,
+        "Upper-Arms"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Incline Push-Up",
+    "gymvisual_name": "Incline Push up",
+    "current_gif": "Incline-Push-Up-(on-box)_converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": null,
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Incline-Push-up_Chest_converted.gif",
+        1.0,
+        0,
+        "Chest"
+      ],
+      [
+        "Incline-Push-Up-(on-box)_converted.gif",
+        1.0,
+        2,
+        null
+      ],
+      [
+        "Ring-Incline-Push-up-(male)_Chest__converted.gif",
+        0.7647058823529411,
+        1,
+        "Chest"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Kneeling Close-Grip Push-Up",
+    "gymvisual_name": "Close-grip Push-up (on knees)",
+    "current_gif": "Close-grip-Push-up-(on-knees)_Upper-Arms__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Upper-Arms",
+    "issues": [
+      "Fewer modifiers available: 1 vs 2"
+    ],
+    "better_matches": [
+      [
+        "Close-Grip-Push-up_Upper-Arms-FIX__converted.gif",
+        1.0,
+        1,
+        "Upper-Arms-FIX"
+      ],
+      [
+        "Close-grip-Push-up-(on-knees)_Upper-Arms__converted.gif",
+        1.0,
+        2,
+        "Upper-Arms"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Pike Push-Up",
+    "gymvisual_name": "Pike Push up",
+    "current_gif": "Pike-Push-up-(on-Bench)-(VERSION-2)_Chest_converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 4,
+    "current_body_part": "Chest",
+    "issues": [
+      "Fewer modifiers available: 0 vs 4",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Pike-Push-up_Chest_converted.gif",
+        1.0,
+        0,
+        "Chest"
+      ],
+      [
+        "Pike-Push-up-(on-Bench)-(VERSION-2)_Chest_converted.gif",
+        1.0,
+        4,
+        "Chest"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Plate-Loaded High Row",
+    "gymvisual_name": "Lever High Row (plate loaded)",
+    "current_gif": "Lever-High-Row-(plate-loaded)-(VERSION-2)_Back_converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 3,
+    "current_body_part": "Back",
+    "issues": [
+      "Fewer modifiers available: 1 vs 3"
+    ],
+    "better_matches": [
+      [
+        "Lever-High-Row-(plate-loaded)_Back_converted.gif",
+        1.0,
+        1,
+        "Back"
+      ],
+      [
+        "Lever-High-Row-(plate-loaded)-(VERSION-3)_Back_converted.gif",
+        1.0,
+        3,
+        "Back"
+      ],
+      [
+        "Lever-High-Row-(plate-loaded)-(VERSION-2)_Back_converted.gif",
+        1.0,
+        3,
+        "Back"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Seated Machine Row",
+    "gymvisual_name": "Lever Seated Row",
+    "current_gif": "Lever-Seated-Row-(version-2)_Back_converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Back",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Lever-Seated-Row_Back_converted.gif",
+        1.0,
+        0,
+        "Back"
+      ],
+      [
+        "Lever-Seated-Row-(plate-loaded)_Back_converted.gif",
+        1.0,
+        1,
+        "Back"
+      ],
+      [
+        "Lever-Seated-Row-(version-2)_Back_converted.gif",
+        1.0,
+        2,
+        "Back"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Medicine Ball Russian Twist",
+    "gymvisual_name": "Russian Twist (with medicine ball)",
+    "current_gif": "Russian-Twist-(with-medicine-ball)_Waist-FIX__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Waist",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Russian-Twist_waist_converted.gif",
+        1.0,
+        0,
+        "Waist"
+      ],
+      [
+        "Russian-Twist-(with-medicine-ball)_Waist-FIX__converted.gif",
+        1.0,
+        2,
+        "Waist"
+      ],
+      [
+        "Russian-Twist-Plus-(male)_Waist__converted.gif",
+        0.75,
+        1,
+        "Waist"
+      ],
+      [
+        "Russian-Twist-Chop-(male)_Waist__converted.gif",
+        0.75,
+        1,
+        "Waist"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Russian Twist",
+    "gymvisual_name": "Russian Twist",
+    "current_gif": "Russian-Twist-(with-medicine-ball)_Waist-FIX__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Waist",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Russian-Twist_waist_converted.gif",
+        1.0,
+        0,
+        "Waist"
+      ],
+      [
+        "Russian-Twist-(with-medicine-ball)_Waist-FIX__converted.gif",
+        1.0,
+        2,
+        "Waist"
+      ],
+      [
+        "Russian-Twist-Plus-(male)_Waist__converted.gif",
+        0.75,
+        1,
+        "Waist"
+      ],
+      [
+        "Russian-Twist-Chop-(male)_Waist__converted.gif",
+        0.75,
+        1,
+        "Waist"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Barbell Split Squat",
+    "gymvisual_name": "Barbell Split Squat",
+    "current_gif": "Barbell-Split-Squat-(VERSION-2)_Hips__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 2,
+    "current_body_part": "Hips",
+    "issues": [
+      "Fewer modifiers available: 0 vs 2",
+      "Exact match without modifiers available",
+      "Better body part match: Thighs (expected Thighs) vs Hips"
+    ],
+    "better_matches": [
+      [
+        "Barbell-Split-Squat_Thighs__converted.gif",
+        1.0,
+        0,
+        "Thighs"
+      ],
+      [
+        "Barbell-Split-Squat-(VERSION-2)_Hips__converted.gif",
+        1.0,
+        2,
+        "Hips"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Machine Tricep Extension",
+    "gymvisual_name": "Lever Triceps Extension (VERSION 2)",
+    "current_gif": "Lever-Triceps-Extension-(VERSION-2)_Upper-Arms-FIX_converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 3,
+    "current_body_part": "Upper-Arms-FIX",
+    "issues": [
+      "Fewer modifiers available: 0 vs 3",
+      "Exact match without modifiers available"
+    ],
+    "better_matches": [
+      [
+        "Lever-Triceps-Extension_Upper-Arms_converted.gif",
+        1.0,
+        0,
+        "Upper-Arms"
+      ],
+      [
+        "Lever-Triceps-Extension_Upper-Arms 1_converted.gif",
+        1.0,
+        0,
+        "Upper-Arms 1"
+      ],
+      [
+        "Lever-Triceps-Extension-(VERSION-2)_Upper-Arms-FIX_converted.gif",
+        1.0,
+        3,
+        "Upper-Arms-FIX"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Tricep Pushdown With Bar",
+    "gymvisual_name": "Cable Pushdown",
+    "current_gif": "Cable-Pushdown-(with-rope-attachment)_Upper-Arms-FIX__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 3,
+    "current_body_part": "Upper-Arms-FIX",
+    "issues": [
+      "Fewer modifiers available: 1 vs 3"
+    ],
+    "better_matches": [
+      [
+        "Cable-Pushdown_Upper-Arms-FIX__converted.gif",
+        1.0,
+        1,
+        "Upper-Arms-FIX"
+      ],
+      [
+        "Cable-Pushdown-(straight-arm)-(VERSION-2)_Back__converted.gif",
+        1.0,
+        3,
+        "Back"
+      ],
+      [
+        "Cable-Pushdown-(with-rope-attachment)_Upper-Arms-FIX__converted.gif",
+        1.0,
+        3,
+        "Upper-Arms-FIX"
+      ]
+    ]
+  },
+  {
+    "exercise_name": "Tricep Pushdown With Rope",
+    "gymvisual_name": "Cable Pushdown (with rope attachment)",
+    "current_gif": "Cable-Pushdown-(with-rope-attachment)_Upper-Arms-FIX__converted.gif",
+    "current_score": 1.0,
+    "current_modifiers": 3,
+    "current_body_part": "Upper-Arms-FIX",
+    "issues": [
+      "Fewer modifiers available: 1 vs 3"
+    ],
+    "better_matches": [
+      [
+        "Cable-Pushdown_Upper-Arms-FIX__converted.gif",
+        1.0,
+        1,
+        "Upper-Arms-FIX"
+      ],
+      [
+        "Cable-Pushdown-(straight-arm)-(VERSION-2)_Back__converted.gif",
+        1.0,
+        3,
+        "Back"
+      ],
+      [
+        "Cable-Pushdown-(with-rope-attachment)_Upper-Arms-FIX__converted.gif",
+        1.0,
+        3,
+        "Upper-Arms-FIX"
+      ]
+    ]
+  }
+]

@@ -2304,7 +2304,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2145-pull-up.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": "Pull-up-(negative)-(male)_Back__converted.gif"
+      "gifName": "Pull-up_Back-FIX2__converted.gif"
     },
     {
       "name": "Towel Pull-Up",
@@ -4062,7 +4062,7 @@
       "weightInstruction": "Per Dumbbell",
       "imageUrl": "https://gymvisual.com/animated-gifs/1803-dumbbell-front-raise.html?search_query=dumbbell+front+raise&results=92",
       "unitType": "weightXreps",
-      "gifName": "Dumbbell-Front-Raise-(version-2)_Shoulders_converted.gif"
+      "gifName": "Dumbbell-Front-Raise_Shoulders_converted.gif"
     },
     {
       "name": "Plate Front Raise",
@@ -5839,7 +5839,7 @@
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1526-barbell-deadlift.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": "Barbell-Deadlift-(side-POV)-(male)_Hips__converted.gif"
+      "gifName": "Barbell-Deadlift_Hips-FIX_converted.gif"
     },
     {
       "name": "Single-Leg Deadlift",
@@ -6444,7 +6444,7 @@
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/13030-weighted-hyperextension.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": "Weighted-Hyperextension-(on-stability-ball)_Waist__converted.gif"
+      "gifName": "Weighted-Hyperextension_Hips__converted.gif"
     },
     {
       "name": "Cable Glute Kickback",
@@ -6808,7 +6808,6 @@
       "name": "Side Bridge Hip Abduction",
       "id": "E105AA93-2D04-4C66-ADC3-F4C3EDCD5253",
       "image": "side_bridge_hip_abduction",
-      "aliases": [ "Side Plank Hip Abduction", "Side Bridge with Leg Lift" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
       "muscles": [
@@ -6870,7 +6869,6 @@
       "name": "Side Plank Hip Adduction",
       "id": "C979DBD5-6ED8-4524-8720-B3196D4A67F7",
       "image": "side_plank_hip_adduction",
-      "aliases": [ "Side Plank Hip Adduction (Bent Knee)" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Flat Bench" ],
       "muscles": [
@@ -6886,7 +6884,7 @@
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/8432-side-plank-hip-adduction-bent-knee.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": "Side-Plank-Hip-Adduction-(bent-knee)_Hips__converted.gif"
+      "gifName": "Side-Plank-Hip-Adduction_Hips_converted.gif"
     },
     {
       "name": "Lever Side Hip Adduction",
@@ -7421,7 +7419,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2689-flutter-kicks-version-3.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": "Flutter-Kicks-(version-2)_Hips_converted 2.gif"
+      "gifName": "Flutter-Kicks-(version-3)_Hips_converted.gif"
     },
     {
       "name": "Hanging Knee Raise",
@@ -7610,7 +7608,7 @@
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/1572-barbell-rear-lunge.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": "Barbell-Rear-Lunge-(VERSION-2)_Thighs__converted.gif"
+      "gifName": "Barbell-Rear-Lunge_Thighs__converted.gif"
     },
     {
       "name": "Barbell Walking Lunge",
@@ -7940,7 +7938,7 @@
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/1731-cable-straight-arm-pulldown.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": "Cable-Straight-Arm-Pulldown-(with-rope-attachment)_converted.gif"
+      "gifName": "Cable-Straight-Arm-Pulldown_Back-FIX__converted.gif"
     },
     {
       "name": "Barbell Pullover",
@@ -8093,7 +8091,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1752-close-grip-push-up.html?search_query=close+grip+push+up&results=27",
       "unitType": "repsOnly",
-      "gifName": "Close-grip-Push-up-(on-knees)_Upper-Arms__converted.gif"
+      "gifName": "Close-Grip-Push-up_Upper-Arms-FIX__converted.gif"
     },
     {
       "name": "Decline Push-Up",
@@ -8149,7 +8147,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1776-diamond-push-up.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": "Diamond-Push-up-(on-knees)_Upper-Arms_converted.gif"
+      "gifName": "Diamond-Push-up_Upper-Arms_converted.gif"
     },
     {
       "name": "Handstand Push-Up",
@@ -8203,7 +8201,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1992-incline-push-up.html?search_query=incline+push+up&results=44",
       "unitType": "repsOnly",
-      "gifName": "Incline-Push-Up-(on-box)_converted.gif"
+      "gifName": "Incline-Push-up_Chest_converted.gif"
     },
     {
       "name": "Kneeling Close-Grip Push-Up",
@@ -8283,7 +8281,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/6735-pike-push-up.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": "Pike-Push-up-(on-Bench)-(VERSION-2)_Chest_converted.gif"
+      "gifName": "Pike-Push-up_Chest_converted.gif"
     },
     {
       "name": "Push-Up",
@@ -8807,7 +8805,7 @@
       "weightInstruction": "Per Peg",
       "imageUrl": "https://gymvisual.com/animated-gifs/2078-lever-high-row-plate-loaded.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": "Lever-High-Row-(plate-loaded)-(VERSION-2)_Back_converted.gif"
+      "gifName": "Lever-High-Row-(plate-loaded)_Back_converted.gif"
     },
     {
       "name": "Plate-Loaded Low Row",
@@ -8977,7 +8975,7 @@
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/3120-lever-seated-row.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": "Lever-Seated-Row-(version-2)_Back_converted.gif"
+      "gifName": "Lever-Seated-Row_Back_converted.gif"
     },
     {
       "name": "T-Bar Row",
@@ -9097,7 +9095,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2179-russian-twist.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": "Russian-Twist-(with-medicine-ball)_Waist-FIX__converted.gif"
+      "gifName": "Russian-Twist_waist_converted.gif"
     },
     {
       "name": "Dumbbell Side Bend",
@@ -9336,7 +9334,7 @@
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/8245-barbell-split-squat.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": "Barbell-Split-Squat-(VERSION-2)_Hips__converted.gif"
+      "gifName": "Barbell-Split-Squat_Thighs__converted.gif"
     },
     {
       "name": "Belt Squat",
@@ -10635,7 +10633,7 @@
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/1694-cable-pushdown.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": "Cable-Pushdown-(with-rope-attachment)_Upper-Arms-FIX__converted.gif"
+      "gifName": "Cable-Pushdown_Upper-Arms-FIX__converted.gif"
     },
     {
       "name": "Tricep Pushdown With Rope",
