@@ -23,45 +23,45 @@ struct WeightIncrementation: View {
             Form {
                 RoundingSection(
                     value: $platedRounding,
-                    title: "Plated Equipment",
+                    title: "\(RoundingCategory.plated.displayName) Equipment",
                     onUpdate: { newValue in
                         ctx.userData.workoutPrefs.roundingPreference.setRounding(weight: newValue, for: .plated)
                     },
                     onInfoTap: {
-                        equipSheet = EquipSheet(category: .plated, categories: [.barsPlates, .platedMachines])
+                        equipSheet = EquipSheet(category: .plated)
                     }
                 )
 
                 RoundingSection(
                     value: $independentPlatedRounding,
-                    title: "Independent Peg Plated Equipment",
+                    title: "\(RoundingCategory.platedIndependentPeg.displayName) Equipment",
                     onUpdate: { newValue in
                         ctx.userData.workoutPrefs.roundingPreference.setRounding(weight: newValue, for: .platedIndependentPeg)
                     },
                     onInfoTap: {
-                        equipSheet = EquipSheet(category: .platedIndependentPeg, categories: [.barsPlates, .platedMachines])
+                        equipSheet = EquipSheet(category: .platedIndependentPeg)
                     }
                 )
 
                 RoundingSection(
                     value: $pinLoadedRounding,
-                    title: "Pin-loaded Equipment",
+                    title: "\(RoundingCategory.pinLoaded.displayName) Equipment",
                     onUpdate: { newValue in
                         ctx.userData.workoutPrefs.roundingPreference.setRounding(weight: newValue, for: .pinLoaded)
                     },
                     onInfoTap: {
-                        equipSheet = EquipSheet(category: .pinLoaded, categories: [.weightMachines, .cableMachines])
+                        equipSheet = EquipSheet(category: .pinLoaded)
                     }
                 )
 
                 RoundingSection(
                     value: $smallWeightsRounding,
-                    title: "Small Weights",
+                    title: RoundingCategory.smallWeights.displayName,
                     onUpdate: { newValue in
                         ctx.userData.workoutPrefs.roundingPreference.setRounding(weight: newValue, for: .smallWeights)
                     },
                     onInfoTap: {
-                        equipSheet = EquipSheet(category: .smallWeights, categories: [.smallWeights])
+                        equipSheet = EquipSheet(category: .smallWeights)
                     }
                 )
             }
@@ -71,9 +71,9 @@ struct WeightIncrementation: View {
             .overlay(kbd.isVisible ? dismissKeyboardButton : nil, alignment: .bottomTrailing)
             .sheet(item: $equipSheet) { sheet in
                 EquipmentPopupView(
-                    selectedEquipment: ctx.equipment.equipmentForCategory(for: sheet.category),
+                    equipment: ctx.equipment.equipmentForCategory(for: sheet.category),
                     showingCategories: true,
-                    title: EquipmentCategory.concatenateEquipCategories(for: sheet.categories),
+                    title: sheet.category.displayName,
                     onClose: {
                         equipSheet = nil
                     }
@@ -92,7 +92,6 @@ struct WeightIncrementation: View {
     struct EquipSheet: Identifiable {
         let id = UUID()
         let category: RoundingCategory
-        let categories: [EquipmentCategory]
     }
 
     private func initializeVariables() {

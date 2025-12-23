@@ -11,6 +11,12 @@ import SwiftUI
 struct Implements: Codable, Equatable, Hashable {
     var weights: Weights?
     var resistanceBands: ResistanceBands?
+    var useGeneralRounding: Bool? = nil
+    
+    /// Returns the useGeneralRounding value, defaulting to true if nil
+    var shouldUseGeneralRounding: Bool {
+        useGeneralRounding ?? true
+    }
     
     var subtitle: String? {
         if let w = weights {

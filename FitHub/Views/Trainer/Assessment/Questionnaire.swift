@@ -116,7 +116,7 @@ struct Questionnaire: View {
         .onAppear(perform: initializeQuestions)
         .sheet(isPresented: $showingPopup) {
             EquipmentPopupView(
-                selectedEquipment: ctx.equipment.equipmentObjects(for: ctx.userData.evaluation.availableEquipment),
+                equipment: ctx.equipment.equipmentObjects(for: ctx.userData.evaluation.availableEquipment),
                 onClose: {
                     showingPopup = false
                 },

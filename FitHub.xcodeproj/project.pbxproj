@@ -27,6 +27,7 @@
 		6510A2D22E28843C0051D002 /* SetInputRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510A2D12E28843C0051D002 /* SetInputRow.swift */; };
 		6510A2D42E2DB5440051D002 /* HeightSelectorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510A2D32E2DB5440051D002 /* HeightSelectorRow.swift */; };
 		6510A2D62E2DB5500051D002 /* WeightSelectorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510A2D52E2DB5500051D002 /* WeightSelectorRow.swift */; };
+		6517BCCB2EFA50ED00AE0BE7 /* EquipmentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6517BCCA2EFA50ED00AE0BE7 /* EquipmentRow.swift */; };
 		652131722E3D9C3900FDFB9C /* DurationPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652131712E3D9C3900FDFB9C /* DurationPicker.swift */; };
 		6531360A2E4D416600EECCA5 /* CalendarUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653136092E4D416600EECCA5 /* CalendarUtility.swift */; };
 		6531360C2E4FDAF000EECCA5 /* MaxTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6531360B2E4FDAF000EECCA5 /* MaxTable.swift */; };
@@ -331,6 +332,7 @@
 		6510A2D12E28843C0051D002 /* SetInputRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetInputRow.swift; sourceTree = "<group>"; };
 		6510A2D32E2DB5440051D002 /* HeightSelectorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightSelectorRow.swift; sourceTree = "<group>"; };
 		6510A2D52E2DB5500051D002 /* WeightSelectorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightSelectorRow.swift; sourceTree = "<group>"; };
+		6517BCCA2EFA50ED00AE0BE7 /* EquipmentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentRow.swift; sourceTree = "<group>"; };
 		652131712E3D9C3900FDFB9C /* DurationPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationPicker.swift; sourceTree = "<group>"; };
 		653136062E4C3A6C00EECCA5 /* Premium.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Premium.storekit; sourceTree = "<group>"; };
 		653136092E4D416600EECCA5 /* CalendarUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUtility.swift; sourceTree = "<group>"; };
@@ -767,6 +769,7 @@
 		653BF8992E595A8D005A07EA /* Selection */ = {
 			isa = PBXGroup;
 			children = (
+				6517BCCA2EFA50ED00AE0BE7 /* EquipmentRow.swift */,
 				653BF89A2E595AA3005A07EA /* EquipmentManagement.swift */,
 				65CD3BC52DD3C84F00C2B671 /* EquipmentSelection.swift */,
 				653BF89C2E595ADB005A07EA /* EquipmentSelectionContent.swift */,
@@ -1765,6 +1768,7 @@
 				653136392E552FF000EECCA5 /* Notification.swift in Sources */,
 				65AC86472E261D040034FAA3 /* MuscleSelection.swift in Sources */,
 				65CD3C742DD3C84F00C2B671 /* EnterOneRepMaxes.swift in Sources */,
+				6517BCCB2EFA50ED00AE0BE7 /* EquipmentRow.swift in Sources */,
 				657067A42E49729A0063090C /* TemplateEditor.swift in Sources */,
 				65B936E82EE3AC0C00D80950 /* SupersetSettingsView.swift in Sources */,
 				653BF8AD2E5AC750005A07EA /* PlateVisualizer.swift in Sources */,

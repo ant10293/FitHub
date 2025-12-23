@@ -8,10 +8,19 @@
 import Foundation
 
 enum RoundingCategory: String, Codable, Equatable {
-    case plated = "Plated"
-    case platedIndependentPeg = "Plated Single Peg"
-    case pinLoaded = "Pin Loaded"
-    case smallWeights = "Small Weights"
+    case plated
+    case platedIndependentPeg
+    case pinLoaded
+    case smallWeights
+    
+    var displayName: String {
+        switch self {
+        case .plated: "Plated"
+        case .platedIndependentPeg: "Plated Independent Peg"
+        case .pinLoaded: "Pin-Loaded"
+        case .smallWeights: "Small Weights"
+        }
+    }
 }
 
 struct RoundingPreference: Codable, Equatable {

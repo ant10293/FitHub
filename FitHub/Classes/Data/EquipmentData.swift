@@ -330,11 +330,12 @@ extension EquipmentData {
         equipment.contains { $0.adjustments?.isEmpty == false }
     }
 
-    func incrementForEquipment(names: [String], rounding p: RoundingPreference) -> Mass {
+    func incrementForEquipment(names: [String], equipment: [GymEquipment]? = nil, rounding p: RoundingPreference) -> Mass {
         let pref = (UnitSystem.current == .imperial) ? p.lb : p.kg
+        let equipment = equipment ?? getEquipment(from: names)
 
         // Find the one equipment that has a rounding category
-        let cat = getEquipment(from: names)
+        let cat = equipment
             .lazy
             .compactMap(\.roundingCategory)
             .first
@@ -344,7 +345,35 @@ extension EquipmentData {
 
     // MARK: Weight rounding with string names
     func roundWeight(_ weight: Mass, for equipmentNames: [String], rounding p: RoundingPreference) -> Mass {
-        let increment = incrementForEquipment(names: equipmentNames, rounding: p)
+        // Check if any equipment has availableImplements with useGeneralRounding = false
+        let equipment = getEquipment(from: equipmentNames)
+        
+        // Find first equipment with availableImplements where useGeneralRounding = false
+        if let implements = equipment.first(where: { 
+            $0.availableImplements != nil && 
+            $0.availableImplements?.shouldUseGeneralRounding == false 
+        })?.availableImplements,
+           let weights = implements.weights,
+           let availableWeights = weights.implements,
+           !availableWeights.isEmpty {
+            // Round to nearest available weight
+            let sortedWeights = weights.sortedImplements(ascending: true)
+            let targetValue = weight.displayValue
+            
+            // Find the weight with minimum absolute difference
+            let nearestWeight = sortedWeights.min(by: { weight1, weight2 in
+                let diff1 = abs(weight1.resolvedMass.displayValue - targetValue)
+                let diff2 = abs(weight2.resolvedMass.displayValue - targetValue)
+                return diff1 < diff2
+            })
+            
+            if let nearest = nearestWeight {
+                return nearest.resolvedMass
+            }
+        }
+        
+        // Fall back to general rounding
+        let increment = incrementForEquipment(names: equipmentNames, equipment: equipment, rounding: p)
 
         // Round in the chosen unit, then convert back to canonical kg
         switch UnitSystem.current {

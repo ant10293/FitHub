@@ -39,7 +39,11 @@ extension GymEquipment {
     var roundingCategory: RoundingCategory? {
         switch equCategory {
         case .platedMachines, .barsPlates:
-            return (implementation == .divided || pegCount == .single) ? .platedIndependentPeg : .plated
+            return (implementation == .divided || pegCount == .single)
+            ? .platedIndependentPeg
+            : (pegCount == .both ? .plated : nil)
+        case .other:
+            return pegCount == .single ? .platedIndependentPeg : nil
         case .weightMachines, .cableMachines:
             return .pinLoaded
         case .smallWeights:
