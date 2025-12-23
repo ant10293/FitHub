@@ -1,0 +1,269 @@
+{
+  "adductor": [
+    {
+      "filename": "Cable-Hip-Adduction_Thighs_converted.gif",
+      "name": "Cable Hip Adduction",
+      "body_part": "Thighs"
+    },
+    {
+      "filename": "Lever-Seated-Hip-Adduction_Thighs_converted.gif",
+      "name": "Lever Seated Hip Adduction",
+      "body_part": "Thighs"
+    },
+    {
+      "filename": "Side-Lying-Hip-Adduction-(left)-(male)_Hips__converted.gif",
+      "name": "Side Lying Hip Adduction",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Bodyweight-Side-Lying-Leg-Adduction-(male)_Hips__converted.gif",
+      "name": "Bodyweight Side Lying Leg Adduction",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Side-Lying-Hip-Adduction-(male)_Hips_converted.gif",
+      "name": "Side Lying Hip Adduction",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Standing-Hip-Adduction-(VERSION-2)_Hips__converted.gif",
+      "name": "Standing Hip Adduction",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Seated-Alternate-Wide-Side-Adduction-(male)_Hips__converted.gif",
+      "name": "Seated Alternate Wide Side Adduction",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Lying-Hip-Adduction-(male)_Hips__converted.gif",
+      "name": "Lying Hip Adduction",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Bent-Over-Back-Extension-Scapular-Adduction-(male)_converted.gif",
+      "name": "Bent Over Back Extension Scapular Adduction",
+      "body_part": ""
+    },
+    {
+      "filename": "Side-Plank-Hip-Adduction_Hips_converted.gif",
+      "name": "Side Plank Hip Adduction",
+      "body_part": "Hips"
+    }
+  ],
+  "abductor": [
+    {
+      "filename": "Lever-Glute-Abductors-Press-(male)_Hips__converted.gif",
+      "name": "Lever Glute Abductors Press",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Lever-Abduction-Leg-Raise_Pilates__converted.gif",
+      "name": "Lever Abduction Leg Raise",
+      "body_part": "Pilates"
+    },
+    {
+      "filename": "Lever-Seated-Hip-Abduction_Hips-FIX__converted.gif",
+      "name": "Lever Seated Hip Abduction",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Cable-hip-abduction-(version-2)-(male)_Hips__converted.gif",
+      "name": "Cable hip abduction",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Sitting-Shoulder-Press-and-Hip-Abduction-on-a-padd_converted.gif",
+      "name": "Sitting Shoulder Press and Hip Abduction on a padd",
+      "body_part": ""
+    },
+    {
+      "filename": "Bridge-Hip-Abduction-(male)_Hips__converted.gif",
+      "name": "Bridge Hip Abduction",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Lying-Abduction-Leg-Raise-on-floor_Pilates__converted.gif",
+      "name": "Lying Abduction Leg Raise on floor",
+      "body_part": "Pilates"
+    },
+    {
+      "filename": "Side-Bridge-Hip-Abduction_Hips__converted.gif",
+      "name": "Side Bridge Hip Abduction",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Glute-Bridge-Abduction-against-Wall-(male)_Hips__converted.gif",
+      "name": "Glute Bridge Abduction against Wall",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Glute-Bridge-Hip-Abduction-(male)_Hips__converted.gif",
+      "name": "Glute Bridge Hip Abduction",
+      "body_part": "Hips"
+    }
+  ],
+  "tibialis": [
+    {
+      "filename": "Weighted-Plate-Tibialis-Anterior-Curl-(male)_Calve_converted.gif",
+      "name": "Weighted Plate Tibialis Anterior Curl",
+      "body_part": "Calve"
+    }
+  ],
+  "glutes": [
+    {
+      "filename": "Dumbbell-Hip-Thrust_Hips__converted.gif",
+      "name": "Dumbbell Hip Thrust",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Barbell-one-leg-hip-thrust_Hips_converted.gif",
+      "name": "Barbell one leg hip thrust",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Dumbbell-Hip-Thrust-(VERSION-2)_Hips__converted.gif",
+      "name": "Dumbbell Hip Thrust",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Lever-Glute-Press-(male)_Hips__converted.gif",
+      "name": "Lever Glute Press",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Barbell-Hip-Thrust_Hips-FIX__converted.gif",
+      "name": "Barbell Hip Thrust",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Lever-Hip-Thrust-(plate-loaded)-(male)_Hips__converted.gif",
+      "name": "Lever Hip Thrust",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Barbell-Glute-Bridge-(hands-on-bar)_Hips__converted.gif",
+      "name": "Barbell Glute Bridge",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Dumbbell-Single-Leg-Hip-Thrust_Hips__converted.gif",
+      "name": "Dumbbell Single Leg Hip Thrust",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Dumbbell-Frog-Hip-Thrust-(male)_Hips__converted.gif",
+      "name": "Dumbbell Frog Hip Thrust",
+      "body_part": "Hips"
+    },
+    {
+      "filename": "Long-Lever-Standing-Hip-Extension-(male)_Hips__converted.gif",
+      "name": "Long Lever Standing Hip Extension",
+      "body_part": "Hips"
+    }
+  ],
+  "hamstrings": [
+    {
+      "filename": "Lever-Seated-Leg-Curl-(plate-loaded)-(male)_Thighs_converted.gif",
+      "name": "Lever Seated Leg Curl",
+      "body_part": "Thighs"
+    },
+    {
+      "filename": "Dumbbell-Decline-Lying-Leg-Curl_Thighs__converted.gif",
+      "name": "Dumbbell Decline Lying Leg Curl",
+      "body_part": "Thighs"
+    },
+    {
+      "filename": "Lever-Seated-Leg-Curl_Thighs-FIX__converted.gif",
+      "name": "Lever Seated Leg Curl",
+      "body_part": "Thighs"
+    },
+    {
+      "filename": "Inverse-Leg-Curl-(on-pull-up-cable-machine)_Thighs_converted.gif",
+      "name": "Inverse Leg Curl",
+      "body_part": "Thighs"
+    },
+    {
+      "filename": "Dumbbell-Lying-Hamstring-Curl_Thighs_converted.gif",
+      "name": "Dumbbell Lying Hamstring Curl",
+      "body_part": "Thighs"
+    },
+    {
+      "filename": "Lever-Lying-Leg-Curl_Thighs-FIX__converted.gif",
+      "name": "Lever Lying Leg Curl",
+      "body_part": "Thighs"
+    },
+    {
+      "filename": "Lever-Lying-Single-Leg-Curl_Thighs__converted.gif",
+      "name": "Lever Lying Single Leg Curl",
+      "body_part": "Thighs"
+    },
+    {
+      "filename": "Lever-Kneeling-Leg-Curl-(plate-loaded)_Thighs_converted.gif",
+      "name": "Lever Kneeling Leg Curl",
+      "body_part": "Thighs"
+    },
+    {
+      "filename": "Dumbbell-Lying-Leg-Curl-(male)_Thighs__converted.gif",
+      "name": "Dumbbell Lying Leg Curl",
+      "body_part": "Thighs"
+    },
+    {
+      "filename": "Lever-Seated-One-Leg-Curl_Thighs__converted.gif",
+      "name": "Lever Seated One Leg Curl",
+      "body_part": "Thighs"
+    }
+  ],
+  "neck": [
+    {
+      "filename": "Weighted-Seated-Neck-Extension-(with-head-harness)_Neck_converted.gif",
+      "name": "Weighted Seated Neck Extension",
+      "body_part": "Neck"
+    },
+    {
+      "filename": "Weighted-Lying-Neck-Flexion_neck_converted.gif",
+      "name": "Weighted Lying Neck Flexion",
+      "body_part": "neck"
+    },
+    {
+      "filename": "Cable-Seated-Neck-Flexion-(with-head-harness)_Neck_converted.gif",
+      "name": "Cable Seated Neck Flexion",
+      "body_part": "Neck"
+    },
+    {
+      "filename": "Cable-Seated-Neck-Extension-(with-head-harness)_Neck_converted.gif",
+      "name": "Cable Seated Neck Extension",
+      "body_part": "Neck"
+    },
+    {
+      "filename": "Lying-Chin-Tuck-Raise_Neck__converted.gif",
+      "name": "Lying Chin Tuck Raise",
+      "body_part": "Neck"
+    },
+    {
+      "filename": "Prone-Cervical-Extension-Isometric-Hold_Neck__converted.gif",
+      "name": "Prone Cervical Extension Isometric Hold",
+      "body_part": "Neck"
+    },
+    {
+      "filename": "Chin-Tuck-against-the-Wall-(male)_Neck__converted.gif",
+      "name": "Chin Tuck against the Wall",
+      "body_part": "Neck"
+    },
+    {
+      "filename": "Seated-Flexion-And-Extension-Neck-(male)_Neck_converted.gif",
+      "name": "Seated Flexion And Extension Neck",
+      "body_part": "Neck"
+    },
+    {
+      "filename": "Lying-Chin-Tucks_Neck__converted.gif",
+      "name": "Lying Chin Tucks",
+      "body_part": "Neck"
+    },
+    {
+      "filename": "Posterior-Neck-Isometric_Neck__converted.gif",
+      "name": "Posterior Neck Isometric",
+      "body_part": "Neck"
+    }
+  ]
+}

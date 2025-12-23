@@ -1,0 +1,264 @@
+[
+  {
+    "name": "Spoto Press",
+    "csvKey": "spoto-press",
+    "id": "5C8D3E1B-7A2F-4A6C-9B0E-1D2F3A4B5C6D",
+    "imageUrl": "",
+    "aliases": [
+      "Paused Hover Bench"
+    ]
+  },
+  {
+    "name": "Dumbbell Hang Clean",
+    "csvKey": "dumbbell-hang-clean",
+    "id": "B2C3D4E5-F6A7-48B9-8C0D-1E2F3A4B5C6D",
+    "imageUrl": "https://gymvisual.com/animated-gifs/12217-dumbbell-hang-clean.html#/47-style_type-basic_grey",
+    "aliases": [
+      "DB Hang Clean"
+    ]
+  },
+  {
+    "name": "Dumbbell High Pull",
+    "csvKey": "dumbbell-high-pull",
+    "id": "F4B7C9D1-2E3F-4A5B-8C6D-1E2F3A4B5C6D",
+    "imageUrl": "https://gymvisual.com/animated-gifs/14155-dumbbell-high-pull.html?search_query=dumbbell+high+pull&results=2",
+    "aliases": [
+      "DB High Pull"
+    ]
+  },
+  {
+    "name": "Hang Power Clean",
+    "csvKey": "hang-power-clean",
+    "id": "E3DDCE2F-697D-4C3E-A698-C5EBEE855C47",
+    "imageUrl": "https://gymvisual.com/animated-gifs/14256-barbell-hang-power-clean.html#/47-style_type-basic_grey",
+    "aliases": [
+      "HPC"
+    ]
+  },
+  {
+    "name": "Muscle Snatch",
+    "csvKey": "muscle-snatch",
+    "id": "D9A1C2B3-4E5F-6789-0A1B-2C3D4E5F6A7B",
+    "imageUrl": "https://gymvisual.com/animated-gifs/3389-barbell-muscle-snatch.html?search_query=muscle+snatch&results=2",
+    "aliases": [
+      "Power Snatch No Catch"
+    ]
+  },
+  {
+    "name": "Push Jerk",
+    "csvKey": "push-jerk",
+    "id": "C7F9A2E1-4B3D-4C8A-9F12-6A5B3E7D9C40",
+    "imageUrl": "",
+    "aliases": [
+      "Dip Jerk"
+    ]
+  },
+  {
+    "name": "Glute Bridge",
+    "csvKey": "glute-bridge",
+    "id": "44B25D0F-9B7D-4CBD-B4DF-D2FF9C4E6309",
+    "imageUrl": "https://gymvisual.com/animated-gifs/5512-glute-bridge-two-legs-on-floor.html#/47-style_type-basic_grey",
+    "aliases": []
+  },
+  {
+    "name": "Weighted Muscle-Up",
+    "csvKey": "weighted-muscle-ups",
+    "id": "ED5C0418-8113-483A-B183-D60F04DC6A0D",
+    "imageUrl": "https://gymvisual.com/animated-gifs/7215-weighted-muscle-up-on-bar.html#/47-style_type-basic_grey",
+    "aliases": [
+      "Bar Muscle-Up"
+    ]
+  },
+  {
+    "name": "Side Crunch",
+    "csvKey": "side-crunch",
+    "id": "FC8CDCA3-7278-40BF-AD2F-7635BF65F6EA",
+    "imageUrl": "https://gymvisual.com/animated-gifs/2196-side-crunch.html#/47-style_type-basic_grey",
+    "aliases": [
+      "Oblique Side Crunch",
+      "Lateral Crunch"
+    ]
+  },
+  {
+    "name": "Overhead Pin Press",
+    "csvKey": "shoulder-pin-press",
+    "id": "F3E2D1C0-B9A8-4765-4E3F-2D1C0B9A8E7D",
+    "imageUrl": "https://gymvisual.com/animated-gifs/14157-barbell-standing-shoulder-pin-press.html?search_query=shoulder+pin+press&results=2",
+    "aliases": [
+      "Rack Overhead Press"
+    ]
+  },
+  {
+    "name": "Seated Dumbbell External Rotation",
+    "csvKey": "dumbbell-external-rotation",
+    "id": "D2A7B8C9-E0F1-4A2B-8C3D-4E5F6A7B8C9D",
+    "imageUrl": "https://gymvisual.com/animated-gifs/12398-dumbbell-seated-external-shoulder-rotation.html#/47-style_type-basic_grey",
+    "aliases": [
+      "Seated DB ER"
+    ]
+  },
+  {
+    "name": "Power Shrug",
+    "csvKey": "barbell-power-shrug",
+    "id": "84B7C993-3B2C-4FA0-AB4D-A5DAE719F6D1",
+    "imageUrl": "https://gymvisual.com/animated-gifs/14151-barbell-power-shrug.html#/47-style_type-basic_grey",
+    "aliases": [
+      "Barbell Power Shrug",
+      "Explosive Shrug"
+    ]
+  },
+  {
+    "name": "Dumbbell Walking Calf Raise",
+    "csvKey": "dumbbell-walking-calf-raise",
+    "id": "A2B6B6AC-6B1B-4B8C-9A3B-7B7C5F4F8F21",
+    "imageUrl": "https://gymvisual.com/animated-gifs/14250-dumbbell-walking-calf-raise.html?search_query=dumbbell+calf+raise&results=47",
+    "aliases": [
+      "Walking Calf Raise (DB)"
+    ]
+  },
+  {
+    "name": "Single-Leg Seated Calf Raise",
+    "csvKey": "single-leg-seated-calf-raise",
+    "id": "73F59343-6763-44FE-B102-CFEEF28578F1",
+    "imageUrl": "https://gymvisual.com/animated-gifs/2666-lever-seated-one-leg-calf-raise.html#/47-style_type-basic_grey",
+    "aliases": [
+      "Unilateral Calf Raise"
+    ]
+  },
+  {
+    "name": "Behind the Back Deadlift",
+    "csvKey": "behind-the-back-deadlift",
+    "id": "D4F7A19E-3B2C-4E5A-8F3B-7C9D2E1A5B6C",
+    "imageUrl": "https://gymvisual.com/animated-gifs/14152-barbell-behind-the-back-deadlift.html?search_query=behind+the+back+deadlift&results=2",
+    "aliases": [
+      "BTB Deadlift",
+      "Reverse Grip Deadlift"
+    ]
+  },
+  {
+    "name": "Jefferson Deadlift",
+    "csvKey": "jefferson-deadlift",
+    "id": "8F1B0D24-3C7E-4A97-9B53-5A2F4D7C1E8A",
+    "imageUrl": "https://gymvisual.com/animated-gifs/14258-barbell-jefferson-deadlift.html?search_query=jefferson+deadlift&results=2",
+    "aliases": [
+      "Straddle Deadlift"
+    ]
+  },
+  {
+    "name": "Zercher Deadlift",
+    "csvKey": "zercher-deadlift",
+    "id": "D7E4C3B2-A1F9-48D0-8E7B-6C5A4D3F2E1B",
+    "imageUrl": "https://gymvisual.com/animated-gifs/14159-barbell-zercher-deadlift.html?search_query=zercher+deadlift&results=2",
+    "aliases": [
+      "Elbow Cradle Deadlift"
+    ]
+  },
+  {
+    "name": "Single-Leg Romanian Deadlift",
+    "csvKey": "single-leg-romanian-deadlift",
+    "id": "5752D53B-8DB9-4559-AB3D-3E0CCAED5DD7",
+    "imageUrl": "",
+    "aliases": [
+      "Unilateral RDL"
+    ]
+  },
+  {
+    "name": "Standing Leg Curl",
+    "csvKey": "standing-leg-curl",
+    "id": "16D733E6-46B9-4FFE-875D-86B09F01B4A3",
+    "imageUrl": "https://gymvisual.com/animated-gifs/12132-lever-standing-leg-curl.html#/47-style_type-basic_grey",
+    "aliases": [
+      "Single Leg Curl"
+    ]
+  },
+  {
+    "name": "Vertical Leg Press",
+    "csvKey": "vertical-leg-press",
+    "id": "F52AF3B8-D669-49CD-9CCE-85454B33BE8D",
+    "imageUrl": "https://gymvisual.com/animated-gifs/12118-sled-vertical-leg-press.html#/47-style_type-basic_grey",
+    "aliases": [
+      "Vertical Sled Press"
+    ]
+  },
+  {
+    "name": "Scissor Kicks",
+    "csvKey": "scissor-kicks",
+    "id": "536E36B9-D612-468A-8F0D-D1A1598361F7",
+    "imageUrl": "https://gymvisual.com/animated-gifs/2117-lying-scissor-kick.html?search_query=scissor+kick&results=3",
+    "aliases": [
+      "Flutter Kicks",
+      "Alternating Leg Raise"
+    ]
+  },
+  {
+    "name": "Dumbbell Bench Pull",
+    "csvKey": "dumbbell-bench-pull",
+    "id": "E1F2D3C4-B5A6-47D8-9E0F-1A2B3C4D5E6F",
+    "imageUrl": "https://gymvisual.com/animated-gifs/14249-dumbbell-lying-row-on-rack.html#/47-style_type-basic_grey",
+    "aliases": [
+      "Prone Dumbbell Row"
+    ]
+  },
+  {
+    "name": "Meadows Row",
+    "csvKey": "meadows-row",
+    "id": "721B6A93-0163-4CF8-9561-B01DC053BACB",
+    "imageUrl": "",
+    "aliases": [
+      "Landmine Meadows Row"
+    ]
+  },
+  {
+    "name": "Seated Single-Arm Cable Row",
+    "csvKey": "one-arm-seated-cable-row",
+    "id": "B5AA4915-F4E3-4628-BBD4-A0EC656DC1FC",
+    "imageUrl": "https://gymvisual.com/animated-gifs/22117-cable-seated-single-arm-lats-focused-row.html#/47-style_type-basic_grey",
+    "aliases": [
+      "Unilateral Cable Row"
+    ]
+  },
+  {
+    "name": "Yates Row",
+    "csvKey": "yates-row",
+    "id": "1F2E3D4C-5B6A-7980-9E8F-7D6C5B4A3E2F",
+    "imageUrl": "",
+    "aliases": [
+      "Underhand Barbell Row"
+    ]
+  },
+  {
+    "name": "Half Squat",
+    "csvKey": "half-squat",
+    "id": "4B6E3DA8-1C57-4C59-9F1C-8A0D5B3F2C91",
+    "imageUrl": "",
+    "aliases": [
+      "Partial Squat"
+    ]
+  },
+  {
+    "name": "Overhead Squat",
+    "csvKey": "overhead-squat",
+    "id": "E60FBD42-E2BC-49A8-97C1-A10F5CD19CB6",
+    "imageUrl": "https://gymvisual.com/animated-gifs/1563-barbell-overhead-squat.html?search_query=overhead+squat&results=52",
+    "aliases": []
+  },
+  {
+    "name": "Pin Squat",
+    "csvKey": "pin-squat",
+    "id": "D3A9F1B2-4C5D-6E7F-890A-1B2C3D4E5F6A",
+    "imageUrl": "https://gymvisual.com/animated-gifs/14253-barbell-pin-squat.html#/47-style_type-basic_grey",
+    "aliases": [
+      "Squat to Pins",
+      "Rack Squat"
+    ]
+  },
+  {
+    "name": "Standing Barbell Tricep Extension",
+    "csvKey": "tricep-extension",
+    "id": "616B4DD0-C379-4637-ADA1-C89E5B9439E0",
+    "imageUrl": "https://gymvisual.com/animated-gifs/1607-barbell-standing-overhead-triceps-extension.html?search_query=standing+barbell+tricep+extension&results=6",
+    "aliases": [
+      "Overhead Barbell Triceps Extension"
+    ]
+  }
+]

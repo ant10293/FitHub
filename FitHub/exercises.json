@@ -2173,7 +2173,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/5512-glute-bridge-two-legs-on-floor.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": ""
+      "gifName": "Glute-Bridge_(male)_Hips__converted.gif"
     },
     {
       "name": "Single-Leg Glute Bridge",
@@ -3780,7 +3780,7 @@
       "resistance": "Machine",
       "imageUrl": "https://gymvisual.com/animated-gifs/6687-strongman-viking-press.html?search_query=viking+press&results=5",
       "unitType": "weightXreps",
-      "gifName": "Lever-Standing-Viking-Press-(male)_Shoulders__converted"
+      "gifName": "Lever-Standing-Viking-Press-(male)_Shoulders__converted.gif"
     },
     {
       "name": "Y Press",
@@ -3976,7 +3976,7 @@
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/1586-cable-lateral-raise.html?search_query=cable+lateral+raise&results=48",
       "unitType": "weightXreps",
-      "gifName": "Cable-Single-Arm-Lateral-Raise-(VERSION-2)-(male)__converted"
+      "gifName": "Cable-Single-Arm-Lateral-Raise-(VERSION-2)-(male)__converted.gif"
     },
     {
       "name": "Dumbbell Lateral Raise",
@@ -4082,7 +4082,7 @@
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/12363-weighted-plate-standing-high-front-raise.html?search_query=plate+raise&results=26",
       "unitType": "weightXreps",
-      "gifName": ""
+      "gifName": "Weighted-Plate-Standing-Front-Raise-(male)_S_converted.gif"
     },
     {
       "name": "I-Y-T Raise (on Bench)",
@@ -5151,7 +5151,7 @@
       "id": "F7B2331C-6357-4481-B81F-F91C3BA6956A",
       "image": "cable_concentration_curl",
       "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Cable Hi-Lo Pulley", "Straight Bar Attachment" ],
+      "equipmentRequired": [ "Cable Hi-Lo Pulley", "Single D-Handles" ],
       "muscles": [
         { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Biceps", "submusclesWorked": [
             { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
@@ -5160,12 +5160,12 @@
       ],
       "difficulty": "Nov.",
       "effort": "Isolation",
-      "limbMovementType": "Bilateral Independent",
+      "limbMovementType": "Unilateral",
       "resistance": "Machine",
       "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/3568-cable-concentration-curl.html?search_query=cable+concentration+curl&results=14",
       "unitType": "weightXreps",
-      "gifName": "Cable-Seated-One-Arm-Concentration-Curl_Upper-Arms_converted"
+      "gifName": "Cable-Seated-One-Arm-Concentration-Curl_Upper-Arms_converted.gif"
     },
     {
       "name": "Cable Curl With Bar",
@@ -9396,7 +9396,7 @@
       "resistance": "Bodyweight",
       "imageUrl": "https://gymvisual.com/animated-gifs/2648-squat-m.html#/47-style_type-basic_grey",
       "unitType": "repsOnly",
-      "gifName": "Bodyweight-Squat-(male)_Thighs-FIX__converted"
+      "gifName": "Bodyweight-Squat-(male)_Thighs-FIX__converted.gif"
     },
     {
       "name": "Box Squat",
@@ -10828,7 +10828,7 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "unitType": "repsOnly",
-      "gifName": ""
+      "gifName": "Dragon-Flag_Waist__converted.gif"
     },
     {
       "name": "Frog Pump",
