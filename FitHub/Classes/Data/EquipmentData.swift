@@ -344,6 +344,7 @@ extension EquipmentData {
     }
 
     // MARK: Weight rounding with string names
+    // TODO: this should take a min and max weight param. If not met, reps can be adjusted and should return a bool to show a warning for workout generation
     func roundWeight(_ weight: Mass, for equipmentNames: [String], rounding p: RoundingPreference) -> Mass {
         // Check if any equipment has availableImplements with useGeneralRounding = false
         let equipment = getEquipment(from: equipmentNames)

@@ -165,16 +165,48 @@ enum LimbMovementType: String, Codable, CaseIterable {
 
 /*
 // TODO: implement these and phase out EffortType
-enum ExerciseComplexity: String, Codable, CaseIterable {
-    case compound
-    case isolation
+enum ExerciseScope: String, Codable, CaseIterable {
+    case compound, isolation
 }
 
 enum ExerciseModality: String, Codable, CaseIterable {
-    case strength
-    case isometric
-    case plyometric
-    case cardio
+    case strength, isometric, plyometric, cardio
+    
+    /// Deterministic ordering for “primary”
+    var priority: Int {
+        switch self {
+        case .strength:   return 0
+        case .plyometric: return 1
+        case .isometric:  return 2
+        case .cardio:     return 3
+        }
+    }
+}
+
+struct ExerciseClassification: Codable, Hashable {
+    var modalities: Set<ExerciseModality>
+    var scope: ExerciseScope?
+    var movements: Set<MovementPattern> = []
+
+    var primaryModality: ExerciseModality? {
+        modalities.min(by: { $0.priority < $1.priority })
+    }
+
+    func normalized() -> Self {
+        var copy = self
+        if !copy.modalities.contains(.strength) { copy.scope = nil }
+        return copy
+    }
+}
+
+// MARK: new (not implemented), prevents bad outputs such as heavy squat + heavy jump squat + heavy leg press in one day.
+enum MovementPattern: String, Codable, CaseIterable, Hashable {
+    case squat, hinge
+    case horizontalPush, horizontalPull
+    case verticalPush, verticalPull
+    case carry
+    case coreAntiExtension, coreAntiRotation, coreLateralFlexion
+    case rotation
 }
 */
 
@@ -182,12 +214,8 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
     case compound   = "Compound"    // multi-joint, dynamic
     case isolation  = "Isolation"   // single-joint, dynamic
     case isometric  = "Isometric"   // joint angle static, time-based load
-    case plyometric = "Plyometric"
+    case plyometric = "Plyometric"  // explosive movements
     case cardio     = "Cardio"      // primarily metabolic
-    
-    // MARK: should be
-    // case strength, isometric, plyometric, cardio
-    // then a separate enum with compound and isolation
 
     var id: String { self.rawValue }
 
