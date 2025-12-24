@@ -73,7 +73,7 @@ extension Exercise {
     }
 }
 extension Exercise {
-    private var fullImagePath: String { return "Exercises/\(image)" }
+    private var fullImagePath: String { return "Exercise_PNG/\(image)" }
 
     var fullImage: Image { getFullImage(image, fullImagePath) }
 

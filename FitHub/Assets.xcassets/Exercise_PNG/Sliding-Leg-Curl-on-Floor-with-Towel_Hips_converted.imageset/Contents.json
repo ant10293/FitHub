@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "Sliding-Leg-Curl-on-Floor-with-Towel_Hips_converted.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

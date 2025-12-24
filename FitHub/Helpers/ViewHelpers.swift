@@ -37,8 +37,8 @@ func getFullImage(_ imageName: String, _ fullPath: String) -> Image {
         }
     }
 
-    // 3️⃣ Fallback to "placeholder" asset
-    if let placeholder = UIImage(named: "placeholder") {
+    // 3️⃣ Fallback to "placeholder_square" asset
+    if let placeholder = UIImage(named: "placeholder_square") {
         return Image(uiImage: placeholder)
     }
 

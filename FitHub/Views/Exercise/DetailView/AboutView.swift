@@ -20,7 +20,7 @@ struct AboutView: View {
             VStack(alignment: .leading, spacing: 24) {   // <- single vertical spacing source
                 // IMAGE + RATING
                 VStack(alignment: .leading, spacing: 4) {
-                    ExEquipImage(image: exercise.fullImage, button: .expand)
+                    GIFView(gifName: exercise.image)
                         .centerHorizontally()
 
                     RatingIcon(

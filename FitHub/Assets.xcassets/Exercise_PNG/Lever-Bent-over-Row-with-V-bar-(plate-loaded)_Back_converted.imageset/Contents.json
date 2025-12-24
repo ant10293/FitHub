@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "Lever-Bent-over-Row-with-V-bar-(plate-loaded)_Back_converted.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

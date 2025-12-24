@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "Sled-45-degrees-Leg-Press_Hips-FIX__converted.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

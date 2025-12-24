@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "Sled-Calf-Press-On-Leg-Press_Calves-FIX__converted.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

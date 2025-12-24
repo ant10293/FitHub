@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "Cable-High-Pulley-Overhead-Tricep-Extension_Upper-Arms_converted.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

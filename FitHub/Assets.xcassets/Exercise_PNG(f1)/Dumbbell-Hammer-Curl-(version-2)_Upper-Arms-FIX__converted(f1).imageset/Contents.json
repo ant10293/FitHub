@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "Dumbbell-Hammer-Curl-(version-2)_Upper-Arms-FIX__converted(f1).png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

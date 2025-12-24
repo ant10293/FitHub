@@ -2,7 +2,7 @@
     {
       "name": "Bench Press",
       "id": "8DCDCCF6-F83E-4445-BF63-8EF67CA91240",
-      "image": "bench_press",
+      "image": "Barbell-Bench-Press_Chest-FIX2__converted",
       "csvKey": "bench-press",
       "aliases": [ "Barbell Bench Press", "Flat Bench Press" ],
       "instructions": { "steps": [] },
@@ -31,7 +31,7 @@
     {
       "name": "Bench Pin Press",
       "id": "C52E6249-F5FD-4E6E-A455-E3D38861C444",
-      "image": "bench_pin_press",
+      "image": "Barbell-Pin-Chest-Press_Chest__converted",
       "csvKey": "bench-pin-press",
       "aliases": [ "Barbell Bench Pin Press" ],
       "instructions": { "steps": [ ] },
@@ -89,7 +89,7 @@
     {
       "name": "Wide-Grip Bench Press",
       "id": "4E5F6A7B-8C9D-0A1B-2C3D-4E5F6A7B8C9D",
-      "image": "wide_grip_bench_press",
+      "image": "Barbell-Wide-Bench-Press_Chest_converted",
       "csvKey": "wide-grip-bench-press",
       "aliases": [ "Wide Bench Press" ],
       "instructions": { "steps": [ ] },
@@ -116,7 +116,7 @@
     {
       "name": "Close-Grip Bench Press",
       "id": "17FC28BC-74C1-4342-BB82-FA37831C13E9",
-      "image": "close_grip_bench_press",
+      "image": "Barbell-Close-Grip-Bench-Press_Upper-Arms-FIX__converted",
       "csvKey": "close-grip-bench-press",
       "aliases": [ "Narrow-Grip Bench Press" ],
       "instructions": { "steps": [ ] },
@@ -141,7 +141,7 @@
     {
       "name": "Close-Grip Incline Bench Press",
       "id": "A9D4C7E2-3B5F-4A1C-8E9D-0B2F3C4D5E6A",
-      "image": "close_grip_incline_bench_press",
+      "image": "Barbell-Incline-Close-Grip-Bench-Press_Upper-Arms__converted",
       "csvKey": "close-grip-incline-bench-press",
       "aliases": [ "Close-Grip Incline Press" ],
       "instructions": { "steps": [ ] },
@@ -250,7 +250,7 @@
     {
       "name": "Decline Bench Press",
       "id": "9B3DFF7F-74EA-4818-B8F0-1085AEE17AF8",
-      "image": "decline_bench_press",
+      "image": "Barbell-Decline-Bench-Press_Chest-FIX__converted",
       "csvKey": "decline-bench-press",
       "aliases": [ "Decline Barbell Press", "Decline Chest Press" ],
       "instructions": { "steps": [ ] },
@@ -278,7 +278,7 @@
     {
       "name": "Decline Dumbbell Bench Press",
       "id": "A6859431-856C-4B7C-9D2E-F7727BE51E42",
-      "image": "dumbbell_decline_bench_press",
+      "image": "Dumbbell-Decline-Bench-Press_Chest-FIX__converted",
       "csvKey": "decline-dumbbell-bench-press",
       "aliases": [ "Decline Dumbbell Press" ],
       "instructions": { "steps": [ ] },
@@ -307,7 +307,7 @@
     {
       "name": "Dumbbell Bench Press",
       "id": "0CCB4F74-F4EB-4FE5-A9B8-CD029ED4C9F5",
-      "image": "dumbbell_bench_press",
+      "image": "Dumbbell-Bench-Press_Chest-FIX__converted",
       "csvKey": "dumbbell-bench-press",
       "aliases": [ "Dumbbell Chest Press" ],
       "instructions": { "steps": [ ] },
@@ -336,7 +336,7 @@
     {
       "name": "Dumbbell Squeeze Press",
       "id": "E6C1BA03-38DE-41F8-ACC5-C203AEA3D118",
-      "image": "dumbbell_squeeze_press",
+      "image": "Dumbbell-Squeeze-Bench-Press_Chest-FIX__converted",
       "aliases": [ "DB Crush Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells", "Flat Bench" ],
@@ -363,7 +363,7 @@
     {
       "name": "Incline Bench Press",
       "id": "3F3CE86A-A24B-47DB-849D-4A6B0D5C7B0A",
-      "image": "incline_bench_press",
+      "image": "Barbell-Incline-Bench-Press_Chest-FIX2__converted",
       "csvKey": "incline-bench-press",
       "aliases": [ "Incline Barbell Press", "Incline Chest Press" ],
       "instructions": { "steps": [ ] },
@@ -391,7 +391,7 @@
     {
       "name": "Incline Dumbbell Bench Press",
       "id": "82942328-CE09-4A6E-8074-648382A6A24A",
-      "image": "incline_dumbbell_press",
+      "image": "Dumbbell-Incline-Bench-Press_Chest-FIX2__converted",
       "csvKey": "incline-dumbbell-bench-press",
       "aliases": [ "Incline Dumbbell Press" ],
       "instructions": { "steps": [ ] },
@@ -420,7 +420,7 @@
     {
       "name": "JM Press",
       "id": "88F247A6-DA37-497A-91C8-C12C2DF146EE",
-      "image": "jm_press",
+      "image": "Barbell-JM-Bench-Press_Upper-Arms-FIX__converted",
       "csvKey": "jm-press",
       "aliases": [ "Tricep Bench Press" ],
       "instructions": { "steps": [ ] },
@@ -441,7 +441,7 @@
     {
       "name": "Smith Machine JM Press",
       "id": "B191EAB0-CA9A-4770-B0AC-E59455057C95",
-      "image": "smith_machine_jm_press",
+      "image": "Smith-JM-Bench-Press_Upper-Arms__converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Smith Machine" ],
       "muscles": [
@@ -459,7 +459,7 @@
     {
       "name": "Reverse-Grip Bench Press",
       "id": "F5DD7891-9C47-4207-9242-25E9B429E2AC",
-      "image": "reverse_grip_bench_press",
+      "image": "Barbell-Reverse-Grip-Bench-Press_Chest__converted",
       "csvKey": "reverse-grip-bench-press",
       "aliases": [ "Underhand Bench Press", "Reverse Chest Press" ],
       "instructions": { "steps": [ ] },
@@ -487,7 +487,7 @@
     {
       "name": "Reverse-Grip Dumbbell Bench Press",
       "id": "06B6D435-A4EA-445C-9E88-AFF5BA5D0C3F",
-      "image": "reverse_grip_db_press",
+      "image": "Dumbbell-Reverse-Bench-Press_Chest__converted",
       "aliases": [ "Underhand DB Bench" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells", "Flat Bench" ],
@@ -514,7 +514,7 @@
     {
       "name": "Single-Arm Dumbbell Bench Press",
       "id": "57B7B767-0D23-404A-9858-3EB6DEFF9778",
-      "image": "single_arm_db_bench_press",
+      "image": "Dumbbell-Alternate-Bench-Press-(high-start)_Chest__converted",
       "aliases": [ "Unilateral DB Bench" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells", "Flat Bench" ],
@@ -542,7 +542,7 @@
     {
       "name": "Smith Machine Bench Press",
       "id": "3E423D30-965F-4BCA-97FD-A73EC76E715C",
-      "image": "smith_machine_bench_press",
+      "image": "Smith-Bench-Press_Chest-FIX__converted",
       "csvKey": "smith-machine-bench-press",
       "aliases": [ "Smith Machine Chest Press" ],
       "instructions": { "steps": [ ] },
@@ -570,7 +570,7 @@
     {
       "name": "Smith Machine Incline Bench Press",
       "id": "BE4E5EAE-92C4-47FD-B4D3-B946E033718D",
-      "image": "smith_machine_incline_bench_press",
+      "image": "Smith-Incline-Bench-Press_Chest-FIX__converted",
       "aliases": [ "Smith Incline Bench" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Smith Machine", "Adjustable Bench" ],
@@ -597,7 +597,7 @@
     {
       "name": "Smith Machine Decline Bench Press",
       "id": "6F3B4E8A-9C2D-4F6E-8A41-2E9D7B8C5A14",
-      "image": "smith_machine_decline_bench_press",
+      "image": "Smith-Decline-Bench-Press_Chest-FIX__converted",
       "aliases": [ "Smith Decline Bench" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Smith Machine", "Adjustable Bench" ],
@@ -624,7 +624,7 @@
     {
       "name": "Guillotine Press",
       "id": "1314D793-7CF6-4C42-B6C1-44671D773CA9",
-      "image": "guillotine_press",
+      "image": "Barbell-Guillotine-Bench-Press_Chest_converted",
       "aliases": [ "Neck Press", "Barbell Guillotine Bench" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Flat Bench Rack", "Barbell" ],
@@ -677,7 +677,7 @@
     {
       "name": "Machine Incline Chest Press",
       "id": "0EAE35F5-CA82-441F-B0C1-123AE33EA0D4",
-      "image": "incline_chest_press_machine",
+      "image": "Lever-Incline-Hammer-Chest-Press_Chest_converted",
       "aliases": [ "Machine Incline Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Incline Chest Press" ],
@@ -706,7 +706,7 @@
     {
       "name": "Machine Chest Press",
       "id": "28184B6B-C72E-4CBB-8BAA-58784E8B9751",
-      "image": "chest_press_machine",
+      "image": "Lever-Chest-Press_Chest_converted",
       "csvKey": "chest-press",
       "aliases": [ "Seated Chest Press", "Chest Press Machine" ],
       "instructions": { "steps": [ ] },
@@ -734,7 +734,7 @@
     {
       "name": "Plate-Loaded Chest Press",
       "id": "E82CBEC9-664A-4660-9418-069641BAC1A8",
-      "image": "plate_loaded_chest_press",
+      "image": "Lever-Chest-Press_Chest_converted",
       "aliases": [ "Iso-Lateral Chest Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Chest Press - Plate Loaded" ],
@@ -764,7 +764,7 @@
     {
       "name": "Plate-Loaded Decline Chest Press",
       "id": "B88314B0-C0A9-4628-918B-02A16BA824FA",
-      "image": "plate_loaded_decline_chest_press",
+      "image": "Lever-Decline-Chest-Press_Chest-FIX__converted",
       "aliases": [ "Decline Iso Chest Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Decline Chest Press - Plate Loaded" ],
@@ -794,7 +794,7 @@
     {
       "name": "Plate-Loaded Incline Chest Press",
       "id": "16F7A746-35D5-4A7D-8FB6-CFBED1F210AC",
-      "image": "plate_loaded_incline_chest_press",
+      "image": "Lever-Incline-Chest-Press_Chest-FIX2__converted",
       "aliases": [ "Incline Iso Chest Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Incline Chest Press - Plate Loaded" ],
@@ -824,7 +824,7 @@
     {
       "name": "Standing Cable Chest Press",
       "id": "8880F704-7053-4A6A-AC41-C5FF8ED5F9A5",
-      "image": "standing_cable_chest_press",
+      "image": "Cable-Standing-Chest-Press_Chest__converted",
       "aliases": [ "Cable Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Crossover", "Single D-Handles" ],
@@ -851,7 +851,7 @@
     {
       "name": "Dumbbell Floor Press",
       "id": "14CB2572-E9B1-4F08-93B5-E3BC658925A9",
-      "image": "dumbbell_floor_press",
+      "image": "Dumbbell-Lying-on-Floor-Chest-Press_Chest_converted",
       "csvKey": "dumbbell-floor-press",
       "aliases": [ "Floor Dumbbell Press" ],
       "instructions": { "steps": [ ] },
@@ -877,7 +877,7 @@
     {
       "name": "Floor Press",
       "id": "159E4A5E-52D2-4900-94C8-374F1D43E709",
-      "image": "floor_press",
+      "image": "Barbell-Floor-Chest-Press_Chest__converted",
       "csvKey": "floor-press",
       "aliases": [ "Barbell Floor Press" ],
       "instructions": { "steps": [ ] },
@@ -902,7 +902,7 @@
     {
       "name": "Clean",
       "id": "E4EEAF77-C959-4C56-8EBC-3EB292ECA736",
-      "image": "clean",
+      "image": "Barbell-Full-Clean_Weightlifting__converted",
       "csvKey": "clean",
       "aliases": [ "Squat Clean" ],
       "instructions": { "steps": [ ] },
@@ -939,7 +939,7 @@
     {
       "name": "Clean and Jerk",
       "id": "80C5E9D7-8B86-4F02-AC4D-21E41B5292DB",
-      "image": "clean_and_jerk",
+      "image": "Barbell-Clean-and-Jerk_Weightlifting__converted",
       "csvKey": "clean-and-jerk",
       "aliases": [ "C&J" ],
       "instructions": { "steps": [ ] },
@@ -980,7 +980,7 @@
     {
       "name": "Clean and Press",
       "id": "1BA53D11-AE74-45E4-8920-CA7A947ECF06",
-      "image": "clean_and_press",
+      "image": "Barbell-Clean-and-Press_Shoulders-FIX__converted",
       "csvKey": "clean-and-press",
       "aliases": [ "C&P" ],
       "instructions": { "steps": [ ] },
@@ -1021,7 +1021,7 @@
     {
       "name": "Clean High Pull",
       "id": "D9A4F1B2-3C5E-4761-8A7B-0F2E3D4C5B6A",
-      "image": "clean_high_pull",
+      "image": "Barbell-Clean-High-Pull_Weightlifts__converted",
       "csvKey": "clean-high-pull",
       "aliases": [ "High Pull" ],
       "instructions": { "steps": [ ] },
@@ -1058,7 +1058,7 @@
     {
       "name": "Clean Pull",
       "id": "A8C2D4E6-1F3B-4A57-9D8E-0B2C3D4E5F6A",
-      "image": "clean_pull",
+      "image": "Barbell-Clean-Pull_Weightlifts__converted",
       "csvKey": "clean-pull",
       "aliases": [ "Power Clean Pull" ],
       "instructions": { "steps": [ ] },
@@ -1095,7 +1095,7 @@
     {
       "name": "Dumbbell Clean and Press",
       "id": "4B6A2C1D-7E8F-49A0-B3C2-D5E4F6A7B8C9",
-      "image": "dumbbell_clean_and_press",
+      "image": "Dumbbell-Clean-and-Press_Weightlifting-FIX__converted",
       "csvKey": "dumbbell-clean-and-press",
       "aliases": [ "DB Clean & Press" ],
       "instructions": { "steps": [ ] },
@@ -1200,7 +1200,7 @@
     {
       "name": "Hang Clean",
       "id": "E1A0722C-E88A-4B77-B8AC-309FEEFCDD8F",
-      "image": "hang_clean",
+      "image": "Barbell-Hang-Clean_Weightlifts-FIX__converted",
       "csvKey": "hang-clean",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
@@ -1296,7 +1296,7 @@
     {
       "name": "Power Clean",
       "id": "FA739B9F-7B60-4236-B5F2-A732026B97B6",
-      "image": "power_clean",
+      "image": "Power-Clean_Thighs_converted",
       "csvKey": "power-clean",
       "aliases": [ "PC" ],
       "instructions": { "steps": [ ] },
@@ -1333,7 +1333,7 @@
     {
       "name": "Dumbbell Snatch",
       "id": "A2F3B4C5-D6E7-48F9-8A0B-1C2D3E4F5A6B",
-      "image": "dumbbell_snatch",
+      "image": "Dumbbell-One-Arm-Snatch_Weightlifting__converted",
       "csvKey": "dumbbell-snatch",
       "aliases": [ "DB Snatch" ],
       "instructions": { "steps": [ ] },
@@ -1372,7 +1372,7 @@
     {
       "name": "Hang Power Snatch",
       "id": "3C56A1AC-F911-4EB3-A4D5-F436A7417CC5",
-      "image": "hang_power_snatch",
+      "image": "Barbell-Power-Snatch_Weightlifts__converted",
       "aliases": [ "HPS" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
@@ -1408,7 +1408,7 @@
     {
       "name": "Hang Snatch",
       "id": "7A9FF9AC-2A03-4108-BCAA-E9C7D025886A",
-      "image": "hang_snatch",
+      "image": "Barbell-Hang-Snatch_Weightlifts-FIX_ copy_converted",
       "csvKey": "hang-snatch",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
@@ -1475,7 +1475,7 @@
     {
       "name": "Power Snatch",
       "id": "034D8B67-27BE-4F7E-9D39-FE5F676EF096",
-      "image": "power_snatch",
+      "image": "Barbell-Power-Snatch_Weightlifts__converted",
       "csvKey": "power-snatch",
       "aliases": [ "PS" ],
       "instructions": { "steps": [ ] },
@@ -1512,7 +1512,7 @@
     {
       "name": "Snatch",
       "id": "EF4F8A1B-0E13-4D0C-BF2D-6E1B9C87221D",
-      "image": "snatch",
+      "image": "Barbell-Snatch_Weightlifts__converted",
       "csvKey": "snatch",
       "aliases": [ "Full Snatch" ],
       "instructions": { "steps": [ ] },
@@ -1549,7 +1549,7 @@
     {
       "name": "Snatch Pull",
       "id": "F9B3E2A7-6D4C-4A1F-8E5B-3C2D1F0A9B8E",
-      "image": "snatch_pull",
+      "image": "Snatch-Pull_Weightlifting__converted",
       "csvKey": "snatch-pull",
       "aliases": [ "Snatch High Pull" ],
       "instructions": { "steps": [ ] },
@@ -1586,7 +1586,7 @@
     {
       "name": "Power Jerk",
       "id": "F0E2A98A-5A65-4239-B4E4-40E32E36237B",
-      "image": "power_jerk",
+      "image": "Barbell-Power-Jerk_Weightlifts__converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
       "muscles": [
@@ -1648,7 +1648,7 @@
     {
       "name": "Split Jerk",
       "id": "44A63383-932E-45B0-9C39-E08A5AEE8021",
-      "image": "split_jerk",
+      "image": "Barbell-Split-Jerk_Weightlifts__converted",
       "csvKey": "split-jerk",
       "aliases": [ "Olympic Split Jerk" ],
       "instructions": { "steps": [ ] },
@@ -1712,7 +1712,7 @@
     {
       "name": "Band Pull-Apart",
       "id": "B16BCDA0-BBB9-427E-B3AD-19AB18AE6F56",
-      "image": "band_pull_apart",
+      "image": "Resistance-Band-Pull-Apart_Shoulders__converted",
       "aliases": [ "Band Face-Pull-Apart" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Handle Bands" ],
@@ -1735,7 +1735,7 @@
     {
       "name": "Cable Chest Fly",
       "id": "8717D2A8-022C-4B4A-B710-B92B6B58AF6A",
-      "image": "cable_chest_fly",
+      "image": "Cable-Low-Fly_Chest-FIX2__converted",
       "csvKey": "cable-fly",
       "aliases": [ "Cable Pec Fly", "Cable Crossover Fly" ],
       "instructions": { "steps": [ ] },
@@ -1757,7 +1757,7 @@
     {
       "name": "High to Low Cable Chest Fly",
       "id": "B1CDD4A1-DC6D-4DAE-B51C-3993387C71DB",
-      "image": "cable_chest_fly",
+      "image": "Cable-Low-Fly_Chest-FIX2__converted",
       "aliases": [ "Hi-Lo Cable Fly", "High-Low Cable Fly" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Crossover", "Single D-Handles" ],
@@ -1778,7 +1778,7 @@
     {
       "name": "Low to High Cable Chest Fly",
       "id": "94156A67-FACF-4CE4-B259-E7B189310F69",
-      "image": "cable_chest_fly",
+      "image": "Cable-Low-Fly_Chest-FIX2__converted",
       "aliases": [ "Lo-Hi Cable Fly", "Low-High Cable Fly" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Crossover", "Single D-Handles" ],
@@ -1799,7 +1799,7 @@
     {
       "name": "Cable Reverse Fly",
       "id": "4127807B-2E7A-4DCD-A366-AEB41C045F7A",
-      "image": "reverse_cable_flyes",
+      "image": "Cable-45-degrees-Reverse-Fly-(male)_Shoulders__converted",
       "csvKey": "cable-reverse-fly",
       "aliases": [ "Reverse Cable Crossover" ],
       "instructions": { "steps": [ ] },
@@ -1825,7 +1825,7 @@
     {
       "name": "Dumbbell Chest Fly",
       "id": "668E2BEA-1BB0-46E4-A817-2B2DB3FCF022",
-      "image": "dumbbell_chest_fly",
+      "image": "Dumbbell-Fly_Chest-FIX2__converted",
       "csvKey": "dumbbell-fly",
       "aliases": [ "Dumbbell Flyes", "Dumbbell Pec Fly" ],
       "instructions": { "steps": [ ] },
@@ -1850,7 +1850,7 @@
     {
       "name": "Incline Dumbbell Chest Fly",
       "id": "6E2F7A3C-9B41-4A53-9C0E-1D4F2B6A8C90",
-      "image": "incline_dumbbell_fly",
+      "image": "Dumbbell-Incline-Fly_Chest-FIX2__converted",
       "csvKey": "incline-dumbbell-fly",
       "aliases": [ "Incline DB Chest Fly", "Incline Flyes" ],
       "instructions": { "steps": [ ] },
@@ -1875,7 +1875,7 @@
     {
       "name": "Decline Dumbbell Chest Fly",
       "id": "C340E32A-711E-4B7E-830B-161ABA39CBAA",
-      "image": "decline_db_fly",
+      "image": "Dumbbell-Decline-Fly_Chest-FIX__converted",
       "csvKey": "decline-dumbbell-fly",
       "aliases": [ "Decline DB Chest Fly" ],
       "instructions": { "steps": [ ] },
@@ -1897,7 +1897,7 @@
     {
       "name": "Reverse Dumbbell Fly",
       "id": "D0758C8F-05F6-45E0-9151-3E4A203EA3CC",
-      "image": "reverse_dumbbell_flyes",
+      "image": "Dumbbell-Reverse-Fly_Shoulders-FIX__converted",
       "csvKey": "dumbbell-reverse-fly",
       "aliases": [ "Bent-Over Dumbbell Reverse Fly" ],
       "instructions": { "steps": [ ] },
@@ -1923,7 +1923,7 @@
     {
       "name": "Machine Chest Fly",
       "id": "77CDEFC9-4FAC-4824-AEA1-AC9F6275564D",
-      "image": "machine_chest_fly",
+      "image": "Lever-Seated-Fly_Chest-FIX__converted",
       "csvKey": "machine-chest-fly",
       "aliases": [ "Pec Deck", "Butterfly Machine" ],
       "instructions": { "steps": [ ] },
@@ -1944,7 +1944,7 @@
     {
       "name": "Machine Reverse Fly",
       "id": "A9E4A6D4-2389-424D-94C3-CCA3EF96BFF1",
-      "image": "reverse_machine_fly",
+      "image": "Lever-Seated-Reverse-Fly_Shoulders-FIX__converted",
       "csvKey": "machine-reverse-fly",
       "aliases": [ "Rear Delt Machine Fly" ],
       "instructions": { "steps": [ ] },
@@ -1969,7 +1969,7 @@
     {
       "name": "Pec Deck Fly",
       "id": "C339B93F-9BE1-475D-93A4-BC7222112F6D",
-      "image": "pec_deck_fly",
+      "image": "Lever-Pec-Deck-Fly_Chest__converted",
       "aliases": [ "Butterfly Machine" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Pec Deck" ],
@@ -1991,7 +1991,7 @@
     {
       "name": "Banded Chest Fly",
       "id": "77EB887A-D914-4D94-A47A-D005ACFF944D",
-      "image": "standing_resistance_band_chest_fly",
+      "image": "Band-Chest-Fly-(male)_Chest-FIX__converted",
       "aliases": [ "Band Chest Fly", "Standing Band Fly" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Loop Bands" ],
@@ -2013,7 +2013,7 @@
     {
       "name": "Hip Thrust",
       "id": "7A61A3F0-6C5C-4A20-BF1A-1C9325563B98",
-      "image": "hip_thrust",
+      "image": "Barbell-Hip-Thrust_Hips-FIX__converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Flat Bench" ],
       "muscles": [
@@ -2037,7 +2037,7 @@
     {
       "name": "Single-Leg Hip Thrust",
       "id": "BF9E47D4-BC97-4ED6-B3FB-106D3CF34A43",
-      "image": "single_leg_hip_thrust",
+      "image": "Single-Leg _Hip-Thrusts_Hips__converted",
       "aliases": [ "Unilateral Hip Thrust" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Flat Bench" ],
@@ -2063,7 +2063,7 @@
     {
       "name": "Barbell Hip Thrust",
       "id": "CDD41D98-51AA-4D4A-9D1F-A117C2F41E59",
-      "image": "hip_thrust",
+      "image": "Barbell-Hip-Thrust_Hips-FIX__converted",
       "csvKey": "hip-thrust",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell", "Flat Bench" ],
@@ -2120,7 +2120,7 @@
     {
       "name": "Banded Hip Thrust",
       "id": "3A8E4268-0485-4C76-8A6D-B5FD0DEBB663",
-      "image": "banded_hip_thrust",
+      "image": "Resistance-Band-Hip-Thrusts_Hips__converted",
       "aliases": [ "Resistance Band Hip Thrust" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Loop Bands", "Flat Bench" ],
@@ -2148,7 +2148,7 @@
     {
       "name": "Glute Bridge",
       "id": "44B25D0F-9B7D-4CBD-B4DF-D2FF9C4E6309",
-      "image": "glute_bridge",
+      "image": "Glute-Bridge_(male)_Hips__converted",
       "csvKey": "glute-bridge",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -2178,7 +2178,7 @@
     {
       "name": "Single-Leg Glute Bridge",
       "id": "76CD81D8-5042-4858-91E5-D2CEB217BE85",
-      "image": "single_leg_glute_bridge",
+      "image": "Single-Straight-Leg-Glute-Bridge-Hold-(male)_Hips__converted",
       "aliases": [ "Unilateral Glute Bridge" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -2204,7 +2204,7 @@
     {
       "name": "Barbell Glute Bridge",
       "id": "C5F6D76E-4AA3-4E47-8A49-8F490D2A6C97",
-      "image": "barbell_glute_bridge",
+      "image": "Barbell-Glute-Bridge-(hands-on-bar)_Hips__converted",
       "csvKey": "barbell-glute-bridge",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
@@ -2229,7 +2229,7 @@
     {
       "name": "Hamstring Bridge",
       "id": "D4E5F6A7-B8C9-4D0E-A1B2-C3D4E5F6A7B8",
-      "image": "hamstring_bridge",
+      "image": "Hamstring-Bridge-(male)_Hips__converted",
       "aliases": [ "Heels-Elevated Bridge" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Flat Bench" ],
@@ -2260,7 +2260,7 @@
     {
       "name": "Glute-Ham Raise",
       "id": "10AFFC85-3B47-4B80-B9AF-9CB5E1A6B772",
-      "image": "glute_ham_raise",
+      "image": "Glute-Ham-Raise-(VERSION-2)_Thighs__converted",
       "csvKey": "glute-ham-raise",
       "aliases": [ "GHR", "Glute Ham Developer Raise" ],
       "instructions": { "steps": [ ] },
@@ -2286,7 +2286,7 @@
     {
       "name": "Pull-Up",
       "id": "BFD3B9CF-D410-4030-AEE1-6CCC09F11624",
-      "image": "pull_up",
+      "image": "Pull-up_Back-FIX2__converted",
       "csvKey": "pull-ups",
       "aliases": [ "Overhand Pull-Up" ],
       "instructions": { "steps": [ ] },
@@ -2333,7 +2333,7 @@
     {
       "name": "Weighted Pull-Up",
       "id": "45B2C4C6-FF43-4085-A09C-5CCC8F6EB2B7",
-      "image": "weighted_pull_up",
+      "image": "Weighted-Pull-Up_Back__converted",
       "csvKey": "weighted-pull-ups",
       "aliases": [ "Overhand Pull-Up" ],
       "instructions": { "steps": [ ] },
@@ -2356,7 +2356,7 @@
     {
       "name": "Neutral-Grip Pull-Up",
       "id": "ABAF0756-8ECB-44B6-86EC-AA28FCD7BE4A",
-      "image": "neutral_grip_pull_up",
+      "image": "Hammer-Grip-Pull-up-on-Dip-Cage_Back_converted",
       "csvKey": "neutral-grip-pull-ups",
       "aliases": [ "Parallel Grip Pull-Up" ],
       "instructions": { "steps": [ ] },
@@ -2379,7 +2379,7 @@
     {
       "name": "Weighted Neutral-Grip Pull-Up",
       "id": "E48A99B5-1C72-4190-9539-5DAA35AAB8B2",
-      "image": "weighted_neutral_grip_pull_up",
+      "image": "Weighted-Hammer-Grip-Pull-up-on-Dip-Cage_Back__converted",
       "aliases": [ "Parallel Grip Pull-Up" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Pull-Up Bar", "Dip Belt", "Weight Plate" ],
@@ -2401,7 +2401,7 @@
     {
       "name": "Chin-Up",
       "id": "DD48D48E-A119-44F1-BFC7-3FBC171D1DFB",
-      "image": "chin_up",
+      "image": "Chin-Up_Back-FIX__converted",
       "csvKey": "chin-ups",
       "aliases": [ "Underhand Pull-Up" ],
       "instructions": { "steps": [ ] },
@@ -2424,7 +2424,7 @@
     {
       "name": "Weighted Chin-Up",
       "id": "14C6C0D7-8251-45E9-A91E-0F0C2ED3D38D",
-      "image": "weighted_chin_up",
+      "image": "Weighted-Chin-Up-(male)_Back__converted",
       "csvKey": "weighted-chin-ups",
       "aliases": [ "Underhand Pull-Up" ],
       "instructions": { "steps": [ ] },
@@ -2447,7 +2447,7 @@
     {
       "name": "Muscle-Up",
       "id": "F55B0E2D-79FF-4935-893B-312F442C331E",
-      "image": "muscle_up",
+      "image": "Muscle-Up_Back__converted",
       "csvKey": "muscle-ups",
       "aliases": [ "Bar Muscle-Up" ],
       "instructions": { "steps": [ ] },
@@ -2493,7 +2493,7 @@
     {
       "name": "Bench Dips",
       "id": "136398DC-0BC9-4EB6-9F19-A25B7FCFD4B4",
-      "image": "bench_dip",
+      "image": "Bench-Dip-on-Floor_Upper-Arms-FIX__converted",
       "csvKey": "bench-dips",
       "aliases": [ "Tricep Bench Dips" ],
       "instructions": { "steps": [ ] },
@@ -2514,7 +2514,7 @@
     {
       "name": "Bench Dips (Feet Elevated)",
       "id": "08C383EA-6997-46E5-9031-587174BE9F7D",
-      "image": "bench_dip_feet_elevated",
+      "image": "Triceps-Dip_Upper-Arms-FIX__converted",
       "aliases": [ "Elevated Bench Dip" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Flat Bench" ],
@@ -2542,7 +2542,7 @@
     {
       "name": "Chest Dip",
       "id": "1718181A-6FB6-40FF-A4A3-F7299038CE1E",
-      "image": "chest_dip",
+      "image": "Chest-Dip_Chest_converted",
       "aliases": [ "Lower-Chest Dip", "Costal Dip" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dip Bar" ],
@@ -2568,7 +2568,7 @@
     {
       "name": "Dips",
       "id": "81B8B2DA-A5F0-44C0-AF54-A0B9757425BC",
-      "image": "bar_dip",
+      "image": "Triceps-Dip_Upper-Arms-FIX__converted",
       "csvKey": "dips",
       "aliases": [ "Chest Dips", "Tricep Dips" ],
       "instructions": { "steps": [ ] },
@@ -2592,7 +2592,7 @@
     {
       "name": "Weighted Dip",
       "id": "B69BFF63-2547-40D8-A5C0-02D72816C5AD",
-      "image": "weighted_parallel_bar_dip",
+      "image": "Weighted-Tricep-Dips_Upper-Arms__converted",
       "csvKey": "weighted-dips",
       "aliases": [ "Weighted Parallel Dip", "Weighted Bar Dip" ],
       "instructions": { "steps": [ ] },
@@ -2621,7 +2621,7 @@
     {
       "name": "Machine Seated Dip",
       "id": "9ABB8EEC-9827-40B7-B92D-D0AA67C8A428",
-      "image": "machine_seated_dip",
+      "image": "Lever-Seated-Dip_Upper-Arms_converted",
       "csvKey": "seated-dip-machine",
       "aliases": [ "Seated Dip Machine" ],
       "instructions": { "steps": [ ] },
@@ -2650,7 +2650,7 @@
     {
       "name": "Sit-Up",
       "id": "D011FE15-0E04-411E-BF9E-5153634CE050",
-      "image": "sit_up",
+      "image": "Sit-up-with-Arms-on-Chest_Waist_converted",
       "csvKey": "sit-ups",
       "aliases": [ "Full Sit-Up", "Basic Sit-Up" ],
       "instructions": { "steps": [ ] },
@@ -2671,7 +2671,7 @@
     {
       "name": "Decline Sit-Up",
       "id": "4387CAED-ACFF-450A-84B5-96C68DF64B22",
-      "image": "decline_sit_up",
+      "image": "Decline-Sit-up_Hips__converted",
       "csvKey": "decline-sit-up",
       "aliases": [ "Incline Sit-Up", "Advanced Sit-Up" ],
       "instructions": { "steps": [ ] },
@@ -2692,7 +2692,7 @@
     {
       "name": "Jackknife Sit-Up",
       "id": "4D70C3C1-CFE4-4A37-96D8-4587DB6AF51F",
-      "image": "jackknife_sit_up",
+      "image": "Band-Jackknife-Sit-Up_Waist__converted",
       "aliases": [ "Jackknife Crunch", "V-Up" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -2713,7 +2713,7 @@
     {
       "name": "Bicycle Crunch",
       "id": "14249A0E-6D7A-42F6-9803-4FF6FC7E868B",
-      "image": "bicycle_crunch",
+      "image": "Bicycle-Crunch-(male)_Waist__converted",
       "csvKey": "bicycle-crunch",
       "aliases": [ "Alternating Elbow-to-Knee Crunch", "Bicycles" ],
       "instructions": { "steps": [ ] },
@@ -2737,7 +2737,7 @@
     {
       "name": "Kneeling Cable Crunch",
       "id": "42BB78AD-2E3A-44F4-A208-DE1DE64ABC14",
-      "image": "cable_crunch",
+      "image": "Cable-Kneeling-Crunch_Waist-FIX2__converted",
       "csvKey": "cable-crunch",
       "aliases": [ "Kneeling Cable Crunch", "Weighted Ab Pulldown" ],
       "instructions": { "steps": [ ] },
@@ -2758,7 +2758,7 @@
     {
       "name": "Standing Cable Crunch",
       "id": "97DB345C-C09A-4D0C-965E-FE4455C4C407",
-      "image": "standing_cable_crunch",
+      "image": "Cable-Standing-Crunch-(with-rope-attachment)_Waist_converted",
       "csvKey": "standing-cable-crunch",
       "aliases": [ "Cable Ab Pulldown", "Standing Crunch" ],
       "instructions": { "steps": [ ] },
@@ -2778,7 +2778,7 @@
     {
       "name": "Seated Cable Crunch",
       "id": "79E0F74C-B04D-460B-B5A3-F201A2D4A7B8",
-      "image": "high_pulley_crunch",
+      "image": "Cable-Seated-Crunch_Waist-FIX__converted",
       "csvKey": "high-pulley-crunch",
       "aliases": [ "Overhead Cable Crunch" ],
       "instructions": { "steps": [ ] },
@@ -2798,7 +2798,7 @@
     {
       "name": "Crunch",
       "id": "F0098597-7F8E-453D-9D85-8D2527AA648A",
-      "image": "crunch",
+      "image": "Crunch-Floor-(male)_waist_converted",
       "csvKey": "crunches",
       "aliases": [ "Abdominal Crunch", "Basic Crunch" ],
       "instructions": { "steps": [ ] },
@@ -2819,7 +2819,7 @@
     {
       "name": "Decline Crunch",
       "id": "98C58448-177E-4B74-BCE1-438066758DD8",
-      "image": "decline_crunch",
+      "image": "Decline-Crunch_Waist_converted",
       "csvKey": "decline-crunch",
       "aliases": [ "Decline Ab Crunch", "Inclined Crunch" ],
       "instructions": { "steps": [ ] },
@@ -2840,7 +2840,7 @@
     {
       "name": "Machine Seated Crunch",
       "id": "B90FB2CA-55D5-4599-9C2F-6F88E72CFC53",
-      "image": "machine_crunch",
+      "image": "Lever-Seated-Crunch_Waist_converted",
       "csvKey": "machine-seated-crunch",
       "aliases": [ "Seated Ab Crunch", "Machine Ab Crunch" ],
       "instructions": { "steps": [ ] },
@@ -2861,7 +2861,7 @@
     {
       "name": "Reverse Crunch",
       "id": "9BAF7CD4-574E-4382-AF3C-58D2D3DF360F",
-      "image": "reverse_crunch",
+      "image": "Reverse-Crunch-(VERSION-2)_Waist_converted",
       "csvKey": "reverse-crunches",
       "aliases": [ "Hip Lift" ],
       "instructions": { "steps": [ ] },
@@ -2962,7 +2962,7 @@
     {
       "name": "Handstand Hold",
       "id": "E2E6E9E0-6C7F-4E3E-9FC0-1F2B7A6D5C48",
-      "image": "handstand_hold",
+      "image": "Handstand-Hold-on-Wall-(male)_Shoulders__converted",
       "aliases": [ "Wall Handstand Hold" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -2992,7 +2992,7 @@
     {
       "name": "Hollow Body Hold",
       "id": "7D6CD89B-6106-492E-B72D-3D3D8145C75B",
-      "image": "hollow_body_hold",
+      "image": "Hollow-Hold_Waist__converted",
       "aliases": [ "Hollow Hold", "Gymnast Hollow" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -3122,7 +3122,7 @@
     {
       "name": "Kneeling Plank",
       "id": "EE5FD372-EAE4-4C96-9493-3B825468E582",
-      "image": "kneeling_plank",
+      "image": "Kneeling-plank-(male)_Waist_converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
       "muscles": [
@@ -3143,7 +3143,7 @@
     {
       "name": "Plank",
       "id": "C699E355-84F6-4244-ADCC-96B29F39E17C",
-      "image": "plank",
+      "image": "Front-Plank---Butt-(WRONG-RIGHT)__converted",
       "aliases": [ "Front Plank" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -3165,7 +3165,7 @@
     {
       "name": "Reverse Plank Hold",
       "id": "A3C2773B-60B5-4B41-A3B9-1E8C4DB7F4A9",
-      "image": "reverse_plank_hold",
+      "image": "Reverse-plank_Back_converted",
       "aliases": [ "Supine Plank Hold" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -3195,7 +3195,7 @@
     {
       "name": "Side Plank",
       "id": "321A748C-6F7A-4BDF-B069-7CF6AAA89B42",
-      "image": "side_plank",
+      "image": "Side-Plank-Rotation_Waist__converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
       "muscles": [
@@ -3215,7 +3215,7 @@
     {
       "name": "Arnold Press",
       "id": "A0CF44D8-36BA-4629-8CE8-01BBAABA2872",
-      "image": "arnold_press",
+      "image": "Dumbbell-Arnold-Press_Shoulders_converted",
       "csvKey": "arnold-press",
       "aliases": [ "Rotational Shoulder Press" ],
       "instructions": { "steps": [ ] },
@@ -3242,7 +3242,7 @@
     {
       "name": "Behind the Neck Press",
       "id": "D6F5911E-E361-4106-92DD-2AE339A785B7",
-      "image": "behind_the_neck_press",
+      "image": "Standing-Behind-Neck-Press_Shoulders_converted",
       "csvKey": "behind-the-neck-press",
       "aliases": [ "Behind Head Shoulder Press" ],
       "instructions": { "steps": [ ] },
@@ -3312,7 +3312,7 @@
     {
       "name": "Cuban Press",
       "id": "DBFD37CD-5C09-4703-A9B1-2C1E0E80952E",
-      "image": "cuban_press",
+      "image": "Dumbbell-Cuban-Press-(version-2)_Shoulders_converted",
       "aliases": [ "DB Cuban Rotation Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
@@ -3337,7 +3337,7 @@
     {
       "name": "Dumbbell Push Press",
       "id": "E8A9B7C6-D5F4-43E2-9A1B-0C2D3E4F5A6B",
-      "image": "dumbbell_push_press",
+      "image": "Dumbbell-Push-Press_Shoulders__converted",
       "csvKey": "dumbbell-push-press",
       "aliases": [ "DB Push Press" ],
       "instructions": { "steps": [ ] },
@@ -3364,7 +3364,7 @@
     {
       "name": "Dumbbell Shoulder Press",
       "id": "F716FC71-A0F0-418E-BC96-058AF9E6B571",
-      "image": "dumbbell_shoulder_press",
+      "image": "Dumbbell-Standing-Overhead-Press_shoulder_converted",
       "csvKey": "dumbbell-shoulder-press",
       "aliases": [ "Overhead Dumbbell Press" ],
       "instructions": { "steps": [ ] },
@@ -3391,7 +3391,7 @@
     {
       "name": "Dumbbell Z Press",
       "id": "0F6D9E28-1B47-4B56-9A7F-5E2C4D3B1A79",
-      "image": "dumbbell_z_press",
+      "image": "Dumbbell-Z-Press_Shoulders__converted",
       "csvKey": "dumbbell-z-press",
       "aliases": [ "DB Z Press", "Seated Floor DB Press (Z)" ],
       "instructions": { "steps": [ ] },
@@ -3417,7 +3417,7 @@
     {
       "name": "Kettlebell Bottoms-Up Press",
       "id": "00F5D530-03B3-4DFF-AD66-643C1AC60918",
-      "image": "kb_bottoms_up_press",
+      "image": "Kettlebell-Standing-Bottoms-Up-One-Arm-Shoulder-Pr_converted",
       "aliases": [ "Bottoms-Up Kettlebell Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Kettlebells" ],
@@ -3442,7 +3442,7 @@
     {
       "name": "Landmine Press",
       "id": "3938ACF3-24DB-448C-8CAF-9C5D136B6A2C",
-      "image": "landmine_press",
+      "image": "Landmine-Press_Shoulders__converted",
       "csvKey": "landmine-press",
       "aliases": [ "Angled Barbell Press" ],
       "instructions": { "steps": [ ] },
@@ -3468,7 +3468,7 @@
     {
       "name": "Machine Shoulder Press",
       "id": "148E2731-ED26-4DD9-8285-BC98786FB679",
-      "image": "machine_shoulder_press",
+      "image": "Lever-Seated-Shoulder-Press_Shoulders-FIX__converted",
       "csvKey": "machine-shoulder-press",
       "aliases": [ "Seated Machine Press" ],
       "instructions": { "steps": [ ] },
@@ -3494,7 +3494,7 @@
     {
       "name": "Military Press",
       "id": "3D2F2B62-40C5-4F7E-82C6-1C928BE81800",
-      "image": "standing_military_press",
+      "image": "Barbell-Standing-Military-Press-(without-rack)_Shoulders_converted",
       "csvKey": "military-press",
       "aliases": [ "Strict Overhead Press" ],
       "instructions": { "steps": [ ] },
@@ -3548,7 +3548,7 @@
     {
       "name": "Plate-Loaded Shoulder Press",
       "id": "606D38F3-571F-4E8F-AB36-874564EF3D4A",
-      "image": "plate_loaded_shoulder_press",
+      "image": "Lever-Shoulder-Press-(plate-loaded)-(VERSION-2)_Shoulders__converted",
       "aliases": [ "Iso Shoulder Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Shoulder Press - Plate Loaded" ],
@@ -3576,7 +3576,7 @@
     {
       "name": "Push Press",
       "id": "BAB10CC2-4703-48EB-8E54-52534C492371",
-      "image": "push_press",
+      "image": "Push-Press_Shoulders_converted",
       "csvKey": "push-press",
       "aliases": [ "Overhead Push Press" ],
       "instructions": { "steps": [ ] },
@@ -3602,7 +3602,7 @@
     {
       "name": "Seated Dumbbell Shoulder Press",
       "id": "EAA915AD-9036-4C6E-92BC-BA336E96642C",
-      "image": "seated_dumbbell_shoulder_press",
+      "image": "Dumbbell-Seated-Shoulder-Press_Shoulders-FIX2__converted",
       "csvKey": "seated-dumbbell-shoulder-press",
       "aliases": [ "Seated Overhead Dumbbell Press" ],
       "instructions": { "steps": [ ] },
@@ -3655,7 +3655,7 @@
     {
       "name": "Overhead Press",
       "id": "7C2E6324-C060-4387-BEA6-BA37B01FE42E",
-      "image": "overhead_press",
+      "image": "Barbell-Standing-Shoulders-Press_Shoulders__converted",
       "csvKey": "shoulder-press",
       "aliases": [ "Overhead Press" ],
       "instructions": { "steps": [ ] },
@@ -3681,7 +3681,7 @@
     {
       "name": "Smith Machine Shoulder Press",
       "id": "0CA3F4A8-79D0-4DCB-A300-BC56F52A3C1C",
-      "image": "smith_machine_shoulder_press",
+      "image": "Smith-Seated-Shoulder-Press_Shoulders_converted",
       "aliases": [ "Smith Seated Shoulder Press", "Smith Overhead Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Smith Machine", "Vertical Bench" ],
@@ -3706,7 +3706,7 @@
     {
       "name": "Seated Overhead Press",
       "id": "E2D009AA-B5F9-4608-8432-206648921022",
-      "image": "seated_barbell_overhead_press",
+      "image": "Barbell-Seated-Overhead-Press_Shoulders_converted",
       "csvKey": "seated-shoulder-press",
       "aliases": [ "Seated Barbell Shoulder Press" ],
       "instructions": { "steps": [ ] },
@@ -3732,7 +3732,7 @@
     {
       "name": "Single-Arm Landmine Press",
       "id": "BF17A9A1-1A33-4074-BF6D-FBA44E9EB99D",
-      "image": "one_arm_landmine_press",
+      "image": "Landmine-Kneeling-One-Arm-Shoulder-Press_Shoulders copy_converted",
       "csvKey": "one-arm-landmine-press",
       "aliases": [ ],
       "instructions": { "steps": [ ] },
@@ -3759,7 +3759,7 @@
     {
       "name": "Viking Press",
       "id": "C44F0BE2-FC4F-4EF2-A18E-1DD602932FE5",
-      "image": "viking_press",
+      "image": "Lever-Standing-Viking-Press-(male)_Shoulders__converted",
       "csvKey": "viking-press",
       "aliases": [ "Standing Overhead Press Machine" ],
       "instructions": { "steps": [ ] },
@@ -3809,7 +3809,7 @@
     {
       "name": "Z Press",
       "id": "14532E34-D349-48E8-A4E8-3ABF39957071",
-      "image": "z_press",
+      "image": "Barbell-Z-Press_Shoulders__converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
       "muscles": [
@@ -3832,7 +3832,7 @@
     {
       "name": "Cable External Rotation",
       "id": "5A7D9C1E-2F3B-4D6A-8E0B-F1C2D3E4A5B6",
-      "image": "cable_external_rotation",
+      "image": "Cable-Standing-Shoulder-External-Rotation_Back-FIX_converted",
       "csvKey": "cable-external-rotation",
       "aliases": [ "Cable ER", "External Rotation (Cable)" ],
       "instructions": { "steps": [ ] },
@@ -3897,7 +3897,7 @@
     {
       "name": "Cable Internal Rotation",
       "id": "51CADC61-9FCE-44F1-A192-ED116CA932A8",
-      "image": "cable_internal_rotation",
+      "image": "Cable-Shoulder-Internal-Rotation_Shoulders__converted",
       "aliases": [ ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Single D-Handles" ],
@@ -3918,7 +3918,7 @@
     {
       "name": "Band Internal Rotation",
       "id": "0DCF3B61-96BF-42F3-B0B1-0BABC412729F",
-      "image": "band_internal_shoulder_rotation",
+      "image": "Resistance-Band-Standing-Shoulder-Internal-Rotatio_converted",
       "aliases": [ "Band IR", "Internal Rotation (Band)" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Handle Bands" ],
@@ -3939,7 +3939,7 @@
     {
       "name": "Banded Lateral Raise",
       "id": "17418419-039B-4F68-A326-D887A9C85249",
-      "image": "banded_lateral_raise",
+      "image": "Band-front-lateral-raise_Shoulders_converted",
       "aliases": [ "Resistance-Band Lateral Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Loop Bands" ],
@@ -3959,7 +3959,7 @@
     {
       "name": "Cable Lateral Raise",
       "id": "0BD3EC5E-D663-410E-B722-C3BAA5A5FAEA",
-      "image": "cable_lateral_raise",
+      "image": "Cable-Single-Arm-Lateral-Raise-(VERSION-2)-(male)__converted",
       "csvKey": "cable-lateral-raise",
       "aliases": [ "Side Cable Raise" ],
       "instructions": { "steps": [ ] },
@@ -3981,7 +3981,7 @@
     {
       "name": "Dumbbell Lateral Raise",
       "id": "B413DB12-1E81-4251-B118-152A941CF6EC",
-      "image": "dumbbell_lateral_raise",
+      "image": "Dumbbell-Lateral-Raise-Plank-(male)_Waist__converted",
       "csvKey": "dumbbell-lateral-raise",
       "aliases": [ "Side Dumbbell Raise" ],
       "instructions": { "steps": [ ] },
@@ -4003,7 +4003,7 @@
     {
       "name": "Machine Lateral Raise",
       "id": "DE677D3C-EA6C-486D-9637-0044A334728F",
-      "image": "machine_lateral_raise",
+      "image": "Lever-Lateral-Raise-(plate-loaded)_Shoulders_converted",
       "csvKey": "machine-lateral-raise",
       "aliases": [ "Side Raise Machine" ],
       "instructions": { "steps": [ ] },
@@ -4024,7 +4024,7 @@
     {
       "name": "Barbell Front Raise",
       "id": "6E2D76B1-C489-4ABA-A13F-3101751C5098",
-      "image": "barbell_front_raise",
+      "image": "Barbell-Front-Raise_Shoulders_converted",
       "csvKey": "barbell-front-raise",
       "aliases": [ "Front Barbell Raise" ],
       "instructions": { "steps": [ ] },
@@ -4045,7 +4045,7 @@
     {
       "name": "Dumbbell Front Raise",
       "id": "0B69C22A-75AA-459C-A033-715EE79D638B",
-      "image": "dumbbell_front_raise",
+      "image": "Dumbbell-Front-Raise_Shoulders_converted",
       "csvKey": "dumbbell-front-raise",
       "aliases": [ "Dumbbell Anterior Raise" ],
       "instructions": { "steps": [ ] },
@@ -4067,7 +4067,7 @@
     {
       "name": "Plate Front Raise",
       "id": "BCB5FC52-C2C3-43E5-9FE2-F612299843A9",
-      "image": "plate_raise",
+      "image": "Weighted-Plate-Standing-Front-Raise-(male)_S_converted",
       "aliases": [ "Plate Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Weight Plate" ],
@@ -4111,7 +4111,7 @@
     {
       "name": "Incline Y Raise",
       "id": "F0C4F1BE-37BF-4347-83FE-4E5DACC9B9C3",
-      "image": "prone_y_raise",
+      "image": "Dumbbell-Incline-Y-Raise_Shoulders__converted",
       "csvKey": "dumbbell-incline-y-raise",
       "aliases": [ "Incline Scaption Raise" ],
       "instructions": { "steps": [ ] },
@@ -4157,7 +4157,7 @@
     {
       "name": "Dumbbell Face Pull",
       "id": "A7D5C3B1-9E8F-4A2B-8C7D-0E1F2A3B4C5D",
-      "image": "dumbbell_face_pull",
+      "image": "Dumbbell-Bent-Over-Face-Pull_Shoulders__converted",
       "csvKey": "dumbbell-face-pull",
       "aliases": [ "DB Face Pull" ],
       "instructions": { "steps": [ ] },
@@ -4183,7 +4183,7 @@
     {
       "name": "Face Pull",
       "id": "657029FE-9C5A-4096-9697-7F371A12273A",
-      "image": "face_pull",
+      "image": "Cable-Standing-Face-Pull-(with-rope)_Shoulders_converted",
       "csvKey": "face-pull",
       "aliases": [ "Rope Face Pull" ],
       "instructions": { "steps": [ ] },
@@ -4208,7 +4208,7 @@
     {
       "name": "Barbell Shrug",
       "id": "33C31D7D-49B5-447E-986A-181A59031FF1",
-      "image": "barbell_shrug",
+      "image": "Barbell-Shrug_Back_converted",
       "csvKey": "barbell-shrug",
       "aliases": [ "Trap Shrug" ],
       "instructions": { "steps": [ ] },
@@ -4229,7 +4229,7 @@
     {
       "name": "Behind the Back Barbell Shrug",
       "id": "A5B2C7D3-8E4F-4A1B-9C6D-2F0E3A7B1C9D",
-      "image": "behind_the_back_barbell_shrug",
+      "image": "Barbell-Behind-The-Back-Shrug_Back__converted",
       "csvKey": "behind-the-back-barbell-shrug",
       "aliases": [ "BTB Barbell Shrug", "Behind-the-Back Shrug" ],
       "instructions": { "steps": [ ] },
@@ -4250,7 +4250,7 @@
     {
       "name": "Cable Shrug",
       "id": "95DC9C65-1793-46E1-B042-BB81AA9086C3",
-      "image": "cable_shrug",
+      "image": "Cable-Shrug_Back-FIX__converted",
       "csvKey": "cable-shrug",
       "aliases": [ "Cable Trap Raise" ],
       "instructions": { "steps": [ ] },
@@ -4271,7 +4271,7 @@
     {
       "name": "Dumbbell Shrug",
       "id": "B13BAF39-61AA-46D1-9AD3-5601DFE7012E",
-      "image": "dumbbell_shrug",
+      "image": "Dumbbell-Shrug_Back-FIX__converted",
       "csvKey": "dumbbell-shrug",
       "aliases": [ "Free-Weight Shrug" ],
       "instructions": { "steps": [ ] },
@@ -4293,7 +4293,7 @@
     {
       "name": "Trap Bar Shrug",
       "id": "1C767591-4DAC-4EDC-B35B-A8F3994BCA09",
-      "image": "trap_bar_shrug",
+      "image": "Trap-Bar-Standing-Shrug-(male)_Back__converted",
       "csvKey": "hex-bar-shrug",
       "aliases": [ "Hex Bar Shrug" ],
       "instructions": { "steps": [ ] },
@@ -4314,7 +4314,7 @@
     {
       "name": "Machine Shrug",
       "id": "65E1ED2C-6B28-4A26-9047-5E5939B89551",
-      "image": "machine_shoulder_shrug",
+      "image": "Lever-Shrug-(plate-loaded)_Back_converted",
       "csvKey": "machine-shrug",
       "aliases": [ "Trap Shrug", "Machine Shrug" ],
       "instructions": { "steps": [ ] },
@@ -4374,7 +4374,7 @@
     {
       "name": "Smith Machine Shrug",
       "id": "E14501FD-A288-4E30-B2A7-6EFCC67715A3",
-      "image": "smith_machine_shrug",
+      "image": "Smith-Shrug_Back_converted",
       "csvKey": "smith-machine-shrug",
       "aliases": [ "Guided Shrug" ],
       "instructions": { "steps": [ ] },
@@ -4395,7 +4395,7 @@
     {
       "name": "Ab Wheel Roll-Out",
       "id": "68490A67-6B25-49BA-BD88-3ABEED688AE5",
-      "image": "kneeling_ab_wheel_roll_out",
+      "image": "Wheel-Rollout_Waist-FIX2__converted",
       "csvKey": "ab-wheel-rollout",
       "aliases": [ "Kneeling Ab Rollout", "Wheel Rollout" ],
       "instructions": { "steps": [ ] },
@@ -4416,7 +4416,7 @@
     {
       "name": "Stability Ball Roll-Out",
       "id": "1A01BBB2-0F54-494B-9724-AD80C607DC0D",
-      "image": "stability_ball_rollout",
+      "image": "Stability-Ball-Rollout-on-Knees-(male)_Hips__converted",
       "aliases": [ "Swiss Ball Rollout" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Exercise Ball" ],
@@ -4437,7 +4437,7 @@
     {
       "name": "Barbell Calf Raise",
       "id": "5B5EB92C-4316-4802-A775-B9666DD97E47",
-      "image": "barbell_calf_raise",
+      "image": "Barbell-Standing-Leg-Calf-Raise_Calves_converted",
       "csvKey": "barbell-calf-raise",
       "aliases": [ "Barbell Standing Calf Raise" ],
       "instructions": { "steps": [ ] },
@@ -4459,7 +4459,7 @@
     {
       "name": "Bodyweight Calf Raise",
       "id": "4354E004-15BC-4560-B760-E2A4C020684D",
-      "image": "bodyweight_calf_raise",
+      "image": "Bodyweight-Standing-Calf-Raise_Calves_converted",
       "csvKey": "bodyweight-calf-raise",
       "aliases": [ "Calf Raise" ],
       "instructions": { "steps": [ ] },
@@ -4481,7 +4481,7 @@
     {
       "name": "Donkey Calf Raise",
       "id": "A4752D8F-2F76-40CF-A55A-585FAF4AA5E1",
-      "image": "donkey_calf_raise",
+      "image": "Donkey-Calf-Raise_Calves_converted",
       "aliases": [ "Bent-Over Calf Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Donkey Calf Raise" ],
@@ -4502,7 +4502,7 @@
     {
       "name": "Dumbbell Calf Raise",
       "id": "B07F91CC-36CE-43BD-8A4C-FBAE30D5CFA5",
-      "image": "dumbbell_calf_raise",
+      "image": "Dumbbell-Standing-Calf-Raise_Calves-FIX__converted",
       "csvKey": "dumbbell-calf-raise",
       "aliases": [ "Dumbbell Standing Calf Raise" ],
       "instructions": { "steps": [ ] },
@@ -4549,7 +4549,7 @@
     {
       "name": "Leg Press Calf Raise",
       "id": "D52FF1FA-8BC0-411F-AA96-A92BB2976A6A",
-      "image": "sled_press_calf_raise",
+      "image": "Sled-Calf-Press-On-Leg-Press_Calves-FIX__converted",
       "csvKey": "sled-press-calf-raise",
       "aliases": [ "Sled Calf Raise" ],
       "instructions": { "steps": [ ] },
@@ -4592,7 +4592,7 @@
     {
       "name": "Seated Calf Raise",
       "id": "5956D818-B610-4075-9636-38ED85C88091",
-      "image": "seated_calf_raise",
+      "image": "Lever-Seated-Calf-Raise-(plate-loaded)_converted",
       "csvKey": "seated-calf-raise",
       "aliases": [ "Soleus Raise" ],
       "instructions": { "steps": [ ] },
@@ -4635,7 +4635,7 @@
     {
       "name": "Standing Calf Raise",
       "id": "9EEA3857-1834-42E0-BA4D-F0D83F87F81B",
-      "image": "machine_calf_raise",
+      "image": "Lever-Standing-Calf-Raise_Calf-FIX__converted",
       "csvKey": "machine-calf-raise",
       "aliases": [ "Machine Calf Raise" ],
       "instructions": { "steps": [ ] },
@@ -4657,7 +4657,7 @@
     {
       "name": "Hack Squat Machine Calf Raise",
       "id": "87A04E39-CE0D-48AA-9D65-0BDF8AC7DDAB",
-      "image": "hack_squat_calf_raise",
+      "image": "Hack-Calf-Raise_Calves__converted 2",
       "aliases": [ "Hack Calf Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Hack Squat" ],
@@ -4678,7 +4678,7 @@
     {
       "name": "Barbell Seated Calf Raise",
       "id": "F2AE97AC-DAB9-4829-AA9D-2FCA15600CC0",
-      "image": "barbell_seated_calf_raise",
+      "image": "Barbell-Seated-Calf-Raise_Calves_converted",
       "aliases": [ "Seated Calf Raise (BB)" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell", "Flat Bench" ],
@@ -4698,7 +4698,7 @@
     {
       "name": "Single-Leg Bodyweight Calf Raise",
       "id": "9B20FF88-F923-47D9-B7C2-D9511FF40E4E",
-      "image": "single_leg_bodyweight_calf_raise",
+      "image": "One-Leg-Floor-Calf-Raise_Calves_converted",
       "aliases": [ "One Leg Floor Calf Raise", "Single-Leg Calf Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -4720,7 +4720,7 @@
     {
       "name": "Standing Smith Machine Calf Raise",
       "id": "D4912BDB-26D6-44A5-8B42-EEB90DD4BFED",
-      "image": "smith_standing_calf_raise",
+      "image": "Smith-Standing-Leg-Calf-Raise_Calves__converted",
       "aliases": [ "Smith Machine Calf Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Smith Machine" ],
@@ -4741,7 +4741,7 @@
     {
       "name": "Seated Smith Machine Calf Raise",
       "id": "5C821D21-AA48-4DDE-B204-0A5C386F8BA6",
-      "image": "smith_seated_calf_raise",
+      "image": "Smith-Seated-Calf-Raise_Calves__converted",
       "aliases": [ "Smith Machine Seated Calf Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Smith Machine", "Flat Bench" ],
@@ -4781,7 +4781,7 @@
     {
       "name": "Standing Banded Calf Raise",
       "id": "103F912D-D126-4443-BFAF-E4A5A743324E",
-      "image": "banded_standing_calf_raise",
+      "image": "Band-Two-Legs-Calf-Raise---(Band-under-both-legs)-VERSION-2_Calves_converted",
       "aliases": [ "Resistance Band Calf Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Handle Bands" ],
@@ -4802,7 +4802,7 @@
     {
       "name": "Cable Standing Calf Raise",
       "id": "36477C2D-C44A-48F5-8408-8B1A824D06DF",
-      "image": "cable_standing_calf_raise",
+      "image": "Standing-Calf-Raise-(On-a-staircase)_Calves__converted",
       "aliases": [ "Cable Calf Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Hi-Lo Pulley Cable" ],
@@ -4858,7 +4858,7 @@
     {
       "name": "Indoor Cycling",
       "id": "01E8C5B7-2A43-4F9C-8D61-7A4B2E3C5D6F",
-      "image": "stationary_bike",
+      "image": "Bicycle-Recline-Walk_Cardio_converted",
       "aliases": [ "Spin Bike Ride", "Exercise Bike Ride" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Stationary Bike" ],
@@ -4952,7 +4952,7 @@
     {
       "name": "Treadmill Walk/Run",
       "id": "A3C7F2E1-5D4B-4E9A-90C1-7B9E3F2A6C51",
-      "image": "treadmill",
+      "image": "Walking-on-Treadmill_Cardio_converted",
       "aliases": [ "Treadmill Walking", "Treadmill Running" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Treadmill" ],
@@ -4984,7 +4984,7 @@
     {
       "name": "21s Curl",
       "id": "2447A9AF-C4A8-410A-AA64-47B2E509CC95",
-      "image": "21s_curl",
+      "image": "EZ-bar-21s_Upper-Arms__converted",
       "aliases": [ "Twenty Ones Curl" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "EZ Bar" ],
@@ -5008,7 +5008,7 @@
     {
       "name": "Band Biceps Curl",
       "id": "3DE3E114-FA06-41C1-94DC-BC8D04CA00C0",
-      "image": "band_biceps_curl",
+      "image": "Band-Biceps-Curl_Upper-Arms__converted",
       "aliases": [ "Resistance Band Curl" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Loop Bands" ],
@@ -5032,7 +5032,7 @@
     {
       "name": "Barbell Curl",
       "id": "12A79F48-6D6B-4A96-8995-A4D7409FBAF6",
-      "image": "barbell_curl",
+      "image": "Barbell-Curl_Upper-Arms_without-weight_converted",
       "csvKey": "barbell-curl",
       "aliases": [ "Barbell Bicep Curl" ],
       "instructions": { "steps": [ ] },
@@ -5057,7 +5057,7 @@
     {
       "name": "Barbell Reverse Curl",
       "id": "3F9D4650-EEB9-4B3C-87B2-6B7D6AEB835F",
-      "image": "reverse_barbell_curl",
+      "image": "Barbell-Reverse-Curl_Forearm_converted",
       "csvKey": "reverse-barbell-curl",
       "aliases": [ "Reverse Curl", "Overhand Barbell Curl" ],
       "instructions": { "steps": [ ] },
@@ -5084,7 +5084,7 @@
     {
       "name": "Barbell Wrist Curl",
       "id": "6C7EBCDE-5EA2-448D-864F-42AB034CE956",
-      "image": "barbell_wrist_curl",
+      "image": "Barbell-Wrist-Curl-(VERSION-2)_Forearms-FIX2__converted",
       "csvKey": "wrist-curl",
       "aliases": [ "Wrist Curl", "Barbell Flexor Curl" ],
       "instructions": { "steps": [ ] },
@@ -5105,7 +5105,7 @@
     {
       "name": "Reverse Wrist Curl",
       "id": "28EAF89E-3805-47C3-946A-926B4ADAD132",
-      "image": "reverse_wrist_curl",
+      "image": "Barbell-Reverse-Wrist-Curl_Forearm_converted",
       "csvKey": "reverse-wrist-curl",
       "aliases": [ "Wrist Extensor Curl", "Barbell Wrist Extension" ],
       "instructions": { "steps": [ ] },
@@ -5149,7 +5149,7 @@
     {
       "name": "Cable Concentration Curl",
       "id": "F7B2331C-6357-4481-B81F-F91C3BA6956A",
-      "image": "cable_concentration_curl",
+      "image": "Cable-Seated-One-Arm-Concentration-Curl_Upper-Arms_converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Single D-Handles" ],
       "muscles": [
@@ -5170,7 +5170,7 @@
     {
       "name": "Cable Curl With Bar",
       "id": "9A908821-1F6B-4B6B-A1E1-3E6E17607CC5",
-      "image": "cable_curl_with_bar",
+      "image": "Cable-Close-Grip-Curl_Upper-Arms__converted",
       "csvKey": "cable-bicep-curl",
       "aliases": [ "Straight Bar Cable Curl" ],
       "instructions": { "steps": [ ] },
@@ -5195,7 +5195,7 @@
     {
       "name": "Cable Hammer Curl",
       "id": "02547B50-5996-44E4-8D5D-DEBBEFC4F90F",
-      "image": "cable_hammer_curl",
+      "image": "Cable-Hammer-Curl-(with-rope)-(male)_Forearms__converted",
       "csvKey": "cable-hammer-curl",
       "aliases": [ "Neutral-Grip Cable Curl" ],
       "instructions": { "steps": [ ] },
@@ -5219,7 +5219,7 @@
     {
       "name": "Cheat Curl",
       "id": "FE3F6A68-B895-4797-BADF-8AF92037E678",
-      "image": "cheat_curl",
+      "image": "Cheat-Curl_Upper-Arms__converted",
       "csvKey": "cheat-curl",
       "aliases": [ "Momentum Bicep Curl" ],
       "instructions": { "steps": [ ] },
@@ -5241,7 +5241,7 @@
     {
       "name": "Concentration Curl",
       "id": "443949F2-EE4E-4E61-B690-95AA87F86466",
-      "image": "concentration_curl",
+      "image": "Dumbbell-Concentration-Curl_Upper-Arms-FIX__converted",
       "csvKey": "dumbbell-concentration-curl",
       "aliases": [ "Seated Concentration Curl" ],
       "instructions": { "steps": [ ] },
@@ -5264,7 +5264,7 @@
     {
       "name": "Drag Curl",
       "id": "A07E89A5-C9C4-44B5-B219-1C46CB95A759",
-      "image": "drag_curl",
+      "image": "Barbell-Drag-Curl_Upper-Arms-FIX__converted",
       "aliases": [ "Body Drag Curl" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
@@ -5288,7 +5288,7 @@
     {
       "name": "Dumbbell Curl",
       "id": "C83F96FB-7E9A-4589-B349-E230542BC620",
-      "image": "dumbbell_curl",
+      "image": "Dumbbell-Alternate-Biceps-Curl_Upper-Arms-FIX__converted",
       "csvKey": "dumbbell-curl",
       "aliases": [ "Bicep Dumbbell Curl" ],
       "instructions": { "steps": [ ] },
@@ -5315,7 +5315,7 @@
     {
       "name": "Dumbbell Reverse Curl",
       "id": "17A55005-88D9-461A-8C61-36B1C3F3D6F0",
-      "image": "dumbbell_reverse_curl",
+      "image": "Dumbbell-Standing-Reverse-Curl_Forearms__converted",
       "csvKey": "dumbbell-reverse-curl",
       "aliases": [ "Reverse Dumbbell Curl", "Overhand Dumbbell Curl" ],
       "instructions": { "steps": [ ] },
@@ -5338,7 +5338,7 @@
     {
       "name": "Dumbbell Reverse Wrist Curl",
       "id": "6ED6C97B-03A3-49D7-BD65-A9E11898C767",
-      "image": "dumbbell_reverse_wrist_curl",
+      "image": "Dumbbell-Over-Bench-Revers-Wrist-Curl_Forearms__converted",
       "csvKey": "dumbbell-reverse-wrist-curl",
       "aliases": [ "Reverse Wrist Flexion", "Dumbbell Wrist Extension" ],
       "instructions": { "steps": [ ] },
@@ -5360,7 +5360,7 @@
     {
       "name": "Dumbbell Wrist Curl",
       "id": "4D89DB46-6359-4E8D-9896-BB7C9FB24564",
-      "image": "dumbbell_wrist_curl",
+      "image": "Dumbbell-Over-Bench-Wrist-Curl_Forearms_converted",
       "csvKey": "dumbbell-wrist-curl",
       "aliases": [ "Wrist Flexion Curl", "Dumbbell Forearm Curl" ],
       "instructions": { "steps": [ ] },
@@ -5382,7 +5382,7 @@
     {
       "name": "EZ-Bar Curl",
       "id": "3C99B887-8118-45AF-92BB-D7D0279D6CE5",
-      "image": "ez_bar_curl",
+      "image": "EZ-Barbell-Curl_Upper-Arms-FIX__converted 2",
       "csvKey": "ez-bar-curl",
       "aliases": [ "EZ Bar Bicep Curl" ],
       "instructions": { "steps": [ ] },
@@ -5407,7 +5407,7 @@
     {
       "name": "EZ-Bar Reverse Curl",
       "id": "E34D0120-E516-457D-B6BA-DB248C4AB21B",
-      "image": "ez_bar_reverse_curl",
+      "image": "EZ-Barbell-Reverse-Grip-Curl_Forearms_converted 2",
       "aliases": [ "Pronated EZ Curl" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "EZ Bar" ],
@@ -5431,7 +5431,7 @@
     {
       "name": "Hammer Curl",
       "id": "2928830C-646E-4799-817C-0CC7E951D22A",
-      "image": "hammer_curl",
+      "image": "Dumbbell-Hammer-Curl-(version-2)_Upper-Arms-FIX__converted",
       "csvKey": "hammer-curl",
       "aliases": [ "Neutral-Grip Curl" ],
       "instructions": { "steps": [ ] },
@@ -5457,7 +5457,7 @@
     {
       "name": "Lying Cable Curl",
       "id": "82D5DDEF-D996-4E98-956F-A6269ADDBD9B",
-      "image": "lying_cable_curl",
+      "image": "Cable-Lying-Bicep-Curl_Upper-Arms__converted",
       "csvKey": "lying-cable-curl",
       "aliases": [ "Supine Cable Curl" ],
       "instructions": { "steps": [ ] },
@@ -5482,7 +5482,7 @@
     {
       "name": "Incline Cable Curl",
       "id": "A2D42A15-FFA6-425D-B0E7-B6BE13126908",
-      "image": "incline_cable_curl",
+      "image": "Cable-Incline-Biceps-Curl_Upper-Arms__converted",
       "csvKey": "incline-cable-curl",
       "aliases": [ "Incline Cable Bicep Curl" ],
       "instructions": { "steps": [ ] },
@@ -5507,7 +5507,7 @@
     {
       "name": "Incline Dumbbell Curl",
       "id": "D09D0936-93F4-4E05-981D-5B291EFA3369",
-      "image": "incline_dumbbell_curl",
+      "image": "Dumbbell-Incline-Biceps-Curl_Upper-Arms_converted",
       "csvKey": "incline-dumbbell-curl",
       "aliases": [ "Incline Bicep Curl" ],
       "instructions": { "steps": [ ] },
@@ -5530,7 +5530,7 @@
     {
       "name": "Incline Hammer Curl",
       "id": "1276CE49-A814-4CAD-8D95-6BF8DBB9F6BC",
-      "image": "incline_hammer_curl",
+      "image": "Dumbbell-Incline-Hammer-Curl_Upper-Arms_converted",
       "csvKey": "incline-hammer-curl",
       "aliases": [ "Incline Neutral-Grip Curl" ],
       "instructions": { "steps": [ ] },
@@ -5556,7 +5556,7 @@
     {
       "name": "Machine Preacher Curl",
       "id": "F12D5485-540E-4A72-AB33-977F5167D3D2",
-      "image": "machine_bicep_curl",
+      "image": "Lever-Preacher-Curl-(Turned-Torso)_Upper-Arms__converted",
       "csvKey": "machine-bicep-curl",
       "aliases": [ "Machine Bicep Curl" ],
       "instructions": { "steps": [ ] },
@@ -5578,7 +5578,7 @@
     {
       "name": "Overhead Cable Curl",
       "id": "340FC7E3-8760-47B9-9D21-81E36F84B44F",
-      "image": "overhead_cable_curl",
+      "image": "Cable-Overhead-Curl_Upper-Arms_converted",
       "csvKey": "overhead-cable-curl",
       "aliases": [ "High Cable Bicep Curl" ],
       "instructions": { "steps": [ ] },
@@ -5604,7 +5604,7 @@
     {
       "name": "Ez-Bar Preacher Curl",
       "id": "2F46DC00-B87C-4E04-961F-B347830B9BED",
-      "image": "barbell_preacher_curl",
+      "image": "EZ-Barbell-Preacher-Curl_Upper-Arms__converted 2",
       "csvKey": "preacher-curl",
       "aliases": [ "EZ Bar Preacher Curl" ],
       "instructions": { "steps": [ ] },
@@ -5626,7 +5626,7 @@
     {
       "name": "Seated Dumbbell Curl",
       "id": "1F2F13EA-002F-495F-9A94-50AA8AED8EDD",
-      "image": "seated_dumbbell_curl",
+      "image": "Dumbbell-Seated-Curl_Upper-Arms_converted",
       "csvKey": "seated-dumbbell-curl",
       "aliases": [ "Seated Bicep Curl" ],
       "instructions": { "steps": [ ] },
@@ -5649,7 +5649,7 @@
     {
       "name": "Single-Arm Cable Bicep Curl",
       "id": "443AD0B7-D64E-4E45-8CF3-3C6AC403A551",
-      "image": "one_arm_bicep_curl",
+      "image": "Cable-One-Arm-Curl_Upper-Arms_converted",
       "csvKey": "one-arm-cable-bicep-curl",
       "aliases": [ "Single Arm Cable Curl" ],
       "instructions": { "steps": [ ] },
@@ -5672,7 +5672,7 @@
     {
       "name": "Single-Arm Dumbbell Preacher Curl",
       "id": "E7819274-5395-4603-85EC-90CB1495C926",
-      "image": "one_arm_dumbbell_preacher_curl",
+      "image": "Dumbbell-Preacher-Curl_Upper-Arms_converted",
       "csvKey": "one-arm-dumbbell-preacher-curl",
       "aliases": [ "Single Arm Preacher Curl" ],
       "instructions": { "steps": [ ] },
@@ -5695,7 +5695,7 @@
     {
       "name": "Spider Curl",
       "id": "63282F98-E669-4CEF-8823-DB9B36ECC11D",
-      "image": "spider_curl",
+      "image": "EZ-Barbell-Spider-Curl_Upper-Arms-FIX__converted",
       "csvKey": "spider-curl",
       "aliases": [ "Incline Bench Spider Curl" ],
       "instructions": { "steps": [ ] },
@@ -5717,7 +5717,7 @@
     {
       "name": "Strict Curl",
       "id": "D7ADF9CE-6594-4D10-A4EB-AACBD9B9B0BC",
-      "image": "strict_curl",
+      "image": "Barbell-Srtict-Curl_Upper-Arms__converted",
       "csvKey": "strict-curl",
       "aliases": [ "Barbell Strict Curl" ],
       "instructions": { "steps": [ ] },
@@ -5739,7 +5739,7 @@
     {
       "name": "Zottman Curl",
       "id": "DAB81916-5A46-4776-BB03-06102657F69E",
-      "image": "zottman_curl",
+      "image": "Dumbbell-Zottman-Curl_Upper-Arms-FIX__converted",
       "csvKey": "zottman-curl",
       "aliases": [ "Reverse Dumbbell Curl" ],
       "instructions": { "steps": [ ] },
@@ -5764,7 +5764,7 @@
     {
       "name": "Nordic Curl",
       "id": "47C4FC6D-E322-43B6-AA97-64302319B095",
-      "image": "nordic_ham_curl",
+      "image": "Nordic-Hamstring-Curl-(male)_Thighs__converted",
       "csvKey": "nordic-hamstring-curl",
       "aliases": [ "Nordic Curl", "Nordic Ham Curl" ],
       "instructions": { "steps": [ ] },
@@ -5811,7 +5811,7 @@
     {
       "name": "Deadlift",
       "id": "B61A4A76-D761-4A08-8C66-25AB3662AC35",
-      "image": "deadlift",
+      "image": "Barbell-Deadlift_Hips-FIX_converted",
       "csvKey": "deadlift",
       "aliases": [ "Conventional Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -5844,7 +5844,7 @@
     {
       "name": "Single-Leg Deadlift",
       "id": "4C9D8E7F-6A5B-4C3D-8E1F-2A3B4C5D6E7F",
-      "image": "single_leg_deadlift",
+      "image": "Barbell-Single-Leg-Deadlift_Hips__converted",
       "csvKey": "single-leg-deadlift",
       "aliases": [ "Unilateral Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -5876,7 +5876,7 @@
     {
       "name": "Dumbbell Deadlift",
       "id": "FBC96D2E-FDD1-42EE-B5A6-F664A3E4C037",
-      "image": "dumbbell_deadlift",
+      "image": "Dumbbell-Deadlift_Hips_converted",
       "csvKey": "dumbbell-deadlift",
       "aliases": [ "DB Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -5910,7 +5910,7 @@
     {
       "name": "Single-Leg Dumbbell Deadlift",
       "id": "A4D9F3E1-7B2C-4A5D-8E6F-1B2C3D4E5F6A",
-      "image": "single_leg_dumbbell_deadlift",
+      "image": "Dumbbell-Single-Leg-Deadlift-(male)_Hips__converted",
       "csvKey": "single-leg-dumbbell-deadlift",
       "aliases": [ "Unilateral DB Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -5944,7 +5944,7 @@
     {
       "name": "Deficit Deadlift",
       "id": "7025768D-F8C7-40E7-A6B7-CEF6C6599DAC",
-      "image": "deficit_deadlift",
+      "image": "Barbell-Deadlift-from-Deficit_Hips__converted",
       "csvKey": "deficit-deadlift",
       "aliases": [ "Elevated Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -6041,7 +6041,7 @@
     {
       "name": "Jefferson Curl",
       "id": "3BE70137-DD4A-4ACF-A5DD-D1E607713B7D",
-      "image": "jefferson_curl",
+      "image": "Dumbbell-Jefferson-Curl-(male)_Hips__converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
       "muscles": [
@@ -6068,7 +6068,7 @@
     {
       "name": "Snatch Grip Deadlift",
       "id": "B312F32F-6168-42CD-B35D-5DF0BBB4FF04",
-      "image": "snatch_grip_deadlift",
+      "image": "Barbell-Snatch-grip-Deadlift-(male)_Hips__converted",
       "csvKey": "snatch-deadlift",
       "aliases": [ "Wide-Grip Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -6099,7 +6099,7 @@
     {
       "name": "Sumo Deadlift",
       "id": "3206FB0D-7981-468F-968E-362BACC5126B",
-      "image": "sumo_deadlift",
+      "image": "Barbell-Sumo-Deadlift_Hips-FIX__converted",
       "csvKey": "sumo-deadlift",
       "aliases": [ "Wide-Stance Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -6124,7 +6124,7 @@
     {
       "name": "Trap Bar Deadlift",
       "id": "E301EA58-B367-418F-9E9A-9A470AE79AA1",
-      "image": "trap_bar_deadlift",
+      "image": "Trap-Bar-Deadlift_Thighs-FIX__converted",
       "csvKey": "hex-bar-deadlift",
       "aliases": [ "Hex Bar Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -6185,7 +6185,7 @@
     {
       "name": "Stiff-Legged Deadlift",
       "id": "D942C43F-CC00-41E8-8AFF-DEB0A56918E9",
-      "image": "stiff_legged_deadlift",
+      "image": "Barbell-Stiff-Legged-Deadlift_Hips-FIX__converted",
       "csvKey": "stiff-leg-deadlift",
       "aliases": [ "Straight-Leg Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -6213,7 +6213,7 @@
     {
       "name": "Romanian Deadlift",
       "id": "71ACFCED-5EE5-4EB7-9E04-3E62AB9B9A39",
-      "image": "romanian_deadlift",
+      "image": "Barbell-Romanian-Deadlift_Hips-FIX__converted",
       "csvKey": "romanian-deadlift",
       "aliases": [ "RDL" ],
       "instructions": { "steps": [ ] },
@@ -6276,7 +6276,7 @@
     {
       "name": "Dumbbell Romanian Deadlift",
       "id": "FBB0749D-F949-4C69-9A5A-864F63E6D744",
-      "image": "dumbbell_romanian_deadlift",
+      "image": "Dumbbell-Romanian-Deadlift_Hips-FIX__converted",
       "csvKey": "dumbbell-romanian-deadlift",
       "aliases": [ "Dumbbell RDL" ],
       "instructions": { "steps": [ ] },
@@ -6303,7 +6303,7 @@
     {
       "name": "Rack Pull",
       "id": "A3737649-EB4D-4B06-9679-799F67D2488D",
-      "image": "rack_pull",
+      "image": "Barbell-Rack-Pull_Hips__converted",
       "csvKey": "rack-pull",
       "aliases": [ "Partial Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -6334,7 +6334,7 @@
     {
       "name": "Hyperextension",
       "id": "02BCAAA0-C2CD-47E4-8C38-5813B5FB3938",
-      "image": "back_extension",
+      "image": "Weighted-Hyperextension_Hips__converted",
       "csvKey": "back-extension",
       "aliases": [ "Hyperextension" ],
       "instructions": { "steps": [ ] },
@@ -6380,7 +6380,7 @@
     {
       "name": "Machine Back Extension",
       "id": "242E3C84-DE68-4ABB-B6D4-CEF55D164334",
-      "image": "machine_back_extension",
+      "image": "Lever-Back-Extension-(version-2)_Back_converted",
       "csvKey": "machine-back-extension",
       "aliases": [ "Back Extension Machine" ],
       "instructions": { "steps": [ ] },
@@ -6402,7 +6402,7 @@
     {
       "name": "Reverse Hyperextension",
       "id": "4D6D945E-F13E-4B2D-B69C-3F30D9728D7C",
-      "image": "reverse_hyperextension",
+      "image": "Lever-Reverse-Hyperextension-(plate-loaded)_Hips_converted",
       "csvKey": "reverse-hyperextension",
       "aliases": [ "Reverse Hyper" ],
       "instructions": { "steps": [ ] },
@@ -6428,7 +6428,7 @@
     {
       "name": "Weighted Hyperextension",
       "id": "383DBE0A-3299-4DBD-9B6A-8EE133365155",
-      "image": "back_extension",
+      "image": "Weighted-Hyperextension_Hips__converted",
       "aliases": [ "Weighted Hyperextension" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Back Extension Bench", "Weight Plate" ],
@@ -6449,7 +6449,7 @@
     {
       "name": "Cable Glute Kickback",
       "id": "B8EC65C3-062F-4389-9337-7FD454FEF343",
-      "image": "cable_glute_kickbacks",
+      "image": "Cable-kickback_Upper-arms__converted",
       "csvKey": "cable-kickback",
       "aliases": [ "Cable Kickbacks" ],
       "instructions": { "steps": [ ] },
@@ -6471,7 +6471,7 @@
     {
       "name": "Machine Glute Kickback",
       "id": "D8B37D59-665B-4CE6-8D0D-B8F11EAB6848",
-      "image": "glute_kickback_machine",
+      "image": "Lever-Glute-Press-(male)_Hips__converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Glute Kickback" ],
       "muscles": [
@@ -6493,7 +6493,7 @@
     {
       "name": "Glute Kickback",
       "id": "E0C9C4C1-3A4C-4F5C-9AD0-9A8EAEF78C61",
-      "image": "glute_kickback",
+      "image": "Bent-Leg-Kickback-(kneeling)-(male)_Hips-FIX__converted",
       "csvKey": "glute-kickback",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -6516,7 +6516,7 @@
     {
       "name": "Dead Hang",
       "id": "9E2A1B4C-73D1-49B8-8C0E-51F8D2B6A91C",
-      "image": "dead_hang",
+      "image": "Dead-Hang-Stretch_Stretching__converted",
       "aliases": [ "Passive Hang" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Pull-Up Bar" ],
@@ -6651,7 +6651,7 @@
     {
       "name": "Bird Dog",
       "id": "9EE4B25F-4561-48C1-B7C4-897639D98AF3",
-      "image": "bird_dog",
+      "image": "Bird-Dog-male_Back_converted",
       "aliases": [ "Quadruped Opposite Arm-Leg Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -6679,7 +6679,7 @@
     {
       "name": "Dead Bug",
       "id": "3F994751-33F7-471E-B7B6-C428156AF986",
-      "image": "dead_bug",
+      "image": "Dead-Bug_Waist__converted 2",
       "aliases": [ "Deadbug" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -6700,7 +6700,7 @@
     {
       "name": "Side Lying Hip Abduction",
       "id": "A4E1C8B2-9D7F-4F31-8E52-6B3A4F1D8C20",
-      "image": "floor_hip_abduction",
+      "image": "Side-Hip-Abduction_Hips__converted",
       "csvKey": "floor-hip-abduction",
       "aliases": [ "Side-Lying Hip Abduction" ],
       "instructions": { "steps": [ ] },
@@ -6724,7 +6724,7 @@
     {
       "name": "Band Standing Hip Abduction",
       "id": "25CE9E2F-14BF-47B5-A79B-98A504CE9C9B",
-      "image": "band_standing_hip_abduction",
+      "image": "Resistance-Band-Standing-Balance-Hip-Abduction-(ma_converted",
       "aliases": [ "Resistance Band Standing Balance Hip Abduction" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Loop Bands" ],
@@ -6747,7 +6747,7 @@
     {
       "name": "Band Seated Hip Abduction",
       "id": "008597EE-D9D3-4E59-B59C-366525D370C2",
-      "image": "band_seated_hip_abduction",
+      "image": "Resistance-Band-Seated-Hip-Abduction_Hips__converted",
       "aliases": [ "Resistance Band Seated Hip Abduction" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Loop Bands", "Flat Bench" ],
@@ -6765,7 +6765,7 @@
     {
       "name": "Cable Hip Abduction",
       "id": "CB484298-9F7D-4C5C-991C-17F71D7D2F53",
-      "image": "cable_hip_abduction",
+      "image": "Cable-hip-abduction-(version-2)-(male)_Hips__converted",
       "aliases": [ "Standing Cable Hip Abduction" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Ankle Strap Attachments" ],
@@ -6788,7 +6788,7 @@
     {
       "name": "Lever Side Hip Abduction",
       "id": "4550E764-7CAC-441E-8B4C-3CBB74333F7A",
-      "image": "lever_side_hip_abduction",
+      "image": "Side-Hip-Abduction_Hips__converted",
       "aliases": [ "Machine Side Hip Abduction" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Multi-Hip Machine" ],
@@ -6807,7 +6807,7 @@
     {
       "name": "Side Bridge Hip Abduction",
       "id": "E105AA93-2D04-4C66-ADC3-F4C3EDCD5253",
-      "image": "side_bridge_hip_abduction",
+      "image": "Side-Bridge-Hip-Abduction_Hips__converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
       "muscles": [
@@ -6831,7 +6831,7 @@
     {
       "name": "Side Lying Hip Adduction",
       "id": "4F8FA4E5-6A9C-41E2-B5F3-0CF6A0E5B8C0",
-      "image": "floor_hip_adduction",
+      "image": "Side-Hip-Abduction_Hips__converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
       "muscles": [
@@ -6849,7 +6849,7 @@
     {
       "name": "Band Hip Adduction",
       "id": "E1336FD4-055E-4A2C-A013-3E8584EA3EAF",
-      "image": "band_hip_adduction",
+      "image": "Band-hip-adduction-(male)_Hips_converted",
       "aliases": [ "Resistance Band Hip Adduction" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Loop Bands" ],
@@ -6868,7 +6868,7 @@
     {
       "name": "Side Plank Hip Adduction",
       "id": "C979DBD5-6ED8-4524-8720-B3196D4A67F7",
-      "image": "side_plank_hip_adduction",
+      "image": "Side-Plank-Hip-Adduction_Hips_converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Flat Bench" ],
       "muscles": [
@@ -6908,7 +6908,7 @@
     {
       "name": "Standing Hip Adduction",
       "id": "3FB97467-4592-4AD2-A85C-C8F081C75904",
-      "image": "standing_hip_adduction",
+      "image": "Hip---Adduction-FIX__converted",
       "aliases": [ "Hip Adduction", "Bodyweight Hip Adduction" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -6927,7 +6927,7 @@
     {
       "name": "Cable Hip Adduction",
       "id": "845F6511-4906-4461-8C6B-242BCA821764",
-      "image": "cable_hip_adduction",
+      "image": "Cable-Hip-Adduction_Thighs_converted",
       "aliases": [ "Standing Cable Hip Adduction" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Ankle Strap Attachments" ],
@@ -6946,7 +6946,7 @@
     {
       "name": "Side Lying Leg Raise",
       "id": "5A7C1E2D-3B4F-6A8C-9E0D-1F2B3C4D5E6F",
-      "image": "side_leg_raise",
+      "image": "Lying-Leg-Raise_Waist-FIX__converted",
       "csvKey": "side-leg-raise",
       "aliases": [ "Side-Lying Hip Abduction", "Floor Hip Abduction" ],
       "instructions": { "steps": [ ] },
@@ -6970,7 +6970,7 @@
     {
       "name": "Kneeling Hip Extension",
       "id": "2E7B1C53-4F8A-4B93-9C1D-6F5A2D3C4B1E",
-      "image": "floor_hip_extension",
+      "image": "Straight-Leg-Kickback-(kneeling)-(male)_Hips__converted",
       "csvKey": "floor-hip-extension",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -6996,7 +6996,7 @@
     {
       "name": "Hip Extension",
       "id": "7CB5F6E1-2A34-4D8C-9F07-3B1E6A4D2C58",
-      "image": "hip_extension",
+      "image": "Hip---Extension_converted",
       "csvKey": "hip-extension",
       "aliases": [ "Quadruped Hip Extension", "Donkey Kick" ],
       "instructions": { "steps": [ ] },
@@ -7056,7 +7056,7 @@
     {
       "name": "Machine Hip Abduction",
       "id": "154EF045-D15E-46C4-A016-356EC23F38E1",
-      "image": "hip_abduction_machine",
+      "image": "Lever-Seated-Hip-Abduction_Hips-FIX__converted",
       "csvKey": "hip-abduction",
       "aliases": [ "Outer Thigh Machine" ],
       "instructions": { "steps": [ ] },
@@ -7075,7 +7075,7 @@
     {
       "name": "Machine Hip Adduction",
       "id": "80B653F4-30C8-4F69-9BDA-D7904D699BE1",
-      "image": "hip_adduction_machine",
+      "image": "Lever-Seated-Hip-Adduction_Thighs_converted",
       "csvKey": "hip-adduction",
       "aliases": [ "Adductor Machine" ],
       "instructions": { "steps": [ ] },
@@ -7094,7 +7094,7 @@
     {
       "name": "Lying Leg Curl",
       "id": "0766D1A6-97C9-442D-8BD7-DC5AF95D909F",
-      "image": "lying_leg_curl",
+      "image": "Lever-Lying-Leg-Curl_Thighs-FIX__converted",
       "csvKey": "lying-leg-curl",
       "aliases": [ "Prone Leg Curl" ],
       "instructions": { "steps": [ ] },
@@ -7117,7 +7117,7 @@
     {
       "name": "Seated Leg Curl",
       "id": "06820192-E7C9-4263-915B-B2CB18657EEB",
-      "image": "seated_leg_curl",
+      "image": "Lever-Seated-Leg-Curl_Thighs-FIX__converted",
       "csvKey": "seated-leg-curl",
       "aliases": [ "Hamstring Curl" ],
       "instructions": { "steps": [ ] },
@@ -7140,7 +7140,7 @@
     {
       "name": "Slider Leg Curl",
       "id": "314C06A3-B4F8-49C8-8B7B-0929BA78F113",
-      "image": "slider_leg_curl",
+      "image": "Sliding-Leg-Curl-on-Floor-with-Towel_Hips_converted",
       "aliases": [ "Glider Leg Curl", "Hamstring Slider Curl" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -7186,7 +7186,7 @@
     {
       "name": "Stability-Ball Leg Curl",
       "id": "4AC4F646-7FE7-4DB7-A6F1-B31E8013C64F",
-      "image": "swiss_ball_leg_curl",
+      "image": "Exercise-Ball-Leg-Curl_Thighs__converted",
       "aliases": [ "Swiss-Ball Ham Curl" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Exercise Ball" ],
@@ -7208,7 +7208,7 @@
     {
       "name": "Cable Leg Extension",
       "id": "5F303B21-4CCF-477C-B81E-FC908383FEAA",
-      "image": "cable_leg_extension",
+      "image": "Cable-Seated-Leg-Extension_Thighs__converted",
       "csvKey": "cable-leg-extension",
       "aliases": [ "Cable Quad Extension" ],
       "instructions": { "steps": [ ] },
@@ -7232,7 +7232,7 @@
     {
       "name": "Leg Extension",
       "id": "926FAEA5-6CEA-46DC-8C5D-ACDA2288EAA5",
-      "image": "leg_extension",
+      "image": "Lever-Leg-Extension_Thighs_converted",
       "csvKey": "leg-extension",
       "aliases": [ "Quad Extension" ],
       "instructions": { "steps": [ ] },
@@ -7254,7 +7254,7 @@
     {
       "name": "Compact Leg Press",
       "id": "D71F2B30-71F1-4DE0-8C98-0A593CFD9F16",
-      "image": "placeholder_ex_img",
+      "image": "Lever-Seated-Twist_Waist-FIX__converted",
       "aliases": [ "Seated Leg Press (Compact)" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Compact Leg Press" ],
@@ -7287,7 +7287,7 @@
     {
       "name": "Horizontal Leg Press",
       "id": "6A7D1C82-5DAD-436D-B15B-E928F8AB22D4",
-      "image": "horizontal_leg_press",
+      "image": "Lever-Horizontal-Leg-Press_Thighs__converted",
       "csvKey": "horizontal-leg-press",
       "aliases": [ "Seated Leg Press" ],
       "instructions": { "steps": [ ] },
@@ -7318,7 +7318,7 @@
     {
       "name": "Leg Press",
       "id": "B177B3F0-9F9D-4488-B70D-838660DBB72F",
-      "image": "leg_press1",
+      "image": "Sled-45-degrees-Leg-Press_Hips-FIX__converted",
       "csvKey": "sled-leg-press",
       "aliases": [ "Sled Press" ],
       "instructions": { "steps": [ ] },
@@ -7341,7 +7341,7 @@
     {
       "name": "Single-Leg Press",
       "id": "D4F7A6C2-8B1E-4A3D-9F0B-7C6E5D4A3B2F",
-      "image": "single_leg_press",
+      "image": "Sled-45-degrees-One-Leg-Press_Hips-FIX__converted",
       "csvKey": "single-leg-press",
       "aliases": [ "Unilateral Leg Press" ],
       "instructions": { "steps": [ ] },
@@ -7404,7 +7404,7 @@
     {
       "name": "Flutter Kicks",
       "id": "9821F9A3-5271-4793-94C4-D90609D4FD09",
-      "image": "flutter_kicks",
+      "image": "Flutter-Kicks-(version-3)_Hips_converted",
       "csvKey": "flutter-kicks",
       "aliases": [ "Kicking Motion", "Leg Flutter" ],
       "instructions": { "steps": [ ] },
@@ -7424,7 +7424,7 @@
     {
       "name": "Hanging Knee Raise",
       "id": "7B763D44-132B-40B8-8B65-0527809F2447",
-      "image": "hanging_knee_raise",
+      "image": "Hanging-Leg-Hip-Raise_Waist_converted",
       "csvKey": "hanging-knee-raise",
       "aliases": [ "Knee Tuck", "Hanging Knee Lift" ],
       "instructions": { "steps": [ ] },
@@ -7444,7 +7444,7 @@
     {
       "name": "Hanging Leg Raise",
       "id": "5581EBAB-22BF-4968-9689-C345044ABF34",
-      "image": "hanging_leg_raise",
+      "image": "Cable-Hanging-Leg-Raise_Waist__converted",
       "csvKey": "hanging-leg-raise",
       "aliases": [ "Leg Lift", "Bar Hanging Raise" ],
       "instructions": { "steps": [ ] },
@@ -7494,7 +7494,7 @@
     {
       "name": "Lying Leg Raise",
       "id": "BF957A9B-2222-47CF-BC3A-0BBB4242D17C",
-      "image": "lying_leg_raise",
+      "image": "Lying-Leg-Raise_Waist-FIX__converted",
       "csvKey": "lying-leg-raise",
       "aliases": [ "Supine Leg Lift", "Leg Raises" ],
       "instructions": { "steps": [ ] },
@@ -7534,7 +7534,7 @@
     {
       "name": "Toes to Bar",
       "id": "7C2EF15B-AAB4-4E2E-B290-31BFF38EE4BA",
-      "image": "toes_to_bar",
+      "image": "Hanging-Toes-to-Bar_Waist__converted",
       "csvKey": "toes-to-bar",
       "aliases": [ "Hanging Toe Touch", "Bar Toe Raise" ],
       "instructions": { "steps": [ ] },
@@ -7554,7 +7554,7 @@
     {
       "name": "Barbell Lunge",
       "id": "653B30B4-EEB2-49E9-AE9B-BD7946F49E3B",
-      "image": "barbell_lunge",
+      "image": "Barbell-Lunge_Thighs-FIX__converted",
       "csvKey": "barbell-lunge",
       "aliases": [ "Weighted Lunge" ],
       "instructions": { "steps": [ ] },
@@ -7581,7 +7581,7 @@
     {
       "name": "Barbell Reverse Lunge",
       "id": "76938A87-24BE-4F5B-8AC9-F8290C650CB8",
-      "image": "barbell_reverse_lunge",
+      "image": "Barbell-Rear-Lunge_Thighs__converted",
       "csvKey": "barbell-reverse-lunge",
       "aliases": [ "Barbell Step-Back Lunge", "Loaded Reverse Lunge" ],
       "instructions": { "steps": [ ] },
@@ -7613,7 +7613,7 @@
     {
       "name": "Barbell Walking Lunge",
       "id": "184B9BD6-69BB-43C9-86F1-1F332F3A07D6",
-      "image": "barbell_walking_lunge",
+      "image": "Barbell-Walking-Lunge_Thighs__converted",
       "csvKey": "walking-lunge",
       "aliases": [ "Walking Weighted Lunge" ],
       "instructions": { "steps": [ ] },
@@ -7640,7 +7640,7 @@
     {
       "name": "Barbell Curtsy Lunge",
       "id": "44C4801D-4E1C-4843-B8AD-9FE3D13CCAA5",
-      "image": "curtsy_lunge",
+      "image": "Barbell-Curtsey-Lunge_Thighs__converted",
       "aliases": [ "Cross-Behind Lunge" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -7668,7 +7668,7 @@
     {
       "name": "Dumbbell Lunge",
       "id": "C81FF9CE-B0B2-4433-8CB5-F21EF8096D33",
-      "image": "dumbbell_lunge",
+      "image": "Dumbbell-Lunge_Hips-FIX2__converted",
       "csvKey": "dumbbell-lunge",
       "aliases": [ "Weighted Dumbbell Lunge" ],
       "instructions": { "steps": [ ] },
@@ -7696,7 +7696,7 @@
     {
       "name": "Lunge",
       "id": "35E5F3F2-9F1C-41E2-88FA-4AA977725878",
-      "image": "body_weight_lunge",
+      "image": "Forward-Lunge-(male)_Thighs_converted",
       "csvKey": "lunge",
       "aliases": [ "Forward Lunge" ],
       "instructions": { "steps": [ ] },
@@ -7723,7 +7723,7 @@
     {
       "name": "Reverse Lunge",
       "id": "EEDDF2CD-0667-4D95-964C-FBC8775B92DD",
-      "image": "reverse_lunge",
+      "image": "Bodyweight-Rear-Lunge_Thighs_converted",
       "csvKey": "reverse-lunge",
       "aliases": [ "Step-Back Lunge" ],
       "instructions": { "steps": [ ] },
@@ -7750,7 +7750,7 @@
     {
       "name": "Lateral Lunge",
       "id": "C5BBC3F3-1BE6-4296-8411-061199B23A5F",
-      "image": "side_lunges_bodyweight",
+      "image": "Side-Lunge_Thighs_converted",
       "csvKey": "side-lunge",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -7777,7 +7777,7 @@
     {
       "name": "Barbell Lateral Lunge",
       "id": "9A4C2F7E-6B1D-4F8A-9E63-1D8B5C2A4F90",
-      "image": "side_lunges",
+      "image": "Barbell-Lateral-Lunge_Hips_converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
       "muscles": [
@@ -7803,7 +7803,7 @@
     {
       "name": "Close-Grip Lat Pulldown",
       "id": "C1D2E3F4-5A6B-4C7D-8E9F-0A1B2C3D4E5F",
-      "image": "close_grip_lat_pulldown",
+      "image": "Cable-Close-Grip-Front-Lat-Pulldown_Back_converted",
       "csvKey": "close-grip-lat-pulldown",
       "aliases": [ "Narrow-Grip Pulldown" ],
       "instructions": { "steps": [ ] },
@@ -7833,7 +7833,7 @@
     {
       "name": "Lat Pulldown",
       "id": "7A557846-AEF3-4546-B464-6BFEF834431E",
-      "image": "lat_pulldown",
+      "image": "Cable-Bar-Lateral-Pulldown_Back_converted",
       "csvKey": "lat-pulldown",
       "aliases": [ "Wide-Grip Pulldown" ],
       "instructions": { "steps": [ ] },
@@ -7863,7 +7863,7 @@
     {
       "name": "Single-Arm Lat Pulldown",
       "id": "5D3A2C1B-9E8F-4A7B-C6D5-E4F3A2B1C0D9",
-      "image": "one_arm_lat_pulldown",
+      "image": "Cable-one-arm-lat-pulldown_back_converted",
       "csvKey": "one-arm-pulldown",
       "aliases": [ "Unilateral Lat Pulldown" ],
       "instructions": { "steps": [ ] },
@@ -7894,7 +7894,7 @@
     {
       "name": "Reverse-Grip Lat Pulldown",
       "id": "1A230A1C-0DE7-4B0D-BB09-6B95942AA006",
-      "image": "reverse_grip_lat_pulldown",
+      "image": "Cable-Reverse-Grip-Pulldown_Back__converted",
       "csvKey": "reverse-grip-lat-pulldown",
       "aliases": [ "Underhand Pulldown" ],
       "instructions": { "steps": [ ] },
@@ -7921,7 +7921,7 @@
     {
       "name": "Straight Arm Lat Pulldown",
       "id": "A242FF2A-91E2-416F-A249-264AF87B1EF2",
-      "image": "straight_arm_lat_pulldown",
+      "image": "Cable-Straight-Arm-Pulldown_Back-FIX__converted",
       "csvKey": "straight-arm-pulldown",
       "aliases": [ "Lat Isolator Pulldown" ],
       "instructions": { "steps": [ ] },
@@ -7943,7 +7943,7 @@
     {
       "name": "Barbell Pullover",
       "id": "F8C3A92E-2154-42AC-AFF7-6F3FAFCDB9D9",
-      "image": "barbell_pullover",
+      "image": "Barbell-Pullover_Back__converted",
       "csvKey": "barbell-pullover",
       "aliases": [ "Barbell Chest Pullover", "Barbell Lats Pullover" ],
       "instructions": { "steps": [ ] },
@@ -7969,7 +7969,7 @@
     {
       "name": "Bent-Arm Barbell Pullover",
       "id": "A1F2B3C4-D5E6-47F8-9A0B-C1D2E3F4A5B6",
-      "image": "bent_arm_barbell_pullover",
+      "image": "Barbell-Bent-Arm-Pullover-(male)_Back__converted",
       "csvKey": "bent-arm-barbell-pullover",
       "aliases": [ "Bent-Arm Pullover" ],
       "instructions": { "steps": [ ] },
@@ -7995,7 +7995,7 @@
     {
       "name": "Dumbbell Pullover",
       "id": "4E747DE9-C24C-46C8-B69F-DA27664E86E8",
-      "image": "dumbbell_pullover",
+      "image": "Dumbbell-Pullover-(VERSION-2)_Back__converted",
       "csvKey": "dumbbell-pullover",
       "aliases": [ "Dumbbell Chest Pullover", "Dumbbell Lats Pullover" ],
       "instructions": { "steps": [ ] },
@@ -8021,7 +8021,7 @@
     {
       "name": "Machine Pullover",
       "id": "C1A0B900-77A5-44E0-998E-A5C66A25F58B",
-      "image": "pullover_machine",
+      "image": "Lever-Pullover-(plate-loaded)_Back__converted",
       "aliases": [ "Nautilus Pullover" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Pullover Machine" ],
@@ -8044,7 +8044,7 @@
     {
       "name": "Archer Push-Up",
       "id": "8672F1E4-9F7F-449A-B245-687C67281B7F",
-      "image": "archer_push_up",
+      "image": "Archer-Push-up_Chest_converted",
       "csvKey": "archer-push-ups",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -8072,7 +8072,7 @@
     {
       "name": "Close-Grip Push-Up",
       "id": "D4311DC8-1855-44EA-BEDC-69FE8068484F",
-      "image": "close_grip_push_up",
+      "image": "Close-Grip-Push-up_Upper-Arms-FIX__converted",
       "csvKey": "close-grip-push-up",
       "aliases": [ "Narrow Push-Up" ],
       "instructions": { "steps": [ ] },
@@ -8096,7 +8096,7 @@
     {
       "name": "Decline Push-Up",
       "id": "6BF22765-CCFA-405F-A1CE-5F4F86FF6A4F",
-      "image": "decline_push_up",
+      "image": "Decline-Push-Up_Chest-FIX__converted",
       "csvKey": "decline-push-up",
       "aliases": [ "Feet Elevated Push-Up" ],
       "instructions": { "steps": [ ] },
@@ -8124,7 +8124,7 @@
     {
       "name": "Diamond Push-Up",
       "id": "BA99D6F4-0DAF-4397-80F8-B06C9AB0F17F",
-      "image": "diamond_push_up",
+      "image": "Diamond-Push-up_Upper-Arms_converted",
       "csvKey": "diamond-push-ups",
       "aliases": [ "Close-Hand Push-Up", "Triceps Push-Up" ],
       "instructions": { "steps": [ ] },
@@ -8152,7 +8152,7 @@
     {
       "name": "Handstand Push-Up",
       "id": "A4DB516D-ECA8-4518-8487-CE48BB00185E",
-      "image": "handstand_push_up",
+      "image": "Handstand-Push-Up_Shoulders__converted",
       "csvKey": "handstand-push-ups",
       "aliases": [ "Inverted Push-Up" ],
       "instructions": { "steps": [ ] },
@@ -8178,7 +8178,7 @@
     {
       "name": "Incline Push-Up",
       "id": "50994FD9-9FBC-4CB9-838D-0233F5C14B3A",
-      "image": "incline_push_up",
+      "image": "Incline-Push-up_Chest_converted",
       "csvKey": "incline-push-up",
       "aliases": [ "Elevated Push-Up", "Incline Chest Push-Up" ],
       "instructions": { "steps": [ ] },
@@ -8206,7 +8206,7 @@
     {
       "name": "Kneeling Close-Grip Push-Up",
       "id": "E29B0B81-7CF8-4231-AA55-9B5E273B222F",
-      "image": "close_grip_knee_push_up",
+      "image": "Close-grip-Push-up-(on-knees)_Upper-Arms__converted",
       "aliases": [ "Modified Narrow Push-Up" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -8233,7 +8233,7 @@
     {
       "name": "Kneeling Push-Up",
       "id": "8F460F11-8B2F-4A82-8ACF-8986299D03D6",
-      "image": "kneeling_push_up",
+      "image": "Kneeling-Push-up-(male)_Chest_converted",
       "aliases": [ "Modified Push-Up" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -8263,7 +8263,7 @@
     {
       "name": "Pike Push-Up",
       "id": "3AE6B370-A3E7-4686-927B-AAA8D8DE54F7",
-      "image": "pike_push_up",
+      "image": "Pike-Push-up_Chest_converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
       "muscles": [
@@ -8286,7 +8286,7 @@
     {
       "name": "Push-Up",
       "id": "D314DC2A-60C4-4C25-A2CB-F46023462D2E",
-      "image": "push_up",
+      "image": "Push-up-m_Chest_converted",
       "csvKey": "push-ups",
       "aliases": [ "Standard Push-Up", "Chest Push-Up" ],
       "instructions": { "steps": [ ] },
@@ -8340,7 +8340,7 @@
     {
       "name": "Wide-Grip Push-Up",
       "id": "35FFE1C1-5BCA-499A-A6B7-3068EDB80A60",
-      "image": "wide_grip_push_up",
+      "image": "Wide-Hand-Push-up_Chest_converted",
       "aliases": [ "Wide Push-Up" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -8366,7 +8366,7 @@
     {
       "name": "Barbell Rear Delt Row",
       "id": "D18DABC1-74C8-4F51-860C-C62080DD76D9",
-      "image": "barbell_rear_delt_row",
+      "image": "Barbell-Rear-Delt-Row_Shoulders__converted",
       "aliases": [ "BB Rear-Delt Row" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
@@ -8389,7 +8389,7 @@
     {
       "name": "Barbell Bent-Over Row",
       "id": "9408B22E-62C7-406D-95F6-5C9BB3786C42",
-      "image": "barbell_row",
+      "image": "Barbell-Bent-Over-Row_Back__converted",
       "csvKey": "bent-over-row",
       "aliases": [ "Bent-Over Row" ],
       "instructions": { "steps": [ ] },
@@ -8416,7 +8416,7 @@
     {
       "name": "Barbell Upright Row",
       "id": "2C313E2B-824C-4177-BA2E-F105B75650EC",
-      "image": "barbell_upright_row",
+      "image": "Barbell-Upright-Row_Shoulders_converted",
       "csvKey": "upright-row",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
@@ -8440,7 +8440,7 @@
     {
       "name": "Bench Pull",
       "id": "7E2A1B4C-9D3F-4A58-AB12-EF3C6D9B0A47",
-      "image": "bench_pull",
+      "image": "Barbell-Lying-Row-on-Rack_Back__converted",
       "csvKey": "bench-pull",
       "aliases": [ "Prone Barbell Row" ],
       "instructions": { "steps": [ ] },
@@ -8465,7 +8465,7 @@
     {
       "name": "Cable Upright Row",
       "id": "F2E1D3C4-B5A6-47F8-9D0E-1A2B3C4D5E6F",
-      "image": "cable_upright_row",
+      "image": "Cable-Upright-Row_Shoulders-FIX2__converted",
       "csvKey": "cable-upright-row",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Straight Bar Attachment" ],
@@ -8489,7 +8489,7 @@
     {
       "name": "Chest-Supported Dumbbell Row",
       "id": "559984F2-BD51-4A22-9725-EDAA9AB6B03A",
-      "image": "chest_supported_dumbbell_row",
+      "image": "Dumbbell-Incline-Row_Back-FIX2__converted",
       "csvKey": "chest-supported-dumbbell-row",
       "aliases": [ "Incline Bench Dumbbell Row" ],
       "instructions": { "steps": [ ] },
@@ -8516,7 +8516,7 @@
     {
       "name": "Chest-Supported T-Bar Row",
       "id": "B68C68AA-D33D-4D09-BE31-4C1D08F0B0ED",
-      "image": "chest_supported_t_bar_row",
+      "image": "Lever-Lying-T-bar-Row_Back_converted",
       "aliases": [ "Supported T-Bar Row", "Chest Pad T-Bar Row" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Incline T-Bar Row" ],
@@ -8591,7 +8591,7 @@
     {
       "name": "Dumbbell Bent-Over Row",
       "id": "04D830B9-5908-45CE-B3A0-E033EDC71520",
-      "image": "dumbbell_row",
+      "image": "Dumbbell-Bent-Over-Row_Back-FIX__converted",
       "csvKey": "dumbbell-row",
       "aliases": [ "Single-Arm Row" ],
       "instructions": { "steps": [ ] },
@@ -8619,7 +8619,7 @@
     {
       "name": "Dumbbell Upright Row",
       "id": "0FA6517A-590C-4DCA-91DB-2E1BA7989CEC",
-      "image": "dumbbell_upright_row",
+      "image": "Dumbbell-Upright-Row_Shoulders-FIX_converted",
       "csvKey": "dumbbell-upright-row",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
@@ -8644,7 +8644,7 @@
     {
       "name": "Endurance Row",
       "id": "6F9D2318-7C8B-4C0E-9E4B-0B7F2B5A1C33",
-      "image": "row_machine",
+      "image": "Rowing-(with-rowing-machine)_Cardio_converted",
       "aliases": [ "Rowing Erg", "Ergometer Row" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Rowing Machine" ],
@@ -8678,7 +8678,7 @@
     {
       "name": "Inverted Row",
       "id": "667F0B93-BC75-418C-B9C8-FE3D3A91950B",
-      "image": "inverted_row",
+      "image": "Inverted-Row_Back-FIX__converted",
       "csvKey": "inverted-row",
       "aliases": [ "Bodyweight Row" ],
       "instructions": { "steps": [ ] },
@@ -8705,7 +8705,7 @@
     {
       "name": "Landmine Row",
       "id": "12563983-538D-4A76-A4DE-A948A59184AE",
-      "image": "landmine_row",
+      "image": "Lever-Bent-over-Row-with-V-bar-(plate-loaded)_Back_converted",
       "aliases": [ "Parallel-Grip Landmine Row" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Landmine", "Barbell" ],
@@ -8758,7 +8758,7 @@
     {
       "name": "Pendlay Row",
       "id": "3DCCB5FE-ECAA-41CE-B7FE-70D6518641EF",
-      "image": "pendlay_row",
+      "image": "Barbell-Pendlay-Row_Back__converted",
       "csvKey": "pendlay-row",
       "aliases": [ "Strict Row" ],
       "instructions": { "steps": [ ] },
@@ -8784,7 +8784,7 @@
     {
       "name": "Plate-Loaded High Row",
       "id": "745E7252-FC4A-4628-BA4F-9092881BCEEA",
-      "image": "iso_lateral_high_row",
+      "image": "Lever-High-Row-(plate-loaded)_Back_converted",
       "aliases": [ "Hammer Strength High Row" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "High Row" ],
@@ -8810,7 +8810,7 @@
     {
       "name": "Plate-Loaded Low Row",
       "id": "9FE29476-3382-4329-A5FF-03793154C9BE",
-      "image": "iso_lateral_low_row",
+      "image": "Lever-Low-Row-(plate-loaded)_Back__converted",
       "aliases": [ "Hammer Strength Low Row" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Low Row" ],
@@ -8836,7 +8836,7 @@
     {
       "name": "Renegade Row",
       "id": "0B6E7AD3-4728-4A18-B4C7-A2E8A7B55A48",
-      "image": "renegade_row",
+      "image": "Dumbbell-Renegade-Row_Back-FIX__converted",
       "csvKey": "renegade-row",
       "aliases": [ "Plank Row" ],
       "instructions": { "steps": [ ] },
@@ -8867,7 +8867,7 @@
     {
       "name": "Seal Row",
       "id": "8D962CE3-8C02-45C7-8433-15F4E45D81C6",
-      "image": "seal_row",
+      "image": "Barbell-Lying-Seal-Row-on-Rack_Back__converted",
       "aliases": [ "Prone Bench Row" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell", "Flat Bench" ],
@@ -8893,7 +8893,7 @@
     {
       "name": "Seated Cable Row",
       "id": "9AA6BF10-4CE0-404C-94CB-7BEA3342DE7F",
-      "image": "seated_cable_row",
+      "image": "Cable-Seated-Row_Back-FIX__converted",
       "csvKey": "seated-cable-row",
       "aliases": [ "Cable Row" ],
       "instructions": { "steps": [ ] },
@@ -8950,7 +8950,7 @@
     {
       "name": "Seated Machine Row",
       "id": "4B086E98-8F84-4625-9DEF-A67D6EA6DE29",
-      "image": "seated_machine_row",
+      "image": "Lever-Seated-Row_Back_converted",
       "csvKey": "machine-row",
       "aliases": [ "Row Machine" ],
       "instructions": { "steps": [ ] },
@@ -8980,7 +8980,7 @@
     {
       "name": "T-Bar Row",
       "id": "9436C119-FE8E-48B3-81DD-8EE12B0AB582",
-      "image": "t_bar_row",
+      "image": "Lever-T-bar-Row-(plate-loaded)_Back_converted",
       "csvKey": "t-bar-row",
       "aliases": [ "Landmine Row" ],
       "instructions": { "steps": [ ] },
@@ -9007,7 +9007,7 @@
     {
       "name": "Towel Row",
       "id": "07F5F61A-1D17-4BB1-9E9D-CB047A994F5A",
-      "image": "placeholder_ex_img",
+      "image": "Lever-Seated-Twist_Waist-FIX__converted",
       "aliases": [ "Towel Inverted Row" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Towel" ],
@@ -9059,7 +9059,7 @@
     {
       "name": "Medicine Ball Russian Twist",
       "id": "BB59EA3F-2D61-4E46-BE5F-4D9E2AC79EC9",
-      "image": "medicine_ball_russian_twist",
+      "image": "Russian-Twist-(with-medicine-ball)_Waist-FIX__converted",
       "aliases": [ "Weighted Russian Twist" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Medicine Ball" ],
@@ -9080,7 +9080,7 @@
     {
       "name": "Russian Twist",
       "id": "28E97836-E522-4697-AD60-F8470AA1CDBA",
-      "image": "oblique_crunch",
+      "image": "Russian-Twist_waist_converted",
       "csvKey": "russian-twist",
       "aliases": [ "Oblique Twist", "Side-To-Side Twist" ],
       "instructions": { "steps": [ ] },
@@ -9100,7 +9100,7 @@
     {
       "name": "Dumbbell Side Bend",
       "id": "B3C4D5E6-F7A8-49B0-8C1D-2E3F4A5B6C7D",
-      "image": "dumbbell_side_bend",
+      "image": "Dumbbell-Side-Bend_Waist-FIX__converted",
       "csvKey": "dumbbell-side-bend",
       "aliases": [ "DB Side Bend" ],
       "instructions": { "steps": [ ] },
@@ -9122,7 +9122,7 @@
     {
       "name": "Roman Chair Side Bend",
       "id": "9D2E4F6A-7B8C-4D0E-9F1A-2B3C4D5E6F7A",
-      "image": "roman_chair_side_bend",
+      "image": "45-degree-Side-Bend_Waist-FIX__converted",
       "csvKey": "roman-chair-side-bend",
       "aliases": [ "Side Bend (Roman Chair)" ],
       "instructions": { "steps": [ ] },
@@ -9149,7 +9149,7 @@
     {
       "name": "Back Squat",
       "id": "F4E51C55-059D-4B60-902B-B9D31C894813",
-      "image": "squat",
+      "image": "Barbell-High-Bar-Squat_Thighs__converted",
       "csvKey": "squat",
       "aliases": [ "Barbell Squat", "High-Bar Squat" ],
       "instructions": { "steps": [ ] },
@@ -9180,7 +9180,7 @@
     {
       "name": "Barbell Bulgarian Split Squat",
       "id": "919FBBE2-C006-4B6A-91E8-2F306EB9D52B",
-      "image": "bulgarian_split_squat",
+      "image": "Barbell-Single-Leg-Split-Squat_Hips__converted",
       "csvKey": "bulgarian-split-squat",
       "aliases": [ "Rear Foot Elevated Squat" ],
       "instructions": { "steps": [ ] },
@@ -9213,7 +9213,7 @@
     {
       "name": "Dumbbell Bulgarian Split Squat",
       "id": "C0DBF10F-A778-4C62-9440-6CCEE7AAC272",
-      "image": "dumbbell_bulgarian_split_squat",
+      "image": "Dumbbell-Bulgarian-Split-Squat-with-Support-(male)_converted",
       "csvKey": "dumbbell-bulgarian-split-squat",
       "aliases": [ "Dumbbell Rear Foot Elevated Squat" ],
       "instructions": { "steps": [ ] },
@@ -9247,7 +9247,7 @@
     {
       "name": "Goblet Bulgarian Split Squat",
       "id": "0387A7F2-DD70-4EF8-819B-810B58ED06FC",
-      "image": "goblet_bulgarian_split_squat",
+      "image": "Dumbbell-Goblet-Bulgarian-Split-Squat_Thighs__converted",
       "aliases": [ "Goblet Rear-Foot Elevated Split Squat" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells", "Flat Bench" ],
@@ -9279,7 +9279,7 @@
     {
       "name": "Barbell Hack Squat",
       "id": "3A05D7E3-95D0-4713-9649-0838D45159AE",
-      "image": "barbell_hack_squat",
+      "image": "Barbell-Hack-Squat_Hips-FIX__converted",
       "csvKey": "barbell-hack-squat",
       "aliases": [ "Behind the Back Squat" ],
       "instructions": { "steps": [ ] },
@@ -9307,7 +9307,7 @@
     {
       "name": "Barbell Split Squat",
       "id": "D2A3B4C5-6D7E-8F90-1A2B-3C4D5E6F7A8B",
-      "image": "barbell_split_squat",
+      "image": "Barbell-Split-Squat_Thighs__converted",
       "csvKey": "split-squat",
       "aliases": [ "Static Lunge (Barbell)" ],
       "instructions": { "steps": [ ] },
@@ -9339,7 +9339,7 @@
     {
       "name": "Belt Squat",
       "id": "419EFE6D-FC82-48F0-8ACE-A25DACAE3FFC",
-      "image": "belt_squat",
+      "image": "Lever-Belt-Squat_Thighs__converted",
       "csvKey": "belt-squat",
       "aliases": [ "Hip Belt Squat" ],
       "instructions": { "steps": [ ] },
@@ -9370,7 +9370,7 @@
     {
       "name": "Bodyweight Squat",
       "id": "7A4E8270-424C-432F-9459-C9E2065773F4",
-      "image": "bodyweight_squat",
+      "image": "Bodyweight-Squat-(male)_Thighs-FIX__converted",
       "csvKey": "bodyweight-squat",
       "aliases": [ "Air Squat" ],
       "instructions": { "steps": [ ] },
@@ -9401,7 +9401,7 @@
     {
       "name": "Box Squat",
       "id": "201CB44E-D499-4AD5-B9E3-7DDCFBA847E7",
-      "image": "box_squat",
+      "image": "Barbell-Box-Squat_Hips__converted",
       "csvKey": "box-squat",
       "aliases": [ "Box Assisted Squat" ],
       "instructions": { "steps": [ ] },
@@ -9427,7 +9427,7 @@
     {
       "name": "Dumbbell Cossack Squat",
       "id": "C11D6EDB-3654-476D-8D19-E491186A40FF",
-      "image": "cossack_squat",
+      "image": "Dumbbell-Cossack-Squats-(VERSION-2)-(male)_Thighs__converted",
       "aliases": [ "Side Deep Squat" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
@@ -9479,7 +9479,7 @@
     {
       "name": "Dumbbell Front Squat",
       "id": "F1E2D3C4-B5A6-4C7D-8E9F-0A1B2C3D4E5F",
-      "image": "dumbbell_front_squat",
+      "image": "Dumbbell-Front-Squat_Thighs-FIX__converted",
       "csvKey": "dumbbell-front-squat",
       "aliases": [ "DB Front Squat" ],
       "instructions": { "steps": [ ] },
@@ -9511,7 +9511,7 @@
     {
       "name": "Dumbbell Split Squat",
       "id": "0D8F2A1C-5E7B-4E6B-9F30-7A9D2C1B3E45",
-      "image": "dumbbell_split_squat",
+      "image": "Dumbbell-Split-Squat_Thighs__converted",
       "csvKey": "dumbbell-split-squat",
       "aliases": [ "DB Split Squat", "Static Lunge (DB)" ],
       "instructions": { "steps": [ ] },
@@ -9544,7 +9544,7 @@
     {
       "name": "Dumbbell Squat",
       "id": "D10E40C3-5CFB-47F1-9900-F4A16208E009",
-      "image": "dumbbell_squat",
+      "image": "Dumbbell-Squat_Thighs_converted",
       "csvKey": "dumbbell-squat",
       "aliases": [ "Weighted Squat" ],
       "instructions": { "steps": [ ] },
@@ -9570,7 +9570,7 @@
     {
       "name": "Front Squat",
       "id": "628C8EDE-26F6-48C3-8747-E471560A7DD1",
-      "image": "front_squat",
+      "image": "Barbell-Clean-grip-Front-Squat_Thighs-FIX__converted",
       "csvKey": "front-squat",
       "aliases": [ "Clean Squat" ],
       "instructions": { "steps": [ ] },
@@ -9601,7 +9601,7 @@
     {
       "name": "Goblet Squat",
       "id": "A48F67D4-4FFA-4FDF-B673-AEC9CEC73A52",
-      "image": "goblet_squat",
+      "image": "Dumbbell-Goblet-Squat_Thighs-FIX__converted",
       "csvKey": "goblet-squat",
       "aliases": [ ],
       "instructions": { "steps": [ ] },
@@ -9662,7 +9662,7 @@
     {
       "name": "Jefferson Squat",
       "id": "61A3445F-4FCD-4AAE-A9B2-AF717D8DF43C",
-      "image": "jefferson_squat",
+      "image": "Barbell-Jefferson-Squat_Thighs-FIX__converted",
       "csvKey": "jefferson-squat",
       "aliases": [ "Straddle Squat" ],
       "instructions": { "steps": [ ] },
@@ -9693,7 +9693,7 @@
     {
       "name": "Landmine Front Squat",
       "id": "F40B24D6-2AF9-40A3-AE55-F191EFC24464",
-      "image": "landmine_squat",
+      "image": "Landmine-Front-Squat_Thighs__converted",
       "csvKey": "landmine-squat",
       "aliases": [ "Lever Squat" ],
       "instructions": { "steps": [ ] },
@@ -9724,7 +9724,7 @@
     {
       "name": "Machine Hack Squat",
       "id": "51A4AA5D-D85A-4875-9562-FB4DD3DA2B1F",
-      "image": "hack_squat_machine1",
+      "image": "Sled-Hack-Squat_Hips_converted",
       "csvKey": "hack-squat",
       "aliases": [ "Hack Squat" ],
       "instructions": { "steps": [ ] },
@@ -9755,7 +9755,7 @@
     {
       "name": "Pendulum Squat",
       "id": "DCD2A61E-A107-4D06-BF40-93DD601A011E",
-      "image": "pendulum_squat",
+      "image": "Lever-Pendulum-Squat-(plate-loaded)_Thighs__converted",
       "aliases": [ "Pendulum Machine Squat" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Pendelum Squat" ],
@@ -9788,7 +9788,7 @@
     {
       "name": "V-Squat",
       "id": "1BE60188-A873-4D7D-B0F4-192D2E47EEE6",
-      "image": "v_squat_machine",
+      "image": "Lever-Squat-(plate-loaded)_Thighs_converted",
       "aliases": [ "Hack V-Squat" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "V-Squat" ],
@@ -9883,7 +9883,7 @@
     {
       "name": "Pistol Squat",
       "id": "F6E12131-5E71-4954-89BE-D2D85E5609E9",
-      "image": "pistol_squat",
+      "image": "Single-Leg-Squat-(pistol)-male_Thighs_converted",
       "csvKey": "pistol-squat",
       "aliases": [ "Single-Leg Squat" ],
       "instructions": { "steps": [ ] },
@@ -9916,7 +9916,7 @@
     {
       "name": "Safety Bar Squat",
       "id": "413CCADC-5EFC-4854-9482-EB1B69ACEB80",
-      "image": "safety_bar_squat",
+      "image": "Safety-Bar-Front-Squat_Thighs__converted",
       "csvKey": "safety-bar-squat",
       "aliases": [ "SSB Squat" ],
       "instructions": { "steps": [ ] },
@@ -9947,7 +9947,7 @@
     {
       "name": "Single-Leg Squat",
       "id": "1A2B3C4D-5E6F-7A8B-9C0D-1E2F3A4B5C6D",
-      "image": "single_leg_squat",
+      "image": "Bodyweight-Single-Leg-Squat-(male)_Thighs__converted",
       "csvKey": "single-leg-squat",
       "aliases": [ "Pistol Squat" ],
       "instructions": { "steps": [ ] },
@@ -10003,7 +10003,7 @@
     {
       "name": "Sissy Squat",
       "id": "D6F58E46-7B38-4C07-B636-44513B46E23E",
-      "image": "sissy_squat",
+      "image": "Bodyweight-Standing-Sissy-Squat_Thighs__converted",
       "csvKey": "sissy-squat",
       "aliases": [ "Bodyweight Sissy Squat" ],
       "instructions": { "steps": [ ] },
@@ -10029,7 +10029,7 @@
     {
       "name": "Smith Machine Squat",
       "id": "19E889B1-F8FC-4B31-AE08-F080A58857A6",
-      "image": "smith_machine_squat",
+      "image": "Smith-Full-Squat_Thighs__converted",
       "csvKey": "smith-machine-squat",
       "aliases": [ "Guided Squat" ],
       "instructions": { "steps": [ ] },
@@ -10109,7 +10109,7 @@
     {
       "name": "Squat Thrust",
       "id": "7A1B2C3D-4E5F-6A7B-8C9D-0E1F2A3B4C5D",
-      "image": "squat_thrust",
+      "image": "Squat-Thrust_Waist_converted",
       "csvKey": "squat-thrust",
       "aliases": [ "Burpee (No Push/Jump)" ],
       "instructions": { "steps": [ ] },
@@ -10145,7 +10145,7 @@
     {
       "name": "Barbell Sumo Squat",
       "id": "9A1B2C3D-4E5F-6A7B-8C9D-0E1F2A3B4C5D",
-      "image": "sumo_squat",
+      "image": "Barbell-sumo-squat_Thighs_converted",
       "csvKey": "sumo-squat",
       "aliases": [ "Wide-Stance Squat" ],
       "instructions": { "steps": [ ] },
@@ -10200,7 +10200,7 @@
     {
       "name": "Zercher Squat",
       "id": "9FBA7CD4-1A04-4D5F-9F5E-4608F0EA592C",
-      "image": "zercher_squat",
+      "image": "Barbell-full-Zercher-Squat_Thighs_converted",
       "csvKey": "zercher-squat",
       "aliases": [ "Front Elbow Squat" ],
       "instructions": { "steps": [ ] },
@@ -10231,7 +10231,7 @@
     {
       "name": "Dumbbell Thruster",
       "id": "7F8B4E1C-2A6D-4C01-9E35-8B2D6F3A9C51",
-      "image": "dumbbell_thruster",
+      "image": "Dumbbell-Thruster_Thighs_converted 2",
       "csvKey": "dumbbell-thruster",
       "aliases": [ "DB Thruster" ],
       "instructions": { "steps": [ ] },
@@ -10265,7 +10265,7 @@
     {
       "name": "Barbell Thruster",
       "id": "C7D8E9F0-1A2B-3C4D-5E6F-7A8B9C0D1E2F",
-      "image": "thruster",
+      "image": "Barbell-Thruster_Weightlifting__converted",
       "csvKey": "thruster",
       "aliases": [ ],
       "instructions": { "steps": [ ] },
@@ -10338,7 +10338,7 @@
     {
       "name": "Dumbbell Tricep Kickback",
       "id": "F5ED93CC-7DD3-4B14-8A1C-D045606CB452",
-      "image": "dumbbell_tricep_kickback",
+      "image": "Dumbbell-Kickback_Upper-Arms_converted",
       "csvKey": "dumbbell-tricep-kickback",
       "aliases": [ "Tricep Kickback" ],
       "instructions": { "steps": [ ] },
@@ -10360,7 +10360,7 @@
     {
       "name": "Lying Barbell Tricep Extension",
       "id": "2F425484-9061-47AF-B46B-58BB687BAB21",
-      "image": "barbell_lying_triceps_extension",
+      "image": "EZ-Barbell-Lying-Triceps-Extension-(male)_Upper-Arms__converted",
       "csvKey": "lying-tricep-extension",
       "aliases": [ "Skull Crushers", "Lying Tricep Barbell Extension" ],
       "instructions": { "steps": [ ] },
@@ -10381,7 +10381,7 @@
     {
       "name": "Lying Dumbbell Tricep Extension",
       "id": "FD3153C2-98E2-4B40-B2E8-206D19DDD9ED",
-      "image": "dumbbell_lying_triceps_extension",
+      "image": "Dumbbell-Lying-Triceps-Extension_Upper-Arms-FIX__converted",
       "csvKey": "lying-dumbbell-tricep-extension",
       "aliases": [ "Dumbbell Skull Crushers" ],
       "instructions": { "steps": [ ] },
@@ -10402,7 +10402,7 @@
     {
       "name": "Lying EZ-Bar Tricep Extension",
       "id": "5FCF8E42-AD0B-44E6-A214-478F8AD23386",
-      "image": "ez_bar_skull_crusher",
+      "image": "EZ-Barbell-Lying-Triceps-Extension-(male)_Upper-Arms__converted",
       "csvKey": "lying-tricep-extension",
       "aliases": [ "EZ-Bar Skull Crusher", "Lying Triceps Extension" ],
       "instructions": { "steps": [ ] },
@@ -10424,7 +10424,7 @@
     {
       "name": "Machine Tricep Extension",
       "id": "1BCB024E-626E-464D-9102-5B85D61F92D2",
-      "image": "machine_tricep_extension",
+      "image": "Lever-Triceps-Extension-(VERSION-2)_Upper-Arms-FIX_converted",
       "csvKey": "machine-tricep-extension",
       "aliases": [ "Tricep Extension Machine" ],
       "instructions": { "steps": [ ] },
@@ -10447,7 +10447,7 @@
     {
       "name": "Overhead Straight Bar Triceps Extension",
       "id": "AE91F80A-A058-4492-BCD2-E3404457D6C3",
-      "image": "overhead_cable_triceps_extension",
+      "image": "Cable-Overhead-Tricep-Extension-Straight-Bar-(male)_Upper-Arms__converted",
       "csvKey": "cable-overhead-tricep-extension",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Straight Bar Attachment" ],
@@ -10467,7 +10467,7 @@
     {
       "name": "Overhead Rope Tricep Extension",
       "id": "4B047321-6A66-4CB2-B189-5465624ECDF5",
-      "image": "overhead_rope_triceps_extension",
+      "image": "Cable-High-Pulley-Overhead-Tricep-Extension_Upper-Arms_converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Dual-End Rope" ],
       "muscles": [
@@ -10486,7 +10486,7 @@
     {
       "name": "Reverse-Grip Tricep Pushdown",
       "id": "40B9991F-E929-4913-94BE-EB4B273198CA",
-      "image": "reverse_grip_tricep_pushdown",
+      "image": "Cable-Reverse-Grip-Triceps-Pushdown-(SZ-bar)_Upper-arms_converted",
       "csvKey": "reverse-grip-tricep-pushdown",
       "aliases": [ "Reverse Cable Pushdown" ],
       "instructions": { "steps": [ ] },
@@ -10507,7 +10507,7 @@
     {
       "name": "Seated Dumbbell Tricep Extension",
       "id": "3CC32294-BF99-4A4D-8272-F34513E7A0A8",
-      "image": "seated_dumbbell_triceps_extension",
+      "image": "Dumbbell-Seated-Triceps-Extension_Upper-Arms_converted",
       "csvKey": "seated-dumbbell-tricep-extension",
       "aliases": [ "Seated Overhead Dumbbell Extension" ],
       "instructions": { "steps": [ ] },
@@ -10528,7 +10528,7 @@
     {
       "name": "Single-Arm Cable Tricep Extension",
       "id": "A9B1E5A3-AEAA-4E75-A0F2-F632F30BB711",
-      "image": "one_arm_cable_triceps_extension",
+      "image": "Cable-Standing-One-Arm-Triceps-Extension_Upper-Arms_converted",
       "aliases": [ "Single-Arm Cable Extension" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Single D-Handles" ],
@@ -10571,7 +10571,7 @@
     {
       "name": "Standing Dumbbell Tricep Extension",
       "id": "72B9E470-78B3-4F93-9C2A-31081CD7C999",
-      "image": "dumbbell_standing_triceps_extension",
+      "image": "Dumbbell-Standing-Triceps-Extension_Upper-Arms_converted",
       "csvKey": "dumbbell-tricep-extension",
       "aliases": [ "Overhead Dumbbell Tricep Extension" ],
       "instructions": { "steps": [ ] },
@@ -10593,7 +10593,7 @@
     {
       "name": "Tate Press",
       "id": "DAEA59C0-35D3-4072-BE02-298F9BB6B6BE",
-      "image": "tate_press",
+      "image": "Dumbbell-Tate-Press_Triceps_converted",
       "csvKey": "tate-press",
       "aliases": [ "Dumbbell Tate Press" ],
       "instructions": { "steps": [ ] },
@@ -10616,7 +10616,7 @@
     {
       "name": "Tricep Pushdown With Bar",
       "id": "E64A151C-EC4E-4FFD-983C-DA71E5361485",
-      "image": "tricep_pushdown_with_bar",
+      "image": "Cable-Pushdown_Upper-Arms-FIX__converted",
       "csvKey": "tricep-pushdown",
       "aliases": [ "Straight Bar Pushdown" ],
       "instructions": { "steps": [ ] },
@@ -10638,7 +10638,7 @@
     {
       "name": "Tricep Pushdown With Rope",
       "id": "C0F3FCFF-14EF-457F-A674-4F5A9FD82E7B",
-      "image": "tricep_rope_pushdown",
+      "image": "Cable-Pushdown-(with-rope-attachment)_Upper-Arms-FIX__converted",
       "csvKey": "tricep-rope-pushdown",
       "aliases": [ "Cable Rope Pushdown" ],
       "instructions": { "steps": [ ] },
@@ -10660,7 +10660,7 @@
     {
       "name": "Wall Sit",
       "id": "1A2B3C4D-5E6F-4A7B-8C9D-0E1F2A3B4C5D",
-      "image": "wall_sit",
+      "image": "Wall-sit-(narrow-stance)-(male)_Thighs__converted",
       "aliases": [ ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -10692,7 +10692,7 @@
     {
       "name": "Weighted Wall Sit",
       "id": "8F9E1A2B-3C4D-5E6F-8A9B-0C1D2E3F4A5B",
-      "image": "weighted_wall_sit",
+      "image": "Dumbbell-Goblet-Wall-Sit-(male)_Thighs__converted",
       "aliases": [ "Plate Wall Sit" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Weight Plate" ],
@@ -10724,7 +10724,7 @@
     {
       "name": "Burpees",
       "id": "CD3A5B76-E8F1-4C2D-9A07-1234B5678C9D",
-      "image": "burpees",
+      "image": "Burpee_Cardio-FIX__converted",
       "csvKey": "burpees",
       "aliases": [ "Burpee" ],
       "instructions": { "steps": [ ] },
@@ -10765,7 +10765,7 @@
     {
       "name": "Cable Pull Through",
       "id": "33C0DFD3-9EBC-4984-8306-EA264AD1CA20",
-      "image": "cable_pull_through",
+      "image": "Cable-pull-through_hips_converted",
       "csvKey": "cable-pull-through",
       "aliases": [ "Cable Hip Hinge" ],
       "instructions": { "steps": [ ] },
@@ -10791,7 +10791,7 @@
     {
       "name": "Cable Anti-Rotation Chop",
       "id": "BD91914D-35F9-47D5-AE29-EB535163E5F8",
-      "image": "cable_woodchop",
+      "image": "Cable-Kneeling-High-Low-Anti-Rotation-Chop-(male)__converted",
       "csvKey": "cable-woodchopper",
       "aliases": [ "Rotational Chop", "Oblique Woodchopper" ],
       "instructions": { "steps": [ ] },
@@ -10813,7 +10813,7 @@
     {
       "name": "Dragon Flag",
       "id": "4A5E437A-C801-4A34-B79B-3F15A46E4938",
-      "image": "dragon_flag",
+      "image": "Dragon-Flag_Waist__converted",
       "aliases": [ "Full Dragon Flag" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Flat Bench" ],
@@ -10858,7 +10858,7 @@
     {
       "name": "Good Morning",
       "id": "5D3D2010-15C7-4D08-945F-123C26B8898E",
-      "image": "good_morning",
+      "image": "Barbell-Good-Morning_Thighs-FIX__converted",
       "csvKey": "good-morning",
       "aliases": [ "Barbell Good Morning" ],
       "instructions": { "steps": [ ] },
@@ -10886,7 +10886,7 @@
     {
       "name": "Kettlebell Halo",
       "id": "C88DE516-461C-4C31-A67C-22B07F725072",
-      "image": "kb_halo",
+      "image": "Kettlebell-Half-Kneeling-Halo-(male)_Shoulders__converted",
       "aliases": [ "Kettlebell Halo" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Kettlebells" ],
@@ -10910,7 +10910,7 @@
     {
       "name": "Kettlebell Swing",
       "id": "1F3E5EE5-3773-4CB9-8B72-88D98CB66DC7",
-      "image": "kettlebell_swing",
+      "image": "Kettlebell-Swing_Hips-FIX2__converted",
       "aliases": [ "KB Swing" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Kettlebells" ],
@@ -10962,7 +10962,7 @@
     {
       "name": "Medicine Ball Slam",
       "id": "C7D35A34-B406-4333-8C41-7ED8236FB6F8",
-      "image": "medicine_ball_slam",
+      "image": "Medicine-Ball-Overhead-Slam_Back__converted",
       "aliases": [ "Ball Slam" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Medicine Ball" ],
@@ -10987,7 +10987,7 @@
     {
       "name": "Mountain Climbers",
       "id": "F61B364C-6744-40CC-9BE1-CD8A74A90DCA",
-      "image": "mountain_climbers",
+      "image": "Mountain-Climber_Cardio-FIX__converted",
       "csvKey": "mountain-climbers",
       "aliases": [ "Climbers", "Dynamic Mountain Climb" ],
       "instructions": { "steps": [ ] },
@@ -11011,7 +11011,7 @@
     {
       "name": "Pallof Press",
       "id": "0B352EA5-B99F-47F7-87B4-3C39AC4F727A",
-      "image": "pallof_press",
+      "image": "Cable-horizontal-Pallof-Press_waist_converted",
       "aliases": [ "Cable Anti-Rotation Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Single D-Handles" ],
@@ -11052,7 +11052,7 @@
     {
       "name": "Plate Pinch",
       "id": "A8AF845D-6B0A-4077-AC49-AF052C716641",
-      "image": "plate_pinch",
+      "image": "Plate-Pinch_Forearms__converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
       "muscles": [
@@ -11094,7 +11094,7 @@
     {
       "name": "Rotary Torso Twist",
       "id": "7D2882B7-988E-4910-92F6-144F84027811",
-      "image": "placeholder_ex_img",
+      "image": "Lever-Seated-Twist_Waist-FIX__converted",
       "aliases": [ "Seated Torso Rotation" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Rotary Torso" ],
@@ -11124,7 +11124,7 @@
     {
       "name": "Stability Ball Pike Push-Up",
       "id": "A717B221-7F03-4B4F-9BD5-FEF44524D0BF",
-      "image": "stability_ball_pike",
+      "image": "Exercise-Ball-Pike-Pushup_Chest__converted",
       "aliases": [ "Swiss Ball Pike" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Exercise Ball" ],
@@ -11145,7 +11145,7 @@
     {
       "name": "Step Up",
       "id": "7FC05939-CD15-45C2-BA22-FAB893B1F852",
-      "image": "step_up",
+      "image": "Bodyweight-Step-up-on-Stepbox_Thighs__converted",
       "aliases": [ "Bench Step Up" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Flat Bench" ],
@@ -11177,7 +11177,7 @@
     {
       "name": "Superman",
       "id": "0D4C40E3-2160-40BB-9F50-45F0D2B7D55B",
-      "image": "superman",
+      "image": "Superman-(male)_Waist_converted",
       "csvKey": "superman",
       "aliases": [ "Superman Hold" ],
       "instructions": { "steps": [ ] },
@@ -11202,7 +11202,7 @@
     {
       "name": "Sitting Tibialis Raise",
       "id": "19EC6510-2F7A-4B36-B756-0FA09E35ADC5",
-      "image": "tibialis_raise",
+      "image": "Sitting-Floor-Tibialis-Raise-(male)_Stretching__converted",
       "aliases": [ "Anterior Tib Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -11286,7 +11286,7 @@
     {
       "name": "Smith Machine Reverse Calf Raise",
       "id": "E5965326-2965-436E-955C-6A2C19E610A5",
-      "image": "smith_reverse_calf_raise",
+      "image": "Smith-Reverse-Calf-Raises_Calves_converted",
       "aliases": [ "Smith Reverse Calf Raises", "Smith Machine Dorsiflexion" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Smith Machine" ],
@@ -11330,7 +11330,7 @@
     {
       "name": "Wrist Roller",
       "id": "6EB692DC-B764-4DD9-910B-9AB490368771",
-      "image": "wrist_roller",
+      "image": "Wrist-Roller_Forearms__converted",
       "aliases": [ "Forearm Roller", "Roll-Up Trainer" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Wrist Roller", "Weight Plate" ],
@@ -11351,7 +11351,7 @@
     {
       "name": "Plate Neck Flexion",
       "id": "E3D4C5B6-A7F8-4920-BC1D-2E3F4A5B6C7D",
-      "image": "neck_curl",
+      "image": "Weighted-Lying-Neck-Flexion_neck_converted",
       "csvKey": "neck-curl",
       "aliases": [ "Supine Neck Curl" ],
       "instructions": { "steps": [ ] },
@@ -11375,7 +11375,7 @@
     {
       "name": "Plate Neck Extension",
       "id": "F2A9B3C7-5D4E-4F81-9A6B-7C3D2E1F4A5B",
-      "image": "neck_extension",
+      "image": "Weighted-Lying-Neck-Extension-(with-head-harness)__converted",
       "csvKey": "neck-extension",
       "aliases": [ "Lying Neck Extension" ],
       "instructions": { "steps": [ ] },
@@ -11399,7 +11399,7 @@
     {
       "name": "Cable Seated Neck Extension",
       "id": "4D770C36-0D2E-467C-8161-F936AFBB67BA",
-      "image": "cable_seated_neck_extension",
+      "image": "Cable-Seated-Neck-Extension-(with-head-harness)_Neck_converted",
       "aliases": [ "Cable Neck Extension (with head harness)" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Neck Harness" ],
@@ -11422,7 +11422,7 @@
     {
       "name": "Weighted Seated Neck Extension",
       "id": "D03CD251-8CF1-4009-84D0-7252E572A7D7",
-      "image": "weighted_seated_neck_extension",
+      "image": "Weighted-Seated-Neck-Extension-(with-head-harness)_Neck_converted",
       "aliases": [ "Seated Neck Extension (with head harness)", "Neck Harness Extension" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Neck Harness", "Flat Bench" ],
@@ -11445,7 +11445,7 @@
     {
       "name": "Weighted Lying Neck Extension",
       "id": "BD454470-2FD3-4449-9381-9943F18E788E",
-      "image": "weighted_lying_neck_extension",
+      "image": "Weighted-Lying-Neck-Extension-(with-head-harness)__converted",
       "aliases": [ "Lying Neck Extension (with head harness)", "Prone Neck Extension" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Neck Harness", "Flat Bench" ],
@@ -11490,7 +11490,7 @@
     {
       "name": "Prone Neck Extension Hold",
       "id": "60CBCFE3-5C0E-4C62-A1E3-1CB30795B0A4",
-      "image": "prone_cervical_extension_isometric",
+      "image": "Prone-Cervical-Extension-Isometric-Hold_Neck__converted",
       "aliases": [ "Prone Neck Extension Hold", "Cervical Extension Isometric" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -11513,7 +11513,7 @@
     {
       "name": "Prone Neck Extension",
       "id": "B44476F1-A055-4B46-9292-420D385950EF",
-      "image": "prone_cervical_extension",
+      "image": "Prone-Cervical-Extension_Neck__converted",
       "aliases": [ "Prone Neck Extension", "Bodyweight Neck Extension" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -11582,7 +11582,7 @@
     {
       "name": "Chin Tuck",
       "id": "F5CA1D6C-E541-4599-87E1-9A47F1AC7F0D",
-      "image": "chin_tuck",
+      "image": "Chin-Tuck-against-the-Wall-(male)_Neck__converted",
       "aliases": [ "Cervical Retraction", "Neck Retraction" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -11654,7 +11654,7 @@
     {
       "name": "Suitcase Carry",
       "id": "E5F6A7B8-C9D0-4E1F-2A3B-4C5D6E7F8A9B",
-      "image": "suitcase_carry",
+      "image": "Dumbbell-Suitcase-Carry_Thighs__converted",
       "aliases": [ "Unilateral Carry", "Single-Arm Carry" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
@@ -11708,7 +11708,7 @@
     {
       "name": "Sled Push",
       "id": "C3D4E5F6-A7B8-4C9D-0E1F-2A3B4C5D6E7F",
-      "image": "sled_push",
+      "image": "Power-Sled-Push-(male)_converted",
       "aliases": [ "Prowler Push", "Sled Drive" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Prowler Sled" ],
