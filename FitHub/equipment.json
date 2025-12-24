@@ -151,7 +151,7 @@
         "pegCount": 2,
         "implementation": "Individual",
         "weightInstruction": "Per Handle",
-        "alternativeEquipment": ["Dumbbells","Kettlebells"]
+        "alternativeEquipment": ["Dumbbells", "Kettlebells"]
     },
     {
         "name": "Landmine",

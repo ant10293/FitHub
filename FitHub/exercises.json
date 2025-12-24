@@ -6449,7 +6449,7 @@
     {
       "name": "Cable Glute Kickback",
       "id": "B8EC65C3-062F-4389-9337-7FD454FEF343",
-      "image": "Cable-kickback_Upper-arms__converted",
+      "image": "",
       "csvKey": "cable-kickback",
       "aliases": [ "Cable Kickbacks" ],
       "instructions": { "steps": [ ] },
@@ -6466,7 +6466,7 @@
       "repsInstruction": "Per Leg",
       "imageUrl": "https://gymvisual.com/animated-gifs/11282-cable-kickback-male.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": "Cable-kickback_Upper-arms__converted.gif"
+      "gifName": ""
     },
     {
       "name": "Machine Glute Kickback",
@@ -10317,8 +10317,7 @@
     {
       "name": "Cable Tricep Kickback",
       "id": "5F9E1F82-4F62-44FD-80A5-959B6ED1C6E8",
-      "image": "cable_triceps_kickback",
-      "aliases": [ "Cable Kickback" ],
+      "image": "Cable-kickback_Upper-arms__converted",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Crossover" ],
       "muscles": [
@@ -10328,12 +10327,12 @@
       ],
       "difficulty": "Nov.",
       "effort": "Isolation",
-      "limbMovementType": "Bilateral Independent",
+      "limbMovementType": "Unilateral",
       "resistance": "Machine",
-      "weightInstruction": "Per Stack",
+      "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/3740-cable-two-arm-tricep-kickback.html#/47-style_type-basic_grey",
       "unitType": "weightXreps",
-      "gifName": ""
+      "gifName": "Cable-kickback_Upper-arms__converted.gif"
     },
     {
       "name": "Dumbbell Tricep Kickback",
@@ -10360,7 +10359,7 @@
     {
       "name": "Lying Barbell Tricep Extension",
       "id": "2F425484-9061-47AF-B46B-58BB687BAB21",
-      "image": "EZ-Barbell-Lying-Triceps-Extension-(male)_Upper-Arms__converted",
+      "image": "Barbell-Lying-Triceps-Extension-Skull-Crusher_Upper-Arms_converted",
       "csvKey": "lying-tricep-extension",
       "aliases": [ "Skull Crushers", "Lying Tricep Barbell Extension" ],
       "instructions": { "steps": [ ] },
@@ -10376,7 +10375,7 @@
       "resistance": "Free Weight",
       "imageUrl": "https://gymvisual.com/animated-gifs/1555-barbell-lying-triceps-extension.html?search_query=lying+ez+bar+tricep+extension&results=25",
       "unitType": "weightXreps",
-      "gifName": "EZ-Barbell-Lying-Triceps-Extension-(male)_Upper-Arms__converted.gif"
+      "gifName": "Barbell-Lying-Triceps-Extension-Skull-Crusher_Upper-Arms_converted.gif"
     },
     {
       "name": "Lying Dumbbell Tricep Extension",
