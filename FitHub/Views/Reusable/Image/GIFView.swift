@@ -63,7 +63,7 @@ private struct LazyAnimatedGIFView: View {
     }
 
     private var placeholderImage: some View {
-        Image("placeholder_rectangle")
+        Image("placeholder_rectangle_text")
             .resizable()
             .scaledToFit()
             .frame(width: imageWidth)
