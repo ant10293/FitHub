@@ -26,7 +26,6 @@ struct Exercise: Identifiable, Hashable, Codable {
     let weightInstruction: WeightInstruction?
     let imageUrl: String?
     let unitType: ExerciseUnit
-    let gifName: String?
     let variationOf: String? // MARK: unused
 
     var draftMax: PeakMetric?
@@ -68,7 +67,6 @@ extension Exercise {
         self.weightInstruction    = initEx.weightInstruction
         self.imageUrl             = initEx.imageUrl
         self.unitType             = initEx.unitType
-        self.gifName              = initEx.gifName
         self.variationOf          = initEx.variationOf
     }
 }

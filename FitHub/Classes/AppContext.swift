@@ -136,6 +136,6 @@ final class AppContext: ObservableObject {
     }
 
     var disableCreatePlan: Bool {
-        store.membershipType == .free && userData.workoutPlans.workoutPlansGenerated >= 1
+        store.membershipType == .free && userData.workoutPlans.workoutPlansGenerated >= 2
     }
 }
