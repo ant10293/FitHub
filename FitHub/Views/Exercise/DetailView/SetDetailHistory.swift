@@ -36,20 +36,15 @@ struct SetDetailHistory: View {
 
                 ScrollView {
                     ForEach(sortedExercise, id: \.self) { workout in
-                        VStack(alignment: .leading) {
-                            Text("\(workout.date.formatted(date: .abbreviated, time: .shortened))")
-                                .font(.subheadline)
-                                .foregroundStyle(.gray)
-                            Text("\(workout.template.name)")
+                        VStack(alignment: .leading, spacing: 12) {
+                            
                             ForEach(workout.template.exercises.filter { $0.id == exerciseId }) { ex in
-                                VStack {
-                                    CompletedDetails.exerciseSets(
-                                        exercise: ex,
-                                        warmup: false,
-                                        prs: workout.updatedMax
-                                    )
-                                }
-                                .cardContainer()
+                                ExerciseSetsDisclosure(
+                                    exercise: ex,
+                                    workoutDate: workout.date,
+                                    workoutName: workout.template.name,
+                                    prs: workout.updatedMax
+                                )
                             }
                         }
                         .padding(.vertical, 5)
@@ -61,9 +56,9 @@ struct SetDetailHistory: View {
 
     private var sortedExercise: [CompletedWorkout] {
         let filteredWorkouts = completedWorkouts.filter { workout in
-            workout.template.exercises.contains(where: { $0.id == exerciseId })
+            workout.template.exercises.contains(where: { $0.id == exerciseId && !$0.noSetsCompleted })
         }
-
+        
         switch selectedSortOption {
         case .mostRecent:
             return filteredWorkouts.sorted { $0.date > $1.date }
@@ -92,5 +87,51 @@ struct SetDetailHistory: View {
                 return setsInFirst < setsInSecond
             }
         }
+    }
+}
+
+private struct ExerciseSetsDisclosure: View {
+    let exercise: Exercise
+    let workoutDate: Date
+    let workoutName: String
+    let prs: [PerformanceUpdate]
+    @State private var isExpanded = false
+    
+    var body: some View {
+        TappableDisclosure(isExpanded: $isExpanded) {
+            // LABEL
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    if !prs.isEmpty {
+                        Image(systemName: "trophy.fill")
+                    }
+                    Text(exercise.name)
+                }
+                .font(.subheadline)
+                .fontWeight(.medium)
+                
+                Text("\(workoutDate.formatted(date: .abbreviated, time: .shortened))")
+                    .font(.subheadline)
+                    .foregroundStyle(.gray)
+                Text("\(workoutName)")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                Text("\(Format.countText(exercise.setsCompleted, base: "set")) completed")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        } content: {
+            // CONTENT
+            VStack {
+                CompletedDetails.exerciseSets(
+                    exercise: exercise,
+                    warmup: false,
+                    prs: prs
+                )
+            }
+            .padding(.top, 8)
+        }
+        .cardContainer()
     }
 }

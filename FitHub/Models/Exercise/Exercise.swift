@@ -167,6 +167,10 @@ extension Exercise {
         }
     }
 
+    var setsCompleted: Int {
+        allSetDetails.filter( { $0.completed != nil }).count
+    }
+    
     var noSetsCompleted: Bool {
         allSetDetails.allSatisfy { $0.completed == nil }
     }

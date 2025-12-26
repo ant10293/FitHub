@@ -2009,6 +2009,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSCameraUsageDescription = "FitHub lets you take new photos using your camera to use as images for custom equipment, exercises, and adjustments.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "FitHub reads profile fields you approve (e.g., height, weight, date of birth, biological sex) from the Health app to prefill your account and calculations. Data stays on your device, and we don't use it for ads or sell it. FitHub does not write data to Health.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "FitHub does not write data to Health. This permission may be required by external libraries used in the app.";
@@ -2023,7 +2024,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.AnthonyC.FitHub;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2048,6 +2049,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSCameraUsageDescription = "FitHub lets you take new photos using your camera to use as images for custom equipment, exercises, and adjustments.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "FitHub reads profile fields you approve (e.g., height, weight, date of birth, biological sex) from the Health app to prefill your account and calculations. Data stays on your device, and we don't use it for ads or sell it. FitHub does not write data to Health.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "FitHub does not write data to Health. This permission may be required by external libraries used in the app.";
@@ -2062,7 +2064,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.AnthonyC.FitHub;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
