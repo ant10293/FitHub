@@ -7562,12 +7562,12 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell", "Flat Bench" ],
       "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+        { "engagementPercentage": 46, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
             { "engagementPercentage": 50, "submuscleWorked": "Clavicular Head" },
             { "engagementPercentage": 50, "submuscleWorked": "Sternocostal Head" }
         ] },
-        { "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+        { "engagementPercentage": 45, "mover": "secondary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+        { "engagementPercentage": 9, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
         ] }
       ],
@@ -7587,12 +7587,12 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell", "Flat Bench" ],
       "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+        { "engagementPercentage": 46, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
             { "engagementPercentage": 50, "submuscleWorked": "Clavicular Head" },
             { "engagementPercentage": 50, "submuscleWorked": "Sternocostal Head" }
         ] },
-        { "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+        { "engagementPercentage": 45, "mover": "secondary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+        { "engagementPercentage": 9, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
         ] }
       ],
@@ -7612,12 +7612,12 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells", "Flat Bench" ],
       "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
+        { "engagementPercentage": 46, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
             { "engagementPercentage": 50, "submuscleWorked": "Clavicular Head" },
             { "engagementPercentage": 50, "submuscleWorked": "Sternocostal Head" }
         ] },
-        { "engagementPercentage": 50, "mover": "secondary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+        { "engagementPercentage": 45, "mover": "secondary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+        { "engagementPercentage": 9, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
         ] }
       ],
@@ -8040,11 +8040,11 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell", "Flat Bench" ],
       "muscles": [
-        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+        { "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+        { "engagementPercentage": 13, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Middle Traps" }
         ] },
-        { "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+        { "engagementPercentage": 7, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Biceps Long Head" }
         ] }
       ],
@@ -8138,11 +8138,11 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells", "Flat Bench" ],
       "muscles": [
-        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-        { "engagementPercentage": 10, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+        { "engagementPercentage": 80, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+        { "engagementPercentage": 13, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Middle Traps" }
         ] },
-        { "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+        { "engagementPercentage": 7, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Biceps Long Head" }
         ] }
       ],
@@ -11062,11 +11062,11 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Farmer's Walk Handles" ],
       "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Trapezius", "submusclesWorked": [
+        { "engagementPercentage": 56, "mover": "primary", "muscleWorked": "Trapezius", "submusclesWorked": [
             { "engagementPercentage": 70, "submuscleWorked": "Upper Traps" },
             { "engagementPercentage": 30, "submuscleWorked": "Middle Traps" }
         ] },
-        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [
+        { "engagementPercentage": 44, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [
             { "engagementPercentage": 50, "submuscleWorked": "Forearm Flexors" },
             { "engagementPercentage": 50, "submuscleWorked": "Forearm Extensors" }
         ] }
@@ -11086,11 +11086,11 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Farmer's Walk Handles" ],
       "muscles": [
-        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
+        { "engagementPercentage": 67, "mover": "primary", "muscleWorked": "Calves", "submusclesWorked": [
             { "engagementPercentage": 70, "submuscleWorked": "Gastrocnemius" },
             { "engagementPercentage": 30, "submuscleWorked": "Soleus" }
         ] },
-        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
+        { "engagementPercentage": 33, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
             { "engagementPercentage": 70, "submuscleWorked": "Upper Traps" },
             { "engagementPercentage": 30, "submuscleWorked": "Middle Traps" }
         ] }
@@ -11109,11 +11109,11 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
       "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Trapezius", "submusclesWorked": [
+        { "engagementPercentage": 56, "mover": "primary", "muscleWorked": "Trapezius", "submusclesWorked": [
             { "engagementPercentage": 70, "submuscleWorked": "Upper Traps" },
             { "engagementPercentage": 30, "submuscleWorked": "Middle Traps" }
         ] },
-        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [
+        { "engagementPercentage": 44, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [
             { "engagementPercentage": 50, "submuscleWorked": "Forearm Flexors" },
             { "engagementPercentage": 50, "submuscleWorked": "Forearm Extensors" }
         ] }
@@ -11134,12 +11134,12 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
       "muscles": [
-        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
+        { "engagementPercentage": 67, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
             { "engagementPercentage": 50, "submuscleWorked": "Side Delt" },
             { "engagementPercentage": 30, "submuscleWorked": "Front Delt" },
             { "engagementPercentage": 20, "submuscleWorked": "Rear Delt" }
         ] },
-        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+        { "engagementPercentage": 33, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
             { "engagementPercentage": 50, "submuscleWorked": "Triceps Lateral Head" },
             { "engagementPercentage": 30, "submuscleWorked": "Triceps Medial Head" },
             { "engagementPercentage": 20, "submuscleWorked": "Triceps Long Head" }
@@ -11161,13 +11161,13 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Prowler Sled" ],
       "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
+        { "engagementPercentage": 56, "mover": "primary", "muscleWorked": "Quadriceps", "submusclesWorked": [
             { "engagementPercentage": 30, "submuscleWorked": "Rectus Femoris" },
             { "engagementPercentage": 25, "submuscleWorked": "Vastus Lateralis" },
             { "engagementPercentage": 25, "submuscleWorked": "Vastus Medialis" },
             { "engagementPercentage": 20, "submuscleWorked": "Vastus Intermedius" }
         ] },
-        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+        { "engagementPercentage": 44, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 85, "submuscleWorked": "Gluteus Maximus" },
             { "engagementPercentage": 15, "submuscleWorked": "Gluteus Medius" }
         ] }
@@ -11187,12 +11187,12 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Prowler Sled", "Suspension Trainer" ],
       "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
+        { "engagementPercentage": 56, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
             { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" },
             { "engagementPercentage": 30, "submuscleWorked": "Semitendinosus" },
             { "engagementPercentage": 30, "submuscleWorked": "Semimembranosus" }
         ] },
-        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
+        { "engagementPercentage": 44, "mover": "primary", "muscleWorked": "Gluteus", "submusclesWorked": [
             { "engagementPercentage": 85, "submuscleWorked": "Gluteus Maximus" },
             { "engagementPercentage": 15, "submuscleWorked": "Gluteus Medius" }
         ] }
@@ -11212,20 +11212,20 @@
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Prowler Sled", "Battle Ropes" ],
       "muscles": [
-        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
-        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Trapezius", "submusclesWorked": [
+        { "engagementPercentage": 29, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+        { "engagementPercentage": 23, "mover": "primary", "muscleWorked": "Trapezius", "submusclesWorked": [
             { "engagementPercentage": 50, "submuscleWorked": "Middle Traps" },
             { "engagementPercentage": 30, "submuscleWorked": "Upper Traps" },
             { "engagementPercentage": 20, "submuscleWorked": "Lower Traps" }
         ] },
-        { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
             { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
             { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
         ] },
-        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+        { "engagementPercentage": 17, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
         ] },
-        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+        { "engagementPercentage": 11, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
             { "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
             { "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
         ] }
