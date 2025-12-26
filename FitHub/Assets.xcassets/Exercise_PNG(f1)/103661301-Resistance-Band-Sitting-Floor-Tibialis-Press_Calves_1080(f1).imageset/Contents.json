@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "103661301-Resistance-Band-Sitting-Floor-Tibialis-Press_Calves_1080(f1).png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

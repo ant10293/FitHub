@@ -1,5 +1,5 @@
 //
-//  ExpandableGIFView.swift
+//  GIFView.swift
 //  FitHub
 //
 //  Created by Anthony Cantu on 12/23/25.
@@ -23,169 +23,127 @@ struct GIFView: View {
 private struct LazyAnimatedGIFView: View {
     let gifName: String
     let size: CGFloat
-    @State private var isLoading: Bool = true
+
+    @State private var isLoadingGIF = false
     @State private var animatedImage: UIImage?
-    
+
     private var imageWidth: CGFloat { screenWidth * size }
-    
+
+    private var baseName: String { gifName.replacingOccurrences(of: ".gif", with: "") }
+    private var f1AssetName: String { "Exercise_PNG(f1)/\(baseName)(f1)" }
+    private var gifAssetName: String { "Exercise_GIF/\(baseName)" }
+
     var body: some View {
-        ZStack {
-            // Show f1 PNG immediately while loading, or placeholder if no image
-            let baseName = gifName.replacingOccurrences(of: ".gif", with: "")
-            let f1ImagePath = "Exercise_PNG(f1)/\(baseName)(f1)"
-            
-            // Check if f1 image exists, otherwise use placeholder
-            if UIImage(named: f1ImagePath) != nil {
-                Image(f1ImagePath)
+        Group {
+            if let image = animatedImage {
+                let aspectRatio = image.size.height / max(image.size.width, 1)
+                AsyncGIFImageView(animatedImage: image)
+                    .frame(width: imageWidth, height: imageWidth * aspectRatio)
+
+            } else if let f1 = UIImage(named: f1AssetName) {
+                // ProgressView ONLY overlays the f1 image
+                Image(uiImage: f1)
                     .resizable()
                     .scaledToFit()
                     .frame(width: imageWidth)
-                    .opacity(isLoading ? 1.0 : 0.0)
+                    .overlay {
+                        if isLoadingGIF {
+                            ProgressView()
+                        }
+                    }
+
             } else {
-                // Fallback to placeholder if no image
                 placeholderImage
-            }
-                        
-            // Show progress overlay while loading
-            if isLoading {
-                ProgressView()
-            }
-            
-            // Show animated GIF when loaded
-            if let image = animatedImage {
-                let imageSize = image.size
-                let aspectRatio = imageSize.height / imageSize.width
-                let imageHeight = imageWidth * aspectRatio
-                
-                AsyncGIFImageView(animatedImage: image)
-                    .frame(width: imageWidth, height: imageHeight)
-                    .opacity(isLoading ? 0.0 : 1.0)
-            } else if !isLoading {
-                // If loading failed and no image, show placeholder
-                placeholderImage
+                    .frame(width: imageWidth)
             }
         }
-        .task {
-            await loadGIF()
+        .task(id: baseName) {
+            await loadGIFIfAndOnlyIfF1Exists()
         }
     }
-        
+
     private var placeholderImage: some View {
         Image("placeholder_rectangle")
             .resizable()
             .scaledToFit()
             .frame(width: imageWidth)
-            .opacity(isLoading ? 1.0 : 0.0)
     }
-    
+
     @MainActor
-    private func loadGIF() async {
-        isLoading = true
-        
-        // Load on background thread
-        let baseName = gifName.replacingOccurrences(of: ".gif", with: "")
-        let fullName = "Exercise_GIF/\(baseName)"
-        
-        let gifData: Data? = NSDataAsset(name: fullName, bundle: .main)?.data
-        
-        guard let data = gifData else {
-            isLoading = false
-            return
-        }
-        
-        // Process GIF on background thread
+    private func loadGIFIfAndOnlyIfF1Exists() async {
+        animatedImage = nil
+        isLoadingGIF = false
+
+        // If there's no f1, never attempt GIF and never show spinner.
+        guard UIImage(named: f1AssetName) != nil else { return }
+
+        // Optional: if the GIF asset doesn't exist, don't even show a spinner.
+        guard let data = NSDataAsset(name: gifAssetName, bundle: .main)?.data else { return }
+
+        isLoadingGIF = true
+        defer { isLoadingGIF = false }
+
         let image = await Task.detached(priority: .userInitiated) {
-            return await createAnimatedImage(from: data)
+            await createAnimatedImage(from: data)
         }.value
-        
-        animatedImage = image
-        isLoading = false
+
+        if let image { animatedImage = image }
     }
-    
+
     private func createAnimatedImage(from data: Data) -> UIImage? {
         guard !data.isEmpty else { return nil }
-        
-        guard let source = CGImageSourceCreateWithData(data as CFData, nil) else {
-            return nil
-        }
-        
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
+
         let totalFrames = CGImageSourceGetCount(source)
         guard totalFrames > 0 else { return nil }
-        
-        // Single frame, return as static image
-        guard totalFrames > 1 else {
-            if let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) {
-                return UIImage(cgImage: cgImage)
-            }
-            return nil
+
+        if totalFrames == 1, let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) {
+            return UIImage(cgImage: cgImage)
         }
-        
-        // Limit to maximum 36 frames and 3 seconds
+
         let maxFrames = 36
         let maxDuration: Double = 3.0
-        
+
         var totalDuration: Double = 0
-        
-        // First pass: calculate total duration from all frames to determine original FPS
         for i in 0..<totalFrames {
             autoreleasepool {
-                if let properties = CGImageSourceCopyPropertiesAtIndex(source, i, nil) as? [String: Any] {
-                    let gifDictKey = kCGImagePropertyGIFDictionary as String
-                    if let gifProperties = properties[gifDictKey] as? [String: Any] {
-                        let unclampedKey = kCGImagePropertyGIFUnclampedDelayTime as String
-                        let delayKey = kCGImagePropertyGIFDelayTime as String
-                        
-                        if let delayTime = gifProperties[unclampedKey] as? Double, delayTime > 0 {
-                            totalDuration += delayTime
-                        } else if let delayTime = gifProperties[delayKey] as? Double, delayTime > 0 {
-                            totalDuration += delayTime
-                        }
-                    }
-                }
+                guard
+                    let props = CGImageSourceCopyPropertiesAtIndex(source, i, nil) as? [String: Any],
+                    let gifProps = props[kCGImagePropertyGIFDictionary as String] as? [String: Any]
+                else { return }
+
+                let unclamped = gifProps[kCGImagePropertyGIFUnclampedDelayTime as String] as? Double
+                let clamped   = gifProps[kCGImagePropertyGIFDelayTime as String] as? Double
+                let dt = (unclamped ?? clamped ?? 0)
+                if dt > 0 { totalDuration += dt }
             }
         }
-        
-        // Default to 0.1 seconds per frame if no duration found
-        if totalDuration <= 0 {
-            totalDuration = Double(totalFrames) * 0.1
-        }
-        
-        // Calculate original FPS to maintain the same frame rate
+
+        if totalDuration <= 0 { totalDuration = Double(totalFrames) * 0.1 }
         let originalFPS = Double(totalFrames) / totalDuration
-        
-        // Determine how many frames we can fit in 3 seconds at original FPS
-        let targetFrames = min(maxFrames, Int(originalFPS * maxDuration))
-        let actualFrames = min(targetFrames, totalFrames)
-        
-        // Calculate frame step to sample evenly across the GIF
+
+        // Calculate how many frames we can fit within maxDuration at original FPS
+        let maxFramesByDuration = Int(originalFPS * maxDuration)
+        // Cap at maxFrames (30) or totalFrames, whichever is smaller
+        let actualFrames = min(maxFrames, min(maxFramesByDuration, totalFrames))
         let frameStep = totalFrames > actualFrames ? max(1, totalFrames / actualFrames) : 1
-        
-        var images: [UIImage] = []
-        
-        // Sample frames evenly across the GIF
+
+        var frames: [UIImage] = []
+        frames.reserveCapacity(actualFrames)
+
         for i in stride(from: 0, to: totalFrames, by: frameStep) {
-            guard let cgImage = CGImageSourceCreateImageAtIndex(source, i, nil) else {
-                continue
-            }
-            images.append(UIImage(cgImage: cgImage))
-            
-            if images.count >= actualFrames {
-                break
-            }
+            guard let cgImage = CGImageSourceCreateImageAtIndex(source, i, nil) else { continue }
+            frames.append(UIImage(cgImage: cgImage))
+            if frames.count >= actualFrames { break }
         }
-        
-        guard !images.isEmpty else { return nil }
-        
+
+        guard !frames.isEmpty else { return nil }
+
         // Calculate duration to maintain original FPS
-        // duration = number_of_frames / fps
-        var duration = Double(images.count) / originalFPS
-        
-        // Cap duration at 3 seconds
-        if duration > maxDuration {
-            duration = maxDuration
-        }
-        
-        return UIImage.animatedImage(with: images, duration: duration)
+        // This ensures the GIF plays at the same speed as the original
+        let duration = Double(frames.count) / originalFPS
+
+        return UIImage.animatedImage(with: frames, duration: duration)
     }
 }
 

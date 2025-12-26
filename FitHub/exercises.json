@@ -57,36 +57,6 @@
       "gifName": "Barbell-Pin-Chest-Press_Chest__converted.gif"
     },
     {
-      "name": "Bench Pin Press Hold",
-      "id": "2B5F4C7E-9A13-4C1D-9E52-6B7A9C3D8F1E",
-      "image": "bench_press_pin_hold",
-      "aliases": [ "Bench Against Pins" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Barbell", "Flat Bench", "Squat Rack" ],
-      "muscles": [
-        { "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-            { "engagementPercentage": 60, "submuscleWorked": "Sternocostal Head" },
-            { "engagementPercentage": 30, "submuscleWorked": "Clavicular Head" },
-            { "engagementPercentage": 10, "submuscleWorked": "Costal Head" }
-        ] },
-        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-            { "engagementPercentage": 50, "submuscleWorked": "Triceps Long Head" },
-            { "engagementPercentage": 30, "submuscleWorked": "Triceps Lateral Head" },
-            { "engagementPercentage": 20, "submuscleWorked": "Triceps Medial Head" }
-        ] },
-        { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-            { "engagementPercentage": 70, "submuscleWorked": "Front Delt" },
-            { "engagementPercentage": 30, "submuscleWorked": "Side Delt" }
-        ] }
-      ],
-      "difficulty": "Int.",
-      "effort": "Isometric",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Free Weight",
-      "unitType": "weightXtime",
-      "gifName": ""
-    },
-    {
       "name": "Wide-Grip Bench Press",
       "id": "4E5F6A7B-8C9D-0A1B-2C3D-4E5F6A7B8C9D",
       "image": "Barbell-Wide-Bench-Press_Chest_converted",
@@ -1137,7 +1107,7 @@
     {
       "name": "Dumbbell Hang Clean",
       "id": "B2C3D4E5-F6A7-48B9-8C0D-1E2F3A4B5C6D",
-      "image": "dumbbell_hang_clean",
+      "image": "44491301-Dumbbell-Hang-Clean_Weightlifting_1080",
       "csvKey": "dumbbell-hang-clean",
       "aliases": [ "DB Hang Clean" ],
       "instructions": { "steps": [ ] },
@@ -1175,7 +1145,7 @@
     {
       "name": "Dumbbell High Pull",
       "id": "F4B7C9D1-2E3F-4A5B-8C6D-1E2F3A4B5C6D",
-      "image": "dumbbell_high_pull",
+      "image": "56661301-Dumbbell-High-Pull_Weigtlifting_1080",
       "csvKey": "dumbbell-high-pull",
       "aliases": [ "DB High Pull" ],
       "instructions": { "steps": [ ] },
@@ -1236,7 +1206,7 @@
     {
       "name": "Hang Power Clean",
       "id": "E3DDCE2F-697D-4C3E-A698-C5EBEE855C47",
-      "image": "hang_power_clean",
+      "image": "57041301-Barbell-Hang-Power-Clean_Weightlifting_1080",
       "csvKey": "hang-power-clean",
       "aliases": [ "HPC" ],
       "instructions": { "steps": [ ] },
@@ -1273,7 +1243,7 @@
     {
       "name": "High Pull",
       "id": "083FD786-8341-48B6-8EB3-ABC519E386EC",
-      "image": "high_pull",
+      "image": "101061301-Barbell-High-Pull-(male)_Shoulders_1080",
       "aliases": [ "Barbell High Pull" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
@@ -1444,7 +1414,7 @@
     {
       "name": "Muscle Snatch",
       "id": "D9A1C2B3-4E5F-6789-0A1B-2C3D4E5F6A7B",
-      "image": "muscle_snatch",
+      "image": "15261301-Barbell-Muscle-Snatch_Weightlifts-FIX_1080",
       "csvKey": "muscle-snatch",
       "aliases": [ "Power Snatch No Catch" ],
       "instructions": { "steps": [ ] },
@@ -1681,7 +1651,7 @@
     {
       "name": "Squat Jerk",
       "id": "6B7DD39A-55C7-4BC1-9446-A18329EABC81",
-      "image": "squat_jerk",
+      "image": "07861301-Squat-Jerk_Thighs_1080",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
       "muscles": [
@@ -2470,7 +2440,7 @@
     {
       "name": "Weighted Muscle-Up",
       "id": "ED5C0418-8113-483A-B183-D60F04DC6A0D",
-      "image": "weighted_muscle_up",
+      "image": "33121301-Weighted-Muscle-up-(on-bar)_1080",
       "csvKey": "weighted-muscle-ups",
       "aliases": [ "Bar Muscle-Up" ],
       "instructions": { "steps": [ ] },
@@ -2882,7 +2852,7 @@
     {
       "name": "Side Crunch",
       "id": "FC8CDCA3-7278-40BF-AD2F-7635BF65F6EA",
-      "image": "side_crunch",
+      "image": "07081301-Side-Crunch_Waist_1080",
       "csvKey": "side-crunch",
       "aliases": [ "Oblique Side Crunch", "Lateral Crunch" ],
       "instructions": { "steps": [ ] },
@@ -3032,26 +3002,6 @@
             { "engagementPercentage": 10, "submuscleWorked": "Middle Traps" },
             { "engagementPercentage": 5, "submuscleWorked": "Lower Traps" },
             { "engagementPercentage": 5, "submuscleWorked": "Rhomboids" }
-        ] }
-      ],
-      "difficulty": "Int.",
-      "effort": "Isometric",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Free Weight",
-      "unitType": "weightXtime",
-      "gifName": ""
-    },
-    {
-      "name": "Thick-Bar Hold",
-      "id": "FD7A70F2-5FA6-44D2-9324-D2E6A2F7230A",
-      "image": "thick_bar_hold",
-      "aliases": [ "Fat-Grip Hold", "Axle Hold" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Thick Bar" ],
-      "muscles": [
-        { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [
-            { "engagementPercentage": 70, "submuscleWorked": "Forearm Flexors" },
-            { "engagementPercentage": 30, "submuscleWorked": "Forearm Extensors" }
         ] }
       ],
       "difficulty": "Int.",
@@ -3264,7 +3214,7 @@
     {
       "name": "Bradford Press",
       "id": "BE7702C5-AE28-4727-98A4-19E925C730A9",
-      "image": "bradford_press",
+      "image": "01051301-Barbell-Standing-Bradford-Press_Shoulders-FIX_1080",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
       "muscles": [
@@ -3517,35 +3467,6 @@
       "gifName": "Barbell-Standing-Military-Press-(without-rack)_Shoulders_converted.gif"
     },
     {
-      "name": "Overhead Press Pin Hold",
-      "id": "5D39B0C5-6D1F-43D1-8D3C-1D0F6BA7B5E2",
-      "image": "overhead_press_pin_hold",
-      "aliases": [ "OHP Pin Hold", "Press Against Pins" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Squat Rack", "Barbell" ],
-      "muscles": [
-        { "engagementPercentage": 55, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-            { "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
-            { "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
-        ] },
-        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-            { "engagementPercentage": 50, "submuscleWorked": "Triceps Long Head" },
-            { "engagementPercentage": 30, "submuscleWorked": "Triceps Lateral Head" },
-            { "engagementPercentage": 20, "submuscleWorked": "Triceps Medial Head" }
-        ] },
-        { "engagementPercentage": 15, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
-            { "engagementPercentage": 70, "submuscleWorked": "Upper Traps" },
-            { "engagementPercentage": 30, "submuscleWorked": "Middle Traps" }
-        ] }
-      ],
-      "difficulty": "Int.",
-      "effort": "Isometric",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Free Weight",
-      "unitType": "weightXtime",
-      "gifName": ""
-    },
-    {
       "name": "Plate-Loaded Shoulder Press",
       "id": "606D38F3-571F-4E8F-AB36-874564EF3D4A",
       "image": "Lever-Shoulder-Press-(plate-loaded)-(VERSION-2)_Shoulders__converted",
@@ -3629,7 +3550,7 @@
     {
       "name": "Overhead Pin Press",
       "id": "F3E2D1C0-B9A8-4765-4E3F-2D1C0B9A8E7D",
-      "image": "shoulder_pin_press",
+      "image": "56681301-Barbell-Standing-Shoulder-Pin-Press_Shoulders_1080",
       "csvKey": "shoulder-pin-press",
       "aliases": [ "Rack Overhead Press" ],
       "instructions": { "steps": [ ] },
@@ -3854,10 +3775,10 @@
     {
       "name": "Band External Rotation",
       "id": "3C0D0256-70CD-4F01-8E84-08EB2E6F69E1",
-      "image": "band_external_shoulder_rotation",
+      "image": "Resistance-Band-Standing-External-Rotation-(male)__converted",
       "aliases": [ "Band ER", "External Rotation (Band)" ],
       "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Handle Bands" ],
+      "equipmentRequired": [ "Loop Bands" ],
       "muscles": [
         { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
             { "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
@@ -3865,17 +3786,16 @@
       ],
       "difficulty": "Beg.",
       "effort": "Isolation",
-      "limbMovementType": "Unilateral",
+      "limbMovementType": "Bilateral Dependent",
       "resistance": "Banded",
-      "repsInstruction": "Per Arm",
       "imageUrl": "https://gymvisual.com/animated-gifs/2396-band-standing-external-shoulder-rotation.html#/47-style_type-basic_grey",
       "unitType": "bandXreps",
-      "gifName": ""
+      "gifName": "Resistance-Band-Standing-External-Rotation-(male)__converted.gif"
     },
     {
       "name": "Seated Dumbbell External Rotation",
       "id": "D2A7B8C9-E0F1-4A2B-8C3D-4E5F6A7B8C9D",
-      "image": "seated_dumbbell_external_shoulder_rotation",
+      "image": "50011301-Dumbbell-Seated-External-Shoulder-Rotation_Shoulders_1080",
       "csvKey": "dumbbell-external-rotation",
       "aliases": [ "Seated DB ER" ],
       "instructions": { "steps": [ ] },
@@ -4135,7 +4055,7 @@
     {
       "name": "Y Raise",
       "id": "6A525709-96F4-44BF-A90E-0CADF0436D38",
-      "image": "scaption_raise",
+      "image": "03111301-Dumbbell-Full-Can-Lateral-Raise_Shoulders_1080",
       "aliases": [ "Scaption Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
@@ -4338,7 +4258,7 @@
     {
       "name": "Power Shrug",
       "id": "84B7C993-3B2C-4FA0-AB4D-A5DAE719F6D1",
-      "image": "power_shrug",
+      "image": "56621301-Barbell-Power-Shrug_Back_1080",
       "csvKey": "barbell-power-shrug",
       "aliases": [ "Barbell Power Shrug", "Explosive Shrug" ],
       "instructions": { "steps": [ ] },
@@ -4525,7 +4445,7 @@
     {
       "name": "Dumbbell Walking Calf Raise",
       "id": "A2B6B6AC-6B1B-4B8C-9A3B-7B7C5F4F8F21",
-      "image": "dumbbell_walking_calf_raise",
+      "image": "56981301-Dumbbell-Walking-Calf-Raise_Calves_1080",
       "csvKey": "dumbbell-walking-calf-raise",
       "aliases": [ "Walking Calf Raise (DB)" ],
       "instructions": { "steps": [ ] },
@@ -4613,7 +4533,7 @@
     {
       "name": "Single-Leg Seated Calf Raise",
       "id": "73F59343-6763-44FE-B102-CFEEF28578F1",
-      "image": "single_leg_seated_calf_raise",
+      "image": "12161301-Lever-seated-one-leg-calf-raise_calves_1080",
       "csvKey": "single-leg-seated-calf-raise",
       "aliases": [ "Unilateral Calf Raise" ],
       "instructions": { "steps": [ ] },
@@ -4761,7 +4681,7 @@
     {
       "name": "Seated Banded Calf Raise",
       "id": "A7B8C9D0-E1F2-4A5B-8C9D-0E1F2A3B4C5D",
-      "image": "banded_seated_calf_raise",
+      "image": "24251301-Resistance-Band-Calf-Raise_Calves_1080",
       "aliases": [ "Resistance Band Seated Calf Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Loop Bands" ],
@@ -4823,7 +4743,7 @@
     {
       "name": "Elliptical Stride",
       "id": "D2A4B6C8-19E3-4F75-A2E1-5C7B9D0E1F22",
-      "image": "elliptical",
+      "image": "42591301-Walking-on-Elliptical-Machine-(VERSION-7)_Cardio_1080",
       "aliases": [ "Cross Trainer Stride", "Elliptical Trainer" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Elliptical" ],
@@ -5126,9 +5046,9 @@
     {
       "name": "Single-Arm Plate Wrist Curl",
       "id": "149BB87D-41C9-4687-B420-C564CF3ABCFB",
-      "image": "plate_wrist_curl",
+      "image": "42331301-Weighted-Seated-One-Arm-Wrist-Curl_Forearms_1080",
       "instructions": { "steps": [ ] },
-      "equipmentRequired": [ ],
+      "equipmentRequired": [ "Weight Plate" ],
       "muscles": [
         { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [
             { "engagementPercentage": 20, "submuscleWorked": "Brachioradialis" },
@@ -5977,7 +5897,7 @@
     {
       "name": "Behind the Back Deadlift",
       "id": "D4F7A19E-3B2C-4E5A-8F3B-7C9D2E1A5B6C",
-      "image": "behind_the_back_deadlift",
+      "image": "56631301-Barbell-Behind-The-Back-Deadlift_Hips_1080",
       "csvKey": "behind-the-back-deadlift",
       "aliases": [ "BTB Deadlift", "Reverse Grip Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -6010,7 +5930,7 @@
     {
       "name": "Jefferson Deadlift",
       "id": "8F1B0D24-3C7E-4A97-9B53-5A2F4D7C1E8A",
-      "image": "jefferson_deadlift",
+      "image": "57061301-Barbell-Jefferson-Deadlift_Hips_1080",
       "csvKey": "jefferson-deadlift",
       "aliases": [ "Straddle Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -6152,7 +6072,7 @@
     {
       "name": "Zercher Deadlift",
       "id": "D7E4C3B2-A1F9-48D0-8E7B-6C5A4D3F2E1B",
-      "image": "zercher_deadlift",
+      "image": "56701301-Barbell-Zercher-Deadlift_Hips_1080",
       "csvKey": "zercher-deadlift",
       "aliases": [ "Elbow Cradle Deadlift" ],
       "instructions": { "steps": [ ] },
@@ -6449,7 +6369,7 @@
     {
       "name": "Cable Glute Kickback",
       "id": "B8EC65C3-062F-4389-9337-7FD454FEF343",
-      "image": "",
+      "image": "51201301-Cable-Kickback-(male)_Hips_1080",
       "csvKey": "cable-kickback",
       "aliases": [ "Cable Kickbacks" ],
       "instructions": { "steps": [ ] },
@@ -6571,7 +6491,7 @@
     {
       "name": "Single-Arm Dead Hang",
       "id": "2582781C-F587-4455-8DD1-15DDB8A62BEB",
-      "image": "single-arm_dead_hang",
+      "image": "104381301-Alternating-Dead-Hang-(male)_Stretching_1080",
       "aliases": [ "One-Handed Bar Hang" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Pull-Up Bar" ],
@@ -6889,7 +6809,7 @@
     {
       "name": "Lever Side Hip Adduction",
       "id": "B98F4842-C9DA-422D-AD27-D3A2561E8DE5",
-      "image": "lever_side_hip_adduction",
+      "image": "10351301-Lever-Side-Hip-Adduction_Hips_1080",
       "aliases": [ "Machine Side Hip Adduction", "Lying Hip Adduction Machine" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Multi-Hip Machine" ],
@@ -7023,7 +6943,7 @@
     {
       "name": "Hip Airplane",
       "id": "8D554BC7-BC11-48B6-977A-4F5703BDACC5",
-      "image": "hip_airplane",
+      "image": "59071301-Warrior-III-Pose-(female)_Stretching_1080",
       "aliases": [ "Warrior 3 Pose" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -7162,7 +7082,7 @@
     {
       "name": "Standing Leg Curl",
       "id": "16D733E6-46B9-4FFE-875D-86B09F01B4A3",
-      "image": "standing_leg_curl",
+      "image": "43471301-Lever-Standing-Leg-Curl_Thighs_1080",
       "csvKey": "standing-leg-curl",
       "aliases": [ "Single Leg Curl" ],
       "instructions": { "steps": [ ] },
@@ -7373,7 +7293,7 @@
     {
       "name": "Vertical Leg Press",
       "id": "F52AF3B8-D669-49CD-9CCE-85454B33BE8D",
-      "image": "vertical_leg_press",
+      "image": "43271301-Sled-Vertical-Leg-Press_Thighs_1080",
       "csvKey": "vertical-leg-press",
       "aliases": [ "Vertical Sled Press" ],
       "instructions": { "steps": [ ] },
@@ -7464,7 +7384,7 @@
     {
       "name": "L-Sit",
       "id": "7A0E05A7-6D6A-4B2B-95E5-1F6B5D5B8C91",
-      "image": "l_sit",
+      "image": "14021301-L-sit_Waist_1080",
       "aliases": [ "LSit", "Parallette L-Sit" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dip Bar" ],
@@ -7514,7 +7434,7 @@
     {
       "name": "Scissor Kicks",
       "id": "536E36B9-D612-468A-8F0D-D1A1598361F7",
-      "image": "scissor_kicks",
+      "image": "06221301-Lying-Scissor-Kick_Hips_1080",
       "csvKey": "scissor-kicks",
       "aliases": [ "Flutter Kicks", "Alternating Leg Raise" ],
       "instructions": { "steps": [ ] },
@@ -8542,7 +8462,7 @@
     {
       "name": "Dumbbell Bench Pull",
       "id": "E1F2D3C4-B5A6-47D8-9E0F-1A2B3C4D5E6F",
-      "image": "dumbbell_bench_pull",
+      "image": "56971301-Dumbbell-Lying-Row-on-Rack_Back_1080",
       "csvKey": "dumbbell-bench-pull",
       "aliases": [ "Prone Dumbbell Row" ],
       "instructions": { "steps": [ ] },
@@ -8568,7 +8488,7 @@
     {
       "name": "Dumbbell Rear Delt Row",
       "id": "26DFBB55-56B6-4BE4-92C4-323F54DA407B",
-      "image": "dumbbell_rear_delt_row",
+      "image": "42351301-Dumbbell-Seated-Bent-Over-Rear-Delt-Row_Shoulders_1080",
       "aliases": [ "DB Rear-Delt Row" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
@@ -8923,7 +8843,7 @@
     {
       "name": "Seated Single-Arm Cable Row",
       "id": "B5AA4915-F4E3-4628-BBD4-A0EC656DC1FC",
-      "image": "single_arm_cable_row",
+      "image": "101121301-Cable-Seated-Single-Arm-Lats-Focused-Row_Back_1080",
       "csvKey": "one-arm-seated-cable-row",
       "aliases": [ "Unilateral Cable Row" ],
       "instructions": { "steps": [ ] },
@@ -9821,7 +9741,7 @@
     {
       "name": "Overhead Squat",
       "id": "E60FBD42-E2BC-49A8-97C1-A10F5CD19CB6",
-      "image": "overhead_squat",
+      "image": "00691301-Barbell-Overhead-Squat_Thighs-FIX_1080",
       "csvKey": "overhead-squat",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell", "Squat Rack" ],
@@ -9852,7 +9772,7 @@
     {
       "name": "Pin Squat",
       "id": "D3A9F1B2-4C5D-6E7F-890A-1B2C3D4E5F6A",
-      "image": "pin_squat",
+      "image": "57011301-Barbell-Pin-Squat_Thighs_1080",
       "csvKey": "pin-squat",
       "aliases": [ "Squat to Pins", "Rack Squat" ],
       "instructions": { "steps": [ ] },
@@ -10295,7 +10215,7 @@
     {
       "name": "Bent-Over Dumbbell Tricep Extension",
       "id": "16C5DCB1-B4E0-4989-AE62-E51427D3EA14",
-      "image": "bent_over_dumbbell_triceps_extension",
+      "image": "17411301-Dumbbell-Standing-Bent-Over-Two-Arm-Triceps-Extension_Upper-Arms_1080",
       "aliases": [ "Dumbbell Kickback" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
@@ -10360,7 +10280,6 @@
       "name": "Lying Barbell Tricep Extension",
       "id": "2F425484-9061-47AF-B46B-58BB687BAB21",
       "image": "Barbell-Lying-Triceps-Extension-Skull-Crusher_Upper-Arms_converted",
-      "csvKey": "lying-tricep-extension",
       "aliases": [ "Skull Crushers", "Lying Tricep Barbell Extension" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell", "Flat Bench" ],
@@ -10549,7 +10468,7 @@
     {
       "name": "Standing Barbell Tricep Extension",
       "id": "616B4DD0-C379-4637-ADA1-C89E5B9439E0",
-      "image": "barbell_standing_triceps_extension",
+      "image": "01091301-Barbell-Standing-Overhead-Triceps-Extension_Upper-Arms_1080",
       "csvKey": "tricep-extension",
       "aliases": [ "Overhead Barbell Triceps Extension" ],
       "instructions": { "steps": [ ] },
@@ -10832,7 +10751,7 @@
     {
       "name": "Frog Pump",
       "id": "8867B980-C358-419B-BB8B-4F4EAB96BB23",
-      "image": "frog_pump",
+      "image": "31811301-Bodyweight-Frog-Pump_Hips_1080",
       "aliases": [ "Butterfly Hip Thrust" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -11029,26 +10948,6 @@
       "gifName": "Cable-horizontal-Pallof-Press_waist_converted.gif"
     },
     {
-      "name": "Plate Flip",
-      "id": "440CAA8D-8258-48A6-A4D4-2FD2BFEB202C",
-      "image": "plate_flip",
-      "aliases": [ "Plate Catch", "Grip Plate Flip" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Weight Plate" ],
-      "muscles": [
-        { "engagementPercentage": 100, "mover": "primary", "muscleWorked": "Forearms", "submusclesWorked": [
-            { "engagementPercentage": 70, "submuscleWorked": "Forearm Extensors" },
-            { "engagementPercentage": 30, "submuscleWorked": "Forearm Flexors" }
-        ] }
-      ],
-      "difficulty": "Int.",
-      "effort": "Isolation",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Free Weight",
-      "unitType": "weightXreps",
-      "gifName": ""
-    },
-    {
       "name": "Plate Pinch",
       "id": "A8AF845D-6B0A-4077-AC49-AF052C716641",
       "image": "Plate-Pinch_Forearms__converted",
@@ -11222,7 +11121,7 @@
     {
       "name": "Kettlebell Seated Tibialis Press",
       "id": "AD8F5F48-8381-4105-BA41-E21BAB4ED43D",
-      "image": "kettlebell_seated_tibialis_press",
+      "image": "103671301-Kettlebell-Sitting-Tibialis-Press_Calves_1080",
       "aliases": [ "Kettlebell Sitting Tibialis Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Kettlebells", "Flat Bench" ],
@@ -11243,7 +11142,7 @@
     {
       "name": "Cable Seated Tibialis Press",
       "id": "A4BDFA72-D061-458C-84AF-88041DB8FA71",
-      "image": "seated_tibialis_anterior_press",
+      "image": "67591301-Seated-Tibialis-Anterior-Press-(female)_Calves_1080",
       "aliases": [ "Machine Seated Tibialis Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Cable Hi-Lo Pulley", "Ankle Strap Attachments" ],
@@ -11264,7 +11163,7 @@
     {
       "name": "Band Seated Tibialis Press",
       "id": "0B1B6DA8-A185-49D2-BEC0-F8B53893BB62",
-      "image": "band_seated_tibialis_press",
+      "image": "103661301-Resistance-Band-Sitting-Floor-Tibialis-Press_Calves_1080",
       "aliases": [ "Resistance Band Sitting Floor Tibialis Press" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Loop Bands" ],
@@ -11305,7 +11204,7 @@
     {
       "name": "Barbell Standing Rocking Calf Raise",
       "id": "42C036F5-ED43-414C-AAF6-54486B7FF6DA",
-      "image": "barbell_standing_rocking_calf_raise",
+      "image": "01111301-Barbell-Standing-Rocking-Leg-Calf-Raise_Calf_1080",
       "aliases": [ "Rocking Leg Calf Raise", "Barbell Rocking Calf Raise" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Barbell" ],
@@ -11467,7 +11366,7 @@
     {
       "name": "Machine Neck Extension",
       "id": "C596542E-8D8D-4AA9-B760-F1890B530184",
-      "image": "machine_neck_extension",
+      "image": "22821301-Lever-Neck-Extension-(plate-loaded)_Neck_1080",
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Neck Extension" ],
       "muscles": [
@@ -11535,7 +11434,7 @@
     {
       "name": "Prone Neck Bridge",
       "id": "9D0EE4DD-4AA2-4494-BF14-BD5EF4320EF9",
-      "image": "neck_bridge_prone",
+      "image": "06331301-Neck-Bridge-Prone_Neck_1080",
       "aliases": [ "Prone Neck Bridge", "Wrestler's Bridge" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ ],
@@ -11558,7 +11457,7 @@
     {
       "name": "Plate Lying Neck Head Twist",
       "id": "4528EB94-BC63-4568-AC61-157CA2D7DB7D",
-      "image": "weighted_lying_neck_head_twist",
+      "image": "44321301-Weighted-Lying-Neck-Head-Twist_Neck_1080",
       "aliases": [ "Weighted Neck Rotation", "Lying Neck Rotation" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Flat Bench", "Weight Plate" ],
@@ -11604,7 +11503,7 @@
     {
       "name": "Farmer's Walk",
       "id": "A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D",
-      "image": "farmers_walk",
+      "image": "27341301-StrongMan-Barbell-Farmers-Walk_Weightlifting_1080",
       "aliases": [ "Farmer Walk", "Loaded Carry" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Farmer's Walk Handles" ],
@@ -11679,7 +11578,7 @@
     {
       "name": "Dumbbell Overhead Carry",
       "id": "A7B8C9D0-E1F2-4A3B-4C5D-6E7F8A9B0C1D",
-      "image": "overhead_carry",
+      "image": "29131301-Dumbbell-Overhead-Carry_Thighs_1080",
       "aliases": [ "Overhead Walk", "Waiter's Walk" ],
       "instructions": { "steps": [ ] },
       "equipmentRequired": [ "Dumbbells" ],
@@ -11732,12 +11631,12 @@
       "gifName": "Power-Sled-Push-(male)_converted.gif"
     },
     {
-      "name": "Sled Pull",
+      "name": "Sled Drag",
       "id": "D4E5F6A7-B8C9-4D0E-1F2A-3B4C5D6E7F8A",
-      "image": "sled_pull",
+      "image": "Power-Sled-Drag_Weightlifting__converted",
       "aliases": [ "Prowler Pull", "Sled Drag" ],
       "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Prowler Sled", "Battle Ropes" ],
+      "equipmentRequired": [ "Prowler Sled", "Suspension Trainer" ],
       "muscles": [
         { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Hamstrings", "submusclesWorked": [
             { "engagementPercentage": 40, "submuscleWorked": "Biceps Femoris" },
@@ -11753,8 +11652,42 @@
       "effort": "Compound",
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Free Weight",
-      "imageUrl": "https://gymvisual.com/animated-gifs/22710-power-sled-pull-male.html#/47-style_type-basic_grey",
       "unitType": "weightXdistance",
+      "gifName": "Power-Sled-Drag_Weightlifting__converted.gif",
+    },
+    {
+      "name": "Stationary Sled Pull",
+      "id": "654B9FCE-A725-4EFC-A7A4-CBE4E5E6A004",
+      "image": "99391301-Power-Sled-Pull-(male)_Back_1080",
+      "csvKey": "stationary-sled-pull",
+      "aliases": [ "Prowler Sled Pull", "Stationary Prowler Pull" ],
+      "instructions": { "steps": [ ] },
+      "equipmentRequired": [ "Prowler Sled", "Battle Ropes" ],
+      "muscles": [
+        { "engagementPercentage": 50, "mover": "primary", "muscleWorked": "Latissimus Dorsi", "submusclesWorked": [ ] },
+        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Trapezius", "submusclesWorked": [
+            { "engagementPercentage": 50, "submuscleWorked": "Middle Traps" },
+            { "engagementPercentage": 30, "submuscleWorked": "Upper Traps" },
+            { "engagementPercentage": 20, "submuscleWorked": "Lower Traps" }
+        ] },
+        { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Biceps", "submusclesWorked": [
+            { "engagementPercentage": 60, "submuscleWorked": "Biceps Long Head" },
+            { "engagementPercentage": 40, "submuscleWorked": "Biceps Short Head" }
+        ] },
+        { "engagementPercentage": 30, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
+            { "engagementPercentage": 100, "submuscleWorked": "Rear Delt" }
+        ] },
+        { "engagementPercentage": 20, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
+            { "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
+            { "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
+        ] }
+      ],
+      "difficulty": "Int.",
+      "effort": "Compound",
+      "limbMovementType": "Bilateral Dependent",
+      "resistance": "Free Weight",
+      "imageUrl": "https://gymvisual.com/animated-gifs/22710-power-sled-pull-male.html#/47-style_type-basic_grey",
+      "unitType": "weightXreps",
       "gifName": ""
     }
 ]

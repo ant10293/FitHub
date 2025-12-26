@@ -165,3 +165,4 @@ export function generateDeviceId(
   }
   return `${ip}_${userAgent.substring(0, 50)}`.replace(/[^a-zA-Z0-9_]/g, "_");
 }
+

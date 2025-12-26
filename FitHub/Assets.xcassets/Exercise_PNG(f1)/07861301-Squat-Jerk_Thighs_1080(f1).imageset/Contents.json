@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "07861301-Squat-Jerk_Thighs_1080(f1).png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
