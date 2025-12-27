@@ -230,7 +230,7 @@ enum EffortType: String, CaseIterable, Identifiable, Codable {
         }
     }
 
-    // TODO: order in which the exercise with type should occur in the generated workout
+    /// order in which the exercise with type should occur in the generated workout
     var order: Int {
         switch self {
         case .plyometric: return 1

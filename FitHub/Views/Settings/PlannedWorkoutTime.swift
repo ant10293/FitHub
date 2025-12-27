@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// TODO: we should separate the interval and time logic into separate views
 // Date only? or Date and Hour
 // Notify how long before planned Time or Notify at Beginning of Day
 // Select Default Workout Time

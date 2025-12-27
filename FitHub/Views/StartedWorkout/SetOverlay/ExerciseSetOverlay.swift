@@ -78,7 +78,6 @@ struct ExerciseSetOverlay: View {
         }
     }
 
-    // TODO: use this layout to make a generic toolbar header that we can use instead of a real toolbar
     private var exerciseToolbar: some View {
         CenteredOverlayHeader(
             leading: {

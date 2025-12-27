@@ -22,7 +22,7 @@ struct GenerationWarning: View {
 
             VStack(spacing: 12) {
                 // ⚠️ Inline summary banner (plain, not inside the List)
-                if let top = agg.first {
+                if let top = getTopReason(agg: agg) {
                     ReductionSummaryBanner(top: top) { reason in
                         switch reason {
                         case .effort:
@@ -103,6 +103,31 @@ struct GenerationWarning: View {
                 }
             }
         }
+    }
+    
+    private func getTopReason(agg: [AggregatedReasonStat]) -> AggregatedReasonStat? {
+        // Filter out reasons that can't be adjusted (already at default/nil)
+        let filterable = agg.filter { stat in
+            switch stat.reason {
+            case .effort:
+                // Only show if customDistribution exists (can be cleared)
+                return ctx.userData.workoutPrefs.customDistribution != nil
+            case .sets:
+                // Only show if customSets exists (can be cleared)
+                return ctx.userData.workoutPrefs.customSets != nil
+            case .resistance:
+                // Only show if resistance is not .any (can be changed to .any)
+                return ctx.userData.workoutPrefs.resistance != .any
+            case .disliked:
+                // Only show if allowDisliked is false (can be set to true)
+                return !ctx.userData.allowDisliked
+            case .repCap, .repMin, .noData, .tooDifficult, .cannotPerform, .split:
+                // These don't have adjustments, so don't show the banner
+                return false
+            }
+        }
+        
+        return filterable.first
     }
 
     // MARK: Aggregation

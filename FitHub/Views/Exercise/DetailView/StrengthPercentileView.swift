@@ -23,6 +23,7 @@ struct StrengthPercentileView: View {
                 .font(.headline)
                 .padding(.top)
             
+            // CRITICAL TODO: this should not be user-facing
             ageBasedStats
                 .padding(.bottom)
             weightBasedStats
