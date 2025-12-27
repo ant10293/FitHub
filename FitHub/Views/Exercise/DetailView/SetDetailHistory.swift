@@ -41,9 +41,7 @@ struct SetDetailHistory: View {
                             ForEach(workout.template.exercises.filter { $0.id == exerciseId }) { ex in
                                 ExerciseSetsDisclosure(
                                     exercise: ex,
-                                    workoutDate: workout.date,
-                                    workoutName: workout.template.name,
-                                    prs: workout.updatedMax
+                                    workout: workout
                                 )
                             }
                         }
@@ -92,28 +90,17 @@ struct SetDetailHistory: View {
 
 private struct ExerciseSetsDisclosure: View {
     let exercise: Exercise
-    let workoutDate: Date
-    let workoutName: String
-    let prs: [PerformanceUpdate]
+    let workout: CompletedWorkout
     @State private var isExpanded = false
     
     var body: some View {
         TappableDisclosure(isExpanded: $isExpanded) {
             // LABEL
             VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    if !prs.isEmpty {
-                        Image(systemName: "trophy.fill")
-                    }
-                    Text(exercise.name)
-                }
-                .font(.subheadline)
-                .fontWeight(.medium)
-                
-                Text("\(workoutDate.formatted(date: .abbreviated, time: .shortened))")
+                Text("\(workout.date.formatted(date: .abbreviated, time: .shortened))")
                     .font(.subheadline)
                     .foregroundStyle(.gray)
-                Text("\(workoutName)")
+                Text("\(workout.name)")
                     .font(.headline)
                     .fontWeight(.semibold)
                 
@@ -127,7 +114,7 @@ private struct ExerciseSetsDisclosure: View {
                 CompletedDetails.exerciseSets(
                     exercise: exercise,
                     warmup: false,
-                    prs: prs
+                    prs: workout.updatedMax
                 )
             }
             .padding(.top, 8)

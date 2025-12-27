@@ -676,35 +676,6 @@
       "unitType": "weightXreps"
     },
     {
-      "name": "Plate-Loaded Chest Press",
-      "id": "E82CBEC9-664A-4660-9418-069641BAC1A8",
-      "image": "Lever-Chest-Press_Chest_converted",
-      "aliases": [ "Iso-Lateral Chest Press" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Chest Press - Plate Loaded" ],
-      "muscles": [
-        { "engagementPercentage": 60, "mover": "primary", "muscleWorked": "Pectorals", "submusclesWorked": [
-            { "engagementPercentage": 80, "submuscleWorked": "Sternocostal Head" },
-            { "engagementPercentage": 15, "submuscleWorked": "Clavicular Head" },
-            { "engagementPercentage": 5, "submuscleWorked": "Costal Head" }
-        ] },
-        { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Triceps", "submusclesWorked": [
-            { "engagementPercentage": 60, "submuscleWorked": "Triceps Lateral Head" },
-            { "engagementPercentage": 40, "submuscleWorked": "Triceps Medial Head" }
-        ] },
-        { "engagementPercentage": 5, "mover": "secondary", "muscleWorked": "Deltoids", "submusclesWorked": [
-            { "engagementPercentage": 100, "submuscleWorked": "Front Delt" }
-        ] }
-      ],
-      "difficulty": "Nov.",
-      "effort": "Compound",
-      "limbMovementType": "Bilateral Independent",
-      "resistance": "Machine",
-      "weightInstruction": "Per Peg",
-      "imageUrl": "https://gymvisual.com/animated-gifs/2073-lever-chest-press-plate-loaded.html?search_query=lever+machine+chest+press&results=100",
-      "unitType": "weightXreps"
-    },
-    {
       "name": "Plate-Loaded Decline Chest Press",
       "id": "B88314B0-C0A9-4628-918B-02A16BA824FA",
       "image": "Lever-Decline-Chest-Press_Chest-FIX__converted",
@@ -2792,35 +2763,6 @@
       "limbMovementType": "Bilateral Dependent",
       "resistance": "Bodyweight",
       "unitType": "timeOnly"
-    },
-    {
-      "name": "Front Rack Hold",
-      "id": "F0A1B2C3-D4E5-46F7-98A9-B0C1D2E3F4A5",
-      "image": "front_rack_hold",
-      "aliases": [ "Front Rack Carry Hold" ],
-      "instructions": { "steps": [ ] },
-      "equipmentRequired": [ "Barbell", "Squat Rack" ],
-      "muscles": [
-        { "engagementPercentage": 40, "mover": "primary", "muscleWorked": "Deltoids", "submusclesWorked": [
-            { "engagementPercentage": 60, "submuscleWorked": "Front Delt" },
-            { "engagementPercentage": 40, "submuscleWorked": "Side Delt" }
-        ] },
-        { "engagementPercentage": 35, "mover": "secondary", "muscleWorked": "Trapezius", "submusclesWorked": [
-            { "engagementPercentage": 70, "submuscleWorked": "Upper Traps" },
-            { "engagementPercentage": 30, "submuscleWorked": "Middle Traps" }
-        ] },
-        { "engagementPercentage": 25, "mover": "secondary", "muscleWorked": "Forearms", "submusclesWorked": [
-            { "engagementPercentage": 20, "submuscleWorked": "Brachioradialis" },
-            { "engagementPercentage": 40, "submuscleWorked": "Forearm Flexors" },
-            { "engagementPercentage": 25, "submuscleWorked": "Forearm Extensors" },
-            { "engagementPercentage": 15, "submuscleWorked": "Forearm Rotators" }
-        ] }
-      ],
-      "difficulty": "Int.",
-      "effort": "Isometric",
-      "limbMovementType": "Bilateral Dependent",
-      "resistance": "Free Weight",
-      "unitType": "weightXtime"
     },
     {
       "name": "Handstand Hold",

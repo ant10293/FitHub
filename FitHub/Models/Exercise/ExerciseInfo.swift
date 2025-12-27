@@ -145,7 +145,7 @@ enum LimbMovementType: String, Codable, CaseIterable {
     var description: String {
         switch self {
         case .unilateral:
-            return "One limb working at a time" // would say 'per arm' or 'per leg' in caption font around the reps text
+            return "One limb working/prioritized at a time" // would say 'per arm' or 'per leg' in caption font around the reps text
         case .bilateralIndependent:
             return "Both limbs working independently but simultaneously" // would say 'per arm' or 'per leg' in caption font around the weight text
         case .bilateralDependent:

@@ -596,18 +596,6 @@
         "adjustments": ["Handle Position"]
     },
     {
-        "name": "Chest Press - Plate Loaded",
-        "id": "1C8462AB-1227-4B5E-A5BB-A1AEF72A83FF",
-        "aliases": ["plate chest press","lever bench"],
-        "image": "chest_press_pl",
-        "description": "Converging lever replicating a bench press with constant tension and natural arm path.",
-        "equCategory": "Plated Machines",
-        "baseWeight": { "lb": 25, "kg": 10 },
-        "pegCount": 2,
-        "implementation": "Divided",
-        "adjustments": ["Seat Height","Handle Position"]
-    },
-    {
         "name": "Incline Chest Press - Plate Loaded",
         "id": "EA2C171F-EEFA-40E0-B7D6-FE400B744A02",
         "aliases": ["incline lever press"],
