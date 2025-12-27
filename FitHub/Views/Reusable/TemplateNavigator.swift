@@ -28,6 +28,7 @@ struct TemplateNavigator<Content: View>: View {
     @Binding var selectedTemplate: SelectedTemplate?
     @State private var navigateToTemplateDetail: Bool = false
     @State private var currentTemplate: SelectedTemplate? = nil
+    @State private var popupToRestore: SelectedTemplate? = nil
 
     @State private var workoutRoute: WorkoutRoute? = nil
 
@@ -65,6 +66,14 @@ struct TemplateNavigator<Content: View>: View {
         .onChange(of: selectedTemplate) { oldValue, newValue in
              handleTemplateSelection(newValue)
          }
+        .onChange(of: navigateToTemplateDetail) { oldValue, newValue in
+            // When detail view is dismissed (navigateToTemplateDetail becomes false)
+            // and we have a popup to restore, restore it
+            if oldValue == true && newValue == false, let popup = popupToRestore {
+                selectedTemplate = popup
+                popupToRestore = nil
+            }
+        }
     }
 
     // MARK: - Template Selection Logic
@@ -83,7 +92,11 @@ struct TemplateNavigator<Content: View>: View {
         }
     }
 
-    private var shouldShowPopup: Bool { selectedTemplate?.mode == .popupOverlay && selectedTemplate != nil }
+    private var shouldShowPopup: Bool { 
+        // Don't show popup if we're navigating to detail view (prevents rendering both)
+        if navigateToTemplateDetail { return false }
+        return selectedTemplate?.mode == .popupOverlay && selectedTemplate != nil
+    }
     private var shouldDisableContent: Bool { return shouldShowPopup }
 
     // MARK: - Navigation Destinations
@@ -162,7 +175,8 @@ struct TemplateNavigator<Content: View>: View {
                     },
                     onEdit: {
                         currentTemplate = newSel
-                        //selectedTemplate = nil // Dismiss popup immediately before navigation
+                        // Store popup state to restore when returning from detail view
+                        popupToRestore = selectedTemplate
                         navigateToTemplateDetail = true
                     }
                 )
